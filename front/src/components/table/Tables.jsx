@@ -299,22 +299,52 @@ const handleRowClick = (rowIndex, e) => {
 
   // th드레그
   const [columnWidths, setColumnWidths] = useState({});
+  // const handleMouseDown = (e, accessor) => {
+  //   const startX = e.clientX;
+  //   const startWidth = columnWidths[accessor] || 150;
+
+  //   const onMouseMove = (moveEvent) => {
+  //     const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 50);
+  //     setColumnWidths((prev) => ({
+  //       ...prev,
+  //       [accessor]: newWidth,
+  //     }));
+  //   };
+
+  //   const onMouseUp = () => {
+  //     document.removeEventListener("mousemove", onMouseMove);
+  //     document.removeEventListener("mouseup", onMouseUp);
+  //   };
+
+  //   document.addEventListener("mousemove", onMouseMove);
+  //   document.addEventListener("mouseup", onMouseUp);
+  // };
   const handleMouseDown = (e, accessor) => {
     const startX = e.clientX;
     const startWidth = columnWidths[accessor] || 150;
+    let animationFrameId = null;
 
     const onMouseMove = (moveEvent) => {
-      const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 50);
-      setColumnWidths((prev) => ({
-        ...prev,
-        [accessor]: newWidth,
-      }));
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 50);
+        setColumnWidths(prev => ({ ...prev, [accessor]: newWidth }));
+      });
     };
 
     const onMouseUp = () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseup", onMouseUp);
+
+      // ✔ 복원
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
+
+    // ✔ 드래그 중 텍스트 선택 방지 및 커서 설정
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
 
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
@@ -490,7 +520,8 @@ const handleRowClick = (rowIndex, e) => {
                 style={{
                   textAlign: "center",
                   cursor: column.isIcon ? "default" : "pointer",
-                  width: columnWidths[column.accessor] ?? column.width ?? "auto",
+                  width: columnWidths[column.accessor] ?? column.width ?? 120,
+                  maxWidth: 600,
                   position: "relative",
                   userSelect: "none",
                   ...column.style,

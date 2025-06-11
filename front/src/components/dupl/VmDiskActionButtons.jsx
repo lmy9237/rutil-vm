@@ -19,16 +19,18 @@ const VmDiskActionButtons = ({
   const isContextMenu = actionType === "context";
 
   const selected1st = [...disksSelected][0] ?? null
+  const vm = vmsSelected[0] ?? null;
   const noneSelected = disksSelected.length === 0
 
   const isActive = selected1st?.active === true;
   const isOK = selected1st?.status === "OK" ? "true" : "false";
   const isLocked = selected1st?.diskImageVo?.status === "LOCKED";
+  const isPoweringUp = vm?.status === "POWERING_UP";
 
   const basicActions = [
     { type: "create",      onClick: () => setActiveModal("vmdisk:create"),     label: Localization.kr.CREATE,     disabled: false },
     { type: "connect",     onClick: () => setActiveModal("vmdisk:connect"),    label: Localization.kr.CONNECTION, disabled: false },
-    { type: "update",      onClick: () => setActiveModal("vmdisk:update"),     label: Localization.kr.UPDATE,     disabled: isLocked || disksSelected.length !== 1 },
+    { type: "update",      onClick: () => setActiveModal("vmdisk:update"),     label: Localization.kr.UPDATE,      disabled: isLocked || isPoweringUp || disksSelected.length !== 1},
     { type: "remove",      onClick: () => setActiveModal("vmdisk:remove"),     label: Localization.kr.REMOVE,     disabled: isLocked || noneSelected },
     { type: "activate",    onClick: () => setActiveModal("vmdisk:activate"),   label: Localization.kr.ACTIVATE,   disabled: isLocked || noneSelected || isActive },
     { type: "deactivate",  onClick: () => setActiveModal("vmdisk:deactivate"), label: Localization.kr.DEACTIVATE, disabled: isLocked || noneSelected || !isActive },

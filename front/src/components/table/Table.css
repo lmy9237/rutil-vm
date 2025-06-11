@@ -1,4 +1,8 @@
 /* Tables.css */
+.custom-table {
+  table-layout: fixed;
+  width: 100%;
+}
 .custom-table td,
 .custom-table th {
   max-width: 200px;
@@ -103,7 +107,8 @@ table .input-container button {
   right: 0;
   top: 0;
   height: 100%;
-  width: 5px;
+  width: 6px;
   cursor: col-resize;
   user-select: none;
+  background-color: transparent;
 }

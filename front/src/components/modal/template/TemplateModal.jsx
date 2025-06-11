@@ -27,7 +27,7 @@ const initialFormState = {
   comment: "",
   allowAllAccess: true,
   diskAlias: "",
-  diskSize: "",
+  Size: "",
   copyVmPermissions: false,
 };
 
@@ -332,6 +332,7 @@ const TemplateModal = ({
                 </tbody> */}
                 <tbody>
                   {diskVoList.map((disk, index) => {
+                      console.log("디버깅 - diskImageVo", disk.diskImageVo); // 💡 이 줄 추가
                     const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
                     const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
 
@@ -382,7 +383,7 @@ const TemplateModal = ({
                           />
                           {selectedDomain && (
                             <div className="text-xs text-gray-500 mt-1">
-                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.diskSize)}
+                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.Size)}
                             </div>
                           )}
                         </td>
@@ -418,12 +419,12 @@ const TemplateModal = ({
         onChange={() => setFormState((prev) => ({ ...prev, allowAllAccess: !formState.allowAllAccess }))}
         tType={"네"} fType={"아니요"}
       />
-      <ToggleSwitchButton
+      {/* <ToggleSwitchButton
         label={`${Localization.kr.VM} 권한 복사`}
         checked={formState.copyVmPermissions}
         onChange={() => setFormState((prev) => ({ ...prev, copyVmPermissions: !formState.copyVmPermissions }))}
         tType={"네"} fType={"아니요"}
-      />
+      /> */}
     </BaseModal>
   );
 };

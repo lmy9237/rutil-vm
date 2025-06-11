@@ -80,6 +80,9 @@ const VmActionButtons = ({
   const hasPreviewSnapshot = useMemo(() => {
     return snapshots.some(s => s.status === "in_preview");
   }, [snapshots]);
+  const hasLockedSnapshot = useMemo(() => {
+    return snapshots.some(s => s.status === "locked");
+  }, [snapshots]);
 
   const manageActions = [
     // { type: "import", label: Localization.kr.IMPORT, },
@@ -114,7 +117,7 @@ const VmActionButtons = ({
     // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
     { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !isVmQualified4ConsoleConnect, subactions: consoleActions},
     { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !ollOkay2Migrate },
-    { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },
+    { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));
 

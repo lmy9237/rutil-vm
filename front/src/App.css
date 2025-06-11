@@ -313,8 +313,10 @@ svg.btn { cursor: pointer; }
   align-items: flex-start !important;
 }
 .info-content {
-  width: calc(100% - var(--w-btn-tab-nav));
-  overflow-y: auto;
+      width: calc(100% - var(--w-btn-tab-nav));
+    /* overflow-y: auto; */
+    height: calc(100% - var(--h-section-header));
+    
 }
 .section-content,.info-content { 
   padding: 10px;

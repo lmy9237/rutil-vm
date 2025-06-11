@@ -295,9 +295,9 @@ export const BoxChartAllGraphs = ({ type }) => {
       <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
         <RadialChartAll type={type} size={heightGraphHoriz} />
         <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  title={
-            type === "cpu" ? "CPU Top3 VM" // "가상머신 CPU 사용률 Top3"
-            : type === "memory" ? " 메모리 Top3 VM" //"가상머신 메모리 사용률 Top3"
-            : type === "domain" ? " 스토리지 Top3 VM" //"가상머신 스토리지 사용률 Top3"
+            type === "cpu" ? "CPU Top3 가상머신" // "가상머신 CPU 사용률 Top3"
+            : type === "memory" ? " 메모리 Top3 가상머신" //"가상머신 메모리 사용률 Top3"
+            : type === "domain" ? " 스토리지 Top3" //"가상머신 스토리지 사용률 Top3"
             : ""
           }/>
       </div>
@@ -305,7 +305,7 @@ export const BoxChartAllGraphs = ({ type }) => {
       <BoxGrids type={type} title={
         type === "cpu" ? "가상머신 CPU 사용률" :
         type === "memory" ? "가상머신 메모리 사용률" : 
-        type === "domain" ? "가상머신 스토리지 사용률" : ""
+        type === "domain" ? "스토리지 사용률" : ""
       } style={{ height: `${heightGraphRest}px` }} />
     </div>
     );
@@ -440,6 +440,7 @@ const BarChartAll = ({
         data={_data}
         keyName="name"
         keyPercent={_keyPercent}
+         type={type}  
         {...props}
       />
     </div>
@@ -489,26 +490,47 @@ const WaveChartCpu = ({
   )
 }
 
+// const BarChartWrapper = ({ 
+//   data, 
+//   keyName, 
+//   keyPercent,
+//   ...props
+// }) => {
+//   const names = useMemo(() => 
+//     [...data]?.map((e) => e[keyName]) ?? []
+//   , [data, keyName]);
+
+//   const percentages = useMemo(() => 
+//     [...data]?.map((e) => e[keyPercent]) ?? []
+//   , [data, keyPercent]);
+
+  
+//   return <BarChart 
+//     names={names}
+//     percentages={percentages}
+//     {...props} 
+//   />;
+// };
 const BarChartWrapper = ({ 
   data, 
   keyName, 
   keyPercent,
+  type,
   ...props
 }) => {
-  const names = useMemo(() => 
-    [...data]?.map((e) => e[keyName]) ?? []
-  , [data, keyName]);
+  const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
+  const percentages = useMemo(() => data.map((e) => e[keyPercent]), [data, keyPercent]);
+  const ids = useMemo(() => data.map((e) => e.id), [data]); // ⭐ id 꼭 들어가야 함
 
-  const percentages = useMemo(() => 
-    [...data]?.map((e) => e[keyPercent]) ?? []
-  , [data, keyPercent]);
-
-  
-  return <BarChart 
-    names={names}
-    percentages={percentages}
-    {...props} 
-  />;
+  return (
+    <BarChart
+      names={names}
+      percentages={percentages}
+      ids={ids}
+      type={type}
+      {...props}
+    />
+  );
 };
 
 

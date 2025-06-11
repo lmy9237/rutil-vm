@@ -9,6 +9,7 @@ import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
 import {
+  useSnapshotsFromVM,
   useVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
@@ -60,6 +61,11 @@ const VmInfo = () => {
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
 
   const [activeTab, setActiveTab] = useState("general")
+  const { data: snapshots = [] } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+
+  const hasLockedSnapshot = useMemo(() => {
+    return snapshots.some(s => s.status === "locked");
+  }, [snapshots]);
 
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
@@ -67,7 +73,7 @@ const VmInfo = () => {
     }
     setVmsSelected(vm)
   }, [vm]);
-
+  
   const tabs = useMemo(() => ([
     { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
     { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
@@ -96,6 +102,7 @@ const VmInfo = () => {
     tabs.find((section) => section.id === activeTab)?.label,
   ]), [vm, tabs, activeTab]);
 
+  
     // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
@@ -120,9 +127,9 @@ const VmInfo = () => {
     { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
     { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isVmQualified4ConsoleConnect },
-    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) },
+    { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) || hasLockedSnapshot  },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isVmQualified2Migrate },
-  ]), [vm, vmId]);
+  ]), [vm, vmId, isUp, isDown, hasLockedSnapshot]);
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),       label: Localization.kr.IMPORT, }, */
