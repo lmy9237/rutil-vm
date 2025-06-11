@@ -240,7 +240,7 @@ export const Localization = {
       else if (_status === "REBOOT")        return "재부팅 중";
       else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
       else if (_status === "SUSPENDED" || _status === "PAUSED")   return "일시중지";
-      else if (_status === "SAVING_STATE")  return "일시중지 중";
+      else if (_status === "SAVINGSTATE" || _status === "SAVING_STATE")  return "저장 중";
       else if (_status === "MAINTENANCE") return "유지보수";
       else if (_status === "PREPARING_FOR_MAINTENANCE") return "유지 관리 모드 준비 중";
       else if (_status === "WAIT_FOR_LAUNCH") return "전원을 켜는 중";
@@ -251,7 +251,7 @@ export const Localization = {
       else if (_status === "NON_RESPONSIVE") return "응답하지 않음";
       else if (_status === "UNATTACHED")  return "연결 해제";
       else if (_status === "DETACHING")  return "분리 중";
-      else if (_status === "RESTORING_STATE")  return "복구 중";
+      else if (_status === "RESTORING_STATE" || _status === "RESTORINGSTATE")  return "복구 중";
       else if (_status === "MIGRATING")  return "마이그레이션 중";
       else if (_status === "LOCKED")  return "잠김";
       else if (_status === "IMAGE_LOCKED") return "이미지 잠김";

@@ -1,29 +1,32 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
+import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
-import com.itinfo.rutilvm.api.model.storage.toUnregisterdDisk
-import com.itinfo.rutilvm.api.ovirt.business.BiosType
+import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.common.toLocalDateTime
-import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 
+//region: DiskVmElementEntity
 fun DiskVmElementEntity.toVmDisk(): DiskImageVo {
 	return DiskImageVo.builder {
 
 	}
 }
+//endregion: DiskVmElementEntity
+
 
 //region: EngineSessionsEntity
-fun EngineSessionsEntity.toUserSession(): UserSessionVo {
+fun EngineSessionsEntity.toUserSessionVo(): UserSessionVo {
 	return UserSessionVo.builder {
 		id { id }
 		userId { userId }
@@ -36,8 +39,10 @@ fun EngineSessionsEntity.toUserSession(): UserSessionVo {
 	}
 }
 
-fun List<EngineSessionsEntity>.toUserSessions(): List<UserSessionVo> = this.map { it.toUserSession() }
+fun List<EngineSessionsEntity>.toUserSessionVos(): List<UserSessionVo> =
+	this@toUserSessionVos.map { it.toUserSessionVo() }
 //endregion: EngineSessionsEntity
+
 
 //region: UnregisteredDiskEntity
 fun UnregisteredDiskEntity.toUnregisteredDiskImageVo(disk: Disk?=null): DiskImageVo =
@@ -58,6 +63,7 @@ fun List<UnregisteredDiskEntity>.toUnregisteredDiskImageVos(disks: List<Disk>): 
 	return this.map { it.toUnregisteredDiskImageVo(itemById[it.id.toString()]) }
 }
 //endregion: UnregisteredDiskEntity
+
 
 //region: UnregisteredOvfOfEntities
 fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
@@ -167,6 +173,105 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm>): List<VmVo>
 fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Template>): List<TemplateVo> {
 	val itemById: Map<String, Template> =
 		templates.associateBy { it.id() }
-	return this@toUnregisteredTemplates.map { it.toUnregisteredTemplate(itemById[it.id?.entityGuid.toString()]) }
+	return this@toUnregisteredTemplates.map {
+		it.toUnregisteredTemplate(itemById[it.id?.entityGuid.toString()])
+	}
 }
 //endregion: UnregisteredOvfOfEntities
+
+
+//region: VmEntity
+fun VmEntity.toVmVoFromVmEntity(): VmVo {
+	val entity = this@toVmVoFromVmEntity
+	return VmVo.builder {
+		id { entity.vmGuid.toString() }
+		name { entity.vmName }
+		comment { entity.freeTextComment }
+		creationTime { entity.creationDate }
+		stopTime { entity.lastStopTime }
+		timeElapsed { entity.elapsedTime?.toLong() }
+		status {
+			com.itinfo.rutilvm.api.ovirt.business.VmStatus.forValue(entity.status).description
+		}
+		description { entity.description }
+		nextRun { entity.nextRunConfigExists }
+		hostedEngineVm { entity.origin == 6 }
+		usageDto {
+			UsageDto.builder {
+				cpuPercent { usageCpuPercent }
+				memoryPercent { usageMemPercent }
+				networkPercent { usageNetworkPercent }
+			}
+		}
+		ipv4 { listOf(entity.vmIp) }
+		fqdn { entity.vmHost }
+		templateVo {
+			IdentifiedVo.builder {
+				id { entity.originalTemplateId.toString() }
+				name { entity.originalTemplateName }
+			}
+		}
+		hostVo {
+			IdentifiedVo.builder {
+				id { entity.runOnVds.toString() }
+				name { entity.runOnVdsName }
+			}
+		}
+		clusterVo {
+			IdentifiedVo.builder {
+				id { entity.clusterId.toString() }
+				name { entity.clusterName }
+			}
+		}
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { entity.storagePoolId.toString() }
+				name { entity.storagePoolName }
+			}
+		}
+		snapshotVos { snapshots.filter {
+			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.ACTIVE &&
+			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.PREVIEW
+		}.toIdentifiedVosFromSnapshotEntities() }
+	}
+}
+
+fun List<VmEntity>.toVmVosFromVmEntities(): List<VmVo> =
+	this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity() }
+fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromVmEntity.vmGuid.toString() }
+	name { this@toIdentifiedVoFromVmEntity.vmName }
+}
+fun List<VmEntity>.toIdentifiedVosFromVoEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromVoEntities.map { it.toIdentifiedVoFromVmEntity() }
+//endregion: VmEntity
+
+
+//region: SnapshotEntity
+fun SnapshotEntity.fromSnapshotEntityToSnapshotVo(): SnapshotVo = SnapshotVo.builder {
+	val entity = this@fromSnapshotEntityToSnapshotVo
+	id { entity.snapshotId.toString() }
+	description { entity.description }
+	status { entity.status }
+	date { entity.creationDate.toDate() }
+	// persistMemory { entity. }
+	// vmVo {  }
+	// snapshotDiskVos { entity }
+	// nicVos { }
+	applicationVos {
+		entity.appList.split(",").map {
+			IdentifiedVo.builder {
+				// id {  }
+				// name {  }
+			}
+		}
+	}
+	// diskAttachmentVos { }
+}
+fun SnapshotEntity.toIdentifiedVoFromSnapshotEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromSnapshotEntity.snapshotId.toString() }
+	name { this@toIdentifiedVoFromSnapshotEntity.description }
+}
+fun Collection<SnapshotEntity>.toIdentifiedVosFromSnapshotEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromSnapshotEntities.map { it.toIdentifiedVoFromSnapshotEntity() }
+//endregion: SnapshotEntity

@@ -6,17 +6,16 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.repository.engine.VmsRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.VmsEntity
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
-import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.util.*
 import kotlin.Error
 
 
@@ -135,15 +134,15 @@ interface ItVmService {
 @Service
 class VmServiceImpl(
 ) : BaseService(), ItVmService {
-	@Autowired private lateinit var rVms: VmsRepository
+	@Autowired private lateinit var rVms: VmRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<VmVo> {
 		log.info("findAll ... ")
 		// val res: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices,snapshots").getOrDefault(emptyList())
 		// return res.toVmMenus(conn) // 3.86
-		val res: List<VmsEntity> = rVms.findAllByOrderByVmNameAsc()
-		return res.toVmEntities(conn)
+		val res: List<VmEntity> = rVms.findAllWithSnapshotsOrderByVmNameAsc()
+		return res.toVmVosFromVmEntities()
 	}
 
 	@Throws(Error::class)

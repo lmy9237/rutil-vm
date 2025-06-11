@@ -108,14 +108,12 @@ fun HostNic.fromHostNicToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<HostNic>.fromHostNicsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromHostNicsToIdentifiedVos.map { it.fromHostNicToIdentifiedVo() }
 
-
 fun IscsiDetails.fromIscsiDetailToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { storageDomainId() }
 	name { if (usernamePresent()) username() else "" }
 }
 fun List<IscsiDetails>.fromIscsiDetailsToIdentifiedVos(): List<IdentifiedVo> =
 	this.map { it.fromIscsiDetailToIdentifiedVo() }
-
 
 fun VnicProfile.fromVnicProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
@@ -128,6 +126,7 @@ fun OpenStackNetworkProvider.fromOpenStackNetworkProviderToIdentifiedVo() = Iden
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
+
 fun List<OpenStackNetworkProvider>.fromOpenStackNetworkProviderToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromOpenStackNetworkProviderToIdentifiedVos.map { it.fromOpenStackNetworkProviderToIdentifiedVo() }
 

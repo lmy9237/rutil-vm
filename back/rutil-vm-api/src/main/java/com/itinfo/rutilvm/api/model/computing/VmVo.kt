@@ -1,36 +1,28 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.computing.VmVo.Companion
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromCpuProfileToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromDiskAttachmentsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromDiskToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromNicsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromSnapshotsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromStorageDomainToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
-import com.itinfo.rutilvm.api.model.network.toNicIdNames
 import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
-import com.itinfo.rutilvm.api.repository.engine.entity.VmsEntity
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.common.toTimeElapsedKr
-import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
-import com.itinfo.rutilvm.util.ovirt.findAllSnapshotsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromVm
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDisk
@@ -216,7 +208,7 @@ class VmVo (
 	val fqdn: String = "",
 	val nextRun: Boolean = false,
 	val runOnce: Boolean = false,
-	val upTime: String = "",
+	val timeElapsed: Long? = 0,
 	private val _creationTime: LocalDateTime? = null,
 	private val _startTime: LocalDateTime? = null,
 	private val _stopTime: LocalDateTime? = null,
@@ -247,6 +239,8 @@ class VmVo (
 		get() = ovirtDf.formatEnhancedFromLDT(_startTime)
 	val stopTime: String?
 		get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	val upTime: String?
+		get() = timeElapsed?.toTimeElapsedKr()
 
     class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
@@ -300,7 +294,7 @@ class VmVo (
 		private var bFqdn: String = ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
 		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
 		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
-		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
+		private var bTimeElapsed: Long? = 0L; fun timeElapsed(block: () -> Long?) { bTimeElapsed = block() ?: 0L }
 		private var bCreationTime: LocalDateTime? = null; fun creationTime(block: () -> LocalDateTime?) { bCreationTime = block() }
 		private var bStartTime: LocalDateTime? = null; fun startTime(block: () -> LocalDateTime?) { bStartTime = block() }
 		private var bStopTime: LocalDateTime? = null; fun stopTime(block: () -> LocalDateTime?) { bStopTime = block() }
@@ -321,8 +315,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
-
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
     }
 
     companion object {
@@ -330,7 +323,6 @@ class VmVo (
         inline fun builder(block: Builder.() -> Unit): VmVo = Builder().apply(block).build()
     }
 }
-
 
 
 /**
@@ -375,11 +367,11 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 			hostVo { host?.fromHostToIdentifiedVo() }
 			ipv4 { vm.reportedDevices().findVmIpv4() }
 			ipv6 { vm.reportedDevices().findVmIpv6() }
-			upTime { statistics.findVmUptime() }
+			timeElapsed { statistics.findVmUptime() }
 			usageDto { statistics.toVmUsage() }
 		} else {
 			fqdn { null }
-			upTime { null }
+			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 			usageDto { null }
@@ -388,64 +380,6 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 }
 fun List<Vm>.toVmMenus(conn: Connection): List<VmVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
-
-fun VmsEntity.toVmEntity(conn: Connection): VmVo {
-	val entity = this@toVmEntity
-	// val snapshots: List<Snapshot> = conn.findAllSnapshotsFromVm(entity.vmGuid.toString())
-	// 	.getOrDefault(listOf())
-	// 	.filter { it.snapshotType() != ACTIVE && it.snapshotType() != PREVIEW }
-
-	return VmVo.builder {
-		id { entity.vmGuid.toString() }
-		name { entity.vmName }
-		comment { entity.freeTextComment }
-		creationTime { entity.creationDate }
-		stopTime { entity.lastStopTime }
-		// upTime { entity.elapsedTime }
-		status { com.itinfo.rutilvm.api.ovirt.business.VmStatus.forValue(entity.status).description }
-		description { entity.description }
-		nextRun { entity.nextRunConfigExists }
-		hostedEngineVm { entity.origin == 6 }
-		usageDto {
-			UsageDto.builder {
-				cpuPercent { usageCpuPercent }
-				memoryPercent { usageMemPercent }
-				networkPercent { usageNetworkPercent }
-			}
-		}
-		ipv4 { listOf(entity.vmIp) }
-		fqdn { entity.vmHost }
-		templateVo {
-			IdentifiedVo.builder {
-				id { entity.originalTemplateId.toString() }
-				name { entity.originalTemplateName }
-			}
-		}
-		hostVo {
-			IdentifiedVo.builder {
-				id { entity.runOnVds.toString() }
-				name { entity.runOnVdsName }
-			}
-		}
-		clusterVo {
-			IdentifiedVo.builder {
-				id { entity.clusterId.toString() }
-				name { entity.clusterName }
-			}
-		}
-		dataCenterVo {
-			IdentifiedVo.builder {
-				id { entity.storagePoolId.toString() }
-				name { entity.storagePoolName }
-			}
-		}
-		// snapshotVos { snapshots.fromSnapshotsToIdentifiedVos() }
-	}
-}
-
-fun List<VmsEntity>.toVmEntities(conn: Connection): List<VmVo> =
-	this@toVmEntities.map { it.toVmEntity(conn) }
-
 
 fun Vm.toVmVo(conn: Connection): VmVo {
 	val vm = this@toVmVo
@@ -530,11 +464,11 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 			ipv4 { vm.reportedDevices().findVmIpv4() }
 			ipv6 { vm.reportedDevices().findVmIpv6() }
 			hostVo { host?.fromHostToIdentifiedVo() }
-			upTime { vm.statistics().findVmUptime() }
+			timeElapsed { vm.statistics().findVmUptime() }
 			usageDto { vm.statistics().toVmUsage() }
 		} else {
 			fqdn { null }
-			upTime { null }
+			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 			usageDto { null }
@@ -562,13 +496,13 @@ fun Vm.toTemplateVmVo(conn: Connection): VmVo {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
-			upTime { statistics.findVmUptime() }
+			timeElapsed { statistics.findVmUptime() }
 			ipv4 { vm.reportedDevices().findVmIpv4() }
 			ipv6 { vm.reportedDevices().findVmIpv6() }
 			hostVo { host?.fromHostToIdentifiedVo() }
 		} else {
 			fqdn { null }
-			upTime { null }
+			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 			hostVo { null }
@@ -617,12 +551,12 @@ fun Vm.toNetworkVm(conn: Connection): VmVo {
 		if (this@toNetworkVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id()).getOrDefault(emptyList())
 			fqdn { this@toNetworkVm.fqdn() }
-			upTime { statistics.findVmUptime() }
+			timeElapsed { statistics.findVmUptime() }
 			ipv4 { this@toNetworkVm.reportedDevices().findVmIpv4() }
 			ipv6 { this@toNetworkVm.reportedDevices().findVmIpv6() }
 		} else {
 			fqdn { null }
-			upTime { null }
+			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 		}
@@ -643,7 +577,7 @@ fun Vm.toDiskVm(conn: Connection): VmVo {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(this@toDiskVm.host().id()).getOrNull()
 			fqdn { this@toDiskVm.fqdn() }
-			upTime { statistics.findVmUptime() }
+			timeElapsed { statistics.findVmUptime() }
 			ipv4 { this@toDiskVm.reportedDevices().findVmIpv4() }
 			ipv6 { this@toDiskVm.reportedDevices().findVmIpv6() }
 			usageDto { this@toDiskVm.statistics().toVmUsage() }
@@ -713,15 +647,16 @@ fun Vm.toVmSystem(): VmVo {
  * Vm 업타임 구하기
  * 이건 매개변수로 statisticList 안줘도 되는게 vm에서만 사용
  *
- * @return 일, 시간, 분 형식
+ * @return [Long] 시간 (in milliseconds)
  */
-fun List<Statistic>.findVmUptime(): String {
+fun List<Statistic>.findVmUptime(): Long {
 	val time: Long = this@findVmUptime.filter {
 		it.name() == "elapsed.time"
 	}.map {
 		it.values().firstOrNull()?.datum()?.toLong()
 	}.firstOrNull() ?: 0L
-	return time.toTimeElapsedKr()
+	return time
+	//  time.toTimeElapsedKr()
 }
 
 

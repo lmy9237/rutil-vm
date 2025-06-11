@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.service.auth
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.repository.engine.EngineSessionsRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.EngineSessionsEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toUserSessions
+import com.itinfo.rutilvm.api.repository.engine.entity.toUserSessionVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.postgresql.util.PSQLException
@@ -32,7 +32,7 @@ class OvirtUserSessionServiceImpl(
 		val res: List<EngineSessionsEntity> =
 			if (username.isNullOrEmpty()) engineSessions.findAll()
 			else engineSessions.findAllByUserNameOrderByIdDesc(username)
-		return res.toUserSessions()
+		return res.toUserSessionVos()
 	}
 
 	companion object {
