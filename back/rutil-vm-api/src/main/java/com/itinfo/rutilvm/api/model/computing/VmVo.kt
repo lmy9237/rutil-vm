@@ -15,6 +15,7 @@ import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
+import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -107,8 +108,7 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property timeOffset [String]
  * @property cloudInit [Boolean]
  * @property script [String]
- * @property placementPolicy [VmAffinity]
- * @property migrationMode [String]
+ * @property migrationMode [VmAffinity]
  * @property migrationPolicy [String]
  * @property migrationAutoConverge [InheritableBoolean]
  * @property migrationCompression [InheritableBoolean]
@@ -353,7 +353,7 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 		name { vm.name() }
 		comment { vm.comment() }
 		creationTime { vm.creationTime().toLocalDateTime() }
-		status { vm.status().value() }
+		status { vm.status().value().uppercase() }
 		description { vm.description() }
 		nextRun { vm.nextRunConfigurationExists() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
@@ -381,6 +381,7 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 fun List<Vm>.toVmMenus(conn: Connection): List<VmVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
 
+
 fun Vm.toVmVo(conn: Connection): VmVo {
 	val vm = this@toVmVo
 	val template: Template? = conn.findTemplate(vm.template().id()).getOrNull()
@@ -406,7 +407,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		name { vm.name() }
 		description { vm.description() }
 		comment { vm.comment() }
-		status { vm.status().value() }
+		status { vm.status().value().uppercase() }
 		optimizeOption { vm.type().value() }
 		biosType { vm.bios().type().value() }
 		osType { vm.os().type() }
@@ -491,7 +492,7 @@ fun Vm.toTemplateVmVo(conn: Connection): VmVo {
 	return VmVo.builder {
 		id { vm.id() }
 		name { vm.name() }
-		status { vm.status().value() }
+		status { vm.status().value().uppercase() }
 		if (vm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
@@ -546,7 +547,7 @@ fun Vm.toNetworkVm(conn: Connection): VmVo {
 		id { this@toNetworkVm.id() }
 		name { this@toNetworkVm.name() }
 		description { this@toNetworkVm.description() }
-		status { this@toNetworkVm.status().value() }
+		status { this@toNetworkVm.status().value().uppercase() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toNetworkVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id()).getOrDefault(emptyList())
@@ -571,7 +572,7 @@ fun Vm.toDiskVm(conn: Connection): VmVo {
 		id { this@toDiskVm.id() }
 		name { this@toDiskVm.name() }
 		description { this@toDiskVm.description() }
-		status { this@toDiskVm.status().value() }
+		status { this@toDiskVm.status().value().uppercase() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		if (this@toDiskVm.status() == VmStatus.UP) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
@@ -596,7 +597,7 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		name { vm.name() }
 		description { vm.description() }
 		comment { vm.comment() }
-		status { vm.status().value() }
+		status { vm.status().value().uppercase() }
 		templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType { vm.bios().type().toString() }
 		cpuArc { vm.cpu().architecture() }

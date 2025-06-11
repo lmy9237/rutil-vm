@@ -34,10 +34,10 @@ const VmDiskDupl = ({
 
   const transformedData = [...vmDisks].map((d) => {
     const diskImage = d?.diskImageVo;
-    const status = d?.active ? "UP" : "DOWN"; 
+    // const status = d?.active ? "UP" : "DOWN"; 
     return {
       ...d,
-      icon: status2Icon(diskImage?.status),
+      icon: status2Icon(d?.active ? "UP" : "DOWN"),
       iconSortKey: getStatusSortKey(diskImage?.status),
       _alias: (
         <TableRowClick type="disk" id={diskImage?.id}>
@@ -50,6 +50,7 @@ const VmDiskDupl = ({
       readOnly: d?.readOnly ? Localization.kr.YES : "",
       sharable: diskImage?.sharable ? Localization.kr.YES : "",
       status: diskImage?.status,
+      active: d?.active,
       interface: d?.interface_,
       storageType: diskImage?.storageType,
       sparse: diskImage?.sparse ? "씬 프로비저닝" : "사전 할당",
