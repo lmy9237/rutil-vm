@@ -163,6 +163,7 @@ const ENDPOINTS = {
   EXPORT_VM: (vmId) =>                                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/export`, 
   CONSOLE_VM: (vmId) =>                                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/console`,
   REMOTE_VIEWER_CONNECTION_FILE_VM: (vmId) =>                              `${ENDPOINT_API_V1}/computing/vms/${vmId}/remoteviewerconnection`,
+  FIND_ALL_MIGRATABLE_HOSTS_FROM_VM: (vmId) =>                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/migratableHosts`,
   FIND_ALL_MIGRATABLE_HOSTS_4_VMS: (vmIds) =>                              `${ENDPOINT_API_V1}/computing/vms/migratableHosts?vmIds=${vmIds}`, 
   MIGRATE_VM: (vmId, affinityClosure) => {
     let url = `${ENDPOINT_API_V1}/computing/vms/${vmId}/migrate`;

@@ -678,7 +678,8 @@ export const status2Icon = (
     case "WAIT_FOR_LAUNCH":
     case "DETACHING":
     case "ACTIVATING":
-    case "MIGRATING":                               iconDef = rvi16RebootLined();break;
+    case "MIGRATING_TO":                          
+    case "MIGRATING_FROM":                         iconDef = rvi16RebootLined();break;
     case "REBOOT": 
     case "REBOOT_IN_PROGRESS":
     case Localization.kr.renderStatus("REBOOT_IN_PROGRESS"):  

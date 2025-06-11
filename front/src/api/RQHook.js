@@ -2908,6 +2908,33 @@ export const useResetVM = (
 };
 
 /**
+ * @name useAllMigratableHostsFromVM
+ * @description 가상머신 마이그레이션 호스트목록  useQuery훅
+ * 
+ * @param {string} vmId 가상머신ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.migrateHostsFromVM
+ */
+export const useAllMigratableHostsFromVM = (
+  vmId,
+  mapPredicate
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allMigratableHostsFromVm', ...vmId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllMigratableHostsFromVM(vmId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllMigratableHostsFromVM ... vmId: ${vmId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!vmId
+})
+
+/**
  * @name useHostsForMigration
  * @description 가상머신 마이그레이션 호스트목록  useQuery훅
  * 

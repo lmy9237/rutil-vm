@@ -1706,6 +1706,18 @@ const ApiManager = {
     });
   },
   /**
+   * @name ApiManager.findAllMigratableHostsFromVM
+   * @description 가상머신 마이그레이션 호스트목록
+   * 
+   * @param {String} vmId 가상 머신 ID
+   */
+  findAllMigratableHostsFromVM: async (vmId) => {
+    return makeAPICall({
+      method: "GET",
+      url: ENDPOINTS.FIND_ALL_MIGRATABLE_HOSTS_FROM_VM(vmId),
+    });
+  },
+  /**
    * @name ApiManager.migrateHostsFromVM
    * @description 가상머신 마이그레이션 호스트목록
    * 

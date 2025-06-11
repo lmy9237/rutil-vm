@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.controller.computing
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.HostNetworkVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
@@ -344,6 +345,7 @@ class HostController {
 		log.info("/computing/hosts/{}/nics/setup ... 호스트 네트워크 생성", hostId)
 		return ResponseEntity.ok(iHostNic.setUpNetworksFromHost(hostId, hostNetworkVo))
 	}
+
 	// endregion
 
 	// region: operation

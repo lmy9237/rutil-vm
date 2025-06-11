@@ -33,7 +33,6 @@ const DiskActionModal = ({
   const [aliases, setAliases] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
 
-
   const { mutate: copyDisk } = useCopyDisk(onClose, onClose);
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
@@ -43,13 +42,12 @@ const DiskActionModal = ({
     }
   }, [isOpen]);
 
-
   const getDomains = useQueries({
     queries: diskList?.map((disk) => ({
-      queryKey: ['allDomainsFromDataCenter', disk.dataCenterVo?.id],
+      queryKey: ['allDomainsFromDataCenter', disk?.dataCenterVo?.id],
       queryFn: async () => {
         try {
-          const domains = await ApiManager.findAllDomainsFromDataCenter(disk.dataCenterVo?.id);
+          const domains = await ApiManager.findAllDomainsFromDataCenter(disk?.dataCenterVo?.id);
           return domains || [];
         } catch (error) {
           console.error(`Error fetching ${disk}`, error);
@@ -212,7 +210,7 @@ const DiskActionModal = ({
                     ) : (
                       <LabelInput label={""}
                         value={aliases[disk.id] || ""}
-                        onChange={(e) => {
+                       onChange={(e) => { 
                           const newAlias = e.target.value;
                           setAliases((prev) => ({ ...prev, [disk.id]: newAlias }));
                         }}

@@ -622,6 +622,7 @@ const TableColumnsInfo = {
     { accessor: '_alias',       header: Localization.kr.ALIAS,         clickable: true },
     { accessor: 'id',           header: 'ID',                          clickable: false },
     // { accessor: 'icon1',      header: Localization.kr.IS_SHARABLE,   clickable: false },
+    { accessor: 'type',         header: '',                            clickable: false },
     { accessor: 'connect',      header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, clickable: false, align: "left" },
     { accessor: 'storageDomain',header: Localization.kr.DOMAIN,        clickable: false },
     { accessor: 'virtualSize',  header: Localization.kr.SIZE_VIRTUAL,  clickable: false },

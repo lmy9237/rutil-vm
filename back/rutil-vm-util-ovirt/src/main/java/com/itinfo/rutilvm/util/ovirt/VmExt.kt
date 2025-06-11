@@ -206,18 +206,17 @@ fun Connection.updateVm(
 
 	val cdrom: Cdrom = this.srvVmCdromsFromVm(vmUpdated.id()).list().send().cdroms().first()
 
-	// ISO 설정 조건 확인 및 실행
-
 	// cdrom에 값 자체가 없다면
-	if (connId != null && !cdrom.filePresent()) {
+	if (!cdrom.filePresent() && connId != null) {
+		log.info("추가 connId: {}", connId)
 		this.addCdromFromVm(vmUpdated.id(), connId)
-	}else if(connId != null && cdrom.filePresent() && cdrom.file().id() != connId ){
+	}else if(cdrom.filePresent() && connId != null && cdrom.file().id() != connId ){
+		log.info("변경 connId: {}", connId)
 		this.updateCdromFromVm(vmUpdated.id(), cdrom.file().id(), connId)
 	}else if (connId.isNullOrEmpty()){
-		log.info("removeCdromFromVm {}", cdrom.id())
+		log.info("삭제 connId: {}", connId)
 		this.removeCdromFromVm(vmUpdated.id(), cdrom.id())
 	}
-	// !cdrom.file().id().equals(connId)
 
 	vmUpdated
 }.onSuccess {
@@ -512,10 +511,10 @@ fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = r
 	val nic = this@removeNicFromVm.findNicFromVm(vmId, nicId)
 		.getOrNull() ?: throw ErrorPattern.NIC_NOT_FOUND.toError()
 
-	if (vm.status() == VmStatus.UP && nic.linked())
-		throw ErrorPattern.NIC_UNLINKED_REQUIRED.apply {
-			this.additional = "NIC 연결분리 필요"
-		}.toError()
+	// if (vm.status() == VmStatus.UP && nic.linked())
+	// 	throw ErrorPattern.NIC_UNLINKED_REQUIRED.apply {
+	// 		this.additional = "NIC 연결분리 필요"
+	// 	}.toError()
 	srvNicFromVm(vmId, nic.id()).remove().send()
 	true
 }.onSuccess {

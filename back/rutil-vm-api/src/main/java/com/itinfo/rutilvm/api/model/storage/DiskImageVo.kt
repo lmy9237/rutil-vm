@@ -80,6 +80,7 @@ class DiskImageVo(
 	val contentType: DiskContentType = DiskContentType.DATA, // unknown
 	val storageType: DiskStorageType = DiskStorageType.IMAGE,
 	private val _dateCreated: LocalDateTime? = null,
+	val type: String = "",
 	val connectVm: IdentifiedVo = IdentifiedVo(),
 	val connectTemplate: IdentifiedVo = IdentifiedVo(),
 	val diskProfileVo: IdentifiedVo = IdentifiedVo(),
@@ -111,6 +112,7 @@ class DiskImageVo(
 		private var bContentType: DiskContentType = DiskContentType.DATA;fun contentType(block: () -> DiskContentType?) { bContentType = block() ?: DiskContentType.DATA }
 		private var bStorageType: DiskStorageType = DiskStorageType.IMAGE;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.IMAGE }
 		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
+		private var bType: String = "";fun type(block: () -> String?) { bType = block() ?: "" }
 		private var bConnectVm: IdentifiedVo = IdentifiedVo();fun connectVm(block: () -> IdentifiedVo?) { bConnectVm = block() ?: IdentifiedVo() }
 		private var bConnectTemplate: IdentifiedVo = IdentifiedVo();fun connectTemplate(block: () -> IdentifiedVo?) { bConnectTemplate = block() ?: IdentifiedVo() }
 		private var bDiskProfileVo: IdentifiedVo = IdentifiedVo();fun diskProfileVo(block: () -> IdentifiedVo?) { bDiskProfileVo = block() ?: IdentifiedVo() }
@@ -118,7 +120,7 @@ class DiskImageVo(
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo, )
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bType, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo, )
 	}
 	companion  object {
 		private val log by LoggerDelegate()
@@ -147,6 +149,11 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 		sparse { entity.volumeType == 2 }
 		description { entity.description }
 		dateCreated { entity.creationDate }
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { entity.storagePoolId.toString() }
+			}
+		}
 		diskProfileVo {
 			IdentifiedVo.builder {
 				id { entity.diskProfileId }
@@ -159,6 +166,7 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 				name { entity.storageName }
 			}
 		}
+		type { entity.entityType }
 		connectVm {
 			if(entity.entityType == "VM") {
 				IdentifiedVo.builder {

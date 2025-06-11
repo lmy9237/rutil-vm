@@ -73,6 +73,7 @@ const [selectedContentType, setSelectedContentType] = useState("__all__");
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
+      type: d?.type,
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
       ].filter(Boolean).join(", "),

@@ -451,7 +451,7 @@ const VmModal = ({
       interface_: disk?.interface_,
       diskImageVo: {
         id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
-        size: disk?.size * 1024 * 1024 * 1024, // GB → Bytes 변환
+        size: disk?.size * 1024 * 1024 * 1024 || 0, // GB → Bytes 변환
         alias: disk?.alias,
         description: disk?.description || "",
         storageDomainVo: { id: disk?.storageDomainVo?.id || "" },

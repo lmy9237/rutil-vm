@@ -203,7 +203,7 @@ class DiskServiceImpl(
         // val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
         //     .filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
         // return res.toDiskMenus(conn)
-		val res: List<AllDiskEntity> = rAllDisks.findAll()
+		val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
 		return res.toDiskEntities()
     }
 

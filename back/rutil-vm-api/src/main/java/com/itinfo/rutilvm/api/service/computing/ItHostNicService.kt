@@ -1,36 +1,45 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.HostNic
+import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.NetworkAttachment
 import org.springframework.stereotype.Service
 
 interface ItHostNicService {
-    /**
-     * [ItHostNicService.findAllFromHost]
-     * 호스트 네트워크 인터페이스 목록
-     *
-     * @param hostId [String] 호스트 Id
-     * @return List<[HostNicVo]> 네트워크 인터페이스 목록
-     */
-    @Throws(Error::class)
-    fun findAllFromHost(hostId: String): List<HostNicVo>
-    /**
-     * [ItHostNicService.findOneFromHost]
-     * 호스트 네트워크 인터페이스
-     *
-     * @param hostId [String] 호스트 Id
-     * @param hostNicId [String] 호스트 nic Id
-     * @return [HostNicVo]? 네트워크 인터페이스 목록
-     */
-    @Throws(Error::class)
-    fun findOneFromHost(hostId: String, hostNicId: String): HostNicVo?
+	/**
+	 * [ItHostNicService.findAllFromHost]
+	 * 호스트 네트워크 인터페이스 목록
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @return List<[HostNicVo]> 네트워크 인터페이스 목록
+	 */
+	@Throws(Error::class)
+	fun findAllFromHost(hostId: String): List<HostNicVo>
+
+	/**
+	 * [ItHostNicService.findOneFromHost]
+	 * 호스트 네트워크 인터페이스
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @param hostNicId [String] 호스트 nic Id
+	 * @return [HostNicVo]? 네트워크 인터페이스 목록
+	 */
+	@Throws(Error::class)
+	fun findOneFromHost(
+		hostId: String,
+		hostNicId: String
+	): HostNicVo?
+
 	/**
 	 * [ItHostNicService.findAllNetworkAttachmentsFromHost]
 	 * 호스트 네트워크 할당 목록
@@ -40,6 +49,7 @@ interface ItHostNicService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworkAttachmentsFromHost(hostId: String): List<NetworkAttachmentVo>
+
 	/**
 	 * [ItHostNicService.findNetworkAttachmentFromHost]
 	 * 호스트 네트워크 할당 조회
@@ -49,7 +59,10 @@ interface ItHostNicService {
 	 * @return [NetworkAttachmentVo] 네트워크
 	 */
 	@Throws(Error::class)
-	fun findNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): NetworkAttachmentVo?
+	fun findNetworkAttachmentFromHost(
+		hostId: String,
+		networkAttachmentId: String
+	): NetworkAttachmentVo?
 
 	/**
 	 * [ItHostNicService.setUpNetworksFromHost]
@@ -60,7 +73,11 @@ interface ItHostNicService {
 	 * @return [Boolean] 아직미정
 	 */
 	@Throws(Error::class)
-	fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean
+	fun setUpNetworksFromHost(
+		hostId: String,
+		hostNetworkVo: HostNetworkVo
+	): Boolean
+
 }
 
 @Service
@@ -110,7 +127,7 @@ class ItHostNicServiceImpl(
 		return res.isSuccess
 	}
 
-    companion object {
+	companion object {
         private val log by LoggerDelegate()
     }
 }

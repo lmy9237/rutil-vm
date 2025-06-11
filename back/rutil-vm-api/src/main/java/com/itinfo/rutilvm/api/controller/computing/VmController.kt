@@ -418,6 +418,28 @@ class VmController: BaseController() {
 	}
 
 	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 마이그레이션 호스트 목록",
+		notes="선택된 가상머신의 마이그레이션 가능한 호스트 목록을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{vmId}/migratableHosts")
+	@ResponseBody
+	fun migratableHostsFromVm(
+		@PathVariable vmId: String? = "",
+	): ResponseEntity<List<IdentifiedVo>> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{vmId}/migratableHosts: {}... (마이그레이션 가능한) 가상머신의 호스트 목록 조회", vmId)
+		return ResponseEntity.ok(iVmOp.findAllMigratableHostsFromVm(vmId))
+	}
+
+	@ApiOperation(
 		httpMethod="POST",
 		value="가상머신 마이그레이션",
 		notes="선택된 가상머신을 마이그레이션한다"
