@@ -42,7 +42,7 @@ const TemplateEditModal = ({
     { value: "desktop", label: "데스크톱" },
     { value: "high_performance", label: "고성능" },
     { value: "server", label: "서버" },
-  ]);
+  ]); // TODO: API 적용 (useVmTypes)
   const monitorOptions = [
     { value: 0, label: "0개" }, 
     { value: 1, label: "1개" },

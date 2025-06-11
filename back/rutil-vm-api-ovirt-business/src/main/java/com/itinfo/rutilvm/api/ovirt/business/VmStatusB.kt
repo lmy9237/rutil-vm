@@ -3,6 +3,12 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [VmStatusB]
+ * 가상머신 상태
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 enum class VmStatusB(
 	override val value: Int,
 	val code: String,

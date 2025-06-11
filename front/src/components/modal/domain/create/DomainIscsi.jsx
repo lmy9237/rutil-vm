@@ -96,11 +96,11 @@
 //               <div className="input-inline-wrap">
 //                 <LabelInput id="address" label="주소"
 //                   value={formSearchState.address} 
-//                   onChange={handleInputChange(setFormSearchState, 'address')} 
+//                   onChange={handleInputChange(setFormSearchState, "address", validationToast)} 
 //                 />
 //                 <LabelInput label="포트" id="port" 
 //                   value={formSearchState.port} 
-//                   onChange={handleInputChange(setFormSearchState, 'port')} 
+//                   onChange={handleInputChange(setFormSearchState, "port", validationToast)} 
 //                 />
 //               <div className='target-btn'>
 //                 <button className="search-button" onClick={handleSearchIscsi}>검색</button>

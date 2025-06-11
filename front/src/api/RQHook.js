@@ -3741,6 +3741,9 @@ export const useDeleteTemplate = (
     },
   });
 };
+
+
+//#region: Type
 /**
  * @name useAllBiosTypes
  * @description  BIOS 유형 (a.k.a. 칩셋옵션) 목록 조회 useQuery훅
@@ -3763,11 +3766,78 @@ export const useAllBiosTypes = (
     return _res;
   },
 })
+/**
+ * @name useAllDiskContentTypes
+ * @description 디스크 유형 목록 조회 useQuery훅
+ * 
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllBiosTypes
+ */
+export const useAllDiskContentTypes = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allDiskContentTypes'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllDiskContentTypes();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllDiskContentTypes ... res: `, _res);
+    return _res;
+  },
+})
+/**
+ * @name useAllMigrationSupports
+ * @description 마이그레이션 모드 목록 조회 useQuery훅
+ * 
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllMigrationSupports
+ */
+export const useAllMigrationSupports = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allAllMigrationSupports'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllMigrationSupports();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllMigrationSupports ... res: `, _res);
+    return _res;
+  },
+});
+/**
+ * @name useAllVmTypes
+ * @description 가상머신 유형 (a.k.a. 최적화 옵션) 목록 조회 useQuery훅
+ * 
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllVmTypes
+ */
+export const useAllVmTypes = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allVmTypes'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllVmTypes();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllVmTypes ... res: `, _res);
+    return _res;
+  },
+});
+//#endregion: Type
 
 
 /**
  * @name useAddNicFromTemplate
- * @description 템플릿 네트워크 생성 useMutation 훅
+ * @findAllMigrationSupportsdescription 템플릿 네트워크 생성 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
@@ -5715,10 +5785,10 @@ export const useAllEventsAlert = (
 export const useRemoveEvent = (
   postSuccess=()=>{}, postError
 ) => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient() 
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    return useMutation({
+  return useMutation({
     mutationFn: async (eventId) => {
       closeModal();
       const res = await ApiManager.removeEvent(eventId)
@@ -6236,18 +6306,17 @@ export const useCert = (
 })
 
 export const useAttachCert = (
-  cert,
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
     return useMutation({
-    mutationFn: async (username) => {
+    mutationFn: async (certReq) => {
       closeModal();
-      const res = await ApiManager.attachCert(cert)
+      const res = await ApiManager.attachCert(certReq)
       const _res = validate(res) ?? {}
-      Logger.debug(`RQHook > useAttachCert ... cert: `, cert);
+      Logger.debug(`RQHook > useAttachCert ... certReq: `, certReq);
       return _res;
     },
     onSuccess: (res) => {

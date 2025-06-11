@@ -15,8 +15,11 @@ import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
+import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
+import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
@@ -183,7 +186,7 @@ class VmVo (
 	val timeOffset: String = "Etc/GMT",
 	val cloudInit: Boolean = false,
 	val script: String = "",
-	val migrationMode: String = "", //VmAffinity
+	val migrationMode: MigrationSupport? = MigrationSupport.UNKNOWN, // VmAffinity
 	val migrationPolicy: String = "",
 	val migrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT,
 	val migrationCompression: InheritableBoolean = InheritableBoolean.INHERIT,
@@ -307,7 +310,7 @@ class VmVo (
 		private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
-		private var bMigrationMode: String = ""; fun migrationMode(block: () -> String?) { bMigrationMode = block() ?: "" }
+		private var bMigrationMode: MigrationSupport? = MigrationSupport.UNKNOWN; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.UNKNOWN }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
 		private var bMigrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationAutoConverge(block: () -> InheritableBoolean?) { bMigrationAutoConverge = block() ?: InheritableBoolean.INHERIT }
 		private var bMigrationCompression: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationCompression(block: () -> InheritableBoolean?) { bMigrationCompression = block() ?: InheritableBoolean.INHERIT }
@@ -467,7 +470,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
-		migrationMode { vm.placementPolicy().affinity().value() } //migrationMode
+		migrationMode { vm.findMigrationSupport() } //migrationMode
 		migrationEncrypt { vm.migration().encrypted() }
 		migrationAutoConverge { vm.migration().autoConverge() }
 		migrationCompression { vm.migration().compressed() }
@@ -798,13 +801,15 @@ fun VmVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 }
 
 fun VmVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
-	val placementBuilder = VmPlacementPolicyBuilder()
+	val placementBuilder = VmPlacementPolicyBuilder().apply {
+
+	}
 	if (!hostInCluster) {
 		placementBuilder.hosts(hostVos.map { HostBuilder()
 			.id(it.id)
 			.build() })
 	}
-	placementPolicy(placementBuilder.affinity(VmAffinity.fromValue(migrationMode)))
+	placementPolicy(placementBuilder.affinity(migrationMode?.toVmAffinity()))
 }
 
 fun VmVo.toVmHaBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {

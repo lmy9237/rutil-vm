@@ -11,8 +11,7 @@ import LabelSelectOptionsID             from "@/components/label/LabelSelectOpti
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import LabelInput                       from "@/components/label/LabelInput";
 import { 
-  handleInputChange, 
-  handleSelectIdChange
+  handleInputChange, handleSelectIdChange
 } from "@/components/label/HandleInput";
 import {
   useAddDomain,
@@ -283,26 +282,26 @@ const DomainModal = ({
             disabled={editMode}
             loading={isDatacentersLoading}
             options={datacenters}
-            onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+            onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
           />
           <LabelSelectOptions id="domain-type" label={`도메인 기능`}
             value={formState.domainType}
             disabled={editMode}
             options={domainTypes}
-            onChange={handleInputChange(setFormState, "domainType")}
+            onChange={handleInputChange(setFormState, "domainType", validationToast)}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"
             value={formState.storageType}
             disabled={editMode}
             options={storageTypes}
-            onChange={handleInputChange(setFormState, "storageType")}
+            onChange={handleInputChange(setFormState, "storageType", validationToast)}
           />
           <LabelSelectOptionsID id="host" label={Localization.kr.HOST}
             value={hostVo.id}
             disabled={editMode}
             loading={isHostsLoading}
             options={hosts}
-            onChange={handleSelectIdChange(setHostVo, hosts)}
+            onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
           />
         </div>
         <hr/>
@@ -310,17 +309,17 @@ const DomainModal = ({
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}
-            onChange={handleInputChange(setFormState, "name")}
+            onChange={handleInputChange(setFormState, "name", validationToast)}
             required={true}
             autoFocus
           />
           <LabelInput id="description" label={Localization.kr.DESCRIPTION}
             value={formState.description}
-            onChange={handleInputChange(setFormState, "description")}
+            onChange={handleInputChange(setFormState, "description", validationToast)}
           />
           <LabelInput id="comment" label={Localization.kr.COMMENT}
             value={formState.comment}
-            onChange={handleInputChange(setFormState, "comment")}
+            onChange={handleInputChange(setFormState, "comment", validationToast)}
           />
         </div>
       </div>
@@ -350,11 +349,11 @@ const DomainModal = ({
         <div className="storage-specific-content">
           <LabelInputNum id="warning" label={`${Localization.kr.DISK} 공간 부족 경고 표시 (%)`}
             value={formState.warning}
-            onChange={handleInputChange(setFormState, "warning")}
+            onChange={handleInputChange(setFormState, "warning", validationToast)}
           />
           <LabelInputNum id="spaceBlocker" label={`심각히 부족한 ${Localization.kr.DISK} 공간의 동작 차단 (GB)`}
             value={formState.spaceBlocker}
-            onChange={handleInputChange(setFormState, "spaceBlocker")}
+            onChange={handleInputChange(setFormState, "spaceBlocker", validationToast)}
           />
         </div>
       </div>

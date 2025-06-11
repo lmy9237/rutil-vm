@@ -119,8 +119,8 @@ fun RemoteConnMgmt.registerRutilVMPubkey2Host(
 	if (targetHost?.isEmpty() == true ||
 		rootPassword4Host?.isEmpty() == true)
 		throw Error("필수 값 없음")
-	val command: String = SSHHelper.registerRutilvmPubkey2Host(targetHost, rootPassword4Host, pubkey2Add)
-	return session?.executeAll(listOf(command)) ?: throw Error("UNKNOWN ERROR!")
+	val command: List<String> = SSHHelper.registerRutilvmPubkey2Host(targetHost, rootPassword4Host, pubkey2Add)
+	return session?.executeAll(command) ?: throw Error("UNKNOWN ERROR!")
 }.onSuccess {
 	log.info("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 성공: {}", it)
 }.onFailure {
@@ -129,10 +129,11 @@ fun RemoteConnMgmt.registerRutilVMPubkey2Host(
 	throw it
 }
 
-fun RemoteConnMgmt.toInsecureSession(connectionTimeout: Int = 60000): Session? {
-	log.debug("toInsecureSession... fullAddress: {}, prvKey: {}", "${id}@${host}:${port}", prvKey)
+fun RemoteConnMgmt.toInsecureSession(isRoot: Boolean = false, connectionTimeout: Int = 60000): Session? {
+	val _id = if (isRoot) "root" else id
+	log.debug("toInsecureSession... fullAddress: {}, prvKey: {}", "${_id}@${host}:${port}", prvKey)
 	val jsch = JSch()
-	val session: Session? = jsch.getSession(id, host, port)
+	val session: Session? = jsch.getSession(_id, host, port)
 	jsch.addIdentity(UUID.randomUUID().toString(), prvKey?.toByteArray(), null, "".toByteArray())
 	session?.setConfig(Properties().apply {
 		put("StrictHostKeyChecking", "no")

@@ -93,6 +93,16 @@ export const useValidationToast = () => {
   const { toast } = useToast();
 
   const validationToast = {
+    debug: (
+      value="",
+    ) => {
+      Logger.debug(`useValidationToast > validationToast.debug ... value: ${value}`);
+      toast({
+        variant: "info",
+        title: Localization.kr.TITLE_DEBUGGING,
+        description: value || ""
+      })
+    }, 
     fail: (
       reason=""
     ) => {

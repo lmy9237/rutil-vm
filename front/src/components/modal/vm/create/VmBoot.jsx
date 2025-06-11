@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import LabelSelectOptions from "../../../label/LabelSelectOptions";
 import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
 import LabelCheckbox from "../../../label/LabelCheckbox";
-import { handleInputCheck, handleSelectIdChange } from "../../../label/HandleInput";
+import { 
+  handleInputCheck,
+  handleSelectIdChange
+} from "../../../label/HandleInput";
 
 const VmBoot = ({
   isos, 

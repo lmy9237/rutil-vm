@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.configuration.PkiServiceClient
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
 import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
 import okio.IOException
 import org.springframework.beans.factory.annotation.Autowired
@@ -83,9 +84,11 @@ class CertServiceImpl(
 			// TODO: 예외처리 필요
 			return@attach false
 		}
-		val cert: CertManager? = findAll().firstOrNull { it.address == it.address }
-		return cert?.registerRutilVMPubkey2Host(
-			rootPassword, certConfig.ovirtSSHPubkey
+		val engineRemoteMgmt: RemoteConnMgmt? = certConfig.ovirtEngineSSH
+		return engineRemoteMgmt?.registerRutilVMPubkey2Host(
+			address,
+			rootPassword,
+			certConfig.ovirtSSHPubkey
 		)?.getOrDefault(false)
 	}
 

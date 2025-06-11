@@ -69,12 +69,12 @@ class CertMgmtController : BaseController() {
 	}
 
 	@ApiOperation(
-		httpMethod = "GET",
+		httpMethod = "POST",
 		value = "oVirt 인증서 연결",
 		notes = "oVirt 인증서 상태를 RutilVM에서 확인할 수 있도록 연결한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="cert", value="oVirt 인증서 연결 관련 입력정보", dataTypeClass=CertManagerReq::class, required=true, paramType="body"),
+		ApiImplicitParam(name="certReq", value="oVirt 인증서 연결 관련 입력정보", dataTypeClass=CertManagerReq::class, required=true, paramType="body"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "성공"),
@@ -84,7 +84,7 @@ class CertMgmtController : BaseController() {
 	fun attach(
 		@RequestBody(required = true) certReq: CertManagerReq
 	): ResponseEntity<Boolean?> {
-		log.debug("attach ... cert: {}", certReq)
+		log.info("attach ... cert: {}", certReq)
 		// val idInt: Int = id.toIntOrNull() ?: throw ErrorPattern.CERT_ID_NOT_FOUND.toException()
 		val res: Boolean? = cert.attach(certReq.address, certReq.rootPassword)
 		return ResponseEntity.ok(res)

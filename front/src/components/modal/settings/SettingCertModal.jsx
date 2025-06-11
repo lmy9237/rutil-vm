@@ -10,6 +10,9 @@ import {
 import {
   useAttachCert
 } from "@/api/RQHook";
+import {
+  checkEmpty
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -36,7 +39,6 @@ const SettingCertModal = ({
     mutate
   } = hook ? hook(closeModal, closeModal) : { mutate: null };
 
-  
   const initialFormState = {
     address: certsSelected[0]?.address || "",
     rootPassword: "",
@@ -65,6 +67,8 @@ const SettingCertModal = ({
 
   const validateForm = () => {
     Logger.debug(`SettingCertModal > validateForm ... `)
+    if (checkEmpty(formState.address)) return "입력 된 주소가 없습니다."
+    if (checkEmpty(formState.rootPassword)) return "입력 된 root 사용자의 비밀번호가 없습니다."
     return null;
   };
 

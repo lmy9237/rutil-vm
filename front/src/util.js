@@ -1,6 +1,11 @@
 import Localization from "./utils/Localization";
 import Logger from "./utils/Logger";
 
+export function checkEmpty(value) {
+  Logger.debug(`util > checkKoreanName ... value: ${value}`);
+  return (value == null || value === undefined || value === "")
+
+}
 /**
  * @name CheckKoreanName
  * @description 한글이 들어갔는지 확인

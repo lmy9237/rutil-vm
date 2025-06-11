@@ -1,7 +1,5 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
-import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType.undefined
-import com.itinfo.rutilvm.api.ovirt.business.Localization.Companion.BiosTypeL
 import java.util.concurrent.ConcurrentHashMap
 
 enum class BiosType(

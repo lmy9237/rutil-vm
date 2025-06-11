@@ -94,13 +94,13 @@ const HostBondingModal = ({
      
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={bondModalState.name}
-        onChange={handleInputChange(setBondModalState, "name")}
+        onChange={handleInputChange(setBondModalState, "name", validationToast)}
         disabled={editMode}
       />
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={bondModalState.optionMode}
         options={optionList}
-        onChange={handleInputChange(setBondModalState, "optionMode")}
+        onChange={handleInputChange(setBondModalState, "optionMode", validationToast)}
       />
       <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={bondModalState.userMode}

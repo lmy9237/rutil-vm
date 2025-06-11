@@ -41,13 +41,6 @@ const chipsetOptions = () => [
   { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
 ];
 
-// 최적화옵션
-const optimizeOptionList = () => [
-  { value: "server", label: "서버" },
-  { value: "high_performance", label: "고성능" },
-  { value: "desktop", label: "데스크톱" },
-];
-
 // CPU 아키텍쳐
 const cpuArcs = () => [
   { value: "UNDEFINED", label: "정의되지 않음" },

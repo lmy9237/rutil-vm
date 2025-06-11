@@ -1996,14 +1996,48 @@ const ApiManager = {
    *
    * @returns 
    * 
-   * @see
+   * @see RQHook.useAllBiosTypes
    */
   findAllBiosTypes : async () => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_BIOS_TYPES(), 
-    // defaultValues: DEFAULT_VALUES.FIND_EVENTS_FROM_TEMPLATE
   }),
-
+  /**
+   * @name ApiManager.findAllDiskContentTypes
+   * @description 디스크 유형 목록 조회
+   *
+   * @returns 
+   * 
+   * @see RQHook.useAllBiosTypes
+   */
+  findAllDiskContentTypes : async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_DISK_CONTENT_TYPES(), 
+  }),
+  /**
+   * @name ApiManager.findAllMigrationSupports
+   * @description 마이그레이션 모드 목록 조회
+   *
+   * @returns 
+   * 
+   * @see RQHook.useAllMigrationSupports
+   */
+  findAllMigrationSupports : async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_MIGRATION_SUPPORTS(),
+  }),
+  /**
+   * @name ApiManager.findAllVmTypes
+   * @description 가상머신 유형 (a.k.a. 최적화 옵션) 목록 조회
+   *
+   * @returns 
+   * 
+   * @see Endpoints.useAllmi
+   */
+  findAllVmTypes : async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_VM_TYPES(),
+  }),
   //#endregion: Type
 
 

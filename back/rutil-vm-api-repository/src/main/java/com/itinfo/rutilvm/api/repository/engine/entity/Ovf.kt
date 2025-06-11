@@ -314,8 +314,8 @@ class OvfVirtualHardwareSectionDeserializer: StdDeserializer<OvfVirtualHardwareS
 		// val items: String? = node?.has("Item")
 		// log.debug("items: {}", items)
 		val hasItems: Boolean = node?.has("Item") == true
-		val items: List<RasdItem> = Arrays.stream(objectMapper.treeToValue(itemsNode, Array<RasdItem>::class.java)).toList()
-		log.debug("hasItems: {}, items: {}", hasItems, items)
+		/*val items: List<RasdItem> = Arrays.stream(objectMapper.treeToValue(itemsNode, Array<RasdItem>::class.java)).toList()
+		log.debug("hasItems: {}, items: {}", hasItems, items)*/
 
 		return OvfVirtualHardwareSection.builder {
 			info { infoNode?.asText() }
@@ -447,8 +447,8 @@ data class OvfVirtualHardwareSection(
 	val system: OvfSystem? = null,
 
 	// @field:JacksonXmlElementWrapper(useWrapping=false)
-	@field:JacksonXmlProperty(localName="Item")
-	val items: List<RasdItem>? = listOf()
+	/*@field:JacksonXmlProperty(localName="Item")
+	val items: List<RasdItem>? = listOf()*/
 	// Add other VirtualHardwareSection properties
 ): OvfSectionBase, Serializable {
 	override fun toString(): String =
@@ -459,7 +459,7 @@ data class OvfVirtualHardwareSection(
 		private var bInfo: String? = "";fun info(block: () -> String?) { bInfo = block() ?: "" }
 		private var bSystem: OvfSystem? = null;fun system(block: () -> OvfSystem?) { bSystem = block() }
 		private var bItems: List<RasdItem>? = listOf();fun items(block: () -> List<RasdItem>?) { bItems = block() ?: listOf() }
-		fun build(): OvfVirtualHardwareSection = OvfVirtualHardwareSection(bXsiType, bInfo, bSystem, bItems)
+		fun build(): OvfVirtualHardwareSection = OvfVirtualHardwareSection(bXsiType, bInfo, bSystem, /*bItems*/)
 	}
 
 	companion object {

@@ -7,8 +7,7 @@ import LabelInput                       from "@/components/label/LabelInput";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import { 
-  handleInputChange,
-  handleSelectIdChange,
+  handleInputChange, handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
   useAllActiveDataCenters,
@@ -197,30 +196,30 @@ const DiskUploadModal = ({
               <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
                 type="number"
                 value={sizeToGB(formState.size)}
-                onChange={handleInputChange(setFormState, "size")}
+                onChange={handleInputChange(setFormState, "size", validationToast)}
                 disabled
               />
               <LabelInput label={Localization.kr.ALIAS}
                 value={formState.alias}
-                onChange={handleInputChange(setFormState, "alias")}
+                onChange={handleInputChange(setFormState, "alias", validationToast)}
               />
               <LabelInput label={Localization.kr.DESCRIPTION}
                 value={formState.description}
-                onChange={handleInputChange(setFormState, "description")}
+                onChange={handleInputChange(setFormState, "description", validationToast)}
               />
               <LabelSelectOptionsID
                 label={Localization.kr.DATA_CENTER}
                 value={dataCenterVo.id}
                 loading={isDatacentersLoading}
                 options={datacenters}
-                onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+                onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
               />
               <LabelSelectOptionsID
                 label="스토리지 도메인"
                 value={domainVo.id}
                 loading={isDomainsLoading}
                 options={domains}
-                onChange={handleSelectIdChange(setDomainVo, domains)}
+                onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
                 // onChange={(e) => {
                 //   const selected = domains.find(d => d.id === e.target.value);
                 //   if (selected) setDomainVo({ id: selected.id, name: selected.name });
@@ -248,14 +247,14 @@ const DiskUploadModal = ({
                 value={diskProfileVo.id}
                 loading={isDiskProfilesLoading}
                 options={diskProfiles}
-                onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+                onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles, validationToast)}
               />
               <LabelSelectOptionsID
                 label={Localization.kr.HOST}
                 value={hostVo.id}
                 loading={isHostsLoading}
                 options={hosts}
-                onChange={handleSelectIdChange(setHostVo, hosts)}
+                onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
               />
             </div>
           

@@ -221,25 +221,25 @@ const DiskModal = ({
           )}
           <LabelInput label={Localization.kr.ALIAS}
             value={formState.alias}
-            onChange={handleInputChange(setFormState, "alias")}
+            onChange={handleInputChange(setFormState, "alias", validationToast)}
           />
           <LabelInput label={Localization.kr.DESCRIPTION}
             value={formState.description}
-            onChange={handleInputChange(setFormState, "description")}
+            onChange={handleInputChange(setFormState, "description", validationToast)}
           />
           <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
             value={dataCenterVo.id}
             disabled={editMode}
             loading={isDatacentersLoading}
             options={datacenters}
-            onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+            onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
           />
           <LabelSelectOptionsID label={Localization.kr.DOMAIN}
             value={domainVo.id}
             disabled={editMode}
             loading={isDomainsLoading}
             options={domains}
-            onChange={handleSelectIdChange(setDomainVo, domains)}
+            onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
           />
           {domainVo && (() => {
               const domainObj = domains.find((d) => d.id === domainVo.id);
@@ -262,7 +262,7 @@ const DiskModal = ({
             value={diskProfileVo.id}
             loading={isDiskProfilesLoading}
             options={diskProfiles}
-            onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+            onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles, validationToast)}
           />
         </div>
         <div className="disk-new-img-right f-end">
@@ -270,7 +270,7 @@ const DiskModal = ({
             <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
               id="wipeAfterDelete"
               checked={formState.wipeAfterDelete}
-              onChange={handleInputCheck(setFormState, "wipeAfterDelete")}
+              onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
             />
           </div>
           {/* <div className="img-checkbox-outer">
@@ -285,7 +285,7 @@ const DiskModal = ({
             <LabelCheckbox label="증분 백업 사용"
               id="backup"
               checked={formState.backup}
-              onChange={handleInputCheck(setFormState, "backup")}
+              onChange={handleInputCheck(setFormState, "backup", validationToast)}
             />
           </div>
         </div>

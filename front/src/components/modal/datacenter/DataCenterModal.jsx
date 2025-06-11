@@ -7,7 +7,9 @@ import { Switch }                       from "@/components/ui/switch"
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
-import { handleInputChange }            from "@/components/label/HandleInput";
+import { 
+  handleInputChange
+} from "@/components/label/HandleInput";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import {
   useAddDataCenter,
@@ -140,17 +142,17 @@ const DataCenterModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus required
         value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
+        onChange={handleInputChange(setFormState, "name", validationToast)}
         // register={register} target={"name"} options={{ required: true, maxLength: 30 }}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
+        onChange={handleInputChange(setFormState, "description", validationToast)}
         // register={register} target={"description"} options={{ required: true, maxLength: 30 }}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
+        onChange={handleInputChange(setFormState, "comment", validationToast)}
         // register={register} target={"comment"} options={{ required: true, maxLength: 30 }}
       />
       <ToggleSwitchButton id="storage-type" label="스토리지 타입"
@@ -164,12 +166,12 @@ const DataCenterModal = ({
       />
       <LabelSelectOptions id="quota-mode" label="쿼터 모드"
         value={formState.quotaMode}
-        onChange={handleInputChange(setFormState, "quotaMode")}
+        onChange={handleInputChange(setFormState, "quotaMode", validationToast)}
         options={quotaModes}
       />
       <LabelSelectOptions id="version-compatible" label="호환버전"
         value={formState.version}
-        onChange={handleInputChange(setFormState, "version")}
+        onChange={handleInputChange(setFormState, "version", validationToast)}
         options={clusterLevelsTransformed}
       />
     </BaseModal>

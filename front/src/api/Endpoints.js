@@ -195,6 +195,9 @@ const ENDPOINTS = {
 
   //#region: Type
   FIND_ALL_BIOS_TYPES: () =>                                               `${ENDPOINT_API_V1}/types/bios`,
+  FIND_ALL_DISK_CONTENT_TYPES: () =>                                       `${ENDPOINT_API_V1}/types/diskContentType`,
+  FIND_ALL_MIGRATION_SUPPORTS: () =>                                       `${ENDPOINT_API_V1}/types/migrationSupport`,
+  FIND_ALL_VM_TYPES: () =>                                                 `${ENDPOINT_API_V1}/types/vmType`,
   //#endregion: Type
 
   //#region: Network

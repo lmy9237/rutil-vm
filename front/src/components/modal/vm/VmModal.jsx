@@ -6,7 +6,7 @@ import TabNavButtonGroup                from "@/components/common/TabNavButtonGr
 import BaseModal                        from "../BaseModal";
 import LabelSelectOptions               from '@/components/label/LabelSelectOptions';
 import LabelSelectOptionsID             from '@/components/label/LabelSelectOptionsID';
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
 import {
   useAddVm,
   useEditVm,
@@ -16,6 +16,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useOsSystemsFromCluster,
   useAllBiosTypes,
+  useAllVmTypes,
   useFindTemplatesFromDataCenter,
   useAllVnicsFromCluster,
   useAllNicsFromTemplate,
@@ -170,6 +171,14 @@ const VmModal = ({
     data: biosTypes = [],
     isLoading: isBiosTypesLoading
   } = useAllBiosTypes((e) => ({ 
+    ...e,
+    value: e?.id,
+    label: e?.kr
+  }))
+  const {
+    data: vmTypes = [],
+    isLoading: isVmTypesLoading
+  } = useAllVmTypes((e) => ({ 
     ...e,
     value: e?.id,
     label: e?.kr
@@ -524,18 +533,21 @@ const VmModal = ({
           <LabelSelectOptionsID label="운영 시스템"
             value={formInfoState.osType}
             options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
+            loading={isOsListLoading}
             onChange={handleInputChange(setFormInfoState, "osType") }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.biosType}
             disabled={["PPC64", "S390X"].includes(architecture)}
             options={biosTypes}
+            loading={isBiosTypesLoading}
             onChange={handleInputChange(setFormInfoState, "biosType") }
           />
           <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}
-            options={optimizeOptionList}
-            onChange={ handleInputChange(setFormInfoState, "optimizeOption") }
+            options={vmTypes}
+            loading={isVmTypesLoading}
+            onChange={handleInputChange(setFormInfoState, "optimizeOption")}
           />
         </div>
         <hr/>
@@ -612,11 +624,4 @@ const chipsetOptionList = [
   { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
   { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
   { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
-];
-
-// 최적화옵션
-const optimizeOptionList = [
-  { value: "server", label: "서버" },
-  { value: "high_performance", label: "고성능" },
-  { value: "desktop", label: "데스크톱" },
 ];

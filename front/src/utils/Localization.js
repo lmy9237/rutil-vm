@@ -147,6 +147,7 @@ export const Localization = {
     REFETCH_IN_PROGRESS: "다시 조회 중 ...",
     TITLE_API_SUCCESS: "API 요청 성공",
     TITLE_API_ERROR: "API 요청 실패",
+    TITLE_DEBUGGING: "디버깅용 값 확인",
     TITLE_SOMETHING_WENT_WRONG: "문제가 발생하였습니다",
     REQ_COMPLETE: "요청완료",
     ERR_OCCURRED: "오류발생",

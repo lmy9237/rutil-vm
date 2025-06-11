@@ -170,40 +170,40 @@ const ClusterModal = ({
         disabled={editMode && !!dataCenterVo.id}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={handleSelectIdChange(setDataCenterVo, datacenters) }
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast) }
       />
       {/* <hr /> */}
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
+        onChange={handleInputChange(setFormState, "name", validationToast)}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
+        onChange={handleInputChange(setFormState, "description", validationToast)}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
+        onChange={handleInputChange(setFormState, "comment", validationToast)}
       />
       <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
         value={networkVo.id}
         disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
-        onChange={handleSelectIdChange(setNetworkVo, networks)}
+        onChange={handleSelectIdChange(setNetworkVo, networks, validationToast)}
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}
         disabled={editMode}
-        onChange={handleInputChange(setFormState, "cpuArc")}
+        onChange={handleInputChange(setFormState, "cpuArc", validationToast)}
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
         disabled={editMode}
         options={cpuOptions}
-        onChange={handleInputChange(setFormState, "cpuType")}
+        onChange={handleInputChange(setFormState, "cpuType", validationToast)}
       />
       {!["PPC64", "S390X", "UNDEFINED"].includes(formState.cpuArc) && (
         <LabelSelectOptions
@@ -211,7 +211,7 @@ const ClusterModal = ({
           label="칩셋/펌웨어 유형"
           value={formState.biosType}
           options={biosTypeFiltered}
-          onChange={handleInputChange(setFormState, "biosType")}
+          onChange={handleInputChange(setFormState, "biosType", validationToast)}
           placeholderLabel="자동 감지"
           placeholderValue="none"
         />
@@ -219,7 +219,7 @@ const ClusterModal = ({
       <LabelSelectOptions id="error-handling" label="복구정책"
         value={formState.errorHandling}
         options={errorHandlingOptions}
-        onChange={handleInputChange(setFormState, "errorHandling")}
+        onChange={handleInputChange(setFormState, "errorHandling", validationToast)}
       />
     </BaseModal>
   );

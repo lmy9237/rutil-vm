@@ -20,6 +20,7 @@ import {
   SelectContent,
   SelectItem
 } from "@/components/ui/select";
+import { useAllDiskContentTypes } from "@/api/RQHook";
 
 const DiskDupl = ({
   disks = [], columns = [],
@@ -37,22 +38,16 @@ const DiskDupl = ({
   ), [disks]);
 
   
-  // TODO
-  const diskContentTypeOptions = [
-    { id: "0", name: "DATA" },
-    { id: "1", name: "OVFS" },
-    { id: "2", name: "MEMD" },
-    { id: "3", name: "MEMM" },
-    { id: "4", name: "ISOF" },
-    { id: "5", name: "HEVD" },
-    { id: "6", name: "HESD" },
-    { id: "7", name: "HEMD" },
-    { id: "8", name: "HECI" },
-    { id: "9", name: "SCRD" },
-    { id: "-1", name: "UNKNOWN" }
-  ];
-const [selectedContentType, setSelectedContentType] = useState("__all__");
+  const {
+    data: diskContentTypes = [],
+    isLoading: isDiskContentTypesLoading
+  } = useAllDiskContentTypes((e) => ({ 
+    ...e,
+    id: e?.id,
+    name: e?.kr
+  }))
 
+  const [selectedContentType, setSelectedContentType] = useState("__all__");
 
   // 데이터 변환: 검색이 가능하도록 `searchText` 추가
   const transformedData = [...disks].map((d) => {
@@ -118,11 +113,11 @@ const [selectedContentType, setSelectedContentType] = useState("__all__");
             position="popper"
           >
             <SelectTrigger className="disk-select-box f-btw w-full text-left">
-              <SelectValue placeholder="디스크 타입 필터" />
+              <SelectValue placeholder="디스크 유형 필터" />
             </SelectTrigger>
             <SelectContent className="z-[9999]">
-            <SelectItem className="select-item-custom" value="__all__">전체</SelectItem>
-              {diskContentTypeOptions.map(opt => (
+              <SelectItem className="select-item-custom" value="__all__">전체</SelectItem>
+              {diskContentTypes.map(opt => (
                 <SelectItem key={opt.id} value={opt.id}>
                   {opt.name}
                 </SelectItem>

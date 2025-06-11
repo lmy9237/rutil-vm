@@ -19,6 +19,16 @@ enum class DiskContentType(
 	BACKUP_SCRATCH(9, "SCRD"),
 	UNKNOWN(-1, "UNKNOWN");
 
+	val localizationKey: String
+		get() = "${DiskContentType::class.java.simpleName}.${this.name}"
+
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val en: String
+		get() = loc.findLocalizedName4DiskContentType(this, "en")
+	val kr: String
+		get() = loc.findLocalizedName4DiskContentType(this, "kr")
+
 	companion object {
 		const val LEGACY_DISK_TYPE = "2"
 		private val valueMapping: MutableMap<Int, DiskContentType> = ConcurrentHashMap<Int, DiskContentType>()
@@ -31,12 +41,12 @@ enum class DiskContentType(
 			storageMapping[LEGACY_DISK_TYPE] = DATA
 		}
 
-		val allContentTypes: List<DiskContentType> = DiskContentType.values().filterNot {
+		val allDiskContentTypes: List<DiskContentType> = DiskContentType.values().filterNot {
 			it == UNKNOWN
 		}
 
 		@JvmStatic fun forValue(value: Int?=-1): DiskContentType = valueMapping[value] ?: UNKNOWN
-		@JvmStatic fun forStorageValue(value: String="UNKNOWN"): DiskContentType = storageMapping[value] ?: UNKNOWN
+		@JvmStatic fun forStorageValue(value: String? = "UNKNOWN"): DiskContentType = storageMapping[value?.uppercase()] ?: UNKNOWN
 	}
 }
 

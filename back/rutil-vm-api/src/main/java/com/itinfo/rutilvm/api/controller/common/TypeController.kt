@@ -1,10 +1,8 @@
 package com.itinfo.rutilvm.api.controller.common
 
 import com.itinfo.rutilvm.api.controller.BaseController
-import com.itinfo.rutilvm.api.model.common.JobVo
-import com.itinfo.rutilvm.api.service.common.BiosTypeVo
+import com.itinfo.rutilvm.api.service.common.TypeVo
 import com.itinfo.rutilvm.api.service.common.ItTypeService
-import com.itinfo.rutilvm.api.service.common.ItWsNotifyService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -36,11 +34,57 @@ class TypeController: BaseController(){
 	@GetMapping("bios")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun allBiosTypes(): ResponseEntity<List<BiosTypeVo>> {
+	fun allBiosTypes(): ResponseEntity<List<TypeVo>> {
 		log.info("/type/bios ... BIOS 유형 (a.k.a. 칩셋옵션) 목록")
 		return ResponseEntity.ok(iType.findAllBiosTypes())
 	}
+	@ApiOperation(
+		httpMethod="GET",
+		value="디스크 유형 목록 조회",
+		notes="디스크 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("diskContentType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allDiskContentTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/type/diskContentType ... 디스크 유형 목록")
+		return ResponseEntity.ok(iType.findAllDiskContentTypes())
+	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="마이그레이션 모드 목록 조회",
+		notes="마이그레이션 모드 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("migrationSupport")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allMigrationSupports(): ResponseEntity<List<TypeVo>> {
+		log.info("/type/migrationSupport ... 마이그레이션 모드 목록")
+		return ResponseEntity.ok(iType.findAllMigrationSupports())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 유형 (a.k.a. 최적화 옵션) 목록 조회",
+		notes="가상머신 유형 (a.k.a. 최적화 옵션) 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("vmType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allVmTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/type/vmType ... 가상머신 유형 (a.k.a. 최적화 옵션) 목록")
+		return ResponseEntity.ok(iType.findAllVmTypes())
+	}
 	companion object {
 		private val log by LoggerDelegate()
 	}

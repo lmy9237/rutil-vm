@@ -39,11 +39,13 @@ class SSHHelper {
 			targetHost: String? = "",
 			rootPassword4Host: String? = "",
 			pubkey2Add: String? = "",
-		): String {
+		): List<String> {
+			// val pubKey: String = Files.rea
 			// val _pubkey = if (pubkey2Add.isNullOrEmpty()) "cat $RUTILVM_SSH_APP_PUBKEY" else "echo $pubkey2Add"
-return """
-cat $RUTILVM_SSH_APP_PUBKEY | sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
+			return listOf("""
+sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "echo \"$(cat $RUTILVM_SSH_APP_PUBKEY)\" su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
 """.trimIndent()
+)
 		}
 // cat $RUTILVM_SSH_APP_PUBKEY | sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
 	}
@@ -95,7 +97,7 @@ fun Session.executeAll(commands: List<String>): Result<Boolean> = runCatching {
 		return@runCatching false
 	}
 	// 종료
-	channel?.disconnect()
+	channel.disconnect()
 	this@executeAll.disconnect()
 	true
 }.onSuccess {

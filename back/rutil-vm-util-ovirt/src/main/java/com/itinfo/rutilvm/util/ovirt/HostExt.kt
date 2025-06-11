@@ -93,11 +93,11 @@ fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 
-	if(this.findAllVmsFromHost(hostId).getOrDefault(emptyList())
-			.any { it.status() == VmStatus.UP }){
+	if (this.findAllVmsFromHost(hostId).getOrDefault(emptyList()).any { it.status() == VmStatus.UP }){
 		log.error("가상머신이 돌아가고 있는게 있음")
 		throw ErrorPattern.HOST_HAS_RUNNING_VMS.toError()
 	}
+
 	if (host.status() != HostStatus.MAINTENANCE) {
 		log.warn("{} 삭제 실패... {} 가 유지관리 상태가 아님 ", Term.HOST.desc, hostId)
 		throw ErrorPattern.HOST_NOT_MAINTENANCE.toError()
