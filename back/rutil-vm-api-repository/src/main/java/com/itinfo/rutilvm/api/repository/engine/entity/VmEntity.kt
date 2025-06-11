@@ -1,8 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.common.formatEnhanced
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.common.ovirtDf
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
 import java.util.UUID
@@ -10,7 +9,6 @@ import java.io.Serializable
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -347,7 +345,8 @@ class VmEntity(
 	val spicePort: Int? = null,
 	val spiceTlsPort: Int? = null,
 	val ssoMethod: String = "",
-	val status: Int? = null,
+	@Column(name="status", nullable=true)
+	private val _status: Int? = -1,
 	val storagePoolId: UUID? = null,
 	val storagePoolName: String = "",
 	val templateVersionNumber: Int? = null,
@@ -366,7 +365,7 @@ class VmEntity(
 	val virtioScsiMultiQueues: Int? = null,
 	val vmFqdn: String = "",
 	@Id
-	@Column(name = "vm_guid", unique = true, nullable = true)
+	@Column(name="vm_guid", unique = true, nullable = true)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val vmGuid: UUID? = null,
 	val vmHost: String = "",
@@ -393,6 +392,44 @@ class VmEntity(
 	)
 	val snapshots: Set<SnapshotEntity> = emptySet()
 ): Serializable {
+	val status: VmStatusB?
+		get() = VmStatusB.forValue(_status)
+	/*
+	val isVmNotRunning: Boolean *//* '실행 중'이 아닌 상태 *//*
+		get() = _status?.notRunning ?: false
+	val isVmQualified2Migrate: Boolean *//* 마이그레이션이 가능한 상태 *//*
+		get() = _status?.qualified2Migrate ?: false
+	val isVmQualified4SnapshotMerge: Boolean *//* 스냅샷 머지 가능한 상태 *//*
+		get() = _status?.qualified4SnapshotMerge ?: false
+	val isVmQualified4LiveSnapshotMerge: Boolean *//* 라이브 스냅샷 머지 가능한 상태 *//*
+		get() = _status?.qualified4LiveSnapshotMerge ?: false
+	val isVmQualified4VmBackup: Boolean *//* 가상머신 백업 가능한 상태 *//*
+		get() = _status?.qualified4VmBackup ?: false
+	val isVmQualified4ConsoleConnect: Boolean *//* 콘솔로 가상머신 접근 가능한 상태 *//*
+		get() = _status?.qualified4ConsoleConnect ?: false
+	val isVmRunningOrPaused: Boolean *//* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*//*
+		get() = _status?.runningOrPaused ?: false
+	val isVmRunning: Boolean *//* '실행 중' 인 상태 *//*
+		get() = _status?.running ?: false
+	val isVmUpOrPaused: Boolean
+		get() = _status?.upOrPaused ?: false
+	val isVmStarting: Boolean
+		get() = _status?.starting ?: false
+	val isVmStartingOrUp: Boolean
+		get() = _status?.startingOrUp ?: false
+	val isVmHibernating: Boolean *//* '수면 중' 인 상태 *//*
+		get() = _status?.hibernating ?: false
+	val isVmDownOrSuspended: Boolean
+		get() = _status?.downOrSuspended ?: false
+	val isVmQualified4QosChange: Boolean
+		get() = _status?.qualified4QosChange ?: false
+	val isVmGuestCpuRunning: Boolean
+		get() = _status?.guestCpuRunning ?: false
+	val isVmPoweringUpOrMigrating: Boolean
+		get() = _status?.poweringUpOrMigrating ?: false
+	val isVmMigrating: Boolean
+		get() = _status?.migrating ?: false
+	*/
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -540,7 +577,7 @@ class VmEntity(
 		private var bSpicePort: Int = -1; fun spicePort(block: () -> Int?) { bSpicePort = block() ?: -1 }
 		private var bSpiceTlsPort: Int = -1; fun spiceTlsPort(block: () -> Int?) { bSpiceTlsPort = block() ?: -1 }
 		private var bSsoMethod: String = ""; fun ssoMethod(block: () -> String?) { bSsoMethod = block() ?: "" }
-		private var bStatus: Int = -1; fun status(block: () -> Int?) { bStatus = block() ?: -1 }
+		private var bStatus: VmStatusB? = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
 		private var bStoragePoolId: UUID? = null; fun storagePoolId(block: () -> UUID?) { bStoragePoolId = block() }
 		private var bStoragePoolName: String = ""; fun storagePoolName(block: () -> String?) { bStoragePoolName = block() ?: "" }
 		private var bTemplateVersionNumber: Int = -1; fun templateVersionNumber(block: () -> Int?) { bTemplateVersionNumber = block() ?: -1 }
@@ -574,7 +611,7 @@ class VmEntity(
 		private var bVncPort: Int = -1; fun vncPort(block: () -> Int?) { bVncPort = block() ?: -1 }
 		private var bVolatileRun: Boolean? = null; fun volatileRun(block: () -> Boolean?) { bVolatileRun = block() }
 		private var bSnapshots: Set<SnapshotEntity> = emptySet(); fun snapshots(block: () -> Set<SnapshotEntity>?) { bSnapshots = block() ?: emptySet() }
-		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIconId, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, bOs, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIconId, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots)
+		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIconId, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, bOs, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIconId, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus?.value, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots)
 	}
 
 	companion object {

@@ -13,7 +13,6 @@ import {
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
-import "./Vm.css";
 import VmGeneral from "./VmGeneral";
 import VmNics from "./VmNics";
 import VmSnapshots from "./VmSnapshots";
@@ -21,6 +20,7 @@ import VmApplications from "./VmApplications";
 import VmHostDevices from "./VmHostDevices";
 import VmEvents from "./VmEvents";
 import VmDisks from "./VmDisks";
+import "./Vm.css";
 
 /**
  * @name VmInfo
@@ -56,6 +56,8 @@ const VmInfo = () => {
   const isPause = vm?.status === "SUSPENDED";
   const isMaintenance = vm?.status === "MAINTENANCE";
   const allOkay2PowerDown = vm?.status === "UP" || vm?.status === "POWERING_DOWN" || vm?.status === "SUSPENDED";
+  const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
+  const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
 
   const [activeTab, setActiveTab] = useState("general")
 
@@ -117,9 +119,9 @@ const VmInfo = () => {
     { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET,       disabled: !isUp },
     { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
-    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isUp },
+    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isVmQualified4ConsoleConnect },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) },
-    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isUp },
+    { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isVmQualified2Migrate },
   ]), [vm, vmId]);
 
   const popupItems = [

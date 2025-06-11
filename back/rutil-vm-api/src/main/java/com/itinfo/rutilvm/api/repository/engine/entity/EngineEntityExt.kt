@@ -7,6 +7,8 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.common.toLocalDateTime
@@ -73,7 +75,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		name { this@toUnregisteredVm.ovf?.virtualSystem?.name }
 		description { this@toUnregisteredVm.ovf?.virtualSystem?.description }
 		comment { this@toUnregisteredVm.ovf?.virtualSystem?.comment }
-		status { vm?.status()?.value() }
+		status { vm?.findStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType {
 			vm?.bios()?.type()?.toString()
@@ -190,9 +192,7 @@ fun VmEntity.toVmVoFromVmEntity(): VmVo {
 		creationTime { entity.creationDate }
 		stopTime { entity.lastStopTime }
 		timeElapsed { entity.elapsedTime?.toLong() }
-		status {
-			com.itinfo.rutilvm.api.ovirt.business.VmStatus.forValue(entity.status).description
-		}
+		status { entity.status }
 		description { entity.description }
 		nextRun { entity.nextRunConfigExists }
 		hostedEngineVm { entity.origin == 6 }

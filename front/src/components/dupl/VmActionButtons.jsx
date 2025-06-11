@@ -52,10 +52,11 @@ const VmActionButtons = ({
   const isMaintenance = selected1st?.status === "MAINTENANCE";
   const isPause = selected1st?.status === "SUSPENDED";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
+  const isVmQualified2Migrate = selected1st?.qualified2Migrate ?? false;
+  const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? false;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
-  const isConsoleDisabled = !allUp;
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "SUSPENDED");
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm.status === "DOWN" || vm.status === "SUSPENDED"
@@ -63,9 +64,10 @@ const VmActionButtons = ({
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm =>
     ["UP", "POWERING_DOWN", "POWERING_UP", "SUSPENDED"].includes(vm?.status)
   );
-  const console = vmsSelected.length > 0 && vmsSelected.some(vm =>
-    ["UP", "POWERING_DOWN", "POWERING_UP","WAIT_FOR_LAUNCH"].includes(vm?.status)
-  );
+  const ollOkay2Migrate = vmsSelected.every(vm => 
+    vm.qualified2Migrate
+  )
+  
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
     Logger.debug(`VmActionButtons > downloadRemoteViewerConnectionFile ... `)
@@ -102,7 +104,7 @@ const VmActionButtons = ({
       return;
     }
     setActiveModal("vm:start");
-  }, label: Localization.kr.START,                                   disabled: !(isDown || isPause || isMaintenance) },
+    }, label: Localization.kr.START, disabled: !(isDown || isPause || isMaintenance) },
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
@@ -110,8 +112,8 @@ const VmActionButtons = ({
     { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"),label: Localization.kr.POWER_OFF,disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
     // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
     // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !console, subactions: consoleActions},
-    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !allUp },
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !isVmQualified4ConsoleConnect, subactions: consoleActions},
+    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !ollOkay2Migrate },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));
@@ -140,8 +142,8 @@ const VmActionButtons = ({
             <ActionButton
               iconDef={
                 consoleDropdownActive 
-                  ? rvi16ChevronUp(isConsoleDisabled ? CONSTANT.color.down : CONSTANT.color.black)
-                  : rvi16ChevronDown(isConsoleDisabled ? CONSTANT.color.down : CONSTANT.color.black)
+                  ? rvi16ChevronUp(isVmQualified4ConsoleConnect ? CONSTANT.color.down : CONSTANT.color.black)
+                  : rvi16ChevronDown(isVmQualified4ConsoleConnect ? CONSTANT.color.down : CONSTANT.color.black)
               }
               label={Localization.kr.CONSOLE}
               disabled={!allUp}

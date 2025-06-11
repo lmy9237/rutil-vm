@@ -201,7 +201,6 @@ fun Application.fromApplicationToIdentifiedVo(): IdentifiedVo = IdentifiedVo.bui
 fun List<Application>.fromApplicationsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromApplicationsToIdentifiedVos.map { it.fromApplicationToIdentifiedVo() }
 
-
 fun Vm.fromVmCdromToIdentifiedVo(diskId: String): IdentifiedVo? {
 	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
 	return if (diskId == file) fromVmToIdentifiedVo() else null

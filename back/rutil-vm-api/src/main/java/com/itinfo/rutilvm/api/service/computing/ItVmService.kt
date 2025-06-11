@@ -243,7 +243,8 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAllApplicationsFromVm(vmId: String): List<IdentifiedVo> {
 		log.info("findAllApplicationsFromVm ... vmId: {}", vmId)
-		val res: List<Application> = conn.findAllApplicationsFromVm(vmId).getOrDefault(emptyList())
+		val res: List<Application> = conn.findAllApplicationsFromVm(vmId)
+			.getOrDefault(emptyList())
 		return res.fromApplicationsToIdentifiedVos()
 	}
 

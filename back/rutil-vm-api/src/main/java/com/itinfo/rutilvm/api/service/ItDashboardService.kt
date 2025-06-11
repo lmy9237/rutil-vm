@@ -2,6 +2,8 @@ package com.itinfo.rutilvm.api.service
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
+import com.itinfo.rutilvm.api.model.computing.toCountByStatus
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.api.service.computing.ItVmService
@@ -44,10 +46,10 @@ interface ItDashboardService {
 	 * [ItDashboardService.getVms]
 	 * 대시보드 - 가상머신 개수
 	 *
-	 * @param type [String] 데이터센터 상태 (up, down, all)
+	 * @param code [String] 가상머신 상태 (up, down, all)
 	 * @return [Int] 가상머신 개수
 	 */
-	fun getVms(type: String = ""): Int
+	fun getVms(code: String = ""): Int
 
 	/**
 	 * [ItDashboardService.getStorages]
@@ -102,15 +104,9 @@ class DashboardServiceImpl(
 		}
 	}
 
-	override fun getVms(type: String): Int {
-		log.info("getVms ... type: $type")
-		return vm.findAll().count {
-			when (type) {
-				"up" -> it.status == "UP"
-				"down" -> it.status != "UP"
-				else -> true
-			}
-		}
+	override fun getVms(code: String): Int {
+		log.info("getVms ... type: $code")
+		return vm.findAll().toCountByStatus(code)
 	}
 
 	override fun getStorages(): Int {
