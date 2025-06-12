@@ -39,6 +39,8 @@ class DataCenterVo (
 	val description: String = "",
 	val storageType: Boolean = false,
 	val version: String = "",
+	val versionMajor: Int = 0,
+	val versionMinor: Int = 0,
 	val quotaMode: QuotaModeType = QuotaModeType.DISABLED,
 	val status: DataCenterStatus = DataCenterStatus.NOT_OPERATIONAL,
 	val domainStatus: StorageDomainStatus = StorageDomainStatus.UNKNOWN,
@@ -58,6 +60,8 @@ class DataCenterVo (
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bStorageType: Boolean = false;fun storageType(block: () -> Boolean?) { bStorageType = block() ?: false }
 		private var bVersion: String = "";fun version(block: () -> String?) { bVersion = block() ?: "" }
+		private var bVersionMajor: Int = 0;fun versionMajor(block: () -> Int?) { bVersionMajor = block() ?: 0 }
+		private var bVersionMinor: Int = 0;fun versionMinor(block: () -> Int?) { bVersionMinor = block() ?: 0 }
 		private var bQuotaMode: QuotaModeType = QuotaModeType.DISABLED;fun quotaMode(block: () -> QuotaModeType?) { bQuotaMode = block() ?: QuotaModeType.DISABLED }
 		private var bStatus: DataCenterStatus = DataCenterStatus.NOT_OPERATIONAL;fun status(block: () -> DataCenterStatus?) { bStatus = block() ?: DataCenterStatus.NOT_OPERATIONAL }
 		private var bDomainStatus: StorageDomainStatus = StorageDomainStatus.UNKNOWN;fun domainStatus(block: () -> StorageDomainStatus?) { bDomainStatus = block() ?: StorageDomainStatus.UNKNOWN }
@@ -67,11 +71,11 @@ class DataCenterVo (
 		private var bNetworkVos: List<IdentifiedVo> = listOf();fun networkVos(block: () -> List<IdentifiedVo>?) { bNetworkVos = block() ?: listOf() }
 		private var bStorageDomainVos: List<StorageDomainVo> = listOf();fun storageDomainVos(block: () -> List<StorageDomainVo>?) { bStorageDomainVos = block() ?: listOf() }
 
-		fun build(): DataCenterVo = DataCenterVo(bId, bName, bComment, bDescription, bStorageType, bVersion, bQuotaMode, bStatus, bDomainStatus, bClusterCnt, bHostCnt, bClusterVos, bNetworkVos, bStorageDomainVos, )
+		fun build(): DataCenterVo = DataCenterVo(bId, bName, bComment, bDescription, bStorageType, bVersion, bVersionMajor, bVersionMinor, bQuotaMode, bStatus, bDomainStatus, bClusterCnt, bHostCnt, bClusterVos, bNetworkVos, bStorageDomainVos, )
 	}
 
 	companion object {
-		inline fun builder(block: DataCenterVo.Builder.() -> Unit): DataCenterVo = DataCenterVo.Builder().apply(block).build()
+		inline fun builder(block: DataCenterVo.Builder.() -> Unit): DataCenterVo = Builder().apply(block).build()
 	}
 }
 
@@ -125,6 +129,8 @@ fun DataCenter.toDataCenterVoInfo(): DataCenterVo {
 		status { dc.status() }
 		quotaMode { dc.quotaMode() }
 		version { dc.version().major().toString() + "." + dc.version().minor() }
+		versionMajor { dc.version().major().toInt() }
+		versionMinor { dc.version().minor().toInt() }
 	}
 }
 
@@ -196,7 +202,11 @@ fun DataCenterVo.toDataCenterBuilder(): DataCenterBuilder = DataCenterBuilder()
 	.name(name)
 	.description(description)
 	.local(storageType)
-	.version(VersionBuilder().major(4).minor(7)) // 버전 고정
+	.version(
+		VersionBuilder()
+			.major(versionMajor)
+			.minor(versionMinor)
+	)
 	.quotaMode(quotaMode)
 	.comment(comment)
 

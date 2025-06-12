@@ -135,6 +135,7 @@ fun Disk.toDiskIdName(): DiskImageVo = DiskImageVo.builder {
 fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 	this@toDiskIdNames.map { it.toDiskIdName() }
 
+/*
 
 fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 	val entity = this@toDiskEntity
@@ -187,6 +188,7 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 }
 fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
 	this@toDiskEntities.map { it.toDiskEntity() }
+*/
 
 
 /**

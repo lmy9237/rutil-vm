@@ -1,9 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import useUIState                       from "@/hooks/useUIState";
-import { Switch }                       from "@/components/ui/switch"
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
@@ -67,9 +64,18 @@ const DataCenterModal = ({
   const { 
     data: clusterLevels=[],
   } = useAllClusterLevels("id", (e) => e);
-  const clusterLevelsTransformed = [...clusterLevels].map((e) => (
-    { value: e, label: e, }
-  ))
+  // 지정된 데이터센터의 버전보다 높은것만 출력되도록
+
+  const initialVersionRef = useRef(null);
+  const minVersion = editMode && initialVersionRef.current ? initialVersionRef.current : null;
+  const filteredClusterLevels = minVersion
+    ? [...clusterLevels].filter(ver => versionCompare(ver, minVersion) >= 0)
+    : [...clusterLevels];
+
+  const clusterLevelsTransformed = filteredClusterLevels.map((e) => ({
+    value: e,
+    label: e,
+  }));
 
   /*
   const { 
@@ -90,6 +96,9 @@ const DataCenterModal = ({
   */
   // 모달 열릴때 초기화, 편집 정보넣기
   useEffect(() => {
+    if (editMode && datacenter?.version && !initialVersionRef.current) {
+      initialVersionRef.current = datacenter.version; // 최초 진입 시 한 번만 세팅
+    }
     if (!isOpen) {
       return setFormState(initialFormState);
     }
@@ -125,8 +134,13 @@ const DataCenterModal = ({
       validationToast.fail(error);
       return;
     }
+    const [versionMajor, versionMinor] = formState.version.split(".");
 
-    const dataToSubmit = { ...formState };
+    const dataToSubmit = { 
+      ...formState,
+      versionMajor: versionMajor,
+      versionMinor: versionMinor
+     };
     Logger.debug(`DataCenterModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit)
     editMode
       ? editDataCenter({ dataCenterId: formState.id, dataCenterData: dataToSubmit })
@@ -185,3 +199,11 @@ const quotaModes = [
   { value: "AUDIT", label: "감사" },
   { value: "ENABLED", label: `${Localization.kr.ACTIVATE}` },
 ];
+
+// 버전 비교 함수
+function versionCompare(a, b) {
+  const [aMaj, aMin] = a.split('.').map(Number);
+  const [bMaj, bMin] = b.split('.').map(Number);
+  if (aMaj !== bMaj) return aMaj - bMaj;
+  return aMin - bMin;
+}

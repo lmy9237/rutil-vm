@@ -26,7 +26,7 @@ import Logger                           from "@/utils/Logger";
 // 일반 정보
 const initialFormState = {
   id: "",
-  domainType: "data", // 기본값 설정
+  domainType: "DATA", // 기본값 설정
   storageType: "NFS", // 기본값 설정
   name: "",
   comment: "",
@@ -283,15 +283,15 @@ export default DomainImportModal;
 
 
 const domainTypes = [
-  { value: "data", label: "데이터" },
-  { value: "iso", label: "ISO" },
-  { value: "export", label: Localization.kr.EXPORT },
+  { value: "DATA", label: "데이터" },
+  { value: "ISO", label: "ISO" },
+  { value: "EXPORT", label: Localization.kr.EXPORT },
 ];
 
 const storageTypeOptions = (dType) => {
   switch (dType) {
-    case "iso":
-    case "export":
+    case "ISO":
+    case "EXPORT":
       return [{ value: "NFS", label: "NFS" }];
     default: // data
       return [

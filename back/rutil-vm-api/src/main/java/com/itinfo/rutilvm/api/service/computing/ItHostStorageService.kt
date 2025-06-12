@@ -130,7 +130,7 @@ class ItHostStorageServiceImpl(
 					name { storageDomainVo.name }
 					description { storageDomainVo.description }
 					comment { storageDomainVo.comment }
-					type { storageDomainVo.type }
+					storageType { storageDomainVo.storageType }
 					master { storageDomainVo.master }
 					storageFormat { storageDomainVo.storageFormat }
 					size { storageDomainVo.size }

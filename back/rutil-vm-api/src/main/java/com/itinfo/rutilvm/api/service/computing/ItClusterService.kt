@@ -4,8 +4,12 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
@@ -173,6 +177,7 @@ interface ItClusterService {
 class ClusterServiceImpl(
 ) : BaseService(), ItClusterService {
 	@Autowired private lateinit var itGraphService: ItGraphService
+	@Autowired private lateinit var rVms: VmRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<ClusterVo> {
@@ -235,8 +240,10 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromCluster(clusterId: String): List<VmVo> {
 		log.info("findAllVmsFromCluster ... clusterId: {}", clusterId)
-		val res: List<Vm> = conn.findAllVmsFromCluster(clusterId, follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
-		return res.toVmMenus(conn)
+		// val res: List<Vm> = conn.findAllVmsFromCluster(clusterId, follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
+		// return res.toVmMenus(conn)
+		val res: List<VmEntity> = rVms.findAllByClusterIdWithSnapshotsOrderByVmNameAsc(clusterId.toUUID())
+		return res.toVmVosFromVmEntities()
 	}
 
 

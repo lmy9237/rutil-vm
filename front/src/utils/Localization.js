@@ -236,7 +236,7 @@ export const Localization = {
       else if (_status === "INSTALL_FAILED")    return "설치 실패";
       else if (_status === "DOWN")          return "정지";
       else if (_status === "INACTIVE")      return "비활성화";
-      else if (_status === "UNINITIALIZED") return "초기화되지 않음";
+      else if (_status === "UNINITIALIZED") return "초기화되지 않음/연결해제";
       else if (_status === "NEXT_RUN")      return "다음 실행 시 변경내용 적용";
       else if (_status === "REBOOT")        return "재부팅 중";
       else if (_status === "REBOOT_IN_PROGRESS")  return "재부팅/재설정 중";
@@ -262,6 +262,18 @@ export const Localization = {
       else if (_status === "FINISHED")  return "완료";
       else if (_status === "UNKNOWN")  return "알 수 없음";
       else if (_status === "IN_PREVIEW")  return "미리보기";
+      return _status;
+    },
+
+    renderDomainStatus(status = "") {
+      const _status = status?.toUpperCase() ?? "";
+      if (_status === "UP")  return "활성화";
+      else if (_status === "UNINITIALIZED") return "연결 해제";
+      else if (_status === "MAINTENANCE") return "유지 보수";
+      else if (_status === "NOT_OPERATIONAL") return "비 가동 중";
+      else if (_status === "NON_RESPONSIVE") return "응답하지 않음";
+      else if (_status === "CONTEND") return "?";
+      
       return _status;
     },
 

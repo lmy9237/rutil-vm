@@ -3,14 +3,22 @@ package com.itinfo.rutilvm.api.model.storage
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromDisksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatus
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus.UNINITIALIZED
+import com.itinfo.rutilvm.api.ovirt.business.StorageType
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
-import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.DataCenter
+import org.ovirt.engine.sdk4.types.Host
+import org.ovirt.engine.sdk4.types.StorageDomain
+import org.ovirt.engine.sdk4.types.StorageFormat
+import org.ovirt.engine.sdk4.types.StorageType.NFS
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
@@ -26,7 +34,7 @@ private val log = LoggerFactory.getLogger(StorageDomainVo::class.java)
  * @property description [String]
  * @property comment [String]
  * @property status [StorageDomainStatus] 상태
- * @property type [String] 도메인 유형  /*StorageDomainType.IMAGE*/
+ * @property storageDomainType [StorageDomainType] 도메인 유형  /*StorageDomainType.IMAGE*/
  * @property master [Boolean] 마스터 여부
  // * @property hostedEngine [Boolean] 호스트 엔진 가상머신 데이터 포함  master가 이거 같음
  * @property storageFormat [StorageFormat] 포맷
@@ -49,10 +57,12 @@ class StorageDomainVo(
 	val description: String = "",
 	val comment: String = "",
 	val status: StorageDomainStatus = StorageDomainStatus.UNATTACHED,
-	val type: String = "",
+	// val storagePoolStatus: StoragePoolStatus = UNINITIALIZED,
+	val storageType: StorageType = StorageType.UNKNOWN,
+	val storageDomainType: StorageDomainType = StorageDomainType.UNKNOWN,
+	val storageFormat: StorageFormat = StorageFormat.V5,
 	val master: Boolean = false,
 	val hostedEngine: Boolean = false,
-	val storageFormat: StorageFormat = StorageFormat.V5,
 	val size: BigInteger = BigInteger.ZERO,
 	val availableSize: BigInteger = BigInteger.ZERO,
 	val usedSize: BigInteger = BigInteger.ZERO,
@@ -74,10 +84,12 @@ class StorageDomainVo(
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = "";fun comment(block: () -> String?) { bComment = block() ?: "" }
 		private var bStatus: StorageDomainStatus = StorageDomainStatus.UNATTACHED;fun status(block: () -> StorageDomainStatus?) { bStatus = block() ?: StorageDomainStatus.UNATTACHED }
-		private var bType: String = "";fun type(block: () -> String?) { bType = block() ?: "" }
+		// private var bStoragePoolStatus: StoragePoolStatus = StoragePoolStatus.UNINITIALIZED;fun storagePoolStatus(block: () -> StoragePoolStatus?) { bStoragePoolStatus = block() ?: StoragePoolStatus.UNINITIALIZED }
+		private var bStorageType: StorageType = StorageType.UNKNOWN;fun storageType(block: () -> StorageType?) { bStorageType = block() ?: StorageType.UNKNOWN }
+		private var bStorageDomainType: StorageDomainType = StorageDomainType.UNKNOWN;fun storageDomainType(block: () -> StorageDomainType?) { bStorageDomainType = block() ?: StorageDomainType.UNKNOWN }
+		private var bStorageFormat: StorageFormat = StorageFormat.V5;fun storageFormat(block: () -> StorageFormat?) { bStorageFormat = block() ?: StorageFormat.V5 }
 		private var bMaster: Boolean = false;fun master(block: () -> Boolean?) { bMaster = block() ?: false }
 		private var bHostedEngine: Boolean = false;fun hostedEngine(block: () -> Boolean?) { bHostedEngine = block() ?: false }
-		private var bStorageFormat: StorageFormat = StorageFormat.V5;fun storageFormat(block: () -> StorageFormat?) { bStorageFormat = block() ?: StorageFormat.V5 }
 		private var bSize: BigInteger = BigInteger.ZERO;fun size(block: () -> BigInteger?) { bSize = block() ?: BigInteger.ZERO }
 		private var bAvailableSize: BigInteger = BigInteger.ZERO;fun availableSize(block: () -> BigInteger?) { bAvailableSize = block() ?: BigInteger.ZERO }
 		private var bUsedSize: BigInteger = BigInteger.ZERO;fun usedSize(block: () -> BigInteger?) { bUsedSize = block() ?: BigInteger.ZERO }
@@ -91,7 +103,7 @@ class StorageDomainVo(
 		private var bDiskImageVos: List<IdentifiedVo> = listOf();fun diskImageVos(block: () -> List<IdentifiedVo>?) { bDiskImageVos = block() ?: listOf() }
 		private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, bType, bMaster, bHostedEngine, bStorageFormat, bSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bWarning, bSpaceBlocker, bStorageVo, bDataCenterVo, bHostVo, bDiskImageVos, bDiskProfileVos, )
+		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, /*bStoragePoolStatus,*/ bStorageType, bStorageDomainType, bStorageFormat, bMaster, bHostedEngine, bSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bWarning, bSpaceBlocker, bStorageVo, bDataCenterVo, bHostVo, bDiskImageVos, bDiskProfileVos, )
 	}
 
 	companion object {
@@ -111,16 +123,19 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainMenu
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
 	val hostedVm = findHostedVmFromStorageDomain(conn)
-	val storageDomainStatus = dataCenter?.let {
-		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()?.status()
+	val dcStatus = dataCenter?.let {
+		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()
 	}
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
-		status { storageDomainStatus }
-		type { storageDomain.type().value() }
+		status { StorageDomainStatus.forStatusValue(dcStatus?.status()?.value()) }
+		// if (storageDomainStatus != null) {
+		// 	storagePoolStatus { StoragePoolStatus.forStatusValue(storageDomainStatus.status().value()) }
+		// }
+		storageType { StorageType.forDescription(storageDomain.type().value()) }
 		storageVo { storageDomain.storage().toStorageVo() }
 		master { storageDomain.masterPresent() && storageDomain.master() }
 		hostedEngine { hostedVm }
@@ -140,17 +155,19 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 	val storageDomain = this@toStorageDomainInfoVo
 	val dataCenter: DataCenter? = resolveDataCenter(conn)
 	val host: Host? = findHostFromStorageDomain(conn)
-	val storageDomainStatus = dataCenter?.let {
-		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()?.status()
+	val dcStatus = dataCenter?.let {
+		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()
 	}
+
+	log.info("cStatus:{}, doaminType: {}/{}", dcStatus?.status()?.value(), storageDomain.type().value(), StorageDomainType.forDescription(storageDomain.type().value()))
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
 		comment { storageDomain.comment() }
-		type { storageDomain.type().value() }
-		status { storageDomainStatus }
+		storageDomainType { StorageDomainType.forDescription(storageDomain.type().value()) }
+		status { StorageDomainStatus.forStatusValue(dcStatus?.status()?.value()) }
 		master { if(storageDomain.masterPresent()) storageDomain.master() else false}
 		storageFormat { storageDomain.storageFormat() }
 		size { storageDomain.toDomainSize() }
@@ -180,10 +197,10 @@ fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
 		id { domain.id() }
 		name { domain.name() }
 		description { domain.description() }
-		status { domain.status() }
+		status { StorageDomainStatus.forStatusValue(domain.status().value()) }
 		hostedEngine { hostedVm }
 		comment { domain.comment() }
-		type { domain.type().value() }
+		storageType { StorageType.forDescription(domain.type().value()) }
 		master { domain.masterPresent() && domain.master() }
 		storageFormat { domain.storageFormat() }
 		usedSize { domain.used() }
@@ -215,7 +232,7 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 	return StorageDomainBuilder()
 		.name(name)
-		.type(StorageDomainType.fromValue(type))
+		.type(org.ovirt.engine.sdk4.types.StorageDomainType.fromValue(storageDomainType.description))
 		.description(description)
 		.comment(comment)
 		.warningLowSpaceIndicator(warning)
@@ -231,7 +248,7 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 	log.info("toAddStorageDomain: {}", this)
 	return toStorageDomainBuilder()
 		.storage(
-			when (StorageType.fromValue(storageVo.type.value())) {
+			when (StorageType.forDescription(storageVo.type.value())) {
 				StorageType.NFS -> storageVo.toAddNFS()
 				StorageType.FCP, StorageType.ISCSI -> storageVo.toAddBlockStorage()
 				else -> throw IllegalArgumentException("Unsupported storage type")
@@ -247,11 +264,11 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 fun StorageDomainVo.toImportStorageDomain(): StorageDomain {
 	log.info("toImportStorageDomain: {}", this)
 	val builder = toStorageDomainBuilder().import_(true)
-	if (storageVo.type != StorageType.NFS) builder.id(id)
+	if (storageVo.type != NFS) builder.id(id)
 
 	return builder
 		.storage(
-			when (StorageType.fromValue(storageVo.type.value())) {
+			when (StorageType.forDescription(storageVo.type.value())) {
 				StorageType.NFS -> storageVo.toImportNFS()
 				StorageType.FCP, StorageType.ISCSI -> storageVo.toImportBlockStorage()
 				else -> throw IllegalArgumentException("Unsupported storage type")
@@ -333,7 +350,7 @@ fun StorageDomain.toStorageDomainSize(): StorageDomainVo {
 	return StorageDomainVo.builder {
 		id { this@toStorageDomainSize.id() }
 		name { this@toStorageDomainSize.name() }
-		type { this@toStorageDomainSize.type().value() }
+		storageType { StorageType.forDescription(this@toStorageDomainSize.type().value()) }
 		master { if(this@toStorageDomainSize.masterPresent()) this@toStorageDomainSize.master() else false }
 		usedSize { this@toStorageDomainSize.used() }
 		availableSize { this@toStorageDomainSize.available() }

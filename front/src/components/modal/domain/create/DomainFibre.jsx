@@ -90,6 +90,8 @@ const DomainFibre = ({
     }).filter(Boolean);
   }, [fibres, isFibresLoading, lunId, setLunId]);
   
+  console.log("$transDomainData", transDomainData[0])
+
   return (
     <div className="storage-popup-iSCSI">
       <div className="section-table-outer">
@@ -104,7 +106,8 @@ const DomainFibre = ({
             : transFibreData
           }
           onRowClick={(selectedRows) => setLunsSelected(selectedRows)}
-          isLoading={isFibresLoading} isError={isFibresError} isSuccess={isFibresSuccess}
+          isLoading={isFibresLoading} isError={isFibresError} 
+          isSuccess={true}
         />
         <SelectedIdView items={lunsSelected} />
       </div>

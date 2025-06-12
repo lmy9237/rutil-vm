@@ -249,12 +249,12 @@ fun Cluster.resolveDataCenter(conn: Connection): DataCenter? {
  */
 fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
 	log.info("ClusterVo: {}", this)
-	return ClusterBuilder()
+
+	val builder = ClusterBuilder()
 		.dataCenter(DataCenterBuilder().id(dataCenterVo.id).build()) // 필수
 		.name(name) // 필수
 		.description(description)
 		.comment(comment)
-		.cpu(CpuBuilder().architecture(Architecture.fromValue(cpuArc.toString())).type(cpuType))
 		.managementNetwork(NetworkBuilder().id(networkVo.id).build())
 		.biosType(BiosType.fromValue(biosType.toString()))
 		.version(VersionBuilder().major(4).minor(7).build())
@@ -272,12 +272,26 @@ fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
 //		.fipsMode(FipsMode.UNDEFINED)
 //		.logMaxMemoryUsedThreshold(builder.logMaxMemory)
 //		.logMaxMemoryUsedThresholdType(builder.logMaxMemoryType)
-		// HELP: 마이그레이션 정책 관련 설정 값 조회 기능 존재여부 확인필요
+	// HELP: 마이그레이션 정책 관련 설정 값 조회 기능 존재여부 확인필요
 //		.migration(
 //			MigrationOptionsBuilder()
 //				.bandwidth(MigrationBandwidthBuilder().assignmentMethod(builder.bandwidth))
 //				.encrypted(builder.encrypted)
 //		)
+
+	if (cpuArc == Architecture.UNDEFINED && cpuType == "none") {
+		// 아무것도 안함
+	} else if (cpuArc == Architecture.UNDEFINED && cpuType != "none") {
+		builder.cpu(CpuBuilder().type(cpuType))
+	} else {
+		builder.cpu(
+			CpuBuilder()
+				.architecture(Architecture.fromValue(cpuArc.toString()))
+				.type(cpuType)
+		)
+	}
+
+	return builder
 }
 
 /**

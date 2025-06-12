@@ -4,10 +4,14 @@ import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
@@ -99,6 +103,7 @@ interface ItHostService {
 class HostServiceImpl(
 ): BaseService(), ItHostService {
 	@Autowired private lateinit var hostConfigurationRepository: HostConfigurationRepository
+	@Autowired private lateinit var rVms: VmRepository
 	@Autowired private lateinit var itGraphService: ItGraphService
 	@Autowired private lateinit var certConfig: CertConfig
 
@@ -162,8 +167,11 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromHost(hostId: String): List<VmVo> {
 		log.info("findAllVmsFromHost ... hostId: {}", hostId)
-		val res: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices").getOrDefault(emptyList())
-		return res.toVmMenus(conn)
+		// val res: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices").getOrDefault(emptyList())
+		// return res.toVmMenus(conn)
+
+		val res: List<VmEntity> = rVms.findAllByRunOnVdsWithSnapshotsOrderByVmNameAsc(hostId.toUUID())
+		return res.toVmVosFromVmEntities()
 	}
 
 	@Throws(Error::class)

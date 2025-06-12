@@ -9,12 +9,17 @@ import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
+import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
+import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl
-import com.itinfo.rutilvm.api.service.storage.DiskServiceImpl.Companion
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.Error
@@ -207,6 +212,8 @@ class DataCenterServiceImpl(
 ): BaseService(), ItDataCenterService {
 	@Autowired private lateinit var itGraphService: ItGraphService
 	@Autowired private lateinit var rDiskVmElements: DiskVmElementRepository
+	@Autowired private lateinit var rVms: VmRepository
+	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {
@@ -271,15 +278,22 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
-		return res.toVmMenus(conn)
+		// val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
+		// return res.toVmMenus(conn)
+		val res: List<VmEntity> = rVms.findAllByStoragePoolIdWithSnapshotsOrderByVmNameAsc(dataCenterId.toUUID())
+		return res.toVmVosFromVmEntities()
 	}
 
 	@Throws(Error::class)
 	override fun findAllStorageDomainsFromDataCenter(dataCenterId: String): List<StorageDomainVo> {
 		log.info("findAllStorageDomainsFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		return res.toDcDomainMenus(conn)
+		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		// return res.toDcDomainMenus(conn)
+		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
+		return res
+			.filter { it.storageType != com.itinfo.rutilvm.api.ovirt.business.StorageType.GLANCE.value }
+			.toStorageDomainEntities()
+
 	}
 
 	@Throws(Error::class)

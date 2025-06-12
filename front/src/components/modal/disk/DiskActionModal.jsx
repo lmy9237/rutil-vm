@@ -189,7 +189,7 @@ const DiskActionModal = ({
     >
     <div className="py-3">
       <div className="section-table-outer">
-        <h1 className="fs-16">디스크 할당:</h1>
+        {/* <h1 className="fs-16">디스크 할당:</h1> */}
         <table>
           <thead>
             <tr>
@@ -210,7 +210,7 @@ const DiskActionModal = ({
                     ) : (
                       <LabelInput label={""}
                         value={aliases[disk.id] || ""}
-                       onChange={(e) => { 
+                        onChange={(e) => { 
                           const newAlias = e.target.value;
                           setAliases((prev) => ({ ...prev, [disk.id]: newAlias }));
                         }}

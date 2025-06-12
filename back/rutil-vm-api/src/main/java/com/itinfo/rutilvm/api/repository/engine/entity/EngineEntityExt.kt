@@ -5,8 +5,19 @@ import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.toDomainSize
+import com.itinfo.rutilvm.api.model.storage.toStorageVo
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatus
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.StorageType
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
@@ -25,6 +36,89 @@ fun DiskVmElementEntity.toVmDisk(): DiskImageVo {
 	}
 }
 //endregion: DiskVmElementEntity
+
+//region: AllDiskEntity
+fun AllDiskEntity.toDiskEntity(): DiskImageVo {
+	val entity = this@toDiskEntity
+	return DiskImageVo.builder {
+		id { entity.diskId.toString() }
+		alias { entity.diskAlias }
+		sharable { entity.shareable }
+		virtualSize { entity.size }
+		actualSize { entity.actualSize }
+		status { DiskStatus.forValue(entity.imagestatus) }
+		contentType { DiskContentType.forValue(entity.diskContentType) }
+		storageType { DiskStorageType.forValue(entity.diskStorageType) }
+		sparse { entity.volumeType == 2 }
+		description { entity.description }
+		dateCreated { entity.creationDate }
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { entity.storagePoolId.toString() }
+			}
+		}
+		diskProfileVo {
+			IdentifiedVo.builder {
+				id { entity.diskProfileId }
+				name { entity.diskProfileName }
+			}
+		}
+		storageDomainVo {
+			IdentifiedVo.builder {
+				id { entity.storageId }
+				name { entity.storageName }
+			}
+		}
+		type { entity.entityType }
+		connectVm {
+			if(entity.entityType == "VM") {
+				IdentifiedVo.builder {
+					name { entity.vmNames }
+				}
+			}
+			else null
+		}
+		connectTemplate {
+			if(entity.entityType == "TEMPLATE") {
+				IdentifiedVo.builder {
+					name { entity.vmNames }
+				}
+			}
+			else null
+		}
+	}
+}
+fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
+	this@toDiskEntities.map { it.toDiskEntity() }
+
+//endregion: AllDiskEntity
+
+//region: StorageDomainEntity
+fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
+	return StorageDomainVo.builder {
+		id { id.toString() }
+		name { storageName }
+		description { storageDescription }
+		status { StorageDomainStatus.forValue(status) }
+		// storagePoolStatus { StoragePoolStatus.forValue(storageDomainSharedStatus) }
+		storageType { StorageType.forValue(storageType) }
+		storageDomainType { StorageDomainType.forValue(storageDomainType) }
+		// storageVo { storage().toStorageVo() }
+		// master { master() }
+		hostedEngine { isHostedEngineStorage }
+		comment { storageComment }
+		size { usedDiskSize?.add(availableDiskSize) }
+		usedSize { usedDiskSize }
+		availableSize { availableDiskSize }
+		dataCenterVo { IdentifiedVo.builder {
+			id { storagePoolId.toString() }
+			name { storagePoolName }
+		} }
+	}
+}
+fun List<StorageDomainEntity>.toStorageDomainEntities(): List<StorageDomainVo> =
+	this@toStorageDomainEntities.map { it.toStorageDomainEntity() }
+//endregion: StorageDomainEntity
 
 
 //region: EngineSessionsEntity

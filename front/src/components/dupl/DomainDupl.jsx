@@ -14,7 +14,7 @@ import {
   status2Icon
 } from "@/components/icons/RutilVmIcons";
 import { getStatusSortKey }          from "@/components/icons/GetStatusSortkey";
-import { checkZeroSizeToGiB, convertBytesToGB } from "@/util";
+import { convertBytesToGB } from "@/util";
 import Localization                  from "@/utils/Localization";
 import Logger                        from "@/utils/Logger";
 /**
@@ -47,23 +47,24 @@ const DomainDupl = ({
     icon: status2Icon(domain.status),
     iconSortKey: getStatusSortKey(domain?.status), 
     _status: Localization.kr.renderStatus(domain?.status),
+    // _status: Localization.kr.renderDomainStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
-    domainType:
-      domain?.type === "data"
+    storageDomainType: domain?.storageDomainType
         ? `데이터 ${domain?.master === true ? "(마스터)": ""}`
-        : domain?.type === "iso"
+        : domain?.type === "ISO"
           ? `ISO ${domain?.master === true ? "(마스터)": ""}`
           : `EXPORT ${domain?.master === true ? "(마스터)": ""}`,
-    storageType:
-      domain?.storageVo?.type === "NFS"
+    storageType: domain?.storageType === "NFS"
         ? "NFS"
         : domain?.storageVo?.type === "ISCSI"
             ? "iSCSI"
             : "Fibre Channel",
+      
+    
     format: domain?.storageFormat,
-    size: checkZeroSizeToGiB(domain?.size),
-    availableSize: checkZeroSizeToGiB(domain?.availableSize),
-    usedSize: checkZeroSizeToGiB(domain?.usedSize),
+    size: domain?.size + " GiB",
+    availableSize: domain?.availableSize + " GiB",
+    usedSize: domain?.usedSize + " GiB",
     searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${convertBytesToGB(domain?.diskSize)}GB`
   }));
 

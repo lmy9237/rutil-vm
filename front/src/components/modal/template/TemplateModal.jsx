@@ -256,6 +256,7 @@ const TemplateModal = ({
         options={cpuProfiles}
         onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles)}
       />
+      <hr/><br/>
 
       {disks && disks.length > 0 && (
         <>
@@ -271,65 +272,6 @@ const TemplateModal = ({
                     <th >{Localization.kr.DISK_PROFILE}</th>
                   </tr>
                 </thead>
-                {/* <tbody>
-                  {diskVoList.map((disk, index) => (
-                    <tr key={disk.id}>
-                      <td>
-                        <LabelInput label={""}
-                          value={disk.diskImageVo?.alias || ""}
-                          onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
-                        />
-                      </td>
-                      <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
-                      <td >
-                        <LabelSelectOptions id={`diskFormat-${index}`}
-                          value={disk.diskImageVo?.format}
-                          options={formats}
-                          onChange={(e) => handleDiskChange(index, "format", e.target.value)}
-                        />
-                      </td>
-                      <td>
-                        <LabelSelectOptionsID
-                          className="template-input max-w-[230px]"
-                          value={disk.diskImageVo?.storageDomainVo?.id}
-                          loading={isDomainsLoading}
-                          options={domains.filter((d) => d.status === "ACTIVE")}
-                          onChange={(e) => {
-                            const selected = domains.find(d => d.id === e.target.value);
-                            if (selected) {
-                              handleDiskChange(index, "storageDomainVo", selected, true);
-                              const newProfiles = diskProfilesList[selected.id] || [];
-                              if (newProfiles.length > 0) {
-                                handleDiskChange(index, "diskProfileVo", newProfiles[0], true);
-                              }
-                            }
-                          }}                        
-                        />
-                        {(() => {
-                          const selected = domains.find(d => d.id === disk.diskImageVo?.storageDomainVo?.id);
-                          return selected ? (
-                            <div className="text-xs text-gray-500 mt-1">
-                              사용 가능: {checkZeroSizeToGiB(selected.availableSize)} /
-                              총 용량: {checkZeroSizeToGiB(selected.diskSize)}
-                            </div>
-                          ) : null;
-                        })()}
-                      </td>
-                      <td>
-                        <LabelSelectOptionsID
-                          className="template-input max-w-[230px]"
-                          value={disk.diskImageVo?.diskProfileVo?.id}
-                          loading={false}
-                          options={diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []}
-                          onChange={(e) => {
-                            const selected = (diskProfilesList[disk.diskImageVo?.storageDomainVo?.id] || []).find(d => d.id === e.target.value);
-                            if (selected) handleDiskChange(index, "diskProfileVo", selected, true);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody> */}
                 <tbody>
                   {diskVoList.map((disk, index) => {
                       console.log("디버깅 - diskImageVo", disk.diskImageVo); // 💡 이 줄 추가
@@ -383,7 +325,7 @@ const TemplateModal = ({
                           />
                           {selectedDomain && (
                             <div className="text-xs text-gray-500 mt-1">
-                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.Size)}
+                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.size)}
                             </div>
                           )}
                         </td>

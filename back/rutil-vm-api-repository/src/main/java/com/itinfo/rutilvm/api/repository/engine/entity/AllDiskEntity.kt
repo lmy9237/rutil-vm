@@ -88,10 +88,6 @@ import javax.persistence.Table
 @Immutable
 @Table(name = "all_disks")
 class AllDiskEntity(
-	// @Column(name = "disk_id", unique = true, nullable = true)
-	// @Type(type = "org.hibernate.type.PostgresUUIDType")
-	// val diskId: UUID? = null,
-
 	val storageId: String = "",
 	val storageName: String = "",
 	val storageType: String = "",
@@ -165,7 +161,6 @@ class AllDiskEntity(
 		gson.toJson(this)
 
 	class Builder {
-
 		private var bStorageId: String = ""; fun storageId(block: () -> String?) { bStorageId = block() ?: "" }
 		private var bStorageName: String = ""; fun storageName(block: () -> String?) { bStorageName = block() ?: "" }
 		private var bStorageType: String = ""; fun storageType(block: () -> String?) { bStorageType = block() ?: "" }

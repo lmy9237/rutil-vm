@@ -8,7 +8,13 @@ import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.ImageRepository
+import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -202,14 +208,21 @@ interface ItStorageService {
 class StorageServiceImpl(
 ): BaseService(), ItStorageService {
 	@Autowired private lateinit var diskVmElementRepository: DiskVmElementRepository
+	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
 	@Autowired private lateinit var rAllDisks: AllDisksRepository
+	@Autowired private lateinit var rVms: VmRepository
+
 
 	@Throws(Error::class)
 	override fun findAll(): List<StorageDomainVo> {
 		log.info("findAll ...")
-		val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
-			.filter { it.storage().type() != StorageType.GLANCE }
-		return res.toStorageDomainsMenu(conn)
+		// val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
+		// 	.filter { it.storage().type() != StorageType.GLANCE }
+		// return res.toStorageDomainsMenu(conn)
+		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
+		return res
+			.filter { it.storageType != com.itinfo.rutilvm.api.ovirt.business.StorageType.GLANCE.value }
+			.toStorageDomainEntities()
 	}
 
 	@Throws(Error::class)
@@ -291,6 +304,8 @@ class StorageServiceImpl(
 		log.info("findAllVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Vm> = conn.findAllVmsFromStorageDomain(storageDomainId).getOrDefault(emptyList())
 		return res.toVmStorageDomainMenus(conn, storageDomainId)
+		// val res: List<VmEntity> = rVms.findAllByClusterIdWithSnapshotsOrderByVmNameAsc(clusterId.toUUID())
+		// return res.toVmVosFromVmEntities()
 	}
 
 

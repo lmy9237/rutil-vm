@@ -57,6 +57,7 @@ class TypeServiceImpl(
 	override fun findAllDiskContentTypes(): List<TypeVo> {
 		log.info("findAllDiskContentTypes ... ")
 		return DiskContentType.allDiskContentTypes.toTypeVosFromDiskContentTypes()
+			.filter { it.id == "DATA" || it.id == "ISOF" }
 	}
 
 	override fun findAllVmTypes(): List<TypeVo> {

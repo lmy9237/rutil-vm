@@ -1050,7 +1050,7 @@ export const useDeleteCluster = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
-      apiToast.ok(`${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE}  ${Localization.kr.REQ_COMPLETE}`)
+      apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.REMOVE}  ${Localization.kr.REQ_COMPLETE}`)
       queryClient.removeQueries(`allClusters,clustersFromDataCenter,${QK.ALL_TREE_NAVIGATIONS}`);
       queryClient.invalidateQueries(QK.ALL_TREE_NAVIGATIONS)
       setClustersSelected([])

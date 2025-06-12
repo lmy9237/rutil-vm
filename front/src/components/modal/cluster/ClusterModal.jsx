@@ -1,9 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import CONSTANT               from "@/Constants";
-import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
-import useContextMenu         from "@/hooks/useContextMenu";
 import BaseModal              from "@/components/modal/BaseModal";
 import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
 import LabelInput             from "@/components/label/LabelInput";
@@ -52,6 +50,7 @@ const ClusterModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [networkVo, setNetworkVo] = useState({ id: "", name: "" });
+  const [editCpuArc, setEditCpuArc] = useState(false);
   const [cpuOptions, setCpuOptions] = useState([]);
 
   const biosTypeFiltered = editMode
@@ -93,6 +92,18 @@ const ClusterModal = ({
     }
   }, [isOpen, editMode, cluster]);
 
+  useEffect(() => {
+    if (isOpen && editMode) {
+      if (cluster?.cpuArc === "UNDEFINED") {
+        setEditCpuArc(true);
+      } else {
+        setEditCpuArc(false);   // 이 부분이 핵심!
+      }
+    }
+    if (!isOpen) {
+      setEditCpuArc(false);
+    }
+  }, [isOpen, editMode, cluster]);
 
   useEffect(() => {
     if (datacenterId) {
@@ -119,7 +130,7 @@ const ClusterModal = ({
   }, [networks, editMode]);
   
   useEffect(() => {
-    const options = cpuArcOptions[formState.cpuArc] || [];
+    const options = cpuTypeOptions[formState.cpuArc] || [];
     setCpuOptions(options);
     if (!editMode) {
       setFormState((prev) => ({
@@ -172,7 +183,7 @@ const ClusterModal = ({
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast) }
       />
-      {/* <hr /> */}
+
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
@@ -188,27 +199,26 @@ const ClusterModal = ({
       />
       <LabelSelectOptionsID id="network-man" label={`관리 ${Localization.kr.NETWORK}`}
         value={networkVo.id}
-        disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
+        disabled={editMode}
         onChange={handleSelectIdChange(setNetworkVo, networks, validationToast)}
       />
       <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}
-        disabled={editMode}
+        disabled={!(!editMode || editCpuArc)}
         onChange={handleInputChange(setFormState, "cpuArc", validationToast)}
       />
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
-        disabled={editMode}
         options={cpuOptions}
+         disabled={!(!editMode || editCpuArc)}
         onChange={handleInputChange(setFormState, "cpuType", validationToast)}
       />
+
       {!["PPC64", "S390X", "UNDEFINED"].includes(formState.cpuArc) && (
-        <LabelSelectOptions
-          id="firmware-type"
-          label="칩셋/펌웨어 유형"
+        <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
           value={formState.biosType}
           options={biosTypeFiltered}
           onChange={handleInputChange(setFormState, "biosType", validationToast)}
@@ -228,7 +238,7 @@ const ClusterModal = ({
 export default ClusterModal;
 
 // name이 value고, description이 label
-const cpuArcOptions = {
+const cpuTypeOptions = {
   X86_64: [
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
@@ -266,6 +276,7 @@ const cpuArcOptions = {
     { value: "IBM z14", label: "IBM z14" },
   ],
   UNDEFINED: [
+    { value: "none", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },
