@@ -284,6 +284,11 @@ export function isNameDuplicated(
   key = "name",
   options = { ignoreCase: true, trim: true }
 ) {
+  if (!Array.isArray(list)) {
+    Logger.warn("isNameDuplicated > list가 배열이 아님 또는 undefined", list);
+    return false;
+  }
+
   const { ignoreCase, trim } = options;
   const normalize = (str) =>
     typeof str === "string" ? (trim ? str.trim() : str) : "";

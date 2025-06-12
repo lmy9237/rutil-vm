@@ -24,6 +24,10 @@
 .tmi:hover {
   background: var(--color-white);
 }
+.tmi.context-selected {
+  background: var(--color-white);
+}
+
 .tmi.active {
   background: var(--color-table) !important;
 }

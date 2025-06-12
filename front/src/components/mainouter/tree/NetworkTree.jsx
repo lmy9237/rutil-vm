@@ -17,7 +17,7 @@ import TreeMenuItem           from "./TreeMenuItem";
 const NetworkTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu, } = useContextMenu();
+  const { contextMenu, setContextMenu, contextMenuType } = useContextMenu();
   const {
     secondVisibleNetwork, toggleSecondVisibleNetwork,
     openDataCentersNetwork, toggleOpenDataCentersNetwork
@@ -35,6 +35,7 @@ const NetworkTree = ({}) => {
         title="Rutil Manager"
         iconDef={rvi16Globe("currentColor")}
         isSelected={() => location.pathname.includes("rutil")}
+        isContextSelected={contextMenuType() === "rutil-manager"}
         isNextLevelVisible={secondVisibleNetwork()}
         onChevronClick={() => toggleSecondVisibleNetwork()}
         isChevronVisible={true}
@@ -61,6 +62,7 @@ const NetworkTree = ({}) => {
               title={dc?.name}
               iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
+              isContextSelected={contextMenuType() === "datacenter" && contextMenu()?.item?.id === dc?.id}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasNetworks}
               onChevronClick={() => toggleOpenDataCentersNetwork(dc?.id)}
@@ -91,6 +93,7 @@ const NetworkTree = ({}) => {
                   title={network.name}
                   iconDef={rvi16Network("currentColor")}
                   isSelected={() => location.pathname.includes(network.id)}
+                  isContextSelected={contextMenuType() === "network" && contextMenu()?.item?.id === network?.id}
                   isNextLevelVisible={false}
                   isChevronVisible={false}
                   onClick={() => {

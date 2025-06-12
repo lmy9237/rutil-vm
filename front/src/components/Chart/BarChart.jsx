@@ -7,13 +7,11 @@ import { useNavigate } from "react-router-dom";
 const BarChart = ({ 
   names,
   percentages,
-    ids,         // ✅ 추가해야 함
+  ids,         // ✅ 추가해야 함
   type,   
   ...props
 }) => {
   const navigate = useNavigate(); 
-  console.log("💡 BarChart type:", type);
-console.log("💡 ids:", ids);
   // const chartContainerRef = useRef(null);
   // const [chartSize, setChartSize] = useState(
   //   {
@@ -96,37 +94,25 @@ console.log("💡 ids:", ids);
     }));
   }, [names, percentages]);
 
-
-
-  // useEffect(() => {
-  //   updateChartSize();
-  //   window.addEventListener("resize", updateChartSize);
-
-  //   return () => {
-  //     window.removeEventListener("resize", updateChartSize);
-  //   };
-  // }, []);
-
   const [series, setSeries] = useState([{ data: percentages }]);
   const [chartOptions, setChartOptions] = useState({
-    
- chart: {
-  type: "bar",
-  redrawOnParentResize: true,
-  events: {
-    dataPointSelection: (_, __, config) => {
-      const index = config.dataPointIndex;
-      const id = ids[index];
-      if (!id) return;
+    chart: {
+      type: "bar",
+      redrawOnParentResize: true,
+      events: {
+        dataPointSelection: (_, __, config) => {
+          const index = config.dataPointIndex;
+          const id = ids[index];
+          if (!id) return;
 
-      if (type === "domain") {
-        navigate(`/storages/domains/${id}`); // ✅ 도메인은 스토리지 도메인 경로로
-      } else {
-        navigate(`/computing/vms/${id}`); // ✅ 나머지는 VM 경로로
-      }
+          if (type === "domain") {
+            navigate(`/storages/domains/${id}`); 
+          } else {
+            navigate(`/computing/vms/${id}`);
+          }
+        },
+      },
     },
-  },
-},
     grid: {
       show: false,
     },

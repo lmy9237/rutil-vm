@@ -13,7 +13,7 @@
 .box {
   min-width: 100px; height: var(--h-dash-nav-box);
   flex: 1 1 calc(100% / 6 - 8px);
-  padding: 20px;
+  padding: 17px 20px;
   cursor: pointer;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: var(--br-default);
@@ -70,6 +70,7 @@
 .bar-chart-title{
   margin-left: 18%;
 }
+ 
 .graphs {
   height: calc(100% - 28px - 32px - 4px);
 }
@@ -104,12 +105,16 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  border-radius: var(--br-default);
+  border-radius: 1px;
+  /* border-radius: var(--br-default); */
   min-width: 80px;
   height: 100%;
   cursor: pointer;
 }
 
+@media screen and (min-width:2300px) {
+  .bar-chart-title{ margin-left: 29%;}
+}
 @media screen and (max-width:1650px) {
   .dash-boxes {
     height: calc(2 * var(--h-dash-nav-box));

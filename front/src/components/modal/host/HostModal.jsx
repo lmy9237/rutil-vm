@@ -86,7 +86,7 @@ const HostModal = ({
         port: formState?.ssh?.port,
         rootPassword: formState?.ssh?.rootPassword,
         vgpu: host?.vgpu,
-        // hostedEngine: Boolean(host?.hostedEngine),
+        deployHostedEngine: host?.hostedEngine != null,
       });
       setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
     }

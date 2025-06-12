@@ -18,9 +18,9 @@ const TableColumnsInfo = {
     { accessor: 'description',   header: Localization.kr.DESCRIPTION,     clickable: false,   },
   ],
   CLUSTERS_FROM_DATACENTER: [
-    { accessor: '_name',         header: Localization.kr.NAME, clickable: true },
-    { accessor: 'version',       header: '호환 버전', clickable: false },
-    { accessor: 'description',   header: Localization.kr.DESCRIPTION , clickable: false },
+    { accessor: '_name',         header: Localization.kr.NAME, clickable: true , width: 150},
+    { accessor: 'version',       header: '호환 버전', clickable: false , width: 50},
+    { accessor: 'description',   header: Localization.kr.DESCRIPTION , clickable: false  , width: 500},
   ],
   STORAGES_FROM_DATACENTER: [
     { accessor: 'status',        header: Localization.kr.STATUS,                    clickable: false },
@@ -52,21 +52,21 @@ const TableColumnsInfo = {
     { accessor: 'description',   header: Localization.kr.DESCRIPTION,   clickable: false },
   ],
   HOSTS: [
-    { accessor: "icon",          header: Localization.kr.STATUS,            clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: "_hostedEngine", header: Localization.kr.ENGINE,            clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
-    { accessor: "ha",            header: "HA",                              clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: '_name',         header: Localization.kr.NAME,              clickable: true,  width: '12%'  },
-    { accessor: 'comment',       header: Localization.kr.COMMENT,           clickable: false, width: '12%'},
-    { accessor: 'address',       header: `${Localization.kr.HOST} 이름/IP`, clickable: false,  width: '12%' },
-    { accessor: 'cluster',       header: Localization.kr.CLUSTER,           clickable: true,  width: '12%'  },
-    { accessor: 'dataCenter',    header: Localization.kr.DATA_CENTER,       clickable: false, width: '10%' },
-    { accessor: 'vmCnt',         header: `${Localization.kr.VM} 수`,        clickable: false, width: '10%' },
-    { accessor: 'status',        header: Localization.kr.STATUS,            clickable: false, },
-    { accessor: 'memoryUsage',   header: Localization.kr.MEMORY,            clickable: false, },
-    { accessor: 'cpuUsage',      header: Localization.kr.CPU,               clickable: false, },
-    { accessor: 'networkUsage',  header: Localization.kr.NETWORK,           clickable: false, },
+    { accessor: "icon",          header: Localization.kr.STATUS,            clickable: false, width: 30 },
+    { accessor: "_hostedEngine", header: Localization.kr.ENGINE,            clickable: false, width: 30  },
+    { accessor: "ha",            header: "HA",                              clickable: false, width: 30 },
+    { accessor: '_name',         header: Localization.kr.NAME,              clickable: true,  },
+    { accessor: 'comment',       header: Localization.kr.COMMENT,           clickable: false},
+    { accessor: 'address',       header: `${Localization.kr.HOST} 이름/IP`, clickable: false },
+    { accessor: 'cluster',       header: Localization.kr.CLUSTER,           clickable: true },
+    { accessor: 'dataCenter',    header: Localization.kr.DATA_CENTER,       clickable: false },
+    { accessor: 'vmCnt',         header: `${Localization.kr.VM} 수`,        clickable: false },
+    { accessor: 'status',        header: Localization.kr.STATUS,            clickable: false, width: 50 },
+    { accessor: 'memoryUsage',   header: Localization.kr.MEMORY,            clickable: false, width: 50},
+    { accessor: 'cpuUsage',      header: Localization.kr.CPU,               clickable: false, width: 50 },
+    { accessor: 'networkUsage',  header: Localization.kr.NETWORK,           clickable: false, width: 50 },
     { accessor: 'spmStatus',     header: 'SPM',                             clickable: false, },
-    { accessor: 'upTime',        header: Localization.kr.UP_TIME,           clickable: false, },
+    { accessor: 'upTime',        header: Localization.kr.UP_TIME,           clickable: false, width: 50 },
   ],
   VMS_FROM_HOST: [
     { accessor: "icon",          header: Localization.kr.STATUS,      clickable: false,   width: DEFAULT_WIDTH_ICON_COLUMN },
@@ -806,12 +806,9 @@ const TableColumnsInfo = {
   ],
 
   EVENTS: [
-    { header: Localization.kr.TIME, accessor: 'time', clickable: false, width:'140px' },
-    { header: '알림', accessor: '_severity', clickable: false, width:'40px'},    
-    { header: '메세지', accessor: 'description', clickable: false},
-    // { header: '상관 관계 ID', accessor: 'correlationId', clickable: false },
-    // { header: '소스', accessor: 'source', clickable: false },
-    // { header: '사용자 지정 이벤트 ID', accessor: 'customEventId', clickable: false }
+    { header: Localization.kr.TIME, accessor: 'time', clickable: false , width: 100},
+    { header: '알림', accessor: '_severity', clickable: false, width: 30},    
+    { header: '메세지', accessor: 'description', clickable: false , width: 640},
   ],
 
   JOBS: [
@@ -819,10 +816,10 @@ const TableColumnsInfo = {
   ],
   JOB_HISTORY_COLUMNS : [
     { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }},
-    { header: '세부작업', accessor: 'numSteps', width:'10px' },
+    { header: '세부작업', accessor: 'numSteps', width:'10px',align: "center" },
     { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime', width:'140px'},
     { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime',  width:'140px'},
-    { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' },
+    { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' ,align: "center"  },
     { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'100px' },
   ],
   // 사용자

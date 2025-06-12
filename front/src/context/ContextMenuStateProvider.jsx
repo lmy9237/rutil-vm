@@ -31,10 +31,10 @@ export const ContextMenuStateProvider = ({ children }) => {
       ...sContextMenuState,
       [KEY_CONTEXT_MENU_CONTENT]: { 
         ...newV,
-        "item": {
+        /*"item": {
           _name: [newV]?.item?.name,
           icon: '',
-        }
+        }*/
       },
       [KEY_CONTEXT_MENU_TYPE]: type
     });

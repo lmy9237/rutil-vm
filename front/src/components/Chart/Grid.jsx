@@ -87,6 +87,14 @@ const GridItem = forwardRef(({
       : item?.memoryPercent
   ), [type, item]);
 
+  // name이 비어있지 않고 0%면 1로 보여주기 (빈 placeholder에는 적용하지 않음)
+  const visualMetric = useMemo(() => {
+  if (useMetricByType === 0 && item.name) {
+    return 1;
+  }
+  return useMetricByType;
+}, [useMetricByType, item.name]);
+
   const handleClick = useCallback((id) => {
     if (id && id.startsWith("placeholder")) return;
     if (type === "domain") {
@@ -99,14 +107,14 @@ const GridItem = forwardRef(({
   return (
     <div key={item.id || index} ref={ref}
       className={
-        `grid-item v-center ${severity2Label(useMetricByType)}`
+        `grid-item v-center ${severity2Label(visualMetric)}`
       }
       onClick={() => hasAnyData && handleClick(item.id)}
     >
       {hasAnyData ? (
         <>
           <div className="percent f-center">
-            <h1 className="fs-14 fw-500">{useMetricByType}</h1>
+            <h1 className="fs-14 fw-500">{visualMetric}</h1>
             <div className="percent unit">%</div>
           </div>
           <div className="grid-item-name fs-10">{item.name}</div>

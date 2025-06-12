@@ -520,7 +520,14 @@ const BarChartWrapper = ({
 }) => {
   const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
   const percentages = useMemo(() => data.map((e) => e[keyPercent]), [data, keyPercent]);
-  const ids = useMemo(() => data.map((e) => e.id), [data]); // ⭐ id 꼭 들어가야 함
+  const ids = useMemo(() => {
+    const originalIds = data.map((e) => e.id);
+    const padded = [...originalIds];
+    while (padded.length < 3) {
+      padded.push(null); // 빈 항목은 null로
+    }
+    return padded;
+  }, [data]);
 
   return (
     <BarChart

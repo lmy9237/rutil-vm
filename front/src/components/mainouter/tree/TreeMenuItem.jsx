@@ -15,6 +15,7 @@ const TreeMenuItem = ({
   isNextLevelVisible=false,
   setNextLevelVisible,
   isSelected,
+  isContextSelected, setContextSelected,
   isChevronVisible=true,
   onChevronClick = () => {},
   ...props
@@ -32,7 +33,7 @@ const TreeMenuItem = ({
 
   return (
     <div id={`tmi-${level}`}
-      className={`tmi f-start ${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}`}
+      className={`tmi f-start ${isSelected() ? " active" : ""}${isChevronVisible ? " wc" : ""}${isContextSelected ? " context-selected" : ""}`}
       // style={{ backgroundColor: getBackgroundColor("rutil-manager") }}
       {...props}
     >

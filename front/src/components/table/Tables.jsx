@@ -65,14 +65,15 @@ const Tables = ({
     if (typeof onRowClick === "function")
       onRowClick([rowData]);
   
-    setContextMenu({
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-      item: {
-        ...sortedData[rowIndex],
-      },
-    }, target);
-  };
+      setContextMenu({
+        mouseX: e.clientX,
+        mouseY: e.clientY,
+        item: {
+          id: rowData?.id,
+          name: rowData?.name,
+        },
+      }, target);
+    };
   
   const tableRef = useRef(null);
   // 테이블 외부 클릭 시 선택된 행 초기화, 단 메뉴 박스,모달,headerbutton 제외
@@ -299,26 +300,6 @@ const handleRowClick = (rowIndex, e) => {
 
   // th드레그
   const [columnWidths, setColumnWidths] = useState({});
-  // const handleMouseDown = (e, accessor) => {
-  //   const startX = e.clientX;
-  //   const startWidth = columnWidths[accessor] || 150;
-
-  //   const onMouseMove = (moveEvent) => {
-  //     const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 50);
-  //     setColumnWidths((prev) => ({
-  //       ...prev,
-  //       [accessor]: newWidth,
-  //     }));
-  //   };
-
-  //   const onMouseUp = () => {
-  //     document.removeEventListener("mousemove", onMouseMove);
-  //     document.removeEventListener("mouseup", onMouseUp);
-  //   };
-
-  //   document.addEventListener("mousemove", onMouseMove);
-  //   document.addEventListener("mouseup", onMouseUp);
-  // };
   const handleMouseDown = (e, accessor) => {
     const startX = e.clientX;
     const startWidth = columnWidths[accessor] || 150;
@@ -327,7 +308,7 @@ const handleRowClick = (rowIndex, e) => {
     const onMouseMove = (moveEvent) => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       animationFrameId = requestAnimationFrame(() => {
-        const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 50);
+        const newWidth = Math.max(startWidth + moveEvent.clientX - startX, 30);
         setColumnWidths(prev => ({ ...prev, [accessor]: newWidth }));
       });
     };

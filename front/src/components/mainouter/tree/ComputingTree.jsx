@@ -30,7 +30,7 @@ import TreeMenuItem           from "./TreeMenuItem";
 const ComputingTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu } = useContextMenu();
+  const { contextMenu, setContextMenu, contextMenuType } = useContextMenu();
   const {
     secondVisibleComputing, toggleSecondVisibleComputing,
     openDataCentersComputing, toggleOpenDataCentersComputing,
@@ -58,6 +58,7 @@ const ComputingTree = ({}) => {
         iconDef={rvi16Globe("currentColor")}
         // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
         isSelected={() => location.pathname.includes("rutil") }
+        isContextSelected={contextMenuType() === "rutil-manager"}
         isNextLevelVisible={secondVisibleComputing()}
         onChevronClick={() => toggleSecondVisibleComputing()}
         onClick={() => navigate("/computing/rutil-manager")}
@@ -70,6 +71,7 @@ const ComputingTree = ({}) => {
             },
             treeType: "computing"
           }, "rutil-manager");
+
         }}
       />
 
@@ -83,6 +85,7 @@ const ComputingTree = ({}) => {
               title={dc?.name}
               iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
+              isContextSelected={contextMenuType() === "datacenter" && contextMenu()?.item?.id === dc?.id}
               isNextLevelVisible={isDataCenterOpen}
               isChevronVisible={hasClusters}
               onChevronClick={() => toggleOpenDataCentersComputing(dc?.id)}
@@ -115,6 +118,7 @@ const ComputingTree = ({}) => {
                     title={cluster?.name}
                     iconDef={rvi16Cluster("currentColor")}
                     isSelected={() => location.pathname.includes(cluster?.id)}
+                    isContextSelected={contextMenuType() === "cluster" && contextMenu()?.item?.id === cluster?.id}
                     isNextLevelVisible={isClusterOpen}
                     isChevronVisible={hasHosts}
                     onChevronClick={() => toggleOpenClustersComputing(cluster?.id)}
@@ -156,10 +160,11 @@ const ComputingTree = ({}) => {
                                   : host?.status === "MAINTENANCE"
                                     ? rvi16Wrench("currentColor")
                                     : host?.status === "PREPARING_FOR_MAINTENANCE" || host?.status === "REBOOT"
-                                      ? rvi16Refresh("currentColor") // TODO: 새로 디자인 된 아이콘 추가 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
+                                      ? rvi16Refresh("currentColor") // (질문)TODO: 새로 디자인 된 아이콘 추가 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
                                       : rvi16Host("currentColor")
                               }
                               isSelected={() => location.pathname.includes(host?.id)}
+                              isContextSelected={contextMenuType() === "host" && contextMenu()?.item?.id === host?.id}
                               isNextLevelVisible={isHostOpen}
                               isChevronVisible={hasVMs}
                               onChevronClick={() => toggleOpenHostsComputing(host?.id)}
@@ -193,6 +198,7 @@ const ComputingTree = ({}) => {
                                   iconDef={status2TreeIcon("vm", vm?.status)}
                                   // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
                                   isSelected={() => location.pathname.includes(vm?.id)}
+                                  isContextSelected={contextMenuType() === "vm" && contextMenu()?.item?.id === vm?.id}
                                   isNextLevelVisible={isHostOpen}
                                   isChevronVisible={false}
                                   onChevronClick={()=>{}}
@@ -232,6 +238,7 @@ const ComputingTree = ({}) => {
                             title={vm?.name}
                             iconDef={vm?.status === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep("currentColor")}
                             isSelected={() => location.pathname.includes(vm?.id)}
+                            isContextSelected={contextMenuType() === "vm" && contextMenu()?.item?.id === vm?.id}
                             isNextLevelVisible={false}
                             isChevronVisible={false}
                             onChevronClick={()=>{}}

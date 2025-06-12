@@ -16,7 +16,7 @@
   letter-spacing:var(--letter-28);
 }
 .cell-ellipsis {
-  display: block; 
+  /* display: block;  */
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
@@ -102,7 +102,7 @@ table .input-container button {
   width: 100% !important;
 }
 /*th드레그*/
-.table-resizer {
+/* .table-resizer {
   position: absolute;
   right: 0;
   top: 0;
@@ -111,4 +111,16 @@ table .input-container button {
   cursor: col-resize;
   user-select: none;
   background-color: transparent;
+} */
+.table-resizer {
+  width: 6px;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: col-resize;
+  z-index: 1;
+  /* 아래 추가 */
+  background: transparent;
 }
+

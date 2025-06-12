@@ -22,7 +22,8 @@ import TreeMenuItem           from "./TreeMenuItem";
 const StorageTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu, } = useContextMenu();
+  const { contextMenu, setContextMenu, contextMenuType } = useContextMenu();
+
   const { 
     secondVisibleStorage, toggleSecondVisibleStorage,
     openDataCentersStorage, toggleDataCentersStorage,
@@ -42,6 +43,7 @@ const StorageTree = ({}) => {
         iconDef={rvi16Globe("currentColor")}
         // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
         isSelected={() => location.pathname.includes("rutil")}
+        isContextSelected={contextMenuType() === "rutil-manager"}
         isNextLevelVisible={secondVisibleStorage()}
         isChevronVisible={true}
         onChevronClick={() => toggleSecondVisibleStorage()}
@@ -69,6 +71,7 @@ const StorageTree = ({}) => {
               title={dc?.name}
               iconDef={rvi16DataCenter("currentColor")}
               isSelected={() => location.pathname.includes(dc?.id)}
+              isContextSelected={contextMenuType() === "datacenter" && contextMenu()?.item?.id === dc?.id}
               isNextLevelVisible={isDataCentersOpen}
               isChevronVisible={hasDomains}
               onChevronClick={() => toggleDataCentersStorage(dc?.id)}
@@ -102,6 +105,7 @@ const StorageTree = ({}) => {
                     title={domain?.name}
                     iconDef={status2TreeIcon("domain", domain?.status)}
                     isSelected={() => location.pathname.includes(domain?.id)}
+                    isContextSelected={contextMenuType() === "domain" && contextMenu()?.item?.id === domain?.id}
                     isNextLevelVisible={isDomainOpen}
                     isChevronVisible={hasDisks}
                     onChevronClick={() => toggleOpenDomainsStorage(domain?.id)}
@@ -137,6 +141,7 @@ const StorageTree = ({}) => {
                             title={disk?.name}
                             iconDef={status2TreeIcon("disk", disk?.status)}
                             isSelected={() => location.pathname.includes(disk?.id)}
+                            isContextSelected={contextMenuType() === "disk" && contextMenu()?.item?.id === disk?.id}
                             isNextLevelVisible={isDomainOpen}
                             isChevronVisible={false}
                             onChevronClick={()=>{}}
