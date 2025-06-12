@@ -6,13 +6,12 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.FilterType
 import org.springframework.core.io.Resource
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Controller
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
@@ -32,6 +31,15 @@ import javax.servlet.http.HttpServletRequest
 	]
 )
 class WebMvcConfig : WebMvcConfigurer {
+	override fun addArgumentResolvers(
+		resolvers: MutableList<HandlerMethodArgumentResolver?>
+	) {
+		val pageableResolver = PageableHandlerMethodArgumentResolver().apply {
+			setMaxPageSize(10_000) // NOTE: Pageable을 사용할 때 최고 조회량을 설정
+			// setFallbackPageable(PageRequest.of(0, 50));
+		}
+		resolvers.add(pageableResolver)
+	}
 /*
 	override fun configureViewResolvers(registry: ViewResolverRegistry) {
 		log.info("... configureViewResolvers")

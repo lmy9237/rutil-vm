@@ -28,7 +28,7 @@ class ConflictException(message: String): ItCloudException(message) {
 
 }
 
-fun ErrorPattern.toException(): ItCloudException {
+fun ErrorPattern.toException(additionalMessage: String =""): ItCloudException {
 	return when(this) {
 		ErrorPattern.OVIRTUSER_ID_NOT_FOUND,
 		ErrorPattern.ROLE_ID_NOT_FOUND,
@@ -46,7 +46,7 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.VNIC_PROFILE_ID_NOT_FOUND,
 		ErrorPattern.TEMPLATE_ID_NOT_FOUND,
 		ErrorPattern.CONSOLE_ID_NOT_FOUND,
-		ErrorPattern.TICKET_ID_NOT_FOUND, -> IdNotFoundException("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.TICKET_ID_NOT_FOUND, -> IdNotFoundException("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 		ErrorPattern.OVIRTUSER_NOT_FOUND,
 		ErrorPattern.ROLE_NOT_FOUND,
 		ErrorPattern.DATACENTER_NOT_FOUND,
@@ -62,7 +62,7 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.VNIC_PROFILE_NOT_FOUND,
 		ErrorPattern.TEMPLATE_NOT_FOUND,
 		ErrorPattern.CONSOLE_NOT_FOUND,
-		ErrorPattern.TICKET_NOT_FOUND,-> ItemNotFoundException("[${code}] ${failureType.message} ${term.desc}")
+		ErrorPattern.TICKET_NOT_FOUND,-> ItemNotFoundException("[${code}] (${failureType.code})${failureType.message} ${term.desc}")
 		ErrorPattern.OVIRTUSER_VO_INVALID,
 		ErrorPattern.OVIRTUSER_AUTH_INVALID,
 		ErrorPattern.OVIRTUSER_DUPLICATE,
@@ -80,13 +80,14 @@ fun ErrorPattern.toException(): ItCloudException {
 		ErrorPattern.VNIC_PROFILE_VO_INVALID,
 		ErrorPattern.TEMPLATE_VO_INVALID,
 		ErrorPattern.CONSOLE_VO_INVALID,
-		ErrorPattern.TICKET_VO_INVALID, -> InvalidRequestException("[${code}] ${term.desc} ${failureType.message}")
-		ErrorPattern.OVIRTUSER_LOCKED, -> ResourceLockedException("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.TICKET_VO_INVALID,
+		ErrorPattern.CERT_MISSING_REQUIRED_VALUE -> InvalidRequestException("[${code}] ${term.desc} (${failureType.code})${failureType.message}: $additionalMessage")
+		ErrorPattern.OVIRTUSER_LOCKED, -> ResourceLockedException("[${code}] ${term.desc} (${failureType.code})${failureType.message}: $additionalMessage")
 		ErrorPattern.NIC_UNLINKED_REQUIRED,
 		ErrorPattern.DISK_CONFLICT,
 		ErrorPattern.DISK_ATTACHMENT_DUPLICATE,
 		ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE,
-		ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> ConflictException("[${code}] ${term.desc} ${failureType.message}: $additional")
+		ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> ConflictException("[${code}] ${term.desc} (${failureType.code})${failureType.message}: $additional")
 		else -> ItCloudException(failureType.message)
 	}
 }

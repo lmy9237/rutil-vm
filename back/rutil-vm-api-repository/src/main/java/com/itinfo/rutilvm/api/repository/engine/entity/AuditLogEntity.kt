@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.common.gson
 
 import org.hibernate.annotations.Type
@@ -17,7 +18,7 @@ private val log = LoggerFactory.getLogger(AuditLogEntity::class.java)
 /**
  * [AuditLogEntity]
  *
- * @property auditLogId [Int]
+ * @property auditLogId [Long]
  * @property userId [UUID]
  * @property userName [String]
  * @property vmId [UUID]
@@ -75,7 +76,8 @@ class AuditLogEntity(
 	val logTime: LocalDateTime? = null,
 	val logTypeName: String = "",
 	val logType: Int = 0,
-	val severity: Int = 0,
+	@Column(name="severity", nullable=true)
+	private val severityValue: Int = 0,
 	val message: String = "",
 	val processed: Boolean = false,
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
@@ -107,7 +109,11 @@ class AuditLogEntity(
 	val brickPath: String = "",
 	val customId: String = "",
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+	val severity: AuditLogSeverity
+		get() = AuditLogSeverity.forValue(severityValue)
+
+	override fun toString(): String =
+		gson.toJson(this)
 
 	class Builder {
 		private var bAuditLogId: Long = 0L;fun auditLogId(block: () ->  Long?) { bAuditLogId = block() ?: 0L }

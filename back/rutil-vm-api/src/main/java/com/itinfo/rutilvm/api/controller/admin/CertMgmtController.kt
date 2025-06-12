@@ -1,11 +1,12 @@
 package com.itinfo.rutilvm.api.controller.admin
 
-
 import com.itinfo.rutilvm.api.controller.BaseController
+import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.service.admin.ItCertService
 import com.itinfo.rutilvm.api.model.cert.CertManager
 
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
 import io.swagger.annotations.ApiImplicitParams
@@ -85,11 +86,20 @@ class CertMgmtController : BaseController() {
 		@RequestBody(required = true) certReq: CertManagerReq
 	): ResponseEntity<Boolean?> {
 		log.info("attach ... cert: {}", certReq)
-		// val idInt: Int = id.toIntOrNull() ?: throw ErrorPattern.CERT_ID_NOT_FOUND.toException()
-		val res: Boolean? = cert.attach(certReq.address, certReq.rootPassword)
+		if (certReq.rootPassword.isNullOrEmpty())
+			throw ErrorPattern.CERT_MISSING_REQUIRED_VALUE.toException("비밀번호 없음")
+		if (certReq.address.isNullOrEmpty())
+			throw ErrorPattern.CERT_MISSING_REQUIRED_VALUE.toException("SSH 접근 호스트 주소 없음")
+		if (certReq.port == null)
+			throw ErrorPattern.CERT_MISSING_REQUIRED_VALUE.toException("SSH 접근 호스트 포트번호 없음")
+		val res: Boolean? = cert.attach(certReq.address, certReq.port, certReq.rootPassword)
 		return ResponseEntity.ok(res)
 	}
-	data class CertManagerReq(val address: String? = "", val rootPassword: String? = ""): Serializable
+	data class CertManagerReq(
+		val address: String? = "",
+		val port: Int? = 22,
+		val rootPassword: String? = ""
+	): Serializable
 
 	companion object {
 		private val log by LoggerDelegate()

@@ -5,6 +5,11 @@ import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.service.setting.ItEventService
+import com.itinfo.rutilvm.common.parseEnhanced2LDT
+import com.itinfo.rutilvm.common.rutilApiQueryDf
+import com.itinfo.rutilvm.common.rutilApiQueryDtf
+import com.itinfo.rutilvm.common.toDate
+import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.Api
@@ -13,8 +18,13 @@ import io.swagger.annotations.ApiImplicitParams
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import springfox.documentation.annotations.ApiIgnore
 import org.ovirt.engine.sdk4.types.LogSeverity
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -26,7 +36,11 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.thymeleaf.util.DateUtils
 import java.io.Serializable
+import java.time.LocalDateTime
+import java.time.format.DateTimeParseException
+import java.util.Date
 
 @Controller
 @Api(tags = ["Events"])
@@ -40,9 +54,10 @@ class EventController: BaseController() {
         notes="전체 이벤트 목록을 조회한다"
     )
 	@ApiImplicitParams(
-		ApiImplicitParam(name="severityThreshold", value="심각도 상위범위", dataTypeClass=String::class, required=false, paramType="query"),
-		ApiImplicitParam(name="pageNo", value="보여줄 페이지 번호", dataTypeClass=Int::class, example ="1", required=false, paramType="query"),
-		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, example="20", required=false, paramType="query"),
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
+		ApiImplicitParam(name="minSeverity", value="심각도 상위범위", dataTypeClass=String::class, required=false, paramType="query", example="normal"),
+		ApiImplicitParam(name="startDate", value="시작시간 (YYYYMMDD)", dataTypeClass=String::class, required=false, paramType="query", example=""),
 	)
     @ApiResponses(
         ApiResponse(code = 200, message = "OK")
@@ -50,13 +65,22 @@ class EventController: BaseController() {
     @GetMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    fun events(
-		@RequestParam(required=false) severityThreshold: String? = null,
-		@RequestParam(required=false) pageNo: Int? = 1,
-		@RequestParam(required=false) size: Int? = 20,
+	@Throws(DateTimeParseException::class)
+    fun findAll(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction=Sort.Direction.DESC) pageable: Pageable,
+		@RequestParam(required=false) minSeverity: String? = null,
+		@RequestParam(required=false) startDate: String? = null,
 	): ResponseEntity<List<EventVo>> {
-        log.info("/events ... severityThreshold: {}, pageNo: {}, size: {}, 이벤트 목록", severityThreshold, pageNo, size)
-		return ResponseEntity.ok(iEvent.findAll(severityThreshold, pageNo, size))
+        log.info("/events ... minSeverity: {}, startDate: {}, page: {}, size: {}, 이벤트 목록", minSeverity, startDate, pageable.pageNumber, pageable.pageSize)
+		val _startDate: Date? = if (startDate == null) null else when (startDate) {
+			"now", "today" -> Date().toLocalDateTime()?.minusDays(1)?.toDate()
+			"recent" -> Date().toLocalDateTime()?.minusDays(5)?.toDate()
+			else -> rutilApiQueryDf.parse(startDate)
+		}
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable, minSeverity, _startDate.toLocalDateTime()).content
+		)
     }
 
 	@ApiOperation(

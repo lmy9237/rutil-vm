@@ -133,6 +133,6 @@ enum class VmStatusB(
 		}
 
 		@JvmStatic fun forValue(value: Int? = -1): VmStatusB = valueMapping[value] ?: Unknown
-		@JvmStatic fun forCode(code: String? = "UNKNOWN"): VmStatusB = codeMapping[code?.uppercase()] ?: Unknown
+		@JvmStatic fun forCode(code: String? = Unknown.name.uppercase()): VmStatusB = codeMapping[code?.uppercase()] ?: Unknown
 	}
 }

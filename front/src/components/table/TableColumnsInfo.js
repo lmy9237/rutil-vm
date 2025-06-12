@@ -806,9 +806,9 @@ const TableColumnsInfo = {
   ],
 
   EVENTS: [
-    { header: Localization.kr.TIME, accessor: 'time', clickable: false , width: 100},
-    { header: '알림', accessor: '_severity', clickable: false, width: 30},    
-    { header: '메세지', accessor: 'description', clickable: false , width: 640},
+    { accessor: '_severity',   header: Localization.kr.ALERT,   clickable: false, width: 30 },
+    { accessor: 'time',        header: Localization.kr.TIME,    clickable: false, width: 100 },
+    { accessor: 'description', header: Localization.kr.MESSAGE, clickable: false, width: 640 },
   ],
 
   JOBS: [
@@ -831,7 +831,7 @@ const TableColumnsInfo = {
     { header: '비활성화 여부', accessor: '_isDisabled', clickable: false, width:'4%' },
     { header: '인증 공급자', accessor: 'authProvider', clickable: false },
     { header: '네임스페이스', accessor: 'namespace', clickable: false, width:'8%'  },
-    { header: '이메일', accessor: 'email', clickable: false },
+    { header: Localization.kr.EMAIL, accessor: 'email', clickable: false },
     { header: '가입일자', accessor: 'createDate', clickable: false },
   ],
   // 활성사용사세션

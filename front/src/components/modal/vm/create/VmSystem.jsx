@@ -1,14 +1,16 @@
 import { useState } from "react";
-import LabelInputNum from "../../../label/LabelInputNum";
-import LabelSelectOptions from "../../../label/LabelSelectOptions";
-import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../../../icons/RutilVmIcons";
-import Logger from "../../../../utils/Logger";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import { 
+  RVI16, rvi16ChevronDown, rvi16ChevronUp
+} from "@/components/icons/RutilVmIcons";
+import Logger                           from "@/utils/Logger";
+
 
 const VmSystem = ({ 
   formSystemState,
   setFormSystemState
 }) => {
-  
   const calculateFactors = (num) => {
     // 총 가산 CPU 계산
     Logger.debug(`VmSystem > calculateFactors ... num: ${num}`)

@@ -116,6 +116,7 @@ enum class ErrorPattern(
 	EVENT_VO_INVALID("EVENT-E003", Term.EVENT, FailureType.BAD_REQUEST),
 	CERT_ID_NOT_FOUND("CERT-E001", Term.CERT, FailureType.ID_NOT_FOUND),
 	CERT_NOT_FOUND("CERT-E002", Term.CERT, FailureType.NOT_FOUND),
+	CERT_MISSING_REQUIRED_VALUE("CERT-E003", Term.CERT, FailureType.BAD_REQUEST),
 	JOB_ID_NOT_FOUND("JOB-E001", Term.JOB, FailureType.ID_NOT_FOUND),
 	JOB_NOT_FOUND("JOB-E002", Term.JOB, FailureType.NOT_FOUND),
 	JOB_VO_INVALID("JOB-E002", Term.JOB, FailureType.BAD_REQUEST),
@@ -185,6 +186,7 @@ fun ErrorPattern.toError(): Error {
 		this.name.endsWith("_VO_INVALID") ||
 			this == ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID ||
 			this == ErrorPattern.OVIRTUSER_AUTH_INVALID ||
+			this == ErrorPattern.CERT_MISSING_REQUIRED_VALUE ||
 			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
 
 		// *_DUPLICATE 항목들 공통 처리

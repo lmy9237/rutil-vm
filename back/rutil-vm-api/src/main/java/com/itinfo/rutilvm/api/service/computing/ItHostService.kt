@@ -40,7 +40,6 @@ interface ItHostService {
 	 */
 	@Throws(Error::class)
 	fun findOne(hostId: String): HostVo?
-
 	/**
 	 * [ItHostService.add]
 	 * 호스트 생성 (전원관리 제외)
@@ -140,6 +139,7 @@ class HostServiceImpl(
 		val engineRemoteMgmt: RemoteConnMgmt? = certConfig.ovirtEngineSSH
 		engineRemoteMgmt?.registerRutilVMPubkey2Host(
 			hostVo.address,
+			hostVo.ssh?.port?.toInt(),
 			hostVo.ssh?.rootPassword,
 			certConfig.ovirtSSHPubkey
 		)

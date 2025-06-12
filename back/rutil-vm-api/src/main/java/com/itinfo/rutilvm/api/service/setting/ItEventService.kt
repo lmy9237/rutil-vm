@@ -4,14 +4,24 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.toEventVos
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
+import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecification
+import com.itinfo.rutilvm.api.repository.engine.entity.toEventVosPage
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.formatEnhancedFromLDT
+import com.itinfo.rutilvm.common.rutilApiQueryDf
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.findAllEvents
 import com.itinfo.rutilvm.util.ovirt.removeEvent
 
 import org.ovirt.engine.sdk4.types.Event
 import org.ovirt.engine.sdk4.types.LogSeverity
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 interface ItEventService {
     /**
@@ -21,7 +31,7 @@ interface ItEventService {
      * @return List<[EventVo]> 이벤트 목록
      */
     @Throws(Error::class)
-    fun findAll(severityThreshold: String?, pageNo: Int?, size: Int?): List<EventVo>
+    fun findAll(pageable: Pageable, minSeverity: String?, startDate: LocalDateTime?,): Page<EventVo>
 	/**
 	 * [ItEventService.remove]
 	 * 이벤트 제거
@@ -35,13 +45,27 @@ interface ItEventService {
 class EventServiceImpl (
 
 ): BaseService(), ItEventService {
+	@Autowired private lateinit var rAuditLog: AuditLogRepository
 
     @Throws(Error::class)
     override fun findAll(
-		severityThreshold: String?,
-		pageNo: Int?,
-		size: Int?
-	): List<EventVo> {
+		pageable: Pageable,
+		minSeverity: String?,
+		startDate: LocalDateTime?,
+	): Page<EventVo> {
+		val severity: Int =
+			AuditLogSeverity.forCode(minSeverity).value
+		log.info("findAll ... page: {}, size: {}, severity: {}, startDate: {}", pageable.pageNumber, pageable.pageSize, severity, rutilApiQueryDf.formatEnhancedFromLDT(startDate))
+		val spec = AuditLogSpecification.build(
+			minSeverity=severity,
+			startDate=startDate,
+			// logTypeName = logTypeName,
+			// messageContains = messageContains,
+			// endDate = endDate
+		)
+		val auditLogPage = rAuditLog.findAll(spec, pageable)
+		return auditLogPage.toEventVosPage()
+		/*
 		val max: Int = size ?: 1000
 		var searchQuery = "${if (severityThreshold != null) "severity >= $severityThreshold " else ""}sortby time desc"
 		if (pageNo != null) searchQuery += " page $pageNo"
@@ -50,6 +74,7 @@ class EventServiceImpl (
 			conn.findAllEvents(searchQuery = searchQuery, max = max.toString())
                 .getOrDefault(listOf())
         return res.toEventVos()
+        */
     }
 
 	@Throws(Error::class)

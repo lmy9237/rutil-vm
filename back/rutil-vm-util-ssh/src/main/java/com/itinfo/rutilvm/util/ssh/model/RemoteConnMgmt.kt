@@ -111,15 +111,16 @@ fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART
 
 fun RemoteConnMgmt.registerRutilVMPubkey2Host(
 	targetHost: String? = "",
+	targetHostSshPort: Int? = 22,
 	rootPassword4Host: String? = "",
 	pubkey2Add: String? = "",
 ): Result<Boolean> = runCatching {
-	log.info("registerRutilvmPubkey2Host ... ")
+	log.info("registerRutilVMPubkey2Host ... targetHost: {}, targetHostSshPort: {}", targetHost, targetHostSshPort)
 	val session: Session? = toInsecureSession()
 	if (targetHost?.isEmpty() == true ||
 		rootPassword4Host?.isEmpty() == true)
 		throw Error("필수 값 없음")
-	val command: List<String> = SSHHelper.registerRutilvmPubkey2Host(targetHost, rootPassword4Host, pubkey2Add)
+	val command: List<String> = SSHHelper.registerRutilVMPubkey2Host(targetHost, targetHostSshPort, rootPassword4Host, pubkey2Add)
 	return session?.executeAll(command) ?: throw Error("UNKNOWN ERROR!")
 }.onSuccess {
 	log.info("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 성공: {}", it)

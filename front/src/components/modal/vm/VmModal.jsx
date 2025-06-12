@@ -518,7 +518,7 @@ const VmModal = ({
             disabled={editMode}
             loading={isClustersLoading}
             options={clusters}
-            onChange={handleSelectIdChange(setClusterVo, clusters)}            
+            onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}            
             etcLabel={`[${Localization.kr.DATA_CENTER}: ${dataCenterVo.name}]`}
           />
           {!isTemplateHidden && (
@@ -527,27 +527,27 @@ const VmModal = ({
               disabled={editMode}
               loading={isTemplatesLoading}
               options={templates}
-              onChange={handleSelectIdChange(setTemplateVo, templates)}
+              onChange={handleSelectIdChange(setTemplateVo, templates, validationToast)}
             />
           )}
           <LabelSelectOptionsID label="운영 시스템"
             value={formInfoState.osType}
             options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
             loading={isOsListLoading}
-            onChange={handleInputChange(setFormInfoState, "osType") }
+            onChange={handleInputChange(setFormInfoState, "osType", validationToast) }
           />
           <LabelSelectOptions label="칩셋/펌웨어 유형"
             value={formInfoState.biosType}
             disabled={["PPC64", "S390X"].includes(architecture)}
             options={biosTypes}
             loading={isBiosTypesLoading}
-            onChange={handleInputChange(setFormInfoState, "biosType") }
+            onChange={handleInputChange(setFormInfoState, "biosType", validationToast) }
           />
           <LabelSelectOptions label="최적화 옵션"
             value={formInfoState.optimizeOption}
             options={vmTypes}
             loading={isVmTypesLoading}
-            onChange={handleInputChange(setFormInfoState, "optimizeOption")}
+            onChange={handleInputChange(setFormInfoState, "optimizeOption", validationToast)}
           />
         </div>
         <hr/>
@@ -619,9 +619,11 @@ const VmModal = ({
 export default VmModal;
 
 // 칩셋 옵션
+/*
 const chipsetOptionList = [
   { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
   { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
   { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
   { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
 ];
+*/

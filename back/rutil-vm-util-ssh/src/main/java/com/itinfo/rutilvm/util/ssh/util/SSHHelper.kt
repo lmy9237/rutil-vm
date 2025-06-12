@@ -35,15 +35,17 @@ class SSHHelper {
 		 *
 		 * @return [String] 조합 된 명령어
 		 */
-		fun registerRutilvmPubkey2Host(
+		fun registerRutilVMPubkey2Host(
 			targetHost: String? = "",
+			targetHostSshPort: Int? = 22,
 			rootPassword4Host: String? = "",
 			pubkey2Add: String? = "",
 		): List<String> {
 			// val pubKey: String = Files.rea
 			// val _pubkey = if (pubkey2Add.isNullOrEmpty()) "cat $RUTILVM_SSH_APP_PUBKEY" else "echo $pubkey2Add"
+// sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "echo \"$(cat $RUTILVM_SSH_APP_PUBKEY)\" su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
 			return listOf("""
-sshpass -p '${rootPassword4Host}' ssh root@${targetHost} "echo \"$(cat $RUTILVM_SSH_APP_PUBKEY)\" su - rutilvm -c 'mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys > /dev/null'"
+cat $RUTILVM_SSH_APP_PUBKEY | sshpass -p '${rootPassword4Host}' ssh -o StrictHostKeyChecking=no root@${targetHost} -p $targetHostSshPort 'su - rutilvm -c "mkdir -p $RUTILVM_DIR_SSH_HOST && touch $RUTILVM_DIR_SSH_HOST/authorized_keys && chown -R rutilvm:rutilvm $RUTILVM_DIR_SSH_HOST && chmod 700 $RUTILVM_DIR_SSH_HOST && chmod 600 $RUTILVM_DIR_SSH_HOST/authorized_keys && tee -a $RUTILVM_DIR_SSH_HOST/authorized_keys"'
 """.trimIndent()
 )
 		}
@@ -85,19 +87,43 @@ fun Session.executeAll(commands: List<String>): Result<Boolean> = runCatching {
 		channel?.setCommand(c)
 	}
 	log.info("---------------------------------------")
+
+	/*val commandOutput = channel?.inputStream?.bufferedReader()?.readText()
+	val commandError = channel?.errStream?.bufferedReader()?.readText()*/
+
 	// 시작!
 	channel?.connect()
 
-	val startTime = System.currentTimeMillis()
+	/*val startTime = System.currentTimeMillis()
 	while (channel?.isClosed == false && System.currentTimeMillis() - startTime < 30000) {
 		Thread.sleep(100)
 	}
 	val exitStatus = channel?.exitStatus
 	if (exitStatus != 0) {
 		return@runCatching false
+	}*/
+
+
+	val startTime = System.currentTimeMillis()
+	while (channel?.isClosed == false && System.currentTimeMillis() - startTime < 30000) {
+		Thread.sleep(100)
 	}
+	val exitStatus = channel?.exitStatus
+	log.debug("\n================ Results ================")
+	log.debug("Exit Status: $exitStatus")/*
+	if (!commandOutput.isNullOrEmpty())
+		log.debug("Output:\n$commandOutput")
+
+	if (!commandError.isNullOrEmpty())
+		log.error("Error:\n$commandError")*/
+
+	if (exitStatus == 0)
+		log.info("\n✅ Shell Execution Successful.")
+	else
+		throw JSchException("❌ Shell Execution Failed")
+
 	// 종료
-	channel.disconnect()
+	channel?.disconnect()
 	this@executeAll.disconnect()
 	true
 }.onSuccess {

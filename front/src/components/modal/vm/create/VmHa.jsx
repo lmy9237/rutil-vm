@@ -1,9 +1,13 @@
 import { useEffect } from "react";
-import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
-import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
-import LabelCheckbox          from "@/components/label/LabelCheckbox";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import { 
+  handleInputChange, handleSelectIdChange
+} from "@/components/label/HandleInput";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const priorities = [
   { value: 1, label: "낮음" },
@@ -14,9 +18,10 @@ const priorities = [
 const VmHa = ({
   editMode,
   domains,
-  formHaState,
-  setFormHaState
+  formHaState, setFormHaState
 }) => {
+  const { validationToast } = useValidationToast()
+  
   useEffect(() => {
     Logger.debug(`VmHa > useEffect ... `)
     // 편집 모드가 아니고, domains가 있을 경우 기본값 설정
@@ -83,13 +88,11 @@ const VmHa = ({
         </select>
       </div> */}
       <div className="py-2 font-bold">실행/{Localization.kr.MIGRATION} 큐에서 우선순위</div> 
+      
       <LabelSelectOptions label="우선 순위"
         value={formHaState.haPriority}
         options={priorities}
-        onChange={(e) =>setFormHaState((prev) => ({ 
-          ...prev,
-          haPriority: e.target.value
-        }))}
+        onChange={handleInputChange(setFormHaState, "haPriority", validationToast)}
       />
     </>
   );

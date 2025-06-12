@@ -300,8 +300,13 @@ const ENDPOINTS = {
   //#endregion: Disk
   
   //#region: Event
-  FIND_ALL_EVENTS: () =>                                                   `${ENDPOINT_API_V1}/events`,
-  FIND_ALL_EVENTS_PAGE: (severityThreshold, pageNo=1,size) =>              `${ENDPOINT_API_V1}/events?${severityThreshold ? `severityThreshold=${severityThreshold}` : ""}${size ? `&size=${size}` : ""}${pageNo ? `&pageNo=${pageNo}` : ""}`,
+  FIND_ALL_EVENTS: (page=0,size=1000) =>                                   `${ENDPOINT_API_V1}/events?page=${page}&size=${size}`,
+  FIND_ALL_EVENTS_PAGE: (
+    page=0,
+    size,
+    minSeverity=null,
+    startDate=null
+  ) =>                                                                     `${ENDPOINT_API_V1}/events?${minSeverity ? `minSeverity=${minSeverity}` : ""}${startDate ? `&startDate=${startDate}` : ""}${size ? `&size=${size}` : ""}${page ? `&page=${page}` : ""}`,
   FIND_EVENT: (eventId) =>                                                 `${ENDPOINT_API_V1}/events/${eventId}`,
   //#endregion: Event
 

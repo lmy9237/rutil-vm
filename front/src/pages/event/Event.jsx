@@ -1,6 +1,6 @@
-import SectionLayout from "@/components/SectionLayout";
-import HeaderButton  from "@/components/button/HeaderButton";
-import EventDupl     from "@/components/dupl/EventDupl";
+import SectionLayout          from "@/components/SectionLayout";
+import HeaderButton           from "@/components/button/HeaderButton";
+import EventDupl              from "@/components/dupl/EventDupl";
 import {
   rvi24Event
 } from "@/components/icons/RutilVmIcons";
@@ -8,6 +8,9 @@ import {
   useAllEvents
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 /**
  * @name AllEvents
@@ -17,30 +20,41 @@ import Localization           from "@/utils/Localization";
  * @returns
  */
 const AllEvents = () => {
+  const queryClient = useQueryClient();
+  const sizePerQuery = 5000;
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
+  
   const {
-    data: events,
+    data: events = [],
     isLoading: isEventsLoading,
     isError: isEventsError,
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
   } = useAllEvents({
+    page: currentPageIdx,
+    size: sizePerQuery,
     mapPredicate: (e) => ({
       ...e,
     })
   });
 
+  const [eventsAccumulated, setEventsAccumulated] = useState([...events]);
+  useEffect(() => {
+    Logger.debug(`AllEvents > useEffect ...`)
+    if (sizePerQuery) 
+    setEventsAccumulated((prev) => [...prev, events])
+  }, [currentPageIdx])
+
   return (
     <SectionLayout>
       <HeaderButton titleIcon={rvi24Event()}
-        title={Localization.kr.EVENT}
-        subtitle="Chart"
+        title={Localization.kr.EVENT} subtitle="Chart"
         buttons={[]}
         popupItems={[]}
         openModal={[]}
         togglePopup={() => {}}
       />
- 
         <div className="section-content v-start gap-8 w-full">
           <EventDupl events={events}
             refetch={refetchEvents} isRefetching={isEventsRefetching}

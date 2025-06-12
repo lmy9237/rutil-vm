@@ -1,28 +1,30 @@
-import Localization from "../../../../utils/Localization";
-import LabelInput from "../../../label/LabelInput";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import LabelInput                       from '@/components/label/LabelInput';
+import { 
+  handleInputChange, handleSelectIdChange
+} from "@/components/label/HandleInput";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const VmCommon = ({ 
   formInfoState,
   setFormInfoState
 }) => {
-  const handleInputChange = (field) => (e) => {
-    setFormInfoState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
-
+  const { validationToast } = useValidationToast()
   return (
     <>
       <div className="edit-second-content mb-1">
         <LabelInput id="name" label={Localization.kr.NAME}
           value={formInfoState.name}
-          onChange={handleInputChange("name") }
+          onChange={handleInputChange(setFormInfoState, "name", validationToast) }
         />
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formInfoState.description}
-          onChange={handleInputChange("description") }
+          onChange={handleInputChange(setFormInfoState, "description", validationToast) }
         />
         <LabelInput id="comment" label={Localization.kr.COMMENT}
            value={formInfoState.comment}
-           onChange={handleInputChange("comment") }
+           onChange={handleInputChange(setFormInfoState, "comment", validationToast) }
         />
       </div>
     </>

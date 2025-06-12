@@ -5730,20 +5730,20 @@ export const useCopyDisk = (
  * @returns useQuery훅
  */
 export const useAllEvents = ({
-  severityThreshold = null,
-  pageNo = null, size = null,
+  page = null, size = null, minSeverity = null, startDate = null,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allEvents'],
+  queryKey: ['allEvents', page],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvents(severityThreshold, pageNo, size)
+    const res = await ApiManager.findAllEvents(page, size, minSeverity, startDate)
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useAllEvents ... res: `, _res);
     return _res;
-  }
+  },
+  keepPreviousData: true,
 });
 /**
  * @name useAllEventsNormal
@@ -5758,7 +5758,7 @@ export const useAllEventsNormal = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEventsNormal'],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvents(null, 1, 100)
+    const res = await ApiManager.findAllEvents(1, 100, null, null)
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -5773,7 +5773,7 @@ export const useAllEventsAlert = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNotiEvents'],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvents("alert", 1, 20)
+    const res = await ApiManager.findAllEvents(0, 20, "alert", "today")
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];

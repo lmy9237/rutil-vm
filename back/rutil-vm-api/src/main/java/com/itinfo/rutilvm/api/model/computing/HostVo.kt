@@ -417,7 +417,11 @@ fun HostVo.toHostBuilder(): HostBuilder = HostBuilder()
  * 호스트 생성 빌더
  */
 fun HostVo.toAddHost(): Host = toHostBuilder()
-	.ssh(SshBuilder().port(ssh?.port).build()) // 기본값이 22 포트 연결은 더 테스트 해봐야함(ovirt 내에서 한적은 없음)
+	.ssh(
+		SshBuilder()
+		.port(ssh?.port)
+		.build()
+	)
 	.rootPassword(ssh?.rootPassword)   // 비밀번호 잘못되면 보여줄 코드?
 	.build()
 

@@ -61,7 +61,6 @@ const TableRowClick = ({
         data-rowclick
         onClick={props.onClick ?? handleClick}
         style={{
-          display: "inline-block",
           textAlign: "left",
           cursor: id ? "pointer" : "default",
           ...props.style,

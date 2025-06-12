@@ -4,7 +4,6 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.cert.model.CertType
 import com.itinfo.rutilvm.util.cert.util.CertParser
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
-import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
 import com.itinfo.rutilvm.util.ssh.model.toInsecureSession
 import com.itinfo.rutilvm.util.ssh.util.fetchFile
 import com.jcraft.jsch.JSchException
@@ -124,23 +123,6 @@ open class CertManager(
 		log.info("인증서 임시보관 성공!")
 	}.onFailure {
 		log.error("인증서 임시보관 실패 ... 이유: {}", it.localizedMessage)
-		it.stackTrace
-	}
-
-	fun registerRutilVMPubkey2Host(
-		rootPassword: String? = "", ovirtSSHPubkey: String? = "",
-	): Result<Boolean> = runCatching {
-		connInfo?.registerRutilVMPubkey2Host(
-			"$address:${connInfo.port}",
-			rootPassword,
-			ovirtSSHPubkey
-		)?.getOrDefault(false)
-			?: false
-			// TODO: 예외처리 필요
-	}.onSuccess {
-		log.info("SSH 공개키 등록 및 연결 성공!")
-	}.onFailure {
-		log.error("SSH 공개키 등록 및 연결 실패 ... 이유: {}", it.localizedMessage)
 		it.stackTrace
 	}
 

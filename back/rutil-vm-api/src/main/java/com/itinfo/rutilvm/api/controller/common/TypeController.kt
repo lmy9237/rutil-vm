@@ -25,6 +25,21 @@ class TypeController: BaseController(){
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="이벤트 심각도 유형 목록 조회",
+		notes="이벤트 심각도 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("auditLogSeverity")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allAuditLogSeverities(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/auditLogSeverity ... 이벤트 심각도 유형 목록")
+		return ResponseEntity.ok(iType.findAllAuditLogSeverities())
+	}
+	@ApiOperation(
+		httpMethod="GET",
 		value="BIOS 유형 (a.k.a. 칩셋옵션) 목록 조회",
 		notes="BIOS 유형 목록을 조회한다"
 	)
@@ -35,7 +50,7 @@ class TypeController: BaseController(){
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun allBiosTypes(): ResponseEntity<List<TypeVo>> {
-		log.info("/type/bios ... BIOS 유형 (a.k.a. 칩셋옵션) 목록")
+		log.info("/types/bios ... BIOS 유형 (a.k.a. 칩셋옵션) 목록")
 		return ResponseEntity.ok(iType.findAllBiosTypes())
 	}
 	@ApiOperation(
@@ -50,7 +65,7 @@ class TypeController: BaseController(){
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun allDiskContentTypes(): ResponseEntity<List<TypeVo>> {
-		log.info("/type/diskContentType ... 디스크 유형 목록")
+		log.info("/types/diskContentType ... 디스크 유형 목록")
 		return ResponseEntity.ok(iType.findAllDiskContentTypes())
 	}
 
@@ -66,7 +81,7 @@ class TypeController: BaseController(){
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun allMigrationSupports(): ResponseEntity<List<TypeVo>> {
-		log.info("/type/migrationSupport ... 마이그레이션 모드 목록")
+		log.info("/types/migrationSupport ... 마이그레이션 모드 목록")
 		return ResponseEntity.ok(iType.findAllMigrationSupports())
 	}
 
@@ -82,7 +97,7 @@ class TypeController: BaseController(){
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun allVmTypes(): ResponseEntity<List<TypeVo>> {
-		log.info("/type/vmType ... 가상머신 유형 (a.k.a. 최적화 옵션) 목록")
+		log.info("/types/vmType ... 가상머신 유형 (a.k.a. 최적화 옵션) 목록")
 		return ResponseEntity.ok(iType.findAllVmTypes())
 	}
 	companion object {

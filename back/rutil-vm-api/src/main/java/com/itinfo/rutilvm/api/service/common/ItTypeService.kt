@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.service.common
 
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.ovirt.business.BiosType
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
@@ -10,6 +11,14 @@ import org.springframework.stereotype.Service
 import java.io.Serializable
 
 interface ItTypeService {
+	/**
+	 * [ItTypeService.findAllAuditLogSeverities]
+	 * 이벤트 심각도 유형 목록
+	 *
+	 * @return List<[TypeVo]> 이벤트 심각도 유형 목록
+	 */
+	@Throws(Error::class)
+	fun findAllAuditLogSeverities(): List<TypeVo>
 	/**
 	 * [ItTypeService.findAllBiosTypes]
 	 * BiosType 목록
@@ -48,6 +57,10 @@ interface ItTypeService {
 class TypeServiceImpl(
 
 ): BaseService(), ItTypeService {
+	override fun findAllAuditLogSeverities(): List<TypeVo> {
+		log.info("findAllAuditLogSeverities ... ")
+		return AuditLogSeverity.allAuditLogSeverities.toTypeVosFromAuditLogSeverities()
+	}
 
 	override fun findAllBiosTypes(): List<TypeVo> {
 		log.info("findAllBiosTypes ... ")
@@ -77,6 +90,13 @@ class TypeServiceImpl(
 
 data class TypeVo(val id: String, val kr: String, val en: String): Serializable
 
+fun AuditLogSeverity.toTypeVoFromAuditLogSeverity(): TypeVo = TypeVo(
+	this@toTypeVoFromAuditLogSeverity.name.lowercase(),
+	this@toTypeVoFromAuditLogSeverity.kr,
+	this@toTypeVoFromAuditLogSeverity.en,
+)
+fun List<AuditLogSeverity>.toTypeVosFromAuditLogSeverities(): List<TypeVo> =
+	this@toTypeVosFromAuditLogSeverities.map { it.toTypeVoFromAuditLogSeverity() }
 fun BiosType.toTypeVoFromBiosType(): TypeVo = TypeVo(
 	this@toTypeVoFromBiosType.name.lowercase(),
 	this@toTypeVoFromBiosType.kr,

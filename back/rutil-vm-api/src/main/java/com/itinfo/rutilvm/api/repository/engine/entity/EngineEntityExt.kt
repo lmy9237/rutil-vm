@@ -2,12 +2,14 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
+import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.toDomainSize
 import com.itinfo.rutilvm.api.model.storage.toStorageVo
@@ -19,6 +21,7 @@ import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageType
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
@@ -28,6 +31,23 @@ import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
+import org.springframework.data.domain.Page
+
+//region: AuditLogEntity
+fun AuditLogEntity.toEventVo(): EventVo = EventVo.builder {
+	id { this@toEventVo.auditLogId.toString() }
+	severity { this@toEventVo.severity }
+	description { this@toEventVo.message }
+	time { this@toEventVo.logTime }
+	code { this@toEventVo.logType }
+	correlationId { this@toEventVo.correlationId }
+}
+fun List<AuditLogEntity>.toEventVos(): List<EventVo> =
+	this@toEventVos.map { it.toEventVo() }
+fun Page<AuditLogEntity>.toEventVosPage(): Page<EventVo> =
+	this@toEventVosPage.map { it.toEventVo() }
+//endregion: AuditLogEntity
+
 
 //region: DiskVmElementEntity
 fun DiskVmElementEntity.toVmDisk(): DiskImageVo {
@@ -134,7 +154,6 @@ fun EngineSessionsEntity.toUserSessionVo(): UserSessionVo {
 		// TODO: sessionLastActiveTime, sessionStartTime 값 찾아 넣기
 	}
 }
-
 fun List<EngineSessionsEntity>.toUserSessionVos(): List<UserSessionVo> =
 	this@toUserSessionVos.map { it.toUserSessionVo() }
 //endregion: EngineSessionsEntity

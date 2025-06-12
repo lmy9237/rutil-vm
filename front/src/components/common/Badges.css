@@ -24,9 +24,9 @@
   background-color: var(--color-alert);
 }
 .badge-status.mini {
-  height:12px !important;aspect-ratio:1/1;
-  padding:3.5px !important;
-  border-radius: 100% !important;
+  height:12px !important;
+  padding:0 6px !important;
+  border-radius: 4px !important;
 }
 
 .badge-status.default { 

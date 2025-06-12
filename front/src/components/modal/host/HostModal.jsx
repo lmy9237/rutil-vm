@@ -8,8 +8,7 @@ import LabelSelectOptionsID             from "@/components/label/LabelSelectOpti
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelInputNum                    from "@/components/label/LabelInputNum";
 import { 
-  handleInputChange, 
-  handleSelectIdChange
+  handleInputChange, handleSelectIdChange, handleInputCheck
 } from "@/components/label/HandleInput";
 import {
   useAddHost,
@@ -148,27 +147,27 @@ const HostModal = ({
         disabled={editMode && !isMaintenance}
         loading={isClustersLoading}
         options={clusters}
-        onChange={handleSelectIdChange(setClusterVo, clusters)}
+        onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
       />
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
+        onChange={handleInputChange(setFormState, "name", validationToast)}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
+        onChange={handleInputChange(setFormState, "comment", validationToast)}
       />
       <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
         value={formState.address}
         disabled={editMode}
-        onChange={handleInputChange(setFormState, "address")}
+        onChange={handleInputChange(setFormState, "address", validationToast)}
       />
       <LabelInputNum id="sshPort" label="SSH 포트"
         value={formState.sshPort}
         disabled={editMode}
-        onChange={handleInputChange(setFormState, "sshPort")}
+        onChange={handleInputChange(setFormState, "sshPort", validationToast)}
       />
       <hr />
       {!editMode && (
@@ -180,7 +179,7 @@ const HostModal = ({
           <LabelInput id="sshRootPassword" label="암호" 
             type="password"           
             value={formState.sshRootPassword}
-            onChange={handleInputChange(setFormState, "sshRootPassword")}
+            onChange={handleInputChange(setFormState, "sshRootPassword", validationToast)}
           />
         </>
       )}
@@ -193,7 +192,7 @@ const HostModal = ({
 
       <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
         checked={formState.deployHostedEngine}
-        onChange={() => setFormState((prev) => ({ ...prev, deployHostedEngine: !formState.deployHostedEngine }))}
+        onChange={handleInputCheck(setFormState, "deployHostedEngine", validationToast)}
         disabled={editMode}
         tType={"배포"} fType={"없음"}
       />

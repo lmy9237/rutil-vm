@@ -3125,8 +3125,10 @@ const ApiManager = {
    * 
    * @returns 
    **/
-  findAllEvents: async (severityThreshold=null, pageNo=null, size=null) => {
-    const _url = (pageNo || severityThreshold) ? ENDPOINTS.FIND_ALL_EVENTS_PAGE(severityThreshold, pageNo, size) : ENDPOINTS.FIND_ALL_EVENTS() 
+  findAllEvents: async (page=null, size=null, minSeverity=null, startDate=null) => {
+    const _url = (minSeverity != null || startDate != null) 
+      ? ENDPOINTS.FIND_ALL_EVENTS_PAGE(page, size, minSeverity, startDate)
+      : ENDPOINTS.FIND_ALL_EVENTS(page, size)
     return makeAPICall({
       method: "GET", 
       url: _url,

@@ -35,6 +35,5 @@ enum class DiskStorageType(
 
 		@JvmStatic fun forValue(value: Int?=-1): DiskStorageType = valueMapping[value] ?: UNKNOWN
 		@JvmStatic fun forStorageValue(value: String="IMAGE"): DiskStorageType = storageMapping[value] ?: IMAGE
-
 	}
 }

@@ -55,8 +55,9 @@ LABEL environment="production"
 LABEL app-name="rutil-vm-api"
 
 # tzdata for timzone
-RUN apt-get update -y
-RUN apt-get install -y tzdata
+RUN apt-get update && \
+    apt-get install -y tzdata && \
+    rm -rf /var/lib/apt/lists/*
 # timezone env with default
 
 ENV RUTIL_VM_VERSION=0.3.3

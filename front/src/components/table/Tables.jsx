@@ -242,7 +242,7 @@ const Tables = ({
       setCurrentPage(newPage);
     }
   };
-
+  
   // const handleRowClick = (rowIndex, e) => {
   //   Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
   //   const clickedRow = sortedData[rowIndex];
@@ -263,32 +263,32 @@ const Tables = ({
   //     onRowClick(selectedData); // 단일 선택된 데이터 전달
   //   }
   // };
-const handleRowClick = (rowIndex, e) => {
-  Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
-  const clickedRow = sortedData[rowIndex];
-  if (!clickedRow) return;
+  const handleRowClick = (rowIndex, e) => {
+    Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
+    const clickedRow = sortedData[rowIndex];
+    if (!clickedRow) return;
 
-  if (e.shiftKey && lastClickedRowIndex !== null) {
-    const start = Math.min(lastClickedRowIndex, rowIndex);
-    const end = Math.max(lastClickedRowIndex, rowIndex);
-    const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-    setSelectedRows(range);
-    onRowClick(range.map(index => sortedData[index]));
-  } else if (e.ctrlKey || e.metaKey) {
-    setSelectedRows((prev) => {
-      const updated = prev.includes(rowIndex)
-        ? prev.filter((i) => i !== rowIndex)
-        : [...prev, rowIndex];
-      onRowClick(updated.map(i => sortedData[i]));
-      return updated;
-    });
-    setLastClickedRowIndex(rowIndex);
-  } else {
-    setSelectedRows([rowIndex]);
-    onRowClick([clickedRow]);
-    setLastClickedRowIndex(rowIndex);
-  }
-};
+    if (e.shiftKey && lastClickedRowIndex !== null) {
+      const start = Math.min(lastClickedRowIndex, rowIndex);
+      const end = Math.max(lastClickedRowIndex, rowIndex);
+      const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+      setSelectedRows(range);
+      onRowClick(range.map(index => sortedData[index]));
+    } else if (e.ctrlKey || e.metaKey) {
+      setSelectedRows((prev) => {
+        const updated = prev.includes(rowIndex)
+          ? prev.filter((i) => i !== rowIndex)
+          : [...prev, rowIndex];
+        onRowClick(updated.map(i => sortedData[i]));
+        return updated;
+      });
+      setLastClickedRowIndex(rowIndex);
+    } else {
+      setSelectedRows([rowIndex]);
+      onRowClick([clickedRow]);
+      setLastClickedRowIndex(rowIndex);
+    }
+  };
 
   useEffect(() => {
     if (sortConfig.key) {
@@ -384,7 +384,6 @@ const handleRowClick = (rowIndex, e) => {
                 if (isTableRowClick) {
                   determinedAlign = "left";
                 }
-                
             
                 return (
                   <td

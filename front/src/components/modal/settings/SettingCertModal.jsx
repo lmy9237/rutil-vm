@@ -4,6 +4,7 @@ import useGlobal                        from "@/hooks/useGlobal";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
+import LabelInputNum                    from "@/components/label/LabelInputNum";
 import { 
   handleInputChange, 
 } from "@/components/label/HandleInput";
@@ -41,6 +42,7 @@ const SettingCertModal = ({
 
   const initialFormState = {
     address: certsSelected[0]?.address || "",
+    port: 22,
     rootPassword: "",
   };
   const [formState, setFormState] = useState(initialFormState);
@@ -60,6 +62,7 @@ const SettingCertModal = ({
     if (certsSelected[0]) {
       setFormState({
         address: certsSelected[0]?.address || "",
+        port: certsSelected[0]?.connInfo?.port || 22,
         rootPassword: "",
       })
     }
@@ -68,6 +71,7 @@ const SettingCertModal = ({
   const validateForm = () => {
     Logger.debug(`SettingCertModal > validateForm ... `)
     if (checkEmpty(formState.address)) return "입력 된 주소가 없습니다."
+    if (checkEmpty(formState.port)) return "입력 된 포트번호호가 없습니다."
     if (checkEmpty(formState.rootPassword)) return "입력 된 root 사용자의 비밀번호가 없습니다."
     return null;
   };
@@ -96,6 +100,11 @@ const SettingCertModal = ({
         value={formState.address}
         disabled={true}
         onChange={handleInputChange(setFormState, "address")}
+      />
+      <LabelInputNum id="port" label="SSH 포트"
+        value={formState.port}
+        disabled={true}
+        onChange={handleInputChange(setFormState, "port")}
       />
       <LabelInput id="username" label={`${Localization.kr.USER} ${Localization.kr.NAME}`}
         value="root" disabled={true} />

@@ -28,14 +28,25 @@ class Localization {
 			locKr = propH.loadProperties(PROP_LOC_KR_FULL_PATH)
 			return locH
 		}
+		//region: AuditLogSeverityL
+		object AuditLogSeverityL {
+			object KR {
+				val NORMAL		= locKr?.get(AuditLogSeverity.NORMAL.localizationKey)?.toString() ?: ""
+				val WARNING		= locKr?.get(AuditLogSeverity.WARNING.localizationKey)?.toString() ?: ""
+				val ERROR		= locKr?.get(AuditLogSeverity.ERROR.localizationKey)?.toString() ?: ""
+				val ALERT		= locKr?.get(AuditLogSeverity.ALERT.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: AuditLogSeverityL
 
-		//region BiosTypeL
+
+		//region: BiosTypeL
 		object BiosTypeL {
 			object KR {
-				val I440FX_SEA_BIOS	= locKr?.get(BiosType.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
+				val I440FX_SEA_BIOS		= locKr?.get(BiosType.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
 				val Q35_SEA_BIOS		= locKr?.get(BiosType.Q35_SEA_BIOS.localizationKey)?.toString() ?: ""
 				val Q35_OVMF			= locKr?.get(BiosType.Q35_OVMF.localizationKey)?.toString() ?: ""
-				val Q35_SECURE_BOOT	= locKr?.get(BiosType.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
+				val Q35_SECURE_BOOT		= locKr?.get(BiosType.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
 			}
 			object EN {
 				val I440FX_SEA_BIOS	= locEn?.get(BiosType.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
@@ -137,17 +148,26 @@ class Localization {
 		//endregion
 	}
 
+	fun findLocalizedName4AuditLogSeverity(type: AuditLogSeverity, loc: String = "kr"): String =
+		when(type) {
+			AuditLogSeverity.NORMAL ->	if (loc == "kr") AuditLogSeverityL.KR.NORMAL else type.name
+			AuditLogSeverity.WARNING -> if (loc == "kr") AuditLogSeverityL.KR.WARNING else type.name
+			AuditLogSeverity.ERROR ->	if (loc == "kr") AuditLogSeverityL.KR.ERROR else type.name
+			AuditLogSeverity.ALERT ->	if (loc == "kr") AuditLogSeverityL.KR.ALERT else type.name
+			else -> if (loc == "kr") "알 수 없음" else "Unknown"
+		}
+
 	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String =
 		when(type) {
 			ProviderType.OPENSTACK_NETWORK ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
-			ProviderType.FOREMAN -> 				if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
-			ProviderType.OPENSTACK_IMAGE -> 		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
-			ProviderType.OPENSTACK_VOLUME ->		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
+			ProviderType.FOREMAN -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
+			ProviderType.OPENSTACK_IMAGE -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
+			ProviderType.OPENSTACK_VOLUME ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
 			ProviderType.VMWARE -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
 			ProviderType.EXTERNAL_NETWORK -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
 			ProviderType.KVM ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
 			ProviderType.XEN ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
-			ProviderType.KUBEVIRT ->				if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+			ProviderType.KUBEVIRT ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
 		}
 
 	fun findLocalizedName4BiosType(type: BiosType, loc: String = "kr"): String =
@@ -171,7 +191,6 @@ class Localization {
 			DiskContentType.BACKUP_SCRATCH -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
 			DiskContentType.UNKNOWN -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
 		}
-
 
 	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String =
 		when(type) {

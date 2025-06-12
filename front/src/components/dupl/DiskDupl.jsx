@@ -103,11 +103,9 @@ const DiskDupl = ({
   return (
     <>{/* v-start으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <div className="disk-filter-option flex">
-          <div className="mr-3">
-            <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-          </div>
-          <Select
+        <div className="f-start disk-filter-option gap-4">
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+          <Select className="h-full"
             value={selectedContentType}
             onValueChange={setSelectedContentType}
             position="popper"

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 
 interface ItProviderService {
 	/**
-	 * [ItEventService.findAll]
+	 * [ItProviderService.findAll]
 	 * 공급자 목록
 	 *
 	 * @return List<[ProviderVo]> 공급자 목록
