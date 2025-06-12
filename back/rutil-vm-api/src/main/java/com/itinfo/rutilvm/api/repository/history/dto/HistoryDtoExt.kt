@@ -216,6 +216,7 @@ fun VmSamplesHistoryEntity.toVmCpuUsageDto(conn: Connection): UsageDto {
     val vm: Vm = conn.findVm(this@toVmCpuUsageDto.vmId.toString())
         .getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
     return UsageDto.builder {
+		id { vm.id() }
         name { vm.name() }
         cpuPercent { this@toVmCpuUsageDto.cpuUsagePercent }
     }
@@ -228,6 +229,7 @@ fun VmSamplesHistoryEntity.toVmMemUsageDto(conn: Connection): UsageDto {
     val vm: Vm = conn.findVm(this@toVmMemUsageDto.vmId.toString())
         .getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
     return UsageDto.builder {
+		id { vm.id() }
         name { vm.name() }
         memoryPercent { this@toVmMemUsageDto.memoryUsagePercent }
     }
