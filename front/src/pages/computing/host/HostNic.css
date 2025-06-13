@@ -126,12 +126,6 @@
   text-align: center;
 }
 
-.split-layout-group {
-  display: flex;
-  width: 100%;
-  gap: 24px; 
-}
-
 .split-item-two-thirds {
   width: 70%;
   padding: 16px; 

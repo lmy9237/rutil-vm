@@ -79,21 +79,26 @@ const RadialBarChart = ({
         },
       },
     },
-    tooltip: {// '사용률'% 사용중 '남은사용량'% 사용가능 계산필요
+     tooltip: {
       enabled: true,
       fillSeriesColor: false,
-      theme: "light", // 'dark' 로 변경가능
-      y: {
-        formatter: (val) => {
-          const used = parseInt(val);
-          const remaining = 100 - used;
-          return `사용률 : ${used}%  / \n남은사용량 : ${remaining}%`;
-        },
-        title: {
-          formatter: () => "",
-        },
-      },
-    },
+      theme: "light",
+      custom: function({ series, seriesIndex }) {
+        const used = parseInt(series[seriesIndex]);
+        const remaining = 100 - used;
+        return `
+          <div style="
+            text-align: center;
+            font-size: 13px;
+            padding: 8px;
+            line-height: 1.4;
+          ">
+            <div><strong>사용률:</strong> ${used}%</div>
+            <div><strong>남은 사용량:</strong> ${remaining}%</div>
+          </div>
+        `;
+      }
+  }
   });
 
   useEffect(() => {

@@ -1,7 +1,14 @@
 .grid-item {
   cursor: pointer;
   min-height:30%;
-  border-radius: var(--br-default);
+  min-width: 80px;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  border-radius: 1px;
+  /* border-radius: var(--br-default); */
   flex: 1 1 calc(100% / 5 - 8px);
 }
 .grid-item.crit { background-color: #E21D1D; }

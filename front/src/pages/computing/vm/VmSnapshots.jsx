@@ -8,8 +8,6 @@ import SelectedIdView         from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 import TablesRow              from "@/components/table/TablesRow";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import VmSnapshotActionButtons from "@/components/dupl/VmSnapshotActionButtons";
 import {
@@ -97,12 +95,10 @@ const VmSnapshots = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start gap-4 w-full">
-        <VmSnapshotActionButtons 
-          hasLocked={hasLockedSnapshot}
-          inPreview={inPreview}
-        />
-      </div>
+      <VmSnapshotActionButtons 
+        hasLocked={hasLockedSnapshot}
+        inPreview={inPreview}
+      />
       <SnapshotHostBackground>
         <div ref={snapshotItemRef}
           className="split-item"
@@ -148,6 +144,7 @@ const VmSnapshots = ({
             </div>
           ))}
         </div>
+        
         <div className="split-item">
           {snapshotsSelected.length > 0 ? (
             <TablesRow columns={TableColumnsInfo.SNAPSHOT_INFO_FROM_VM}

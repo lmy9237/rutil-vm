@@ -25,6 +25,7 @@ import NoneNetwork from "./hostNics/NoneNetwork";
 import ClusterNetworkList from "./hostNics/ClusterNetworkList";
 import { getBondModalStateForCreate, getBondModalStateForEdit, getNetworkAttachmentModalState, transDetachNA, transNA, transNic } from "./hostNics/TransHostNicData";
 import FilterButtons from "@/components/button/FilterButtons";
+import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 
 const HostNics = ({
   hostId
@@ -1173,88 +1174,87 @@ const filterOptions = [
         )}
       </div>
 
-      <div className="f-btw w-full" style={{ padding: "inherit", position: "relative" }}>
-        <div className="split-layout-group flex w-full">
-          {/* 작업 탭 */}
-          <div className="split-item split-item-two-thirds"
-            onDragOver={e => {
-              if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "move";
-              }
-            }}
-            onDrop={e => {
-              if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
-                handleDropBond(dragItem.item, dragItem.parentBond);
-                setDragItem(null);
-              }
-            }}
-          >
-            <div className="row group-span mb-4 items-center">
-              <div className="col-40 fs-16">인터페이스</div>
-              <div className="col-20"></div>
-              <div className="col-40 fs-16">할당된 논리 네트워크</div>
-            </div>
-            <br/>
+      <SnapshotHostBackground className="f-btw w-full" style={{ padding: "inherit", position: "relative" }}>
+        {/* 작업 탭 */}
+        <div className="split-item split-item-two-thirds"
+          onDragOver={e => {
+            if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+            }
+          }}
+          onDrop={e => {
+            if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
+              handleDropBond(dragItem.item, dragItem.parentBond);
+              setDragItem(null);
+            }
+          }}
+        >
+          <div className="row group-span mb-4 items-center">
+            <div className="col-40 fs-16">인터페이스</div>
+            <div className="col-20"></div>
+            <div className="col-40 fs-16">할당된 논리 네트워크</div>
+          </div>
+          <br/>
 
-          {transNicData.map((nic) => {
-            const matchedNAs = [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
-              (na) => na.hostNicVo?.name === nic.name
-            );
-            return (
-              <div className="row group-span mb-4 items-center" key={nic.id} >
-                {/* 인터페이스 */}
-                <div className="col-40" onDragOver={(e) => e.preventDefault()}>
-                  {nic.bondingVo?.slaveVos?.length > 0 
-                    ? <BondNic
+        {transNicData.map((nic) => {
+          const matchedNAs = [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
+            (na) => na.hostNicVo?.name === nic.name
+          );
+          return (
+            <div className="row group-span mb-4 items-center" key={nic.id} >
+              {/* 인터페이스 */}
+              <div className="col-40" onDragOver={(e) => e.preventDefault()}>
+                {nic.bondingVo?.slaveVos?.length > 0 
+                  ? <BondNic
+                      nic={nic}
+                      dragItem={dragItem}
+                      handleDragStart={handleDragStart}
+                      handleAddBaseNicToBond={handleAddBaseNicToBond}
+                      setSelectedNic={setSelectedNic}
+                      editBondingData={tossEditBondingData}
+                    />
+                  : <BaseNic
+                      nic={nic}
+                      handleDragStart={handleDragStart}
+                      handleDrop={handleDrop}
+                      handleDragOver={handleDragOver}
+                    />
+                }
+              </div>
+
+              {/* 화살표 */}
+              <div className="col-20 flex justify-center items-center">
+                {matchedNAs.length > 0 && ( <RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
+              </div>
+
+              {/* 할당된 논리 네트워크 */}
+              <div className="col-40 fs-18 network-stack">
+                {matchedNAs.length > 0 ? (
+                  matchedNAs.map((na) => (
+                    <React.Fragment key={`${nic.id}-${na.networkVo?.id}`}>
+                      <MatchNetwork
+                        networkAttach={na}
                         nic={nic}
-                        dragItem={dragItem}
-                        handleDragStart={handleDragStart}
-                        handleAddBaseNicToBond={handleAddBaseNicToBond}
-                        setSelectedNic={setSelectedNic}
-                        editBondingData={tossEditBondingData}
-                      />
-                    : <BaseNic
-                        nic={nic}
-                        handleDragStart={handleDragStart}
                         handleDrop={handleDrop}
                         handleDragOver={handleDragOver}
+                        handleDragStart={handleDragStart}
+                        setSelectedNetwork={setSelectedNetwork}
+                        editNetworkAttachmentData={tossEditNetworkAttachmentData}
                       />
-                  }
-                </div>
-
-                {/* 화살표 */}
-                <div className="col-20 flex justify-center items-center">
-                  {matchedNAs.length > 0 && ( <RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
-                </div>
-
-                {/* 할당된 논리 네트워크 */}
-                <div className="col-40 fs-18 network-stack">
-                  {matchedNAs.length > 0 ? (
-                    matchedNAs.map((na) => (
-                      <React.Fragment key={`${nic.id}-${na.networkVo?.id}`}>
-                        <MatchNetwork
-                          networkAttach={na}
-                          nic={nic}
-                          handleDrop={handleDrop}
-                          handleDragOver={handleDragOver}
-                          handleDragStart={handleDragStart}
-                          setSelectedNetwork={setSelectedNetwork}
-                          editNetworkAttachmentData={tossEditNetworkAttachmentData}
-                        />
-                      </React.Fragment>
-                    ))
-                  ) : (
-                    <NoneNetwork
-                      nic={nic}
-                      handleDragOver={handleDragOver}
-                      handleDrop={handleDrop}
-                    />
-                  )}
-                </div>
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <NoneNetwork
+                    nic={nic}
+                    handleDragOver={handleDragOver}
+                    handleDrop={handleDrop}
+                  />
+                )}
               </div>
-            );
-          })}
+            </div>
+          );
+        })}
         </div>
 
         {/* 할당되지않은 네트워크 */}
@@ -1281,7 +1281,7 @@ const filterOptions = [
                 network={network}
                 handleDragStart={handleDragStart}
               />
-           ))} */}
+          ))} */}
           {[...baseItems.network, ...movedItems.network]
             .filter(network => {
               if (networkFilter === 'required') return network.required;
@@ -1296,8 +1296,7 @@ const filterOptions = [
               />
           ))}
         </div>
-      </div>
-    </div>
+      </SnapshotHostBackground>
       {/* <LabelCheckbox id="connection" label={`${Localization.kr.HOST}와 Engine간의 연결을 확인`}
         value={connection}
         onChange={(e) => setConnection(e.target.checked)}

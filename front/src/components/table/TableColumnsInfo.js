@@ -432,9 +432,9 @@ const TableColumnsInfo = {
     { accessor: 'comment',        header: Localization.kr.COMMENT,          width: 170    },
   ],
   DATACENTERS_FROM_STORAGE_DOMAIN: [
-    { accessor: "icon",           header: Localization.kr.STATUS,     clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: '_name',          header: Localization.kr.NAME,       clickable: false, width: '17%' },
-    { accessor: '_domainStatus',  header: `${Localization.kr.DATA_CENTER} 내의 도메인 상태`, clickable: false },
+    { accessor: "icon",           header: Localization.kr.STATUS,     clickable: false, width: 30 },
+    { accessor: '_name',          header: Localization.kr.NAME,       clickable: false, width: 100 },
+    { accessor: '_domainStatus',  header: `${Localization.kr.DATA_CENTER} 내의 도메인 상태`, clickable: false , width: 640 },
   ],
   DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN: [
     { accessor: 'name',           header: Localization.kr.NAME, clickable: false, width: '20%' },
@@ -497,7 +497,7 @@ const TableColumnsInfo = {
     { accessor: 'storageDomainId',  header: 'storageDomainId',  clickable: false },
   ],
   UPDATE_FIBRE: [
-    { accessor: 'able',       header: 'able',       clickable: false },
+    { accessor: 'able',       header: 'able',       clickable: false, width: 60 },
     { accessor: 'id',         header: 'Lun ID',     clickable: false },
     { accessor: 'size',       header: 'size',       clickable: false },
     { accessor: 'paths',      header: '#path',      clickable: false },
@@ -828,7 +828,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.USER_ID, accessor: 'username', clickable: false },
     { header: Localization.kr.NAME, accessor: 'firstName', clickable: false },
     { header: '성', accessor: 'surName', clickable: false },
-    { header: '비활성화 여부', accessor: '_isDisabled', clickable: false, width:'4%' },
+    { header: '비활성화 여부', accessor: '_isDisabled', clickable: false },
     { header: '인증 공급자', accessor: 'authProvider', clickable: false },
     { header: '네임스페이스', accessor: 'namespace', clickable: false, width:'8%'  },
     { header: Localization.kr.EMAIL, accessor: 'email', clickable: false },

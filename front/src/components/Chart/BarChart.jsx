@@ -128,6 +128,28 @@ const BarChart = ({
         },
       },
     },
+    // grid: {
+    //   show: true,
+    //   borderColor:"#F7F7F7",
+    //   strokeDashArray: 0,
+    //   xaxis: {
+    //     lines: { show: false }
+    //   },
+    //   yaxis: {
+    //     lines: { show: true }
+    //   }
+    // },
+    // plotOptions: {
+    //   bar: {
+    //     horizontal: true,
+    //     barHeight: "100%",
+    //     distributed: true,
+    //     borderRadius: 1,
+    //     dataLabels: {
+    //       position: "bottom",
+    //     },
+    //   }
+    // },
     colors: ["#BBD8FF", "#FFDE6A", "#FFAABF"],
     dataLabels: {
       enabled: true,
@@ -143,7 +165,7 @@ const BarChart = ({
       },
     },
     stroke: {
-      width: 1,
+      width: 0.7,
       colors: ["#fff"],
     },
     xaxis: {

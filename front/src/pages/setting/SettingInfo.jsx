@@ -79,7 +79,7 @@ const SettingInfo = () => {
           tabActive={activeTab} setTabActive={setActiveTab}
         />
         <div className="info-content v-start gap-8 w-full h-full">
-          <Path pathElements={pathData} />
+          <Path pathElements={pathData} basePath={`/settings/users`}/>
           {renderSectionContent()}
         </div>
       </div>

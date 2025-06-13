@@ -6,7 +6,7 @@ const FilterButtons = ({
   activeOption,
   onClick 
 }) => (
-  <div className="host-filter-btns f-center">
+  <div className="host-filter-btns f-start">
     {options.map(({ key, label }) => (
       <FilterButton key={key}
         onClick={() => onClick(key)}

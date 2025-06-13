@@ -88,8 +88,8 @@ const VmDiskDupl = ({
   return (
     <>
       <div className="dupl-header-group f-start gap-4 w-full">
-        <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+        <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
         <VmDiskActionButtons />
       </div>
       <TablesOuter target={"vmdisk"}

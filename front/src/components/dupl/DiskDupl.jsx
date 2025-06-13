@@ -103,25 +103,27 @@ const DiskDupl = ({
   return (
     <>{/* v-start으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
-        <div className="f-start disk-filter-option gap-4">
+        <div className="f-start disk-filter-option gap-4 ">
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-          <Select className="h-full"
-            value={selectedContentType}
-            onValueChange={setSelectedContentType}
-            position="popper"
-          >
-            <SelectTrigger className="disk-select-box f-btw w-full text-left">
-              <SelectValue placeholder="디스크 유형 필터" />
-            </SelectTrigger>
-            <SelectContent className="z-[9999]">
-              <SelectItem className="select-item-custom" value="__all__">전체</SelectItem>
-              {diskContentTypes.map(opt => (
-                <SelectItem key={opt.id} value={opt.id}>
-                  {opt.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <div className="h-full">
+            <Select
+              value={selectedContentType}
+              onValueChange={setSelectedContentType}
+              position="popper"
+            >
+              <SelectTrigger className="disk-select-box f-btw w-full text-left h-[28px]">
+                <SelectValue placeholder="디스크 유형 필터" />
+              </SelectTrigger>
+              <SelectContent className="z-[9999]">
+                <SelectItem className="select-item-custom" value="__all__">전체</SelectItem>
+                {diskContentTypes.map(opt => (
+                  <SelectItem key={opt.id} value={opt.id}>
+                    {opt.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+         </div>
         </div>
 
         <DiskActionButtons 

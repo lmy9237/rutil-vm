@@ -1,4 +1,9 @@
 
+.split-layout-group {
+  display: flex;
+  width: 100%;
+  gap: 24px; 
+}
 .split-item {
   width: auto;
   padding: 20px;
@@ -6,6 +11,12 @@
   min-height: 220px;
   background: var(--color-white);
 }
+.snapshot-item {
+  cursor: pointer;
+  padding: 4px 20px;
+  background: none;
+}
+
 .split-item:first-child {
   width: 60%;
 }
@@ -14,9 +25,4 @@
 }
 .split-item:last-child:empty {
   display: none;
-}
-.snapshot-item {
-  cursor: pointer;
-  padding: 4px 20px;
-  background: none;
 }

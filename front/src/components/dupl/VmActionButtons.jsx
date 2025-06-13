@@ -101,13 +101,19 @@ const VmActionButtons = ({
   const basicActions = [
     { type: "create",     onClick: () => setActiveModal("vm:create"),      label: Localization.kr.CREATE,                                  disabled: isContextMenu && vmsSelected.length > 0 },
     { type: "update",     onClick: () => setActiveModal("vm:update"),      label: Localization.kr.UPDATE,                                  disabled: vmsSelected.length !== 1 },
-    { type: "start",       onClick: () => {
-    if (hasPreviewSnapshot) {
-      validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
-      return;
-    }
-    setActiveModal("vm:start");
-    }, label: Localization.kr.START, disabled: !(isDown || isPause || isMaintenance) },
+    { 
+      type: "start", 
+      onClick: () => {
+        const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
+        if (!hasBootableDisk || hasPreviewSnapshot) {
+          validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
+          return;
+        }
+        setActiveModal("vm:start");
+      }, 
+      label: Localization.kr.START, 
+      disabled: !(isDown || isPause || isMaintenance) 
+    },
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },

@@ -157,7 +157,14 @@ const StorageTree = ({}) => {
                               e.preventDefault();
                               setDatacentersSelected(dc)
                               setDomainsSelected(domain)
-                              setDisksSelected(disk)
+                              // setDisksSelected(disk)
+                              setDisksSelected({ //이동,복사 안뜸
+                                ...disk,
+                                dataCenterVo: dc,
+                                storageDomainVo: domain,
+                                alias: disk?.diskImageVo?.alias ?? disk?.alias ?? "",
+                                virtualSize: disk?.diskImageVo?.virtualSize ?? disk?.virtualSize ?? 0,
+                              });
                               setContextMenu({
                                 mouseX: e.clientX,
                                 mouseY: e.clientY,

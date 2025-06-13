@@ -133,7 +133,7 @@ html {
   --p-tmi-4-wc: calc(48px + 20px);
   --p-tmi-5:    calc(88px + 20px);
   --p-tmi-5-wc: calc(68px + 20px);
-  --p-btn-tab-nav: 20px;
+  --p-btn-tab-nav: 16px;
 
   --color-black:#1D1D1D;
   --color-down: #999999; 
