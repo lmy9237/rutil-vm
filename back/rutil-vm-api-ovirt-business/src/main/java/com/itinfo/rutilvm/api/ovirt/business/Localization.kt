@@ -132,7 +132,7 @@ class Localization {
 		//endregion
 
 
-		//region VmTypeL
+		//region: VmTypeL
 		object VmTypeL {
 			object KR {
 				val Desktop = locKr?.get(VmType.Desktop.localizationKey)?.toString() ?: ""
@@ -145,7 +145,24 @@ class Localization {
 				val HighPerformance = locEn?.get(VmType.HighPerformance.localizationKey)?.toString() ?: ""
 			}
 		}
-		//endregion
+		//endregion:
+
+		//region: VmEntityTypeL
+		object VmEntityTypeL {
+			object KR {
+				val VM = locKr?.get(VmEntityType.VM.localizationKey)?.toString() ?: ""
+				val TEMPLATE = locKr?.get(VmEntityType.TEMPLATE.localizationKey)?.toString() ?: ""
+				val INSTANCE_TYPE = locKr?.get(VmEntityType.INSTANCE_TYPE.localizationKey)?.toString() ?: ""
+				val IMAGE_TYPE = locKr?.get(VmEntityType.IMAGE_TYPE.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val VM = locEn?.get(VmEntityType.VM.localizationKey)?.toString() ?: ""
+				val TEMPLATE = locEn?.get(VmEntityType.TEMPLATE.localizationKey)?.toString() ?: ""
+				val INSTANCE_TYPE = locEn?.get(VmEntityType.INSTANCE_TYPE.localizationKey)?.toString() ?: ""
+				val IMAGE_TYPE = locEn?.get(VmEntityType.IMAGE_TYPE.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: VmEntityTypeL
 	}
 
 	fun findLocalizedName4AuditLogSeverity(type: AuditLogSeverity, loc: String = "kr"): String =
@@ -199,10 +216,21 @@ class Localization {
 			MigrationSupport.PINNED_TO_HOST -> 				if (loc == "kr") MigrationSupportL.KR.PINNED_TO_HOST else MigrationSupportL.EN.PINNED_TO_HOST
 			else -> if (loc == "kr") "알 수 없음" else "Unknown"
 		}
+
 	fun findLocalizedName4VmType(type: VmType, loc: String = "kr"): String =
 		when(type) {
 			VmType.Desktop -> 				if (loc == "kr") VmTypeL.KR.Desktop else VmTypeL.EN.Desktop
 			VmType.Server ->				if (loc == "kr") VmTypeL.KR.Server else VmTypeL.EN.Server
 			VmType.HighPerformance -> 		if (loc == "kr") VmTypeL.KR.HighPerformance else VmTypeL.EN.HighPerformance
 		}
+
+	fun findLocalizedName4VmEntityType(type: VmEntityType, loc: String = "kr"): String =
+		when(type) {
+			VmEntityType.VM ->						if (loc == "kr") VmEntityTypeL.KR.VM else VmEntityTypeL.EN.VM
+			VmEntityType.TEMPLATE ->				if (loc == "kr") VmEntityTypeL.KR.TEMPLATE else VmEntityTypeL.EN.TEMPLATE
+			VmEntityType.INSTANCE_TYPE ->			if (loc == "kr") VmEntityTypeL.KR.INSTANCE_TYPE else VmEntityTypeL.EN.INSTANCE_TYPE
+			VmEntityType.IMAGE_TYPE -> 				if (loc == "kr") VmEntityTypeL.KR.IMAGE_TYPE else VmEntityTypeL.EN.IMAGE_TYPE
+			else -> if (loc == "kr") "알 수 없음" else "Unknown"
+		}
+
 }
