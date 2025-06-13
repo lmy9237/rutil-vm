@@ -11,13 +11,11 @@ import Logger                 from "@/utils/Logger";
 import { useValidationToast } from "@/hooks/useSimpleToast";
 
 // 마이그레이션 모드
-/*
 const migrationModeOptionList = [
-  { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
-  { value: "user_migratable", label: `수동 마이그레이션만 허용` },
-  { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
+  { value: "MIGRATABLE", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
+  { value: "USER_MIGRATABLE", label: `수동 마이그레이션만 허용` },
+  { value: "PINNED", label: `${Localization.kr.MIGRATION} 불가` },
 ];
-*/
 
 const VmHost = ({
   hosts,
@@ -25,14 +23,14 @@ const VmHost = ({
   setFormHostState
 }) => {
   const { validationToast } = useValidationToast()
-  const {
-    data: migrationSupports = [],
-    isLoading: isMigrationSupportsLoading
-  } = useAllMigrationSupports((e) => ({ 
-    ...e,
-    value: e?.id,
-    label: e?.kr
-  }))
+  // const {
+  //   data: migrationSupports = [],
+  //   isLoading: isMigrationSupportsLoading
+  // } = useAllMigrationSupports((e) => ({ 
+  //   ...e,
+  //   value: e?.id,
+  //   label: e?.kr
+  // }))
 
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {
@@ -150,8 +148,7 @@ const VmHost = ({
         <div className="py-2" style={{ fontWeight: 600 }}>{Localization.kr.MIGRATION} 옵션</div>
         <LabelSelectOptions label={`${Localization.kr.MIGRATION} 모드`}
           value={formHostState.migrationMode}
-          loading={isMigrationSupportsLoading}
-          options={migrationSupports}
+          options={migrationModeOptionList}
           onChange={handleInputChange(setFormHostState, "migrationMode", validationToast)}
         />
       </div>

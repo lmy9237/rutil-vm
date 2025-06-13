@@ -373,7 +373,7 @@ fun NicVo.toEditNic(): Nic {
 
 
 // 가상머신 만들때 nic
-fun NicVo.toVmNic(): Nic {
+fun NicVo.toAddVmNic(): Nic {
 	return NicBuilder()
 		.name(name)
 		.vnicProfile(VnicProfileBuilder().id(vnicProfileVo.id).build())

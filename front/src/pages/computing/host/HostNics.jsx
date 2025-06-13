@@ -1307,16 +1307,8 @@ const filterOptions = [
         onChange={(e) => setSetting(e.target.checked)}
       /> */}
     <br/>
-      {/* <br/>
-      <span>modifiedBonds: {modifiedBonds.map((e) => `[${e.name}: ${e.bondingVo.slaveVos.map((s) => s?.name)}]`)}</span><br/>
-      <span>removeBonds: {removeBonds.map((e) => `${e.name}, `)}</span><br/>
-      <span>modifiedNAs: {modifiedNAs.map(e => `[${e.hostNicVo.name}: ${Array.isArray(e.networkVo) ? e.networkVo.map(net => net.name).join(", ") : e.networkVo?.name}]`)}</span><br/>
-      <span>removeNAs: {removeNAs.map((e) => `${e.id}`)}</span><br/>
-      <br/> */}
       
   </div>
-
-
       <Suspense fallback={<Loading />}>
         <HostBondingModal
           editMode={isBondingEditMode}

@@ -7,10 +7,10 @@ enum class MigrationSupport(
 	override val value: Int,
 	val code: String,
 ): Identifiable, Serializable {
-	MIGRATABLE(0, "MIGRATABLE"),
-	IMPLICITLY_NON_MIGRATABLE(1, "IMPLICITLY_NON_MIGRATABLE"),
-	PINNED_TO_HOST(2, "PINNED_TO_HOST"),
-	UNKNOWN(-1, "UNKNOWN");
+	MIGRATABLE(0, "migratable"),
+	IMPLICITLY_NON_MIGRATABLE(1, "implicitly_non_migratable"),
+	PINNED_TO_HOST(2, "pinned_to_host"),
+	UNKNOWN(-1, "unknown");
 
 	val localizationKey: String
 		get() = "${MigrationSupport::class.java.simpleName}.${this.name}"

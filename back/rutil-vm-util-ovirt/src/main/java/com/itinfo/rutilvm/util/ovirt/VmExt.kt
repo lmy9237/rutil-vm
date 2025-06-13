@@ -140,36 +140,13 @@ fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
 }
 
 
-fun Connection.addVm(
-	vm: Vm,
-	diskAttachments: List<DiskAttachment>?,
-	nics: List<Nic>?,
-	connId: String?,
-): Result<Vm?> = runCatching {
+fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 
 	val vmAdded: Vm =
 		this.srvVms().add().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-
-	diskAttachments?.takeIf { it.isNotEmpty() }?.let { addMultipleDiskAttachmentsToVm(vmAdded.id(), it) }
-	nics?.takeIf { it.isNotEmpty() }?.let { addMultipleNicsToVm(vmAdded.id(), it) }
-	connId?.takeIf { it.isNotEmpty() }?.let { addCdromFromVm(vmAdded.id(), it) }
-
-
-	// // 디스크 연결 조건 확인 및 실행
-	// if (!diskAttachments.isNullOrEmpty()) {
-	// 	this.addMultipleDiskAttachmentsToVm(vmAdded.id(), diskAttachments)
-	// }
-	// // NIC 추가 조건 확인 및 실행
-	// if (!nics.isNullOrEmpty()) {
-	// 	this.addMultipleNicsToVm(vmAdded.id(), nics)
-	// }
-	// // ISO 설정 조건 확인 및 실행
-	// if (connId != null) {
-	// 	this.addCdromFromVm(vmAdded.id(), connId)
-	// }
 
 	vmAdded
 }.onSuccess {
@@ -180,43 +157,13 @@ fun Connection.addVm(
 }
 
 
-fun Connection.updateVm(
-	vm: Vm,
-	diskAttachments: List<DiskAttachment>?,
-	nics: List<Nic>?,
-	connId: String?
-): Result<Vm?> = runCatching {
+fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 
 	val vmUpdated: Vm =
 		this.srvVm(vm.id()).update().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-
-	diskAttachments?.takeIf { it.isNotEmpty() }?.let { addMultipleDiskAttachmentsToVm(vmUpdated.id(), it) }
-	nics?.takeIf { it.isNotEmpty() }?.let { addMultipleNicsToVm(vmUpdated.id(), it) }
-
-
-	// if (!diskAttachments.isNullOrEmpty()) {
-	// 	this.addMultipleDiskAttachmentsToVm(vmUpdated.id(), diskAttachments)
-	// }
-	// if (!nics.isNullOrEmpty()) {
-	// 	this.addMultipleNicsToVm(vmUpdated.id(), nics)
-	// }
-
-	val cdrom: Cdrom = this.srvVmCdromsFromVm(vmUpdated.id()).list().send().cdroms().first()
-
-	// cdrom에 값 자체가 없다면
-	if (!cdrom.filePresent() && connId != null) {
-		log.info("추가 connId: {}", connId)
-		this.addCdromFromVm(vmUpdated.id(), connId)
-	}else if(cdrom.filePresent() && connId != null && cdrom.file().id() != connId ){
-		log.info("변경 connId: {}", connId)
-		this.updateCdromFromVm(vmUpdated.id(), cdrom.file().id(), connId)
-	}else if (connId.isNullOrEmpty()){
-		log.info("삭제 connId: {}", connId)
-		this.removeCdromFromVm(vmUpdated.id(), cdrom.id())
-	}
 
 	vmUpdated
 }.onSuccess {
@@ -637,7 +584,8 @@ fun Connection.addDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachmen
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.addMultipleDiskAttachmentsToVm(vmId: String, diskAttachments: List<DiskAttachment>): Result<Boolean> = runCatching {
+fun Connection.addMultipleDiskAttachmentsToVm(
+	vmId: String, diskAttachments: List<DiskAttachment>): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
 
 	val results = diskAttachments.map { this.addDiskAttachmentToVm(vmId, it) }
@@ -655,7 +603,10 @@ fun Connection.addMultipleDiskAttachmentsToVm(vmId: String, diskAttachments: Lis
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.updateDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachment): Result<DiskAttachment> = runCatching {
+fun Connection.updateDiskAttachmentToVm(
+	vmId: String,
+	diskAttachment: DiskAttachment
+): Result<DiskAttachment> = runCatching {
 	checkVmExists(vmId)
 
 	if(this.findDiskAttachmentFromVm(vmId, diskAttachment.id()).isFailure){
@@ -700,9 +651,9 @@ fun Connection.removeDiskAttachmentToVm(
 	val dah: DiskAttachment = this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
 
-	if(dah.active()){
-		throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
-	}
+	// if(dah.active()){
+	// 	throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
+	// }
 	// DiskAttachment 삭제 요청 및 결과 확인
 	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).remove().detachOnly(detachOnly).send()
 

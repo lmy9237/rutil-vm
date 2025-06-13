@@ -18,7 +18,7 @@ enum class Term(
 	NETWORK_FILTER("네트워크 필터"),
 	EXTERNAL_NETWORK_PROVIDER("외부 네트워크 공급자"),
 	BOND("(네트워크) 본드"),
-	NIC("네트워크 인터페이스 컨트롤러"),
+	NIC("네트워크 인터페이스"),
 	VM("가상머신"),
 	EXTERNAL_VM("외부 가상머신"),
 	CONSOLE("콘솔"),

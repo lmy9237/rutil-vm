@@ -112,7 +112,7 @@ fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 fun List<DiskContentType>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
 fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
-	this@toTypeVoFromMigrationSupport.name.lowercase(),
+	this@toTypeVoFromMigrationSupport.name.uppercase(),
 	this@toTypeVoFromMigrationSupport.kr,
 	this@toTypeVoFromMigrationSupport.en,
 )

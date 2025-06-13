@@ -56,7 +56,7 @@ const cloudForm = {
 const hostForm = {
   hostInCluster: true, // 클러스터 내 호스트 버튼
   hostVos: [],
-  migrationMode: "migratable", // 마이그레이션 모드
+  migrationMode: "MIGRATABLE", // 마이그레이션 모드
   // migrationEncrypt: 'INHERIT',  // 암호화
   // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
 };
@@ -93,9 +93,9 @@ const VmModal = ({
 
   const { vmsSelected } = useGlobal();
   const { templatesSelected } = useGlobal();
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const templateId = templatesSelected[0]?.id;
 
-  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const [selectedModalTab, setSelectedModalTab] = useState("common");
   const tabs = useMemo(() => [
     { id: "common",    label: Localization.kr.GENERAL, onClick: () => setSelectedModalTab("common") },
@@ -192,7 +192,6 @@ const VmModal = ({
     isLoading: isIsoLoading 
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
-
   // 템플릿 id변경 시 NIC 초기화
   const {
     data: vnicProfilesFromTemplate = []
@@ -215,6 +214,7 @@ const VmModal = ({
   const [formHostState, setFormHostState] = useState(hostForm);
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
+
 
   useEffect(() => {
     if (!editMode && isOpen && templateVo.id) {
@@ -291,7 +291,7 @@ const VmModal = ({
         hostInCluster: vm?.hostInCluster || true,
         hostVos: (vm?.hostVos || [])?.map((host) => {
           return { id: host.id, name: host.name}}),
-        migrationMode: vm?.migrationMode || "migratable",
+        migrationMode: vm?.migrationMode || "MIGRATABLE",
       });
       setFormHaState({
         ha: vm?.ha || false,
@@ -329,7 +329,9 @@ const VmModal = ({
       setDiskListState([...vm?.diskAttachmentVos].map((d) => ({
         id: d?.id,
         alias: d?.diskImageVo?.alias,
-
+        size: d?.diskImageVo?.virtualSize
+          ? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024)
+          : 0,
         virtualSize: d?.diskImageVo?.virtualSize
           ? d?.diskImageVo?.virtualSize / (1024 * 1024 * 1024)
           : 0,
@@ -440,15 +442,16 @@ const VmModal = ({
     ...formBootState,
 
     // nic 목록
-    nicVos: [...nicListState]?.map((nic) => ({
-      id: nic?.id || "",
-      name: nic?.name || "",
-      vnicProfileVo: {
-        id: nic?.vnicProfileVo && "id" in nic.vnicProfileVo
-          ? nic.vnicProfileVo.id
-          : null
-      }
-    })),
+    nicVos: nicListState
+      .filter(nic => !!nic?.vnicProfileVo?.id)
+      .map(nic => ({
+        id: nic?.id || "",
+        name: nic?.name || "",
+        vnicProfileVo: {
+          id: nic.vnicProfileVo.id
+        }
+      })),
+
 
     // 디스크 데이터 (객체 형태 배열로 변환)
     diskAttachmentVos: diskListState.map((disk) => ({
@@ -461,6 +464,7 @@ const VmModal = ({
       diskImageVo: {
         id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
         size: disk?.size * 1024 * 1024 * 1024 || 0, // GB → Bytes 변환
+        // appendSize: 0, // 임시
         alias: disk?.alias,
         description: disk?.description || "",
         storageDomainVo: { id: disk?.storageDomainVo?.id || "" },

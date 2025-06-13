@@ -182,9 +182,11 @@ fun List<DiskAttachmentVo>.toAddVmDiskAttachmentList(): List<DiskAttachment> {
 	val diskAttachmentList = mutableListOf<DiskAttachment>()
 
 	this.forEach { diskAttachmentVo ->
-		if (diskAttachmentVo.diskImageVo.id.isEmpty()) { // 디스크 생성
+		if (diskAttachmentVo.diskImageVo.id.isEmpty()) {
+			// 디스크 생성
 			diskAttachmentList.add(diskAttachmentVo.toAddDiskAttachment())
-		} else { // 디스크 연결
+		} else {
+			// 디스크 연결
 			diskAttachmentList.add(diskAttachmentVo.toAttachDisk())
 		}
 	}

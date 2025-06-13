@@ -3,12 +3,13 @@ import useUIState            from "@/hooks/useUIState";
 import useGlobal             from "@/hooks/useGlobal";
 import Loading               from "@/components/common/Loading";
 import { ActionButton }      from "@/components/button/ActionButtons";
-import { RVI36, rvi36Trash } from "@/components/icons/RutilVmIcons";
+import { RVI36, rvi36EditDisabled, rvi36EditHover, rvi36Trash, rvi36TrashDisabled, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import {
   useDisksFromVM
 } from "@/api/RQHook";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
+import LabelCheckbox from "@/components/label/LabelCheckbox";
 
 
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
@@ -72,6 +73,8 @@ const VmDisk = ({
     setIsCreatePopupOpen(false);
   }, [setDiskListState]);  
   
+  const [editDisk, setEditDisk] = useState(null);
+
   // 디스크 연결 시 diskListState에 들어갈 값 (isCreated: false)
   const handleConnDisk = useCallback((connDisks) => {
     const normalizedDisks = Array.isArray(connDisks) ? connDisks.flat() : [connDisks];
@@ -81,10 +84,30 @@ const VmDisk = ({
   }, [setDiskListState]);
 
   
-  const handleRemoveDisk = useCallback((index, isExisting) => {
-    setDiskListState((prev) => prev.filter((_, i) => i !== index));
+  const handleUpdateDisk = useCallback((index, isExisting) => {
+    // setDiskListState((prev) => prev.filter((_, i) => i !== index));
   }, [setDiskListState]);
-  const [editDisk, setEditDisk] = useState(null);
+  
+  // const handleRemoveDisk = useCallback((index, isExisting) => {
+  //   setDiskListState((prev) => prev.filter((_, i) => i !== index));
+  // }, [setDiskListState]);
+
+  // const handleRemoveDisk = useCallback((index, isExisting) => {
+  //   setDiskListState(prev =>
+  //     prev.map((disk, i) =>
+  //       i === index ? { ...disk, deleted: true } : disk
+  //     )
+  //   );
+  // }, [setDiskListState]);
+  const handleRemoveDisk = useCallback((index, isExisting) => {
+    setDiskListState(prev =>
+      prev.map((disk, i) =>
+        i === index ? { ...disk, deleted: !disk.deleted } : disk
+      )
+    );
+  }, [setDiskListState]);
+
+
 
   return (
     <>
@@ -96,12 +119,10 @@ const VmDisk = ({
             className="instance-disk-btn"
             onClick={() => setIsConnectionPopupOpen(true)}
             disabled={disabled}
-            // onClick={() => setActiveModal("vmdisk:connect")}
           />
           <ActionButton label={Localization.kr.CREATE}
             actionType="default"
             className="instance-disk-btn"
-            // onClick={() => setActiveModal("vmdisk:create")}
             onClick={() => setIsCreatePopupOpen(true)}
             disabled={disabled}
           />
@@ -113,34 +134,65 @@ const VmDisk = ({
           <div key={index} className="disk-item f-btw  mb-0.5">
             <div className="f-start">
               <span style={{ marginRight: "25px" }}>
-                <strong>{disk.isExisting ? "[기존] " : disk.isCreated ? "[생성] " : "[연결] "}</strong>
-                {disk?.alias} ({(disk?.size || disk?.virtualSize) + ' GB'})
-                {disk?.bootable && " [부팅]"}
+                {disk.deleted 
+                  ?
+                  <>
+                    <del>
+                      <strong>{
+                        disk.isExisting 
+                          ? `[기존${disk?.bootable ? " & 부팅]":"]"}`
+                          : disk.isCreated 
+                          ? "[생성] " 
+                          : "[연결] "}
+                      </strong>
+                      &nbsp;{disk?.alias}&nbsp;
+                      ({(disk?.size || disk?.virtualSize) + ' GB'})
+                    </del>
+                    </>
+                  : 
+                  <>
+                    <strong>{
+                        disk.isExisting 
+                          ? `[기존${disk?.bootable ? " & 부팅]":"]"}`
+                          : disk.isCreated 
+                          ? "[생성] " 
+                          : "[연결] "}
+                      </strong>
+                      &nbsp;{disk?.alias}&nbsp;
+                      ({(disk?.size || disk?.virtualSize) + ' GB'})
+                    </>
+                  }
               </span>
             </div>
-            {/*{disk?.storageDomainVo?.id} <- 연결되어있는 디스크아이디*/}
+
             <div className="f-end">
-              <span>편집/삭제 2차구현</span>
               <RVI36 
-                iconDef={rvi36Trash}
+                iconDef={rvi36EditHover}
+                className="btn-icon"
+                currentColor="transparent"
+                onClick={() => handleUpdateDisk(index, disk.isExisting)}
+              />
+              <RVI36
+                iconDef={disk.deleted ? rvi36Trash : rvi36TrashHover}
                 className="btn-icon"
                 currentColor="transparent"
                 onClick={() => handleRemoveDisk(index, disk.isExisting)}
               />
+              {/* <RVI36 
+                iconDef={rvi36TrashHover}
+                className="btn-icon"
+                currentColor="transparent"
+                onClick={() => handleRemoveDisk(index, disk.isExisting)}
+              /> */}
+              <LabelCheckbox id="detachOnly" label={"완전삭제"}
+                checked={true}
+                // onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
+              />
             </div>
-            {/* 기존 디스크가 아닌 경우에만 삭제 버튼 표시(삭제예정정) */}
-            {/* <div className="flex">
-              {!disk.isExisting && (
-                <button onClick={() => handleRemoveDisk(index, disk.isExisting)}><RVI24 iconDef={rvi24Error} /></button>
-              )}
-            </div> */}
           </div>     
         ))}
       </div>
-      {/* <OVirtWebAdminHyperlink
-        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
-        path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
-      /> */}
+      
       <Suspense fallback={<Loading/>}>
         {(isCreatePopupOpen || editDisk) && (
           <VmDiskModal
@@ -160,7 +212,7 @@ const VmDisk = ({
         )}
         {isConnectionPopupOpen && (
           <VmDiskConnectionModal 
-            isOpen={isConnectionPopupOpen}
+            isOpen={true}
             diskType={false}
             vmId={vm?.id} dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDisk}

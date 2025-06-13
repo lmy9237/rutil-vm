@@ -186,7 +186,7 @@ class VmVo (
 	val timeOffset: String = "Etc/GMT",
 	val cloudInit: Boolean = false,
 	val script: String = "",
-	val migrationMode: MigrationSupport? = MigrationSupport.UNKNOWN, // VmAffinity
+	val migrationMode: VmAffinity? = VmAffinity.MIGRATABLE, // VmAffinity
 	val migrationPolicy: String = "",
 	val migrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT,
 	val migrationCompression: InheritableBoolean = InheritableBoolean.INHERIT,
@@ -310,7 +310,7 @@ class VmVo (
 		private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
-		private var bMigrationMode: MigrationSupport? = MigrationSupport.UNKNOWN; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.UNKNOWN }
+		private var bMigrationMode: VmAffinity? = VmAffinity.MIGRATABLE; fun migrationMode(block: () -> VmAffinity?) { bMigrationMode = block() ?: VmAffinity.MIGRATABLE }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
 		private var bMigrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationAutoConverge(block: () -> InheritableBoolean?) { bMigrationAutoConverge = block() ?: InheritableBoolean.INHERIT }
 		private var bMigrationCompression: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationCompression(block: () -> InheritableBoolean?) { bMigrationCompression = block() ?: InheritableBoolean.INHERIT }
@@ -470,7 +470,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
-		migrationMode { vm.findMigrationSupport() } //migrationMode
+		migrationMode { vm.placementPolicy().affinity() } //migrationMode
 		migrationEncrypt { vm.migration().encrypted() }
 		migrationAutoConverge { vm.migration().autoConverge() }
 		migrationCompression { vm.migration().compressed() }
@@ -735,6 +735,8 @@ fun List<ReportedDevice>.findVmIpv6(): List<String> {
 }
 
 
+//region: Builder
+
 fun VmVo.toVmBuilder(): VmBuilder {
 	return VmBuilder().apply {
 		toVmInfoBuilder(this)
@@ -762,6 +764,7 @@ fun VmVo.toEditVm(): Vm =
 		)
 		.build()
 
+
 fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	name(name)
 	description(description)
@@ -783,14 +786,13 @@ fun VmVo.toVmSystemBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 		MemoryPolicyBuilder().max(memoryMax).guaranteed(memoryGuaranteed)
 	)
 	cpu(
-		CpuBuilder()
-			.topology(
-				CpuTopologyBuilder()
-					.cores(cpuTopologyCore)
-					.sockets(cpuTopologySocket)
-					.threads(cpuTopologyThread)
-					.build()
-			)
+		CpuBuilder().topology(
+			CpuTopologyBuilder()
+				.cores(cpuTopologyCore)
+				.sockets(cpuTopologySocket)
+				.threads(cpuTopologyThread)
+				.build()
+		)
 	)
 }
 
@@ -801,15 +803,15 @@ fun VmVo.toVmInitBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 }
 
 fun VmVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
-	val placementBuilder = VmPlacementPolicyBuilder().apply {
+	log.info("(migrationMode?.toVmAffinity() {}: ", migrationMode)
 
+	val placementPolicy = VmPlacementPolicyBuilder().apply {
+		affinity(migrationMode)
+		if (!hostInCluster) {
+			hosts(hostVos.map { HostBuilder().id(it.id).build() })
+		}
 	}
-	if (!hostInCluster) {
-		placementBuilder.hosts(hostVos.map { HostBuilder()
-			.id(it.id)
-			.build() })
-	}
-	placementPolicy(placementBuilder.affinity(migrationMode?.toVmAffinity()))
+	placementPolicy(placementPolicy.build())
 }
 
 fun VmVo.toVmHaBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
@@ -844,6 +846,7 @@ fun VmVo.toRegisterVm(): Vm {
 		.build()
 }
 
+//endregion
 
 // CPU Topology 계산 최적화
 fun calculateCpuTopology(vm: Vm): Int {

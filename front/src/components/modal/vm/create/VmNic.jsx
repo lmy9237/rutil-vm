@@ -31,14 +31,6 @@ const VmNic = ({
     setNicsState(updated);
   };
 
-  // const handleAdd = () => {
-  //   const newNic = {
-  //     id: "",
-  //     name: `nic${nicsState.length + 1}`,
-  //     vnicProfileVo: { id: "", },
-  //   };
-  //   setNicsState([...nicsState, newNic]);
-  // };
   const handleAdd = () => {
     const lastIndex = Math.max(
       0,
@@ -60,9 +52,8 @@ const VmNic = ({
     const newValues = nicsState.filter((_, idx) => idx !== indexToRemove);
   
     // NIC 이름 다시 재정렬
-    const updatedValues = newValues.map((item, idx) => ({
+    const updatedValues = newValues.map((item) => ({
       ...item,
-      name: `nic${idx + 1}`, // 소문자 nic+숫자
     }));
   
     setNicsState(updatedValues);

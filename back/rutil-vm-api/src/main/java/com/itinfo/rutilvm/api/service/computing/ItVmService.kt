@@ -16,6 +16,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigInteger
 import kotlin.Error
 
 
@@ -154,64 +155,123 @@ class VmServiceImpl(
 
 	@Throws(Error::class)
 	override fun add(vmVo: VmVo): VmVo? {
-		log.info("vmCreateVo {}", vmVo)
+		log.info("add ... vmVo: {}", vmVo)
 
+		// 부팅디스크는 한개 이상일때 오류
 		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
+		// 가상머신 생성
 		val res: Vm? = conn.addVm(
-			vmVo.toAddVm(),
-			vmVo.diskAttachmentVos.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			vmVo.nicVos.takeIf { it.isNotEmpty() }?.map { it.toVmNic() }, // NIC가 있는 경우만 전달
-			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }  // ISO 설정이 있는 경우만 전달
+			vmVo.toAddVm()
 		).getOrNull()
+
+
+		if (res != null) {
+			// 디스크 생성
+			if(vmVo.diskAttachmentVos.isNotEmpty()){
+				vmVo.diskAttachmentVos.forEach {
+					conn.addDiskAttachmentToVm(res.id(), it.toAddDiskAttachment())
+				}
+			}
+			// nic 생성
+			if(vmVo.nicVos.isNotEmpty()){
+				vmVo.nicVos.forEach {
+					conn.addNicFromVm(res.id(), it.toAddVmNic())
+				}
+			}
+			// 부트옵션
+			if(vmVo.cdRomVo.id.isNotEmpty()){
+				conn.addCdromFromVm(res.id(), vmVo.cdRomVo.id)
+			}
+		}
 		return res?.toVmVo(conn)
 	}
 
-	// 서비스에서 디스크 목록과 nic 목록을 분류(분류만)
 	@Throws(Error::class)
 	override fun update(vmVo: VmVo): VmVo? {
 		log.info("update ... vmVo: {}", vmVo)
 
-		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+		// 1. 디스크 부팅옵션 검사
+		if (vmVo.diskAttachmentVos.count { it.bootable } > 1) {
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
-		// 기존 디스크 목록 조회
-		val existDiskAttachments: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(emptyList())
+		// 2. VM 정보 업데이트 (메인 정보만)
+		val updatedVm: Vm = conn.updateVm(vmVo.toEditVm()).getOrNull() ?: return null
 
-		// 기존 디스크 ID 목록 생성
-		val existDiskIds = existDiskAttachments.map { it.disk().id() }.toSet()
+		// 3. 기존 디스크/네트워크 상태 조회
+		val existDisks = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(emptyList())
+		val existDisksMap = existDisks.associateBy { it.disk().id() }
+		val changeDisks = vmVo.diskAttachmentVos
+		val changeDisksMap = changeDisks.associateBy { it.diskImageVo.id }
 
-		// 새로운 디스크 목록에서 기존에 존재하지 않는 디스크만 필터링
-		val newDisks = vmVo.diskAttachmentVos.filter { it.diskImageVo.id !in existDiskIds }
+		val existNics = conn.findAllNicsFromVm(vmVo.id).getOrDefault(emptyList())
+		val changeNics = vmVo.nicVos
+		val changeNicsMap = changeNics.associateBy { it.id }
 
-		// 기존 nic 목록 조회
-		val existNics: List<Nic> = conn.findAllNicsFromVm(vmVo.id).getOrDefault(emptyList())
+		// 4. 디스크 diff (삭제/생성/수정)
+		val disksToDelete = existDisks.filter { !changeDisksMap.containsKey(it.disk().id()) }
+		val disksToAdd = changeDisks.filter { it.diskImageVo.id.isEmpty() || !existDisksMap.containsKey(it.diskImageVo.id) }
+		val disksToUpdate = changeDisks
+			.filter { it.diskImageVo.id.isNotEmpty() && existDisksMap.containsKey(it.diskImageVo.id) }
+			.filter {
+				val exist = existDisksMap[it.diskImageVo.id]!!
+				it.diskImageVo.appendSize > BigInteger.ZERO ||
+					it.diskImageVo.alias != exist.disk().alias() ||
+					it.diskImageVo.description != exist.disk().description() ||
+					it.diskImageVo.wipeAfterDelete != exist.disk().wipeAfterDelete() ||
+					it.diskImageVo.sharable != exist.disk().shareable() ||
+					it.diskImageVo.backup != (exist.disk().backup() == DiskBackup.INCREMENTAL) ||
+					it.readOnly != exist.readOnly() ||
+					it.bootable != exist.bootable()
+			}
 
-		// 기존 nic ID 목록 생성
-		val existNicIds = existNics.map { it.id() }.toSet()
+		// 5. NIC diff (삭제/생성)
+		val nicsToDelete = existNics.filter { !changeNicsMap.containsKey(it.id()) }
+		val nicsToAdd = changeNics.filter { it.id.isEmpty() }
 
-		// 새로운 NIC 중 ID가 없는 NIC는 생성 대상
-		val newNics = vmVo.nicVos.filter { it.id.isEmpty() }
+		// 6. Disk 삭제
+		disksToDelete.forEach { existDisk ->
+			val detachOnly = changeDisks.find { it.diskImageVo.id == existDisk.disk().id() }?.detachOnly ?: false
+			conn.removeDiskAttachmentToVm(vmVo.id, existDisk.id(), detachOnly)
+		}
+		// 7. Disk 생성
+		disksToAdd.forEach { conn.addDiskAttachmentToVm(vmVo.id, it.toAddDiskAttachment()) }
+		// 8. Disk 업데이트
+		disksToUpdate.forEach { conn.updateDiskAttachmentToVm(vmVo.id, it.toEditDiskAttachment()) }
 
-		// 기존 NIC 중 vmUpdateVo.nicVos에 없는 NIC는 삭제 대상
-		val newNicIds = vmVo.nicVos.mapNotNull { it.id.takeIf { id -> id.isNotEmpty() } }.toSet()
-		val deleteNics = existNics.filter { it.id() !in newNicIds }
+		// 9. NIC 삭제
+		nicsToDelete.forEach { conn.removeNicFromVm(vmVo.id, it.id()) }
+		// 10. NIC 생성
+		nicsToAdd.forEach { conn.addNicFromVm(vmVo.id, it.toAddVmNic()) }
 
-		deleteNics.forEach { nic ->
-			conn.removeNicFromVm(vmVo.id, nic.id())
+		// 11. CD-ROM 처리 (안전성, 조건 통일)
+		val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(updatedVm.id()).getOrNull()?.firstOrNull()
+		val isoId = vmVo.cdRomVo.id
+
+		when {
+			// ISO 추가(아직 파일 없고, 새 iso 설정)
+			(cdrom == null || !cdrom.filePresent()) && isoId.isNotEmpty() -> {
+				log.info("CDROM 추가 iso: $isoId")
+				conn.addCdromFromVm(updatedVm.id(), isoId)
+			}
+			// ISO 변경(파일 있고, isoId와 다르면 변경)
+			cdrom != null && cdrom.filePresent() && isoId.isNotEmpty() && cdrom.file().id() != isoId -> {
+				log.info("CDROM 변경 iso: $isoId")
+				conn.updateCdromFromVm(updatedVm.id(), cdrom.file().id(), isoId)
+			}
+			// ISO 삭제(파일 있고, isoId 비어있음)
+			cdrom != null && cdrom.filePresent() && isoId.isEmpty() -> {
+				log.info("CDROM 삭제 iso: $isoId")
+				conn.removeCdromFromVm(updatedVm.id(), cdrom.id())
+			}
 		}
 
-		val res: Vm? = conn.updateVm(
-			vmVo.toEditVm(),
-			newDisks.takeIf { it.isNotEmpty() }?.toAddVmDiskAttachmentList(),
-			newNics.map { it.toVmNic() }.takeIf { it.isNotEmpty() },
-			vmVo.cdRomVo.id.takeIf { it.isNotEmpty() }
-		).getOrNull()
-		return res?.toVmVo(conn)
+		return updatedVm.toVmVo(conn)
 	}
+
 
 	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제
 	@Throws(Error::class)
