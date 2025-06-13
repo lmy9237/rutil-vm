@@ -29,6 +29,131 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 0.3.3 - 2025-06-13
+
+- [`api-v0.3.4`][api-v0.3.4]: 백엔드
+- [`web-v0.3.4`][web-v0.3.4]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`: 디스크 가져오기 관련 API 개발을 위한 JPA 엔티티 개발
+    - `unregistered_dsk`
+    - `unregistered_disk_to_vm`
+    - `unregistered_ovf_of_entities`
+- [@dhj27][dhj27]
+  - `${back}`: Disk API 속도 개선
+  - `${back}`: VM API 속도 개선
+  - `${back}`: Snapshot API 추가
+  - `${back}`: StorageDomain API 속도 개선
+  - `${back}`: VM 마이그레이션 가능한 호스트 목록 출력(마이그레이션 대상 호스트와 현재 호스트의 네트워크 비교 후 같은 값이 있어야만 넘어갈 수 있음)
+  - `${back}`: 대시보드 가상머신 아이디 추가
+  - `${back}`: Entity 생성
+      - `BaseDisksRepository`,  `BaseDiskEntity` , `DiskStatus` , `DiskStorageType`, `AllDisksRepository` , `AllDiskEntity`
+      - `Origin`, `VmStatus`, `VmsRepository`, `VmsEntity`,
+      - `SnapshotsRepository`, `SnapshotEntity`
+      - `MigrationSupport`, `StorageDomainEntity`, `StorageDomainsRepository`, `StorageDomainStatus`, `StorageDomainType`, `StorageDomainPoolStatus`, `StorageType`
+- [@lmy9237][lmy9237]
+  - `${front}`: path.jsx   Breadcrumb로 바꾸기
+  - `${front}`: 추후 디스크에 디스크 유형 탭 추가
+  - `${front}`: 테이블 
+    - tablerowclick 잘리면 ..처리 + 툴팁 추가
+    - shift 클릭 후 다중 선택(추가)
+    - 기존 정렬기능 추가
+    - 컬럼 간격 드레그 추가
+  - `${front}`: dashboard section에만 세로 드레그 추가( 세부페이지쪽에선 안쪽에만 드레그 추가)
+  - `${front}`: 트리네비: 우클릭에 대한 선택 표시 필요 (우클릭에 대한 선택유지 특정색 부여)
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`/`${front}`: 이벤트 목록 API 처리 개선
+    - 전체, 데이터센터, 클러스터, 호스트, 가상머신, 탬플릿, 스토리지 도메인
+  - `${back}`: 가상머신 목록 API 속도 개선에 따른 미비된 속성 연결
+    - 스냅샷 정보 관계 연결
+    - uptime 계산
+  - `${front}`: 스토리지 도메인 > 디스크 생성 (데이터센터, 스토리지 도메인 지정 처리 정상화)
+  - `${front}`: 스토리지 도메인 > 디스크 가져오기 목록 (API 및 조회기능 복구환료)
+  - `${front}`: 가상머신 (상세) > 디스크: 우클릭 메뉴 비활성화
+  - `${back}`/`${front}`: 설정 > 인증서
+    - 인증서 우클릭메뉴: 구성
+    - `ID`,  `버전` 컬럼 (일단 은닉)
+    - 재갱신 정책: 영문 → 한글 변경
+  - `${back}`/`${front}`: 스토리지 도메인 (상세) > 데이터센터:
+    - 우클릭메뉴 재구성
+    - action버튼 활성화 조건 부여
+    - 연결 API 문제 개선
+- [@dhj27][dhj27]
+  - `${back}`: VM- Disk 연결 api 구현
+  - `${back}`: VM- 모달수정
+  - `${front}`: DataCenter
+      - 모달-버전 적용 및 버전에 따른 selct 변경
+  - `${front}`: Cluster
+      - 모달-type 적용 및 cpuArc 수정
+  - `${front}`: Host
+      - HostNic 네트워크 required 수정
+  - `${front}`: VM
+      - 모달 수정
+      - Snapshot 메모리 출력
+      - 실행 중인 디스크 크기 추가 기능 수정
+      - 마이그레이션 모달 수정
+  - `${front}`: Disk
+      - DiskContentType 필터링
+  - `${front}`: StorageDomain
+      - Status 수정
+      - DomainModal, DomainImportModal 수정
+- [@lmy9237][lmy9237]
+  - `${front}`: `TableRowClick` : `tr-clickable w-full` > `tr-clickable` 변경
+  - `${front}`: `TableColumnInfo.VMS` : `host` 컬럼을 `comment` 다음으로 위치순서 변경
+  - `${front}`: 문구 변경: `Localization`: `"중지"` > `"정지"`
+  - `${front}`: 가상머신 action button
+    - `POWERING_UP`일 때 콘솔 버튼 활성화
+    - 시작버튼 눌렀을 때 토스트 문구 수정
+    - 시작 하면 디스크 수정버튼 비활성화
+  - `${front}`: 가상머신(상세) > 스냅샷 > 우측 메뉴
+    - 눌렀을 때만 화면에서 표출되도록 (`display: hidden`)
+  - `${front}`: 최근작업
+    - 테이블 top margin 제거
+    - `(위치)` 문구 제거
+    - footer 테이블 데이터 위치 가운데로 맞추기
+  - `${front}`: 템플릿 편집 모니터수 안뜸(0개일때)
+  - `${front}`: 대시보드
+    - 특정 해상도에서 bar 그래프 내용이 넘치는 현상
+    - 제목 부여 (그리드, 바)
+    - 동그라미차트 툴팁 가운데로 맞추기
+    - 그리드: 0%일 때 최소 1%값 부여 (그래프)
+    - 원그래프: 외각 hover 했을 때 남은 사용량( 사용하지않은부분 지원x)
+    - bar 그래프 선택 시, 상세화면으로 이동
+  - `${front}`: 스토리지 도메인 (상세) > 연결해제 상태일 때 `삭제` 활성화(?)
+    - 유지보수 상태로 변경 후 연결해제 상태가 됨
+  - `${front}`: 네트워크 생성/편집
+    - `${back}`: MTU 값을 `0`이 아니라 `1500` 을 주도록 (기본값)
+    - `${back}`: `mtu` 값이 비어있을 때 기본으로 `1500` 할당 `const val DEFAULT_MTU = 1500`
+    - `${front}`: 빈 값일 경우 이거나  값 변경 대상이 아닐 경우 무시
+  - `${front}`:가상머신 디스크 생성 모달 디자인 변경
+  - `${front}`스냅샷 생성중일때(스냅샷 이미지가 lock일때) 스냅샷 생성버튼 막기
+  - `${front}`: 테이블
+    - 0퍼센트 1프로로 표시
+    - info 테이블 th,td 넓이 수정
+    - 데이터센터 호스트수,클러스터수,호환버전 가운데 정렬
+    - 이벤트 테이블 크기 수정
+    - (운영) 테이블 내용 정렬: 최근작업 및 기타 테이블 값 내용 가운데정렬 적용 이상현상 (확인필요)
+        - `.cell-ellipsis > display: block` 제거 필요
+  - `${front}`:hostnic , vmsnapshot 컴포넌트 분리, css정리
+  - `${front}`:설정
+    - 사용자 테이블 컬럼 잘리는 것 수정
+    - path경로 이상한 것 수정
+  - `${front}`:디스크  필터링 박스 높이맞추기
+  
+### Removed
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`: 이벤트 조회 통일화에 대한 관련 서비스 응용처리 제거
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+---
+
 ## 0.3.3 - 2025-05-30
 
 - [`api-v0.3.3`][api-v0.3.3]: 백엔드
@@ -1152,6 +1277,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.4]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.3...web-v0.3.4
+[web-v0.3.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.3...api-v0.3.4
 [web-v0.3.3]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.2...web-v0.3.3
 [api-v0.3.3]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.2...api-v0.3.3
 [web-v0.3.2]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.1...web-v0.3.2

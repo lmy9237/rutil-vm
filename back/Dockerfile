@@ -46,9 +46,9 @@ RUN ./gradlew rutil-vm-api:bootJar -Pprofile=staging --parallel
 FROM eclipse-temurin:11-jdk-focal
 LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
 LABEL description="RutilVM (API)"
-LABEL version="0.3.3"
+LABEL version="0.3.4"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-05-30"
+LABEL build-date="2025-06-13"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"
@@ -60,8 +60,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 # timezone env with default
 
-ENV RUTIL_VM_VERSION=0.3.3
-ENV RUTIL_VM_RELEASE_DATE=2025-05-30
+ENV RUTIL_VM_VERSION=0.3.4
+ENV RUTIL_VM_RELEASE_DATE=2025-06-13
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
 ENV RUTIL_VM_OVIRT_PORT_HTTPS=2443
