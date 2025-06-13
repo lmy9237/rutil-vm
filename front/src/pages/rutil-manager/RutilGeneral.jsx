@@ -1,8 +1,11 @@
 import { useMemo } from "react";
-import RutilVmLogo            from "@/components/common/RutilVmLogo";
-import InfoTable              from "@/components/table/InfoTable";
-import { useDashboard }       from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
+import RutilVmLogo                from "@/components/common/RutilVmLogo";
+import { InfoTable }              from "@/components/table/InfoTable";
+import {
+  useDashboard
+} from "@/api/RQHook";
+import Localization               from "@/utils/Localization";
+import "./RutilGeneral.css"
 
 /**
  * @name RutilGeneral
@@ -31,7 +34,7 @@ const RutilGeneral = () => {
   ], [dashboard]);
 
   return (
-    <div className="rutil-general-contents f-start w-full">
+    <div className="rutil-general-wrapper v-start align-start gap-6 w-full">
       <RutilVmLogo className="big"
         details={`v${dashboard?.version} (${dashboard?.releaseDate})`}
       />

@@ -1,4 +1,7 @@
 import React from "react";
+import { 
+  Accordion, AccordionItem, AccordionTrigger, AccordionContent
+} from "@/components/ui/accordion"
 import {
   severity2Icon,
 } from "@/components/icons/RutilVmIcons";
@@ -14,6 +17,7 @@ import Localization from "@/utils/Localization";
 const SettingCertRenewalPolicies = () => {
 
   return (
+    /*
     <details className="v-start w-full">
       <summary className="f-start fs-18 gap-2 w-full">
         <h2 
@@ -25,6 +29,23 @@ const SettingCertRenewalPolicies = () => {
         {[...Localization.kr.CERTIFICATE_GUIDES].map((e) => (<li>{e}</li>))}
       </ul>
     </details>
+    */
+    <Accordion type="single"
+      collapsible
+      className="f-start" defaultValue="item-1"
+    >
+    <AccordionItem value="item-1">
+      <AccordionTrigger className="f-start">
+        {severity2Icon("WARNING", true)}
+        인증서 재갱신 정책
+      </AccordionTrigger>
+      <AccordionContent className="flex flex-col gap-4 text-balance">
+        <ul>
+        {[...Localization.kr.CERTIFICATE_GUIDES].map((e) => (<li>{e}</li>))}
+        </ul>
+      </AccordionContent>
+    </AccordionItem>
+    </Accordion>
   );
 };
 

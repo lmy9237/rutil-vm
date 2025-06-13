@@ -29,7 +29,7 @@ const isLoggingEnabled = () => {
   return _value
 }
 
-// 칩셋 옵션
+// 칩셋 옵션 (a.k.a. biosType)
 const chipsetOptions = () => [
   // { value: "I440FX_SEA_BIOS", label: "BIOS의 I440FX 칩셋" },
   // { value: "Q35_OVMF", label: "UEFI의 Q35 칩셋" },
@@ -73,6 +73,7 @@ const CONSTANT = {
   regex: {
     uuid: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
   },
+  queryMaxSize: 5000,
   color: {
     ok: "#E7F2FF",
     ok2: "#8FC855",

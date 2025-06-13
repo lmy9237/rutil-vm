@@ -119,7 +119,7 @@
 //                         <thead>
 //                           <tr>
 //                             <th>포맷</th>
-//                             <th>스토리지 유형</th>
+//                             <th>${Localization.kr.STORAGE} ${Localization.kr.TYPE}</th>
 //                             <th>크기</th>
 //                             <th>{Localization.kr.STATUS}</th>
 //                             <th>할당</th>

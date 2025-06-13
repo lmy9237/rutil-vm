@@ -290,7 +290,7 @@ const DomainModal = ({
             options={domainTypes}
             onChange={handleInputChange(setFormState, "domainType", validationToast)}
           />
-          <LabelSelectOptions id="storage-type" label="스토리지 유형"
+          <LabelSelectOptions id="storage-type" label=""
             value={formState.storageType}
             disabled={editMode}
             options={storageTypes}
@@ -327,10 +327,7 @@ const DomainModal = ({
 
       {/* NFS 의 경우 */}
       {isNfs && (
-        <DomainNfs
-          editMode={editMode}
-          nfsAddress={nfsAddress} setNfsAddress={setNfsAddress}
-        />
+        <DomainNfs editMode={editMode} nfsAddress={nfsAddress} setNfsAddress={setNfsAddress} />
       )}
 
       {/* Fibre 의 경우 */}

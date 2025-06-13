@@ -66,7 +66,7 @@ const TemplateNics = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start gap-4 w-full">
+      <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVnicProfiles}/>
         <TemplateNicActionbuttons />
       </div>

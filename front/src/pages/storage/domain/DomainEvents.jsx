@@ -1,6 +1,8 @@
-import useGlobal              from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import EventDupl              from "@/components/dupl/EventDupl";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
 import {
   useAllEventsFromDomain
 } from "@/api/RQHook";
@@ -17,9 +19,8 @@ import Localization           from "@/utils/Localization";
 const DomainEvents = ({
   domainId
 }) => {
-  const {
-    domainsSelected,
-  } = useGlobal();
+  const { domainsSelected, } = useGlobal();
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
 
   const {
     data: events = [],
@@ -28,9 +29,14 @@ const DomainEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useAllEventsFromDomain(domainId, (e) => ({
-    ...e,
-  }));
+  } = useAllEventsFromDomain({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    storageDomainId: domainId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

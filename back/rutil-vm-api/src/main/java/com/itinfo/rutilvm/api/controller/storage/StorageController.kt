@@ -9,16 +9,22 @@ import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.StorageVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.api.service.storage.ItStorageDatacenterService
 import com.itinfo.rutilvm.api.service.storage.ItStorageImportService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 
 @Controller
 @Api(tags = ["Storage", "Domain"])
@@ -847,12 +853,16 @@ class StorageController: BaseController() {
 		return ResponseEntity.ok(iDomain.findAllDiskProfilesFromStorageDomain(storageDomainId))
 	}
 
+	//region event
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="스토리지 도메인 이벤트 목록",
 		notes = "선택된 스토리지 도메인의 이벤트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
 		ApiImplicitParam(name="storageDomainId", value="스토리지 도메인 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
@@ -862,16 +872,22 @@ class StorageController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	fun events(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
 		@PathVariable("storageDomainId") storageDomainId: String? = null
 	): ResponseEntity<List<EventVo>> {
-		checkDomain(storageDomainId)
-		log.info("/storages/{}/events ... Event(s) 목록", storageDomainId)
-		return ResponseEntity.ok(iDomain.findAllEventsFromStorageDomain(storageDomainId!!))
+		if (storageDomainId == null)
+			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
+		log.info("/storages/{}/events ... 스토리지 도메인 이벤트 목록: page: {}, size: {}", storageDomainId, pageable.pageNumber, pageable.pageSize)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					storageDomainId { storageDomainId }
+				}
+			).content
+		)
 	}
-
-	private fun checkDomain(id: String?) {
-		if (id.isNullOrEmpty()) throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
-	}
+	//endregion event
 
 	companion object {
 		private val log by LoggerDelegate()

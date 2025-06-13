@@ -3,6 +3,12 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [MigrationSupport]
+ * 마이그레이션 유형 (가상머신 대상)
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 enum class MigrationSupport(
 	override val value: Int,
 	val code: String,

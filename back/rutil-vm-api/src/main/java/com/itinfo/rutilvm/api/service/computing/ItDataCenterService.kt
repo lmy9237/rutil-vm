@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
@@ -19,6 +20,7 @@ import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
@@ -139,16 +141,6 @@ interface ItDataCenterService {
 	 */
 	@Throws(Error::class)
 	fun findAllNetworksFromDataCenter(dataCenterId: String): List<NetworkVo>
-	/**
-	 * [ItDataCenterService.findAllEventsFromDataCenter]
-	 * 데이터센터가 가지고 있는 이벤트 목록
-	 *
-	 * @param dataCenterId [String] 데이터센터 Id
-	 * @return List<[EventVo]> 이벤트 목록
-	 */
-	@Throws(Error::class)
-	fun findAllEventsFromDataCenter(dataCenterId: String): List<EventVo>
-
 	/**
 	 * [ItDataCenterService.findAllTemplatesFromDataCenter]
 	 * 가상머신 생성 - 템플릿
@@ -317,21 +309,6 @@ class DataCenterServiceImpl(
 		val res: List<Network> = conn.findAllNetworks(follow = "vnicprofiles").getOrDefault(emptyList())
 			.filter { it.dataCenter().id() == dataCenterId }
 		return res.toDcNetworkMenus()
-	}
-
-	@Throws(Error::class)
-	override fun findAllEventsFromDataCenter(dataCenterId: String): List<EventVo> {
-		log.info("findAllEventsFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val dataCenter: DataCenter? = conn.findDataCenter(dataCenterId).getOrNull()
-		val res: List<Event> = conn.findAllEvents("sortby time desc")
-			.getOrDefault(emptyList())
-			.filter {
-				(it.dataCenterPresent() && (
-					(it.dataCenter().idPresent() && it.dataCenter().id() == dataCenterId) ||
-					(it.dataCenter().namePresent() && it.dataCenter().name() == dataCenter?.name()))
-				)
-			}
-		return res.toEventVos()
 	}
 
 	@Throws(Error::class)

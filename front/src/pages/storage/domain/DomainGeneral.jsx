@@ -1,7 +1,7 @@
 import React from "react";
-import useGlobal              from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import InfoTable              from "@/components/table/InfoTable";
+import useGlobal                  from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }              from "@/components/table/InfoTable";
 import {
   useAllDisksFromDomain,
   useAllDiskSnapshotsFromDomain,
@@ -12,7 +12,7 @@ import {
   checkZeroSizeToGiB,
   convertBytesToGB
 } from "@/util";
-import Localization           from "@/utils/Localization";
+import Localization               from "@/utils/Localization";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
 

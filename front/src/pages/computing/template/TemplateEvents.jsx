@@ -1,11 +1,12 @@
-import useGlobal              from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import EventDupl              from "@/components/dupl/EventDupl";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
 import {
-  useAllEventFromTemplate
+  useAllEventsFromTemplate
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name TemplateEvents
@@ -18,9 +19,8 @@ import Logger                 from "@/utils/Logger";
 const TemplateEvents = ({
   templateId
 }) => {
-  const {
-    templatesSelected
-  } = useGlobal()
+  const { templatesSelected } = useGlobal()
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
 
   const {
     data: events = [],
@@ -29,7 +29,14 @@ const TemplateEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useAllEventFromTemplate(templateId, (e) => ({ ...e }));
+  } = useAllEventsFromTemplate({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    templateId: templateId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

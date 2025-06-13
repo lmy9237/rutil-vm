@@ -1,10 +1,20 @@
-/* 디스크 유형 : 이미지|  전체 이런거 컴포넌트 */
 import "./FilterButtons.css";
 
+/**
+ * @name FilterButtons
+ * @description 필터처리 버튼
+ * (/computing/hosts/<hostId>)
+ *
+ * @param {[string]} options 선택목록
+ * @param {string} activeOption 선택 된 옵션
+ * 
+ * 
+ * @returns {JSX.Element} FilterButtons
+ */
 const FilterButtons = ({
   options,
   activeOption,
-  onClick 
+  onClick=()=>{},
 }) => (
   <div className="host-filter-btns f-start">
     {options.map(({ key, label }) => (

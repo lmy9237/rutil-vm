@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useValidationToast }           from "@/hooks/useSimpleToast";
-import { useToast }                     from "@/hooks/use-toast";
+import {
+  useValidationToast, useProgressToast,
+} from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import BaseModal                        from "../BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -43,8 +44,8 @@ const DiskUploadModal = ({
   isOpen,
   onClose,
 }) => {
-  const { toast } = useToast();
   const { validationToast } = useValidationToast();
+  const { progressToast } = useProgressToast()
   // const { closeModal } = useUIState()
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
@@ -56,10 +57,8 @@ const DiskUploadModal = ({
 
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
     /*if (progress < 1) onClose()*/
-    toast.loading(`디스크 업로드 중 ... ${progress}%`, {
-      id: toastId,
-    });
-    // TODO: 컴포넌트로 변경
+    progressToast.in(`디스크 업로드 중 ... `, progress)
+    
   });
 
   // 전체 데이터센터 가져오기

@@ -160,9 +160,7 @@ useEffect(() => {
 
         <div className="w-full px-7">
           <div>
-            <LabelSelectOptions
-              id="optimization"
-              label="최적화 옵션"
+            <LabelSelectOptions id="optimization" label={Localization.kr.OPTIMIZATION_OPTION}
               value={selectedOptimizeOption}
               onChange={(e) => setSelectedOptimizeOption(e.target.value)}
               options={optimizeOption}
@@ -171,8 +169,7 @@ useEffect(() => {
           <hr/>
           {activeTab === "general" && (
             <>
-              <LabelInput id="template_name"
-                label={Localization.kr.NAME}
+              <LabelInput id="template_name" label={Localization.kr.NAME}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 autoFocus

@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from "react";
-import CONSTANT               from "@/Constants";
-import useGlobal              from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import InfoTable              from "@/components/table/InfoTable";
-import TableRowClick          from "@/components/table/TableRowClick";
-import SemiCircleChart        from "@/components/Chart/SemiCircleChart";
+import CONSTANT                   from "@/Constants";
+import useGlobal                  from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }              from "@/components/table/InfoTable";
+import TableRowClick              from "@/components/table/TableRowClick";
+import SemiCircleChart            from "@/components/Chart/SemiCircleChart";
 import {
   RVI16,
   rvi16Cluster,
@@ -13,9 +13,10 @@ import {
 import {
   useVm,
   useOsSystemsFromCluster,
+  useAllBiosTypes,
 } from "@/api/RQHook";
-import { convertBytesToMB }   from "@/util";
-import Localization           from "@/utils/Localization";
+import { convertBytesToMB }       from "@/util";
+import Localization               from "@/utils/Localization";
 import "./Vm.css"
 
 /**
@@ -43,8 +44,17 @@ const VmGeneral = ({
 
   const { 
     data: osList = [], 
-    isLoading: isOsListLoading
+    isLoading: isOsListLoading,
   } = useOsSystemsFromCluster(clustersSelected[0]?.id, (e) => ({ ...e }));
+
+  const {
+    data: biosTypes=[],
+    isLoading: isBiosTypesLoading,
+  } = useAllBiosTypes((e) => ({ 
+    ...e,
+    value: e?.id,
+    label: e?.kr
+  }))
   
   useEffect(() => {
     if (vm?.hostVo)
@@ -55,11 +65,11 @@ const VmGeneral = ({
   }, [vm])
 
   const osLabel = useMemo(() => (
-    osList.find((e) => e?.name === vm?.osType)?.description
+    [...osList].find((e) => e?.name === vm?.osType)?.description
   ), [vmId, vm])
     
   const chipsetLabel = useMemo(() => (
-    CONSTANT.chipsetOptions.find((option) => option.value === vm?.biosType)?.label || vm?.biosType
+    [...biosTypes].find((option) => option.value === vm?.biosType)?.label || vm?.biosType
   ), [vm])
 
   const generalTableRows = [
@@ -68,7 +78,7 @@ const VmGeneral = ({
     { label: Localization.kr.UP_TIME, value: vm?.upTime },
     { label: "IP 주소", value: vm?.ipv4 },
     { label: "FQDN", value: vm?.fqdn },
-    { label: "최적화 옵션", value: vm?.optimizeOption },
+    { label: Localization.kr.OPTIMIZATION_OPTION, value: vm?.optimizeOption },
     { label: Localization.kr.TIMEZONE, value: vm?.timeOffset },
     {
       label: Localization.kr.CLUSTER,
@@ -98,16 +108,16 @@ const VmGeneral = ({
   ];
 
   const hardwareTableRows = [
-    { label: "운영 체제", value: osLabel },
-    { label: "아키텍처", value: vm?.cpuArc },
+    { label: Localization.kr.OPERATING_SYSTEM, value: osLabel },
+    { label: Localization.kr.ARCH, value: vm?.cpuArc },
     { label: "칩셋/펌웨어 유형", value: chipsetLabel },
     { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
     { label: Localization.kr.MEMORY, value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` },
     { label: " 할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)}  MB` },
     { label: "", value: "" },
     { label: "게스트", value: "" },
-    { label: "- 아키텍처", value: vm?.guestArc },
-    { label: "- 운영 시스템", value: vm?.guestOsType },
+    { label: `- ${Localization.kr.ARCH}`, value: vm?.guestArc },
+    { label: `- ${Localization.kr.OPERATING_SYSTEM}`, value: vm?.guestOsType },
     { label: "- 커널 버전", value: vm?.guestKernelVer },
     { label: `- ${Localization.kr.TIMEZONE}`, value: vm?.guestTimeZone },
   ];
@@ -126,7 +136,7 @@ const VmGeneral = ({
           <hr className="w-full"/>
           <InfoTable tableRows={hardwareTableRows} />
         </div>
-
+        {vm?.runningOrPaused && (
         <div className="detail-general-box v-start gap-8">
           <h1 className="f-start fs-16 fw-500 w-full">용량 및 사용량</h1>
           <hr className="w-full"/>
@@ -145,7 +155,9 @@ const VmGeneral = ({
             </div>
           </div>
         </div>
+        )}
       </div>
+      
       <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 

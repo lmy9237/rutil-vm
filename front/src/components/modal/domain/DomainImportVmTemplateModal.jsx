@@ -1,17 +1,22 @@
-/* 가상머신/템플릿 가져오기모달 */
 import { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
-import BaseModal from "../BaseModal";
-import TablesOuter from "../../table/TablesOuter";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
-import { checkKoreanName } from "../../../util";
-import FilterButtons from "../../button/FilterButtons";
-import Localization from "../../../utils/Localization";
-import InfoTable from "../../table/InfoTable";
+import { useValidationToast }     from "@/hooks/useSimpleToast";
+import useGlobal                  from "@/hooks/useGlobal";
+import FilterButtons              from "@/components/button/FilterButtons";
+import BaseModal                  from "@/components/modal/BaseModal";
+import LabelSelectOptionsID       from "@/components/label/LabelSelectOptionsID";
+import TablesOuter                from "@/components/table/TablesOuter";
+import TableColumnsInfo           from "@/components/table/TableColumnsInfo";
+import { InfoTable }              from "@/components/table/InfoTable";
+import {
+  useClustersFromDataCenter
+} from "@/api/RQHook";
+import { 
+  checkKoreanName, 
+  checkName
+} from "@/util";
+import Localization               from "@/utils/Localization";
+import Logger                     from "@/utils/Logger";
 import "./MDomain.css";
-import useGlobal from "@/hooks/useGlobal";
-import { useValidationToast } from "@/hooks/useSimpleToast";
-import { useClustersFromDataCenter } from "@/api/RQHook";
 
 const initialFormState = {
   id: "",
@@ -95,11 +100,11 @@ const DomainImportVmTemplateModal = ({
     { label: Localization.kr.NAME, value: "이름" },
     { label: Localization.kr.DESCRIPTION, value: "설명" },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: "Cluster-01" },
-    { label: "운영 시스템", value: "" },
+    { label: Localization.kr.OPERATING_SYSTEM, value: "" },
     { label: "칩셋/펌웨어 유형", value: "" },
     { label: "그래픽 프로토콜", value: "" },
     { label: "비디오 유형", value: "" },
-    { label: "최적화 옵션", value: "" },
+    { label: Localization.kr.OPTIMIZATION_OPTION, value: "" },
     { label: `설정된 ${Localization.kr.MEMORY}`, value: "" },
     { label: "CPU 코어 수", value: "4" },
     { label: "모니터 수", value: "1" },
@@ -115,11 +120,11 @@ const DomainImportVmTemplateModal = ({
     { label: Localization.kr.DESCRIPTION, value: "설명" },
     { label: `실행 ${Localization.kr.HOST}`, value: "Cluster-01" },
     { label: `${Localization.kr.TEMPLATE}`, value: "Template" },
-    { label: "운영 시스템", value: "" },
+    { label: Localization.kr.OPERATING_SYSTEM, value: "" },
     { label: "칩셋/펌웨어 유형", value: "" },
     { label: "그래픽 프로토콜", value: "" },
     { label: "비디오 유형", value: "" },
-    { label: "최적화 옵션", value: "" },
+    { label: Localization.kr.OPTIMIZATION_OPTION, value: "" },
     { label: `설정된 ${Localization.kr.MEMORY}`, value: "" },
     { label: "CPU 코어 수", value: "4" },
     { label: "모니터 수", value: "1" },
@@ -130,8 +135,11 @@ const DomainImportVmTemplateModal = ({
   ];
   
   const validateForm = () => {
+    Logger.debug(`DomainImportVmTemplateModal > validateForm ... `)
+    /*
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
+    */
     
     return null;
   };
@@ -179,7 +187,7 @@ const DomainImportVmTemplateModal = ({
                   <th>{Localization.kr.NAME}</th>
                   <th>{Localization.kr.MEMORY}</th>
                   <th>CPU</th>
-                  <th>아키텍처</th>
+                  <th>{Localization.kr.ARCH}</th>
                   <th>{Localization.kr.DISK}</th>
                   <th>불량 MAC 재배치</th>
                   <th>부분 허용</th>
@@ -190,7 +198,7 @@ const DomainImportVmTemplateModal = ({
                   <th>{Localization.kr.ALIAS}</th>
                   <th>{Localization.kr.MEMORY}</th>
                   <th>CPU</th>
-                  <th>아키텍처</th>
+                  <th>{Localization.kr.ARCH}</th>
                   <th>{Localization.kr.DISK}</th>
                   <th>{Localization.kr.CLUSTER}</th>
                 </>
@@ -257,9 +265,7 @@ const DomainImportVmTemplateModal = ({
                 ? vmTableRows.filter((_, index) => index % 3 === groupIndex)
                 : templateTableRows.filter((_, index) => index % 3 === groupIndex);
               return (
-                // <div key={groupIndex} className="info-table-wrapper">
-                  <InfoTable tableRows={splitRows} />
-                // </div>
+                <InfoTable tableRows={splitRows} />
               );
             })}
           </div>

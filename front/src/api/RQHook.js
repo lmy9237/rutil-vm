@@ -458,31 +458,6 @@ export const useNetworksFromDataCenter = (
   },
   enabled: !!dataCenterId
 });
-/**
- * @name useEventsFromDataCenter
- * @description 데이터센터 내 이벤트 목록조회 useQuery훅
- * 
- * @param {string} dataCenterId 데이터센터ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllEventsFromDataCenter
- */
-export const useEventsFromDataCenter = (
-  dataCenterId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromDataCenter', dataCenterId],
-  queryFn: async () => {
-    const res = await ApiManager.findAllEventsFromDataCenter(dataCenterId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
-    return _res;
-  }
-});
 
 /**
  * @name useFindTemplatesFromDataCenter
@@ -929,33 +904,6 @@ export const useAllVnicsFromCluster = (
   enabled: !!clusterId,
   staleTime: 0,
   cacheTime: 0,
-})
-
-/**
- * @name useEventFromCluster
- * @description 클러스터 내 이벤트 목록조회 useQuery훅
- * 
- * @param {string} clusterId 클러스터ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findEventsFromCluster
- */
-export const useEventFromCluster = (
-  clusterId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromCluster', clusterId],
-  queryFn: async () => {
-    const res = await ApiManager.findEventsFromCluster(clusterId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventFromCluster ... clusterId: ${clusterId}, res: `, _res);
-    return _res
-  },
-  enabled: !!clusterId,
 })
 
 /**
@@ -1484,32 +1432,6 @@ export const useHostDevicesFromHost = (
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
     Logger.debug(`RQHook > useHostDevicesFromHost ... hostId: ${hostId},  res: `, _res);
-    return _res
-  },
-  enabled: !!hostId
-})
-/**
- * @name useEventsFromHost
- * @description 호스트 내 이벤트 목록조회 useQuery훅
- * 
- * @param {string} clusterId 클러스터ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findEventsFromHost
- */
-export const useEventsFromHost = (
-  hostId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromHost', hostId],
-  queryFn: async () => {
-    const res = await ApiManager.findEventsFromHost(hostId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useEventsFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
   enabled: !!hostId
@@ -2510,33 +2432,6 @@ export const useApplicationsFromVM = (
   staleTime: 0,
   cacheTime: 0,
 });
-/**
- * @name useAllEventFromVM
- * @description 가상머신 내 이벤트 목록조회 useQuery훅
- * 
- * @param {string} vmId 가상머신ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllDataCenterFromDomain
- */
-export const useAllEventsFromVM = (
-  vmId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allEventFromVM', vmId],
-  queryFn: async () => {
-    const res = await ApiManager.findEventsFromVM(vmId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!vmId
-})
-
 
 /**
  * @name useVmConsoleAccessInfo
@@ -3607,34 +3502,6 @@ export const useAllStoragesFromTemplate = (
   enabled: !!templateId,
   staleTime: 0,
   cacheTime: 0,
-})
-
-
-/**
- * @name useAllEventFromTemplate
- * @description  Template 내  이벤트 목록조회 useQuery훅
- * 
- * @param {string} templateId TemplateID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllDataCenterFromDomain
- */
-export const useAllEventFromTemplate = (
-  templateId,
-  mapPredicate = (e) => ({ ...e }),
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allEventFromTemplate', templateId],
-  queryFn: async () => {
-    const res = await ApiManager.findEventsFromTemplate(templateId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
-    Logger.debug(`RQHook > useAllEventFromTemplate ... templateId: ${templateId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!templateId,
 })
 
 /**
@@ -4980,33 +4847,6 @@ export const useAllDiskSnapshotsFromDomain = (
   cacheTime: 0,
 })
 /**
- * @name useAllEventsFromDomain
- * @description 도메인 내 이벤트 목록조회 useQuery훅
- * 
- * @param {string} storageDomainId 도메인ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllDataCenterFromDomain
- */
-export const useAllEventsFromDomain = (
-  storageDomainId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllEventFromDomain', storageDomainId],
-  queryFn: async () => {
-    if (storageDomainId === '') return [];
-    const res = await ApiManager.findAllEventsFromDomain(storageDomainId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!storageDomainId,
-})
-/**
  * @name useAllActiveDataCenters
  * @description 데이터센터 목록조회 useQuery훅
  * 
@@ -5721,11 +5561,17 @@ export const useCopyDisk = (
     },
   });
 };
+
+
 //#region: event (이벤트)
 /**
  * @name useAllEvents
  * @description 모든 이벤트 목록조회 useQuery훅
  * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} minSeverity 이벤트 심각도 (normal, alert, ...)
+ * @param {string} startDate 조회범위 시작시간 (YYYYMMDD)
  * @param {function} mapPredicate 
  * @returns useQuery훅
  */
@@ -5745,6 +5591,180 @@ export const useAllEvents = ({
   },
   keepPreviousData: true,
 });
+
+/**
+ * @name useAllEventsFromDataCenter
+ * @description 데이터센터 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} datacenterId 데이터센터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromDataCenter = ({
+  page=null, size=null, datacenterId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromDataCenter', datacenterId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, datacenterId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromDataCenter ... datacenterId: ${datacenterId}, res: `, _res);
+    return _res;
+  }
+});
+
+/**
+ * @name useAllEventsFromCluster
+ * @description 클러스터 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} clusterId 클러스터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromCluster = ({
+  page=null, size=null, clusterId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromCluster', clusterId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, clusterId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromCluster ... clusterId: ${clusterId}, res: `, _res);
+    return _res
+  },
+  enabled: !!clusterId,
+})
+
+/**
+ * @name useAllEventsFromHost
+ * @description 호스트 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} hostId 호스트ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromHost = ({
+  page=null, size=null, hostId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromHost', hostId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, hostId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromHost ... hostId: ${hostId}, res: `, _res);
+    return _res
+  },
+  enabled: !!hostId
+})
+
+/**
+ * @name useAllEventFromVM
+ * @description 가상머신 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} vmId 가상머신ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromVM = ({
+  page=null, size=null, vmId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromVM', vmId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, vmId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!vmId
+})
+
+/**
+ * @name useAllEventsFromDomain
+ * @description 도메인 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} storageDomainId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromDomain = ({
+  page=null, size=null, storageDomainId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromDomain', storageDomainId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, storageDomainId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!storageDomainId,
+})
+
+/**
+ * @name useAllEventsFromTemplate
+ * @description  탬플릿 내 이벤트 목록조회 useQuery훅
+ * 
+ * @param {number} page 페이지 인덱스 번호 (0부터 시작)
+ * @param {number} size 단일 쿼리 총 조회결과 개수
+ * @param {string} templateId 탬플릿 ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllEvents
+ */
+export const useAllEventsFromTemplate = ({
+  page=null, size=null, templateId,
+  mapPredicate = (e) => ({ ...e })
+}) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['eventsFromTemplate', templateId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllEvents({ page, size, templateId });
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllEventsFromTemplate ... templateId: ${templateId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!templateId,
+})
+
 /**
  * @name useAllEventsNormal
  * @description 박스 안 정상 이벤트 목록조회 useQuery훅
@@ -5758,7 +5778,9 @@ export const useAllEventsNormal = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allEventsNormal'],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvents(1, 100, null, null)
+    const res = await ApiManager.findAllEvents({
+      page: 0, size: 100
+    })
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
@@ -5773,7 +5795,9 @@ export const useAllEventsAlert = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allNotiEvents'],
   queryFn: async () => {
-    const res = await ApiManager.findAllEvents(0, 20, "alert", "today")
+    const res = await ApiManager.findAllEvents({
+      page: 0, size: 20, minSeverity: "alert", startDate: "recent",
+    })
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];

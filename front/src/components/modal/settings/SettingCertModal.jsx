@@ -103,7 +103,6 @@ const SettingCertModal = ({
       />
       <LabelInputNum id="port" label="SSH 포트"
         value={formState.port}
-        disabled={true}
         onChange={handleInputChange(setFormState, "port")}
       />
       <LabelInput id="username" label={`${Localization.kr.USER} ${Localization.kr.NAME}`}

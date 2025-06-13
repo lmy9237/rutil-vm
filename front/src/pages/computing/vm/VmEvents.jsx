@@ -1,11 +1,12 @@
-import useGlobal              from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import EventDupl              from "@/components/dupl/EventDupl";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
 import {
   useAllEventsFromVM
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
 
 
 /**
@@ -19,9 +20,8 @@ import Logger                 from "@/utils/Logger";
 const VmEvents = ({
   vmId
 }) => {
-  const { 
-    vmsSelected,
-  } = useGlobal();
+  const { vmsSelected, } = useGlobal();
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
   
   const {
     data: events = [],
@@ -30,7 +30,14 @@ const VmEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useAllEventsFromVM(vmId, (e) => ({ ...e }));
+  } = useAllEventsFromVM({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    vmId: vmId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

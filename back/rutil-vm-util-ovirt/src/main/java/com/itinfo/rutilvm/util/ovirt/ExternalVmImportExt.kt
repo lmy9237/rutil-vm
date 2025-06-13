@@ -13,7 +13,6 @@ private fun Connection.srvExternalVmImports(): ExternalVmImportsService =
 fun Connection.addExternalVmImport(externalVmImport: ExternalVmImport): Result<ExternalVmImport?> = runCatching {
 	val addExternalVm = srvExternalVmImports().add().import_(externalVmImport).send()
 	// srvExternalVmImports().add().import_(externalVmImport).send().import_() // ExternalVmImport!
-
 	addExternalVm.import_()
 }.onSuccess {
 	Term.EXTERNAL_VM.logSuccess("생성", it.name())

@@ -88,6 +88,26 @@ class Localization {
 		}
 		//endregion
 
+		//region: DisplayTypeL
+		object DisplayTypeL {
+			object KR {
+				val cirrus							= locKr?.get(DisplayType.cirrus.localizationKey)?.toString() ?: ""
+				val qxl								= locKr?.get(DisplayType.qxl.localizationKey)?.toString() ?: ""
+				val vga								= locKr?.get(DisplayType.vga.localizationKey)?.toString() ?: ""
+				val bochs							= locKr?.get(DisplayType.bochs.localizationKey)?.toString() ?: ""
+				val none							= locKr?.get(DisplayType.cirrus.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val cirrus							= locEn?.get(DisplayType.cirrus.localizationKey)?.toString() ?: ""
+				val qxl								= locEn?.get(DisplayType.qxl.localizationKey)?.toString() ?: ""
+				val vga								= locEn?.get(DisplayType.vga.localizationKey)?.toString() ?: ""
+				val bochs							= locEn?.get(DisplayType.bochs.localizationKey)?.toString() ?: ""
+				val none							= locEn?.get(DisplayType.cirrus.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: DisplayTypeL
+
+
 		//region MigrationSupportL
 		object MigrationSupportL {
 			object KR {
@@ -207,6 +227,15 @@ class Localization {
 			DiskContentType.HOSTED_ENGINE_CONFIGURATION -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
 			DiskContentType.BACKUP_SCRATCH -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
 			DiskContentType.UNKNOWN -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
+		}
+
+	fun findLocalizedName4DisplayType(type: DisplayType, loc: String = "kr"): String =
+		when(type) {
+			DisplayType.cirrus ->					if (loc == "kr") DisplayTypeL.KR.cirrus else DisplayTypeL.EN.cirrus
+			DisplayType.qxl	->						if (loc == "kr") DisplayTypeL.KR.qxl else DisplayTypeL.EN.qxl
+			DisplayType.vga	->						if (loc == "kr") DisplayTypeL.KR.vga else DisplayTypeL.EN.vga
+			DisplayType.bochs -> 					if (loc == "kr") DisplayTypeL.KR.bochs else DisplayTypeL.EN.bochs
+			DisplayType.none ->						if (loc == "kr") DisplayTypeL.KR.none else DisplayTypeL.EN.none
 		}
 
 	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String =

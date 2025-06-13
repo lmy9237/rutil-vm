@@ -11,18 +11,24 @@ import com.itinfo.rutilvm.api.model.computing.HostStorageVo
 import com.itinfo.rutilvm.api.model.storage.IscsiDetailVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.model.storage.LogicalUnitVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItHostNicService
 import com.itinfo.rutilvm.api.service.computing.ItHostOperationService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
 import com.itinfo.rutilvm.api.service.computing.ItHostStorageService
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 
 @Controller
 @Api(tags = ["Computing", "Host"])
@@ -193,11 +199,15 @@ class HostController {
 		return ResponseEntity.ok(iHost.findAllHostDevicesFromHost(hostId))
 	}
 
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="호스트 이벤트 목록",
-		notes="선택된 호스트의 이벤트 목록을 조회한다")
+		notes="선택된 호스트의 이벤트 목록을 조회한다"
+	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
 		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
@@ -207,12 +217,20 @@ class HostController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun events(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
 		@PathVariable hostId: String?
 	): ResponseEntity<List<EventVo>> {
 		if (hostId.isNullOrEmpty())
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		log.info("/computing/hosts/{}/events ... 호스트 이벤트 목록", hostId)
-		return ResponseEntity.ok(iHost.findAllEventsFromHost(hostId))
+		log.info("/computing/hosts/{}/events ... 호스트 이벤트 목록: page: {}, size: {}", hostId, pageable.pageNumber, pageable.pageSize)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					hostId { hostId }
+				}
+			).content
+		)
 	}
 
 	// region: hostNic

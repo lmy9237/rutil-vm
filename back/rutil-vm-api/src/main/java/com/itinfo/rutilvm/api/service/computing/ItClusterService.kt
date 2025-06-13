@@ -144,15 +144,6 @@ interface ItClusterService {
 	fun findAllVnicProfilesFromCluster(clusterId: String): List<VnicProfileVo>
 
 	/**
-	 * [ItClusterService.findAllEventsFromCluster]
-	 * 클러스터가 가지고있는 이벤트 목록
-	 *
-	 * @param clusterId [String] 클러스터 Id
-	 * @return List<[EventVo]> 이벤트 목록
-	 */
-	@Throws(Error::class)
-	fun findAllEventsFromCluster(clusterId: String): List<EventVo>
-	/**
 	 * [ItClusterService.findAllOsSystemFromCluster]
 	 * 가상머신 operation system
 	 *
@@ -325,17 +316,6 @@ class ClusterServiceImpl(
 			conn.findAllVnicProfilesFromNetwork(network.id(), follow = "network").getOrDefault(emptyList())
 		}
 		return res.toCVnicProfileMenus()
-	}
-
-	@Throws(Error::class)
-	override fun findAllEventsFromCluster(clusterId: String): List<EventVo> {
-		log.info("findAllEventsFromCluster ... clusterId: {}", clusterId)
-		val cluster: Cluster = conn.findCluster(clusterId)
-			.getOrNull() ?: throw ErrorPattern.CLUSTER_NOT_FOUND.toException()
-
-		val res: List<Event> = conn.findAllEvents("cluster.name=${cluster.name()}").getOrDefault(emptyList())
-			.filter { it.clusterPresent() && it.cluster().idPresent() && it.cluster().id().equals(clusterId) }
-		return res.toEventVos()
 	}
 
 	@Throws(Error::class)

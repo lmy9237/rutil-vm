@@ -534,7 +534,7 @@ const VmModal = ({
               onChange={handleSelectIdChange(setTemplateVo, templates, validationToast)}
             />
           )}
-          <LabelSelectOptionsID label="운영 시스템"
+          <LabelSelectOptionsID label={Localization.kr.OPERATING_SYSTEM}
             value={formInfoState.osType}
             options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
             loading={isOsListLoading}

@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Badge }              from "@/components/ui/badge";
 import "./Badges.css"
 
 /**
@@ -32,9 +33,15 @@ export const BadgeNumber = ({
   status="number",
   text="0"
 }) => (
-<BadgeStatus 
-  status={status}
-  text={text}
-/>)
-
+  <Badge
+    className="h-5 min-w-5 rounded-full px-1 tabular-nums"
+    variant={
+      status === "alert" 
+        ? "destructive"
+        : "info"
+    }
+  >
+    {text}
+  </Badge> 
+)
 export default BadgeStatus;

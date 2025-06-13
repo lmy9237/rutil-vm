@@ -9,14 +9,20 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItTemplateService
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 
 @Controller
 @Api(tags = ["Computing", "Template"])
@@ -353,12 +359,15 @@ class TemplateController: BaseController() {
 	// 	return ResponseEntity.ok(iTemplate.findAllStorageDomainsFromTemplate(templateId))
 	// }
 
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="템플릿 이벤트 목록",
 		notes="선택된 템플릿의 이벤트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
 		ApiImplicitParam(name="templateId", value="템플릿 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
@@ -368,12 +377,20 @@ class TemplateController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun findAllEventsFromTemplate(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
 		@PathVariable templateId: String? = null,
 	): ResponseEntity<List<EventVo>> {
 		if (templateId.isNullOrEmpty())
 			throw ErrorPattern.TEMPLATE_ID_NOT_FOUND.toException()
-		log.info("/computing/templates/{}/events 이벤트", templateId)
-		return ResponseEntity.ok(iTemplate.findAllEventsFromTemplate(templateId))
+		log.info("/computing/templates/{}/events 탬플릿 이벤트 목록: page: {}, size: {}", templateId, pageable.pageNumber, pageable.pageSize)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					templateId { templateId }
+				}
+			).content
+		)
 	}
 
 

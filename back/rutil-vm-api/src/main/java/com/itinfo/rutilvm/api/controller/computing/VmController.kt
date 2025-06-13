@@ -9,12 +9,17 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.*
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.io.FileSystemResource
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -23,6 +28,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Schedulers
+import springfox.documentation.annotations.ApiIgnore
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -223,12 +229,16 @@ class VmController: BaseController() {
 
 	}
 
+	//region event
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 이벤트 목록",
 		notes="선택된 가상머신의 이벤트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
 		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
@@ -238,14 +248,22 @@ class VmController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun events(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
 		@PathVariable vmId: String? = null,
 	): ResponseEntity<List<EventVo>> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
-		log.info("/computing/vms/{}/events ... 가상머신 이벤트", vmId)
-		return ResponseEntity.ok(iVm.findAllEventsFromVm(vmId))
+		log.info("/computing/vms/{}/events ... 가상머신 이벤트: page: {}, size: {}", vmId, pageable.pageNumber, pageable.pageSize)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					vmId { vmId }
+				}
+			).content
+		)
 	}
-
+	//endregion event
 
 	//region: vmOp
 	@Autowired private lateinit var iVmOp: ItVmOperationService

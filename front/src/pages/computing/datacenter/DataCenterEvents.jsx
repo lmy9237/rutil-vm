@@ -1,10 +1,12 @@
-import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import EventDupl from "../../../components/dupl/EventDupl";
-import { useEventsFromDataCenter } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
+import {
+  useAllEventsFromDataCenter
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name DataCenterEvents
@@ -18,6 +20,8 @@ const DataCenterEvents = ({
   datacenterId
 }) => {
   const { datacentersSelected } = useGlobal()
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
+
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -25,7 +29,14 @@ const DataCenterEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useEventsFromDataCenter(datacenterId, (e) => ({ ...e }));
+  } = useAllEventsFromDataCenter({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    datacenterId: datacenterId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

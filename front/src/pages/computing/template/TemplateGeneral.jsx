@@ -1,9 +1,9 @@
-import InfoTable from "@/components/table/InfoTable";
+import { InfoTable }              from "@/components/table/InfoTable";
 import {
   useTemplate
 } from "@/api/RQHook";
-import { checkZeroSizeToMB }   from "@/util";
-import Localization           from "@/utils/Localization";
+import { checkZeroSizeToMB }      from "@/util";
+import Localization               from "@/utils/Localization";
 
 /**
  * @name TemplateGeneral
@@ -16,15 +16,15 @@ const TemplateGeneral = ({ templateId }) => {
   const { data: template } = useTemplate(templateId);
 
   const tableRows = [
-    { label: `${Localization.kr.TEMPLATE} ID`, value: template?.id },
-    { label: Localization.kr.NAME,             value: template?.name },
-    { label: Localization.kr.DESCRIPTION,      value: template?.description },
+    { label: `${Localization.kr.TEMPLATE} ID`,     value: template?.id },
+    { label: Localization.kr.NAME,                 value: template?.name },
+    { label: Localization.kr.DESCRIPTION,          value: template?.description },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: template?.clusterVo?.name },
-    { label: "운영 시스템",     value: template?.osSystem },
-    { label: "칩셋/펌웨어 유형", value: template?.chipsetFirmwareType },
-    { label: "그래픽 프로토콜",  value: template?.displayType },
+    { label: Localization.kr.OPERATING_SYSTEM,     value: template?.osSystem },
+    { label: "칩셋/펌웨어 유형",                      value: template?.chipsetFirmwareType },
+    { label: "그래픽 프로토콜",                       value: template?.displayType },
     // { label: "비디오 유형",     value:  },
-    { label: "최적화 옵션",     value: template?.optimizeOption },
+    { label: Localization.kr.OPTIMIZATION_OPTION,  value: template?.optimizeOption },
     { label: "설정된 메모리",    value: checkZeroSizeToMB(template?.memorySize) },
     { label: "CPU 코어 수",    value: `${template?.cpuTopologyCnt} (${template?.cpuTopologySocket}:${template?.cpuTopologyCore}:${template?.cpuTopologyThread})` || "" },
     { label: "모니터 수",       value: template?.monitor },

@@ -1,16 +1,17 @@
-import SectionLayout          from "@/components/SectionLayout";
-import HeaderButton           from "@/components/button/HeaderButton";
-import EventDupl              from "@/components/dupl/EventDupl";
+import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import CONSTANT                         from "@/Constants";
+import SectionLayout                    from "@/components/SectionLayout";
+import HeaderButton                     from "@/components/button/HeaderButton";
+import EventDupl                        from "@/components/dupl/EventDupl";
 import {
   rvi24Event
 } from "@/components/icons/RutilVmIcons";
 import {
   useAllEvents
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
-import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name AllEvents
@@ -18,7 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
  * (/events)
  *
  * @returns
- */
+*/
 const AllEvents = () => {
   const queryClient = useQueryClient();
   const sizePerQuery = 5000;
@@ -33,7 +34,7 @@ const AllEvents = () => {
     isRefetching: isEventsRefetching,
   } = useAllEvents({
     page: currentPageIdx,
-    size: sizePerQuery,
+    size: CONSTANT.queryMaxSize,
     mapPredicate: (e) => ({
       ...e,
     })

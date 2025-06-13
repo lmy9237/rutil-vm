@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import BaseModal from "../BaseModal";
-import TablesOuter from "../../table/TablesOuter";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
-import FilterButtons from "../../button/FilterButtons";
-import Localization from "../../../utils/Localization";
-import InfoTable from "../../table/InfoTable";
+import { useValidationToast }     from "@/hooks/useSimpleToast";
+import useGlobal                  from "@/hooks/useGlobal";
+import FilterButtons              from "@/components/button/FilterButtons";
+import BaseModal                  from "@/components/modal/BaseModal";
+import LabelSelectOptionsID       from "@/components/label/LabelSelectOptionsID";
+import TablesOuter                from "@/components/table/TablesOuter";
+import TableColumnsInfo           from "@/components/table/TableColumnsInfo";
+import { InfoTable }              from "@/components/table/InfoTable";
+import {
+  useClustersFromDataCenter
+} from "@/api/RQHook";
+import Localization               from "@/utils/Localization";
+import Logger                     from "@/utils/Logger";
 import "./MDomain.css";
-import useGlobal from "@/hooks/useGlobal";
-import { useValidationToast } from "@/hooks/useSimpleToast";
-import { useClustersFromDataCenter } from "@/api/RQHook";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 
 /**
  * @name DomainImportTemplateModal
@@ -77,10 +80,10 @@ const DomainImportTemplateModal = ({
     { label: Localization.kr.NAME, value: template.name || "" },
     { label: Localization.kr.DESCRIPTION, value: template.description || "" },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: "" },
-    { label: "운영 시스템", value: template.osSystem || "" },
+    { label: Localization.kr.OPERATING_SYSTEM, value: template.osSystem || "" },
     { label: "칩셋/펌웨어 유형", value: template.chipsetFirmwareType || "" },
     { label: "그래픽 프로토콜", value: template.displayType || "" },
-    { label: "최적화 옵션", value: template.optimizeOption || "" },
+    { label: Localization.kr.OPTIMIZATION_OPTION, value: template.optimizeOption || "" },
     { label: `설정된 ${Localization.kr.MEMORY}`, value: template.memory || "" },
     { label: "CPU 코어 수", value: `${template.cpuTopologyCnt} (${template.cpuTopologySocket}:${template.cpuTopologyCore}:${template.cpuTopologyThread})` || "" },
     { label: "모니터 수", value: template.monitor || "" },
@@ -126,7 +129,7 @@ const DomainImportTemplateModal = ({
               <th>{Localization.kr.ALIAS}</th>
               <th>{Localization.kr.MEMORY}</th>
               <th>CPU</th>
-              <th>아키텍처</th>
+              <th>{Localization.kr.ARCH}</th>
               <th>{Localization.kr.DISK}</th>
               <th>{Localization.kr.CLUSTER}</th>
             </tr>

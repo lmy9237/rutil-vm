@@ -69,16 +69,20 @@ export const useProgressToast = () => {
   const { toast } = useToast();
 
   const progressToast = {
-    in: (progress=0) => {
+    in: (title, progress=0) => {
       Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}`);
       toast({
-        title: `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
+        title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
         description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%`,
+        update: () => ({
+          duration: (progress === 100) ? 20 : Infinity
+        }),
         duration: Infinity,
       })
-      
     }
   }
+
+  return { progressToast }
 }
 
 /**

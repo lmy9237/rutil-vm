@@ -12,9 +12,9 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
 import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
-import okio.IOException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.io.IOException
 import kotlin.jvm.Throws
 
 interface ItCertService {

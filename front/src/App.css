@@ -96,6 +96,7 @@ html {
   --h-rutil-header: 64px;
   --h-rutil-footer: 36px; /* section-footer 높이 */
   --h-btn-tab-nav: 36px; /* 왼쪽 네비게이션 버튼 높이 */
+  --h-btn-tab-detail: calc(100% - var(--h-modal-footer) - var(--h-modal-header) - var(--h-section-header));
   --h-rutil-footer-content: 20px;
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
@@ -280,6 +281,8 @@ svg.btn { cursor: pointer; }
 .v-start  { display:flex;align-items:center;justify-content:flex-start;flex-direction:column; }
 .v-end    { display:flex;align-items:center;justify-content:flex-end;flex-direction:column; }
 .v-btw    { display:flex;align-items:space-between;justify-content:center;flex-direction:column; } 
+.align-start  { align-items:flex-start !important; }
+.align-end    { align-items:flex-end !important; }
 .ml-auto { margin-left:auto !important; }
 .mr-auto { margin-right:auto !important; }
 .mt-auto { margin-top:auto !important; }
@@ -295,6 +298,10 @@ svg.btn { cursor: pointer; }
 .gap-14 { gap: 14px; }
 .gap-16 { gap: 16px; }
 .gap-18 { gap: 18px; }
+.gap-20 { gap: 20px; }
+.gap-22 { gap: 22px; }
+.gap-24 { gap: 24px; }
+.gap-28 { gap: 28px; }
 
 .down { color: var(--color-down) }
 .dash-boxs+.bar+.dash-section {
@@ -313,10 +320,9 @@ svg.btn { cursor: pointer; }
   align-items: flex-start !important;
 }
 .info-content {
-      width: calc(100% - var(--w-btn-tab-nav));
-    /* overflow-y: auto; */
-    height: calc(100% - var(--h-section-header));
-    
+  width: calc(100% - var(--w-btn-tab-nav));
+  /* overflow-y: auto; */
+  height: calc(100% - var(--h-section-header));
 }
 .section-content,.info-content { 
   padding: 10px;

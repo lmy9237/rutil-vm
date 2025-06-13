@@ -1,12 +1,11 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
 import java.util.concurrent.ConcurrentHashMap
-import com.itinfo.rutilvm.api.ovirt.business.Localization.Companion.ProviderTypeL
 
 /**
  * [ProviderType]
+ * 제공자 유형
  *
- * The provider type determines what external provider is used.
  */
 enum class ProviderType(
 	override val value: Int,

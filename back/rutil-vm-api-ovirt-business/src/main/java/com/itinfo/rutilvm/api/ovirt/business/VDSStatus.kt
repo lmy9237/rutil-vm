@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap
  * [VDSStatus]
  * 호스트 상태 값 유형
  *
+ * [VDSStatus.Unassigned]
+ * [VDSStatus.Down]
  */
 enum class VDSStatus(
 	override val value: Int,

@@ -33,7 +33,6 @@ const ENDPOINTS = {
   FIND_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/storageDomains`, 
   FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) =>          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/activeDomains`,
   FIND_NETWORKS_FROM_DATA_CENTER: (dataCenterId) =>                        `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/networks`, 
-  FIND_EVENTS_FROM_DATA_CENTER: (dataCenterId) =>                          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/events`,
   FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) =>                       `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/templates`,
   FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/unattachedDiskImages`,
   FIND_ISOS_FROM_DATA_CENTER:(dataCenterId) =>                             `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/iso`, 
@@ -301,12 +300,13 @@ const ENDPOINTS = {
   
   //#region: Event
   FIND_ALL_EVENTS: (page=0,size=1000) =>                                   `${ENDPOINT_API_V1}/events?page=${page}&size=${size}`,
-  FIND_ALL_EVENTS_PAGE: (
+  FIND_ALL_EVENTS_PAGE: ({
     page=0,
     size,
+    datacenterId=null, clusterId=null, hostId=null, vmId=null, templateId=null, storageDomainId=null,
     minSeverity=null,
     startDate=null
-  ) =>                                                                     `${ENDPOINT_API_V1}/events?${minSeverity ? `minSeverity=${minSeverity}` : ""}${startDate ? `&startDate=${startDate}` : ""}${size ? `&size=${size}` : ""}${page ? `&page=${page}` : ""}`,
+  }) =>                                                                    `${ENDPOINT_API_V1}/events?${page ? `page=${page}` : ""}${size ? `&size=${size}` : ""}${datacenterId ? `&datacenterId=${datacenterId}` : ""}${clusterId ? `&clusterId=${clusterId}` : ""}${hostId ? `&hostId=${hostId}` : ""}${vmId ? `&vmId=${vmId}` : ""}${templateId ? `&templateId=${templateId}` : ""}${storageDomainId ? `&storageDomainId=${storageDomainId}` : ""}${minSeverity ? `&minSeverity=${minSeverity}` : ""}${startDate ? `&startDate=${startDate}` : ""}`,
   FIND_EVENT: (eventId) =>                                                 `${ENDPOINT_API_V1}/events/${eventId}`,
   //#endregion: Event
 

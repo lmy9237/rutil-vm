@@ -1,7 +1,12 @@
-import InfoTable from "@/components/table/InfoTable";
-import { useDisk } from "@/api/RQHook";
-import { checkZeroSizeToGiB, convertBytesToGB } from "@/util";
-import Localization           from "@/utils/Localization";
+import { InfoTable }              from "@/components/table/InfoTable";
+import {
+  useDisk
+} from "@/api/RQHook";
+import {
+  checkZeroSizeToGiB,
+  convertBytesToGB
+} from "@/util";
+import Localization               from "@/utils/Localization";
 
 /**
  * @name DiskGeneral

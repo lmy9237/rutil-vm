@@ -58,7 +58,7 @@ const DomainImportDisks = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start gap-4 w-full">
+      <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDisks}/>
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.IMPORT}

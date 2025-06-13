@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.common.parseEnhanced2LDT
 import com.itinfo.rutilvm.common.rutilApiQueryDf
@@ -56,6 +57,12 @@ class EventController: BaseController() {
 	@ApiImplicitParams(
 		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
 		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
+		ApiImplicitParam(name="datacenterId", value="데이터센터 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
+		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
+		ApiImplicitParam(name="templateId", value="탬플릿 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
+		ApiImplicitParam(name="storageDomainId", value="스토리지도메인 ID", dataTypeClass=String::class, required=false, paramType="query", example=""),
 		ApiImplicitParam(name="minSeverity", value="심각도 상위범위", dataTypeClass=String::class, required=false, paramType="query", example="normal"),
 		ApiImplicitParam(name="startDate", value="시작시간 (YYYYMMDD)", dataTypeClass=String::class, required=false, paramType="query", example=""),
 	)
@@ -69,17 +76,39 @@ class EventController: BaseController() {
     fun findAll(
 		@ApiIgnore
 		@PageableDefault(size=5000, sort=["logTime"], direction=Sort.Direction.DESC) pageable: Pageable,
+		@RequestParam(required=false) datacenterId: String? = null,
+		@RequestParam(required=false) clusterId: String? = null,
+		@RequestParam(required=false) hostId: String? = null,
+		@RequestParam(required=false) vmId: String? = null,
+		@RequestParam(required=false) templateId: String? = null,
+		@RequestParam(required=false) storageDomainId: String? = null,
 		@RequestParam(required=false) minSeverity: String? = null,
 		@RequestParam(required=false) startDate: String? = null,
 	): ResponseEntity<List<EventVo>> {
-        log.info("/events ... minSeverity: {}, startDate: {}, page: {}, size: {}, 이벤트 목록", minSeverity, startDate, pageable.pageNumber, pageable.pageSize)
+        log.info(
+			"/events ... 이벤트 목록 page: {}, size: {},\ndatacenterId: {}, clusterId: {}, hostId: {}, vmId: {}, templateId: {}, storageDomainId: {}, minSeverity: {}, startDate: {}",
+			pageable.pageNumber, pageable.pageSize,
+			datacenterId, clusterId, hostId, vmId, templateId, storageDomainId,
+			minSeverity, startDate,
+		)
 		val _startDate: Date? = if (startDate == null) null else when (startDate) {
 			"now", "today" -> Date().toLocalDateTime()?.minusDays(1)?.toDate()
 			"recent" -> Date().toLocalDateTime()?.minusDays(5)?.toDate()
 			else -> rutilApiQueryDf.parse(startDate)
 		}
 		return ResponseEntity.ok(
-			iEvent.findAll(pageable, minSeverity, _startDate.toLocalDateTime()).content
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					datacenterId { datacenterId }
+					clusterId { clusterId }
+					hostId { hostId }
+					vmId { vmId }
+					templateId { templateId }
+					storageDomainId { storageDomainId }
+					minSeverity { minSeverity }
+					startDate { _startDate.toLocalDateTime() }
+				}
+			).content
 		)
     }
 

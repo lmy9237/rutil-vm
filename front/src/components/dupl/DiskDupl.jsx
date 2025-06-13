@@ -102,8 +102,8 @@ const DiskDupl = ({
 
   return (
     <>{/* v-start으로 묶어짐*/}
-      <div className="dupl-header-group f-start gap-4 w-full">
-        <div className="f-start disk-filter-option gap-4 ">
+      <div className="dupl-header-group f-start align-start gap-4 w-full">
+        <div className="f-start disk-filter-option gap-4">
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
             <div className="h-full">
             <Select

@@ -1,18 +1,21 @@
 import { useState, useEffect } from "react";
-import BaseModal from "../BaseModal";
-import TablesOuter from "../../table/TablesOuter";
-import TableColumnsInfo from "../../table/TableColumnsInfo";
-import FilterButtons from "../../button/FilterButtons";
-import Localization from "../../../utils/Localization";
-import InfoTable from "../../table/InfoTable";
+import { useValidationToast }     from "@/hooks/useSimpleToast";
+import useGlobal                  from "@/hooks/useGlobal";
+import FilterButtons              from "@/components/button/FilterButtons";
+import BaseModal                  from "@/components/modal/BaseModal";
+import TablesOuter                from "@/components/table/TablesOuter";
+import TableColumnsInfo           from "@/components/table/TableColumnsInfo";
+import { InfoTable }              from "@/components/table/InfoTable";
+import LabelSelectOptionsID       from "@/components/label/LabelSelectOptionsID";
+import LabelCheckbox              from "@/components/label/LabelCheckbox";
+import LabelInput                 from "@/components/label/LabelInput";
+import {
+  useClustersFromDataCenter,
+  useRegisteredVmFromDomain
+} from "@/api/RQHook";
+import { checkZeroSizeToMB }      from "@/util";
+import Localization               from "@/utils/Localization";
 import "./MDomain.css";
-import useGlobal from "@/hooks/useGlobal";
-import { useValidationToast } from "@/hooks/useSimpleToast";
-import { useClustersFromDataCenter, useRegisteredVmFromDomain } from "@/api/RQHook";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
-import LabelInput from "@/components/label/LabelInput";
-import { checkZeroSizeToMB } from "@/util";
-import LabelCheckbox from "@/components/label/LabelCheckbox";
 
 /**
  * @name DomainImportVmModal
@@ -163,10 +166,10 @@ const DomainImportVmModal = ({
     },
     { label: Localization.kr.DESCRIPTION, value: vm.description || "" },
     { label: Localization.kr.TEMPLATE, value: vm.templateVo?.name || "" },
-    { label: "운영 시스템", value: vm.osType || "" },
+    { label: Localization.kr.OPERATING_SYSTEM, value: vm.osType || "" },
     { label: "칩셋/펌웨어 유형", value: vm.biosType || "" },
     { label: "그래픽 프로토콜", value: vm.displayType || "" },
-    { label: "최적화 옵션", value: vm.optimizeOption || "" },
+    { label: Localization.kr.OPTIMIZATION_OPTION, value: vm.optimizeOption || "" },
     { label: `설정된 ${Localization.kr.MEMORY}`, value: checkZeroSizeToMB(vm.memoryGuaranteed) || "" },
     { label: `할당할 실제 ${Localization.kr.MEMORY}`, value: checkZeroSizeToMB(vm.memorySize) || "" },
     { label: "CPU 코어 수", value: `${vm.cpuTopologyCnt} (${vm.cpuTopologySocket}:${vm.cpuTopologyCore}:${vm.cpuTopologyThread})` || "" },

@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.service.common
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.ovirt.business.BiosType
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DisplayType
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmType
 import com.itinfo.rutilvm.api.service.BaseService
@@ -35,6 +36,14 @@ interface ItTypeService {
 	 */
 	@Throws(Error::class)
 	fun findAllDiskContentTypes(): List<TypeVo>
+	/**
+	 * [ItTypeService.findAllDisplayTypes]
+	 * 가상머신 디스플레이 유형 목록
+	 *
+	 * @return List<[TypeVo]> 가상머신 디스플레이 유형 목록
+	 */
+	@Throws(Error::class)
+	fun findAllDisplayTypes(): List<TypeVo>
 	/**
 	 * [ItTypeService.findAllMigrationSupports]
 	 * 마이그레이션 모드 목록
@@ -69,8 +78,14 @@ class TypeServiceImpl(
 
 	override fun findAllDiskContentTypes(): List<TypeVo> {
 		log.info("findAllDiskContentTypes ... ")
-		return DiskContentType.allDiskContentTypes.toTypeVosFromDiskContentTypes()
-			.filter { it.id == "DATA" || it.id == "ISOF" }
+		return DiskContentType.allDiskContentTypes.filter {
+			it == DiskContentType.DATA || it == DiskContentType.ISO  // NOTE: 실제 필드에서 사용 될 유형
+		}.toTypeVosFromDiskContentTypes()
+	}
+
+	override fun findAllDisplayTypes(): List<TypeVo> {
+		log.info("findAllDisplayTypes ... ")
+		return DisplayType.allDisplayTypes.toTypeVosFromDisplayTypes()
 	}
 
 	override fun findAllVmTypes(): List<TypeVo> {
@@ -111,6 +126,13 @@ fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 )
 fun List<DiskContentType>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
+fun DisplayType.toTypeVoFromDisplayType(): TypeVo = TypeVo(
+	this@toTypeVoFromDisplayType.name,
+	this@toTypeVoFromDisplayType.kr,
+	this@toTypeVoFromDisplayType.en,
+)
+fun List<DisplayType>.toTypeVosFromDisplayTypes(): List<TypeVo> =
+	this@toTypeVosFromDisplayTypes.map { it.toTypeVoFromDisplayType() }
 fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
 	this@toTypeVoFromMigrationSupport.name.uppercase(),
 	this@toTypeVoFromMigrationSupport.kr,

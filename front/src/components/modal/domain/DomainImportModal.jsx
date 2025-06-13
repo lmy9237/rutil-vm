@@ -214,7 +214,7 @@ const DomainImportModal = ({
             options={domainTypes}
             onChange={handleInputChange(setFormState, "domainType", validationToast)}
           />
-          <LabelSelectOptions id="storage-type" label="스토리지 유형"
+          <LabelSelectOptions id="storage-type" label={`${Localization.kr.STORAGE} ${Localization.kr.TYPE}`}
             value={formState.storageType}
             options={storageTypes}
             onChange={handleInputChange(setFormState, "storageType", validationToast)}

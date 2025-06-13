@@ -1,15 +1,26 @@
 import "./InfoTable.css";
 
 /**
+ * @name DetailBox
+ * 
+ * @param {*} tableRows
+ * @returns {JSX.Element} DetailBox
+ */
+const DetailBox = ({ 
+  tableRows
+}) => (
+  <></>
+);
+/**
  * @name InfoTable
  * 
  * @param {*} tableRows
  * @returns {JSX.Element} InfoTable
  */
-const InfoTable = ({ 
+export const InfoTable = ({ 
   tableRows
 }) => (
-  <div className="info-table-wrapper w-full">
+  <div className="info-table-wrapper">
     <table className="info-table w-full">
       <tbody>
         {tableRows.map((row, index) => (

@@ -1,6 +1,7 @@
 /* NavButtonGroup.css */
 .btn-tab-nav-group {
   width: var(--w-btn-tab-nav);
+  height: 100%;
   border-right: var(--border-default);
 }
 .btn-tab-nav {

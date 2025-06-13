@@ -1,8 +1,12 @@
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import EventDupl from "../../../components/dupl/EventDupl";
-import { useEventFromCluster } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
+import {
+  useAllEventsFromCluster
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name ClusterEvents
@@ -15,9 +19,8 @@ import Localization from "../../../utils/Localization";
 const ClusterEvents = ({
   clusterId
 }) => {
-  const {
-    clustersSelected
-  } = useGlobal()
+  const { clustersSelected } = useGlobal()
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
   
   const {
     data: events = [],
@@ -26,7 +29,14 @@ const ClusterEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useEventFromCluster(clusterId, (e) => ({ ...e }));
+  } = useAllEventsFromCluster({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    clusterId: clusterId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

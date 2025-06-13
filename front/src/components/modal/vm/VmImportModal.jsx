@@ -173,11 +173,11 @@ const VmImportModal = ({
         <thead>
           <tr>
             <th>체크</th>
-            <th>이름</th>
+            <th>{Localization.kr.NAME}</th>
             <th>소스</th>
             <th>메모리</th>
             <th>CPU</th>
-            <th>아키텍처</th>
+            <th>{Localization.kr.ARCH}</th>
             <th>디스크</th>
           </tr>
         </thead>

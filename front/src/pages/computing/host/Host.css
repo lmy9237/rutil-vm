@@ -1,6 +1,11 @@
- .host-tabs {
+.host-info-wrapper {
+}
+
+.host-info-detail {
+}
+
+.host-tabs {
   width: fit-content;
-  margin-bottom: 16px;
   border: 1px solid gray;border-radius: 4px;
   overflow: hidden; 
 }
@@ -24,18 +29,15 @@
   color:  var(--color-primary-white);
   font-weight: 700;
 }
-.host-graph{
+
+.host-graph {
   width: 100%;
   font-weight: 600;
   font-size: var(--fs-14);
 }
 
-.host-wrapper .info-table-wrapper{
-  height: 100%;
-}
 .graph-area {
   width: 500px;
-  padding: 80px;
   box-sizing: border-box;
   flex-shrink: 0;
 }

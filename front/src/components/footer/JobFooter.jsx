@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import CONSTANT               from "@/Constants";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import useFooterState         from "@/hooks/useFooterState";
@@ -11,7 +12,6 @@ import {
 import Spinner                from "@/components/common/Spinner";
 import SelectedIdView         from "@/components/common/SelectedIdView";
 import { BadgeStatus, BadgeNumber } from "@/components/common/Badges";
-import SearchBox              from "@/components/button/SearchBox";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
@@ -21,8 +21,6 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./JobFooter.css";
-import IconButton from "../Input/IconButton";
-import CONSTANT from "@/Constants";
 
 /**
  * @name JobFooter
@@ -186,7 +184,7 @@ const JobFooter = ({
           style={{ height: `${footerHeight - 40}px` }}
         >
           <div className="footer-nav v-start gap-8 w-full h-full">
-            {/* <div className="dupl-header-group f-start gap-4 w-full">
+            {/* <div className="dupl-header-group f-start align-start gap-4 w-full">
               {transformedData.length > 0 && 
                 <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchJobs} />
               }

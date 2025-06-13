@@ -7,14 +7,20 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 
 import io.swagger.annotations.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 
 @Controller
 @Api(tags = ["Computing", "Cluster"])
@@ -319,12 +325,15 @@ class ClusterController: BaseController() {
 //	}
 
 
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="이벤트 목록",
 		notes="선택된 클러스터의 이벤트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
 		ApiImplicitParam(name="clusterId", value="클러스터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
@@ -334,12 +343,20 @@ class ClusterController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun events(
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
 		@PathVariable clusterId: String? = null
 	): ResponseEntity<List<EventVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/events ... 클러스터 이벤트", clusterId)
-		return ResponseEntity.ok(iCluster.findAllEventsFromCluster(clusterId))
+		log.info("/computing/clusters/{}/events ... 클러스터 이벤트: page: {}, size: {}", pageable.pageNumber, pageable.pageSize, clusterId)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					clusterId { clusterId }
+				}
+			).content
+		)
 	}
 
 	@ApiOperation(

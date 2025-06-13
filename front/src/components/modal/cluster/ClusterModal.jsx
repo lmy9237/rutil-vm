@@ -181,7 +181,7 @@ const ClusterModal = ({
         disabled={editMode && !!dataCenterVo.id}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast) }
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />
 
       <LabelInput id="name" label={Localization.kr.NAME}
@@ -204,7 +204,7 @@ const ClusterModal = ({
         disabled={editMode}
         onChange={handleSelectIdChange(setNetworkVo, networks, validationToast)}
       />
-      <LabelSelectOptions id="cpu-arch" label="CPU 아키텍처"
+      <LabelSelectOptions id="cpu-arch" label={`CPU ${Localization.kr.ARCH}`}
         value={formState.cpuArc}
         options={CONSTANT.cpuArcs}
         disabled={!(!editMode || editCpuArc)}

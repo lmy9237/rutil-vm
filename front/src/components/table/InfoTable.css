@@ -1,11 +1,12 @@
 .info-table-wrapper {
+  min-width:500px;max-height:500px;
   padding: 12px 16px;
   background: var(--color-white);
   border-radius: 8px;
 }
 
 .info-table {
-  border-collapse:collapse;
+  border-collapse: collapse;
 }
 .info-table th,
 .info-table td {
@@ -13,9 +14,7 @@
   vertical-align: top;
   border: none;
 }
-.info-table th {
-  width: 400px;
-}
+.info-table th { padding-right: 10px; width: auto; }
 .info-table td {
   color: #757575;
 }

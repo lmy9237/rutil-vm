@@ -68,6 +68,21 @@ class TypeController: BaseController(){
 		log.info("/types/diskContentType ... 디스크 유형 목록")
 		return ResponseEntity.ok(iType.findAllDiskContentTypes())
 	}
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 디스플레이 유형 목록 조회",
+		notes="가상머신 디스플레이 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("displayType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allDisplayTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/displayType ... 가상머신 디스플레이 유형 목록")
+		return ResponseEntity.ok(iType.findAllDisplayTypes())
+	}
 
 	@ApiOperation(
 		httpMethod="GET",

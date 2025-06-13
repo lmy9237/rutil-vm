@@ -1,10 +1,10 @@
-import InfoTable from "../../../components/table/InfoTable";
-import Localization from "../../../utils/Localization";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }              from "@/components/table/InfoTable";
 import { 
   useAllBiosTypes,
   useCluster
-} from "../../../api/RQHook";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
+} from "@/api/RQHook";
+import Localization               from "@/utils/Localization";
 
 /**
  * @name ClusterGeneral

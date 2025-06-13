@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import useGlobal               from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
-import InfoTable               from "@/components/table/InfoTable";
-import SuperAreaChart          from "@/components/Chart/SuperAreaChart";
+import useGlobal                  from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }              from "@/components/table/InfoTable";
+import SuperAreaChart             from "@/components/Chart/SuperAreaChart";
 import { 
   useDashboardHost, 
   useHost
 } from "@/api/RQHook";
-import { convertBytesToMB }    from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import { convertBytesToMB }       from "@/util";
+import Localization               from "@/utils/Localization";
+import Logger                     from "@/utils/Logger";
 import "./Host.css";
 
 /**
@@ -39,11 +39,6 @@ const HostGeneral = ({
     error: hostPerError,
     isLoading: isHostPerLoading,
   } = useDashboardHost(hostId);
-
-  // 최신 데이터를 반영
-  // useEffect(() => {
-  //   if (host) setHostsSelected(host)
-  // }, [host, hostPer]);
 
   useEffect(() => {
     if (host) setHostsSelected(host)
@@ -109,7 +104,7 @@ const HostGeneral = ({
   // ]), [tabs, activeTab])
   
   return (
-    <div className="w-full h-ull">
+    <div className="host-info-wrapper v-start align-start w-full gap-4">
       <div className="host-tabs f-start fs-14">
         {[...tabs].map(({ tab, label }, i) => (
           <button key={tab}
@@ -120,22 +115,24 @@ const HostGeneral = ({
           </button>
         ))}
       </div>
-      <div className="host-wrapper f-btw h-full">
+      <div className="host-info-detail f-start align-start gap-16">
         <InfoTable tableRows={
           tabs.find(({ tab }) => 
             tab === activeTab
           )?.tableRows || []
         }/>
-        <div className="graph-area">
+        <div className="graph-area v-start gap-20">
           <div className="host-graph">
-            cpu <SuperAreaChart id={`${hostId}-cpu`}
+            호스트 CPU 사용률
+            <SuperAreaChart id={`${hostId}-cpu`}
               key={`${hostId}-cpu`} 
               per={hostPer} 
               type="cpu"
             />
           </div>
           <div className="host-graph">
-            memory <SuperAreaChart id={`${hostId}-memory`} 
+            호스트 메모리 사용률
+            <SuperAreaChart id={`${hostId}-memory`} 
               key={`${hostId}-memory`} 
               per={hostPer} 
               type="memory"

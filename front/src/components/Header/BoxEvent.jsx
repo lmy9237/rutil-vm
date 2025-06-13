@@ -22,6 +22,7 @@ import {
 } from "@/api/RQHook";
 import Logger                 from "@/utils/Logger";
 import "./BoxEvent.css";
+import Localization from "@/utils/Localization";
 
 /**
  * @name BoxEvent
@@ -109,23 +110,23 @@ const BoxEvent = ({
         </span>
       </div>
       {/* 알림 탭 */}
-      <div className={`bell-cate bell-cate-section ${eventBoxSectionActive() === "알림" ? "active" : ""} f-start gap-4`}
+      <div className={`bell-cate bell-cate-section ${eventBoxSectionActive() === Localization.kr.ALERT ? "active" : ""} f-start gap-4`}
         onClick={() => handleSectionClick("알림")}
       >
         <span className="bell-header-icon f-center">
-          <RVI24 iconDef={eventBoxSectionActive() === "알림" 
-            ? rvi24DownArrow(`${eventBoxSectionActive() === "알림" ? "currentColor" : "currentColor"}`) 
+          <RVI24 iconDef={eventBoxSectionActive() === Localization.kr.ALERT 
+            ? rvi24DownArrow(`${eventBoxSectionActive() === Localization.kr.ALERT ? "currentColor" : "currentColor"}`) 
             : rvi24RightArrow("currentColor")}
           />
         </span>
         {(eventBadgeNum() > 0) && 
           <BadgeNumber status={"alert"} text={eventBadgeNum()} />
         }
-        <span className="bell-section-title fs-16 ml-1.5">알림</span>
+        <span className="bell-section-title fs-16 ml-1.5">{Localization.kr.ALERT}</span>
       </div>
 
       {/* 알림 내용 */}
-      {eventBoxSectionActive() === "알림" && (
+      {eventBoxSectionActive() === Localization.kr.ALERT && (
         <>
           <div className="bell-content-outer"
             style={{

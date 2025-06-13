@@ -71,7 +71,7 @@ const HostNetworkAdapter = ({
   
   return (
     <>
-      <div className="dupl-header-group f-start gap-2 w-full">
+      <div className="dupl-header-group f-start align-start gap-2 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchHostNics}/>
         {/*  */}
       </div>

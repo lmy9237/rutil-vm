@@ -9,7 +9,9 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItDataCenterService
+import com.itinfo.rutilvm.api.service.setting.ItEventService
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiImplicitParam
@@ -18,10 +20,14 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
+import springfox.documentation.annotations.ApiIgnore
 
 @Controller
 @Api(tags = ["Computing", "DataCenter"])
@@ -283,30 +289,39 @@ class DataCenterController: BaseController() {
 		return ResponseEntity.ok(iDataCenter.findAllNetworksFromDataCenter(dataCenterId))
 	}
 
+	@Autowired private lateinit var iEvent: ItEventService
 	@ApiOperation(
 		httpMethod="GET",
 		value="이벤트 목록조회",
 		notes="선택된 데이터센터의 이벤트 목록을 조회한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name="dataCenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="page", value="보여줄 페이지 번호", dataTypeClass=Int::class, required=false, paramType="query", example="0"),
+		ApiImplicitParam(name="size", value="페이지 당 보여줄 개수", dataTypeClass=Int::class, required=false, paramType="query", example="20",),
+		ApiImplicitParam(name="datacenterId", value="데이터센터 ID", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{dataCenterId}/events")
+	@GetMapping("/{datacenterId}/events")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun events(
-		@PathVariable dataCenterId: String? = null,
+		@ApiIgnore
+		@PageableDefault(size=5000, sort=["logTime"], direction= Sort.Direction.DESC) pageable: Pageable,
+		@PathVariable datacenterId: String? = null,
 	): ResponseEntity<List<EventVo>> {
-		if (dataCenterId.isNullOrEmpty())
+		if (datacenterId.isNullOrEmpty())
 			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
-		log.info("/computing/datacenters/{}/events ... 데이터센터 이벤트 목록", dataCenterId)
-		return ResponseEntity.ok(iDataCenter.findAllEventsFromDataCenter(dataCenterId))
+		log.info("/computing/datacenters/{}/events ... 데이터센터 이벤트 목록: page: {}, size: {}", datacenterId, pageable.pageNumber, pageable.pageSize)
+		return ResponseEntity.ok(
+			iEvent.findAll(pageable,
+				AuditLogSpecificationParam.builder {
+					datacenterId { datacenterId }
+				}
+			).content
+		)
 	}
-
-
 
 	@ApiOperation(
 		httpMethod="GET",

@@ -1,9 +1,12 @@
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import EventDupl from "../../../components/dupl/EventDupl";
-import { useEventsFromHost } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import React, { useEffect, useState } from "react";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import EventDupl                        from "@/components/dupl/EventDupl";
+import {
+  useAllEventsFromHost
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name HostEvents
@@ -17,6 +20,8 @@ const HostEvents = ({
   hostId
 }) => {
   const { hostsSelected } = useGlobal()
+  const [currentPageIdx, setCurrentPageIdx] = useState(0);
+  
   const {
     data: events = [],
     isLoading: isEventsLoading,
@@ -24,7 +29,14 @@ const HostEvents = ({
     isSuccess: isEventsSuccess,
     refetch: refetchEvents,
     isRefetching: isEventsRefetching,
-  } = useEventsFromHost(hostId, (e) => ({ ...e }));
+  } = useAllEventsFromHost({
+    page: currentPageIdx,
+    size: CONSTANT.queryMaxSize,
+    hostId: hostId,
+    mapPredicate: (e) => ({
+      ...e,
+    })
+  });
 
   return (
     <>

@@ -347,18 +347,6 @@ const ApiManager = {
     url: ENDPOINTS.FIND_NETWORKS_FROM_DATA_CENTER(dataCenterId), 
     // defaultValues: DEFAULT_VALUES.FIND_NETWORKS_FROM_DATA_CENTER
   }),
-  /**
-   * @name ApiManager.findAllEventsFromDataCenter
-   * @description  데이터 센터 내 이벤트
-   * 
-   * @param {string} dataCenterId
-   * @returns 
-   */
-  findAllEventsFromDataCenter: async (dataCenterId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_EVENTS_FROM_DATA_CENTER(dataCenterId), 
-    // defaultValues: DEFAULT_VALUES.FIND_EVENT
-  }),
 
   /**
    * @name ApiManager.findTemplatesFromDataCenter
@@ -859,7 +847,7 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_DEVICE_FROM_HOST
   }),
   /**
-   * @name ApiManager.findEventsFromHost
+   * @name ApiManager.findAllEventsFromHost
    * @description 호스트 이벤트 목록
    *
    * @param {string} hostId
@@ -867,7 +855,7 @@ const ApiManager = {
    * 
    * @see
    */
-  findEventsFromHost: async (hostId) => makeAPICall({
+  findAllEventsFromHost: async (hostId) => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_EVENTS_FROM_HOST(hostId), 
     // defaultValues: DEFAULT_VALUES.FIND_EVNET_FROM_HOST
@@ -3125,10 +3113,24 @@ const ApiManager = {
    * 
    * @returns 
    **/
-  findAllEvents: async (page=null, size=null, minSeverity=null, startDate=null) => {
-    const _url = (minSeverity != null || startDate != null) 
-      ? ENDPOINTS.FIND_ALL_EVENTS_PAGE(page, size, minSeverity, startDate)
-      : ENDPOINTS.FIND_ALL_EVENTS(page, size)
+  findAllEvents: async ({
+    page=null, size=null, 
+    datacenterId=null, clusterId=null, hostId=null, vmId=null, templateId=null, storageDomainId=null,
+    minSeverity=null, startDate=null
+  }) => {
+    const _url = (
+      datacenterId != null ||
+      clusterId != null ||
+      hostId != null ||
+      vmId != null ||
+      templateId != null ||
+      storageDomainId != null ||
+      minSeverity != null ||
+      startDate != null
+    ) ? ENDPOINTS.FIND_ALL_EVENTS_PAGE({
+      page, size, datacenterId, clusterId, hostId, vmId, templateId, storageDomainId, 
+      minSeverity, startDate
+    }) : ENDPOINTS.FIND_ALL_EVENTS(page, size)
     return makeAPICall({
       method: "GET", 
       url: _url,
