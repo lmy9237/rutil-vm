@@ -1,10 +1,10 @@
 package com.itinfo.rutilvm.api.service.admin
 
 import com.itinfo.rutilvm.api.model.cert.CertManager
+import com.itinfo.rutilvm.api.configuration.CertConfig
+import com.itinfo.rutilvm.api.service.OvirtPkiResourceServiceClient
 import com.itinfo.rutilvm.api.model.cert.toCertManagers
 import com.itinfo.rutilvm.api.model.computing.HostVo
-import com.itinfo.rutilvm.api.configuration.CertConfig
-import com.itinfo.rutilvm.api.configuration.PkiServiceClient
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
@@ -54,7 +54,7 @@ class CertServiceImpl(
 ): BaseService(), ItCertService {
 	@Autowired private lateinit var iHost: ItHostService
 	@Autowired private lateinit var certConfig: CertConfig
-	@Autowired private lateinit var pkiServiceClient: PkiServiceClient
+	@Autowired private lateinit var pkiServiceClient: OvirtPkiResourceServiceClient
 
 	override fun findAll(): List<CertManager> {
 		log.info("findAll ...")

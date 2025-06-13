@@ -33,6 +33,7 @@ COPY rutil-vm-util-ovirt /home/gradle/project/rutil-vm-util-ovirt
 COPY rutil-vm-util-ssh /home/gradle/project/rutil-vm-util-ssh
 
 
+
 # Copy the node build results to path (ONLY when skipNpm=true)
 # COPY --from=build-fe /usr/src/app/build /home/gradle/project/rutil-vm-api/src/main/resources/static
 # RUN ls /home/gradle/project/rutil-vm-api/src/main/resources/static

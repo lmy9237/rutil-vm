@@ -159,3 +159,7 @@ function engineLog() {
 function engineLogConfig() {
   vi $OVIRT_ENGINE_LOG_CONFIG
 }
+
+function tailOvirtLog() {
+  tail -200f /var/log/ovirt-engine/engine.log
+}

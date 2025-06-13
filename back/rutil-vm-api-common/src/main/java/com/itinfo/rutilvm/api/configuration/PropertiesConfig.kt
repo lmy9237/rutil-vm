@@ -14,7 +14,7 @@ import javax.annotation.PostConstruct
  */
 @Component
 open class PropertiesConfig {
-	@Value("\${application.title}")						open lateinit var title: String
+	@Value("\${application.title}")					open lateinit var title: String
 	@Value("\${application.version}")					open lateinit var version: String
 	@Value("\${application.release-date}")				open lateinit var releaseDate: String
 	@Value("\${application.ovirt.ip}")					open lateinit var ovirtIp: String
@@ -46,6 +46,10 @@ open class PropertiesConfig {
 
 	@Value("\${reboot-host.id}")				lateinit var rebootHostId: String
 	@Value("\${reboot-host.password}")			lateinit var rebootHostPassword: String
+
+	@Value("\${vmware.api.url}")				open lateinit var vmwareApiUrl: String
+	@Value("\${vmware.api.id}")				open lateinit var vmwareApiId: String
+	@Value("\${vmware.api.password}")			open lateinit var vmwareApiPassword: String
 
 	open val ovirtPort: Int
 		get() = _ovirtPort.toIntOrNull() ?: 80
@@ -106,9 +110,12 @@ open class PropertiesConfig {
 		/*log.debug("  management.endpoints.web.exposure.include: {}", exposureInclude)
 		log.debug("  management.endpoint.shutdown.enabled: {}", shutdownEnabled1)
 		log.debug("  endpoints.shutdown.enabled: {}\n\n", shutdownEnabled2)*/
-
 		log.debug("  reboot-host.id: {}", rebootHostId)
 		log.debug("  reboot-host.password: {}\n\n", rebootHostPassword)
+
+		log.debug("  vmware.api.url: {}", vmwareApiUrl)
+		log.debug("  vmware.api.id: {}", vmwareApiId)
+		log.debug("  vmware.api.password: {}\n\n", vmwareApiPassword)
 	}
 
 	companion object {
