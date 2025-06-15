@@ -140,6 +140,7 @@ html {
   --color-down: #999999; 
   --color-nav: #555;
   --color-white:#f0f0f0; /*0*/   
+  --color-white-1:#FAFAFA; /*0*/      
   --color-gray:#717171; /*0*/      
   --color-gray-4: #C6C6C6; /*0버튼색*/
   --color-gray-disabled: #6d6d6d; /* 비활성화 색 */

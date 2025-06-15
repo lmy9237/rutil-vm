@@ -1,0 +1,11 @@
+/* max supported dimensions in oVirt API */
+.icon-os-wrapper {
+  width: 150px;height:120px;
+}
+.icon-os {
+  max-width: 150px;
+  max-height: 120px;
+  overflow: hidden;
+  display: block;
+  height: 106px;
+}

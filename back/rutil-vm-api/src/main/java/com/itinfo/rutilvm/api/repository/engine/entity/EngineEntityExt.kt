@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
+import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
@@ -302,11 +303,13 @@ fun VmEntity.toVmVoFromVmEntity(): VmVo {
 		id { entity.vmGuid.toString() }
 		name { entity.vmName }
 		comment { entity.freeTextComment }
+		description { entity.description }
+		status { entity.status }
+		iconSmall { entity.smallIcon?.toVmIconVoFromVmEntity() }
+		iconLarge { entity.largeIcon?.toVmIconVoFromVmEntity() }
 		creationTime { entity.creationDate }
 		stopTime { entity.lastStopTime }
 		timeElapsed { entity.elapsedTime?.toLong() }
-		status { entity.status }
-		description { entity.description }
 		nextRun { entity.nextRunConfigExists }
 		hostedEngineVm { entity.origin == 6 }
 		usageDto {
@@ -351,6 +354,7 @@ fun VmEntity.toVmVoFromVmEntity(): VmVo {
 
 fun List<VmEntity>.toVmVosFromVmEntities(): List<VmVo> =
 	this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity() }
+
 fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromVmEntity.vmGuid.toString() }
 	name { this@toIdentifiedVoFromVmEntity.vmName }
@@ -358,6 +362,15 @@ fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
 fun List<VmEntity>.toIdentifiedVosFromVoEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromVoEntities.map { it.toIdentifiedVoFromVmEntity() }
 //endregion: VmEntity
+
+//region: VmIconEntity
+fun VmIconEntity.toVmIconVoFromVmEntity(): VmIconVo = VmIconVo.builder {
+	id { this@toVmIconVoFromVmEntity.id.toString() }
+	dataUrl { this@toVmIconVoFromVmEntity.dataUrl }
+}
+fun List<VmIconEntity>.toVmIconVosFromVmIconEntities(): List<VmIconVo> =
+	this@toVmIconVosFromVmIconEntities.map { it.toVmIconVoFromVmEntity() }
+//endregion: VmIconEntity
 
 
 //region: SnapshotEntity

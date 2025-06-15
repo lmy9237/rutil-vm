@@ -30,7 +30,7 @@ fun Connection.srvVm(vmId: String): VmService =
 
 fun Connection.findVm(vmId: String, follow: String = ""): Result<Vm?> = runCatching {
 	this.srvVm(vmId).get().apply {
-		if (follow.isNotEmpty()) follow(follow)
+		follow(if (follow.isNotEmpty()) "large_icon,small_icon,$follow" else follow)
 	}.send().vm()
 }.onSuccess {
 	Term.VM.logSuccess("상세조회", vmId)

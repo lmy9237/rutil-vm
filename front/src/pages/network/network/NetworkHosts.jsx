@@ -66,7 +66,7 @@ const NetworkHosts = ({
   ];
   
   const transformHostData = (hosts) => {
-    return hosts.map((host) => {
+    return [...hosts].map((host) => {
       const baseData = {
         ...host,
         icon: status2Icon(host?.status),
@@ -102,7 +102,8 @@ const NetworkHosts = ({
   
       return baseData;
     });
-  };  
+  };
+
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(
     activeFilter === "connected"
@@ -115,10 +116,7 @@ const NetworkHosts = ({
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-          refetch={activeFilter === "connected" 
-            ? refetchConnectedHosts()
-            : refetchDisconnectedHosts()
-          }
+          refetch={activeFilter === "connected" ? refetchConnectedHosts : refetchDisconnectedHosts}
         />
         <div className="header-right-btns">
           <ActionButton

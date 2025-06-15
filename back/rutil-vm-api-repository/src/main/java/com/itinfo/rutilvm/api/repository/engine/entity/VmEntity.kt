@@ -16,6 +16,7 @@ import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
+import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 
@@ -298,7 +299,14 @@ class VmEntity(
 	val isoPath: String = "",
 	val kernelParams: String = "",
 	val kernelUrl: String = "",
-	val largeIconId: UUID? = null,
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="large_icon_id", // This is the foreign key column in the 'vms' view
+		referencedColumnName="id", // This is the primary key column in 'vm_icons'
+		insertable=false,
+		updatable=false
+	)
+	val largeIcon: VmIconEntity? = null,
 	val lastStartTime: LocalDateTime? = LocalDateTime.now(),
 	val lastStopTime: LocalDateTime? = LocalDateTime.now(),
 	val lastWatchdogAction: String = "",
@@ -342,7 +350,14 @@ class VmEntity(
 	val runtimeName: String = "",
 	val serialNumberPolicy: Int? = null,
 	val session: Int? = null,
-	val smallIconId: UUID? = null,
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="small_icon_id", // This is the foreign key column in the 'vms' view
+		referencedColumnName="id", // This is the primary key column in 'vm_icons'
+		insertable=false,
+		updatable=false
+	)
+	val smallIcon: VmIconEntity? = null,
 	val spiceIp: String = "",
 	val spicePort: Int? = null,
 	val spiceTlsPort: Int? = null,
@@ -399,6 +414,10 @@ class VmEntity(
 
 	val migrationSupport: MigrationSupport?
 		get() = MigrationSupport.forValue(_migrationSupport)
+	val urlSmallIcon: String
+		get() = smallIcon?.dataUrl ?: ""
+	val urlLargeIcon: String
+		get() = largeIcon?.dataUrl ?: ""
 	/*
 	val isVmNotRunning: Boolean *//* '실행 중'이 아닌 상태 *//*
 		get() = _status?.notRunning ?: false
@@ -534,7 +553,7 @@ class VmEntity(
 		private var bIsoPath: String = ""; fun isoPath(block: () -> String?) { bIsoPath = block() ?: "" }
 		private var bKernelParams: String = ""; fun kernelParams(block: () -> String?) { bKernelParams = block() ?: "" }
 		private var bKernelUrl: String = ""; fun kernelUrl(block: () -> String?) { bKernelUrl = block() ?: "" }
-		private var bLargeIconId: UUID? = null; fun largeIconId(block: () -> UUID?) { bLargeIconId = block() }
+		private var bLargeIcon: VmIconEntity? = null; fun largeIcon(block: () -> VmIconEntity?) { bLargeIcon = block() }
 		private var bLastStartTime: LocalDateTime = LocalDateTime.MIN; fun lastStartTime(block: () -> LocalDateTime?) { bLastStartTime = block() ?: LocalDateTime.MIN }
 		private var bLastStopTime: LocalDateTime = LocalDateTime.MIN; fun lastStopTime(block: () -> LocalDateTime?) { bLastStopTime = block() ?: LocalDateTime.MIN }
 		private var bLastWatchdogAction: String = ""; fun lastWatchdogAction(block: () -> String?) { bLastWatchdogAction = block() ?: "" }
@@ -577,7 +596,7 @@ class VmEntity(
 		private var bRuntimeName: String = ""; fun runtimeName(block: () -> String?) { bRuntimeName = block() ?: "" }
 		private var bSerialNumberPolicy: Int = -1; fun serialNumberPolicy(block: () -> Int?) { bSerialNumberPolicy = block() ?: -1 }
 		private var bSession: Int = -1; fun session(block: () -> Int?) { bSession = block() ?: -1 }
-		private var bSmallIconId: UUID? = null; fun smallIconId(block: () -> UUID?) { bSmallIconId = block() }
+		private var bSmallIcon: VmIconEntity? = null; fun smallIcon(block: () -> VmIconEntity?) { bSmallIcon = block() }
 		private var bSpiceIp: String = ""; fun spiceIp(block: () -> String?) { bSpiceIp = block() ?: "" }
 		private var bSpicePort: Int = -1; fun spicePort(block: () -> Int?) { bSpicePort = block() ?: -1 }
 		private var bSpiceTlsPort: Int = -1; fun spiceTlsPort(block: () -> Int?) { bSpiceTlsPort = block() ?: -1 }
@@ -616,7 +635,7 @@ class VmEntity(
 		private var bVncPort: Int = -1; fun vncPort(block: () -> Int?) { bVncPort = block() ?: -1 }
 		private var bVolatileRun: Boolean? = null; fun volatileRun(block: () -> Boolean?) { bVolatileRun = block() }
 		private var bSnapshots: Set<SnapshotEntity> = emptySet(); fun snapshots(block: () -> Set<SnapshotEntity>?) { bSnapshots = block() ?: emptySet() }
-		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIconId, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport?.value, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, bOs, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIconId, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus?.value, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots)
+		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIcon, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport?.value, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, bOs, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIcon, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus?.value, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots)
 	}
 
 	companion object {

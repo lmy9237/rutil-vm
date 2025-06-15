@@ -18,6 +18,7 @@ import {
 import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
 import "./Vm.css"
+import VmOsIcon from "@/components/icons/VmOsIcon";
 
 /**
  * @name VmGeneral
@@ -124,6 +125,7 @@ const VmGeneral = ({
 
   return (
     <>
+      <VmOsIcon dataUrl={vm?.urlLargeIcon} />
       <div className="vm-detail-general-boxs f-start w-full">
         <div className="detail-general-box v-start gap-8">
           <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.GENERAL}</h1>

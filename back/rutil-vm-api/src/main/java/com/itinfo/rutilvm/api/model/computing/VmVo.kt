@@ -93,6 +93,8 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property description [String]
  * @property comment [String]
  * @property status [VmStatusB]
+ * @property iconSmall [VmIconVo] 작은 아이콘
+ * @property iconLarge [VmIconVo] 큰 아이콘
  * @property optimizeOption [String]
  * @property biosBootMenu [Boolean]
  * @property biosType [String] vm.bios().type() 칩셋
@@ -167,6 +169,8 @@ class VmVo (
 	val comment: String = "",
 	// val status: String = "",
 	private val _status: VmStatusB? = VmStatusB.Unknown,
+	private val iconSmall: VmIconVo? = null,
+	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: String = "", // VmType
 	val biosBootMenu: Boolean = false,
 	val biosType: String = "", // chipsetFirmwareType
@@ -237,8 +241,10 @@ class VmVo (
 	val status: String
 		get() = _status?.code ?: VmStatusB.Unknown.code
 
-    override fun toString(): String =
-		gson.toJson(this)
+	val urlSmallIcon: String
+		get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String
+		get() = iconLarge?.dataUrl ?: ""
 
 	val creationTime: String?
 		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
@@ -284,12 +290,17 @@ class VmVo (
 	val migrating: Boolean
 		get() = _status?.migrating ?: false
 
+    override fun toString(): String =
+		gson.toJson(this)
+
     class Builder {
 		private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
 		private var bStatus: VmStatusB = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
+		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
+		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		// private var bStatus: com.itinfo.rutilvm.api.ovirt.business.VmStatus = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
 		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
@@ -357,7 +368,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
     }
 
     companion object {
@@ -394,9 +405,11 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 		id { vm.id() }
 		name { vm.name() }
 		comment { vm.comment() }
-		creationTime { vm.creationTime().toLocalDateTime() }
-		status { status }
 		description { vm.description() }
+		status { status }
+		iconSmall { if (vm.largeIconPresent()) vm.largeIcon().toVmIconVo() else null }
+		iconLarge { if (vm.smallIconPresent()) vm.smallIcon().toVmIconVo() else null }
+		creationTime { vm.creationTime().toLocalDateTime() }
 		nextRun { vm.nextRunConfigurationExists() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
@@ -451,6 +464,8 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		description { vm.description() }
 		comment { vm.comment() }
 		status { status }
+		iconSmall { if (vm.smallIconPresent()) vm.smallIcon().toVmIconVo() else null }
+		iconLarge { if (vm.largeIconPresent()) vm.largeIcon().toVmIconVo() else null }
 		optimizeOption { vm.type().value() }
 		biosType { vm.bios().type().value() }
 		osType { vm.os().type() }
@@ -482,13 +497,13 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		hostInCluster { !vm.placementPolicy().hostsPresent() }
 		hostVos { hosts.fromHostsToIdentifiedVos() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		if(vm.guestOperatingSystemPresent()){
+		if (vm.guestOperatingSystemPresent()){
 			guestArc { vm.guestOperatingSystem().architecture() }
 			guestOsType { vm.guestOperatingSystem().family() }
 			guestDistribution { vm.guestOperatingSystem().distribution() }
 			guestKernelVer { vm.guestOperatingSystem().kernel().version().fullVersion() }
 			guestTimeZone { vm.guestTimeZone().name() + " " + vm.guestTimeZone().utcOffset() }
-		}else{
+		} else {
 			guestArc { "" }
 			guestOsType { "" }
 			guestDistribution { "" }
