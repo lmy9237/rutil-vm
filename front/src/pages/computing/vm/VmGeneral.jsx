@@ -162,6 +162,47 @@ const VmGeneral = ({
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 
       />
+      {/* <div className="f-btw w-full h-full">
+        <div className="vm-general-boxs vm-general-box-first v-btw h-full">
+
+          <div className="vm-general-box operating-system mb-3 h-[378px]">
+            <h1 className="f-start fs-14 w-full">{Localization.kr.GENERAL}</h1>
+            <hr className="w-full"/>
+              <div className="flex">
+                <div>이미지</div>
+                <InfoTable tableRows={generalTableRows} />
+              </div>
+          </div>
+          <div className="vm-hardware f-btw">
+            <div className="vm-general-box w-[49.5%] h-[275px]">
+              <h1 className="f-start fs-14 w-full">가상머신 하드웨어</h1>
+              <hr className="w-full"/>
+            </div>
+            <div className="vm-general-box w-[49.5%] h-[275px]">
+              <h1 className="f-start fs-14 w-full">관련 개체</h1>
+              <hr className="w-full"/>
+            </div>
+          </div>
+
+        </div>
+
+        <div className="vm-general-boxs vm-general-boxs-second">
+          
+          <div className="vm-general-box operating-system mb-3">
+            <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.GENERAL}</h1>
+            <hr className="w-full"/>
+              <div className="flex">
+                <div>이미지</div>
+                <InfoTable tableRows={generalTableRows} />
+              </div>
+          </div>
+          <div className="vm-general-box h-full">
+            <h1 className="f-start fs-16 fw-500 w-full">관련 개체</h1>
+            <hr className="w-full"/>
+          </div>
+
+        </div>
+      </div> */}
     </>
   );
 };

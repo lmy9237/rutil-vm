@@ -12,6 +12,24 @@
 .capacity {
   padding-top: 10px;
 }
+/* .vm-general-boxs h1{
+    font-weight: 600;
+    font-size: 12px;
+    padding-bottom: 6px;
+}
+.vm-general-box{
+  background:var(--color-white);
+  padding: 14px 17px;
+  border-radius: 8px;
+}
+.vm-general-box-first{
+  width: 60%;
+  border:1px solid red;
+}
+.vm-general-boxs-second{
+  width: 40%;
+  border:1px solid red;
+} */
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;
