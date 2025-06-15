@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import SelectedIdView                   from "@/components/common/SelectedIdView";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
@@ -13,7 +12,6 @@ import {
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-
 import { 
   checkZeroSizeToGiB,
   convertBytesToGB,
@@ -58,9 +56,7 @@ const VmDiskConnectionModal = ({
   const [activeTab, setActiveTab] = useState("img");
   const existingDiskIds = new Set(existingDisks?.map(disk => disk.id));
 
-  const {
-    mutate: connDiskListVm
-  } = useConnDiskListFromVM();
+  const { mutate: connDiskListVm } = useConnDiskListFromVM();
   
   // 기존에 연결된 디스크 ID 목록 생성
 
@@ -72,6 +68,8 @@ const VmDiskConnectionModal = ({
     isSuccess: isAttDisksSuccess,
     isRefetching: isAttDisksRefetching,
   } = useAllAttachedDisksFromDataCenter(dataCenterId, (e) => ({ ...e }));
+
+  console.log("$ attDisks", attDisks)
 
   const transformedData = [...attDisks].map((attDisk) => ({
     ...attDisk,
@@ -208,8 +206,10 @@ const VmDiskConnectionModal = ({
     })
 
     Logger.debug("VmDiskConnectionModal > handleFormSubmit ... ", selectedDiskLists);
-    connDiskListVm({ vmId, diskAttachmentList: selectedDiskLists})
-    // closeModal();
+    connDiskListVm({ 
+      vmId, 
+      diskAttachmentList: selectedDiskLists
+    })
   };
 
   const handleCheckboxChange = (diskId) => {

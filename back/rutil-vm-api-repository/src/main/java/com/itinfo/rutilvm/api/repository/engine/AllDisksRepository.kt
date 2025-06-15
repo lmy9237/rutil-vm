@@ -12,5 +12,6 @@ interface AllDisksRepository : JpaRepository<AllDiskEntity, UUID> {
 	fun findAllByOrderByDiskAliasAsc(): List<AllDiskEntity>
 
 	fun findByStorageId(storageId: String): List<AllDiskEntity>?
+	fun findBystoragePoolId(storagePoolId: String): List<AllDiskEntity>?
 }
 

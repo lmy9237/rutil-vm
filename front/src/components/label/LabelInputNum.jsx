@@ -34,6 +34,7 @@ const LabelInputNum = ({
         onChange={onChange}
         autoFocus={autoFocus}
         disabled={disabled}
+        min={0}
         {...props}
       />
     </div>

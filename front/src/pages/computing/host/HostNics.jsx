@@ -23,7 +23,14 @@ import BaseNic from "./hostNics/BaseNic";
 import MatchNetwork from "./hostNics/MatchNetwork";
 import NoneNetwork from "./hostNics/NoneNetwork";
 import ClusterNetworkList from "./hostNics/ClusterNetworkList";
-import { getBondModalStateForCreate, getBondModalStateForEdit, getNetworkAttachmentModalState, transDetachNA, transNA, transNic } from "./hostNics/TransHostNicData";
+import { 
+  getBondModalStateForCreate, 
+  getBondModalStateForEdit, 
+  getNetworkAttachmentModalState, 
+  transDetachNA, 
+  transNA, 
+  transNic 
+} from "./hostNics/TransHostNicData";
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 
@@ -122,33 +129,13 @@ const HostNics = ({
   }, [baseItems, movedItems]);
   
 
-  // useEffect(() => {
-  //   console.log("$ modifiedBonds: ", modifiedBonds);
-  // }, [modifiedBonds]);
-
-  // useEffect(() => {
-  //   console.log("$ modifiedNAs: ", modifiedNAs);
-  // }, [modifiedNAs]);
-
-  // useEffect(() => {
-  //   console.log("$ removeBonds: ", removeBonds);
-  // }, [removeBonds]);
-
-  // useEffect(() => {
-  //   console.log("$ removeNAs: ", removeNAs);
-  // }, [removeNAs]);
-
-  // useEffect(() => {
-  //   console.log("$ recentlyUnassignedNAs: ", recentlyUnassignedNAs);
-  // }, [recentlyUnassignedNAs]);
-
   // 네트워크 필수,필요하지않음 분리버튼
   const [networkFilter, setNetworkFilter] = useState('all');
-const filterOptions = [
-  { key: 'all', label: '전체' },
-  { key: 'required', label: '필수' },
-  { key: 'optional', label: '필요하지 않음' }
-];
+  const filterOptions = [
+    { key: 'all', label: '전체' },
+    { key: 'required', label: '필수' },
+    { key: 'optional', label: '필요하지 않음' }
+  ];
   // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
   const [isBondingEditMode, setIsEditBondingMode] = useState(false); // 본딩 편집 모드
@@ -294,17 +281,6 @@ const filterOptions = [
           (currentBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value)
           ?? (initialBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value);
         const hasOptionChange = initialOption !== currentOption;
-
-        /*
-          console.log('$currentBond:', currentBond);
-          console.log('$initialSlaveNames:', initialSlaveNames);
-          console.log('$currentSlaveNames:', currentSlaveNames);
-          console.log('$hasSlaveChanges:', hasSlaveChanges);
-
-          console.log('$initialOption:', initialOption);
-          console.log('$currentOption:', currentOption);
-          console.log('$hasOptionChange:', hasOptionChange);
-        */
 
         if (hasSlaveChanges || hasOptionChange) {
           newModifiedBonds.push(currentBond);

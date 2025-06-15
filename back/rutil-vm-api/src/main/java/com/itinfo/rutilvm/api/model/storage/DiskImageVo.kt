@@ -235,26 +235,27 @@ fun List<Disk>.toDiskMenus(conn: Connection): List<DiskImageVo> =
 fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDcDiskMenu
 	log.info("disk.vmsPresent(): {} / {}", disk.vmsPresent(), disk.id())
-	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
-		.firstOrNull { template ->
-			template.diskAttachmentsPresent() &&
-				template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
-		}?.id()
-	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+	// val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
+	// 	.firstOrNull { template ->
+	// 		template.diskAttachmentsPresent() &&
+	// 			template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
+	// 	}?.id()
+	// val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+	val storageDomain = conn.findStorageDomain(disk.storageDomain().id()).getOrNull()
 
 	return DiskImageVo.builder {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
-		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
 		status { DiskStatus.forStorageValue(disk.status().value()) }
 		sparse { disk.sparse() }
 		storageType { DiskStorageType.forStorageValue(disk.storageType().toString()) }
 		description { disk.description() }
-		connectVm { if(disk.vmsPresent()) disk.vms().first().fromVmToIdentifiedVo() else null }
-		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
+		// connectVm { if(disk.vmsPresent()) disk.vms().first().fromVmToIdentifiedVo() else null }
+		// connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
 fun List<Disk>.toDcDiskMenus(conn:Connection): List<DiskImageVo> =

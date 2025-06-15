@@ -8,13 +8,16 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
@@ -131,7 +134,7 @@ interface ItDataCenterService {
 	 * @return List<[DiskImageVo]> 디스크 목록
 	 */
 	@Throws(Error::class)
-	fun findAllDisksFromDataCenter(dataCenterId: String): List<DiskImageVo>
+	fun findAllDisksFromDataCenter(dataCenterId: String): List<DiskImageVo>?
 	/**
 	 * [ItDataCenterService.findAllNetworksFromDataCenter]
 	 * 데이터센터가 가지고있는 네트워크 목록
@@ -206,6 +209,7 @@ class DataCenterServiceImpl(
 	@Autowired private lateinit var rDiskVmElements: DiskVmElementRepository
 	@Autowired private lateinit var rVms: VmRepository
 	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
+	@Autowired private lateinit var rAllDisks: AllDisksRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {
@@ -297,10 +301,12 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllDisksFromDataCenter(dataCenterId: String): List<DiskImageVo> {
+	override fun findAllDisksFromDataCenter(dataCenterId: String): List<DiskImageVo>? {
 		log.info("findAllDisksFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-		return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
+		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		// return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
+		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(dataCenterId)
+		return res?.toDiskEntities()
 	}
 
 	@Throws(Error::class)
