@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
+import ReactApexChart             from "react-apexcharts";
 import useGlobal                  from "@/hooks/useGlobal";
 import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import { InfoTable }              from "@/components/table/InfoTable";
 import SuperAreaChart             from "@/components/Chart/SuperAreaChart";
+import VmGeneralBarChart          from "../vm/VmGeneralBarChart";
+import HostGeneralChart           from "./HostGeneralChart";
 import { 
   useDashboardHost, 
   useHost
@@ -11,9 +14,6 @@ import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
 import Logger                     from "@/utils/Logger";
 import "./Host.css";
-import VmGeneralBarChart from "../vm/VmGeneralBarChart";
-import ReactApexChart from "react-apexcharts";
-import HostGeneralChart from "./HostGeneralChart";
 
 /**
  * @name HostGeneral
@@ -71,8 +71,8 @@ const HostGeneral = ({
     { label: "버전", value: host?.hostHwVo?.hwVersion },
     { label: "UUID", value: host?.hostHwVo?.uuid },
     { label: "일련 번호", value: host?.hostHwVo?.serialNum },
-    { label: "제품군", value: host?.hostHwVo?.family },
-    { label: "제품 이름", value: host?.hostHwVo?.productName },
+    { label: Localization.kr.PRODUCT_FAMILY, value: host?.hostHwVo?.family },
+    { label: `${Localization.kr.PRODUCT} ${Localization.kr.NAME}`, value: host?.hostHwVo?.productName },
     { label: "CPU 모델", value: host?.hostHwVo?.cpuName },
     { label: "CPU 유형", value: host?.hostHwVo?.cpuType },
     { label: "CPU 소켓", value: host?.hostHwVo?.cpuTopologySocket },

@@ -146,6 +146,9 @@ export const Localization = {
     DAYS_REMAINING: "남은 일수",
     COUNT: "수",
     VERSION_COMPATIBLE: "호환 버전",
+    VENDOR: "벤더",
+    PRODUCT: "제품",
+    PRODUCT_FAMILY: "제품군",
 
     PLACEHOLDER: "임력하세요.",
     PLACEHOLDER_SELECT: "선택하세요.",

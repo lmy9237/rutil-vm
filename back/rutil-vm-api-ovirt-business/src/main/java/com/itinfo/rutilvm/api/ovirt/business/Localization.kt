@@ -95,14 +95,14 @@ class Localization {
 				val qxl								= locKr?.get(DisplayTypeB.qxl.localizationKey)?.toString() ?: ""
 				val vga								= locKr?.get(DisplayTypeB.vga.localizationKey)?.toString() ?: ""
 				val bochs							= locKr?.get(DisplayTypeB.bochs.localizationKey)?.toString() ?: ""
-				val none							= locKr?.get(DisplayTypeB.cirrus.localizationKey)?.toString() ?: ""
+				val none							= locKr?.get(DisplayTypeB.none.localizationKey)?.toString() ?: ""
 			}
 			object EN {
 				val cirrus							= locEn?.get(DisplayTypeB.cirrus.localizationKey)?.toString() ?: ""
 				val qxl								= locEn?.get(DisplayTypeB.qxl.localizationKey)?.toString() ?: ""
 				val vga								= locEn?.get(DisplayTypeB.vga.localizationKey)?.toString() ?: ""
 				val bochs							= locEn?.get(DisplayTypeB.bochs.localizationKey)?.toString() ?: ""
-				val none							= locEn?.get(DisplayTypeB.cirrus.localizationKey)?.toString() ?: ""
+				val none							= locEn?.get(DisplayTypeB.none.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion: DisplayTypeL

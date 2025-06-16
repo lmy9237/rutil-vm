@@ -38,7 +38,7 @@ const VmDeviceAddModal = ({
         </div>
         <div className="select-box mb-1 flex">
           <label className="mr-1 w-9 block" htmlFor="features">
-            기능
+            {Localization.kr.CAPABILITIES}
           </label>
           <select id="features">
             <option value="pci">pci</option>
