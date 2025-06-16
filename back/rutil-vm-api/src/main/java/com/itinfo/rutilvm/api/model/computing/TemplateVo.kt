@@ -10,9 +10,9 @@ import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatus
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatus.OK
-import com.itinfo.rutilvm.api.ovirt.business.findStatus
+import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB
+import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB.OK
+import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.toLocalDateTime
@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.Date
 
 private val log = LoggerFactory.getLogger(TemplateVo::class.java)
 
@@ -39,7 +38,7 @@ class TemplateVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	private val _status: com.itinfo.rutilvm.api.ovirt.business.TemplateStatus? = com.itinfo.rutilvm.api.ovirt.business.TemplateStatus.OK,
+	private val _status: com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB? = com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB.OK,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: String = "", // VmType
@@ -112,7 +111,7 @@ class TemplateVo(
 	val versionNumber: Int = 0,             // <version><version_number>
 ): Serializable {
 	val status: String
-		get() = _status?.code ?: TemplateStatus.Unknown.code
+		get() = _status?.code ?: TemplateStatusB.Unknown.code
 
 	val urlSmallIcon: String
 		get() = iconSmall?.dataUrl ?: ""
@@ -135,7 +134,7 @@ class TemplateVo(
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: com.itinfo.rutilvm.api.ovirt.business.TemplateStatus = OK; fun status(block: () -> com.itinfo.rutilvm.api.ovirt.business.TemplateStatus?) { bStatus = block() ?: OK }
+		private var bStatus: com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB = OK; fun status(block: () -> com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB?) { bStatus = block() ?: OK }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
@@ -236,7 +235,7 @@ fun Template.toTemplateMenu(conn: Connection): TemplateVo {
 		comment { this@toTemplateMenu.comment() }
 		description { this@toTemplateMenu.description() }
 		creationTime { this@toTemplateMenu.creationTime().toLocalDateTime() }
-		status { this@toTemplateMenu.findStatus() }
+		status { this@toTemplateMenu.findTemplateStatus() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 	}
@@ -256,7 +255,7 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		name { template.name() }
 		comment { template.comment()}
 		description { template.description() }
-		status { template.findStatus() }
+		status { template.findTemplateStatus() }
 		creationTime { template.creationTime().toLocalDateTime() }
 		osType { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
 		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
@@ -282,7 +281,7 @@ fun Template.toStorageTemplate(conn: Connection): TemplateVo {
 		comment { template.comment() }
 		description { template.description() }
 		creationTime { template.creationTime().toLocalDateTime() }
-		status { template.findStatus() }
+		status { template.findTemplateStatus() }
 		diskAttachmentVos { disks.toDiskAttachmentsToTemplate(conn) }
 	}
 }

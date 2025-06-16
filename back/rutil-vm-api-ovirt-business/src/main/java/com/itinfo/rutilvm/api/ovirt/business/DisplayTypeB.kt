@@ -3,12 +3,12 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * [DisplayType]
+ * [DisplayTypeB]
  * 가상머신 디스플레이 유형
  *
  * @see VmDeviceType
  */
-enum class DisplayType(
+enum class DisplayTypeB(
 	val defaultVmDeviceType: VmDeviceType?,
 ) {
 	cirrus(VmDeviceType.CIRRUS),
@@ -18,10 +18,10 @@ enum class DisplayType(
 	none(null); // For Headless VM, this type means that the VM will run without any display (VIDEO) device
 
 	val value: Int
-		get() = this@DisplayType.ordinal
+		get() = this@DisplayTypeB.ordinal
 
 	val localizationKey: String
-		get() = "${DisplayType::class.java.simpleName}.${this.name}"
+		get() = "${DisplayTypeB::class.java.simpleName}.${this.name}"
 
 	private val loc: Localization
 		get() = Localization.getInstance()
@@ -31,12 +31,12 @@ enum class DisplayType(
 		get() = loc.findLocalizedName4DisplayType(this, "kr")
 
 	companion object {
-		private val valueMapping: MutableMap<Int, DisplayType> = ConcurrentHashMap<Int, DisplayType>()
+		private val valueMapping: MutableMap<Int, DisplayTypeB> = ConcurrentHashMap<Int, DisplayTypeB>()
 		init {
-			DisplayType.values().forEach { valueMapping[it.value] = it }
+			DisplayTypeB.values().forEach { valueMapping[it.value] = it }
 		}
-		@JvmStatic fun forValue(value: Int): DisplayType = valueMapping[value] ?: none
+		@JvmStatic fun forValue(value: Int?): DisplayTypeB = valueMapping[value] ?: none
 
-		val allDisplayTypes: List<DisplayType> = DisplayType.values().toList()
+		val allDisplayTypes: List<DisplayTypeB> = DisplayTypeB.values().toList()
 	}
 }

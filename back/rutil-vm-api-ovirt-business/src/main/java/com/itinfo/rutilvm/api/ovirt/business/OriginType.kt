@@ -3,9 +3,9 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
-enum class Origin(
+enum class OriginType(
 	override val value: Int,
-	val description: String,
+	val code: String,
 ): Identifiable, Serializable {
 	RHEV(0, "RHEV"),
 	VMWARE(1, "VMWARE"),
@@ -23,19 +23,19 @@ enum class Origin(
 	KUBEVIRT(10, "KUBEVIRT");
 
 	val label: String
-		get() = this@Origin.name.lowercase()
+		get() = this@OriginType.name.lowercase()
 
 	companion object {
-		private val valueMapping: MutableMap<Int, Origin> = ConcurrentHashMap<Int, Origin>()
-		private val descriptionMapping: MutableMap<String, Origin> = ConcurrentHashMap<String, Origin>()
+		private val valueMapping: MutableMap<Int, OriginType> = ConcurrentHashMap<Int, OriginType>()
+		private val codeMapping: MutableMap<String, OriginType> = ConcurrentHashMap<String, OriginType>()
 
 		init {
-			values().forEach { valueMapping[it.value] = it }
+			values().forEach {
+				valueMapping[it.value] = it
+				codeMapping[it.code] = it
+			}
 		}
-
-
-		@JvmStatic fun forValue(value: Int?=-1): Origin = valueMapping[value] ?: OVIRT
-		@JvmStatic fun forDescription(value: String="OVIRT"): Origin = descriptionMapping[value] ?: OVIRT
-
+		@JvmStatic fun forValue(value: Int?): OriginType = valueMapping[value ?: 3] ?: OVIRT
+		@JvmStatic fun forCode(value: String?): OriginType = codeMapping[value?.uppercase() ?: "OVIRT"] ?: OVIRT
 	}
 }

@@ -28,7 +28,6 @@ enum class StorageType(
 				descriptionMapping[it.description.lowercase()] = it
 			}
 		}
-
 		val allStorageTypes: List<StorageType> = StorageType.values().filterNot {
 			it == UNKNOWN
 		}

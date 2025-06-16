@@ -6,18 +6,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.itinfo.rutilvm.api.repository.engine.entity.NS_OVF
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.parseEnhanced2LDT
 import org.slf4j.LoggerFactory
@@ -26,10 +23,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.Arrays
 import javax.xml.namespace.QName
-import javax.xml.stream.XMLStreamConstants
-import kotlin.streams.toList
 
 // For handling namespaces (often tricky with OVF)
 // You might need to experiment with jackson-module-jaxb-annotations if namespaces are complex
@@ -549,8 +543,8 @@ data class OvfContent(
 	val snapshotsSection: OvfSnapshotsSection?
 		get() = sections?.filterIsInstance<OvfSnapshotsSection>()?.firstOrNull()
 
-	val biosTypeEnum: com.itinfo.rutilvm.api.ovirt.business.BiosType?
-		get() = com.itinfo.rutilvm.api.ovirt.business.BiosType.forValue(biosType)
+	val biosTypeEnum: com.itinfo.rutilvm.api.ovirt.business.BiosTypeB?
+		get() = com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.forValue(biosType)
 
 	val creationDate: LocalDateTime?
 		get() = try {

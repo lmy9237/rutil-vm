@@ -1,11 +1,11 @@
 package com.itinfo.rutilvm.api.service.common
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
-import com.itinfo.rutilvm.api.ovirt.business.BiosType
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
-import com.itinfo.rutilvm.api.ovirt.business.DisplayType
+import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
-import com.itinfo.rutilvm.api.ovirt.business.VmType
+import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.springframework.stereotype.Service
@@ -73,7 +73,7 @@ class TypeServiceImpl(
 
 	override fun findAllBiosTypes(): List<TypeVo> {
 		log.info("findAllBiosTypes ... ")
-		return BiosType.allBiosTypes.toTypeVosFromBiosTypes()
+		return BiosTypeB.allBiosTypes.toTypeVosFromBiosTypes()
 	}
 
 	override fun findAllDiskContentTypes(): List<TypeVo> {
@@ -85,12 +85,12 @@ class TypeServiceImpl(
 
 	override fun findAllDisplayTypes(): List<TypeVo> {
 		log.info("findAllDisplayTypes ... ")
-		return DisplayType.allDisplayTypes.toTypeVosFromDisplayTypes()
+		return DisplayTypeB.allDisplayTypes.toTypeVosFromDisplayTypes()
 	}
 
 	override fun findAllVmTypes(): List<TypeVo> {
 		log.info("findAllVmTypes ... ")
-		return VmType.allVmTypes.toTypeVosFromVmTypes()
+		return VmTypeB.allVmTypes.toTypeVosFromVmTypes()
 	}
 
 	override fun findAllMigrationSupports(): List<TypeVo> {
@@ -112,12 +112,12 @@ fun AuditLogSeverity.toTypeVoFromAuditLogSeverity(): TypeVo = TypeVo(
 )
 fun List<AuditLogSeverity>.toTypeVosFromAuditLogSeverities(): List<TypeVo> =
 	this@toTypeVosFromAuditLogSeverities.map { it.toTypeVoFromAuditLogSeverity() }
-fun BiosType.toTypeVoFromBiosType(): TypeVo = TypeVo(
+fun BiosTypeB.toTypeVoFromBiosType(): TypeVo = TypeVo(
 	this@toTypeVoFromBiosType.name.lowercase(),
 	this@toTypeVoFromBiosType.kr,
 	this@toTypeVoFromBiosType.en,
 )
-fun List<BiosType>.toTypeVosFromBiosTypes(): List<TypeVo> =
+fun List<BiosTypeB>.toTypeVosFromBiosTypes(): List<TypeVo> =
 	this@toTypeVosFromBiosTypes.map { it.toTypeVoFromBiosType() }
 fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 	this@toTypeVoFromDiskContentType.storageValue,
@@ -126,12 +126,12 @@ fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 )
 fun List<DiskContentType>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
-fun DisplayType.toTypeVoFromDisplayType(): TypeVo = TypeVo(
+fun DisplayTypeB.toTypeVoFromDisplayType(): TypeVo = TypeVo(
 	this@toTypeVoFromDisplayType.name,
 	this@toTypeVoFromDisplayType.kr,
 	this@toTypeVoFromDisplayType.en,
 )
-fun List<DisplayType>.toTypeVosFromDisplayTypes(): List<TypeVo> =
+fun List<DisplayTypeB>.toTypeVosFromDisplayTypes(): List<TypeVo> =
 	this@toTypeVosFromDisplayTypes.map { it.toTypeVoFromDisplayType() }
 fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
 	this@toTypeVoFromMigrationSupport.name.uppercase(),
@@ -140,11 +140,11 @@ fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
 )
 fun List<MigrationSupport>.toTypeVosFromMigrationSupports(): List<TypeVo> =
 	this@toTypeVosFromMigrationSupports.map { it.toTypeVoFromMigrationSupport() }
-fun VmType.toTypeVoFromVmType(): TypeVo = TypeVo(
+fun VmTypeB.toTypeVoFromVmType(): TypeVo = TypeVo(
 	this@toTypeVoFromVmType.name.lowercase(),
 	this@toTypeVoFromVmType.kr,
 	this@toTypeVoFromVmType.en,
 )
-fun List<VmType>.toTypeVosFromVmTypes(): List<TypeVo> =
+fun List<VmTypeB>.toTypeVosFromVmTypes(): List<TypeVo> =
 	this@toTypeVosFromVmTypes.map { it.toTypeVoFromVmType() }
 

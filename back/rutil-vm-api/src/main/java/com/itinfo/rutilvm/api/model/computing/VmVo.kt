@@ -15,12 +15,29 @@ import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
+import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationAutoConverge
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationCompression
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
+import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
+import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -78,6 +95,7 @@ import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmAffinity
 import org.ovirt.engine.sdk4.types.VmStorageErrorResumeBehaviour
 import org.ovirt.engine.sdk4.types.VmType
+
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
@@ -92,13 +110,13 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property name [String]
  * @property description [String]
  * @property comment [String]
- * @property status [VmStatusB]
+ * @property status [VmStatusB] 가상머신 상태
  * @property iconSmall [VmIconVo] 작은 아이콘
  * @property iconLarge [VmIconVo] 큰 아이콘
- * @property optimizeOption [String]
- * @property biosBootMenu [Boolean]
- * @property biosType [String] vm.bios().type() 칩셋
- * @property osType [String] vm.os().type()  운영체제
+ * @property optimizeOption [VmTypeB] 가상머신 최적화 옵션
+ * @property biosType [BiosTypeB] vm.bios().type() 칩셋
+ * @property biosBootMenu [Boolean] BIOS 부팅 메뉴 활성화 여부
+ * @property osType [VmOsType] vm.os().type()  운영체제
  * @property cpuArc [Architecture]
  * @property cpuTopologyCnt [Int]
  * @property cpuTopologyCore [Int]
@@ -171,16 +189,17 @@ class VmVo (
 	private val _status: VmStatusB? = VmStatusB.Unknown,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	val optimizeOption: String = "", // VmType
+	private val _optimizeOption: VmTypeB? = VmTypeB.Unknown, // VmType
+	// val biosType: String = "", // chipsetFirmwareType
+	private val _biosType: BiosTypeB? = BiosTypeB.UNKNOWN,
 	val biosBootMenu: Boolean = false,
-	val biosType: String = "", // chipsetFirmwareType
-	val osType: String = "",
-	val cpuArc: Architecture = Architecture.UNDEFINED,
+	private val _osType: VmOsType? = VmOsType.OTHER_OS,
+	val cpuArc: ArchitectureType = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	val cpuPinningPolicy: String = "",
+	val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -190,20 +209,20 @@ class VmVo (
 	val timeOffset: String = "Etc/GMT",
 	val cloudInit: Boolean = false,
 	val script: String = "",
-	val migrationMode: VmAffinity? = VmAffinity.MIGRATABLE, // VmAffinity
+	val migrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE, // VmAffinity
 	val migrationPolicy: String = "",
-	val migrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationCompression: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT,
+	val migrationAutoConverge: Boolean? = null,
+	val migrationCompression: Boolean? = null,
+	val migrationEncrypt: Boolean? = null,
+	val migrationParallelPolicy: Boolean? = null,
 	val parallelMigration: String = "",
-	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
+	val storageErrorResumeBehaviour: VmResumeBehavior? = VmResumeBehavior.AUTO_RESUME,
 	val virtioScsiMultiQueueEnabled: Boolean = false,
 	val firstDevice: String = "",
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: DisplayType = DisplayType.VNC,
+	val displayType: GraphicsTypeB? = GraphicsTypeB.VNC,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -245,6 +264,18 @@ class VmVo (
 		get() = iconSmall?.dataUrl ?: ""
 	val urlLargeIcon: String
 		get() = iconLarge?.dataUrl ?: ""
+
+	val optimizeOption: String
+		get() = _optimizeOption?.code ?: VmTypeB.Unknown.code
+
+	val biosType: String
+		get() = _biosType?.name?.lowercase() ?: BiosTypeB.UNKNOWN.name.lowercase()
+
+	val osType: String
+		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
+
+	val cpuPinningPolicy: String
+		get() = _cpuPinningPolicy?.name?.lowercase() ?: CpuPinningPolicyB.NONE.name.lowercase()
 
 	val creationTime: String?
 		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
@@ -298,20 +329,20 @@ class VmVo (
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
+		// private var bStatus: com.itinfo.rutilvm.api.ovirt.business.VmStatus = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
 		private var bStatus: VmStatusB = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
-		// private var bStatus: com.itinfo.rutilvm.api.ovirt.business.VmStatus = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
-		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
+		private var bOptimizeOption: VmTypeB? = VmTypeB.Unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.Unknown }
+		private var bBiosType: BiosTypeB? = BiosTypeB.UNKNOWN; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.UNKNOWN }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
-		private var bBiosType: String = ""; fun biosType(block: () -> String?) { bBiosType = block() ?: "" }
-		private var bOsType: String = ""; fun osType(block: () -> String?) { bOsType = block() ?: "" }
-		private var bCpuArc: Architecture = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
+		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
+		private var bCpuArc: ArchitectureType = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: "" }
+		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.NONE }
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
 		private var bMemoryGuaranteed: BigInteger = BigInteger.ZERO; fun memoryGuaranteed(block: () -> BigInteger?) { bMemoryGuaranteed = block() ?: BigInteger.ZERO }
 		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
@@ -321,20 +352,20 @@ class VmVo (
 		private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
-		private var bMigrationMode: VmAffinity? = VmAffinity.MIGRATABLE; fun migrationMode(block: () -> VmAffinity?) { bMigrationMode = block() ?: VmAffinity.MIGRATABLE }
+		private var bMigrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.MIGRATABLE }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
-		private var bMigrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationAutoConverge(block: () -> InheritableBoolean?) { bMigrationAutoConverge = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationCompression: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationCompression(block: () -> InheritableBoolean?) { bMigrationCompression = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationEncrypt(block: () -> InheritableBoolean?) { bMigrationEncrypt = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationParallelPolicy(block: () -> InheritableBoolean?) { bMigrationParallelPolicy = block() ?: InheritableBoolean.INHERIT }
+		private var bMigrationAutoConverge: Boolean? = null; fun migrationAutoConverge(block: () -> Boolean?) { bMigrationAutoConverge = block() }
+		private var bMigrationCompression: Boolean? = null; fun migrationCompression(block: () -> Boolean?) { bMigrationCompression = block() }
+		private var bMigrationEncrypt: Boolean? = null; fun migrationEncrypt(block: () -> Boolean?) { bMigrationEncrypt = block() }
+		private var bMigrationParallelPolicy: Boolean? = null; fun migrationParallelPolicy(block: () -> Boolean?) { bMigrationParallelPolicy = block() }
 		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
-		private var bStorageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmStorageErrorResumeBehaviour?) { bStorageErrorResumeBehaviour = block() ?: VmStorageErrorResumeBehaviour.AUTO_RESUME }
+		private var bStorageErrorResumeBehaviour: VmResumeBehavior = VmResumeBehavior.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmResumeBehavior?) { bStorageErrorResumeBehaviour = block() ?: VmResumeBehavior.AUTO_RESUME }
 		private var bVirtioScsiMultiQueueEnabled: Boolean = false; fun virtioScsiMultiQueueEnabled(block: () -> Boolean?) { bVirtioScsiMultiQueueEnabled = block() ?: false }
 		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
+		private var bDisplayType: GraphicsTypeB? = GraphicsTypeB.VNC; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.VNC }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -368,7 +399,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
     }
 
     companion object {
@@ -377,8 +408,8 @@ class VmVo (
     }
 }
 
-
 /**
+ * [Vm.toVmIdName]
  * 가상머신 id & name
  */
 fun Vm.toVmIdName(): VmVo = VmVo.builder {
@@ -393,9 +424,9 @@ fun Vm.toVmStatus(): VmVo = VmVo.builder {
 	name { this@toVmStatus.name() }
 	status { this@toVmStatus.findStatus() }
 }
+
 fun List<Vm>.toVmStatusList(): List<VmVo> =
 	this@toVmStatusList.map { it.toVmStatus() }
-
 
 fun Vm.toVmMenu(conn: Connection): VmVo {
 	val vm = this@toVmMenu
@@ -436,7 +467,6 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 fun List<Vm>.toVmMenus(conn: Connection): List<VmVo> =
 	this@toVmMenus.map { it.toVmMenu(conn) }
 
-
 fun Vm.toVmVo(conn: Connection): VmVo {
 	val vm = this@toVmVo
 	val status = vm.findStatus()
@@ -466,29 +496,31 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		status { status }
 		iconSmall { if (vm.smallIconPresent()) vm.smallIcon().toVmIconVo() else null }
 		iconLarge { if (vm.largeIconPresent()) vm.largeIcon().toVmIconVo() else null }
-		optimizeOption { vm.type().value() }
-		biosType { vm.bios().type().value() }
-		osType { vm.os().type() }
-		cpuArc { vm.cpu().architecture() }
+		creationTime { vm.creationTime().toLocalDateTime() }
+		optimizeOption { vm.type().toVmTypeB() }
+		nextRun { vm.nextRunConfigurationExists() }
+		biosType { vm.bios().findBiosTypeB() }
+		biosBootMenu { vm.bios().bootMenu().enabled() }
+		osType { vm.os().findVmOsType() }
+		cpuArc { vm.cpu().findArchitectureType() }
 		cpuTopologyCnt { calculateCpuTopology(vm) }
 		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-		cpuPinningPolicy { vm.cpuPinningPolicy().value() }
+		cpuPinningPolicy { vm.cpuPinningPolicy().toCpuPinningPolicyB() }
 		memorySize { vm.memory() }
 		memoryGuaranteed { vm.memoryPolicy().guaranteed() }
 		memoryMax { vm.memoryPolicy().max() }
-		creationTime { vm.creationTime().toLocalDateTime() }
 		deleteProtected { vm.deleteProtected() }
-		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
-		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
+		monitor { if (vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
+		displayType { vm.display().findGraphicsTypeB() }
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
-		migrationMode { vm.placementPolicy().affinity() } //migrationMode
-		migrationEncrypt { vm.migration().encrypted() }
-		migrationAutoConverge { vm.migration().autoConverge() }
-		migrationCompression { vm.migration().compressed() }
+		migrationMode { vm.placementPolicy().findMigrationSupport() } //migrationMode
+		migrationEncrypt { vm.migration().findMigrationEncrypt() }
+		migrationAutoConverge { vm.migration().findMigrationAutoConverge() }
+		migrationCompression { vm.migration().findMigrationCompression() }
 		firstDevice { vm.os().boot().devices().first().value() }
 		secDevice {
 			if (vm.os().boot().devices().size > 1) vm.os().boot().devices()[1].value()
@@ -511,12 +543,11 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 			guestTimeZone { "" }
 		}
 		startPaused { vm.startPaused() }
-		storageErrorResumeBehaviour { vm.storageErrorResumeBehaviour() }
+		storageErrorResumeBehaviour { vm.storageErrorResumeBehaviour().toVmResumeBehavior() }
 		usb { if(vm.usbPresent()) vm.usb().enabled() else false }
 		virtioScsiMultiQueueEnabled { vm.virtioScsiMultiQueuesEnabled() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
 		timeOffset { vm.timeZone().name() }
-		nextRun { vm.nextRunConfigurationExists() }
 		if (status == VmStatusB.Up) {
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
@@ -663,23 +694,23 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		comment { vm.comment() }
 		status { status }
 		templateVo { tmp?.fromTemplateToIdentifiedVo() }
-		biosType { vm.bios().type().toString() }
-		cpuArc { vm.cpu().architecture() }
+		optimizeOption { vm.type().toVmTypeB() }
+		biosType { vm.bios().findBiosTypeB() }
+		osType { vm.os().findVmOsType() }
+		cpuArc { vm.cpu().findArchitectureType() }
 		cpuTopologyCnt { calculateCpuTopology(vm) }
 		cpuTopologyCore { vm.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { vm.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { vm.cpu().topology().threadsAsInteger() }
-		cpuPinningPolicy { vm.cpuPinningPolicy().value() }
+		cpuPinningPolicy { vm.cpuPinningPolicy().toCpuPinningPolicyB() }
 		creationTime { vm.creationTime().toLocalDateTime() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
-		displayType { if(vm.displayPresent()) vm.display().type() else DisplayType.VNC }
+		displayType { vm.display().findGraphicsTypeB() }
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		memorySize { vm.memory() }
 		memoryGuaranteed { vm.memoryPolicy().guaranteed() }
 		memoryMax { vm.memoryPolicy().max() }
-		osType { vm.os().type() }
-		optimizeOption { vm.type().toString() }
 		usb { if(vm.usbPresent()) vm.usb().enabled() else false }
 	}
 }
@@ -821,7 +852,7 @@ fun VmVo.toVmHostBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	log.info("(migrationMode?.toVmAffinity() {}: ", migrationMode)
 
 	val placementPolicy = VmPlacementPolicyBuilder().apply {
-		affinity(migrationMode)
+		affinity(migrationMode?.toVmAffinity())
 		if (!hostInCluster) {
 			hosts(hostVos.map { HostBuilder().id(it.id).build() })
 		}
@@ -852,7 +883,6 @@ fun VmVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))
 }
 
-
 fun VmVo.toRegisterVm(): Vm {
 	return VmBuilder()
 		.id(this.id)
@@ -860,7 +890,6 @@ fun VmVo.toRegisterVm(): Vm {
 		.cluster(ClusterBuilder().id(this.clusterVo.id).build())
 		.build()
 }
-
 //endregion
 
 // CPU Topology 계산 최적화

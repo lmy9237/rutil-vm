@@ -401,7 +401,7 @@ class ClusterController: BaseController() {
 	): ResponseEntity<List<OsVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/osSystems ... 클러스터 운영시스템 목록", clusterId)
+		log.info("/computing/clusters/{}/levels ... 클러스터 운영시스템 목록", clusterId)
 		return ResponseEntity.ok(iCluster.findAllOsSystemFromCluster(clusterId))
 	}
 

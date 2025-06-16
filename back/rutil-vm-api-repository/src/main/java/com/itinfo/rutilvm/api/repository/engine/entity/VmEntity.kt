@@ -1,7 +1,16 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
+import com.itinfo.rutilvm.api.ovirt.business.OriginType
+import com.itinfo.rutilvm.api.ovirt.business.UsbPolicy
+import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -18,7 +27,7 @@ import javax.persistence.JoinColumn
 import javax.persistence.OneToMany
 import javax.persistence.ManyToOne
 import javax.persistence.Table
-
+import kotlin.math.pow
 
 /**
  * [VmEntity]
@@ -208,10 +217,12 @@ class VmEntity(
 	val acpiEnable: Boolean? = null,
 	val allowConsoleReconnect: Boolean? = false,
 	val appList: String = "",
-	val architecture: Int? = null,
+	@Column(name="architecture", nullable=true)
+	private val _architecture: Int? = null,
 	val autoStartup: Boolean? = null,
 	val balloonEnabled: Boolean? = null,
-	val biosType: Int? = null,
+	@Column(name="bios_type", nullable=true)
+	private val _biosType: Int? = -1,
 	val bootSequence: Int? = null,
 	val bootTime: LocalDateTime? = LocalDateTime.now(),
 	val changedFields: String = "",
@@ -231,7 +242,8 @@ class VmEntity(
 	val cpuName: String = "",
 	val cpuPerSocket: Int? = null,
 	val cpuPinning: String = "",
-	val cpuPinningPolicy: Int? = null,
+	@Column(name="cpu_pinning_policy", nullable=true)
+	private val _cpuPinningPolicy: Int? = null,
 	val cpuProfileId: UUID? = null,
 	val cpuShares: Int? = null,
 	val cpuSys: BigDecimal? = BigDecimal.ZERO,
@@ -251,7 +263,8 @@ class VmEntity(
 	val dbGeneration: BigInteger? = BigInteger.ZERO,
 	val dedicatedVmForVds: String = "",
 	val defaultBootSequence: Int? = null,
-	val defaultDisplayType: Int? = null,
+	@Column(name="default_display_type", nullable=true)
+	private val _defaultDisplayType: Int? = null,
 	val description: String = "",
 	val disksUsage: String = "",
 	val downtime: BigInteger? = BigInteger.ZERO,
@@ -301,8 +314,8 @@ class VmEntity(
 	val kernelUrl: String = "",
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name="large_icon_id", // This is the foreign key column in the 'vms' view
-		referencedColumnName="id", // This is the primary key column in 'vm_icons'
+		name="large_icon_id",
+		referencedColumnName="id",
 		insertable=false,
 		updatable=false
 	)
@@ -313,8 +326,8 @@ class VmEntity(
 	val lastWatchdogEvent: BigInteger? = BigInteger.ZERO,
 	val leaseInfo: String = "",
 	val leaseSdId: UUID? = null,
-	val maxMemorySizeMb: Int? = null,
-	val memSizeMb: Int? = null,
+	val maxMemorySizeMb: BigInteger? = BigInteger.ZERO,
+	val memSizeMb: BigInteger? = BigInteger.ZERO,
 	val migratingToVds: UUID? = null,
 	val migrationDowntime: Int? = null,
 	val migrationPolicyId: UUID? = null,
@@ -329,10 +342,19 @@ class VmEntity(
 	val numOfIoThreads: Int? = null,
 	val numOfMonitors: Int? = null,
 	val numOfSockets: Int? = null,
-	val origin: Int? = null,
+	@Column(name="origin", nullable=false)
+	private val _origin: Int? = null,
 	val originalTemplateId: UUID? = null,
 	val originalTemplateName: String = "",
-	val os: Int? = null,
+	// private val os: Int? = null,
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="os",                         // The column in the 'vms' view
+		referencedColumnName="os_id",      // The PK column in the 'dwh_osinfo' table
+		insertable = false,
+		updatable = false
+	)
+	val dwhOsInfo: DwhOsinfoEntity? = null,
 	val ovirtGuestAgentStatus: Int? = null,
 	val parallelMigrations: Int? = null,
 	val pauseStatus: Int? = null,
@@ -344,16 +366,17 @@ class VmEntity(
 	val quotaId: UUID? = null,
 	val quotaName: String = "",
 	val reason: String = "",
-	val resumeBehavior: String = "",
-	val runOnVds: UUID? = null,
-	val runOnVdsName: String = "",
+	@Column(name="resume_behavior", nullable=true)
+	private val _resumeBehavior: String = "",
+	val runOnVds: UUID? = null, // a.k.a. 호스트 ID
+	val runOnVdsName: String = "", // a.k.a. 호스트 ID
 	val runtimeName: String = "",
 	val serialNumberPolicy: Int? = null,
 	val session: Int? = null,
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name="small_icon_id", // This is the foreign key column in the 'vms' view
-		referencedColumnName="id", // This is the primary key column in 'vm_icons'
+		name="small_icon_id",
+		referencedColumnName="id",
 		insertable=false,
 		updatable=false
 	)
@@ -375,7 +398,8 @@ class VmEntity(
 	val usageCpuPercent: Int? = null,
 	val usageMemPercent: Int? = null,
 	val usageNetworkPercent: Int? = null,
-	val usbPolicy: Int? = null,
+	@Column(name="usb_policy", unique = true, nullable = true)
+	private val _usbPolicy: Int? = 1,
 	val useTscFrequency: Boolean? = null,
 	val userdefinedProperties: String = "",
 	val utcDiff: Int? = null,
@@ -392,7 +416,8 @@ class VmEntity(
 	val vmPoolId: UUID? = null,
 	val vmPoolName: String = "",
 	val vmPoolSpiceProxy: String = "",
-	val vmType: Int? = null,
+	@Column(name="vm_type", nullable=false)
+	private val _vmType: Int? = -1,
 	val vmtGuid: UUID? = null,
 	val vmtName: String = "",
 	val vncIp: String = "",
@@ -402,22 +427,73 @@ class VmEntity(
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name = "vm_id", // The column in the 'snapshots' table (the "many" side)
-		referencedColumnName = "vm_guid", // The column in the 'vms' view (the "one" side)
-		insertable = false,
-		updatable = false
+		name="vm_id", // The column in the 'snapshots' table (the "many" side)
+		referencedColumnName="vm_guid", // The column in the 'vms' view (the "one" side)
+		insertable=false,
+		updatable=false
 	)
-	val snapshots: Set<SnapshotEntity> = emptySet()
+	val snapshots: Set<SnapshotEntity> = emptySet(),
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="os",                         // The column in the 'vms' view
+		referencedColumnName="os_id",      // The column in the 'vm_icon_defaults' table
+		insertable=false,
+		updatable=false
+	)
+	val iconDefaults: VmIconDefaultsEntity? = null,
 ): Serializable {
 	val status: VmStatusB?
 		get() = VmStatusB.forValue(_status)
 
+	val biosType: BiosTypeB
+		get() = BiosTypeB.forValue(_biosType)
+
+		val vmType: VmTypeB? /* a.k.a. 최적화 옵션 (optmizationOption) */
+		get() = VmTypeB.forValue(_vmType)
+
+	val osType: VmOsType?
+		get() = dwhOsInfo?.toVmOsType()
+
+	val architecture: ArchitectureType?
+		get() = ArchitectureType.forValue(_architecture)
+
+	val memSize: BigInteger?
+		get() = memSizeMb?.times(MEGABYTE_2_BYTE)
+
+	val maxMemorySize: BigInteger?
+		get() = maxMemorySizeMb?.times(MEGABYTE_2_BYTE)
+
+	val cpuPinningPolicy: CpuPinningPolicyB?
+			get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
+
+	val defaultDisplayType: GraphicsTypeB?
+		get() = GraphicsTypeB.forValue(_defaultDisplayType)
+
 	val migrationSupport: MigrationSupport?
 		get() = MigrationSupport.forValue(_migrationSupport)
-	val urlSmallIcon: String
-		get() = smallIcon?.dataUrl ?: ""
-	val urlLargeIcon: String
-		get() = largeIcon?.dataUrl ?: ""
+
+	val vmResumeBehavior: VmResumeBehavior?
+		get() = VmResumeBehavior.forCode(_resumeBehavior)
+
+	val usbPolicy: UsbPolicy?
+		get() = UsbPolicy.forValue(_usbPolicy)
+
+	val originType: OriginType?
+		get() = OriginType.forValue(_origin)
+	val origin: Int?
+		get() = originType?.value
+	val isHostedEngineVm: Boolean
+		get() = originType == OriginType.MANAGED_HOSTED_ENGINE
+
+	val virtioScsiMultiQueuesEnabled: Boolean?
+		get() = (virtioScsiMultiQueues ?: 0) > 0
+
+	val effectiveSmallIcon: VmIconEntity?
+		get() = this.iconDefaults?.smallIcon ?: this.smallIcon
+
+	val effectiveLargeIcon: VmIconEntity?
+		get() = this.iconDefaults?.largeIcon ?: this.largeIcon
+
 	/*
 	val isVmNotRunning: Boolean *//* '실행 중'이 아닌 상태 *//*
 		get() = _status?.notRunning ?: false
@@ -560,8 +636,8 @@ class VmEntity(
 		private var bLastWatchdogEvent: BigInteger = BigInteger.ZERO; fun lastWatchdogEvent(block: () -> BigInteger?) { bLastWatchdogEvent = block() ?: BigInteger.ZERO }
 		private var bLeaseInfo: String = ""; fun leaseInfo(block: () -> String?) { bLeaseInfo = block() ?: "" }
 		private var bLeaseSdId: UUID? = null; fun leaseSdId(block: () -> UUID?) { bLeaseSdId = block() }
-		private var bMaxMemorySizeMb: Int = -1; fun maxMemorySizeMb(block: () -> Int?) { bMaxMemorySizeMb = block() ?: -1 }
-		private var bMemSizeMb: Int = -1; fun memSizeMb(block: () -> Int?) { bMemSizeMb = block() ?: -1 }
+		private var bMaxMemorySizeMb: BigInteger? = BigInteger.ZERO; fun maxMemorySizeMb(block: () -> BigInteger?) { bMaxMemorySizeMb = block() ?: BigInteger.ZERO }
+		private var bMemSizeMb: BigInteger? = BigInteger.ZERO; fun memSizeMb(block: () -> BigInteger?) { bMemSizeMb = block() ?: BigInteger.ZERO }
 		private var bMigratingToVds: UUID? = null; fun migratingToVds(block: () -> UUID?) { bMigratingToVds = block() }
 		private var bMigrationDowntime: Int = -1; fun migrationDowntime(block: () -> Int?) { bMigrationDowntime = block() ?: -1 }
 		private var bMigrationPolicyId: UUID? = null; fun migrationPolicyId(block: () -> UUID?) { bMigrationPolicyId = block() }
@@ -578,7 +654,8 @@ class VmEntity(
 		private var bOrigin: Int = -1; fun origin(block: () -> Int?) { bOrigin = block() ?: -1 }
 		private var bOriginalTemplateId: UUID? = null; fun originalTemplateId(block: () -> UUID?) { bOriginalTemplateId = block() }
 		private var bOriginalTemplateName: String = ""; fun originalTemplateName(block: () -> String?) { bOriginalTemplateName = block() ?: "" }
-		private var bOs: Int = -1; fun os(block: () -> Int?) { bOs = block() ?: -1 }
+		// private var bOs: Int = -1; fun os(block: () -> Int?) { bOs = block() ?: -1 }
+		private var bDwhOsInfo: DwhOsinfoEntity? = null;fun dwhOsInfo(block: () -> DwhOsinfoEntity?) { bDwhOsInfo = block() }
 		private var bOvirtGuestAgentStatus: Int = -1; fun ovirtGuestAgentStatus(block: () -> Int?) { bOvirtGuestAgentStatus = block() ?: -1 }
 		private var bParallelMigrations: Int = -1; fun parallelMigrations(block: () -> Int?) { bParallelMigrations = block() ?: -1 }
 		private var bPauseStatus: Int = -1; fun pauseStatus(block: () -> Int?) { bPauseStatus = block() ?: -1 }
@@ -635,10 +712,12 @@ class VmEntity(
 		private var bVncPort: Int = -1; fun vncPort(block: () -> Int?) { bVncPort = block() ?: -1 }
 		private var bVolatileRun: Boolean? = null; fun volatileRun(block: () -> Boolean?) { bVolatileRun = block() }
 		private var bSnapshots: Set<SnapshotEntity> = emptySet(); fun snapshots(block: () -> Set<SnapshotEntity>?) { bSnapshots = block() ?: emptySet() }
-		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIcon, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport?.value, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, bOs, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIcon, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus?.value, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots)
+		private var bIconDefaults: VmIconDefaultsEntity? = null; fun iconDefaults(block: () -> VmIconDefaultsEntity?) { bIconDefaults = block() }
+		fun build(): VmEntity = VmEntity(bAcpiEnable, bAllowConsoleReconnect, bAppList, bArchitecture, bAutoStartup, bBalloonEnabled, bBiosType, bBootSequence, bBootTime, bChangedFields, bClientIp, bClusterBiosType, bClusterCompatibilityVersion, bClusterCpuFlags, bClusterCpuName, bClusterCpuVerb, bClusterId, bClusterName, bClusterSpiceProxy, bConsoleCurUserName, bConsoleDisconnectAction, bConsoleDisconnectActionDelay, bConsoleUserId, bCpuName, bCpuPerSocket, bCpuPinning, bCpuPinningPolicy, bCpuProfileId, bCpuShares, bCpuSys, bCpuUser, bCreatedByUserId, bCreationDate, bCurrentCd, bCurrentCores, bCurrentCpuPinning, bCurrentNumaPinning, bCurrentSockets, bCurrentThreads, bCustomCompatibilityVersion, bCustomCpuName, bCustomEmulatedMachine, bCustomSerialNumber, bDbGeneration, bDedicatedVmForVds, bDefaultBootSequence, bDefaultDisplayType, bDescription, bDisksUsage, bDowntime, bElapsedTime, bEmulatedMachine, bExitMessage, bExitReason, bExitStatus, bFreeTextComment, bGuestAgentNicsHash, bGuestContainers, bGuestCpuCount, bGuestCurUserName, bGuestMemBuffered, bGuestMemCached, bGuestOs, bGuestRequestedMemory, bGuestTimezoneName, bGuestTimezoneOffset, bGuestosArch, bGuestosCodename, bGuestosDistribution, bGuestosKernelVersion, bGuestosType, bGuestosVersion, bHasIllegalImages, bHash, bHostCpuFlags, bImageTypeId, bInitrdUrl, bInstanceTypeId, bIsAutoConverge, bIsBootMenuEnabled, bIsDeleteProtected, bIsInitialized, bIsMigrateCompressed, bIsMigrateEncrypted, bIsPreviewingSnapshot, bIsRunAndPause, bIsRunOnce, bIsSmartcardEnabled, bIsSpiceCopyPasteEnabled, bIsSpiceFileTransferEnabled, bIsStateless, bIsoPath, bKernelParams, bKernelUrl, bLargeIcon, bLastStartTime, bLastStopTime, bLastWatchdogAction, bLastWatchdogEvent, bLeaseInfo, bLeaseSdId, bMaxMemorySizeMb, bMemSizeMb, bMigratingToVds, bMigrationDowntime, bMigrationPolicyId, bMigrationSupport?.value, bMinAllocatedMem, bMultiQueuesEnabled, bNamespace, bNextRunConfigExists, bNiceLevel, bNumOfCpus, bNumOfIoThreads, bNumOfMonitors, bNumOfSockets, bOrigin, bOriginalTemplateId, bOriginalTemplateName, /*bOs,*/ bDwhOsInfo, bOvirtGuestAgentStatus, bParallelMigrations, bPauseStatus, bPredefinedProperties, bPriority, bProviderId, bQemuGuestAgentStatus, bQuotaEnforcementType, bQuotaId, bQuotaName, bReason, bResumeBehavior, bRunOnVds, bRunOnVdsName, bRuntimeName, bSerialNumberPolicy, bSession, bSmallIcon, bSpiceIp, bSpicePort, bSpiceTlsPort, bSsoMethod, bStatus?.value, bStoragePoolId, bStoragePoolName, bTemplateVersionNumber, bThreadsPerCpu, bTimeZone, bTransparentHugepages, bTrustedService, bTunnelMigration, bUsageCpuPercent, bUsageMemPercent, bUsageNetworkPercent, bUsbPolicy, bUseTscFrequency, bUserdefinedProperties, bUtcDiff, bVirtioScsiMultiQueues, bVmFqdn, bVmGuid, bVmHost, bVmIp, bVmIpInetArray, bVmName, bVmPoolId, bVmPoolName, bVmPoolSpiceProxy, bVmType, bVmtGuid, bVmtName, bVncIp, bVncKeyboardLayout, bVncPort, bVolatileRun, bSnapshots, bIconDefaults)
 	}
 
 	companion object {
+		val MEGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(2.0.pow(20.0).toLong()) // 2^20승
 		inline fun builder(block: Builder.() -> Unit): VmEntity = Builder().apply(block).build()
 	}
 }

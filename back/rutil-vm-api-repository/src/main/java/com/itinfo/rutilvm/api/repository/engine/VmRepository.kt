@@ -15,6 +15,10 @@ SELECT DISTINCT v FROM VmEntity v
 LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
+LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.iconDefaults ide
+LEFT JOIN FETCH ide.smallIcon
+LEFT JOIN FETCH ide.largeIcon
 WHERE 1=1
 ORDER BY v.vmName ASC
 """)
@@ -25,6 +29,10 @@ SELECT DISTINCT v FROM VmEntity v
 LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
+LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.iconDefaults ide
+LEFT JOIN FETCH ide.smallIcon
+LEFT JOIN FETCH ide.largeIcon
 WHERE v.storagePoolId = :storagePoolId
 ORDER BY v.vmName ASC
 """)
@@ -35,6 +43,10 @@ SELECT DISTINCT v FROM VmEntity v
 LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
+LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.iconDefaults ide
+LEFT JOIN FETCH ide.smallIcon
+LEFT JOIN FETCH ide.largeIcon
 WHERE v.clusterId = :clusterId
 ORDER BY v.vmName ASC
 """)
@@ -45,7 +57,12 @@ SELECT DISTINCT v FROM VmEntity v
 LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
-WHERE v.runOnVds = :runOnVds
+LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.iconDefaults ide
+LEFT JOIN FETCH ide.smallIcon
+LEFT JOIN FETCH ide.largeIcon
+WHERE 1=1
+AND v.runOnVds = :runOnVds
 ORDER BY v.vmName ASC
 """)
 	fun findAllByRunOnVdsWithSnapshotsOrderByVmNameAsc(runOnVds: UUID): List<VmEntity>
@@ -56,6 +73,10 @@ SELECT DISTINCT v FROM VmEntity v
 LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
+LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.iconDefaults ide
+LEFT JOIN FETCH ide.smallIcon
+LEFT JOIN FETCH ide.largeIcon
 WHERE 1=1
 AND v.vmGuid = :vmId
 """)

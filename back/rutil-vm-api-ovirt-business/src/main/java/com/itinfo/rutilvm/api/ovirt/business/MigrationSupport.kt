@@ -44,6 +44,6 @@ enum class MigrationSupport(
 		}
 
 		@JvmStatic fun forValue(value: Int? = -1): MigrationSupport = valueMapping[value] ?: MIGRATABLE
-		@JvmStatic fun forCode(value: String? = "MIGRATABLE"): MigrationSupport = codeMapping[value?.uppercase()] ?: MIGRATABLE
+		@JvmStatic fun forCode(value: String? = "migratable"): MigrationSupport = codeMapping[value?.lowercase()] ?: MIGRATABLE
 	}
 }

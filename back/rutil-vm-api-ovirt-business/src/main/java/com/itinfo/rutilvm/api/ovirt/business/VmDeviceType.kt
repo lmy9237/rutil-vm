@@ -5,6 +5,9 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * [VmDeviceType]
  * 가상머신 디바이스 유형
+ *
+ * @see GraphicsTypeB
+ * @see DisplayTypeB
  */
 enum class VmDeviceType(
 	val code: String,

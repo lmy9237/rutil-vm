@@ -231,10 +231,11 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromCluster(clusterId: String): List<VmVo> {
 		log.info("findAllVmsFromCluster ... clusterId: {}", clusterId)
-		// val res: List<Vm> = conn.findAllVmsFromCluster(clusterId, follow = "cluster.datacenter,reporteddevices").getOrDefault(emptyList())
+		val vms: List<Vm> = conn.findAllVmsFromCluster(clusterId, follow = "cluster.datacenter,reporteddevices")
+			.getOrDefault(emptyList()) // TODO: 다 연결 됐을때 제거
 		// return res.toVmMenus(conn)
 		val res: List<VmEntity> = rVms.findAllByClusterIdWithSnapshotsOrderByVmNameAsc(clusterId.toUUID())
-		return res.toVmVosFromVmEntities()
+		return res.toVmVosFromVmEntities(vms) // TODO: 다 연결 됐을때 제거
 	}
 
 

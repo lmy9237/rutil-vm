@@ -166,11 +166,12 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromHost(hostId: String): List<VmVo> {
 		log.info("findAllVmsFromHost ... hostId: {}", hostId)
-		// val res: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices").getOrDefault(emptyList())
+		val vms: List<Vm> = conn.findAllVmsFromHost(hostId, follow = "cluster.datacenter,statistics,reporteddevices")
+			.getOrDefault(emptyList()) // TODO: 다 연결 됐을때 제거
 		// return res.toVmMenus(conn)
 
 		val res: List<VmEntity> = rVms.findAllByRunOnVdsWithSnapshotsOrderByVmNameAsc(hostId.toUUID())
-		return res.toVmVosFromVmEntities()
+		return res.toVmVosFromVmEntities(vms) // TODO: 다 연결 됐을때 제거
 	}
 
 	@Throws(Error::class)

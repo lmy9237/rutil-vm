@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatus
+import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -214,8 +214,8 @@ class VmTemplateEntity(
 	override fun toString(): String =
 		gson.toJson(this)
 
-	val status: TemplateStatus?
-		get() = TemplateStatus.forValue(_status)
+	val status: TemplateStatusB?
+		get() = TemplateStatusB.forValue(_status)
 
 	class Builder {
 		private var bVmtGuid: UUID? = null; fun vmtGuid(block: () -> UUID?) { bVmtGuid = block() }
@@ -235,7 +235,7 @@ class VmTemplateEntity(
 		private var bClusterId: UUID? = null; fun clusterId(block: () -> UUID?) { bClusterId = block() }
 		private var bNumOfMonitors: Int? = null; fun numOfMonitors(block: () -> Int?) { bNumOfMonitors = block() }
 		private var bAllowConsoleReconnect: Boolean? = null; fun allowConsoleReconnect(block: () -> Boolean?) { bAllowConsoleReconnect = block() }
-		private var bStatus: TemplateStatus? = TemplateStatus.Unknown; fun status(block: () -> TemplateStatus?) { bStatus = block()?: TemplateStatus.Unknown }
+		private var bStatus: TemplateStatusB? = TemplateStatusB.Unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block()?: TemplateStatusB.Unknown }
 		private var bUsbPolicy: Int? = null; fun usbPolicy(block: () -> Int?) { bUsbPolicy = block() }
 		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: "" }
 		private var bClusterName: String = ""; fun clusterName(block: () -> String?) { bClusterName = block() ?: "" }

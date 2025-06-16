@@ -33,5 +33,6 @@ fun OperatingSystemInfo.toOsVo(): OsVo = OsVo.builder {
 	description { this@toOsVo.description() }
 	architecture { this@toOsVo.architecture() }
 }
+
 fun List<OperatingSystemInfo>.toOsVos(): List<OsVo> =
 	this@toOsVos.map { it.toOsVo() }

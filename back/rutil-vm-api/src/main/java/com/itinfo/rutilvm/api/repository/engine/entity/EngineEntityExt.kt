@@ -1,7 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
@@ -9,31 +8,30 @@ import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
-import com.itinfo.rutilvm.api.model.computing.calculateCpuTopology
-import com.itinfo.rutilvm.api.model.computing.findVmCntFromHost
-import com.itinfo.rutilvm.api.model.computing.toHostedEngineVo
-import com.itinfo.rutilvm.api.model.computing.toSshVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
+
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
-import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
+import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
 import com.itinfo.rutilvm.api.ovirt.business.StorageType
-
+import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
+import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
+import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
-import com.itinfo.rutilvm.util.ovirt.findBios
-import com.itinfo.rutilvm.util.ovirt.findBootTime
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
@@ -41,7 +39,6 @@ import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.data.domain.Page
-import java.util.*
 
 //region: AuditLogEntity
 fun AuditLogEntity.toEventVo(): EventVo = EventVo.builder {
@@ -200,17 +197,18 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		comment { this@toUnregisteredVm.ovf?.virtualSystem?.comment }
 		status { vm?.findStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
-		biosType {
-			vm?.bios()?.type()?.toString()
-			// BiosType.forValue(this@toUnregisteredVm.ovf?.virtualSystem?.biosType)?.name
-		}
-		cpuArc { vm?.cpu()?.architecture() }
+		optimizeOption { vm?.type()?.toVmTypeB() }
+		nextRun { vm?.nextRunConfigurationExists() }
+		biosType { vm?.bios()?.findBiosTypeB() }
+		biosBootMenu { vm?.bios()?.bootMenu()?.enabled() }
+		osType { vm?.os()?.findVmOsType() }
+		cpuArc { vm?.cpu()?.findArchitectureType() }
 		cpuTopologyCnt { vm.cpuTopologyAll() }
 		cpuTopologyCore { vm?.cpu()?.topology()?.coresAsInteger() }
 		cpuTopologySocket { vm?.cpu()?.topology()?.socketsAsInteger() }
 		cpuTopologyThread { vm?.cpu()?.topology()?.threadsAsInteger() }
 		cpuPinningPolicy {
-			"${this@toUnregisteredVm.ovf?.virtualSystem?.cpuPinningPolicy}"
+			CpuPinningPolicyB.forCode("${this@toUnregisteredVm.ovf?.virtualSystem?.cpuPinningPolicy}")
 			// vm?.cpuPinningPolicy()?.value()
 		}
 		creationTime {
@@ -219,14 +217,12 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 			vm?.creationTime().toLocalDateTime()
 		}
 		monitor { if (vm?.displayPresent() == true) vm.display().monitorsAsInteger() else 0 }
-		displayType { if (vm?.displayPresent() == true) vm.display().type() else DisplayType.VNC }
+		displayType {  vm?.display().findGraphicsTypeB() }
 		ha { vm?.highAvailability()?.enabled() }
 		haPriority { vm?.highAvailability()?.priorityAsInteger() }
 		memorySize { vm?.memory() }
 		memoryGuaranteed { vm?.memoryPolicy()?.guaranteed() }
 		memoryMax { vm?.memoryPolicy()?.max() }
-		osType { vm?.os()?.type() }
-		optimizeOption { vm?.type()?.value() }
 		usb { if(vm?.usbPresent() == true) vm.usb()?.enabled() else false }
 		diskAttachmentVos { disksFromOvf.toDiskAttachmentIdentifiedVos() }
 	}
@@ -238,7 +234,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		name { this@toUnregisteredTemplate.ovf?.virtualSystem?.name }
 		description { this@toUnregisteredTemplate.ovf?.virtualSystem?.description }
 		comment { this@toUnregisteredTemplate.ovf?.virtualSystem?.comment }
-		status { template?.findStatus() }
+		status { template?.findTemplateStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType {
 			template?.bios()?.type()?.toString()
@@ -306,21 +302,52 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Temp
 
 
 //region: VmEntity
-fun VmEntity.toVmVoFromVmEntity(): VmVo {
+fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	val entity = this@toVmVoFromVmEntity
 	return VmVo.builder {
 		id { entity.vmGuid.toString() }
 		name { entity.vmName }
-		comment { entity.freeTextComment }
 		description { entity.description }
+		comment { entity.freeTextComment }
 		status { entity.status }
-		iconSmall { entity.smallIcon?.toVmIconVoFromVmEntity() }
-		iconLarge { entity.largeIcon?.toVmIconVoFromVmEntity() }
+		iconSmall { entity.effectiveSmallIcon?.toVmIconVoFromVmEntity() }
+		iconLarge { entity.effectiveLargeIcon?.toVmIconVoFromVmEntity() }
 		creationTime { entity.creationDate }
 		stopTime { entity.lastStopTime }
 		timeElapsed { entity.elapsedTime?.toLong() }
+		optimizeOption { entity.vmType }
 		nextRun { entity.nextRunConfigExists }
-		hostedEngineVm { entity.origin == 6 }
+		biosType { entity.biosType }
+		biosBootMenu { entity.isBootMenuEnabled }
+		osType { entity.osType }
+		cpuArc { entity.architecture }
+		cpuTopologyCnt { entity.numOfCpus }
+		cpuTopologyCore { entity.cpuPerSocket } // TODO: 이거 맞는지 모르겠음
+		cpuTopologySocket { entity.numOfSockets }
+		// cpuTopologyThread { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
+		cpuPinningPolicy { entity.cpuPinningPolicy }
+		memorySize { entity.memSize }
+		memoryGuaranteed { entity.memSize }
+		memoryMax { entity.maxMemorySize }
+		deleteProtected { entity.isDeleteProtected }
+		monitor { entity.numOfMonitors }
+		displayType { entity.defaultDisplayType }
+		// ha { }
+		haPriority { entity.priority }
+		ioThreadCnt { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
+		migrationMode { entity.migrationSupport }
+		migrationEncrypt { entity.isMigrateEncrypted }
+		migrationAutoConverge { entity.isAutoConverge }
+		migrationCompression { entity.isMigrateCompressed }
+		// firstDevice {  }
+		// secDevice {  }
+		// hostInCluster {  }
+		startPaused { entity.isRunAndPause }
+		storageErrorResumeBehaviour { entity.vmResumeBehavior }
+		usb { entity.usbPolicy?.isEnabled }
+		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }
+		hostedEngineVm { entity.isHostedEngineVm }
+		// timeOffset {  }
 		usageDto {
 			UsageDto.builder {
 				cpuPercent { usageCpuPercent }
@@ -361,8 +388,11 @@ fun VmEntity.toVmVoFromVmEntity(): VmVo {
 	}
 }
 
-fun List<VmEntity>.toVmVosFromVmEntities(): List<VmVo> =
-	this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity() }
+fun List<VmEntity>.toVmVosFromVmEntities(vms: List<Vm>? = null): List<VmVo> {  // TODO: 다 연결 되었을 때 vms없이 mapping
+	val itemById: Map<String, Vm>? =
+		vms?.associateBy { it.id() }
+	return this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity(itemById?.get(it.vmGuid.toString())) }
+}
 
 fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromVmEntity.vmGuid.toString() }

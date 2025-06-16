@@ -278,10 +278,11 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllVmsFromDataCenter(dataCenterId: String): List<VmVo> {
 		log.debug("findAllVmsFromDataCenter ... dataCenterId: {}", dataCenterId)
-		// val res: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId).getOrDefault(emptyList())
+		val vms: List<Vm> = conn.findAllVmsFromDataCenter(dataCenterId)
+			.getOrDefault(emptyList()) // TODO: 다 연결 됐을 때 제거
 		// return res.toVmMenus(conn)
 		val res: List<VmEntity> = rVms.findAllByStoragePoolIdWithSnapshotsOrderByVmNameAsc(dataCenterId.toUUID())
-		return res.toVmVosFromVmEntities()
+		return res.toVmVosFromVmEntities(vms) // TODO: 다 연결 됐을때 제거
 	}
 
 	@Throws(Error::class)
@@ -341,7 +342,8 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
+			.getOrDefault(emptyList())
 		// 디스크 포맷 필터링
 		val disks: List<Disk> = storageDomains.flatMap {
 			it.disks().filter { disk -> disk.format() == DiskFormat.COW }
@@ -356,7 +358,8 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllISOFromDataCenter(dataCenterId: String): List<IdentifiedVo> {
 		log.info("findAllISOFromDataCenter ...  dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
+			.getOrDefault(emptyList())
 		val res = storageDomains.flatMap { it.disks().filter { disk -> disk.contentType() == ISO && disk.status() == OK }}
  		return res.fromDisksToIdentifiedVos()
 	}

@@ -31,14 +31,15 @@ enum class ArchitectureType(
 		const val HOTPLUG_MEMORY_FACTOR_PPC_MB: Int = 256
 		const val HOTPLUG_MEMORY_FACTOR_X86_MB: Int = 128
 		private val valueMapping: MutableMap<Int, ArchitectureType> = ConcurrentHashMap<Int, ArchitectureType>()
+		private val codeMapping: MutableMap<String, ArchitectureType> = ConcurrentHashMap<String, ArchitectureType>()
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
+				codeMapping[it.name] = it
 			}
 		}
-
-		val allArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().filterNot {
-			it == undefined
-		}
+		@JvmStatic fun forValue(value: Int?): ArchitectureType = valueMapping[value ?: -1] ?: undefined
+		@JvmStatic fun forCode(code: String?): ArchitectureType = codeMapping[code?.lowercase() ?: "undefined"] ?: undefined
+		val allArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().filterNot { it == undefined }
 	}
 }

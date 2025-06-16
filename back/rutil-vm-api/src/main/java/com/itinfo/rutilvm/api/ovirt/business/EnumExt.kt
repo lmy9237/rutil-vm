@@ -1,11 +1,25 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
+import org.ovirt.engine.sdk4.types.Architecture
+import org.ovirt.engine.sdk4.types.Bios
+import org.ovirt.engine.sdk4.types.BiosType
+import org.ovirt.engine.sdk4.types.Cpu
+import org.ovirt.engine.sdk4.types.CpuPinningPolicy
+import org.ovirt.engine.sdk4.types.Display
+import org.ovirt.engine.sdk4.types.DisplayType
+import org.ovirt.engine.sdk4.types.InheritableBoolean
 import org.ovirt.engine.sdk4.types.LogSeverity
 import org.ovirt.engine.sdk4.types.Template
+import org.ovirt.engine.sdk4.types.MigrationOptions
+import org.ovirt.engine.sdk4.types.OperatingSystem
+import org.ovirt.engine.sdk4.types.OsType
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmAffinity
+import org.ovirt.engine.sdk4.types.VmPlacementPolicy
 import org.ovirt.engine.sdk4.types.VmStatus
 import org.ovirt.engine.sdk4.types.TemplateStatus
+import org.ovirt.engine.sdk4.types.VmStorageErrorResumeBehaviour
+import org.ovirt.engine.sdk4.types.VmType
 
 fun LogSeverity?.toAuditLogSeverity(): AuditLogSeverity =
 	AuditLogSeverity.forCode(this@toAuditLogSeverity?.value())
@@ -16,17 +30,92 @@ fun VmStatus?.toVmStatusB(): VmStatusB =
 fun Vm.findStatus(): VmStatusB =
 	this@findStatus.status().toVmStatusB()
 
-fun TemplateStatus?.toTemplateStatusB(): com.itinfo.rutilvm.api.ovirt.business.TemplateStatus =
-	com.itinfo.rutilvm.api.ovirt.business.TemplateStatus.forCode(this@toTemplateStatusB?.value())
+fun TemplateStatusB.toTemplateStatus(): TemplateStatus =
+	TemplateStatus.fromValue(this@toTemplateStatus.code.lowercase())
 
-fun Template.findStatus(): com.itinfo.rutilvm.api.ovirt.business.TemplateStatus =
-	this@findStatus.status().toTemplateStatusB()
+fun TemplateStatus?.toTemplateStatusB(): TemplateStatusB =
+	TemplateStatusB.forCode(this@toTemplateStatusB?.value())
+
+fun Template.findTemplateStatus(): TemplateStatusB =
+	this@findTemplateStatus.status().toTemplateStatusB()
+
+fun VmType?.toVmTypeB(): VmTypeB? =
+	VmTypeB.forCode(this@toVmTypeB?.value())
+
+fun VmTypeB?.toVmType(): VmType? =
+	VmType.fromValue(this@toVmType?.code?.lowercase())
+
+fun BiosType?.toBiosTypeB(): BiosTypeB =
+	BiosTypeB.forCode(this@toBiosTypeB?.value())
+
+fun BiosTypeB?.toBiosType(): BiosType? =
+	BiosType.fromValue(this@toBiosType?.name?.lowercase())
+
+fun Bios?.findBiosTypeB(): BiosTypeB =
+	BiosTypeB.forCode(this@findBiosTypeB?.type()?.value())
+
+fun Bios?.findBiosType(): BiosType =
+	BiosType.fromValue(this@findBiosType?.type()?.value())
+
+fun OsType?.toVmOsType(): VmOsType =
+	VmOsType.forCode(this@toVmOsType?.value())
+
+fun VmOsType?.toOsType(): OsType =
+	OsType.fromValue(this@toOsType?.code ?: "other_os")
+
+fun OperatingSystem.findVmOsType(): VmOsType =
+	VmOsType.forCode(this@findVmOsType.type())
+
+fun OperatingSystem.findOsType(): OsType =
+	OsType.fromValue(this@findOsType.type())
+
+fun Architecture?.toArchitectureType(): ArchitectureType? =
+	ArchitectureType.forCode(this@toArchitectureType?.value())
+
+fun ArchitectureType?.toArchitecture(): Architecture? =
+	Architecture.fromValue(this@toArchitecture?.name?.lowercase())
+
+fun Cpu?.findArchitectureType(): ArchitectureType? =
+	this@findArchitectureType?.architecture()?.toArchitectureType()
+
+fun CpuPinningPolicy?.toCpuPinningPolicyB(): CpuPinningPolicyB? =
+	CpuPinningPolicyB.forCode(this@toCpuPinningPolicyB?.name?.lowercase())
+
+fun CpuPinningPolicyB?.toCpuPinningPolicy(): CpuPinningPolicy? =
+	CpuPinningPolicy.fromValue(this@toCpuPinningPolicy?.name?.lowercase())
+
+fun DisplayType?.toGraphicsTypeB(): GraphicsTypeB? =
+	GraphicsTypeB.forCode(this@toGraphicsTypeB?.value())
+
+fun Display?.findGraphicsTypeB(): GraphicsTypeB? =
+	this@findGraphicsTypeB?.type().toGraphicsTypeB()
 
 fun VmAffinity?.toMigrationSupport(): MigrationSupport =
 	MigrationSupport.forCode(this@toMigrationSupport?.value())
 
-fun Vm.findMigrationSupport(): MigrationSupport =
-	this@findMigrationSupport.placementPolicy().affinity().toMigrationSupport()
+fun VmPlacementPolicy.findMigrationSupport(): MigrationSupport =
+	this@findMigrationSupport.affinity().toMigrationSupport()
+
+fun MigrationOptions.findMigrationEncrypt(): Boolean? =
+	this@findMigrationEncrypt.encrypted().toBoolean()
+
+fun MigrationOptions.findMigrationAutoConverge(): Boolean? =
+	this@findMigrationAutoConverge.autoConverge().toBoolean()
+
+fun MigrationOptions.findMigrationCompression(): Boolean? =
+	this@findMigrationCompression.compressed().toBoolean()
 
 fun MigrationSupport.toVmAffinity(): VmAffinity =
 	VmAffinity.fromValue(this@toVmAffinity.code)
+
+fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior =
+	VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
+
+fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour =
+	VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())
+
+fun InheritableBoolean.toBoolean(): Boolean? = when(this@toBoolean.name) {
+	"true" -> true
+	"false" -> false
+	else -> null
+}

@@ -29,13 +29,14 @@ import javax.persistence.Table
  * @author 이찬희 (@chanhi2000)
  */
 @Entity
-@Table(name="vm_icon_defaults",)
+@Table(name="vm_icon_defaults")
 class VmIconDefaultsEntity(
 
 	@Id
 	@Column(name = "id", unique = true, nullable = false)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val id: UUID? = null,
+	@Column(name = "os_id", unique=true, nullable=false)
 	val osId: Int = 0,
 
 	@ManyToOne(fetch = FetchType.LAZY)
