@@ -103,7 +103,7 @@ const BarChart = ({
         dataPointSelection: (_, __, config) => {
           const index = config.dataPointIndex;
           const id = ids[index];
-          if (!id) return;
+          // if (!id) return;
 
           if (type === "domain") {
             navigate(`/storages/domains/${id}`); 

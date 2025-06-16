@@ -9,7 +9,7 @@
   padding: 20px;
   border-radius: 8px;
   min-height: 220px;
-  background: var(--color-white);
+  background: var(--color-white-1);
 }
 .snapshot-item {
   cursor: pointer;

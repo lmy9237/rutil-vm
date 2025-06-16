@@ -15,11 +15,16 @@ const VmOsIcon = ({
   dataUrl,
   className=""
 }) => (
+  <>
   <span className="icon-os-wrapper">
-    {dataUrl 
-      ? <img src={dataUrl} className={`icon-os ${className}`} alt='' />
-      : null}
+    <div>
+      {dataUrl 
+        ? <img src={dataUrl} className={`icon-os ${className}`} alt='' />
+        : null}
+    </div>
+    <button className="mt-3 w-[100%] fs-14">웹 콘솔 시작</button>
   </span>
+  </>
 )
 
 VmOsIcon.propTypes = {

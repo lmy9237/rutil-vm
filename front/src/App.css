@@ -320,10 +320,11 @@ svg.btn { cursor: pointer; }
   flex-direction: column;
   align-items: flex-start !important;
 }
+
 .info-content {
   width: calc(100% - var(--w-btn-tab-nav));
   /* overflow-y: auto; */
-  height: calc(100% - var(--h-section-header));
+  /* height: calc(100% - var(--h-section-header)); */
 }
 .section-content,.info-content { 
   padding: 10px;
@@ -343,7 +344,6 @@ svg.btn { cursor: pointer; }
   text-align: left;
   border-radius:0 !important;
 }
-
 .context-menu-item {
   background: var(--color-primary-white);
   border: var(--border-btn);
@@ -376,3 +376,5 @@ svg.btn { cursor: pointer; }
 .no-search-box{
   margin-bottom: 15px;
 }
+
+

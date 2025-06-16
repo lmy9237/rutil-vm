@@ -11,6 +11,9 @@ import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
 import Logger                     from "@/utils/Logger";
 import "./Host.css";
+import VmGeneralBarChart from "../vm/VmGeneralBarChart";
+import ReactApexChart from "react-apexcharts";
+import HostGeneralChart from "./HostGeneralChart";
 
 /**
  * @name HostGeneral
@@ -93,6 +96,17 @@ const HostGeneral = ({
     { label: "OVN configured", value: Localization.kr.YES },
   ]), [host]);
 
+  const sampledata = useMemo(() => ([
+    { label: "KVM 버전", value: host?.hostSwVo?.kvmVersion },
+    { label: "LIBVIRT 버전", value: host?.hostSwVo?.libvirtVersion },
+    { label: "VDSM 버전", value: host?.hostSwVo?.vdsmVersion },
+    { label: "SPICE 버전", value: host?.hostSwVo?.spiceVersion },
+    { label: "GlusterFS 버전", value: host?.hostSwVo?.glustersfsVersion },
+    { label: "CEPH 버전", value: host?.hostSwVo?.cephVersion },
+    { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion },
+    { label: "Nmstate 버전", value: host?.hostSwVo?.nmstateVersion },
+  ]), [host]);
+
   const tabs = useMemo(() => ([
     { tab: "general",  label: Localization.kr.GENERAL,  tableRows: renderGeneralTab },
     { tab: "hardware", label: Localization.kr.HARDWARE, tableRows: renderHardwareTab },
@@ -104,47 +118,85 @@ const HostGeneral = ({
   // ]), [tabs, activeTab])
   
   return (
-    <div className="host-info-wrapper v-start align-start w-full gap-4">
-      <div className="host-tabs f-start fs-14">
-        {[...tabs].map(({ tab, label }, i) => (
-          <button key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`tab-button ${activeTab === tab ? "active" : ""}`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      <div className="host-info-detail f-start align-start gap-16">
-        <InfoTable tableRows={
-          tabs.find(({ tab }) => 
-            tab === activeTab
-          )?.tableRows || []
-        }/>
-        <div className="graph-area v-start gap-20">
-          <div className="host-graph">
-            호스트 CPU 사용률
-            <SuperAreaChart id={`${hostId}-cpu`}
-              key={`${hostId}-cpu`} 
-              per={hostPer} 
-              type="cpu"
-            />
+    // <div className="host-info-wrapper v-start align-start w-full gap-4">
+    //   <div className="host-tabs f-start fs-14">
+    //     {[...tabs].map(({ tab, label }, i) => (
+    //       <button key={tab}
+    //         onClick={() => setActiveTab(tab)}
+    //         className={`tab-button ${activeTab === tab ? "active" : ""}`}
+    //       >
+    //         {label}
+    //       </button>
+    //     ))}
+    //   </div>
+    //   <div className="host-info-detail f-start align-start gap-16">
+    //     <InfoTable tableRows={
+    //       tabs.find(({ tab }) => 
+    //         tab === activeTab
+    //       )?.tableRows || []
+    //     }/>
+    //     <div className="graph-area v-start gap-20">
+    //       <div className="host-graph">
+    //         호스트 CPU 사용률
+    //         <SuperAreaChart id={`${hostId}-cpu`}
+    //           key={`${hostId}-cpu`} 
+    //           per={hostPer} 
+    //           type="cpu"
+    //         />
+    //       </div>
+    //       <div className="host-graph">
+    //         호스트 메모리 사용률
+    //         <SuperAreaChart id={`${hostId}-memory`} 
+    //           key={`${hostId}-memory`} 
+    //           per={hostPer} 
+    //           type="memory"
+    //         />
+    //       </div>
+    //     </div>
+    //   </div>
+    
+    // </div>
+    <>
+      <div className="vm-section section-top">
+        <div className="vm-box-default">
+          <h3 className="box-title">가상머신 하드웨어</h3>
+          <hr className="w-full" />
+          <div className="box-content">
+            <InfoTable tableRows={sampledata} />
           </div>
-          <div className="host-graph">
-            호스트 메모리 사용률
-            <SuperAreaChart id={`${hostId}-memory`} 
-              key={`${hostId}-memory`} 
-              per={hostPer} 
-              type="memory"
-            />
+        </div>
+          <div className="vm-box-default">
+          <h3 className="box-title">가상머신 하드웨어</h3>
+          <hr className="w-full" />
+          <div className="box-content">
+            <InfoTable tableRows={sampledata} />
+          </div>
+        </div>
+          <div className="vm-box-default">
+          <h3 className="box-title">가상머신 하드웨어</h3>
+          <hr className="w-full" />
+          <div className="box-content">
+            <InfoTable tableRows={sampledata} />
           </div>
         </div>
       </div>
-      <OVirtWebAdminHyperlink
+       {/* <div className="vm-section section-bottom">
+        <div className="vm-box-default grid-col-span-2">
+          <HostGeneralChart />
+        </div>
+        <div className="vm-box-default">
+          <h3 className="box-title">용량 및 사용량</h3>
+          <hr className="w-full" />
+          <div className="box-content">
+            <VmGeneralBarChart/>
+          </div>
+        </div>
+       </div> */}
+      {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
         path={`hosts-general;name=${hostsSelected[0]?.name}`} 
-      />
-    </div>
+      /> */}
+    </>
   );
 };
 
