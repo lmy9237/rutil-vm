@@ -11,10 +11,8 @@ import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
 
-
 const VmDiskModal = lazy(() => import("../VmDiskModal"));
 const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
-// 생략: import 구문은 동일
 
 const VmDisk = ({
   editMode = false,
@@ -27,6 +25,7 @@ const VmDisk = ({
   const { vmsSelected } = useGlobal();
 
   const { data: diskAttachments = [] } = useDisksFromVM(vm?.id);
+
   const [createOpen, setCreateOpen] = useState(false);
   const [updateOpen, setUpdateOpen] = useState(false);
   const [connOpen, setConnOpen] = useState(false);
@@ -63,17 +62,24 @@ const VmDisk = ({
 
   const handleConnDisk = useCallback((connDisks) => {
     const normalized = Array.isArray(connDisks) ? connDisks.flat() : [connDisks];
-    console.log("$ 연결된 디스크 리스트:", normalized);
-    setDiskListState(prev => [...prev, ...normalized]);
+    setDiskListState(normalized);  // ⬅️ 기존과 병합하지 않고 새로 설정
     setConnOpen(false);
   }, [setDiskListState]);
 
   const handleUpdateDisk = useCallback(() => setUpdateOpen(false), []);
 
-  const handleRemoveDisk = useCallback((index) => {
-    setDiskListState(prev =>
-      prev.map((disk, i) => i === index ? { ...disk, deleted: !disk.deleted } : disk)
-    );
+  const handleRemoveDisk = useCallback((index, isExisting) => {
+    if (isExisting) {
+      setDiskListState(prev =>
+        prev.map((disk, i) =>
+          i === index ? { ...disk, deleted: !disk.deleted } : disk
+        )
+      );
+    } else {
+      setDiskListState(prev =>
+        prev.filter((_, i) => i !== index)
+      );
+    }
   }, [setDiskListState]);
 
   const getDiskLabel = (disk) => {
@@ -91,9 +97,13 @@ const VmDisk = ({
         <div className="f-start">
           <span style={{ marginRight: "25px" }}>
             {disk.deleted ? (
-              <del><strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)</del>
+              <del style={{ textDecorationColor: 'red' }}>
+                <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) <strong style={{ color: 'red' }}>[삭제]</strong>
+              </del>
             ) : (
-              <><strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)</>
+              <>
+                <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)
+              </>
             )}
           </span>
         </div>
@@ -107,7 +117,7 @@ const VmDisk = ({
                 iconDef={rvi24Close}
                 className="btn-icon"
                 currentColor="transparent"
-                onClick={() => handleRemoveDisk(index)}
+                onClick={() => handleRemoveDisk(index, disk.isExisting)}  // ✅ 디스크의 상태 기준
               />
             </>
           ) : (
@@ -124,7 +134,7 @@ const VmDisk = ({
                 iconDef={rvi36TrashHover}
                 className="btn-icon"
                 currentColor="transparent"
-                onClick={() => handleRemoveDisk(index)}
+                onClick={() => handleRemoveDisk(index, disk.isExisting)}  // ✅ 디스크의 상태 기준
               />
             </>
           )}
@@ -169,13 +179,13 @@ const VmDisk = ({
         {connOpen && (
           <VmDiskConnectionModal
             isOpen={true}
+            onClose={() => setConnOpen(false)}
             diskType={false}
             vmId={vm?.id}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDisk}
             onSelectDisk={handleConnDisk}
             existingDisks={diskListState}
-            onClose={() => setConnOpen(false)}
           />
         )}
       </Suspense>

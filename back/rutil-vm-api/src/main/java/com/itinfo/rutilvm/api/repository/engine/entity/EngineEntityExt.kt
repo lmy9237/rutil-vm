@@ -1,38 +1,47 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.model.computing.HostVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.calculateCpuTopology
+import com.itinfo.rutilvm.api.model.computing.findVmCntFromHost
+import com.itinfo.rutilvm.api.model.computing.toHostedEngineVo
+import com.itinfo.rutilvm.api.model.computing.toSshVo
+import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
-import com.itinfo.rutilvm.api.model.storage.toDomainSize
-import com.itinfo.rutilvm.api.model.storage.toStorageVo
+import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
-import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageType
-import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
+import com.itinfo.rutilvm.util.ovirt.findBios
+import com.itinfo.rutilvm.util.ovirt.findBootTime
+import com.itinfo.rutilvm.util.ovirt.findCluster
+import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.data.domain.Page
+import java.util.*
 
 //region: AuditLogEntity
 fun AuditLogEntity.toEventVo(): EventVo = EventVo.builder {
@@ -229,7 +238,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		name { this@toUnregisteredTemplate.ovf?.virtualSystem?.name }
 		description { this@toUnregisteredTemplate.ovf?.virtualSystem?.description }
 		comment { this@toUnregisteredTemplate.ovf?.virtualSystem?.comment }
-		status { template?.status() }
+		status { template?.findStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
 		biosType {
 			template?.bios()?.type()?.toString()
@@ -247,7 +256,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		creationTime {
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
 			// ovf?.virtualSystem?.creationDate?.toDate()
-			template?.creationTime()
+			template?.creationTime().toLocalDateTime()
 		}
 		monitor { if (template?.displayPresent() == true) template.display().monitorsAsInteger() else 0 }
 		displayType { if (template?.displayPresent() == true) template.display().type() else DisplayType.VNC }
@@ -400,4 +409,87 @@ fun SnapshotEntity.toIdentifiedVoFromSnapshotEntity(): IdentifiedVo = Identified
 }
 fun Collection<SnapshotEntity>.toIdentifiedVosFromSnapshotEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromSnapshotEntities.map { it.toIdentifiedVoFromSnapshotEntity() }
+
 //endregion: SnapshotEntity
+
+
+//region: DwhHostConfigurationFullCheckEntity
+fun DwhHostConfigurationFullCheckEntity.fromDwhHostConfigurationFullCheckToHostVo(conn: Connection): HostVo = HostVo.builder {
+	val entity = this@fromDwhHostConfigurationFullCheckToHostVo
+	val cluster = conn.findCluster(entity.clusterId.toString()).getOrNull()
+	id { entity.hostId.toString() }
+	name { entity.hostName }
+	clusterVo { cluster?.fromClusterToIdentifiedVo() }
+	memoryTotal { entity.memorySizeMb?.toBigInteger() }
+	// comment { entity.comment }
+	// status { entity.status() }
+	// ksm { entity.ksm().enabled() }
+	// hostedEngine {
+	// 	if (entity.hostedEnginePresent())
+	// 		entity.hostedEngine().toHostedEngineVo()
+	// 	else
+	// 		null
+	// }
+	// hostedEngineVM { hostedVm }
+	address { entity.fqdnOrIp }
+	// ssh { entity.ssh().toSshVo() }
+	// clusterVo { entity.cluster()?.fromClusterToIdentifiedVo() }
+	// dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+	// vmSizeVo { host.findVmCntFromHost() }
+	// usageDto { usageDto }
+	// spmStatus { entity.spm().status() }
+	// bootingTime { Date(statistics.findBootTime() * 1000) }
+}
+
+
+//endregion: DwhHostConfigurationFullCheckEntity
+
+//region: VmTemplateEntity
+
+fun VmTemplateEntity.fromVmTemplateToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@fromVmTemplateToIdentifiedVo.vmtGuid.toString() }
+	name { this@fromVmTemplateToIdentifiedVo.name }
+}
+fun List<VmTemplateEntity>.fromVmTemplateToIdentifiedVos(): List<IdentifiedVo> =
+	this@fromVmTemplateToIdentifiedVos.map { it.fromVmTemplateToIdentifiedVo() }
+
+
+fun VmTemplateEntity.fromVmTemplateToTemplateVo(): TemplateVo = TemplateVo.builder {
+	val entity = this@fromVmTemplateToTemplateVo
+	id { entity.vmtGuid.toString() }
+	name { entity.name }
+	comment { entity.freeTextComment }
+	description { entity.description }
+	status { entity.status }
+	// iconSmall { entity.smallIconId?.toVmIconVoFromVmEntity() }
+	// iconLarge { entity.largeIconId?.toVmIconVoFromVmEntity() }
+	creationTime { entity.creationDate }
+	// osType {  }
+	// biosType { entity.biosType } // cluster_biosType
+	// optimizeOption { entity.vmType } // 최적화 옵션 entity.type().findVmType()
+	// memorySize { entity.memSizeMb }
+	// cpuTopologyCore { entity.per }
+	// cpuArc { entity.architecture }
+	cpuTopologySocket { entity.cpuPerSocket }
+	cpuTopologyThread { entity.threadsPerCpu }
+	cpuTopologyCnt { entity.numOfCpus }
+	// displayType { entity.defaultDisplayType }
+	// ha {  }
+	haPriority { entity.priority }
+	monitor { entity.numOfMonitors }
+	clusterVo {
+		IdentifiedVo.builder {
+			id { entity.clusterId.toString() }
+			name { entity.clusterName }
+		}
+	}
+	dataCenterVo {
+		IdentifiedVo.builder {
+			id { entity.storagePoolId.toString() }
+			name { entity.storagePoolName }
+		}
+	}
+}
+
+
+//endregion: VmTemplateEntity

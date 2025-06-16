@@ -20,7 +20,8 @@ import {
   useFindTemplatesFromDataCenter,
   useAllVnicsFromCluster,
   useAllNicsFromTemplate,
-  useVm, 
+  useVm,
+  useDisksFromVM, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -35,49 +36,7 @@ import Localization                     from "@/utils/Localization";
 
 import Logger                           from "@/utils/Logger";
 import './MVm.css';
-
-//시스템
-const systemForm = {
-  memorySize: 1024, // 메모리 크기
-  memoryMax: (1024*4), // 최대 메모리
-  memoryGuaranteed: 1024, // 할당할 실제메모리
-  cpuTopologyCnt: 1, // 총cpu
-  cpuTopologyCore: 1, // 가상 소켓 당 코어
-  cpuTopologySocket: 1, // 가상소켓
-  cpuTopologyThread: 1, //코어당 스레드
-};
-
-// 초기실행
-const cloudForm = {
-  cloudInit: false, // Cloud-lnit
-  script: "", // 스크립트
-};
-
-// 호스트
-const hostForm = {
-  hostInCluster: true, // 클러스터 내 호스트 버튼
-  hostVos: [],
-  migrationMode: "MIGRATABLE", // 마이그레이션 모드
-  // migrationEncrypt: 'INHERIT',  // 암호화
-  // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
-};
-
-// 고가용성
-const haForm = {
-  ha: false, // 고가용성(체크박스)
-  haPriority: 1, // 초기값
-  storageDomainVo: { id: "", name: "" },
-};
-
-// 부트옵션
-const bootForm = {
-  firstDevice: "hd", // 첫번째 장치
-  secDevice: "", // 두번째 장치
-  isCdDvdChecked: false, // cd/dvd 연결 체크박스
-  cdRomVo: { id: "", name: "" }, // iso 파일
-  biosBootMenu: false, // 부팅메뉴 활성화
-};
-
+  
 const VmModal = ({ 
   isOpen, 
   onClose, 
@@ -106,15 +65,25 @@ const VmModal = ({
     { id: "boot",      label: "부트 옵션", onClick: () => setSelectedModalTab("boot") },
   ], []);
 
+  const [formInfoState, setFormInfoState] = useState(infoform);
+  const [formSystemState, setFormSystemState] = useState(systemForm);
+  const [formCloudState, setFormCloudState] = useState(cloudForm);
+  const [formHostState, setFormHostState] = useState(hostForm);
+  const [formHaState, setFormHaState] = useState(haForm);
+  const [formBootState, setFormBootState] = useState(bootForm);
+
   const [architecture, setArchitecture] = useState("");
   const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
   const [templateVo, setTemplateVo] = useState({ id: "", name: "" });
   const [nicListState, setNicListState] = useState([
-    { id: "", name: "nic1", vnicProfileVo: { id: "" } },
+    { 
+      id: "", name: "nic1", 
+      vnicProfileVo: { id: "", name: "" },
+      networkVo: { id: "", name: "" }
+    },
   ]);
   const [diskListState, setDiskListState] = useState([]);
-    
   
   const { mutate: addVM } = useAddVm(
     (result) => {
@@ -130,13 +99,10 @@ const VmModal = ({
       Logger.error("VM 생성 에러:", error);
     }
   );
-
   const { mutate: editVM } = useEditVm(onClose, onClose);
 
   // 가상머신 상세데이터 가져오기
-  const {
-    data: vm
-  } = useVm(vmId);
+  const { data: vm } = useVm(vmId);
 
   // 클러스터 목록 가져오기
   const { 
@@ -150,6 +116,11 @@ const VmModal = ({
     isLoading: isTemplatesLoading 
   } = useFindTemplatesFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
+  // 템플릿 id변경 시 NIC 초기화
+  const {
+    data: vnicProfilesFromTemplate = []
+  } = useAllNicsFromTemplate(templateVo.id);
+
   // 클러스터가 가지고 있는 nic 목록 가져오기
   const { 
     data: vnics = [], 
@@ -157,16 +128,24 @@ const VmModal = ({
   } = useAllVnicsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
-  // const { data: disks = [], isLoading: isDisksLoading } = 
-  //   useDisksFromVM(vmId, (e) => ({ ...e }));
+  const { 
+    data: disks = [], 
+    isLoading: isDisksLoading 
+  } = useDisksFromVM(vmId, (e) => ({ ...e }));
+
+  // 클러스터가 가지고 있는 호스트 목록 가져오기
   const { 
     data: hosts = [], 
     isLoading: isHostsLoading 
   } = useHostsFromCluster(clusterVo.id, (e) => ({ ...e }));
+
+  // 클러스터가 가지고 있는 운영시스템 목록 가져오기
   const { 
     data: osList = [], 
     isLoading: isOsListLoading
   } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
+
+  // 칩셋 목록 가져오기
   const {
     data: biosTypes = [],
     isLoading: isBiosTypesLoading
@@ -175,6 +154,8 @@ const VmModal = ({
     value: e?.id,
     label: e?.kr
   }))
+
+  // 최적화 옵션 가져오기
   const {
     data: vmTypes = [],
     isLoading: isVmTypesLoading
@@ -183,37 +164,19 @@ const VmModal = ({
     value: e?.id,
     label: e?.kr
   }))
+
+  // 고가용성 - 임대대상 스토리지 도메인
+  // 부팅디스크에 해당하는 스토리지 도메인이 우선 지정되어야하는듯 함 (일단 보류)
   const { 
     data: domains = [], 
     isLoading: isDomainsLoading 
   } = useAllActiveDomainsFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+
+  // 부트 옵션 - cd/dvd 연결
   const { 
     data: isos = [], 
     isLoading: isIsoLoading 
   } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
-
-  // 템플릿 id변경 시 NIC 초기화
-  const {
-    data: vnicProfilesFromTemplate = []
-  } = useAllNicsFromTemplate(templateVo.id);
-
-  // 일반
-  const infoform = {
-    id: "",
-    name: "",
-    description: "",
-    comment: "",
-    osType: "other_linux",
-    biosType: "q35_ovmf" || biosTypes[0].value,
-    optimizeOption: "server",
-  };
-  
-  const [formInfoState, setFormInfoState] = useState(infoform);
-  const [formSystemState, setFormSystemState] = useState(systemForm);
-  const [formCloudState, setFormCloudState] = useState(cloudForm);
-  const [formHostState, setFormHostState] = useState(hostForm);
-  const [formHaState, setFormHaState] = useState(haForm);
-  const [formBootState, setFormBootState] = useState(bootForm);
 
 
   useEffect(() => {
@@ -237,10 +200,9 @@ const VmModal = ({
         // NIC 정보가 없을 때 → 기본 nic1 세팅
         setNicListState([
           {
-            id: "",
-            name: "nic1",
+            id: "", name: "nic1",
             vnicProfileVo: { id: "", name: "" },
-            networkVo: { id: "", name: "" }
+            networkVo: { id: "", name: "" },
           }
         ]);
       }
@@ -261,7 +223,13 @@ const VmModal = ({
       setDataCenterVo({ id: "", name: "" })
       setClusterVo({ id: "", name: "" })
       setTemplateVo({ id: "", name: "" })
-      setNicListState([{ id: "", name: "nic1", vnicProfileVo: { id: "" } }]);
+      setNicListState([
+        {
+          id: "", name: "nic1",
+          vnicProfileVo: { id: "", name: "" },
+          networkVo: { id: "", name: "" },
+        }
+      ]);
       setDiskListState([]);
     }
     if (editMode && vm) { 
@@ -305,13 +273,25 @@ const VmModal = ({
         firstDevice: vm?.firstDevice || "hd",
         secDevice: vm?.secDevice || "",
         isCdDvdChecked: !vm?.cdRomVo?.id,
-        cdRomVo: {id: vm?.cdRomVo?.id, name: "" },
+        cdRomVo: {
+          id: vm?.cdRomVo?.id, 
+          name: "" 
+        },
         biosBootMenu: vm?.biosBootMenu || false, 
       });
       setArchitecture("");
-      setDataCenterVo({ id: vm?.dataCenterVo?.id, name: vm?.dataCenterVo?.name })
-      setClusterVo({ id: vm?.clusterVo?.id, name: vm?.clusterVo?.name })
-      setTemplateVo({ id: vm?.templateVo?.id, name: vm?.templateVo?.name })
+      setDataCenterVo({ 
+        id: vm?.dataCenterVo?.id, 
+        name: vm?.dataCenterVo?.name 
+      })
+      setClusterVo({ 
+        id: vm?.clusterVo?.id, 
+        name: vm?.clusterVo?.name 
+      })
+      setTemplateVo({ 
+        id: vm?.templateVo?.id, 
+        name: vm?.templateVo?.name 
+      })
       
       setNicListState([...vm.nicVos].map((nic) => ({
         id: nic?.id || "",
@@ -354,7 +334,10 @@ const VmModal = ({
     if (selectedCluster) {
       setDataCenterVo((prev) => {
         return prev.id !== selectedCluster.dataCenterVo?.id
-          ? { id: selectedCluster.dataCenterVo?.id || "", name: selectedCluster.dataCenterVo?.name || "" }
+          ? { 
+            id: selectedCluster.dataCenterVo?.id || "", 
+            name: selectedCluster.dataCenterVo?.name || "" 
+          }
           : prev;
       });
 
@@ -384,14 +367,25 @@ const VmModal = ({
       
       const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
       if (defaultC) {
-        setClusterVo({ id: defaultC.id, name: defaultC.name });
-        setClusterVo({id: defaultC.id, name: defaultC.name});
-        setDataCenterVo({id: defaultC.dataCenterVo?.id || "", name: defaultC.dataCenterVo?.name || ""});
+        setClusterVo({ 
+          id: defaultC.id, 
+          name: defaultC.name 
+        });
+        setDataCenterVo({ 
+          id: defaultC.dataCenterVo?.id || "", 
+          name: defaultC.dataCenterVo?.name || "" 
+        });
         setArchitecture(defaultC.cpuArc || "");
       } else {
         const firstCluster = clusters[0];
-        setClusterVo({id: firstCluster.id, name: firstCluster.name});
-        setDataCenterVo({id: firstCluster.dataCenterVo?.id || "", name: firstCluster.dataCenterVo?.name || ""});
+        setClusterVo({
+          id: firstCluster.id, 
+          name: firstCluster.name
+        });
+        setDataCenterVo({
+          id: firstCluster.dataCenterVo?.id || "", 
+          name: firstCluster.dataCenterVo?.name || ""
+        });
         setArchitecture(firstCluster.cpuArc || "");
       }      
     }
@@ -402,15 +396,20 @@ const VmModal = ({
       if (templateId) {
         const found = templates.find(t => t.id === templateId);
         if (found) {
-          setTemplateVo({ id: found.id, name: found.name });
+          setTemplateVo({ 
+            id: found.id, 
+            name: found.name 
+          });
         }
       } else {
-        setTemplateVo({ id: CONSTANT.templateIdDefault });
+        setTemplateVo({ 
+          id: CONSTANT.templateIdDefault 
+        });
       }
     }
   }, [isOpen, templates, editMode, templateId]);
   
-  // 템플릿항목 숨기는 조건건
+  // 템플릿항목 숨기는 조건
   const isTemplateHidden = editMode && templateVo.id === CONSTANT.templateIdDefault;
   
   const dataToSubmit = {
@@ -451,7 +450,6 @@ const VmModal = ({
           id: nic.vnicProfileVo.id
         }
       })),
-
 
     // 디스크 데이터 (객체 형태 배열로 변환)
     diskAttachmentVos: diskListState.map((disk) => ({
@@ -582,7 +580,8 @@ const VmModal = ({
         )}
         {selectedModalTab === "system" && (
           <VmSystem 
-            formSystemState={formSystemState} setFormSystemState={setFormSystemState}
+            formSystemState={formSystemState} 
+            setFormSystemState={setFormSystemState}
           />
         )}
         {selectedModalTab === "beginning" && (
@@ -631,3 +630,62 @@ const chipsetOptionList = [
   { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
 ];
 */
+
+// 일반
+const infoform = {
+  id: "",
+  name: "",
+  description: "",
+  comment: "",
+  osType: "other_linux",
+  biosType: "q35_ovmf",
+  optimizeOption: "server",
+};
+
+//시스템
+const systemForm = {
+  memorySize: 1024, // 메모리 크기
+  memoryMax: (1024 * 4), // 최대 메모리
+  memoryGuaranteed: 1024, // 할당할 실제메모리
+  cpuTopologyCnt: 1, // 총cpu
+  cpuTopologyCore: 1, // 가상 소켓 당 코어
+  cpuTopologySocket: 1, // 가상소켓
+  cpuTopologyThread: 1, //코어당 스레드
+};
+
+// 초기실행
+const cloudForm = {
+  cloudInit: false, // Cloud-lnit
+  script: "", // 스크립트
+};
+
+// 호스트
+const hostForm = {
+  hostInCluster: true, // 클러스터 내 호스트 버튼
+  hostVos: [],
+  migrationMode: "MIGRATABLE", // 마이그레이션 모드
+  // migrationEncrypt: 'INHERIT',  // 암호화
+  // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
+};
+
+// 고가용성
+const haForm = {
+  ha: false, // 고가용성(체크박스)
+  haPriority: 1, // 초기값
+  storageDomainVo: { 
+    id: "",
+    name: "" 
+  },
+};
+
+// 부트옵션
+const bootForm = {
+  firstDevice: "hd", // 첫번째 장치
+  secDevice: "", // 두번째 장치
+  isCdDvdChecked: false, // cd/dvd 연결 체크박스
+  cdRomVo: { 
+    id: "", 
+    name: "" 
+  }, // iso 파일
+  biosBootMenu: false, // 부팅메뉴 활성화
+};

@@ -110,7 +110,6 @@ class HostServiceImpl(
 	override fun findAll(): List<HostVo> {
 		log.info("findAll ... ")
 		val res: List<Host> = conn.findAllHosts(follow = "cluster").getOrDefault(emptyList())
-
 		return res.map { host ->
 			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList())
 				.firstOrNull()

@@ -36,7 +36,6 @@ const VmDiskMoveModal = ({
     }
   }, [isOpen]);
 
-
   const getDomains = useQueries({
     queries: diskList?.map((disk) => ({
       queryKey: ['allDomainsFromDataCenter', disk?.dataCenterVo?.id],
@@ -52,12 +51,10 @@ const VmDiskMoveModal = ({
     })),
   });  
 
-
   useEffect(() => {
     console.log("$diskList", diskList);
     console.log("$getDomains", getDomains);
   }, [diskList, getDomains]);
-
 
   useEffect(() => {
     const newDomainList = {};
@@ -174,8 +171,7 @@ const VmDiskMoveModal = ({
                   <td>{checkZeroSizeToGiB(disk?.virtualSize)}</td>
                   <td>{disk.storageDomainVo?.name || ""}</td>
                   <td className="w-[230px]">
-                    <LabelSelectOptionsID
-                     className="w-full"
+                    <LabelSelectOptionsID className="w-full"
                       value={targetDomains[disk.id] || ""}
                       options={domainList[disk.id] || []}
                       onChange={(selected) => {

@@ -1,6 +1,5 @@
 package com.itinfo.rutilvm.api.model.computing;
 
-import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.util.ovirt.findBios
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.Os
@@ -11,7 +10,12 @@ import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
+import com.itinfo.rutilvm.api.ovirt.business.TemplateStatus
+import com.itinfo.rutilvm.api.ovirt.business.TemplateStatus.OK
+import com.itinfo.rutilvm.api.ovirt.business.findStatus
+import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
+import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
@@ -22,6 +26,7 @@ import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
+import java.time.LocalDateTime
 import java.util.Date
 
 private val log = LoggerFactory.getLogger(TemplateVo::class.java)
@@ -34,7 +39,9 @@ class TemplateVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val status: TemplateStatus = TemplateStatus.OK,
+	private val _status: com.itinfo.rutilvm.api.ovirt.business.TemplateStatus? = com.itinfo.rutilvm.api.ovirt.business.TemplateStatus.OK,
+	private val iconSmall: VmIconVo? = null,
+	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: String = "", // VmType
 	val biosBootMenu: Boolean = false,
 	val biosType: String = "", // chipsetFirmwareType
@@ -82,9 +89,9 @@ class TemplateVo(
 	val nextRun: Boolean = false,
 	val runOnce: Boolean = false,
 	val upTime: String = "",
-	private val _creationTime: Date? = null,
-	private val _startTime: Date? = null,
-	private val _stopTime: Date? = null,
+	private val _creationTime: LocalDateTime? = null,
+	private val _startTime: LocalDateTime? = null,
+	private val _stopTime: LocalDateTime? = null,
 	val ipv4: List<String> = listOf(),
 	val ipv6: List<String> = listOf(),
 	val hostInCluster: Boolean = false,
@@ -104,15 +111,23 @@ class TemplateVo(
 	val versionName: String = "",           // <version><version_name>
 	val versionNumber: Int = 0,             // <version><version_number>
 ): Serializable {
+	val status: String
+		get() = _status?.code ?: TemplateStatus.Unknown.code
+
+	val urlSmallIcon: String
+		get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String
+		get() = iconLarge?.dataUrl ?: ""
+
+	val creationTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?
+		get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+
 	override fun toString(): String =
 		gson.toJson(this)
-
-	val creationTime: String
-		get() = ovirtDf.formatEnhanced(_creationTime)
-	val startTime: String
-		get() = ovirtDf.formatEnhanced(_startTime)
-	val stopTime: String
-		get() = ovirtDf.formatEnhanced(_stopTime)
 
 	class Builder {
 
@@ -120,7 +135,9 @@ class TemplateVo(
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: TemplateStatus = TemplateStatus.OK; fun status(block: () -> TemplateStatus?) { bStatus = block() ?: TemplateStatus.OK }
+		private var bStatus: com.itinfo.rutilvm.api.ovirt.business.TemplateStatus = OK; fun status(block: () -> com.itinfo.rutilvm.api.ovirt.business.TemplateStatus?) { bStatus = block() ?: OK }
+		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
+		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
 		private var bBiosType: String = ""; fun biosType(block: () -> String?) { bBiosType = block() ?: "" }
@@ -168,9 +185,9 @@ class TemplateVo(
 		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
 		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
 		private var bUpTime: String = ""; fun upTime(block: () -> String?) { bUpTime = block() ?: "" }
-		private var bCreationTime: Date? = null; fun creationTime(block: () -> Date?) { bCreationTime = block() }
-		private var bStartTime: Date? = null; fun startTime(block: () -> Date?) { bStartTime = block() }
-		private var bStopTime: Date? = null; fun stopTime(block: () -> Date?) { bStopTime = block() }
+		private var bCreationTime: LocalDateTime? = null; fun creationTime(block: () -> LocalDateTime?) { bCreationTime = block() }
+		private var bStartTime: LocalDateTime? = null; fun startTime(block: () -> LocalDateTime?) { bStartTime = block() }
+		private var bStopTime: LocalDateTime? = null; fun stopTime(block: () -> LocalDateTime?) { bStopTime = block() }
 		private var bIpv4: List<String> = listOf(); fun ipv4(block: () -> List<String>?) { bIpv4 = block() ?: listOf() }
 		private var bIpv6: List<String> = listOf(); fun ipv6(block: () -> List<String>?) { bIpv6 = block() ?: listOf() }
 		private var bHostInCluster: Boolean = false; fun hostInCluster(block: () -> Boolean?) { bHostInCluster = block() ?: false }
@@ -190,7 +207,7 @@ class TemplateVo(
 		private var bVersionName: String = ""; fun versionName(block: () -> String?) { bVersionName = block() ?: "" }
 		private var bVersionNumber: Int = 0; fun versionNumber(block: () -> Int?) { bVersionNumber = block() ?: 0 }
 
-		fun build(): TemplateVo = TemplateVo(bId, bName, bDescription, bComment, bStatus, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bPlacementPolicy, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bNicVos, bDiskAttachmentVos, bVmVo, bOriginTemplateVo, bVersionName, bVersionNumber)
+		fun build(): TemplateVo = TemplateVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bPlacementPolicy, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bNicVos, bDiskAttachmentVos, bVmVo, bOriginTemplateVo, bVersionName, bVersionNumber)
 	}
 
 	companion object {
@@ -218,8 +235,8 @@ fun Template.toTemplateMenu(conn: Connection): TemplateVo {
 		name { this@toTemplateMenu.name() }
 		comment { this@toTemplateMenu.comment() }
 		description { this@toTemplateMenu.description() }
-		creationTime { this@toTemplateMenu.creationTime() }
-		status { this@toTemplateMenu.status() }
+		creationTime { this@toTemplateMenu.creationTime().toLocalDateTime() }
+		status { this@toTemplateMenu.findStatus() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 	}
@@ -239,8 +256,8 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		name { template.name() }
 		comment { template.comment()}
 		description { template.description() }
-		status { template.status() }
-		creationTime { template.creationTime() }
+		status { template.findStatus() }
+		creationTime { template.creationTime().toLocalDateTime() }
 		osType { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
 		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
 		optimizeOption { template.type().value() } // 최적화 옵션 template.type().findVmType()
@@ -264,8 +281,8 @@ fun Template.toStorageTemplate(conn: Connection): TemplateVo {
 		name { template.name() }
 		comment { template.comment() }
 		description { template.description() }
-		creationTime { template.creationTime() }
-		status { template.status() }
+		creationTime { template.creationTime().toLocalDateTime() }
+		status { template.findStatus() }
 		diskAttachmentVos { disks.toDiskAttachmentsToTemplate(conn) }
 	}
 }
@@ -289,7 +306,7 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
 		osType { template.os().type() }
 		optimizeOption { template.type().toString() }
-		creationTime { template.creationTime() }
+		creationTime { template.creationTime().toLocalDateTime() }
 		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }

@@ -13,10 +13,13 @@ import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.VmTemplateRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmTemplateEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.fromVmTemplateToIdentifiedVos
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
@@ -152,7 +155,7 @@ interface ItDataCenterService {
 	 * @return List<[IdentifiedVo]> 템플릿 목록
 	 */
 	@Throws(Error::class)
-	fun findAllTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo>
+	fun findAllTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo>?
 	/**
 	 * [ItDataCenterService.findUnattachedDiskImageFromDataCenter]
 	 * 가상머신 생성 - 인스턴스 이미지 - 연결 -> 디스크 목록
@@ -210,6 +213,7 @@ class DataCenterServiceImpl(
 	@Autowired private lateinit var rVms: VmRepository
 	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
 	@Autowired private lateinit var rAllDisks: AllDisksRepository
+	@Autowired private lateinit var rTemplates: VmTemplateRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {
@@ -318,8 +322,9 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo> {
+	override fun findAllTemplatesFromDataCenter(dataCenterId: String): List<IdentifiedVo>? {
 		log.info("findAllTemplatesFromDataCenter ... dataCenterId: {}", dataCenterId)
+
 		val templates: List<Template> = conn.findAllTemplates().getOrDefault(emptyList())
 		val clusters: List<Cluster> = conn.findAllClustersFromDataCenter(dataCenterId).getOrDefault(emptyList())
 
@@ -328,6 +333,9 @@ class DataCenterServiceImpl(
 			it.id().equals(TemplateVo.DEFAULT_BLANK_TEMPLATE_ID) || it.cluster().id() in clusterIds
 		}
 		return res.map { it.fromTemplateToIdentifiedVo() }
+		// TODO: template entity
+		// val res: List<VmTemplateEntity>? = rTemplates.findByStoragePoolIdOrderByNameAsc(dataCenterId.toUUID())
+		// return res?.fromVmTemplateToIdentifiedVos()
 	}
 
 	@Throws(Error::class)
