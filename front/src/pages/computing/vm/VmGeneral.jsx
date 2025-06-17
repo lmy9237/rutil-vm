@@ -26,6 +26,7 @@ import "./Vm.css"
 import VmOsIcon from "@/components/icons/VmOsIcon";
 import VmGeneralBarChart from "./VmGeneralBarChart";
 import useUIState from "@/hooks/useUIState";
+import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 
 /**
  * @name VmGeneral
@@ -257,41 +258,27 @@ const snapshotList = useMemo(() =>
           </div>
         </div>
 
-        <div className="vm-box-default">
-          <h3 className="box-title">용량 및 사용량</h3>
-          <hr className="w-full" />
-          <div className="box-content">
-            <VmGeneralBarChart/>
-          </div>
-        </div>
+        <GeneralBoxProps title="용량 및 사용량">
+          <VmGeneralBarChart />
+        </GeneralBoxProps>
       </div>
 
       {/* ✅ 2번 구역: 하단 보라색 영역 */}
       <div className="vm-section section-bottom">
-        <div className="vm-box-default">
-          <h3 className="box-title">가상머신 하드웨어</h3>
-          <hr className="w-full" />
-          <div className="box-content">
-            <InfoTable tableRows={hardwareTableRows} />
-          </div>
-        </div>
+        <GeneralBoxProps title="가상머신 하드웨어">
+          <InfoTable tableRows={hardwareTableRows} />
+        </GeneralBoxProps>
 
-        <div className="vm-box-default">
-          <h3 className="box-title">관련 개체</h3>
-          <hr className="w-full" />
-          <div className="box-content">
-            <InfoTable tableRows={relatedTableRows} />
-          </div>
-        </div>
+        <GeneralBoxProps title="관련 개체">
+          <InfoTable tableRows={relatedTableRows} />
+        </GeneralBoxProps>
 
-        <div className="vm-box-default">
-          <h3 className="box-title">스냅샷</h3>
-          <hr className="w-full" />
+        <GeneralBoxProps title="스냅샷">
           <div className="box-content snapshots">
             <div
-              className="snapshot-add py-2"
+              className="snapshot-add py-3 fs-13"
               onClick={() => setActiveModal("vm:snapshot")}
-              >
+            >
               + 스냅샷 추가
             </div>
             {snapshotList.map((snap) => (
@@ -302,10 +289,10 @@ const snapshotList = useMemo(() =>
               </div>
             ))}
           </div>
-        </div>
-
+        </GeneralBoxProps>
       </div>
-    </div>
+  </div>
+  
 
     {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}

@@ -175,6 +175,7 @@ html {
   --fs-8: 8px;
   --fs-10: 10px;
   --fs-default: 12px;
+  --fs-13: 13px;
   --fs-14: 14px;
   --fs-16: 16px;
   --fs-18: 18px;
@@ -211,6 +212,9 @@ body {
 }
 .fs-default,.fs-default > * {/*폰트12px (기본)*/
   font-style:normal;font-size:var(--fs-default);line-height:var(--fs-default);font-weight:200 !important;
+}
+.fs-13,.fs-13 > * {/*폰트14px*/
+  font-size:var(--fs-13) !important;line-height:var(--fs-13) !important;
 }
 .fs-14,.fs-14 > * {/*폰트14px*/
   font-size:var(--fs-14) !important;line-height:var(--fs-14) !important;

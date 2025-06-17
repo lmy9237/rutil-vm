@@ -10,6 +10,10 @@ import {
 import {
   RVI16,
   rvi16Host,
+  RVI24,
+  rvi24DeveloperBoard,
+  rvi24Memory,
+  rvi24Storage,
 } from "@/components/icons/RutilVmIcons";
 import "./VmGeneralBarChart.css";
 
@@ -18,21 +22,21 @@ const usageData = [
     label: "CPU",
     value: 53,
     color: "#f57171",
-    icon: <RVI16 iconDef={rvi16Host("currentColor")} />,
+    icon: <RVI24 iconDef={rvi24DeveloperBoard()}/>,
     description: "1 CPU 할당됨 | 47% 사용 가능",
   },
   {
     label: "메모리",
     value: 34,
     color: "#98db6b",
-    icon: <RVI16 iconDef={rvi16Host("currentColor")} />,
+    icon: <RVI24 iconDef={rvi24Memory()}/>,
     description: "4096 MB 할당됨 | 66% 사용 가능",
   },
   {
     label: "네트워크",
     value: 10,
     color: "#98db6b",
-    icon: <RVI16 iconDef={rvi16Host("currentColor")} />,
+    icon: <RVI24 iconDef={rvi24Storage()} />,
     description: "90% 사용 가능",
   },
 ];
@@ -57,7 +61,7 @@ const VmGeneralBarChart = () => {
                         const { name, value } = payload[0];
                         return (
                             <div
-                            style={{
+                              style={{
                                 padding: "6px 10px",
                                 backgroundColor: "#fff",
                                 border: "1px solid #ccc",
@@ -76,7 +80,7 @@ const VmGeneralBarChart = () => {
                 <Bar
                   dataKey="value"
                   fill={item.color}
-                  background={{ fill: "#e0e0e0" }}
+                  background={{ fill: "#D9D9D9" }}
                   radius={0} // ✅ 둥근 모서리 제거
                 />
               </BarChart>

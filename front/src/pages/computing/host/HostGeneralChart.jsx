@@ -35,10 +35,7 @@ const HostGeneralChart = () => {
     },
     dataLabels: { enabled: false },
     stroke: { curve: "straight" },
-    title: {
-      text: "실시간 사용량",
-      align: "left",
-    },
+
     grid: {
       row: {
         colors: ["#f3f3f3", "transparent"],
@@ -78,7 +75,7 @@ const HostGeneralChart = () => {
           options={chartOptions}
           series={series}
           type="line"
-          height={350}
+          height={230}
         />
       </div>
     </div>

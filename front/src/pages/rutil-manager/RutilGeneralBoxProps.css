@@ -1,0 +1,36 @@
+.summary-box {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 2px;
+  padding: 12px 14px;
+  font-size: 14px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+.summary-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-box-content {
+    margin-top: 6px;
+    height: 80%;
+    display: flex;
+    padding: 0 30px;
+    align-items: den;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.badge {
+  background-color: #f3f4f6;
+  padding: 2px 13px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.rutil-box-title{
+
+}
