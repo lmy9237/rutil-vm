@@ -6,7 +6,6 @@ import {
 } from "@/components/icons/RutilVmIcons";
 import Logger                           from "@/utils/Logger";
 
-
 const VmSystem = ({ 
   formSystemState,
   setFormSystemState
@@ -71,7 +70,7 @@ const VmSystem = ({
       ...prev,
       cpuTopologySocket: socket,
       cpuTopologyCore: core,
-      cpuTopologyThread: thread > 0 ? thread : 1,
+      cpuTopologyThread: thread || 1,
     }));
   };
   

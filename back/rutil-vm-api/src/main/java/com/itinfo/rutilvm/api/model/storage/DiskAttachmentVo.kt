@@ -159,6 +159,7 @@ fun DiskAttachmentVo.toAddDiskAttachment(): DiskAttachment {
  */
 fun DiskAttachmentVo.toAttachDisk(): DiskAttachment {
 	return this.toDiskAttachmentBuilder()
+		.active(true)
 		.disk(DiskBuilder().id(this.diskImageVo.id).build())
 		.build()
 }

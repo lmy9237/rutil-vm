@@ -805,7 +805,8 @@ fun VmVo.toEditVm(): Vm =
 		.id(id)
 		.bios(
 			BiosBuilder()
-				.type(BiosType.fromValue(biosType))
+				// VmOsType.forCode(osType).code
+				.type(BiosType.fromValue(BiosTypeB.forCode(biosType).name.lowercase()))
 				.bootMenu(BootMenuBuilder().enabled(biosBootMenu).build())
 		)
 		.build()
@@ -816,7 +817,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	description(description)
 	comment(comment)
 	cluster(ClusterBuilder().id(clusterVo.id))
-	bios(BiosBuilder().type(BiosType.fromValue(biosType)).build())
+	bios(BiosBuilder().type(BiosType.fromValue(BiosTypeB.forCode(biosType).name.lowercase())).build())
 	type(VmType.fromValue(optimizeOption))
 	timeZone(
 		TimeZoneBuilder().name(
@@ -877,7 +878,7 @@ fun VmVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	}
 	os(
 		OperatingSystemBuilder()
-			.type(osType)
+			.type(VmOsType.forCode(osType).code)
 			.boot(BootBuilder().devices(bootDeviceList))
 	)
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))

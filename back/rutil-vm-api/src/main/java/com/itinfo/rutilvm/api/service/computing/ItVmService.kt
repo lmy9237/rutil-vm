@@ -172,7 +172,6 @@ class VmServiceImpl(
 			vmVo.toAddVm()
 		).getOrNull()
 
-
 		if (res != null) {
 			// 디스크 생성
 			if(vmVo.diskAttachmentVos.isNotEmpty()){
@@ -204,7 +203,9 @@ class VmServiceImpl(
 		}
 
 		// 2. VM 정보 업데이트 (메인 정보만)
-		val updatedVm: Vm = conn.updateVm(vmVo.toEditVm()).getOrNull() ?: return null
+		val updatedVm: Vm = conn.updateVm(
+			vmVo.toEditVm()
+		).getOrNull() ?: return null
 
 		// 3. 기존 디스크/네트워크 상태 조회
 		val existDisks = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(emptyList())

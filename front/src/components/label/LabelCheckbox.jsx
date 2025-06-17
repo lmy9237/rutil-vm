@@ -35,16 +35,6 @@ const LabelCheckbox = ({
     />
     <label htmlFor={id}>{label}</label>
   </div>
-  // <LabelInput className={className}
-  //   id={id} type={"checkbox"}
-  //   value={checked}
-  //   label={label}
-  //   autoFocus={autoFocus}
-  //   checked={checked}
-  //   onChange={onChange}
-  //   disabled={disabled}
-  //   required={required}
-  // />
 );
 
 

@@ -44,7 +44,6 @@ const VmDiskDupl = ({
           {diskImage?.alias}
         </TableRowClick>
       ),
-      // connectionvm: vmsSelected[0]?.name || "",
       description: diskImage?.description,
       bootable: d?.bootable ? Localization.kr.YES: "",
       readOnly: d?.readOnly ? Localization.kr.YES : "",
@@ -56,7 +55,6 @@ const VmDiskDupl = ({
       sparse: diskImage?.sparse ? "씬 프로비저닝" : "사전 할당",
       virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
       actualSize: checkZeroSizeToGiB(diskImage?.actualSize),
-      // dataCenterVo: diskImage?.dataCenterVo?.id,
       storageDomain: (
         <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
           {diskImage?.storageDomainVo?.name}

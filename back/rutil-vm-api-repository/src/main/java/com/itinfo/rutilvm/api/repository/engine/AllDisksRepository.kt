@@ -10,6 +10,7 @@ import java.util.*
 interface AllDisksRepository : JpaRepository<AllDiskEntity, UUID> {
 	fun findByDiskId(diskId: UUID): AllDiskEntity?
 	fun findAllByOrderByDiskAliasAsc(): List<AllDiskEntity>
+	fun findAllByVmNamesOrderByDiskAliasAsc(vNames: String): List<AllDiskEntity>
 
 	fun findByStorageId(storageId: String): List<AllDiskEntity>?
 	fun findBystoragePoolId(storagePoolId: String): List<AllDiskEntity>?

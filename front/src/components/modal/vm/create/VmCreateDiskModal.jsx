@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "../../BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelInputNum                    from "@/components/label/LabelInputNum";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
@@ -23,7 +23,6 @@ import {
   checkKoreanName, 
   checkZeroSizeToGiB, 
   convertBytesToGB, 
-  convertGBToBytes
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -42,76 +41,77 @@ const initialFormState = {
   bootable: false, // 부팅가능
   sharable: false, // 공유가능
   readOnly: false, // 읽기전용
+  // cancelActive: false, // 취소 활성화
   backup: true, // 증분 백업사용
   shouldUpdateDisk: false,
 };
 
 /**
- * @name VmDiskModal
+ * @name VmCreateDiskModal
  * @description ...
- * 가상머신-디스크 에서 디스크 생성, 편집에서 사용될 예정
+ * type은 vm이면 가상머신 생성할때 디스크 생성하는 창, disk면 가상머신 디스크 목록에서 생성하는
  * 
  * @param {*} param0 
  * @returns 
  */
-const VmDiskModal = ({
-  isOpen, 
-  onClose,
+const VmCreateDiskModal = ({
+  isOpen, onClose,
   editMode = false,
-  diskName,
+  vmData,
+  vmName, // 가상머신 생성 디스크 이름
+  dataCenterId,
   hasBootableDisk=false, // 부팅가능한 디스크 여부
+  initialDisk,
+  onCreateDisk,
 }) => {
   const { validationToast } = useValidationToast();
-  const dLabel = editMode 
-    ? Localization.kr.UPDATE 
-    : Localization.kr.CREATE;
+  const { 
+    vmsSelected, 
+    disksSelected, setDisksSelected 
+  } = useGlobal()
+  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const [activeTab, setActiveTab] = useState("img");
 
-  const { vmsSelected, disksSelected } = useGlobal()
+  const handleTabClick = useCallback((tab) => { 
+    setActiveTab(tab);
+  }, []);
 
-  const vmId = useMemo(() => 
-      [...vmsSelected][0]?.id
-    , [vmsSelected]);
-
-  const diskId = useMemo(() => 
-      [...disksSelected][0]?.id
-    , [disksSelected]);
-  
   const [formState, setFormState] = useState(initialFormState);
   const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
   const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
-  
+
   const { mutate: addDiskVm } = useAddDiskFromVM(onClose, onClose);
   const { mutate: editDiskVm } = useEditDiskFromVM(onClose, onClose);
-
-  const { data: vm } = useVm(vmId);
+  const { data: vm } = useVm(vmsSelected[0]?.id);
   
   // 디스크 데이터 가져오기
   const {
-    data: diskAttachment,
-    isLoading: isDiskAttachmentsLoading
-  } = useDiskAttachmentFromVm(vmId, diskId);
+    data: diskAttachment
+  } = useDiskAttachmentFromVm(vmData?.id, initialDisk?.id);
+
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
     data: domains = [], 
     isLoading: isDomainsLoading 
-  } = useAllActiveDomainsFromDataCenter(vm?.dataCenterVo?.id, (e) => ({ ...e }));
+  } = useAllActiveDomainsFromDataCenter(dataCenterId || vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const { 
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading, 
+    isError: isDiskProfilesError,
+    isSuccess: isDiskProfilesSuccess
   } = useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
-
   useEffect(() => {
-    if (!editMode && isOpen && vm) {
+    if (!editMode && isOpen && vmName) {
       setFormState((prev) => ({ ...prev,
-        alias: diskName || "",
-        bootable: hasBootableDisk ? false : vm?.bootable || true,
+        alias: vmName || vmData?.name,
+        bootable: hasBootableDisk ? false : initialDisk?.bootable || true,
        }));
     }
-  }, [editMode, isOpen, vm]); 
+  }, [editMode, isOpen, vmName]); 
   
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const VmDiskModal = ({
     if (!isOpen) {
       setFormState((prev) => ({
         ...initialFormState,
-        alias: diskName || "", 
+        alias: vmName || "", 
         bootable: hasBootableDisk ? false : initialFormState.bootable
       }));
       setStorageDomainVo({ id: domains[0]?.id, name: domains[0]?.name });
@@ -166,34 +166,29 @@ const VmDiskModal = ({
   }, [isOpen, editMode, diskAttachment, hasBootableDisk]);
 
   useEffect(() => {
-    if (!editMode && diskAttachment) {
+    if (!editMode && initialDisk) {
       setFormState({
-        id: diskAttachment?.id || "",
-        size: diskAttachment?.size || "",
+        id: initialDisk?.id || "",
+        size: initialDisk?.size || "",
         appendSize: 0,
-        alias: diskAttachment?.alias || "",
-        description: diskAttachment?.description || "",
-        interface_: diskAttachment?.interface_ || "VIRTIO_SCSI",
-        sparse: diskAttachment?.sparse || false,
-        active: diskAttachment?.active || false,
-        wipeAfterDelete: diskAttachment?.wipeAfterDelete || false,
-        bootable: hasBootableDisk ? false : diskAttachment?.bootable || true,
-        sharable: diskAttachment?.sharable || false,
-        readOnly: diskAttachment?.readOnly || false,
-        backup: diskAttachment?.backup || false,
+        alias: initialDisk?.alias || "",
+        description: initialDisk?.description || "",
+        interface_: initialDisk?.interface_ || "VIRTIO_SCSI",
+        sparse: initialDisk?.sparse || false,
+        active: initialDisk?.active || false,
+        wipeAfterDelete: initialDisk?.wipeAfterDelete || false,
+        bootable: hasBootableDisk ? false : initialDisk?.bootable || true,
+        sharable: initialDisk?.sharable || false,
+        readOnly: initialDisk?.readOnly || false,
+        backup: initialDisk?.backup || false,
         // shouldUpdateDisk: true
       });
-      setStorageDomainVo({ 
-        id: diskAttachment?.diskImageVo?.storageDomainVo?.id || "", 
-        name: diskAttachment?.diskImageVo?.storageDomainVo?.name || ""  
-      });
-      setDiskProfileVo({ 
-        id: diskAttachment?.diskImageVo?.diskProfileVo?.id || ""
-      });
+      setStorageDomainVo({ id: initialDisk?.diskImageVo?.storageDomainVo?.id || "", name: initialDisk?.diskImageVo?.storageDomainVo?.name || ""  });
+      setDiskProfileVo({ id: initialDisk?.diskImageVo?.diskProfileVo?.id || ""});
     }
-  }, [editMode, diskAttachment, hasBootableDisk]);
+  }, [editMode, initialDisk, hasBootableDisk]);
 
-  console.log("$ diskAttachment", diskAttachment)
+  console.log("$ initialDisk", initialDisk)
   
   const handleInputChangeCheck = (field) => (e) => {
     setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
@@ -209,57 +204,46 @@ const VmDiskModal = ({
     return null;
   }, [formState, storageDomainVo, diskProfileVo]);
 
-
-  // 가상머신 - 디스크 생성
-  const handleFormSubmit = useCallback((e) => {
+  // 가상머신 생성 - 가상머신 디스크 생성
+  const handleOkClick = useCallback((e) => {
     e.preventDefault();
     const error = validateForm();
     if (error) {
       validationToast.fail(error);
       return;
     }
+    Logger.debug(`VmDiskModal > handleOkClick ... `)
  
-    // GB -> Bytes 변환
-    const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
-    // GB -> Bytes 변환 (기본값 0)
-    const appendSizeToBytes = convertGBToBytes(parseInt(formState.appendSize || 0, 10)); 
+    // const sizeToBytes = convertGBToBytes(parseInt(formState.size, 10));
 
     const selectedDomain = domains.find((dm) => dm.id === storageDomainVo.id);
     const selectedDiskProfile = diskProfiles.find((dp) => dp.id === diskProfileVo.id);
-    Logger.debug(`VmDiskModal > handleFormSubmit ... selectedDomain: `, selectedDomain);
-
-    // 전송 객체
-    const dataToSubmit = {
-      ...formState,
-      id: formState?.id,
-      diskImageVo: {
-        id:formState?.id,
-        alias: formState.alias,
-        size: sizeToBytes,
-        appendSize: appendSizeToBytes,
-        description: formState.description,
-        wipeAfterDelete: formState.wipeAfterDelete,
-        backup: formState.backup,
-        sparse: Boolean(formState.sparse),
-        storageDomainVo: { id: selectedDomain?.id, name: selectedDomain?.name },
-        diskProfileVo: { id: selectedDiskProfile?.id, name: selectedDiskProfile?.name },
-      },
-    };
     
-    Logger.debug(`데이터 : ${JSON.stringify(dataToSubmit, null, 2)}`); // 데이터를 확인하기 위한 로그
-    editMode
-      ? editDiskVm({ vmId, diskAttachmentId: formState?.id, diskAttachment: dataToSubmit })
-      : addDiskVm({ vmId, diskData: dataToSubmit });
+    const newDisk = {
+      alias: formState.alias,
+      size: formState.size,
+      interface_: formState.interface_,
+      sparse: formState.sparse,
+      bootable: formState.bootable,
+      readOnly: formState.readOnly,
+      storageDomainVo: { id: selectedDomain.id },
+      diskProfileVo: { id: selectedDiskProfile.id },
+      isCreated: true,
+    };
+    Logger.debug(`VmDiskModal > handleOkClick ... Form Data: `, newDisk);
+    onCreateDisk(newDisk);
+    onClose();
   }, [formState, storageDomainVo, diskProfileVo]);
+
 
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
+      onSubmit={handleOkClick}
       contentStyle={{ width: "700px" }} 
     >
       <div className="disk-new-img">
-        <div>              
+        <div>
           <LabelInputNum label="크기(GB)"
             value={formState.size}
             autoFocus
@@ -317,7 +301,6 @@ const VmDiskModal = ({
             onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true", }))}
           />
         </div>
-        <br/>
         <div className="img-checkbox-outer f-end checkbox-outer">
           <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
             checked={Boolean(formState.wipeAfterDelete)} 
@@ -349,7 +332,7 @@ const VmDiskModal = ({
   );
 };
 
-export default VmDiskModal;
+export default VmCreateDiskModal;
 
 const interfaceList = [
   { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },

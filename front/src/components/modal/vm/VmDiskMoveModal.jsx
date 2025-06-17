@@ -7,18 +7,15 @@ import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import ApiManager                       from "@/api/ApiManager";
 import { 
-  useCopyDisk, 
   useMoveDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
-import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 import { checkZeroSizeToGiB } from "@/util";
 
 const VmDiskMoveModal = ({ 
   isOpen,
   onClose,
-  data
 }) => {
   const { validationToast } = useValidationToast();
   const { activeModal, } = useUIState()

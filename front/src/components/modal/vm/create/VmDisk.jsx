@@ -1,39 +1,26 @@
-import { lazy, Suspense, useCallback, useMemo, useState } from "react";
-import useUIState            from "@/hooks/useUIState";
-import useGlobal             from "@/hooks/useGlobal";
+import { Suspense, useCallback, useMemo, useState } from "react";
 import Loading               from "@/components/common/Loading";
 import { ActionButton }      from "@/components/button/ActionButtons";
 import { rvi24Close, RVI36, rvi36EditHover, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
-import {
-  useDisksFromVM
-} from "@/api/RQHook";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
-
-const VmDiskModal = lazy(() => import("../VmDiskModal"));
-const VmDiskConnectionModal = lazy(() => import("../VmDiskConnectionModal"));
+import VmCreateDiskModal from "./VmCreateDiskModal";
+import VmCreateDiskConnectionModal from "./VmCreateDiskConnectionModal";
 
 const VmDisk = ({
-  editMode = false,
   vm, vmName,
   dataCenterId,
   diskListState, setDiskListState,
   disabled = false,
 }) => {
-  const { setActiveModal } = useUIState();
-  const { vmsSelected } = useGlobal();
+  console.log("$diskAttachments", diskListState)
 
-  const { data: diskAttachments = [] } = useDisksFromVM(vm?.id);
-
-  const [createOpen, setCreateOpen] = useState(false);
-  const [updateOpen, setUpdateOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(null);
+  const [updateOpen, setUpdateOpen] = useState(null);
   const [connOpen, setConnOpen] = useState(false);
 
   const hasBootableDisk = useMemo(() =>
-    diskAttachments.some(d => d?.bootable), [diskAttachments]);
-
-  const hasBootableDiskList = useMemo(() =>
     diskListState.some(d => d?.bootable), [diskListState]);
 
   const diskNameWthSuffix = () => {
@@ -41,7 +28,7 @@ const VmDisk = ({
     if (!vmName) return "";
 
     const existingNames = [
-      ...diskAttachments.map(d => d?.diskImageVo?.alias),
+      ...diskListState.map(d => d?.diskImageVo?.alias),
       ...diskListState.map(d => d?.alias),
     ];
 
@@ -62,11 +49,26 @@ const VmDisk = ({
 
   const handleConnDisk = useCallback((connDisks) => {
     const normalized = Array.isArray(connDisks) ? connDisks.flat() : [connDisks];
-    setDiskListState(normalized);  // ⬅️ 기존과 병합하지 않고 새로 설정
+    const connectedIds = normalized.map(d => d.diskImageVo?.id || d.id);
+
+    setDiskListState((prev) => {
+      const createdDisks = prev.filter(d => d.isCreated);
+      const existingDisks = prev.filter(d => d.isExisting && !connectedIds.includes(d.diskImageVo?.id || d.id));
+      const updatedConnected = normalized.map(d => ({
+        ...d,
+        isCreated: false,
+        isExisting: false,
+      }));
+
+      return [...createdDisks, ...existingDisks, ...updatedConnected];
+    });
+
     setConnOpen(false);
   }, [setDiskListState]);
 
-  const handleUpdateDisk = useCallback(() => setUpdateOpen(false), []);
+  const handleUpdateDisk = useCallback(() => 
+    setUpdateOpen(false)
+  , []);
 
   const handleRemoveDisk = useCallback((index, isExisting) => {
     if (isExisting) {
@@ -83,64 +85,9 @@ const VmDisk = ({
   }, [setDiskListState]);
 
   const getDiskLabel = (disk) => {
-    if (disk.isExisting) return `[기존${disk.bootable ? " & 부팅]" : "]"}`;
-    if (disk.isCreated) return "[생성]";
-    return "[연결]";
-  };
-
-  const renderDiskInfo = (disk, index) => {
-    const label = getDiskLabel(disk);
-    const size = disk?.size || disk?.virtualSize;
-
-    return (
-      <div key={index} className="disk-item f-btw mb-0.5">
-        <div className="f-start">
-          <span style={{ marginRight: "25px" }}>
-            {disk.deleted ? (
-              <del style={{ textDecorationColor: 'red' }}>
-                <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) <strong style={{ color: 'red' }}>[삭제]</strong>
-              </del>
-            ) : (
-              <>
-                <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)
-              </>
-            )}
-          </span>
-        </div>
-        <div className="f-end">
-          {disk.deleted ? (
-            <>
-              <div>
-                <LabelCheckbox id="detachOnly" label="완전삭제" checked />
-              </div>
-              <RVI36
-                iconDef={rvi24Close}
-                className="btn-icon"
-                currentColor="transparent"
-                onClick={() => handleRemoveDisk(index, disk.isExisting)}  // ✅ 디스크의 상태 기준
-              />
-            </>
-          ) : (
-            <>
-              {(disk.isCreated || disk.isExisting) && (
-                <RVI36
-                  iconDef={rvi36EditHover}
-                  className="btn-icon"
-                  currentColor="transparent"
-                  onClick={() => setUpdateOpen(true)}
-                />
-              )}
-              <RVI36
-                iconDef={rvi36TrashHover}
-                className="btn-icon"
-                currentColor="transparent"
-                onClick={() => handleRemoveDisk(index, disk.isExisting)}  // ✅ 디스크의 상태 기준
-              />
-            </>
-          )}
-        </div>
-      </div>
-    );
+    const type = disk.isExisting ? "기존" : disk.isCreated ? "생성" : "연결";
+    const boot = disk.bootable ? " & 부팅" : "";
+    return `[${type}${boot}]`;
   };
 
   return (
@@ -156,35 +103,100 @@ const VmDisk = ({
       </div>
 
       <div className="pb-3">
-        {diskListState.length > 0 && diskListState.map(renderDiskInfo)}
+        {diskListState.length > 0 && diskListState.map((disk, index) => {
+          const label = getDiskLabel(disk);
+          const size = disk?.size || disk?.virtualSize;
+
+          return (
+            <div key={index} className="disk-item f-btw mb-0.5">
+              <div className="f-start">
+                <span style={{ marginRight: "25px" }}>
+                  {disk.deleted ? (
+                    <del style={{ textDecorationColor: 'red' }}>
+                      <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) <strong style={{ color: 'red' }}>[삭제]</strong>
+                    </del>
+                  ) : (
+                    <>
+                      <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)
+                    </>
+                  )}
+                </span>
+              </div>
+              <div className="f-end">
+                {disk.deleted ? (
+                  <>
+                    <div>
+                      <LabelCheckbox id="detachOnly" label="완전삭제" 
+                        checked 
+                      />
+                    </div>
+                    <RVI36
+                      iconDef={rvi24Close}
+                      className="btn-icon"
+                      currentColor="transparent"
+                      onClick={() => handleRemoveDisk(index, disk.isExisting)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {(disk.isCreated || disk.isExisting) && (
+                      <RVI36
+                        iconDef={rvi36EditHover}
+                        className="btn-icon"
+                        currentColor="transparent"
+                        onClick={() => {
+                          if (disk.isCreated) {
+                            setCreateOpen(true); // 생성 모달 열기
+                          } else if (disk.isExisting) {
+                            setUpdateOpen(disk); // 수정 모달 열기
+                          }
+                        }}
+                      />
+                    )}
+                    <RVI36
+                      iconDef={rvi36TrashHover}
+                      className="btn-icon"
+                      currentColor="transparent"
+                      onClick={() => handleRemoveDisk(index, disk.isExisting)}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <Suspense fallback={<Loading />}>
-        {(createOpen || updateOpen) && (
-          <VmDiskModal
+        {createOpen && (
+          <VmCreateDiskModal
             isOpen={true}
-            diskType={false}
-            vmId={vm?.id}
-            editMode={!!updateOpen}
-            vmName={updateOpen ? updateOpen.alias : diskNameWthSuffix()}
+            onClose={() => setCreateOpen(false)}
+            vmName={diskNameWthSuffix()}
             dataCenterId={dataCenterId}
-            hasBootableDisk={hasBootableDiskList}
+            hasBootableDisk={hasBootableDisk}
             onCreateDisk={handleCreateDisk}
-            onClose={() => {
-              setCreateOpen(false);
-              setUpdateOpen(false);
-            }}
+          />
+        )}
+        {updateOpen && (
+          <VmCreateDiskModal
+            isOpen={true}
+            onClose={() => setUpdateOpen(null)}
+            editMode
+            vmData={vm}
+            dataCenterId={dataCenterId}
+            hasBootableDisk={hasBootableDisk}
+            initialDisk={updateOpen}
+            onCreateDisk={handleCreateDisk}
           />
         )}
         {connOpen && (
-          <VmDiskConnectionModal
+          <VmCreateDiskConnectionModal
             isOpen={true}
             onClose={() => setConnOpen(false)}
-            diskType={false}
-            vmId={vm?.id}
-            dataCenterId={dataCenterId}
+            vmData={vm}
+            diskData={handleConnDisk}
             hasBootableDisk={hasBootableDisk}
-            onSelectDisk={handleConnDisk}
             existingDisks={diskListState}
           />
         )}

@@ -41,32 +41,22 @@ const VmDiskModals = ({
     create: (
       <VmDiskModal isOpen={activeModal().includes("vmdisk:create")}
         onClose={() => closeModal("vmdisk:create")}
-        diskType={true}
-        vmId={vmId || ""}
-        vmName={`${vm?.name}_Disk${diskCount}`}
-        dataCenterId={vm?.dataCenterVo?.id || ""}
+        diskName={`${vm?.name}_Disk${diskCount}`}
         hasBootableDisk={hasBootableDisk}
       />
     ), update: (
-      <VmDiskModal isOpen={activeModal().includes("vmdisk:update")} editMode
+      <VmDiskModal isOpen={activeModal().includes("vmdisk:update")} 
         onClose={() => closeModal("vmdisk:update")}
-        diskType={true}
-        vmId={disk?.vmVo?.id || ""}
-        diskAttachmentId={disk?.id || ""}
+        editMode
         hasBootableDisk={hasBootableDisk}
       />
     ), remove: (
       <VmDiskDeleteModal isOpen={activeModal().includes("vmdisk:remove")}
         onClose={() => closeModal("vmdisk:remove")}
-        vmId={vmId || ""}
-        data={disksSelected}
       />
     ), connect: (
       <VmDiskConnectionModal isOpen={activeModal().includes("vmdisk:connect")}
         onClose={() => closeModal("vmdisk:connect")}
-        diskType={true}
-        vmId={vmId}
-        dataCenterId={vm?.dataCenterVo?.id || ""}
         hasBootableDisk={hasBootableDisk}
       />
     ), activate: (

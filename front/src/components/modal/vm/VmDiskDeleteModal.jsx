@@ -1,11 +1,11 @@
-import { useState, useMemo, useCallback } from "react";
-import toast from "react-hot-toast";
+import { useState, useMemo } from "react";
 import BaseModal from "../BaseModal";
 import { useDeleteDiskFromVM } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
-import useUIState from "../../../hooks/useUIState";
+import useGlobal from "@/hooks/useGlobal";
+import { useValidationToast } from "@/hooks/useSimpleToast";
 
 /**
  * @name VmDiskDeleteModal
@@ -17,47 +17,45 @@ import useUIState from "../../../hooks/useUIState";
 const VmDiskDeleteModal = ({ 
   isOpen, 
   onClose,
-  vmId, 
-  data,
 }) => {
-  // const { closeModal } = useUIState()
-  const {
-    mutate: deleteDisk
-  } = useDeleteDiskFromVM(onClose, onClose);
-
-
+  const { validationToast } = useValidationToast();
+  const { vmsSelected, disksSelected } = useGlobal()
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const diskList = useMemo(() => [...disksSelected], [disksSelected]);
+  
+  const { mutate: deleteDisk } = useDeleteDiskFromVM(onClose, onClose);
 
   const { ids, aliases } = useMemo(() => {
     return {
-      ids: [...data].map((item) => item?.id),
-      aliases: [...data].map((item) => item?.diskImageVo?.alias || "undefined"),
+      ids: [...disksSelected].map((item) => item?.id),
+      aliases: [...disksSelected].map((item) => item?.diskImageVo?.alias || ""),
     };
-  }, [data]);
+  }, [disksSelected]);
 
-  const [detachOnlyList, setDetachOnlyList] = useState([false]); // 디스크 완전삭제
+  const [detachOnlyList, setDetachOnlyList] = useState({});
 
   const validateForm = () => {
-    Logger.debug(`VmDiskDeleteModal > validateForm ... `)
     if (!ids.length) return `삭제할 ${Localization.kr.DISK} ID가 없습니다.`
     return null
   }
 
-  const handleFormSubmit = useCallback(() => {
+  const handleFormSubmit = (e) => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
-    Logger.debug(`VmDiskDeleteModal ... data: `, data);
-    [...ids]?.forEach((diskAttachmentId, index) => {
-      deleteDisk({ vmId, diskAttachmentId, detachOnly: detachOnlyList[index] });
+    Logger.debug(`VmDiskDeleteModal ... data: `, disksSelected);
+
+    diskList.forEach((disk) => {
+      deleteDisk({ 
+        vmId, 
+        diskAttachmentId: disk.id, 
+        detachOnly: !!detachOnlyList[disk.id],
+      });
     });
-  }, [ids]);
+  };
 
   return (
     <BaseModal targetName={`${Localization.kr.VM} ${Localization.kr.DISK}`} submitTitle={Localization.kr.REMOVE}
@@ -67,23 +65,26 @@ const VmDiskDeleteModal = ({
       contentStyle={{ width: "630px" }}
       shouldWarn={true}
     >
-      {ids.map((diskId, index) => (
-        <div key={diskId} className="f-btw">
-          <span className="fs-16 p-3.5 w-full">{aliases[index]}</span>
-          <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
-            id={`diskDelete-${index}`}
-            checked={detachOnlyList[index] || false}
-            onChange={() =>
-              setDetachOnlyList((prev) => {
-                const newList = [...prev];
-                newList[index] = !newList[index]; // 값 반전
-                return newList;
-              })
-            }
-          />
-          {/* <span>{detachOnlyList[index] === true ? "A" : "B"}</span> */}
-        </div>
-      ))}
+      {diskList.map((disk) => {
+        const diskId = disk?.id;
+        const alias = disk?.diskImageVo?.alias || "";
+
+        return (
+          <div key={diskId} className="f-btw">
+            <span className="fs-16 p-3.5 w-full">{alias} {disk?.bootable? "(부팅)" : ""}</span>
+            <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
+              id={`diskDelete-${diskId}`}
+              checked={!!detachOnlyList[diskId]}
+              onChange={() =>
+                setDetachOnlyList(prev => ({
+                  ...prev,
+                  [diskId]: !prev[diskId],
+                }))
+              }
+            />
+          </div>
+        );
+      })}
     </BaseModal>
   );
 };
