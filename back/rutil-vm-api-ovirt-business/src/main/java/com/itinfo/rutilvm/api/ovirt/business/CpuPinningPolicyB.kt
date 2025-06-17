@@ -15,7 +15,6 @@ enum class CpuPinningPolicyB(
 		get() = this@CpuPinningPolicyB == DEDICATED ||
 			this@CpuPinningPolicyB == ISOLATE_THREADS
 
-
 	companion object {
 		private val valueMapping: MutableMap<Int, CpuPinningPolicyB> = ConcurrentHashMap<Int, CpuPinningPolicyB>()
 		private val codeMapping: MutableMap<String, CpuPinningPolicyB> = ConcurrentHashMap<String, CpuPinningPolicyB>()

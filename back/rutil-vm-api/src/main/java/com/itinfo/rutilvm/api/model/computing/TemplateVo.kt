@@ -1,8 +1,6 @@
 package com.itinfo.rutilvm.api.model.computing;
 
-import com.itinfo.rutilvm.util.ovirt.findBios
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.api.model.Os
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
@@ -10,9 +8,25 @@ import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toAddTemplateDisk
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
+import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB.OK
+import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationAutoConverge
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationCompression
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
+import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.toLocalDateTime
@@ -38,19 +52,19 @@ class TemplateVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	private val _status: com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB? = com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB.OK,
+	private val _status: TemplateStatusB? = TemplateStatusB.OK,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	val optimizeOption: String = "", // VmType
+	private val _optimizeOption: VmTypeB? = VmTypeB.Unknown,
 	val biosBootMenu: Boolean = false,
-	val biosType: String = "", // chipsetFirmwareType
-	val osType: String = "",
-	val cpuArc: Architecture = Architecture.UNDEFINED,
+	private val _biosType: BiosTypeB? = BiosTypeB.UNKNOWN, // chipsetFirmwareType
+	private val _osType: VmOsType? = VmOsType.OTHER_OS,
+	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	val cpuPinningPolicy: String = "",
+	private val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -61,12 +75,12 @@ class TemplateVo(
 	val cloudInit: Boolean = false,
 	val script: String = "",
 	val placementPolicy: VmAffinity = VmAffinity.MIGRATABLE,
-	val migrationMode: String = "",
+	val migrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE,
 	val migrationPolicy: String = "",
-	val migrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationCompression: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT,
-	val migrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT,
+	val migrationAutoConverge: Boolean? = null,
+	val migrationCompression: Boolean? = null,
+	val migrationEncrypt: Boolean? = null,
+	val migrationParallelPolicy: Boolean? = null,
 	val parallelMigration: String = "",
 	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
 	val virtioScsiMultiQueueEnabled: Boolean = false,
@@ -74,7 +88,7 @@ class TemplateVo(
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: DisplayType = DisplayType.VNC,
+	val displayType: GraphicsTypeB = GraphicsTypeB.VNC,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -118,6 +132,15 @@ class TemplateVo(
 	val urlLargeIcon: String
 		get() = iconLarge?.dataUrl ?: ""
 
+	val optimizeOption: String
+		get() = _optimizeOption?.code ?: VmTypeB.Unknown.code
+
+	val biosType: String
+		get() = _biosType?.name?.lowercase() ?: BiosTypeB.UNKNOWN.name.lowercase()
+
+	val osType: String
+		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
+
 	val creationTime: String?
 		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
 	val startTime: String?
@@ -134,19 +157,19 @@ class TemplateVo(
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB = OK; fun status(block: () -> com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB?) { bStatus = block() ?: OK }
+		private var bStatus: TemplateStatusB? = TemplateStatusB.Unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block() ?: TemplateStatusB.Unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
-		private var bOptimizeOption: String = ""; fun optimizeOption(block: () -> String?) { bOptimizeOption = block() ?: "" }
+		private var bOptimizeOption: VmTypeB? = VmTypeB.Unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.Unknown }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
-		private var bBiosType: String = ""; fun biosType(block: () -> String?) { bBiosType = block() ?: "" }
-		private var bOsType: String = ""; fun osType(block: () -> String?) { bOsType = block() ?: "" }
-		private var bCpuArc: Architecture = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
+		private var bBiosType: BiosTypeB? = BiosTypeB.UNKNOWN; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.UNKNOWN }
+		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
+		private var bCpuArc: ArchitectureType? = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-		private var bCpuPinningPolicy: String = ""; fun cpuPinningPolicy(block: () -> String?) { bCpuPinningPolicy = block() ?: "" }
+		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.NONE }
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
 		private var bMemoryGuaranteed: BigInteger = BigInteger.ZERO; fun memoryGuaranteed(block: () -> BigInteger?) { bMemoryGuaranteed = block() ?: BigInteger.ZERO }
 		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
@@ -157,12 +180,12 @@ class TemplateVo(
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
 		private var bPlacementPolicy: VmAffinity = VmAffinity.MIGRATABLE; fun placementPolicy(block: () -> VmAffinity?) { bPlacementPolicy = block() ?: VmAffinity.MIGRATABLE }
-		private var bMigrationMode: String = ""; fun migrationMode(block: () -> String?) { bMigrationMode = block() ?: "" }
+		private var bMigrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.MIGRATABLE }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
-		private var bMigrationAutoConverge: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationAutoConverge(block: () -> InheritableBoolean?) { bMigrationAutoConverge = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationCompression: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationCompression(block: () -> InheritableBoolean?) { bMigrationCompression = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationEncrypt: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationEncrypt(block: () -> InheritableBoolean?) { bMigrationEncrypt = block() ?: InheritableBoolean.INHERIT }
-		private var bMigrationParallelPolicy: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationParallelPolicy(block: () -> InheritableBoolean?) { bMigrationParallelPolicy = block() ?: InheritableBoolean.INHERIT }
+		private var bMigrationAutoConverge: Boolean? = null; fun migrationAutoConverge(block: () -> Boolean?) { bMigrationAutoConverge = block() }
+		private var bMigrationCompression: Boolean? = null; fun migrationCompression(block: () -> Boolean?) { bMigrationCompression = block() }
+		private var bMigrationEncrypt: Boolean? = null; fun migrationEncrypt(block: () -> Boolean?) { bMigrationEncrypt = block() }
+		private var bMigrationParallelPolicy: Boolean? = null; fun migrationParallelPolicy(block: () -> Boolean?) { bMigrationParallelPolicy = block() }
 		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
 		private var bStorageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmStorageErrorResumeBehaviour?) { bStorageErrorResumeBehaviour = block() ?: VmStorageErrorResumeBehaviour.AUTO_RESUME }
 		private var bVirtioScsiMultiQueueEnabled: Boolean = false; fun virtioScsiMultiQueueEnabled(block: () -> Boolean?) { bVirtioScsiMultiQueueEnabled = block() ?: false }
@@ -170,7 +193,7 @@ class TemplateVo(
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: DisplayType = DisplayType.VNC; fun displayType(block: () -> DisplayType?) { bDisplayType = block() ?: DisplayType.VNC }
+		private var bDisplayType: GraphicsTypeB = GraphicsTypeB.VNC; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.VNC }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -257,15 +280,18 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		description { template.description() }
 		status { template.findTemplateStatus() }
 		creationTime { template.creationTime().toLocalDateTime() }
-		osType { if (template.osPresent()) Os.findByCode(template.os().type()).fullName else null }
-		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
-		optimizeOption { template.type().value() } // 최적화 옵션 template.type().findVmType()
+		osType { template.os().findVmOsType() }
+		biosType { template.bios().findBiosTypeB() }
+		optimizeOption { template.type().toVmTypeB() } // 최적화 옵션 template.type().findVmType()
 		memorySize { template.memory() }
+		memoryGuaranteed { template.memoryPolicy().guaranteed() }
+		memoryGuaranteed { template.memoryPolicy().guaranteed() }
+		cpuTopologyCnt { calculateCpuTopology(template) }
 		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
-		cpuTopologyCnt { calculateCpuTopology(template) }
-		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
+		cpuPinningPolicy { template.cpuPinningPolicy().toCpuPinningPolicyB() }
+		displayType { template.display().findGraphicsTypeB() }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
@@ -297,26 +323,30 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 		name { template.name() }
 		description { template.description() }
 		comment { template.comment() }
-		biosType { if (template.bios().typePresent()) template.bios().type().findBios() else null }
-		cpuArc { template.cpu().architecture() }
+		biosType { template.bios().findBiosTypeB() }
+		cpuArc { template.cpu().findArchitectureType() }
 		cpuTopologyCnt { calculateCpuTopology(template) }
 		cpuTopologyCore { template.cpu().topology().coresAsInteger() }
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
-		osType { template.os().type() }
-		optimizeOption { template.type().toString() }
+		cpuPinningPolicy { template.cpuPinningPolicy().toCpuPinningPolicyB() }
+		memorySize { template.memory() }
+		osType { template.os().findVmOsType() }
+		optimizeOption { template.type().toVmTypeB() }
 		creationTime { template.creationTime().toLocalDateTime() }
-		displayType { if(template.displayPresent()) template.display().type() else DisplayType.VNC }
+		displayType { template.display().findGraphicsTypeB() }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
-		memorySize { template.memory() }
+		migrationMode { template.placementPolicy().findMigrationSupport() } //migrationMode
+		migrationEncrypt { template.migration().findMigrationEncrypt() }
+		migrationAutoConverge { template.migration().findMigrationAutoConverge() }
+		migrationCompression { template.migration().findMigrationCompression() }
 		// usb { if(template.usbPresent()) template.usb().enabled() else false }
 		// stateless { template.stateless() }
 	}
 }
-fun List<Template>.toUnregisterdTemplates() =
-	this@toUnregisterdTemplates.map { it.toUnregisterdTemplate() }
-
+fun List<Template>.toUnregisteredTemplates() =
+	this@toUnregisteredTemplates.map { it.toUnregisterdTemplate() }
 
 
 // region: builder
@@ -360,7 +390,6 @@ fun TemplateVo.toRegisterTemplate(): Template {
 			ClusterBuilder().id(this.clusterVo.id).build())
 		.build()
 }
-
 // endregion
 
 private fun calculateCpuTopology(template: Template): Int {

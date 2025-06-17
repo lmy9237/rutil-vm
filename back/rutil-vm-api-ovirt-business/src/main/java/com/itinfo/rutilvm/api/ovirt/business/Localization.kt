@@ -88,6 +88,25 @@ class Localization {
 		}
 		//endregion
 
+		//region: DiskInterfaceL
+		object DiskInterfaceL {
+			object KR {
+				val IDE								= locKr?.get(DiskInterface.IDE.localizationKey)?.toString() ?: ""
+				val VirtIO_SCSI						= locKr?.get(DiskInterface.VirtIO_SCSI.localizationKey)?.toString() ?: ""
+				val VirtIO							= locKr?.get(DiskInterface.VirtIO.localizationKey)?.toString() ?: ""
+				val SPAPR_VSCSI						= locKr?.get(DiskInterface.SPAPR_VSCSI.localizationKey)?.toString() ?: ""
+				val SATA							= locKr?.get(DiskInterface.SATA.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val IDE								= locEn?.get(DiskInterface.IDE.localizationKey)?.toString() ?: ""
+				val VirtIO_SCSI						= locEn?.get(DiskInterface.VirtIO_SCSI.localizationKey)?.toString() ?: ""
+				val VirtIO							= locEn?.get(DiskInterface.VirtIO.localizationKey)?.toString() ?: ""
+				val SPAPR_VSCSI						= locEn?.get(DiskInterface.SPAPR_VSCSI.localizationKey)?.toString() ?: ""
+				val SATA							= locEn?.get(DiskInterface.SATA.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: DiskInterfaceL
+
 		//region: DisplayTypeL
 		object DisplayTypeL {
 			object KR {
@@ -228,6 +247,15 @@ class Localization {
 			DiskContentType.HOSTED_ENGINE_CONFIGURATION -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
 			DiskContentType.BACKUP_SCRATCH -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
 			DiskContentType.UNKNOWN -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
+		}
+
+	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String =
+		when(type) {
+			DiskInterface.IDE -> 			if (loc == "kr") DiskInterfaceL.KR.IDE else DiskInterfaceL.EN.IDE
+			DiskInterface.VirtIO_SCSI -> 	if (loc == "kr") DiskInterfaceL.KR.VirtIO_SCSI else DiskInterfaceL.EN.VirtIO_SCSI
+			DiskInterface.VirtIO -> 		if (loc == "kr") DiskInterfaceL.KR.VirtIO else DiskInterfaceL.EN.VirtIO
+			DiskInterface.SPAPR_VSCSI -> 	if (loc == "kr") DiskInterfaceL.KR.SPAPR_VSCSI else DiskInterfaceL.EN.SPAPR_VSCSI
+			DiskInterface.SATA -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
 		}
 
 	fun findLocalizedName4DisplayType(type: DisplayTypeB, loc: String = "kr"): String =

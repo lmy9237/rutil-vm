@@ -98,26 +98,6 @@ fun NetworkStatus.findNetworkStatus(): String =
 		NetworkStatus.OPERATIONAL -> "가동 중"
 	}
 
-fun VmStatus.findVmStatus(): String =
-	when (this) {
-		VmStatus.UP -> "실행중"
-		VmStatus.DOWN -> "정지"
-		VmStatus.IMAGE_LOCKED -> "IMAGE_LOCKED"
-		VmStatus.MIGRATING -> "마이그레이션"
-		VmStatus.NOT_RESPONDING -> "NOT_RESPONDING"
-		VmStatus.PAUSED -> "PAUSED"
-		VmStatus.POWERING_DOWN -> "전원을 끄는 중"
-		VmStatus.POWERING_UP -> "POWERING_UP"
-		VmStatus.REBOOT_IN_PROGRESS -> "REBOOT_IN_PROGRESS"
-		VmStatus.RESTORING_STATE -> "RESTORING_STATE"
-		VmStatus.SAVING_STATE -> "SAVING_STATE"
-		VmStatus.SUSPENDED -> "일시중지됨"
-		VmStatus.UNASSIGNED -> "UNASSIGNED"
-		VmStatus.UNKNOWN -> "알수없음"
-		VmStatus.WAIT_FOR_LAUNCH -> "WAIT_FOR_LAUNCH"
-	}
-
-
 fun VnicPassThroughMode.findVnicPass(): String =
 	when (this) {
 		VnicPassThroughMode.ENABLED -> "예"

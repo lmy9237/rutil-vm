@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
 import com.itinfo.rutilvm.common.gson
 //import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
@@ -29,19 +30,25 @@ private val log = LoggerFactory.getLogger(DiskVmElementEntity::class.java)
 class DiskVmElementEntity(
 	@Id
     @Type(type = "org.hibernate.type.PostgresUUIDType")
-	@Column(unique = true, nullable = true)
+	@Column(name="disk_id", unique = true, nullable = true)
     val diskId: UUID? = null,
 
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name="vm_id", unique = true, nullable = true)
 	val vmId: UUID? = null,
 
 	val isBoot: Boolean = false,
-	val diskInterface: String = "",
+	@Column(name="disk_interface", unique = true, nullable = true)
+	private val _diskInterface: String = "",
 	val isUsingScsiReservation: Boolean = false,
 	val passDiscard: Boolean = false,
 
 ): Serializable {
-	override fun toString(): String = gson.toJson(this)
+	override fun toString(): String =
+		gson.toJson(this)
+
+	val diskInterface: DiskInterface?
+		get() = DiskInterface.forCode(_diskInterface)
 
 	class Builder {
 		private var bDiskId: UUID? = null; fun diskId(block: () -> UUID?) { bDiskId = block() }

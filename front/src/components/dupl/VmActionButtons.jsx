@@ -53,7 +53,7 @@ const VmActionButtons = ({
   const isPause = selected1st?.status === "SUSPENDED";
   const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
   const isVmQualified2Migrate = selected1st?.qualified2Migrate ?? false;
-  const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? false;
+  const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
@@ -64,9 +64,7 @@ const VmActionButtons = ({
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm =>
     ["UP", "POWERING_DOWN", "POWERING_UP", "SUSPENDED"].includes(vm?.status)
   );
-  const ollOkay2Migrate = vmsSelected.every(vm => 
-    vm.qualified2Migrate
-  )
+  const ollOkay2Migrate = vmsSelected.every(vm => vm?.qualified2Migrate === true)
   
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
@@ -121,8 +119,8 @@ const VmActionButtons = ({
     { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"),label: Localization.kr.POWER_OFF,disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
     // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
     // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: !isVmQualified4ConsoleConnect, subactions: consoleActions},
-    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: !ollOkay2Migrate },
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
+    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: vmsSelected.length === 0 || !ollOkay2Migrate },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));

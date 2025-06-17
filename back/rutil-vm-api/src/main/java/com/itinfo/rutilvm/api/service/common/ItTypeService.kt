@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.service.common
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
@@ -126,6 +127,11 @@ fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 )
 fun List<DiskContentType>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
+fun DiskInterface.toTypeVoFromDiskInterface(): TypeVo = TypeVo(
+	this@toTypeVoFromDiskInterface.name,
+	this@toTypeVoFromDiskInterface.kr,
+	this@toTypeVoFromDiskInterface.en,
+)
 fun DisplayTypeB.toTypeVoFromDisplayType(): TypeVo = TypeVo(
 	this@toTypeVoFromDisplayType.name,
 	this@toTypeVoFromDisplayType.kr,

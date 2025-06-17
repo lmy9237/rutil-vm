@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useParams } from "react-router-dom";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmDeleteModal from "./VmDeleteModal";
@@ -11,7 +12,6 @@ import VmMigrationModal from "./VmMigrationModal";
 import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
-import { useParams } from "react-router-dom";
 import DomainImportVmTemplateModal from "../domain/DomainImportVmTemplateModal";
 
 /**

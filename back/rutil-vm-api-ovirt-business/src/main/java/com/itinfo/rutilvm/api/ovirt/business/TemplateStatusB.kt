@@ -25,11 +25,9 @@ enum class TemplateStatusB(
 				codeMapping[it.code] = it
 			}
 		}
-
-		val allVmStatuses: List<TemplateStatusB> = TemplateStatusB.values().filterNot {
+		val allTemplatesStatuses: List<TemplateStatusB> = TemplateStatusB.values().filterNot {
 			it == Unknown
 		}
-
 		@JvmStatic fun forValue(value: Int? = -1): TemplateStatusB = valueMapping[value] ?: Unknown
 		@JvmStatic fun forCode(code: String? = Unknown.name.uppercase()): TemplateStatusB = codeMapping[code?.uppercase()] ?: Unknown
 	}

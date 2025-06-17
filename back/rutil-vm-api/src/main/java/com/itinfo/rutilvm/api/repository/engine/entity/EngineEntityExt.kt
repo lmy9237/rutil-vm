@@ -32,7 +32,9 @@ import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
+import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll4Template
 import com.itinfo.rutilvm.util.ovirt.findCluster
+import com.itinfo.rutilvm.util.ovirt.findVmType
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DisplayType
@@ -236,18 +238,15 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		comment { this@toUnregisteredTemplate.ovf?.virtualSystem?.comment }
 		status { template?.findTemplateStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
-		biosType {
-			template?.bios()?.type()?.toString()
-			// BiosType.forValue(this@toUnregisteredVm.ovf?.virtualSystem?.biosType)?.name
-		}
-		cpuArc { template?.cpu()?.architecture() }
-		// cpuTopologyCnt { template.cpuTopologyAll() }
+		biosType { template?.bios()?.findBiosTypeB() }
+		cpuArc { template?.cpu()?.findArchitectureType() }
+		cpuTopologyCnt { template.cpuTopologyAll4Template() }
 		cpuTopologyCore { template?.cpu()?.topology()?.coresAsInteger() }
 		cpuTopologySocket { template?.cpu()?.topology()?.socketsAsInteger() }
 		cpuTopologyThread { template?.cpu()?.topology()?.threadsAsInteger() }
 		cpuPinningPolicy {
-			"${this@toUnregisteredTemplate.ovf?.virtualSystem?.cpuPinningPolicy}"
-			// vm?.cpuPinningPolicy()?.value()
+			CpuPinningPolicyB.forCode("${this@toUnregisteredTemplate.ovf?.virtualSystem?.cpuPinningPolicy}")
+			// template?.cpuPinningPolicy()?.value()
 		}
 		creationTime {
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
@@ -255,14 +254,14 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 			template?.creationTime().toLocalDateTime()
 		}
 		monitor { if (template?.displayPresent() == true) template.display().monitorsAsInteger() else 0 }
-		displayType { if (template?.displayPresent() == true) template.display().type() else DisplayType.VNC }
+		displayType { template?.display().findGraphicsTypeB() }
 		ha { template?.highAvailability()?.enabled() }
 		haPriority { template?.highAvailability()?.priorityAsInteger() }
 		memorySize { template?.memory() }
 		memoryGuaranteed { template?.memoryPolicy()?.guaranteed() }
 		memoryMax { template?.memoryPolicy()?.max() }
-		osType { template?.os()?.type() }
-		optimizeOption { template?.type()?.value() }
+		osType { template?.os()?.findVmOsType() }
+		optimizeOption { template?.type()?.toVmTypeB() }
 		usb { if(template?.usbPresent() == true) template.usb()?.enabled() else false }
 		diskAttachmentVos { disksFromOvf.toDiskAttachmentIdentifiedVos() }
 	}
@@ -324,7 +323,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		cpuTopologyCnt { entity.numOfCpus }
 		cpuTopologyCore { entity.cpuPerSocket } // TODO: 이거 맞는지 모르겠음
 		cpuTopologySocket { entity.numOfSockets }
-		// cpuTopologyThread { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
+		cpuTopologyThread { entity.threadsPerCpu } // TODO: 이거 맞는지 모르겠음
 		cpuPinningPolicy { entity.cpuPinningPolicy }
 		memorySize { entity.memSize }
 		memoryGuaranteed { entity.memSize }
@@ -339,7 +338,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		migrationEncrypt { entity.isMigrateEncrypted }
 		migrationAutoConverge { entity.isAutoConverge }
 		migrationCompression { entity.isMigrateCompressed }
-		// firstDevice {  }
+		// firstDevice { entity.bootableDiskVmElements?.firstOrNull() }
 		// secDevice {  }
 		// hostInCluster {  }
 		startPaused { entity.isRunAndPause }
@@ -491,18 +490,19 @@ fun VmTemplateEntity.fromVmTemplateToTemplateVo(): TemplateVo = TemplateVo.build
 	comment { entity.freeTextComment }
 	description { entity.description }
 	status { entity.status }
-	// iconSmall { entity.smallIconId?.toVmIconVoFromVmEntity() }
-	// iconLarge { entity.largeIconId?.toVmIconVoFromVmEntity() }
+	iconSmall { entity.effectiveSmallIcon?.toVmIconVoFromVmEntity() }
+	iconLarge { entity.effectiveLargeIcon?.toVmIconVoFromVmEntity() }
 	creationTime { entity.creationDate }
-	// osType {  }
+	osType { entity.osType }
 	// biosType { entity.biosType } // cluster_biosType
 	// optimizeOption { entity.vmType } // 최적화 옵션 entity.type().findVmType()
 	// memorySize { entity.memSizeMb }
 	// cpuTopologyCore { entity.per }
 	// cpuArc { entity.architecture }
-	cpuTopologySocket { entity.cpuPerSocket }
-	cpuTopologyThread { entity.threadsPerCpu }
 	cpuTopologyCnt { entity.numOfCpus }
+	cpuTopologyCore { entity.cpuPerSocket } // TODO: 이거 맞는지 모르겠음
+	cpuTopologySocket { entity.numOfSockets }
+	cpuTopologyThread { entity.threadsPerCpu } // TODO: 이거 맞는지 모르겠음
 	// displayType { entity.defaultDisplayType }
 	// ha {  }
 	haPriority { entity.priority }

@@ -16,6 +16,7 @@ LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
 LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.diskVmElements
 LEFT JOIN FETCH v.iconDefaults ide
 LEFT JOIN FETCH ide.smallIcon
 LEFT JOIN FETCH ide.largeIcon
@@ -30,6 +31,7 @@ LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
 LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.diskVmElements
 LEFT JOIN FETCH v.iconDefaults ide
 LEFT JOIN FETCH ide.smallIcon
 LEFT JOIN FETCH ide.largeIcon
@@ -44,6 +46,7 @@ LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
 LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.diskVmElements
 LEFT JOIN FETCH v.iconDefaults ide
 LEFT JOIN FETCH ide.smallIcon
 LEFT JOIN FETCH ide.largeIcon
@@ -58,6 +61,7 @@ LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
 LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.diskVmElements
 LEFT JOIN FETCH v.iconDefaults ide
 LEFT JOIN FETCH ide.smallIcon
 LEFT JOIN FETCH ide.largeIcon
@@ -74,6 +78,7 @@ LEFT JOIN FETCH v.snapshots
 LEFT JOIN FETCH v.smallIcon
 LEFT JOIN FETCH v.largeIcon
 LEFT JOIN FETCH v.dwhOsInfo
+LEFT JOIN FETCH v.diskVmElements
 LEFT JOIN FETCH v.iconDefaults ide
 LEFT JOIN FETCH ide.smallIcon
 LEFT JOIN FETCH ide.largeIcon

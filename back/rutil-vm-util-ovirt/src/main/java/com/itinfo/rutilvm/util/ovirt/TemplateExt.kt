@@ -196,7 +196,6 @@ fun Connection.updateNicFromTemplate(templateId: String, nic: Nic): Result<Nic?>
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-
 fun Connection.removeNicFromTemplate(templateId: String, nicId: String): Result<Boolean> = runCatching {
 	this.srvNicFromTemplate(templateId, nicId).remove().send()
 	true
@@ -205,6 +204,16 @@ fun Connection.removeNicFromTemplate(templateId: String, nicId: String): Result<
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"제거", it, templateId)
 	throw if (it is Error) it.toItCloudException() else it
+}
+
+
+// CPU Topology 계산 최적화
+fun Template?.cpuTopologyAll4Template(): Int? {
+	val topology = this@cpuTopologyAll4Template?.cpu()?.topology()
+	val cores = topology?.coresAsInteger() ?: 0
+	val sockets = topology?.socketsAsInteger() ?: 0
+	val threads = topology?.threadsAsInteger() ?: 0
+	return cores * sockets * threads
 }
 
 /**

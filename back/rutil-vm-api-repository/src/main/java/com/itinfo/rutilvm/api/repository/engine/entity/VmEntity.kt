@@ -134,8 +134,8 @@ import kotlin.math.pow
  * @property lastWatchdogEvent [BigInteger]
  * @property leaseInfo [String]
  * @property leaseSdId [UUID]
- * @property maxMemorySizeMb [Int]
- * @property memSizeMb [Int]
+ * @property maxMemorySizeMb [Int] 최대 메모리 크기 (MB)
+ * @property memSizeMb [Int] 메모리 크기 (MB)
  * @property migratingToVds [UUID]
  * @property migrationDowntime [Int]
  * @property migrationPolicyId [UUID]
@@ -146,7 +146,7 @@ import kotlin.math.pow
  * @property nextRunConfigExists [Boolean]
  * @property niceLevel [Int]
  * @property numOfCpus [Int]
- * @property numOfIoThreads [Int]
+ * @property numOfIoThreads [Int] I/O 스레드 수
  * @property numOfMonitors [Int]
  * @property numOfSockets [Int]
  * @property origin [Int]
@@ -398,7 +398,7 @@ class VmEntity(
 	val usageCpuPercent: Int? = null,
 	val usageMemPercent: Int? = null,
 	val usageNetworkPercent: Int? = null,
-	@Column(name="usb_policy", unique = true, nullable = true)
+	@Column(name="usb_policy", nullable=true)
 	private val _usbPolicy: Int? = 1,
 	val useTscFrequency: Boolean? = null,
 	val userdefinedProperties: String = "",
@@ -427,20 +427,28 @@ class VmEntity(
 
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name="vm_id", // The column in the 'snapshots' table (the "many" side)
-		referencedColumnName="vm_guid", // The column in the 'vms' view (the "one" side)
+		name="vm_id",
+		referencedColumnName="vm_guid",
 		insertable=false,
 		updatable=false
 	)
 	val snapshots: Set<SnapshotEntity> = emptySet(),
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
-		name="os",                         // The column in the 'vms' view
-		referencedColumnName="os_id",      // The column in the 'vm_icon_defaults' table
+		name="os",
+		referencedColumnName="os_id",
 		insertable=false,
 		updatable=false
 	)
 	val iconDefaults: VmIconDefaultsEntity? = null,
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="vm_id",
+		referencedColumnName="vm_guid",
+		insertable=false,
+		updatable=false
+	)
+	val diskVmElements: Set<DiskVmElementEntity>? = emptySet(),
 ): Serializable {
 	val status: VmStatusB?
 		get() = VmStatusB.forValue(_status)
@@ -448,7 +456,7 @@ class VmEntity(
 	val biosType: BiosTypeB
 		get() = BiosTypeB.forValue(_biosType)
 
-		val vmType: VmTypeB? /* a.k.a. 최적화 옵션 (optmizationOption) */
+	val vmType: VmTypeB? /* a.k.a. 최적화 옵션 (optmizationOption) */
 		get() = VmTypeB.forValue(_vmType)
 
 	val osType: VmOsType?
@@ -464,7 +472,7 @@ class VmEntity(
 		get() = maxMemorySizeMb?.times(MEGABYTE_2_BYTE)
 
 	val cpuPinningPolicy: CpuPinningPolicyB?
-			get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
+		get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
 
 	val defaultDisplayType: GraphicsTypeB?
 		get() = GraphicsTypeB.forValue(_defaultDisplayType)
@@ -493,6 +501,9 @@ class VmEntity(
 
 	val effectiveLargeIcon: VmIconEntity?
 		get() = this.iconDefaults?.largeIcon ?: this.largeIcon
+
+	val bootableDiskVmElements: Set<DiskVmElementEntity>
+		get() = this@VmEntity.diskVmElements?.filter { it.isBoot }?.toSet() ?: emptySet()
 
 	/*
 	val isVmNotRunning: Boolean *//* '실행 중'이 아닌 상태 *//*
