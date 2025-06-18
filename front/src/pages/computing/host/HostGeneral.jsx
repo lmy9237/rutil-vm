@@ -154,44 +154,6 @@ const HostGeneral = ({
   ];
 
   return (
-    // <div className="host-info-wrapper v-start align-start w-full gap-4">
-    //   <div className="host-tabs f-start fs-14">
-    //     {[...tabs].map(({ tab, label }, i) => (
-    //       <button key={tab}
-    //         onClick={() => setActiveTab(tab)}
-    //         className={`tab-button ${activeTab === tab ? "active" : ""}`}
-    //       >
-    //         {label}
-    //       </button>
-    //     ))}
-    //   </div>
-    //   <div className="host-info-detail f-start align-start gap-16">
-    //     <InfoTable tableRows={
-    //       tabs.find(({ tab }) => 
-    //         tab === activeTab
-    //       )?.tableRows || []
-    //     }/>
-    //     <div className="graph-area v-start gap-20">
-    //       <div className="host-graph">
-    //         호스트 CPU 사용률
-    //         <SuperAreaChart id={`${hostId}-cpu`}
-    //           key={`${hostId}-cpu`} 
-    //           per={hostPer} 
-    //           type="cpu"
-    //         />
-    //       </div>
-    //       <div className="host-graph">
-    //         호스트 메모리 사용률
-    //         <SuperAreaChart id={`${hostId}-memory`} 
-    //           key={`${hostId}-memory`} 
-    //           per={hostPer} 
-    //           type="memory"
-    //         />
-    //       </div>
-    //     </div>
-    //   </div>
-    
-    // </div>
     <>
       <div className="vm-section section-top">
         <GeneralBoxProps title="시스템 정보">
@@ -206,14 +168,14 @@ const HostGeneral = ({
           <InfoTable tableRows={softwareTableRows} />
         </GeneralBoxProps>
       </div>
-       <div className="vm-section section-bottom">
+      <div className="vm-section section-bottom">
         <div className=" grid-col-span-2">
           <HostGeneralChart />
         </div>
         <GeneralBoxProps title="용량 및 사용량">
           <VmGeneralBarChart />
         </GeneralBoxProps>
-       </div>
+      </div>
       {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
         path={`hosts-general;name=${hostsSelected[0]?.name}`} 

@@ -1,14 +1,15 @@
 .host-filter-btns {
   width: fit-content;height: var(--h-text-input);
   border-radius: 1px;
-  border: var(--border-btn-filter);
+  /* border: var(--border-btn-filter); */
+  border: var(--border-btn);
   background-color: var(--color-primary-white);
 }
 .host-filter-btns button {
   min-width: 60px;height:100%;
   padding: 0 6px;
   border-radius: 0;border:none;
-  border-right: var(--border-btn-filter);
+  border-right:  var(--border-btn);
   color:var(--color-nav);
   word-break: break-all;
 }

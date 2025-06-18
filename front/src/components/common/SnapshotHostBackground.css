@@ -26,3 +26,17 @@
 .split-item:last-child:empty {
   display: none;
 }
+/* @media (max-width: 1124px) {
+  .split-layout-group {
+    flex-direction: column;
+  }
+
+  .split-item {
+    width: 100% !important;
+  }
+
+  .split-item:first-child,
+  .split-item:last-child {
+    width: 100% !important;
+  }
+} */

@@ -5,3 +5,6 @@
 .apexcharts-yaxis-texts-g{
     display:none;
 }
+.show-yaxis .apexcharts-yaxis-texts-g {
+  display: block !important;
+}

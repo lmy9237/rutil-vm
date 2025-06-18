@@ -9,18 +9,18 @@
 .vm-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 8px;
 }
 .section-top {
   background-color: #fff3cd; 
-  max-height: 350px;
+  
+  width: 100%;
 }
 
 .section-bottom {
   background-color: #f3e8ff; 
-  max-height: 340px;
+ 
   width: 100%;
-  overflow-y: auto;
   height: 100%;
 }
 
@@ -33,6 +33,9 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+.vm-info-box-outer > .flex {
+  flex-wrap: wrap;
 }
 
 .half-box {
@@ -87,6 +90,35 @@
 .snapshots .snapshot-entry{
   padding:3px 0;
 }
+
+/**/
+/* 공통 */
+
+/* 반응형 */
+@media (max-width: 1024px) {
+ .vm-section{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+  }
+
+  .grid-col-span-2 {
+    grid-column: auto;
+  }
+
+  .vm-info-box-outer {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .half-box {
+    flex: 1 1 100%;
+    min-width: 100%;
+    padding: 10px 0;
+  }
+}
+
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;

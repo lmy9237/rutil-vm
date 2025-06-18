@@ -6,13 +6,13 @@ const RutilGeneralBoxProps = ({ title, icon, badge, children }) => {
     <div className="summary-box">
       <div className="summary-box-header f-between">
         <div className="f-start items-center gap-1">
-          {icon && <span className="text-lg">{icon}</span>}
+          {icon && <span className="text-lg mr-1">{icon}</span>}
           <span className="rutil-box-title fw-700 fs-13">{title}</span>
         </div>
         {badge !== undefined && <span className="badge">{badge}</span>}
       </div>
       <hr className="w-full my-2" />
-      <div className="summary-box-content">
+      <div className="summary-box-content fw-700">
         {children}
       </div>
     </div>

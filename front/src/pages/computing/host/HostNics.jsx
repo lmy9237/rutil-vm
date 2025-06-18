@@ -1283,7 +1283,7 @@ const HostNics = ({
       /> */}
     <br/>
       
-  </div>
+    </div>
       <Suspense fallback={<Loading />}>
         <HostBondingModal
           editMode={isBondingEditMode}

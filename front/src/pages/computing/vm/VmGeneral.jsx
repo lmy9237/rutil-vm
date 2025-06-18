@@ -27,6 +27,7 @@ import VmOsIcon from "@/components/icons/VmOsIcon";
 import VmGeneralBarChart from "./VmGeneralBarChart";
 import useUIState from "@/hooks/useUIState";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
+import GeneralLayout from "@/components/GeneralLayout";
 
 /**
  * @name VmGeneral
@@ -209,91 +210,82 @@ const snapshotList = useMemo(() =>
 , [snapshots]);
   return (
     <>
-    {/* <div className="vm-detail-general-boxs f-start w-full">
-      <div className="detail-general-box v-start gap-8">
-        <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.GENERAL}</h1>
-        <hr className="w-full"/>
-        <InfoTable tableRows={generalTableRows} />
-      </div>
+    {/* <div className="vm-detail-grid">
 
-      <div className="detail-general-box v-start gap-8">
-        <h1 className="f-start fs-16 fw-500 w-full">{Localization.kr.VM} {Localization.kr.HARDWARE}</h1>
-        <hr className="w-full"/>
-        <InfoTable tableRows={hardwareTableRows} />
-      </div>
-      {vm?.runningOrPaused && (
-      <div className="detail-general-box v-start gap-8">
-        <h1 className="f-start fs-16 fw-500 w-full">용량 및 사용량</h1>
-        <hr className="w-full"/>
-        <div className="capacity-outer">
-          <div className="capacity f-center">
-            <span className="fs-14">CPU</span>
-            <SemiCircleChart percentage={vm?.usageDto?.cpuPercent || 0} />
-          </div>
-          <div className="capacity f-center">
-            <span className="fs-14">{Localization.kr.MEMORY}</span>
-            <SemiCircleChart percentage={vm?.usageDto?.memoryPercent || 0} />
-          </div>
-          <div className="capacity f-center">
-            <span className="fs-14">네트워크</span>
-            <SemiCircleChart percentage={vm?.usageDto?.networkPercent || 0} />
-          </div>
-        </div>
-      </div>
-      )}
-    </div> */}
-    <div className="vm-detail-grid">
-      {/* ✅ 1번 구역: 상단 노란색 영역 */}
-      <div className="vm-section section-top">
-        <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
-          <h3 className="box-title">게스트 운영체제</h3>
-          <hr className="w-full" />
-          <div className="flex h-full">
-            <div className="half-box">
-              <VmOsIcon dataUrl={vm?.urlLargeIcon} />
-            </div>
-            <div className="half-box vm-info-content">
-              <InfoTable tableRows={generalTableRows} />
-            </div>
-          </div>
-        </div>
-
-        <GeneralBoxProps title="용량 및 사용량">
-          <VmGeneralBarChart />
-        </GeneralBoxProps>
-      </div>
-
-      {/* ✅ 2번 구역: 하단 보라색 영역 */}
-      <div className="vm-section section-bottom">
-        <GeneralBoxProps title="가상머신 하드웨어">
-          <InfoTable tableRows={hardwareTableRows} />
-        </GeneralBoxProps>
-
-        <GeneralBoxProps title="관련 개체">
-          <InfoTable tableRows={relatedTableRows} />
-        </GeneralBoxProps>
-
-        <GeneralBoxProps title="스냅샷">
-          <div className="box-content snapshots">
-            <div
-              className="snapshot-add py-3 fs-13"
-              onClick={() => setActiveModal("vm:snapshot")}
-            >
-              + 스냅샷 추가
-            </div>
-            {snapshotList.map((snap) => (
-              <div key={snap.id} className="snapshot-entry f-start">
-                {snap.statusIcon && <RVI16 iconDef={snap.statusIcon} className="mr-1" />}
-                <RVI16 iconDef={snap.icon} className="ml-1 mr-1" />
-                <span>{snap.description}_{snap.date}</span>
+        <div className="vm-section section-top">
+          <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
+            <h3 className="box-title">게스트 운영체제</h3>
+            <hr className="w-full" />
+            <div className="flex h-full">
+              <div className="half-box">
+                <VmOsIcon dataUrl={vm?.urlLargeIcon} />
               </div>
-            ))}
+              <div className="half-box vm-info-content">
+                <InfoTable tableRows={generalTableRows} />
+              </div>
+            </div>
           </div>
-        </GeneralBoxProps>
-      </div>
-  </div>
-  
 
+          <GeneralBoxProps title="용량 및 사용량">
+            <VmGeneralBarChart />
+          </GeneralBoxProps>
+        </div>
+
+       
+        <div className="vm-section section-bottom">
+          <GeneralBoxProps title="가상머신 하드웨어">
+            <InfoTable tableRows={hardwareTableRows} />
+          </GeneralBoxProps>
+
+          <GeneralBoxProps title="관련 개체">
+            <InfoTable tableRows={relatedTableRows} />
+          </GeneralBoxProps>
+
+          <GeneralBoxProps title="스냅샷">
+            <div className="box-content snapshots">
+              <div
+                className="snapshot-add py-3 fs-13"
+                onClick={() => setActiveModal("vm:snapshot")}
+              >
+                + 스냅샷 추가
+              </div>
+              {snapshotList.map((snap) => (
+                <div key={snap.id} className="snapshot-entry f-start">
+                  {snap.statusIcon && <RVI16 iconDef={snap.statusIcon} className="mr-1" />}
+                  <RVI16 iconDef={snap.icon} className="ml-1 mr-1" />
+                  <span>{snap.description}_{snap.date}</span>
+                </div>
+              ))}
+            </div>
+          </GeneralBoxProps>
+        </div>
+    </div> */}
+      <GeneralLayout
+        leftBox={<VmOsIcon dataUrl={vm?.urlLargeIcon} />}
+      topTable={generalTableRows}
+      topRightContent={<VmGeneralBarChart />}
+      bottomTables={[
+        { title: "가상머신 하드웨어", rows: hardwareTableRows },
+        { title: "관련 개체", rows: relatedTableRows },
+        {
+          title: "스냅샷",
+          content: (
+            <div className="box-content snapshots">
+              <div className="snapshot-add py-3 fs-13" onClick={() => setActiveModal("vm:snapshot")}>
+                + 스냅샷 추가
+              </div>
+              {snapshotList.map((snap) => (
+                <div key={snap.id} className="snapshot-entry f-start">
+                  {snap.statusIcon && <RVI16 iconDef={snap.statusIcon} className="mr-1" />}
+                  <RVI16 iconDef={snap.icon} className="ml-1 mr-1" />
+                  <span>{snap.description}_{snap.date}</span>
+                </div>
+              ))}
+            </div>
+          )
+        }
+        ]}
+      />
     {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 
