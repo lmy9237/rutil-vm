@@ -19,7 +19,6 @@ const VmDeleteModal = ({
   onClose,
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
   const { vmsSelected } = useGlobal()
   const {
     mutate: deleteVm

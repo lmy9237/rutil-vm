@@ -80,6 +80,10 @@ enum class ErrorPattern(
 	DISK_ATTACHMENT_ACTIVE_INVALID("DISKATTACHMENT-E004", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
 	DISK_ATTACHMENT_NOT_BOOTABLE("DISKATTACHMENT-E005", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST, "부팅 가능한 디스크가 없음"),
 	DISK_ATTACHMENT_DUPLICATE("DISKATTACHMENT-E006", Term.DISK_ATTACHMENT, FailureType.BAD_REQUEST),
+	CD_ROM_ID_NOT_FOUND("CDROM-E001", Term.CD_ROM, FailureType.ID_NOT_FOUND),
+	CD_ROM_NOT_FOUND("CDROM-E002", Term.CD_ROM, FailureType.NOT_FOUND),
+	CD_ROM_VO_INVALID("CDROM-E003", Term.CD_ROM, FailureType.BAD_REQUEST),
+	CD_ROM_CONFLICT_WHILE_VM_UPDATING("CDROM-E004", Term.CD_ROM, FailureType.CONFLICT, "가상머신이 변경 중일 때 CD-ROM 변경 불가능"),
 	IMAGE_TRANSFER_NOT_FOUND("IMAGE_TRANSFER_NOT_FOUND", Term.IMAGE_TRANSFER, FailureType.NOT_FOUND),
 	TRANSFER_URL_EMPTY("TRANSFER_URL_EMPTY", Term.IMAGE_TRANSFER, FailureType.NOT_FOUND),
 	NETWORK_ID_NOT_FOUND("NETWORK-E001", Term.NETWORK, FailureType.ID_NOT_FOUND),
@@ -147,6 +151,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.DISK_ID_NOT_FOUND,
 			// ErrorPattern.DISK_IMAGE_ID_NOT_FOUND,
 			ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND,
+			ErrorPattern.CD_ROM_ID_NOT_FOUND,
 			ErrorPattern.NETWORK_ID_NOT_FOUND,
 			ErrorPattern.NIC_ID_NOT_FOUND,
 			ErrorPattern.VM_ID_NOT_FOUND,
@@ -170,6 +175,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.DISK_NOT_FOUND,
 			// ErrorPattern.DISK_IMAGE_NOT_FOUND,
 			ErrorPattern.DISK_ATTACHMENT_NOT_FOUND,
+			ErrorPattern.CD_ROM_NOT_FOUND,
 			ErrorPattern.NETWORK_NOT_FOUND,
 			ErrorPattern.NIC_NOT_FOUND,
 			ErrorPattern.VM_NOT_FOUND,
@@ -202,7 +208,8 @@ fun ErrorPattern.toError(): Error {
 		this == ErrorPattern.DISK_CONFLICT ||
 		this == ErrorPattern.DISK_ATTACHMENT_DUPLICATE ||
 		this == ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE ||
-		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
+		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT ||
+		this == ErrorPattern.CD_ROM_CONFLICT_WHILE_VM_UPDATING -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
 		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
 
 		// 기본 처리

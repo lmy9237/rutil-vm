@@ -34,8 +34,10 @@ import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll4Template
 import com.itinfo.rutilvm.util.ovirt.findCluster
+import com.itinfo.rutilvm.util.ovirt.findStorageDomain
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
+import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.data.domain.Page
@@ -301,6 +303,19 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Temp
 //region: VmEntity
 fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	val entity = this@toVmVoFromVmEntity
+	val hosts: List<IdentifiedVo> = if(!entity.dedicatedVmForVds.isNullOrEmpty()) {
+		entity.dedicatedVmForVds
+			.split(",")
+			.mapNotNull { id ->
+				id.trim().takeIf { it.isNotEmpty() }?.let {
+					IdentifiedVo.builder {
+						id { it }
+						name { "" }
+					}
+				}
+			}
+	} else emptyList()
+
 	return VmVo.builder {
 		id { entity.vmGuid.toString() }
 		name { entity.vmName }
@@ -329,7 +344,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		deleteProtected { entity.isDeleteProtected }
 		monitor { entity.numOfMonitors }
 		displayType { entity.defaultDisplayType }
-		// ha { }
+		ha { entity.autoStartup }
 		haPriority { entity.priority }
 		ioThreadCnt { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
 		migrationMode { entity.migrationSupport }
@@ -338,7 +353,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		migrationCompression { entity.isMigrateCompressed }
 		// firstDevice { entity.bootableDiskVmElements?.firstOrNull() }
 		// secDevice {  }
-		// hostInCluster {  }
+		hostInCluster { entity.dedicatedVmForVds.isNullOrEmpty() }
 		startPaused { entity.isRunAndPause }
 		storageErrorResumeBehaviour { entity.vmResumeBehavior }
 		usb { entity.usbPolicy?.isEnabled }
@@ -354,6 +369,12 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		}
 		ipv4 { listOf(entity.vmIp) }
 		fqdn { entity.vmHost }
+		hostVos { hosts }
+		cdRomVo {
+			IdentifiedVo.builder {
+				id { entity.isoPath }
+			}
+		}
 		templateVo {
 			IdentifiedVo.builder {
 				id { entity.originalTemplateId.toString() }
@@ -376,6 +397,12 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 			IdentifiedVo.builder {
 				id { entity.storagePoolId.toString() }
 				name { entity.storagePoolName }
+			}
+		}
+		storageDomainVo {
+			IdentifiedVo.builder {
+				id { entity.leaseSdId.toString() }
+				// name { entity. }
 			}
 		}
 		snapshotVos { snapshots.filter {

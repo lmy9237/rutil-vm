@@ -25,6 +25,7 @@ const VmCreateDiskConnectionModal = ({
   isOpen, onClose,
   vmData,
   diskData,
+  dataCenterId,
   hasBootableDisk=false, // 부팅가능한 디스크 여부  
   existingDisks,
 }) => {
@@ -34,7 +35,7 @@ const VmCreateDiskConnectionModal = ({
   const { 
     data: attDisks = [],
     isLoading: isAttDisksLoading
-  } = useAllAttachedDisksFromDataCenter(vmData?.dataCenterVo?.id, (e) => ({ ...e }));
+  } = useAllAttachedDisksFromDataCenter(dataCenterId, (e) => ({ ...e }));
 
   const { mutate: connDiskListVm } = useConnDiskListFromVM();
 
@@ -72,7 +73,6 @@ const VmCreateDiskConnectionModal = ({
     setDiskList(initialDiskList);
   }, [isOpen, attDisks, existingDisks]);
 
-
   
   // 가상머신 생성 - 디스크 연결
   const handleOkClick = (e) => {
@@ -88,7 +88,9 @@ const VmCreateDiskConnectionModal = ({
       interface_: disk.interface_ || "VIRTIO_SCSI",
       readOnly: disk.readOnly || false,
       bootable: disk.bootable || false,
-      diskImageVo: { id: disk.id },
+      diskImageVo: { 
+        id: disk.id 
+      },
     }));
 
     diskData(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
@@ -184,7 +186,7 @@ const VmCreateDiskConnectionModal = ({
               )})
             ) : (
               <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
+                <td colSpan="10" style={{ textAlign: "center" }}>
                   데이터가 없습니다.
                 </td>
               </tr>

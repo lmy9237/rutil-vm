@@ -234,7 +234,6 @@ class VmDiskService(
 		return res.isSuccess
 	}
 
-
 	@Throws(Error::class)
 	override fun activeFromVm(vmId: String, diskAttachmentId: String): Boolean {
 		log.info("activeFromVm ... vmId: {}, diskAttachmentId: {}", vmId, diskAttachmentId)

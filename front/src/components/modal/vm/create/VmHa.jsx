@@ -4,16 +4,10 @@ import LabelSelectOptionsID             from "@/components/label/LabelSelectOpti
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
-  handleInputChange, handleSelectIdChange
+  handleInputChange
 } from "@/components/label/HandleInput";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-
-const priorities = [
-  { value: 1, label: "낮음" },
-  { value: 50, label: "중간" },
-  { value: 100, label: "높음" },
-];
 
 const VmHa = ({
   editMode,
@@ -23,19 +17,16 @@ const VmHa = ({
   const { validationToast } = useValidationToast()
   
   useEffect(() => {
-    Logger.debug(`VmHa > useEffect ... `)
-    // 편집 모드가 아니고, domains가 있을 경우 기본값 설정
     if (!editMode && domains.length > 0) {
-      setFormHaState((prev) => ({
-        ...prev,
-        storageDomainVo: prev.ha ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" },
-      }));
-    } else {
-      const [domainFound] = domains.filter((e) => e?.id === formHaState?.storageDomainVo?.id);
-      setFormHaState((prev) => ({
-        ...prev,
-        storageDomainVo: prev.ha ? { ...domainFound } : { id: "", name: "" },
-      }));
+      setFormHaState((prev) => {
+        if (prev.ha && (!prev.storageDomainVo.id || prev.storageDomainVo.id === "")) {
+          return {
+            ...prev,
+            storageDomainVo: { id: domains[0].id, name: domains[0].name },
+          };
+        }
+        return prev;
+      });
     }
   }, [domains, editMode, setFormHaState]);
 
@@ -48,7 +39,9 @@ const VmHa = ({
           setFormHaState((prev) => ({
             ...prev,
             ha: isChecked,
-            storageDomainVo: { id: "", name: "" }, 
+            storageDomainVo: isChecked
+              ? (domains[0] ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" })
+              : { ...prev.storageDomainVo }, // 값 유지
           }));
         }}
       />
@@ -64,9 +57,7 @@ const VmHa = ({
               ...prev, 
               storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
             }));
-            // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
           } else {
-            // '도메인 없음' 선택 시
             setFormHaState((prev) => ({
               ...prev,
               storageDomainVo: { id: "", name: "" },
@@ -99,3 +90,9 @@ const VmHa = ({
 };
 
 export default VmHa;
+
+const priorities = [
+  { value: 1, label: "낮음" },
+  { value: 50, label: "중간" },
+  { value: 100, label: "높음" },
+];

@@ -39,8 +39,8 @@ import javax.persistence.Table
  * @property itGuid [UUID]
  * @property imagestatus [Int]
  * @property lastmodified [LocalDateTime]
- * @property volumeType [Int]
- * @property volumeFormat [Int]
+ * @property volumeType [Int] 할당 정책 spare sin/
+ * @property volumeFormat [Int] 디스크 포맷 cow raw
  * @property qcowCompat [Int]
  * @property imageGroupId [UUID]
  * @property description [String]

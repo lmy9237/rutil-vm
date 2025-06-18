@@ -13,8 +13,8 @@ enum class MigrationSupport(
 	override val value: Int,
 ): Identifiable, Serializable {
 	migratable(0),
-	implicitly_non_migratable(1),
-	pinned_to_host(2),
+	user_migratable(1),
+	pinned(2),
 	unknown(-1);
 
 	override fun toString(): String = code

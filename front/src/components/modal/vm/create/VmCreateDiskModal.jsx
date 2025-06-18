@@ -177,7 +177,7 @@ const VmCreateDiskModal = ({
         sparse: initialDisk?.sparse || false,
         active: initialDisk?.active || false,
         wipeAfterDelete: initialDisk?.wipeAfterDelete || false,
-        bootable: hasBootableDisk ? false : initialDisk?.bootable || true,
+        bootable: hasBootableDisk ? false : true,
         sharable: initialDisk?.sharable || false,
         readOnly: initialDisk?.readOnly || false,
         backup: initialDisk?.backup || false,
@@ -307,7 +307,7 @@ const VmCreateDiskModal = ({
             onChange={handleInputChangeCheck("wipeAfterDelete")}
           />
           <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
-            checked={diskAttachment?.bootable}
+            checked={Boolean(formState.bootable)}
             disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
             onChange={handleInputChangeCheck("bootable")}
           />

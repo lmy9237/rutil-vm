@@ -163,7 +163,7 @@ interface ItDataCenterService {
 	 * @return List<[DiskImageVo]> 디스크  목록
 	 */
 	@Throws(Error::class)
-	fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>
+	fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>?
 	/**
 	 * [ItDataCenterService.findAllISOFromDataCenter]
 	 * 가상머신 생성 - 부트 옵션 - 생성 시 필요한 CD/DVD 연결할 ISO 목록 (디스크이미지)
@@ -337,19 +337,25 @@ class DataCenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo> {
+	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>? {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
-		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
-			.getOrDefault(emptyList())
-		// 디스크 포맷 필터링
-		val disks: List<Disk> = storageDomains.flatMap {
-			it.disks().filter { disk -> disk.format() == DiskFormat.COW }
-		}
-		// 이미 연결되어 있는 디스크는 제외
-		val elements: List<DiskVmElementEntity> = rDiskVmElements.findAll()
-
-		val res = disks.filter { disk -> disk.id() !in elements.toDiskIds() }
-		return res.toDcDiskMenus(conn)
+		val res: List<AllDiskEntity>? = rAllDisks.findByStoragePoolIdOrderByDiskAliasAsc(dataCenterId.toUUID())
+		return res?.toDiskEntities()
+		// val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
+		// 	.getOrDefault(emptyList())
+		// // 디스크 포맷 필터링
+		// val disks: List<Disk> = storageDomains.flatMap {
+		// 	// it.disks()
+		// 	it.disks().filter { disk ->
+		// 		disk.format() == DiskFormat.COW
+		// 		||  disk.format() == DiskFormat.RAW
+		// 	}
+		// }
+		// // 이미 연결되어 있는 디스크는 제외
+		// val elements: List<DiskVmElementEntity> = rDiskVmElements.findAll()
+		//
+		// val res = disks.filter { disk -> disk.id() !in elements.toDiskIds() }
+		// return res.toDcDiskMenus(conn)
 	}
 
 	@Throws(Error::class)

@@ -1,20 +1,17 @@
 import { useEffect } from "react";
 import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
 import {
-  handleInputChange, handleSelectIdChange,
+  handleInputChange,
 } from "@/components/label/HandleInput";
-import {
-  useAllMigrationSupports
-} from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import { useValidationToast } from "@/hooks/useSimpleToast";
 
 // 마이그레이션 모드
 const migrationModeOptionList = [
-  { value: "MIGRATABLE", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
-  { value: "USER_MIGRATABLE", label: `수동 마이그레이션만 허용` },
-  { value: "PINNED", label: `${Localization.kr.MIGRATION} 불가` },
+  { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
+  { value: "user_migratable", label: `수동 마이그레이션만 허용` },
+  { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
 ];
 
 const VmHost = ({

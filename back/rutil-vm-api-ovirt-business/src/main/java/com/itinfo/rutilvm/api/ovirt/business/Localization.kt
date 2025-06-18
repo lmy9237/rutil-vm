@@ -130,14 +130,14 @@ class Localization {
 		//region MigrationSupportL
 		object MigrationSupportL {
 			object KR {
-				val MIGRATABLE = locKr?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
-				val IMPLICITLY_NON_MIGRATABLE = locKr?.get(MigrationSupport.implicitly_non_migratable.localizationKey)?.toString() ?: ""
-				val PINNED_TO_HOST = locKr?.get(MigrationSupport.pinned_to_host.localizationKey)?.toString() ?: ""
+				val migratable = locKr?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
+				val user_migratable = locKr?.get(MigrationSupport.user_migratable.localizationKey)?.toString() ?: ""
+				val pinned = locKr?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val MIGRATABLE = locEn?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
-				val IMPLICITLY_NON_MIGRATABLE = locEn?.get(MigrationSupport.implicitly_non_migratable.localizationKey)?.toString() ?: ""
-				val PINNED_TO_HOST = locEn?.get(MigrationSupport.pinned_to_host.localizationKey)?.toString() ?: ""
+				val migratable = locEn?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
+				val user_migratable = locEn?.get(MigrationSupport.user_migratable.localizationKey)?.toString() ?: ""
+				val pinned = locEn?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion
@@ -314,9 +314,9 @@ class Localization {
 
 	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String =
 		when(type) {
-			MigrationSupport.migratable ->					if (loc == "kr") MigrationSupportL.KR.MIGRATABLE else MigrationSupportL.EN.MIGRATABLE
-			MigrationSupport.implicitly_non_migratable ->	if (loc == "kr") MigrationSupportL.KR.IMPLICITLY_NON_MIGRATABLE else MigrationSupportL.EN.IMPLICITLY_NON_MIGRATABLE
-			MigrationSupport.pinned_to_host -> 				if (loc == "kr") MigrationSupportL.KR.PINNED_TO_HOST else MigrationSupportL.EN.PINNED_TO_HOST
+			MigrationSupport.migratable ->				if (loc == "kr") MigrationSupportL.KR.migratable else MigrationSupportL.EN.migratable
+			MigrationSupport.user_migratable ->			if (loc == "kr") MigrationSupportL.KR.user_migratable else MigrationSupportL.EN.user_migratable
+			MigrationSupport.pinned -> 					if (loc == "kr") MigrationSupportL.KR.pinned else MigrationSupportL.EN.pinned
 			else -> if (loc == "kr") "알 수 없음" else "Unknown"
 		}
 

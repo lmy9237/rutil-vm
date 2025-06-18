@@ -173,16 +173,21 @@ class VmServiceImpl(
 		).getOrNull()
 
 		if (res != null) {
-			// 디스크 생성
-			if(vmVo.diskAttachmentVos.isNotEmpty()){
-				vmVo.diskAttachmentVos.forEach {
-					conn.addDiskAttachmentToVm(res.id(), it.toAddDiskAttachment())
-				}
-			}
 			// nic 생성
 			if(vmVo.nicVos.isNotEmpty()){
 				vmVo.nicVos.forEach {
 					conn.addNicFromVm(res.id(), it.toAddVmNic())
+				}
+			}
+			// 디스크 생성
+			if(vmVo.diskAttachmentVos.isNotEmpty()){
+				vmVo.diskAttachmentVos.forEach {
+					log.info("vmVo.diskAttachmentVos: {}", it.diskImageVo.alias)
+					if (it.diskImageVo.id.isEmpty()) { // 디스크 생성
+						conn.addDiskAttachmentToVm(res.id(), it.toAddDiskAttachment())
+					} else { // 디스크 연결
+						conn.addDiskAttachmentToVm(res.id(), it.toAttachDisk())
+					}
 				}
 			}
 			// 부트옵션
@@ -197,27 +202,101 @@ class VmServiceImpl(
 	override fun update(vmVo: VmVo): VmVo? {
 		log.info("update ... vmVo: {}", vmVo)
 
-		// 1. 디스크 부팅옵션 검사
+		// 디스크 부팅옵션 검사
 		if (vmVo.diskAttachmentVos.count { it.bootable } > 1) {
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
-		// 2. VM 정보 업데이트 (메인 정보만)
+		// VM 정보 업데이트 (메인 정보만)
 		val updatedVm: Vm = conn.updateVm(
 			vmVo.toEditVm()
 		).getOrNull() ?: return null
 
-		// 3. 기존 디스크/네트워크 상태 조회
+		log.info("현재 VM 상태: ${updatedVm.status()}")
+
+		updateNics(vmVo)
+		updateDisks(vmVo)
+
+		// 상태가 UP 될 때까지 대기
+		Thread.sleep(2000)
+		updateCdrom(updatedVm .id(), vmVo)
+
+		return updatedVm.toVmVo(conn)
+	}
+
+
+	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제
+	@Throws(Error::class)
+	override fun remove(vmId: String, diskDelete: Boolean): Boolean {
+		log.info("remove ...  vmId: {}", vmId)
+		val res: Result<Boolean> = conn.removeVm(vmId, diskDelete)
+		return res.isSuccess
+	}
+
+
+	private fun updateCdrom(vmId: String, vmVo: VmVo) {
+		val cdrom = conn.findAllVmCdromsFromVm(vmId).getOrNull()?.firstOrNull()
+			?: throw IllegalStateException("CDROM 정보를 가져올 수 없습니다.")
+
+		val isoId = vmVo.cdRomVo.id
+
+		try {
+			when {
+				(cdrom.filePresent().not()) && isoId.isNotEmpty() -> {
+					log.info("CDROM 추가 iso: $isoId")
+					conn.addCdromFromVm(vmId, isoId).getOrElse {
+						throw RuntimeException("CDROM 추가 실패: isoId=$isoId", it)
+					}
+				}
+				cdrom.filePresent() && isoId.isNotEmpty() && cdrom.file().id() != isoId -> {
+					log.info("CDROM 변경 iso: $isoId")
+					conn.updateCdromFromVm(vmId, cdrom.file().id(), isoId).getOrElse {
+						throw RuntimeException("CDROM 변경 실패: isoId=$isoId", it)
+					}
+				}
+				cdrom.filePresent() && isoId.isEmpty() -> {
+					log.info("CDROM 삭제 iso: $isoId")
+					conn.removeCdromFromVm(vmId, cdrom.id()).getOrElse {
+						throw RuntimeException("CDROM 삭제 실패: cdromId=${cdrom.id()}", it)
+					}
+				}
+			}
+		} catch (e: Exception) {
+			throw RuntimeException("CDROM 처리 중 오류 발생", e)
+		}
+	}
+
+	private fun updateNics(vmVo: VmVo) {
+		val existNics = conn.findAllNicsFromVm(vmVo.id).getOrElse {
+			throw RuntimeException("NIC 목록 조회 실패", it)
+		}
+
+		val changeNics = vmVo.nicVos
+		val changeNicsMap = changeNics.associateBy { it.id }
+
+		val nicsToDelete = existNics.filter { !changeNicsMap.containsKey(it.id()) }
+		val nicsToAdd = changeNics.filter { it.id.isEmpty() }
+
+		nicsToDelete.forEach {
+			conn.removeNicFromVm(vmVo.id, it.id()).getOrElse {
+				throw RuntimeException("NIC 삭제 실패 ${it.message}", it)
+			}
+		}
+
+		nicsToAdd.forEach {
+			conn.addNicFromVm(vmVo.id, it.toAddVmNic()).getOrElse {
+				throw RuntimeException("NIC 추가 실패 ${it.message}", it)
+			}
+		}
+	}
+
+
+	private fun updateDisks(vmVo: VmVo) {
 		val existDisks = conn.findAllDiskAttachmentsFromVm(vmVo.id).getOrDefault(emptyList())
 		val existDisksMap = existDisks.associateBy { it.disk().id() }
 		val changeDisks = vmVo.diskAttachmentVos
 		val changeDisksMap = changeDisks.associateBy { it.diskImageVo.id }
 
-		val existNics = conn.findAllNicsFromVm(vmVo.id).getOrDefault(emptyList())
-		val changeNics = vmVo.nicVos
-		val changeNicsMap = changeNics.associateBy { it.id }
-
-		// 4. 디스크 diff (삭제/생성/수정)
 		val disksToDelete = existDisks.filter { !changeDisksMap.containsKey(it.disk().id()) }
 		val disksToAdd = changeDisks.filter { it.diskImageVo.id.isEmpty() || !existDisksMap.containsKey(it.diskImageVo.id) }
 		val disksToUpdate = changeDisks
@@ -234,57 +313,22 @@ class VmServiceImpl(
 					it.bootable != exist.bootable()
 			}
 
-		// 5. NIC diff (삭제/생성)
-		val nicsToDelete = existNics.filter { !changeNicsMap.containsKey(it.id()) }
-		val nicsToAdd = changeNics.filter { it.id.isEmpty() }
-
-		// 6. Disk 삭제
-		disksToDelete.forEach { existDisk ->
-			val detachOnly = changeDisks.find { it.diskImageVo.id == existDisk.disk().id() }?.detachOnly ?: false
-			conn.removeDiskAttachmentToVm(vmVo.id, existDisk.id(), detachOnly)
+		disksToDelete.forEach {
+			log.info("diskDelete: {}", it.disk().name())
+			conn.removeDiskAttachmentToVm(vmVo.id, it.id(), false) // false가 완전삭제
 		}
-		// 7. Disk 생성
-		disksToAdd.forEach { conn.addDiskAttachmentToVm(vmVo.id, it.toAddDiskAttachment()) }
-		// 8. Disk 업데이트
-		disksToUpdate.forEach { conn.updateDiskAttachmentToVm(vmVo.id, it.toEditDiskAttachment()) }
-
-		// 9. NIC 삭제
-		nicsToDelete.forEach { conn.removeNicFromVm(vmVo.id, it.id()) }
-		// 10. NIC 생성
-		nicsToAdd.forEach { conn.addNicFromVm(vmVo.id, it.toAddVmNic()) }
-
-		// 11. CD-ROM 처리 (안전성, 조건 통일)
-		val cdrom: Cdrom? = conn.findAllVmCdromsFromVm(updatedVm.id()).getOrNull()?.firstOrNull()
-		val isoId = vmVo.cdRomVo.id
-
-		when {
-			// ISO 추가(아직 파일 없고, 새 iso 설정)
-			(cdrom == null || !cdrom.filePresent()) && isoId.isNotEmpty() -> {
-				log.info("CDROM 추가 iso: $isoId")
-				conn.addCdromFromVm(updatedVm.id(), isoId)
-			}
-			// ISO 변경(파일 있고, isoId와 다르면 변경)
-			cdrom != null && cdrom.filePresent() && isoId.isNotEmpty() && cdrom.file().id() != isoId -> {
-				log.info("CDROM 변경 iso: $isoId")
-				conn.updateCdromFromVm(updatedVm.id(), cdrom.file().id(), isoId)
-			}
-			// ISO 삭제(파일 있고, isoId 비어있음)
-			cdrom != null && cdrom.filePresent() && isoId.isEmpty() -> {
-				log.info("CDROM 삭제 iso: $isoId")
-				conn.removeCdromFromVm(updatedVm.id(), cdrom.id())
+		disksToAdd.forEach {
+			log.info("disksToAdd: {}", it.diskImageVo.alias)
+			if (it.diskImageVo.id.isEmpty()) { // 디스크 생성
+				conn.addDiskAttachmentToVm(vmVo.id, it.toAddDiskAttachment())
+			} else { // 디스크 연결
+				conn.addDiskAttachmentToVm(vmVo.id, it.toAttachDisk())
 			}
 		}
-
-		return updatedVm.toVmVo(conn)
-	}
-
-
-	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제
-	@Throws(Error::class)
-	override fun remove(vmId: String, diskDelete: Boolean): Boolean {
-		log.info("remove ...  vmId: {}", vmId)
-		val res: Result<Boolean> = conn.removeVm(vmId, diskDelete)
-		return res.isSuccess
+		disksToUpdate.forEach {
+			log.info("disksToUpdate: {}", it.diskImageVo.alias)
+			conn.updateDiskAttachmentToVm(vmVo.id, it.toEditDiskAttachment())
+		}
 	}
 
 	// @Throws(Error::class)

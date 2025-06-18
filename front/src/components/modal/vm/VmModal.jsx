@@ -22,7 +22,8 @@ import {
   useAllNicsFromTemplate,
   useVm,
   useDisksFromVM,
-  useNetworkInterfacesFromVM, 
+  useNetworkInterfacesFromVM,
+  useStorageDomain, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -45,7 +46,6 @@ const defaultNic = {
   networkVo: { id: "", name: "" },
 };
 
-
 // 일반
 const infoform = {
   id: "",
@@ -54,7 +54,7 @@ const infoform = {
   comment: "",
   osType: "other_linux",
   biosType: "q35_ovmf",
-  optimizeOption: "SERVER",
+  optimizeOption: "server",
 };
 
 //시스템
@@ -78,7 +78,7 @@ const cloudForm = {
 const hostForm = {
   hostInCluster: true, // 클러스터 내 호스트 버튼
   hostVos: [],
-  migrationMode: "MIGRATABLE", // 마이그레이션 모드
+  migrationMode: "migratable", // 마이그레이션 모드
   // migrationEncrypt: 'INHERIT',  // 암호화
   // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
 };
@@ -290,14 +290,13 @@ const VmModal = ({
         hostInCluster: vm?.hostInCluster || true,
         hostVos: (vm?.hostVos || [])?.map((host) => {
           return { id: host.id, name: host.name}}),
-        migrationMode: vm?.migrationMode || "MIGRATABLE",
+        migrationMode: vm?.migrationMode || "migratable",
       });
       setFormHaState({
-        ha: vm?.ha || false,
+        ha: vm?.ha,
         haPriority: vm?.haPriority || 1,
         storageDomainVo: {
-          id: vm?.storageDomainVo?.id ,
-          name: vm?.storageDomainVo?.name
+          id: vm?.storageDomainVo?.id,
         }
       });
       setFormBootState({
@@ -510,27 +509,29 @@ const VmModal = ({
       })),
 
     // 디스크 데이터 (객체 형태 배열로 변환)
-    diskAttachmentVos: diskListState.map((disk) => ({
-      id: disk?.id || "",
-      active: true,
-      bootable: disk?.bootable,
-      readOnly: disk?.readOnly,
-      passDiscard: false,
-      interface_: disk?.interface_,
-      diskImageVo: {
-        id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
-        size: disk?.size * 1024 * 1024 * 1024 || 0, // GB → Bytes 변환
-        // appendSize: 0, // 임시
-        alias: disk?.alias,
-        description: disk?.description || "",
-        storageDomainVo: { id: disk?.storageDomainVo?.id || "" },
-        diskProfileVo: { id: disk?.diskProfileVo?.id || "" },
-        sparse: disk?.sparse,
-        wipeAfterDelete: disk?.wipeAfterDelete || false,
-        sharable: disk?.sharable || false,
-        backup: disk?.backup || false,
-      },
-    })),    
+    diskAttachmentVos: diskListState
+      .filter((disk) => !disk.deleted)
+      .map((disk) => ({
+        id: disk?.id || "",
+        active: true,
+        bootable: disk?.bootable,
+        readOnly: disk?.readOnly,
+        passDiscard: false,
+        interface_: disk?.interface_,
+        diskImageVo: {
+          id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
+          size: disk?.size * 1024 * 1024 * 1024 || 0, // GB → Bytes 변환
+          // appendSize: 0, // 임시
+          alias: disk?.alias,
+          description: disk?.description || "",
+          storageDomainVo: { id: disk?.storageDomainVo?.id || "" },
+          diskProfileVo: { id: disk?.diskProfileVo?.id || "" },
+          sparse: disk?.sparse,
+          wipeAfterDelete: disk?.wipeAfterDelete || false,
+          sharable: disk?.sharable || false,
+          backup: disk?.backup || false,
+        },
+      })),    
   };
 
   Logger.debug(`VmModal ... formHaState.storageDomainVo: `, formHaState.storageDomainVo);

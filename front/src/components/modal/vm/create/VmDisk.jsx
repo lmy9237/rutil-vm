@@ -100,6 +100,7 @@ const VmDisk = ({
           <ActionButton label={Localization.kr.CREATE} actionType="default"
             className="instance-disk-btn" onClick={() => setCreateOpen(true)} disabled={disabled} />
         </div>
+        {/* <div>{hasBootableDisk === true ? "T" : "F"}</div> */}
       </div>
 
       <div className="pb-3">
@@ -125,24 +126,32 @@ const VmDisk = ({
               <div className="f-end">
                 {disk.deleted ? (
                   <>
-                    <div>
-                      <LabelCheckbox id="detachOnly" label="완전삭제" 
-                        checked 
+                    {/* <div>
+                      <LabelCheckbox id={`detachOnly-${index}`}
+                        label="완전삭제"
+                        checked={disk.detachOnly || false}
+                        onChange={(e) => {
+                          const checked = e.target.checked;
+                          setDiskListState(prev =>
+                            prev.map((d, i) =>
+                              i === index ? { ...d, detachOnly: checked } : d
+                            )
+                          );
+                        }}
                       />
-                    </div>
-                    <RVI36
+                    </div> */}
+                    <div>완전 삭제</div>
+                    <RVI36 className="btn-icon"
                       iconDef={rvi24Close}
-                      className="btn-icon"
                       currentColor="transparent"
                       onClick={() => handleRemoveDisk(index, disk.isExisting)}
                     />
                   </>
                 ) : (
                   <>
-                    {(disk.isCreated || disk.isExisting) && (
-                      <RVI36
-                        iconDef={rvi36EditHover}
-                        className="btn-icon"
+                    {/* {(disk.isCreated || disk.isExisting) && (
+                      <RVI36 className="btn-icon"
+                        iconDef={rvi36EditHover}                        
                         currentColor="transparent"
                         onClick={() => {
                           if (disk.isCreated) {
@@ -152,10 +161,9 @@ const VmDisk = ({
                           }
                         }}
                       />
-                    )}
-                    <RVI36
-                      iconDef={rvi36TrashHover}
-                      className="btn-icon"
+                    )} */}
+                    <RVI36 className="btn-icon"
+                      iconDef={rvi36TrashHover}                      
                       currentColor="transparent"
                       onClick={() => handleRemoveDisk(index, disk.isExisting)}
                     />
@@ -196,6 +204,7 @@ const VmDisk = ({
             onClose={() => setConnOpen(false)}
             vmData={vm}
             diskData={handleConnDisk}
+            dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDisk}
             existingDisks={diskListState}
           />
