@@ -14,7 +14,7 @@ import {
   useCDFromDataCenter,
   useHostsFromCluster,
   useAllActiveDomainsFromDataCenter,
-  useOsSystemsFromCluster,
+  useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useAllVmTypes,
   useFindTemplatesFromDataCenter,
@@ -210,7 +210,7 @@ const VmModal = ({
   const { 
     data: osList = [], 
     isLoading: isOsListLoading
-  } = useOsSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
+  } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   // 칩셋 목록 가져오기
   const {

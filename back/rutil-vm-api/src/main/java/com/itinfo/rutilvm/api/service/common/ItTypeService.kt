@@ -80,7 +80,7 @@ class TypeServiceImpl(
 	override fun findAllDiskContentTypes(): List<TypeVo> {
 		log.info("findAllDiskContentTypes ... ")
 		return DiskContentType.allDiskContentTypes.filter {
-			it == DiskContentType.DATA || it == DiskContentType.ISO  // NOTE: 실제 필드에서 사용 될 유형
+			it == DiskContentType.data || it == DiskContentType.iso  // NOTE: 실제 필드에서 사용 될 유형
 		}.toTypeVosFromDiskContentTypes()
 	}
 

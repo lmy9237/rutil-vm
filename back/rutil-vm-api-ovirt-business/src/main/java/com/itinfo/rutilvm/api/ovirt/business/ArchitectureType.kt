@@ -18,6 +18,9 @@ enum class ArchitectureType(
 	ppc64le(5, ppc),	/* Guest architecture */
 	ppcle(6, ppc);	/* Guest architecture */
 
+	override fun toString(): String = code
+	val code: String
+		get() = this@ArchitectureType.name.uppercase()
 
 	val hotplugMemorySizeFactorMb: Int?
 		get() = when (this) {
@@ -35,11 +38,13 @@ enum class ArchitectureType(
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
+				codeMapping[it.code] = it
 				codeMapping[it.name] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?): ArchitectureType = valueMapping[value ?: -1] ?: undefined
-		@JvmStatic fun forCode(code: String?): ArchitectureType = codeMapping[code?.lowercase() ?: "undefined"] ?: undefined
 		val allArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().filterNot { it == undefined }
+
+		@JvmStatic fun forValue(value: Int?): ArchitectureType = valueMapping[value ?: undefined.value] ?: undefined
+		@JvmStatic fun forCode(code: String?): ArchitectureType = codeMapping[code ?: undefined.code] ?: undefined
 	}
 }

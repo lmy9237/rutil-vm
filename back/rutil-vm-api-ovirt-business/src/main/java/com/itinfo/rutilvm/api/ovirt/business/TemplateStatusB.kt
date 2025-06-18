@@ -3,17 +3,23 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [TemplateStatusB]
+ * 탬플릿 상태
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 enum class TemplateStatusB(
 	override val value: Int,
-	val code: String,
 ): Identifiable, Serializable {
-	Unknown(-1, "UNKNOWN"),
-	OK(0, "OK"),
-	Locked(1, "LOCKED"),
-	Illegal(2, "ILLEGAL");
+	unknown(-1),
+	ok(0),
+	locked(1),
+	illegal(2);
 
-	val label: String
-		get() = this@TemplateStatusB.code
+	override fun toString(): String = code
+	val code: String
+		get() = this@TemplateStatusB.name.uppercase()
 
 	companion object {
 		private val valueMapping: MutableMap<Int, TemplateStatusB> = ConcurrentHashMap<Int, TemplateStatusB>()
@@ -23,12 +29,13 @@ enum class TemplateStatusB(
 			values().forEach {
 				valueMapping[it.value] = it
 				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
 		val allTemplatesStatuses: List<TemplateStatusB> = TemplateStatusB.values().filterNot {
-			it == Unknown
+			it == unknown
 		}
-		@JvmStatic fun forValue(value: Int? = -1): TemplateStatusB = valueMapping[value] ?: Unknown
-		@JvmStatic fun forCode(code: String? = Unknown.name.uppercase()): TemplateStatusB = codeMapping[code?.uppercase()] ?: Unknown
+		@JvmStatic fun forValue(value: Int?): TemplateStatusB = valueMapping[value ?: unknown.value] ?: unknown
+		@JvmStatic fun forCode(code: String?): TemplateStatusB = codeMapping[code ?: unknown.code] ?: unknown
 	}
 }

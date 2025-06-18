@@ -6,9 +6,9 @@ enum class VdcObjectType(
 	val value: Int,
 	val vdcObjectTranslation: String,
 ) {
-	Unknown(-1, "Unknown"),
+	unknown(-1, "Unknown"),
 	// For internal use only. Used to mark the host used for execution of a Step.
-	EXECUTION_HOST(-100, "Execution Host"),
+	execution_host(-100, "Execution Host"),
 	// bottom is an object which all the objects in the system are its parents
 	// useful to denote we want all objects when checking for permissions
 	Bottom(0, "Bottom"),
@@ -43,12 +43,23 @@ enum class VdcObjectType(
 	DiskProfile(29, "Disk Profile"),
 	CpuProfile(30, "Cpu Profile");
 
+	override fun toString(): String = code
+	val code: String
+		get() = this@VdcObjectType.name.uppercase()
+
 	companion object {
 		private const val INTERNAL_ENTITY_VALUE = -100
-		private val findMap: MutableMap<Int, VdcObjectType> = ConcurrentHashMap<Int, VdcObjectType>()
+		private val valueMapping: MutableMap<Int, VdcObjectType> = ConcurrentHashMap<Int, VdcObjectType>()
+		private val codeMapping: MutableMap<String, VdcObjectType> = ConcurrentHashMap<String, VdcObjectType>()
+
 		init {
-			values().forEach { findMap[it.value] = it }
+			values().forEach {
+				valueMapping[it.value] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
-		@JvmStatic fun forValue(value: Int): VdcObjectType = findMap[value] ?: Unknown
+		@JvmStatic fun forValue(value: Int?): VdcObjectType = valueMapping[value ?: unknown.value] ?: unknown
+		@JvmStatic fun forCode(code: String?): VdcObjectType = codeMapping[code ?: unknown.code] ?: unknown
 	}
 }

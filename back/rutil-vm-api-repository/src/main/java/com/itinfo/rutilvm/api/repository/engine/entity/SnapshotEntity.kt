@@ -7,12 +7,9 @@ import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 import java.util.UUID
 import java.io.Serializable
-import java.math.BigDecimal
-import java.math.BigInteger
 import javax.persistence.Id
 import javax.persistence.Column
 import javax.persistence.Embeddable
-import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.Table
 
@@ -74,7 +71,7 @@ class SnapshotEntity(
 	val changedFields: String = "",
 ): Serializable {
 	val _snapshotType: SnapshotType
-		get() = SnapshotType.forValue(snapshotType.uppercase())
+		get() = SnapshotType.forCode(snapshotType.uppercase())
 
 	override fun toString(): String =
 		gson.toJson(this)

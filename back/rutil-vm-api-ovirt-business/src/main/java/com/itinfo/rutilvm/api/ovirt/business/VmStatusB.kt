@@ -11,111 +11,131 @@ import java.util.concurrent.ConcurrentHashMap
  */
 enum class VmStatusB(
 	override val value: Int,
-	val code: String,
 ): Identifiable, Serializable {
-	Unassigned(-1, "UNASSIGNED"),
-	Down(0, "DOWN"),
-	Up(1, "UP"),
-	PoweringUp(2, "POWERING_UP"),
-	Paused(4, "PAUSED"),
-	MigratingFrom(5, "MIGRATING_FROM"),
-	MigratingTo(6, "MIGRATING_TO"),
-	Unknown(7, "UNKNOWN"),
-	NotResponding(8, "NOT_RESPONDING"),
-	WaitForLaunch(9, "WAIT_FOR_LAUNCH"),
-	RebootInProgress(10, "REBOOT_IN_PROGRESS"),
-	SavingState(11, "SAVING_STATE"),
-	RestoringState(12, "RESTORING_STATE"),
-	Suspended(13, "SUSPENDED"),
-	ImageIllegal(14, "IMAGE_ILLEGAL"),
-	ImageLocked(15, "IMAGE_LOCKED"),
-	PoweringDown(16, "POWERING_DOWN");
+	unassigned(-1),
+	down(0),
+	up(1),
+	powering_up(2),
+	paused(4),
+	migrating_from(5),
+	migrating_to(6),
+	unknown(7),
+	not_responding(8),
+	wait_for_launch(9),
+	reboot_in_progress(10),
+	saving_state(11),
+	restoring_state(12),
+	suspended(13),
+	image_illegal(14),
+	image_locked(15),
+	powering_down(16);
 
-	val label: String
-		get() = this@VmStatusB.code
+	override fun toString(): String = this@VmStatusB.code
+	val code: String
+		get() = this@VmStatusB.name.lowercase()
 
 	val notRunning: Boolean /* '실행 중'이 아닌 상태 */
-		get() = this@VmStatusB == Down ||
-			this@VmStatusB == Suspended ||
-			this@VmStatusB == ImageLocked ||
-			this@VmStatusB == ImageIllegal
+		get() = this@VmStatusB == down ||
+			this@VmStatusB == suspended ||
+			this@VmStatusB == image_locked ||
+			this@VmStatusB == image_illegal
 
 	val qualified2Migrate: Boolean /* 마이그레이션이 가능한 상태 */
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == PoweringUp ||
-			this@VmStatusB == Paused ||
-			this@VmStatusB == RebootInProgress
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == powering_up ||
+			this@VmStatusB == paused ||
+			this@VmStatusB == reboot_in_progress
 
 	val qualified4SnapshotMerge: Boolean /* 스냅샷 머지 가능한 상태 */
-		get() = qualified4LiveSnapshotMerge || this@VmStatusB == Down
+		get() = qualified4LiveSnapshotMerge || this@VmStatusB == down
 
 	val qualified4LiveSnapshotMerge: Boolean /* 라이브 스냅샷 머지 가능한 상태 */
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == PoweringUp ||
-			this@VmStatusB == Paused ||
-			this@VmStatusB == RebootInProgress
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == powering_up ||
+			this@VmStatusB == paused ||
+			this@VmStatusB == reboot_in_progress
 
 	val qualified4VmBackup: Boolean /* 가상머신 백업 가능한 상태 */
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == Down
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == down
+
 	val qualified4ConsoleConnect: Boolean /* 콘솔로 가상머신 접근 가능한 상태 */
-		get() = this@VmStatusB == PoweringUp ||
-			this@VmStatusB == Up ||
-			this@VmStatusB == RebootInProgress ||
-			this@VmStatusB == PoweringDown ||
-			this@VmStatusB == Paused ||
-			this@VmStatusB == MigratingFrom ||
-			this@VmStatusB == SavingState
+		get() = this@VmStatusB == powering_up ||
+			this@VmStatusB == up ||
+			this@VmStatusB == reboot_in_progress ||
+			this@VmStatusB == powering_down ||
+			this@VmStatusB == paused ||
+			this@VmStatusB == migrating_from ||
+			this@VmStatusB == saving_state
+
+	val qualified4PowerDown: Boolean /* 가상머신 종료 가능한 상태*/
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == powering_down ||
+			this@VmStatusB == powering_up ||
+			this@VmStatusB == suspended
+
 	val runningOrPaused: Boolean /* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*/
 		get() = this@VmStatusB.running ||
-			this@VmStatusB == Paused ||
+			this@VmStatusB == paused ||
 			this@VmStatusB.hibernating ||
-			this@VmStatusB == RestoringState
+			this@VmStatusB == restoring_state
+
 	val running: Boolean /* '실행 중' 인 상태 */
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == PoweringDown ||
-			this@VmStatusB == PoweringUp ||
-			this@VmStatusB == MigratingFrom ||
-			this@VmStatusB == MigratingTo ||
-			this@VmStatusB == WaitForLaunch ||
-			this@VmStatusB == RebootInProgress
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == powering_down ||
+			this@VmStatusB == powering_up ||
+			this@VmStatusB == migrating_from ||
+			this@VmStatusB == migrating_to ||
+			this@VmStatusB == wait_for_launch ||
+			this@VmStatusB == reboot_in_progress
+
 	val upOrPaused: Boolean
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == Paused
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == paused ||
+			this@VmStatusB == suspended
 
 	val starting: Boolean
-		get() = this@VmStatusB == WaitForLaunch ||
-			this@VmStatusB == PoweringUp
+		get() = this@VmStatusB == wait_for_launch ||
+			this@VmStatusB == powering_up
 
 	val startingOrUp: Boolean
-		get() = this@VmStatusB == Up ||
+		get() = this@VmStatusB == up ||
 			this@VmStatusB.starting
 
 	val hibernating: Boolean /* '수면 중' 인 상태 */
-		get() = this@VmStatusB == SavingState
+		get() = this@VmStatusB == saving_state
 
 	val downOrSuspended: Boolean
-		get() = this@VmStatusB == Down ||
-			this@VmStatusB == Suspended
+		get() = this@VmStatusB == down ||
+			this@VmStatusB == suspended
 
 	val qualified4QosChange: Boolean
-		get() = this@VmStatusB == Up
+		get() = this@VmStatusB == up
 
 	val guestCpuRunning: Boolean
-		get() = this@VmStatusB == Up ||
-			this@VmStatusB == PoweringUp
+		get() = this@VmStatusB == up ||
+			this@VmStatusB == powering_up
 
 	val poweringUpOrMigrating: Boolean
 		get() = when(this@VmStatusB) {
-			WaitForLaunch, PoweringUp, Paused, RebootInProgress, MigratingTo
-			, MigratingFrom, RestoringState -> true
+			wait_for_launch, powering_up, paused, reboot_in_progress, migrating_to
+			, migrating_from, restoring_state -> true
 			else -> false
 		}
 
 	val migrating: Boolean
-		get() = this@VmStatusB == MigratingFrom ||
-			this@VmStatusB == MigratingTo
+		get() = this@VmStatusB == migrating_from ||
+			this@VmStatusB == migrating_to
 
+
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val localizationKey: String
+		get() = "${VmStatusB::class.java.simpleName}.${this.name}"
+	val kr: String
+		get() = loc.findLocalizedName4VmStatusB(this, "kr")
+	val en: String
+		get() = loc.findLocalizedName4VmStatusB(this, "en")
 
 	companion object {
 		private val valueMapping: MutableMap<Int, VmStatusB> = ConcurrentHashMap<Int, VmStatusB>()
@@ -128,11 +148,9 @@ enum class VmStatusB(
 			}
 		}
 
-		val allVmStatuses: List<VmStatusB> = VmStatusB.values().filterNot {
-			it == Unassigned
-		}
+		val allVmStatuses: List<VmStatusB> = VmStatusB.values().toList()
 
-		@JvmStatic fun forValue(value: Int? = -1): VmStatusB = valueMapping[value] ?: Unknown
-		@JvmStatic fun forCode(code: String? = Unknown.name.uppercase()): VmStatusB = codeMapping[code?.uppercase()] ?: Unknown
+		@JvmStatic fun forValue(value: Int?): VmStatusB = valueMapping[value ?: unassigned.value] ?: unassigned
+		@JvmStatic fun forCode(code: String?): VmStatusB = codeMapping[code?.uppercase() ?: unassigned.code] ?: unassigned
 	}
 }

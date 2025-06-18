@@ -135,7 +135,7 @@ const Vnc = forwardRef(({
   // 1. VM 정보 가져오기 (상태 확인용)
   const { data: vm } = useVm(vmId);
   const status = vm?.status ?? "";
-  const isVmRunning = status === "UP";
+  const isVmRunning = status.running;
 
   // 2. 콘솔 정보: VM이 실행중일 때만 요청
   const { data: vmConsoleAccessInfo, error } = useVmConsoleAccessInfo(vmId, {

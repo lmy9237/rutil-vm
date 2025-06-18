@@ -1,5 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -150,13 +152,21 @@ class AllDiskEntity(
 	val diskDescription: String = "",
 	val shareable: Boolean = false,
 	val sgio: Int? = null,
-	val diskStorageType: Int? = null,
+	@Column(name = "disk_storage_type", nullable = true)
+	private val _diskStorageType: Int? = null,
 	val cinderVolumeType: String = "",
-	val diskContentType: Int? = null,
+	@Column(name = "disk_content_type", nullable = true)
+	private val _diskContentType: Int? = null,
 	val backup: String = "",
 	val backupMode: String = "",
 
 ): Serializable {
+	val diskStorageType: DiskStorageType
+		get() = DiskStorageType.forValue(_diskStorageType)
+
+	val diskContentType: DiskContentType
+		get() = DiskContentType.forValue(_diskContentType)
+
 	override fun toString(): String =
 		gson.toJson(this)
 

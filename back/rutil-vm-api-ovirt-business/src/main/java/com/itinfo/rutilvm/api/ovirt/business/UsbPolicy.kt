@@ -11,11 +11,15 @@ import java.util.concurrent.ConcurrentHashMap
 enum class UsbPolicy(
 	override val value: Int,
 ): Identifiable {
-	DISABLED(1),
-	ENABLED_NATIVE(2);
+	disabled(1),
+	enabled_native(2);
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@UsbPolicy.name.uppercase()
 
 	val isEnabled: Boolean
-		get() = this@UsbPolicy !== DISABLED
+		get() = this@UsbPolicy !== disabled
 
 	companion object {
 		private val valueMapping: MutableMap<Int, UsbPolicy> = ConcurrentHashMap<Int, UsbPolicy>()
@@ -28,26 +32,27 @@ enum class UsbPolicy(
 		init {
 			UsbPolicy.values().forEach {
 				valueMapping[it.value] = it
-				codeMapping[it.name.lowercase()] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
 		val allUsbPolicies: List<UsbPolicy> = UsbPolicy.values().toList()
 
-		@JvmStatic fun forValue(value: Int? = 1): UsbPolicy = valueMapping[value] ?: DISABLED
-		@JvmStatic fun forCode(value: String? = "disabled"): UsbPolicy? = codeMapping[value?.lowercase() ?: "disabled"] ?: DISABLED
-		@JvmStatic fun forStringValue(value: String? = "disabled"): UsbPolicy? {
+		@JvmStatic fun forValue(value: Int?): UsbPolicy = valueMapping[value ?: disabled.value] ?: disabled
+		@JvmStatic fun forCode(value: String?): UsbPolicy? = codeMapping[value ?: disabled.code] ?: disabled
+		@JvmStatic fun forStringValue(value: String?): UsbPolicy? {
 			var retVal: UsbPolicy? = null
 
 			if (value.equals(PRE_3_1_ENABLED, ignoreCase = true) ||
 				PRE_4_1_ENABLED_LEGACY.equals(value, ignoreCase = true) ||
-				value.equals(ENABLED_NATIVE.name, ignoreCase = true)
+				value.equals(enabled_native.name, ignoreCase = true)
 			) {
-				retVal = ENABLED_NATIVE
+				retVal = enabled_native
 			} else if (
 				value.equals(PRE_3_1_DISABLED, ignoreCase = true) ||
-				value.equals(DISABLED.name, ignoreCase = true)
+				value.equals(disabled.name, ignoreCase = true)
 			) {
-				retVal = DISABLED
+				retVal = disabled
 			}
 			return retVal
 		}

@@ -16,7 +16,7 @@ import {
 } from "@/components/icons/RutilVmIcons";
 import {
   useVm,
-  useOsSystemsFromCluster,
+  useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useSnapshotsFromVM,
 } from "@/api/RQHook";
@@ -54,7 +54,7 @@ const VmGeneral = ({
   const { 
     data: osList = [], 
     isLoading: isOsListLoading,
-  } = useOsSystemsFromCluster(clustersSelected[0]?.id, (e) => ({ ...e }));
+  } = useAllOpearatingSystemsFromCluster(clustersSelected[0]?.id, (e) => ({ ...e }));
 
   const {
     data: biosTypes=[],
@@ -134,7 +134,7 @@ const generalTableRows = [
     { label: "이름", value: vm?.name },
     { label: "상태", value: <div className="f-start">{status2Icon(vm?.status)} {Localization.kr.renderStatus(vm?.status)}</div> },
     { label: "업타임", value: vm?.uptime },
-    { label: "운영 시스템", value: vm?.guestOsType },
+    { label: "운영 시스템", value: vm?.guestOsType || vm?.osTypeName },
     { label: "고가용성", value: vm?.highAvailability ? "예" : "아니요" },
     { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" },
     { label: "설명", value: vm?.description },

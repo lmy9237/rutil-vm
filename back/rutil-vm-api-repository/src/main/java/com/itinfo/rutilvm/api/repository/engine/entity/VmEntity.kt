@@ -491,7 +491,7 @@ class VmEntity(
 	val origin: Int?
 		get() = originType?.value
 	val isHostedEngineVm: Boolean
-		get() = originType == OriginType.MANAGED_HOSTED_ENGINE
+		get() = originType == OriginType.managed_hosted_engine
 
 	val virtioScsiMultiQueuesEnabled: Boolean?
 		get() = (virtioScsiMultiQueues ?: 0) > 0
@@ -652,7 +652,7 @@ class VmEntity(
 		private var bMigratingToVds: UUID? = null; fun migratingToVds(block: () -> UUID?) { bMigratingToVds = block() }
 		private var bMigrationDowntime: Int = -1; fun migrationDowntime(block: () -> Int?) { bMigrationDowntime = block() ?: -1 }
 		private var bMigrationPolicyId: UUID? = null; fun migrationPolicyId(block: () -> UUID?) { bMigrationPolicyId = block() }
-		private var bMigrationSupport: MigrationSupport? = MigrationSupport.UNKNOWN; fun migrationSupport(block: () -> MigrationSupport?) { bMigrationSupport = block() ?: MigrationSupport.UNKNOWN }
+		private var bMigrationSupport: MigrationSupport? = MigrationSupport.unknown; fun migrationSupport(block: () -> MigrationSupport?) { bMigrationSupport = block() ?: MigrationSupport.unknown }
 		private var bMinAllocatedMem: Int = -1; fun minAllocatedMem(block: () -> Int?) { bMinAllocatedMem = block() ?: -1 }
 		private var bMultiQueuesEnabled: Boolean? = null; fun multiQueuesEnabled(block: () -> Boolean?) { bMultiQueuesEnabled = block() }
 		private var bNamespace: String = ""; fun namespace(block: () -> String?) { bNamespace = block() ?: "" }
@@ -689,7 +689,7 @@ class VmEntity(
 		private var bSpicePort: Int = -1; fun spicePort(block: () -> Int?) { bSpicePort = block() ?: -1 }
 		private var bSpiceTlsPort: Int = -1; fun spiceTlsPort(block: () -> Int?) { bSpiceTlsPort = block() ?: -1 }
 		private var bSsoMethod: String = ""; fun ssoMethod(block: () -> String?) { bSsoMethod = block() ?: "" }
-		private var bStatus: VmStatusB? = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
+		private var bStatus: VmStatusB? = VmStatusB.unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.unknown }
 		private var bStoragePoolId: UUID? = null; fun storagePoolId(block: () -> UUID?) { bStoragePoolId = block() }
 		private var bStoragePoolName: String = ""; fun storagePoolName(block: () -> String?) { bStoragePoolName = block() ?: "" }
 		private var bTemplateVersionNumber: Int = -1; fun templateVersionNumber(block: () -> Int?) { bTemplateVersionNumber = block() ?: -1 }

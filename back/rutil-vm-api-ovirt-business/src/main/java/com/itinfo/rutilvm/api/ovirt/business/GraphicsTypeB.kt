@@ -11,9 +11,12 @@ import java.util.concurrent.ConcurrentHashMap
 enum class GraphicsTypeB(
 	val vmDeviceType: VmDeviceType,
 ) {
-	SPICE(VmDeviceType.SPICE), // 1
-	VNC(VmDeviceType.VNC); // 2
+	spice(VmDeviceType.SPICE), // 1
+	vnc(VmDeviceType.VNC); // 2
 
+	override fun toString(): String = code
+	val code: String
+		get() = this@GraphicsTypeB.name.uppercase()
 	val value: Int
 		get() = this@GraphicsTypeB.ordinal+1
 
@@ -25,13 +28,14 @@ enum class GraphicsTypeB(
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
-				codeMapping[it.name.lowercase()] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 				deviceTypeMapping[it.vmDeviceType] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?): GraphicsTypeB? = valueMapping[value ?: 2] ?: VNC
-		@JvmStatic fun forCode(code: String?): GraphicsTypeB? = codeMapping[code?.lowercase() ?: "vnc"] ?: VNC
-		@JvmStatic fun forDeviceType(deviceType: VmDeviceType?): GraphicsTypeB? = deviceTypeMapping[deviceType] ?: VNC
+		@JvmStatic fun forValue(value: Int?): GraphicsTypeB? = valueMapping[value ?: vnc.code] ?: vnc
+		@JvmStatic fun forCode(code: String?): GraphicsTypeB? = codeMapping[code ?: vnc.code] ?: vnc
+		@JvmStatic fun forDeviceType(deviceType: VmDeviceType?): GraphicsTypeB? = deviceTypeMapping[deviceType] ?: vnc
 	}
 
 }

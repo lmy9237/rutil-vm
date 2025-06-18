@@ -25,6 +25,7 @@ import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
@@ -52,19 +53,19 @@ class TemplateVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	private val _status: TemplateStatusB? = TemplateStatusB.OK,
+	private val _status: TemplateStatusB? = TemplateStatusB.ok,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	private val _optimizeOption: VmTypeB? = VmTypeB.unknown,
 	val biosBootMenu: Boolean = false,
-	private val _biosType: BiosTypeB? = BiosTypeB.cluster_default, // chipsetFirmwareType
-	private val _osType: VmOsType? = VmOsType.OTHER_OS,
+	val biosType: BiosTypeB? = BiosTypeB.cluster_default, // chipsetFirmwareType
+	private val _osType: VmOsType? = VmOsType.other,
 	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	private val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE,
+	private val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -75,7 +76,7 @@ class TemplateVo(
 	val cloudInit: Boolean = false,
 	val script: String = "",
 	val placementPolicy: VmAffinity = VmAffinity.MIGRATABLE,
-	val migrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE,
+	val migrationMode: MigrationSupport? = MigrationSupport.migratable,
 	val migrationPolicy: String = "",
 	val migrationAutoConverge: Boolean? = null,
 	val migrationCompression: Boolean? = null,
@@ -88,7 +89,7 @@ class TemplateVo(
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: GraphicsTypeB = GraphicsTypeB.VNC,
+	val displayType: GraphicsTypeB = GraphicsTypeB.vnc,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -125,7 +126,7 @@ class TemplateVo(
 	val versionNumber: Int = 0,             // <version><version_number>
 ): Serializable {
 	val status: String
-		get() = _status?.code ?: TemplateStatusB.Unknown.code
+		get() = _status?.code ?: TemplateStatusB.unknown.code
 
 	val urlSmallIcon: String
 		get() = iconSmall?.dataUrl ?: ""
@@ -135,11 +136,22 @@ class TemplateVo(
 	val optimizeOption: String
 		get() = _optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosType: String
-		get() = _biosType?.name?.lowercase() ?: BiosTypeB.cluster_default.name.lowercase()
+	val biosTypeCode: String
+		get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String
+		get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String
+		get() = biosType?.kr ?: "알 수 없음"
+
+	val migrationModeCode: String
+		get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String
+		get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String
+		get() = migrationMode?.kr ?: "알 수 없음"
 
 	val osType: String
-		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
+		get() = _osType?.code?.lowercase() ?: VmOsType.other.name.lowercase()
 
 	val creationTime: String?
 		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
@@ -157,19 +169,19 @@ class TemplateVo(
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: TemplateStatusB? = TemplateStatusB.Unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block() ?: TemplateStatusB.Unknown }
+		private var bStatus: TemplateStatusB? = TemplateStatusB.unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block() ?: TemplateStatusB.unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		private var bOptimizeOption: VmTypeB? = VmTypeB.unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.unknown }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
 		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
-		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
+		private var bOsType: VmOsType? = VmOsType.other; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.other }
 		private var bCpuArc: ArchitectureType? = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.NONE }
+		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.none }
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
 		private var bMemoryGuaranteed: BigInteger = BigInteger.ZERO; fun memoryGuaranteed(block: () -> BigInteger?) { bMemoryGuaranteed = block() ?: BigInteger.ZERO }
 		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
@@ -180,7 +192,7 @@ class TemplateVo(
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
 		private var bPlacementPolicy: VmAffinity = VmAffinity.MIGRATABLE; fun placementPolicy(block: () -> VmAffinity?) { bPlacementPolicy = block() ?: VmAffinity.MIGRATABLE }
-		private var bMigrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.MIGRATABLE }
+		private var bMigrationMode: MigrationSupport? = MigrationSupport.migratable; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.migratable }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
 		private var bMigrationAutoConverge: Boolean? = null; fun migrationAutoConverge(block: () -> Boolean?) { bMigrationAutoConverge = block() }
 		private var bMigrationCompression: Boolean? = null; fun migrationCompression(block: () -> Boolean?) { bMigrationCompression = block() }
@@ -193,7 +205,7 @@ class TemplateVo(
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: GraphicsTypeB = GraphicsTypeB.VNC; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.VNC }
+		private var bDisplayType: GraphicsTypeB = GraphicsTypeB.vnc; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.vnc }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -375,7 +387,7 @@ fun TemplateVo.toEditTemplate(): Template {
 	return toTemplateBuilder()
 		.id(id)
 		.os(OperatingSystemBuilder().type(osType))
-		.bios(BiosBuilder().type(BiosType.fromValue(biosType)))
+		.bios(BiosBuilder().type(biosType.toBiosType()))
 		.type(VmType.fromValue(optimizeOption))
 		// .stateless(stateless)
 		// .startPaused(startPaused)

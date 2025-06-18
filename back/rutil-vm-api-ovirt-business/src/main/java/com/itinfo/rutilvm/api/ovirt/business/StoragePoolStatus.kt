@@ -3,37 +3,43 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [StoragePoolStatus]
+ * 스토리지풀 (데이터센터) 상태
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 enum class StoragePoolStatus(
 	override val value: Int,
-	val statusValue: String,
 ): Identifiable, Serializable {
-	UNINITIALIZED(0, "uninitialized"),
-	UP(1, "up"),
-	MAINTENANCE(2, "maintenance"),
-	NOT_OPERATIONAL(3, "not_operational"),
-	NON_RESPONSIVE(4, "non_responsive"),
-	CONTEND(5, "contend");
+	uninitialized(0),
+	up(1),
+	maintenance(2),
+	not_operational(3),
+	non_responsive(4),
+	contend(5);
 
-	val label: String
-		get() = this@StoragePoolStatus.statusValue.uppercase()
-
+	override fun toString(): String = code
+	val code: String
+		get() = this@StoragePoolStatus.name.uppercase()
 
 	companion object {
 		private val valueMapping: MutableMap<Int, StoragePoolStatus> = ConcurrentHashMap<Int, StoragePoolStatus>()
-		private val storageMapping: MutableMap<String, StoragePoolStatus> = ConcurrentHashMap<String, StoragePoolStatus>()
+		private val codeMapping: MutableMap<String, StoragePoolStatus> = ConcurrentHashMap<String, StoragePoolStatus>()
 
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
-				storageMapping[it.statusValue.lowercase()] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
 
 		val allStoragePoolStatus: List<StoragePoolStatus> = StoragePoolStatus.values().filterNot {
-			it == UNINITIALIZED
+			it == uninitialized
 		}
 
-		@JvmStatic fun forValue(value: Int? = -1): StoragePoolStatus = valueMapping[value] ?: UNINITIALIZED
-		@JvmStatic fun forStatusValue(value: String = "uninitialized"): StoragePoolStatus = storageMapping[value.lowercase()] ?: UNINITIALIZED
+		@JvmStatic fun forValue(value: Int?): StoragePoolStatus = valueMapping[value ?: uninitialized.value] ?: uninitialized
+		@JvmStatic fun forCode(value: String?): StoragePoolStatus = codeMapping[value ?: uninitialized.code] ?: uninitialized
 	}
 }

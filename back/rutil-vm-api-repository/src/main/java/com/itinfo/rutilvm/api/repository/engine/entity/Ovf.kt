@@ -17,6 +17,7 @@ import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.parseEnhanced2LDT
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -512,7 +513,7 @@ data class OvfContent(
 	private val isSmartcardEnabled: Boolean? = false,
 
 	@field:JacksonXmlProperty(localName="BiosType")
-	val biosType: Int? = -1,
+	private val _biosType: Int? = -1,
 
 	@field:JacksonXmlProperty(localName="CpuPinningPolicy")
 	val cpuPinningPolicy: Int? = 0,
@@ -543,8 +544,8 @@ data class OvfContent(
 	val snapshotsSection: OvfSnapshotsSection?
 		get() = sections?.filterIsInstance<OvfSnapshotsSection>()?.firstOrNull()
 
-	val biosTypeEnum: com.itinfo.rutilvm.api.ovirt.business.BiosTypeB?
-		get() = com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.forValue(biosType)
+	val biosType: BiosTypeB?
+		get() = BiosTypeB.forValue(_biosType)
 
 	val creationDate: LocalDateTime?
 		get() = try {

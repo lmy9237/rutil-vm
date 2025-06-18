@@ -4,18 +4,25 @@ import java.util.concurrent.ConcurrentHashMap
 
 enum class SnapshotType(
 ) {
-	REGULAR,
-	ACTIVE,
-	STATELESS,
-	PREVIEW,
-	NEXT_RUN,
-	UNKNOWN;
+	regular,
+	active,
+	stateless,
+	preview,
+	next_run,
+	unknown;
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@SnapshotType.name.uppercase()
 
 	companion object {
 		private val codeMapping: MutableMap<String, SnapshotType> = ConcurrentHashMap<String, SnapshotType>()
 		init {
-			SnapshotType.values().forEach { codeMapping[it.name] = it }
+			SnapshotType.values().forEach {
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
-		@JvmStatic fun forValue(value: String): SnapshotType = codeMapping[value] ?: UNKNOWN
+		@JvmStatic fun forCode(value: String?): SnapshotType = codeMapping[value ?: unknown.code] ?: unknown
 	}
 }

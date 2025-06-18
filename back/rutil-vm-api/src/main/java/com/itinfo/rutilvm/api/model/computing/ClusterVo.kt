@@ -4,6 +4,8 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.util.ovirt.*
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toBiosTypeB
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
@@ -66,8 +68,8 @@ class ClusterVo(
     val comment: String = "",
     val isConnected: Boolean = false,
     val ballooningEnabled: Boolean = false,
-    val biosType: BiosType = BiosType.CLUSTER_DEFAULT,
-    val cpuArc: Architecture = Architecture.UNDEFINED,
+    val biosType: BiosTypeB? = BiosTypeB.cluster_default,
+    val cpuArc: Architecture? = Architecture.UNDEFINED,
     val cpuType: String = "",
     val errorHandling: String = "",   /* MigrateOnError */
     val fipsMode: FipsMode = FipsMode.UNDEFINED,
@@ -94,14 +96,12 @@ class ClusterVo(
     val templateVos: List<IdentifiedVo> = listOf(),
 	val required: Boolean = false, // 네트워크 생성시 필수 지정
 ): Serializable {
-	val biosTypeNameLcKr: String
-		get() = (if (biosType.name.lowercase() == "cluster_default")
-			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.q35_ovmf // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
-			else com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.valueOf(biosType.name.uppercase())).kr
-	val biosTypeNameLcEn: String
-		get() = (if (biosType.name.lowercase() == "cluster_default")
-			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.q35_ovmf // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
-		else com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.valueOf(biosType.name.uppercase())).en
+	val biosTypeCode: String
+		get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String
+		get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String
+		get() = biosType?.kr ?: "알 수 없음"
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -113,8 +113,8 @@ class ClusterVo(
 		private var bComment: String = "";fun comment(block: () -> String?) { bComment = block() ?: "" }
 		private var bIsConnected: Boolean = false; fun isConnected(block: () -> Boolean?) { bIsConnected = block() ?: false }
 		private var bBallooningEnabled: Boolean = false; fun ballooningEnabled(block: () -> Boolean?) { bBallooningEnabled = block() ?: false }
-		private var bBiosType: BiosType = BiosType.CLUSTER_DEFAULT; fun biosType(block: () -> BiosType?) { bBiosType = block() ?: BiosType.CLUSTER_DEFAULT }
-		private var bCpuArc: Architecture = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
+		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
+		private var bCpuArc: Architecture? = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
 		private var bCpuType: String = ""; fun cpuType(block: () -> String?) { bCpuType = block() ?: "" }
 		private var bErrorHandling: String = ""; fun errorHandling(block: () -> String?) { bErrorHandling = block() ?: "" }
 		private var bFipsMode: FipsMode = FipsMode.UNDEFINED; fun fipsMode(block: () -> FipsMode?) { bFipsMode = block() ?: FipsMode.UNDEFINED}
@@ -201,7 +201,7 @@ fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 		name { cluster.name() }
 		description {cluster.description() }
 		comment { cluster.comment() }
-		biosType { if(cluster.biosTypePresent()) cluster.biosType() else null}
+		biosType { cluster.biosType().toBiosTypeB() }
 		cpuArc { if(cluster.cpuPresent()) cluster.cpu().architecture() else null}
 		cpuType { if (cluster.cpuPresent()) cluster.cpu().type() else null }
 		firewallType { cluster.firewallType() }
@@ -248,8 +248,6 @@ fun Cluster.resolveDataCenter(conn: Connection): DataCenter? {
  * 클러스터 빌더
  */
 fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
-	log.info("ClusterVo: {}", this)
-
 	val builder = ClusterBuilder()
 		.dataCenter(DataCenterBuilder().id(dataCenterVo.id).build()) // 필수
 		.name(name) // 필수

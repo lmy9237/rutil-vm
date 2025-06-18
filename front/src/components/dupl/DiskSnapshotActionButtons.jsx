@@ -26,8 +26,8 @@ const DiskSnapshotActionButtons = ({
 
   const selected1st = [...vmsSelected][0] ?? null
 
-  const isVmUp = useMemo(() => selected1st?.status === "UP", [vmsSelected])
-  const isVmPause = useMemo(() => selected1st?.status === "SUSPENDED", [vmsSelected])
+  const isUp = useMemo(() => selected1st?.running ?? false, [vmsSelected])
+  const isVmPause = useMemo(() => selected1st?.downOrSuspended ?? false, [vmsSelected])
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
 
   const basicActions = useMemo(() => ([

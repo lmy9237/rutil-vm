@@ -1,27 +1,19 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.VDSStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
-import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.UUID
 import java.io.Serializable
 import java.math.BigDecimal
-import java.math.BigInteger
-import javax.persistence.CascadeType
 // Or jakarta.persistence.* for newer Spring Boot
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
-import javax.persistence.OneToMany
 import javax.persistence.OneToOne
-import javax.persistence.Lob
 import javax.persistence.MapsId
 import javax.persistence.Table
 
@@ -234,15 +226,15 @@ class VdsDynamicEntity(
 	override fun toString(): String =
 		gson.toJson(this)
 
-	var vdsStatus: VDSStatus
-		get() = VDSStatus.findByValue(status)
+	var vdsStatus: VdsStatus
+		get() = VdsStatus.forValue(status)
 		set(newV) {
 			this.previousStatus = this.status
 			this.vdsStatus = newV
 			this.status = newV.value
 		}
-	val vdsPreviousStatus: VDSStatus
-		get() = VDSStatus.findByValue(previousStatus)
+	val vdsPreviousStatus: VdsStatus
+		get() = VdsStatus.forValue(previousStatus)
 
 	class Builder {
 		private var bVdsId: UUID? = null;fun vdsId(block: () -> UUID?) { bVdsId = block() }

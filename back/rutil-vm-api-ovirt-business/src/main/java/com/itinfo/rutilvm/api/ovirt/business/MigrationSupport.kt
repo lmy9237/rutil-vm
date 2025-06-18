@@ -11,18 +11,20 @@ import java.util.concurrent.ConcurrentHashMap
  */
 enum class MigrationSupport(
 	override val value: Int,
-	val code: String,
 ): Identifiable, Serializable {
-	MIGRATABLE(0, "migratable"),
-	IMPLICITLY_NON_MIGRATABLE(1, "implicitly_non_migratable"),
-	PINNED_TO_HOST(2, "pinned_to_host"),
-	UNKNOWN(-1, "unknown");
+	migratable(0),
+	implicitly_non_migratable(1),
+	pinned_to_host(2),
+	unknown(-1);
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@MigrationSupport.name.uppercase()
 
 	val localizationKey: String
 		get() = "${MigrationSupport::class.java.simpleName}.${this.name}"
 	private val loc: Localization
 		get() = Localization.getInstance()
-
 	val en: String
 		get() = loc.findLocalizedName4MigrationSupport(this, "en")
 	val kr: String
@@ -35,15 +37,15 @@ enum class MigrationSupport(
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
-				codeMapping[it.code.lowercase()] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
 
 		val allMigrationSupports: List<MigrationSupport> = MigrationSupport.values().filterNot {
-			it == UNKNOWN
+			it == unknown
 		}
-
-		@JvmStatic fun forValue(value: Int? = -1): MigrationSupport = valueMapping[value] ?: MIGRATABLE
-		@JvmStatic fun forCode(value: String? = "migratable"): MigrationSupport = codeMapping[value?.lowercase()] ?: MIGRATABLE
+		@JvmStatic fun forValue(value: Int?): MigrationSupport = valueMapping[value ?: migratable.value] ?: migratable
+		@JvmStatic fun forCode(value: String?): MigrationSupport = codeMapping[value ?: migratable.code] ?: migratable
 	}
 }

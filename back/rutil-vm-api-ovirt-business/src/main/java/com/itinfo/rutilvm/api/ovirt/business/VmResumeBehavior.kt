@@ -19,11 +19,11 @@ enum class VmResumeBehavior(
 	 *
 	 * This is the default for VMs which are not HA with a lease.
 	 */
-	AUTO_RESUME,
+	auto_resume,
 	/**
 	 * Do nothing with the virtual machine.
 	 */
-	LEAVE_PAUSED,
+	leave_paused,
 	/**
 	 * The virtual machine will be killed after a timeout (configurable on the hypervisor).
 	 *
@@ -32,18 +32,22 @@ enum class VmResumeBehavior(
 	 * restarted using the infrastructure and any kind of resume risks
 	 * split brains.
 	 */
-	KILL;
+	kill;
+
+	override fun toString(): String = this@VmResumeBehavior.code
+	val code: String
+		get() = this@VmResumeBehavior.name.uppercase()
 
 	companion object {
 		private val codeMapping: MutableMap<String, VmResumeBehavior> = ConcurrentHashMap<String, VmResumeBehavior>()
 
 		init {
 			VmResumeBehavior.values().forEach {
-				codeMapping[it.name.lowercase()] = it
+				codeMapping[it.code] = it
 			}
 		}
 
 		val allVmResumeBehaviors: List<VmResumeBehavior> = VmResumeBehavior.values().toList()
-		@JvmStatic fun forCode(value: String? = "auto_resume"): VmResumeBehavior = codeMapping[value?.lowercase() ?: "auto_resume"] ?: AUTO_RESUME
+		@JvmStatic fun forCode(value: String?): VmResumeBehavior = codeMapping[value?.uppercase() ?: auto_resume.code] ?: auto_resume
 	}
 }

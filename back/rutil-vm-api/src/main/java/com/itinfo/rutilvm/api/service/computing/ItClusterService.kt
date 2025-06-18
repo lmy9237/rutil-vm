@@ -4,6 +4,8 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toVmOsTypes
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
@@ -144,14 +146,14 @@ interface ItClusterService {
 	fun findAllVnicProfilesFromCluster(clusterId: String): List<VnicProfileVo>
 
 	/**
-	 * [ItClusterService.findAllOsSystemFromCluster]
-	 * 가상머신 operation system
+	 * [ItClusterService.findAllOperatingSystemsFromCluster]
+	 * 해당 클러스터가 적용 가능한 가상머신의 OS 유형 목록
 	 *
 	 * @param clusterId [String]
-	 * @return List<[OsVo]>
+	 * @return List<[OperatingSystemVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllOsSystemFromCluster(clusterId: String): List<OsVo>
+	fun findAllOperatingSystemsFromCluster(clusterId: String): List<OperatingSystemVo>
 	/**
 	 * [ItClusterService.findAllCpuProfilesFromCluster]
 	 * 클러스터가 가지고있는 CPU 프로파일 목록
@@ -320,12 +322,15 @@ class ClusterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllOsSystemFromCluster(clusterId: String): List<OsVo> {
-		log.info("findAllOsSystemFromCluster ... clusterId: {}", clusterId)
-		val cluster: Cluster? = conn.findCluster(clusterId).getOrNull()
-		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems().getOrDefault(emptyList())
+	override fun findAllOperatingSystemsFromCluster(clusterId: String): List<OperatingSystemVo> {
+		log.info("findAllOperatingSystemsFromCluster ... clusterId: {}", clusterId)
+		val cluster: Cluster? = conn.findCluster(clusterId)
+			.getOrNull()
+		val res: List<OperatingSystemInfo> = conn.findAllOperatingSystems()
+			.getOrDefault(emptyList())
 			.filter { it.architecture() == cluster?.cpu()?.architecture() }
-		return res.toOsVos()
+		// return res.toVmOsTypes()
+		return res.toOperatingSystemVos()
 	}
 
 	@Throws(Error::class)

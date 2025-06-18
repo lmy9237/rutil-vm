@@ -5,35 +5,39 @@ import java.util.concurrent.ConcurrentHashMap
 
 enum class DiskStorageType(
 	override val value: Int,
-	val storageValue: String,
 ): Identifiable, Serializable {
-	IMAGE(0, "IMAGE"),
-	CINDER(1, "CINDER"),
-	LUN(2, "LUN"),
-	MANAGED_BLOCK_STORAGE(3, "MANAGED_BLOCK_STORAGE"),
-	UNKNOWN(-1, "UNKNOWN");
+	image(0),
+	cinder(1),
+	lun(2),
+	managed_block_storage(3),
+	unknown(-1);
 
-	val label: String
-		get() = this@DiskStorageType.name.lowercase()
+	override fun toString(): String = code
+	val code: String
+		get() = this@DiskStorageType.name.uppercase()
 
 	val isInternal: Boolean
-		get() = this@DiskStorageType == IMAGE ||
-			this@DiskStorageType == CINDER ||
-			this@DiskStorageType == MANAGED_BLOCK_STORAGE
+		get() = this@DiskStorageType == image ||
+			this@DiskStorageType == cinder ||
+			this@DiskStorageType == managed_block_storage
 
 	companion object {
 		private val valueMapping: MutableMap<Int, DiskStorageType> = ConcurrentHashMap<Int, DiskStorageType>()
-		private val storageMapping: MutableMap<String, DiskStorageType> = ConcurrentHashMap<String, DiskStorageType>()
+		private val codeMapping: MutableMap<String, DiskStorageType> = ConcurrentHashMap<String, DiskStorageType>()
 
 		init {
-			values().forEach { valueMapping[it.value] = it }
+			values().forEach {
+				valueMapping[it.value] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
 
-		val allContentTypes: List<DiskStorageType> = DiskStorageType.values().filterNot {
-			it == UNKNOWN
+		val allDiskStorageTypes: List<DiskStorageType> = DiskStorageType.values().filterNot {
+			it == unknown
 		}
 
-		@JvmStatic fun forValue(value: Int?=-1): DiskStorageType = valueMapping[value] ?: UNKNOWN
-		@JvmStatic fun forStorageValue(value: String="IMAGE"): DiskStorageType = storageMapping[value] ?: IMAGE
+		@JvmStatic fun forValue(value: Int?): DiskStorageType = valueMapping[value ?: unknown.code] ?: unknown
+		@JvmStatic fun forCode(code: String?): DiskStorageType = codeMapping[code ?: unknown.code] ?: unknown
 	}
 }

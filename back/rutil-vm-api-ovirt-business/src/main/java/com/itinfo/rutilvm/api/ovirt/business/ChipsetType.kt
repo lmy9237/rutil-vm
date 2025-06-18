@@ -3,27 +3,33 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.util.concurrent.ConcurrentHashMap
 
 enum class ChipsetType(
-	val chipsetName: String,
 ) {
-	I440FX("i440fx"),
-	Q35("q35");
+	i440fx,
+	q35;
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@ChipsetType.name.uppercase()
 
 	companion object {
-		private val findMap: MutableMap<String, ChipsetType> = ConcurrentHashMap<String, ChipsetType>()
+		private val codeMapping: MutableMap<String, ChipsetType> = ConcurrentHashMap<String, ChipsetType>()
 		init {
-			ChipsetType.values().forEach { findMap[it.chipsetName] = it }
+			ChipsetType.values().forEach {
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
-		@JvmStatic fun forValue(chipsetName: String): ChipsetType? = findMap[chipsetName]
+		@JvmStatic fun forCode(code: String): ChipsetType? = codeMapping[code]
 		@JvmStatic fun fromMachineType(machineType: String): ChipsetType? {
 			var defaultChipset: ChipsetType? = null
 
 			for (element in machineType.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()) {
 				for (chipsetType in values()) {
-					if (element.equals(chipsetType.chipsetName, ignoreCase = true)) {
+					if (element.equals(chipsetType.code, ignoreCase = true)) {
 						return chipsetType
 					}
 					if (element.equals("pc", ignoreCase = true)) {
-						defaultChipset = I440FX
+						defaultChipset = i440fx
 					}
 				}
 			}

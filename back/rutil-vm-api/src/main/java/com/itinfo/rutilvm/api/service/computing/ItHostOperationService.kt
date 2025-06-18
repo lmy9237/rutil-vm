@@ -4,7 +4,7 @@ import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.api.model.cert.toRemoteConnMgmt
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.ovirt.business.VDSStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.api.repository.engine.VdcOptionsRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsDynamicRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.VdcOptionEntity
@@ -146,7 +146,7 @@ class HostOperationServiceImpl(
 		val vdcOption: VdcOptionEntity? = vdcOptions.findSshHostRebootCommandByVersion() // 기본 4.7
 		val vdsDynamic2Update: VdsDynamicEntity = vdsDynamics.findByVdsId(hostId.toUUID())
 			?: throw ErrorPattern.HOST_NOT_FOUND.toError()
-		vdsDynamic2Update.vdsStatus = VDSStatus.Reboot
+		vdsDynamic2Update.vdsStatus = VdsStatus.reboot
 		val res: Result<Boolean>? =
 			if (vdcOption?.optionValue?.isEmpty() == false)
 				remoteConnMgmt?.rebootSystem(vdcOption.optionValue)

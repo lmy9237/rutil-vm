@@ -35,6 +35,7 @@ import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.toOsType
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
 import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
@@ -74,7 +75,6 @@ import org.ovirt.engine.sdk4.builders.TimeZoneBuilder
 import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.builders.VmPlacementPolicyBuilder
 import org.ovirt.engine.sdk4.types.Architecture
-import org.ovirt.engine.sdk4.types.BiosType
 import org.ovirt.engine.sdk4.types.BootDevice
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Disk
@@ -96,7 +96,6 @@ import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmAffinity
 import org.ovirt.engine.sdk4.types.VmStorageErrorResumeBehaviour
-import org.ovirt.engine.sdk4.types.VmType
 
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -188,20 +187,20 @@ class VmVo (
 	val description: String = "",
 	val comment: String = "",
 	// val status: String = "",
-	private val _status: VmStatusB? = VmStatusB.Unknown,
+	val status: VmStatusB? = VmStatusB.unknown,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: VmTypeB? = VmTypeB.unknown, // VmType
 	// val biosType: String = "", // chipsetFirmwareType
 	val biosType: BiosTypeB? = BiosTypeB.cluster_default,
 	val biosBootMenu: Boolean = false,
-	private val _osType: VmOsType? = VmOsType.OTHER_OS,
+	val osType: VmOsType? = VmOsType.other,
 	val cpuArc: ArchitectureType = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE,
+	val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -211,20 +210,20 @@ class VmVo (
 	val timeOffset: String = "Etc/GMT",
 	val cloudInit: Boolean = false,
 	val script: String = "",
-	val migrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE, // VmAffinity
+	val migrationMode: MigrationSupport? = MigrationSupport.migratable, // VmAffinity
 	val migrationPolicy: String = "",
 	val migrationAutoConverge: Boolean? = null,
 	val migrationCompression: Boolean? = null,
 	val migrationEncrypt: Boolean? = null,
 	val migrationParallelPolicy: Boolean? = null,
 	val parallelMigration: String = "",
-	val storageErrorResumeBehaviour: VmResumeBehavior? = VmResumeBehavior.AUTO_RESUME,
+	val storageErrorResumeBehaviour: VmResumeBehavior? = VmResumeBehavior.auto_resume,
 	val virtioScsiMultiQueueEnabled: Boolean = false,
 	val firstDevice: String = "",
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: GraphicsTypeB? = GraphicsTypeB.VNC,
+	val displayType: GraphicsTypeB? = GraphicsTypeB.vnc,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -259,69 +258,67 @@ class VmVo (
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 	val usageDto: UsageDto = UsageDto(),
 ): Serializable {
-	val status: String
-		get() = _status?.code ?: VmStatusB.Unknown.code
+	val statusCode: String 			get() = status?.code ?: VmStatusB.unknown.code
+	val statusKr: String			get() = status?.kr ?: "알 수 없음"
+	val statusEn: String 			get() = status?.en ?: "N/A"
 
-	val urlSmallIcon: String
-		get() = iconSmall?.dataUrl ?: ""
-	val urlLargeIcon: String
-		get() = iconLarge?.dataUrl ?: ""
+	val urlSmallIcon: String		get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String		get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOptionCode: String
-		get() = optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionCode: String	get() = optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosTypeCode: String
-		get() = (biosType?.name ?: BiosTypeB.cluster_default.name).lowercase()
+	val biosTypeCode: String		get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String			get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String			get() = biosType?.kr ?: "알 수 없음"
 
-	val osType: String
-		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
+	val osTypeCode: String			get() = osType?.code ?: VmOsType.other.code
+	val osTypeName: String			get() = osType?.description ?: VmOsType.other.description
 
-	val cpuPinningPolicy: String
-		get() = _cpuPinningPolicy?.name?.lowercase() ?: CpuPinningPolicyB.NONE.name.lowercase()
+	val migrationModeCode: String	get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String		get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String		get() = migrationMode?.kr ?: "알 수 없음"
 
-	val creationTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
-	val startTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_startTime)
-	val stopTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
-	val upTime: String?
-		get() = timeElapsed?.toTimeElapsedKr()
+	val cpuPinningPolicy: String	get() = _cpuPinningPolicy?.name?.lowercase() ?: CpuPinningPolicyB.none.name.lowercase()
 
-	val notRunning: Boolean /* '실행 중'이 아닌 상태 */
-		get() = _status?.notRunning ?: false
-	val qualified2Migrate: Boolean /* 마이그레이션이 가능한 상태 */
-		get() = _status?.qualified2Migrate ?: false
+	val creationTime: String?		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	val upTime: String?				get() = timeElapsed?.toTimeElapsedKr()
+
+	val notRunning: Boolean			get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
+	val qualified2Migrate: Boolean	get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
 	val qualified4SnapshotMerge: Boolean /* 스냅샷 머지 가능한 상태 */
-		get() = _status?.qualified4SnapshotMerge ?: false
+		get() = status?.qualified4SnapshotMerge ?: false
 	val qualified4LiveSnapshotMerge: Boolean /* 라이브 스냅샷 머지 가능한 상태 */
-		get() = _status?.qualified4LiveSnapshotMerge ?: false
+		get() = status?.qualified4LiveSnapshotMerge ?: false
 	val qualified4VmBackup: Boolean /* 가상머신 백업 가능한 상태 */
-		get() = _status?.qualified4VmBackup ?: false
+		get() = status?.qualified4VmBackup ?: false
 	val qualified4ConsoleConnect: Boolean /* 콘솔로 가상머신 접근 가능한 상태 */
-		get() = _status?.qualified4ConsoleConnect ?: false
+		get() = status?.qualified4ConsoleConnect ?: false
+	val qualified4PowerDown: Boolean /* 가상머신 종료 가능한 상태*/
+		get() = status?.qualified4PowerDown ?: false
 	val runningOrPaused: Boolean /* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*/
-		get() = _status?.runningOrPaused ?: false
+		get() = status?.runningOrPaused ?: false
 	val running: Boolean /* '실행 중' 인 상태 */
-		get() = _status?.running ?: false
+		get() = status?.running ?: false
 	val upOrPaused: Boolean
-		get() = _status?.upOrPaused ?: false
+		get() = status?.upOrPaused ?: false
 	val starting: Boolean
-		get() = _status?.starting ?: false
+		get() = status?.starting ?: false
 	val startingOrUp: Boolean
-		get() = _status?.startingOrUp ?: false
+		get() = status?.startingOrUp ?: false
 	val hibernating: Boolean /* '수면 중' 인 상태 */
-		get() = _status?.hibernating ?: false
+		get() = status?.hibernating ?: false
 	val downOrSuspended: Boolean
-		get() = _status?.downOrSuspended ?: false
+		get() = status?.downOrSuspended ?: false
 	val qualified4QosChange: Boolean
-		get() = _status?.qualified4QosChange ?: false
+		get() = status?.qualified4QosChange ?: false
 	val guestCpuRunning: Boolean
-		get() = _status?.guestCpuRunning ?: false
+		get() = status?.guestCpuRunning ?: false
 	val poweringUpOrMigrating: Boolean
-		get() = _status?.poweringUpOrMigrating ?: false
+		get() = status?.poweringUpOrMigrating ?: false
 	val migrating: Boolean
-		get() = _status?.migrating ?: false
+		get() = status?.migrating ?: false
 
     override fun toString(): String =
 		gson.toJson(this)
@@ -332,19 +329,19 @@ class VmVo (
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
 		// private var bStatus: com.itinfo.rutilvm.api.ovirt.business.VmStatus = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
-		private var bStatus: VmStatusB = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
+		private var bStatus: VmStatusB = VmStatusB.unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		private var bOptimizeOption: VmTypeB? = VmTypeB.unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.unknown }
 		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
-		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
+		private var bOsType: VmOsType? = VmOsType.other; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.other }
 		private var bCpuArc: ArchitectureType = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }
 		private var bCpuTopologyThread: Int = 0; fun cpuTopologyThread(block: () -> Int?) { bCpuTopologyThread = block() ?: 0 }
-		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.NONE; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.NONE }
+		private var bCpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none; fun cpuPinningPolicy(block: () -> CpuPinningPolicyB?) { bCpuPinningPolicy = block() ?: CpuPinningPolicyB.none }
 		private var bMemorySize: BigInteger = BigInteger.ZERO; fun memorySize(block: () -> BigInteger?) { bMemorySize = block() ?: BigInteger.ZERO }
 		private var bMemoryGuaranteed: BigInteger = BigInteger.ZERO; fun memoryGuaranteed(block: () -> BigInteger?) { bMemoryGuaranteed = block() ?: BigInteger.ZERO }
 		private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO }
@@ -354,20 +351,20 @@ class VmVo (
 		private var bTimeOffset: String = ""; fun timeOffset(block: () -> String?) { bTimeOffset = block() ?: "" }
 		private var bCloudInit: Boolean = false; fun cloudInit(block: () -> Boolean?) { bCloudInit = block() ?: false }
 		private var bScript: String = ""; fun script(block: () -> String?) { bScript = block() ?: "" }
-		private var bMigrationMode: MigrationSupport? = MigrationSupport.MIGRATABLE; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.MIGRATABLE }
+		private var bMigrationMode: MigrationSupport? = MigrationSupport.migratable; fun migrationMode(block: () -> MigrationSupport?) { bMigrationMode = block() ?: MigrationSupport.migratable }
 		private var bMigrationPolicy: String = ""; fun migrationPolicy(block: () -> String?) { bMigrationPolicy = block() ?: "" }
 		private var bMigrationAutoConverge: Boolean? = null; fun migrationAutoConverge(block: () -> Boolean?) { bMigrationAutoConverge = block() }
 		private var bMigrationCompression: Boolean? = null; fun migrationCompression(block: () -> Boolean?) { bMigrationCompression = block() }
 		private var bMigrationEncrypt: Boolean? = null; fun migrationEncrypt(block: () -> Boolean?) { bMigrationEncrypt = block() }
 		private var bMigrationParallelPolicy: Boolean? = null; fun migrationParallelPolicy(block: () -> Boolean?) { bMigrationParallelPolicy = block() }
 		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
-		private var bStorageErrorResumeBehaviour: VmResumeBehavior = VmResumeBehavior.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmResumeBehavior?) { bStorageErrorResumeBehaviour = block() ?: VmResumeBehavior.AUTO_RESUME }
+		private var bStorageErrorResumeBehaviour: VmResumeBehavior = VmResumeBehavior.auto_resume; fun storageErrorResumeBehaviour(block: () -> VmResumeBehavior?) { bStorageErrorResumeBehaviour = block() ?: VmResumeBehavior.auto_resume }
 		private var bVirtioScsiMultiQueueEnabled: Boolean = false; fun virtioScsiMultiQueueEnabled(block: () -> Boolean?) { bVirtioScsiMultiQueueEnabled = block() ?: false }
 		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: GraphicsTypeB? = GraphicsTypeB.VNC; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.VNC }
+		private var bDisplayType: GraphicsTypeB? = GraphicsTypeB.vnc; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.vnc }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -448,7 +445,7 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		snapshotVos { snapshots }
-		if (status == VmStatusB.Up) {
+		if (status == VmStatusB.up) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
@@ -550,7 +547,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		virtioScsiMultiQueueEnabled { vm.virtioScsiMultiQueuesEnabled() }
 		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
 		timeOffset { vm.timeZone().name() }
-		if (status == VmStatusB.Up) {
+		if (status == VmStatusB.up) {
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
 			ipv4 { vm.reportedDevices().findVmIpv4() }
@@ -585,7 +582,7 @@ fun Vm.toTemplateVmVo(conn: Connection): VmVo {
 		id { vm.id() }
 		name { vm.name() }
 		status { status }
-		if (status == VmStatusB.Up) {
+		if (status == VmStatusB.up) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(vm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()
 			fqdn { vm.fqdn() }
@@ -604,7 +601,6 @@ fun Vm.toTemplateVmVo(conn: Connection): VmVo {
 }
 fun List<Vm>.toTemplateVmVos(conn: Connection) =
 	this@toTemplateVmVos.map { it.toTemplateVmVo(conn) }
-
 
 fun Vm.toVmStorageDomainMenu(conn: Connection, storageDomainId: String): VmVo {
 	val vm: Vm? = conn.findVm(this@toVmStorageDomainMenu.id(), follow = "diskattachments.disk,snapshots").getOrNull()
@@ -643,7 +639,7 @@ fun Vm.toNetworkVm(conn: Connection): VmVo {
 		description { this@toNetworkVm.description() }
 		status { status }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		if (status == VmStatusB.Up) {
+		if (status == VmStatusB.up) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toNetworkVm.id()).getOrDefault(emptyList())
 			fqdn { this@toNetworkVm.fqdn() }
 			timeElapsed { statistics.findVmUptime() }
@@ -670,7 +666,7 @@ fun Vm.toDiskVm(conn: Connection): VmVo {
 		description { this@toDiskVm.description() }
 		status { status }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
-		if (status == VmStatusB.Up) {
+		if (status == VmStatusB.up) {
 			val statistics: List<Statistic> = conn.findAllStatisticsFromVm(this@toDiskVm.id()).getOrDefault(emptyList())
 			val host: Host? = conn.findHost(this@toDiskVm.host().id()).getOrNull()
 			fqdn { this@toDiskVm.fqdn() }
@@ -822,7 +818,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	type(optimizeOption.toVmType())
 	timeZone(
 		TimeZoneBuilder().name(
-			if(osType.contains("windows")) "GMT Standard Time"
+			if(osType?.isWindows == true) "GMT Standard Time"
 			else timeOffset
 		)
 	)
@@ -879,7 +875,7 @@ fun VmVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	}
 	os(
 		OperatingSystemBuilder()
-			.type(VmOsType.forCode(osType).code)
+			.type(osType?.toOsType()?.value())
 			.boot(BootBuilder().devices(bootDeviceList))
 	)
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))
@@ -904,8 +900,8 @@ fun List<VmVo>.toCountByStatus(code: String): Int {
 	val status = VmStatusB.forCode(code)
 	return this@toCountByStatus.count {
 		when (status) {
-			VmStatusB.Up -> it.status == VmStatusB.Up.code
-			VmStatusB.Down -> it.status != VmStatusB.Up.code
+			VmStatusB.up -> it.status == VmStatusB.up
+			VmStatusB.down -> it.status != VmStatusB.up
 			else -> true
 		}
 	}

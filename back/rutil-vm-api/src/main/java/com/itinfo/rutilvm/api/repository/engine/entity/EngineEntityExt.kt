@@ -18,9 +18,9 @@ import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatus
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainType
-import com.itinfo.rutilvm.api.ovirt.business.StorageType
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
@@ -34,10 +34,8 @@ import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll4Template
 import com.itinfo.rutilvm.util.ovirt.findCluster
-import com.itinfo.rutilvm.util.ovirt.findVmType
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
-import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.data.domain.Page
@@ -76,8 +74,8 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 		virtualSize { entity.size }
 		actualSize { entity.actualSize }
 		status { DiskStatus.forValue(entity.imagestatus) }
-		contentType { DiskContentType.forValue(entity.diskContentType) }
-		storageType { DiskStorageType.forValue(entity.diskStorageType) }
+		contentType { diskContentType }
+		storageType { entity.diskStorageType }
 		sparse { entity.volumeType == 2 }
 		description { entity.description }
 		dateCreated { entity.creationDate }
@@ -128,10 +126,10 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		id { id.toString() }
 		name { storageName }
 		description { storageDescription }
-		status { StorageDomainStatus.forValue(status) }
+		status { status }
 		// storagePoolStatus { StoragePoolStatus.forValue(storageDomainSharedStatus) }
-		storageType { StorageType.forValue(storageType) }
-		storageDomainType { StorageDomainType.forValue(storageDomainType) }
+		storageType { storageType }
+		storageDomainType { storageDomainType }
 		// storageVo { storage().toStorageVo() }
 		// master { master() }
 		hostedEngine { isHostedEngineStorage }
@@ -381,8 +379,8 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 			}
 		}
 		snapshotVos { snapshots.filter {
-			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.ACTIVE &&
-			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.PREVIEW
+			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.active &&
+			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.preview
 		}.toIdentifiedVosFromSnapshotEntities() }
 	}
 }

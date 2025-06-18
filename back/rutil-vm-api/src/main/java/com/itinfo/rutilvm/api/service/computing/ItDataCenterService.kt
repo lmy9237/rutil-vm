@@ -8,8 +8,8 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
-import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
@@ -18,15 +18,12 @@ import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.VmTemplateEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.fromVmTemplateToIdentifiedVos
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.setting.ItEventService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
@@ -292,7 +289,7 @@ class DataCenterServiceImpl(
 		// return res.toDcDomainMenus(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.filter { it.storageType != com.itinfo.rutilvm.api.ovirt.business.StorageType.GLANCE.value }
+			.filter { it.storageType != StorageTypeB.glance }
 			.toStorageDomainEntities()
 
 	}

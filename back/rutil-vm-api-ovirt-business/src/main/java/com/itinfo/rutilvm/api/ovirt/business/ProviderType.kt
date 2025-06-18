@@ -14,15 +14,20 @@ enum class ProviderType(
 	val isUnmanagedAware: Boolean,
 	vararg providedTypes: VdcObjectType
 ) : Identifiable {
-	OPENSTACK_NETWORK(0, true, true, false, VdcObjectType.Network),
-	FOREMAN(1, false, false, false, VdcObjectType.VDS),
-	OPENSTACK_IMAGE(2, true, false, false, VdcObjectType.Storage),
-	OPENSTACK_VOLUME(3, true, false, false, VdcObjectType.Storage),
-	VMWARE(4, false, false, false, VdcObjectType.VM),
-	EXTERNAL_NETWORK(5, true, true, true, VdcObjectType.Network),
-	KVM(6, false, false, false, VdcObjectType.VM),
-	XEN(7, false, false, false, VdcObjectType.VM),
-	KUBEVIRT(8, false, false, false, VdcObjectType.Cluster);
+	openstack_network(0, true, true, false, VdcObjectType.Network),
+	foreman(1, false, false, false, VdcObjectType.VDS),
+	openstack_image(2, true, false, false, VdcObjectType.Storage),
+	openstack_volume(3, true, false, false, VdcObjectType.Storage),
+	vmware(4, false, false, false, VdcObjectType.VM),
+	external_network(5, true, true, true, VdcObjectType.Network),
+	kvm(6, false, false, false, VdcObjectType.VM),
+	xen(7, false, false, false, VdcObjectType.VM),
+	kubevirt(8, false, false, false, VdcObjectType.Cluster);
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@ProviderType.name.uppercase()
+
 	private val loc: Localization
 		get() = Localization.getInstance()
 	val localizationKey: String
@@ -34,25 +39,30 @@ enum class ProviderType(
 
 	val defaultUrl: String
 		get() = when(this) {
-			EXTERNAL_NETWORK, OPENSTACK_NETWORK -> "http://localhost:9696"
-			OPENSTACK_IMAGE -> "http://localhost:9292"
-			VMWARE, KVM, XEN, KUBEVIRT -> ""
+			external_network, openstack_network -> "http://localhost:9696"
+			openstack_image -> "http://localhost:9292"
+			vmware, kvm, xen, kubevirt -> ""
 			else -> "http://localhost"
 		}
 
 	val isTypeNetwork: Boolean
-		get() = this == EXTERNAL_NETWORK || this == OPENSTACK_NETWORK
+		get() = this == external_network || this == openstack_network
 	val isTypeOpenstack: Boolean
-		get() = this == OPENSTACK_IMAGE || this == OPENSTACK_NETWORK
+		get() = this == openstack_image || this == openstack_network
 	val supportsAuthApiV3: Boolean
 		get() = isTypeOpenstack
 
 	companion object {
-		private val findMap: MutableMap<Int, ProviderType> = ConcurrentHashMap<Int, ProviderType>()
+		private val valueMapping: MutableMap<Int, ProviderType> = ConcurrentHashMap<Int, ProviderType>()
+		private val codeMapping: MutableMap<String, ProviderType> = ConcurrentHashMap<String, ProviderType>()
 		init {
-			ProviderType.values().forEach { findMap[it.value] = it }
+			ProviderType.values().forEach {
+				valueMapping[it.value] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
-		@JvmStatic fun forValue(value: Int): ProviderType? = findMap[value]
-		@JvmStatic fun findByName(name: String): ProviderType? = findMap.values.firstOrNull() { it.name == name }
+		@JvmStatic fun forValue(value: Int): ProviderType? = valueMapping[value]
+		@JvmStatic fun findByName(name: String): ProviderType? = valueMapping.values.firstOrNull() { it.name == name }
 	}
 }

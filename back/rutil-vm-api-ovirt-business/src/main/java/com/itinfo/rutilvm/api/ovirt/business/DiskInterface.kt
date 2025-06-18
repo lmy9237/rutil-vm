@@ -9,12 +9,17 @@ import java.util.concurrent.ConcurrentHashMap
  * @author 이찬희 (@chanhi2000)
  */
 enum class DiskInterface(
+	val description: String
 ) {
-	IDE,
-	VirtIO_SCSI,
-	VirtIO,
-	SPAPR_VSCSI,
-	SATA;
+	ide("IDE"),
+	virtio_scsi("VirtIO_SCSI"),
+	virtio("VirtIO"),
+	spapr_vscsi("SPAPR_VSCSI"),
+	sata("SATA");
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@DiskInterface.name.uppercase()
 
 	val localizationKey: String
 		get() = "${DiskInterface::class.java.simpleName}.${this.name}"
@@ -30,12 +35,11 @@ enum class DiskInterface(
 
 		init {
 			values().forEach {
-				codeMapping[it.name.lowercase()] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
-
 		val allDiskInterfaces: List<DiskInterface> = DiskInterface.values().toList()
-
-		@JvmStatic fun forCode(value: String? = "IDE"): DiskInterface? = codeMapping[value?.lowercase() ?: "IDE"]
+		@JvmStatic fun forCode(value: String?): DiskInterface? = codeMapping[value ?: ide.code] ?: ide
 	}
 }

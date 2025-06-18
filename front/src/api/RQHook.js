@@ -849,27 +849,27 @@ export const useCpuProfilesFromCluster = (
 })
 
 /**
- * @name useOsSystemsFromCluster
+ * @name useAllOpearatingSystemsFromCluster
  * @description 클러스터 내 운영시스템 목록조회 useQuery훅
  * 
  * @param {string} clusterId 클러스터ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findOsSystemsFromCluster
+ * @see ApiManager.findAllOperatingSystemsFromCluster
  */
-export const useOsSystemsFromCluster = (
+export const useAllOpearatingSystemsFromCluster = (
   clusterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['osSystemsFromCluster', clusterId],
   queryFn: async () => {
-    const res = await ApiManager.findOsSystemsFromCluster(clusterId);
+    const res = await ApiManager.findAllOperatingSystemsFromCluster(clusterId);
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validate(res) ?? [];
-    Logger.debug(`RQHook > useOsSystemsFromCluster ... ${clusterId}, res: `, _res);
+    Logger.debug(`RQHook > useAllOpearatingSystemsFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
   enabled: !!clusterId,

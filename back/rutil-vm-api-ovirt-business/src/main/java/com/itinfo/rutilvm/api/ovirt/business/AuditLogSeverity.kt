@@ -5,11 +5,15 @@ import java.util.concurrent.ConcurrentHashMap
 enum class AuditLogSeverity(
 	override val value: Int,
 ): Identifiable {
-	NORMAL(0),
-	WARNING(1),
-	ERROR(2),
-	ALERT(10),
-	UNKNOWN(-1);
+	normal(0),
+	warning(1),
+	error(2),
+	alert(10),
+	unknown(-1);
+
+	override fun toString(): String = code
+	val code: String
+		get() = this@AuditLogSeverity.name.uppercase()
 
 	val localizationKey: String
 		get() = "${AuditLogSeverity::class.java.simpleName}.${this.name}"
@@ -27,15 +31,15 @@ enum class AuditLogSeverity(
 		init {
 			AuditLogSeverity.values().forEach {
 				valueMapping[it.value] = it
+				codeMapping[it.code] = it
 				codeMapping[it.name] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?=-1): AuditLogSeverity = valueMapping[value] ?: UNKNOWN
-		@JvmStatic fun forCode(code: String?): AuditLogSeverity
-			= codeMapping[(code ?: "UNKNOWN").uppercase()] ?: UNKNOWN
+		@JvmStatic fun forValue(value: Int?=-1): AuditLogSeverity = valueMapping[value] ?: unknown
+		@JvmStatic fun forCode(code: String?): AuditLogSeverity = codeMapping[code ?: unknown.code] ?: unknown
 
 		val allAuditLogSeverities: List<AuditLogSeverity> = AuditLogSeverity.values().filter {
-			it != UNKNOWN
+			it != unknown
 		}.toList()
 	}
 }

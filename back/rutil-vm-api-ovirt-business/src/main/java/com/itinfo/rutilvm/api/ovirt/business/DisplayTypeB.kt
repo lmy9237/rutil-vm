@@ -17,6 +17,9 @@ enum class DisplayTypeB(
 	bochs(VmDeviceType.BOCHS),
 	none(null); // For Headless VM, this type means that the VM will run without any display (VIDEO) device
 
+	override fun toString(): String = code
+	val code: String
+		get() = this@DisplayTypeB.name.uppercase()
 	val value: Int
 		get() = this@DisplayTypeB.ordinal
 
@@ -32,11 +35,16 @@ enum class DisplayTypeB(
 
 	companion object {
 		private val valueMapping: MutableMap<Int, DisplayTypeB> = ConcurrentHashMap<Int, DisplayTypeB>()
+		private val codeMapping: MutableMap<String, DisplayTypeB> = ConcurrentHashMap<String, DisplayTypeB>()
 		init {
-			DisplayTypeB.values().forEach { valueMapping[it.value] = it }
+			DisplayTypeB.values().forEach {
+				valueMapping[it.value] = it
+				codeMapping[it.code] = it
+				codeMapping[it.name] = it
+			}
 		}
-		@JvmStatic fun forValue(value: Int?): DisplayTypeB = valueMapping[value] ?: none
-
+		@JvmStatic fun forValue(value: Int?): DisplayTypeB = valueMapping[value ?: -1] ?: none
+		@JvmStatic fun forCode(code: String?): DisplayTypeB = codeMapping[code ?: none.code] ?: none
 		val allDisplayTypes: List<DisplayTypeB> = DisplayTypeB.values().toList()
 	}
 }

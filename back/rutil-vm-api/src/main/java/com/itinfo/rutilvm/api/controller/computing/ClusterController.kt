@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
+import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 import com.itinfo.rutilvm.api.service.setting.ItEventService
@@ -370,16 +371,16 @@ class ClusterController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{clusterId}/osSystems")
+	@GetMapping("/{clusterId}/operatingSystems")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun osSystem(
 		@PathVariable clusterId: String? = null
-	): ResponseEntity<List<OsVo>> {
+	): ResponseEntity<List<OperatingSystemVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/osSystems ... 클러스터 운영시스템 목록", clusterId)
-		return ResponseEntity.ok(iCluster.findAllOsSystemFromCluster(clusterId))
+		log.info("/computing/clusters/{}/operatingSystems ... 클러스터 운영시스템 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllOperatingSystemsFromCluster(clusterId))
 	}
 
 	@ApiOperation(
@@ -398,11 +399,11 @@ class ClusterController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun clusterLevels(
 		@PathVariable clusterId: String? = null
-	): ResponseEntity<List<OsVo>> {
+	): ResponseEntity<List<OperatingSystemVo>> {
 		if (clusterId.isNullOrEmpty())
 			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
-		log.info("/computing/clusters/{}/levels ... 클러스터 운영시스템 목록", clusterId)
-		return ResponseEntity.ok(iCluster.findAllOsSystemFromCluster(clusterId))
+		log.info("/computing/clusters/{}/levels ... 클러스터 레벨 목록", clusterId)
+		return ResponseEntity.ok(iCluster.findAllOperatingSystemsFromCluster(clusterId))
 	}
 
 

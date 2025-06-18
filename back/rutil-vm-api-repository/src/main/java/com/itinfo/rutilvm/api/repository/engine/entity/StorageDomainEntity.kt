@@ -1,5 +1,8 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -31,7 +34,7 @@ import javax.persistence.Table
  * @property actualImagesSize [BigInteger] 실제 이미지 크기 (GB)
  * @property status [Int] 스토리지 도메인 상태
  * @property storagePoolName [String] 스토리지 풀 이름
- * @property storageType [Int] 스토리지 타입
+ * @property _storageType [Int] 스토리지 타입
  * @property storageDomainType [Int] 스토리지 도메인 타입
  * @property storageDomainFormatType [String] 스토리지 도메인 포맷 타입
  * @property lastTimeUsedAsMaster [LocalDateTime] 마지막으로 마스터로 사용된 시간
@@ -63,17 +66,20 @@ class StorageDomainEntity(
 	val storageName: String = "",
 	val storageDescription: String = "",
 	val storageComment: String = "",
-	val storagePoolId: UUID? = null,
 	val availableDiskSize: BigInteger? = BigInteger.ZERO,
 	val confirmedAvailableDiskSize: BigInteger? = BigInteger.ZERO,
 	val vdoSavings: BigInteger? = BigInteger.ZERO,
 	val usedDiskSize: BigInteger? = BigInteger.ZERO,
 	val commitedDiskSize: BigInteger? = BigInteger.ZERO,
 	val actualImagesSize: BigInteger? = BigInteger.ZERO,
-	val status: Int? = null,
+	@Column(name = "status", nullable=true)
+	private val _status: Int? = null,
+	val storagePoolId: UUID? = null,
 	val storagePoolName: String = "",
-	val storageType: Int? = null,
-	val storageDomainType: Int? = null,
+	@Column(name = "storage_type", nullable=true)
+	private val _storageType: Int? = null,
+	@Column(name = "storage_domain_type", nullable=true)
+	private val _storageDomainType: Int? = null,
 	val storageDomainFormatType: String? = null,
 	val wipeAfterDelete: Boolean? = null,
 	val discardAfterDelete: Boolean? = null,
@@ -90,8 +96,16 @@ class StorageDomainEntity(
 	val externalStatus: Int? = null,
 	val supportsDiscard: Boolean? = null,
 	val isHostedEngineStorage: Boolean = false,
+) : Serializable {
+	val status: StorageDomainStatusB
+		get() = StorageDomainStatusB.forValue(_status)
 
-	) : Serializable {
+	val storageType: StorageTypeB
+		get() = StorageTypeB.forValue(_storageType)
+
+	val storageDomainType: StorageDomainTypeB
+		get() = StorageDomainTypeB.forValue(_storageDomainType)
+
 	override fun toString(): String =
 		gson.toJson(this)
 
@@ -101,7 +115,6 @@ class StorageDomainEntity(
 		private var bStorageName: String = ""; fun storageName(block: () -> String?) { bStorageName = block() ?: "" }
 		private var bStorageDescription: String = ""; fun storageDescription(block: () -> String?) { bStorageDescription = block() ?: "" }
 		private var bStorageComment: String = ""; fun storageComment(block: () -> String?) { bStorageComment = block() ?: "" }
-		private var bStoragePoolId: UUID? = null; fun storagePoolId(block: () -> UUID?) { bStoragePoolId = block() }
 		private var bAvailableDiskSize: BigInteger? = BigInteger.ZERO; fun availableDiskSize(block: () -> BigInteger?) { bAvailableDiskSize = block() ?: BigInteger.ZERO }
 		private var bConfirmedAvailableDiskSize: BigInteger? = BigInteger.ZERO; fun confirmedAvailableDiskSize(block: () -> BigInteger?) { bConfirmedAvailableDiskSize = block() }
 		private var bVdoSavings: BigInteger? = BigInteger.ZERO; fun vdoSavings(block: () -> BigInteger?) { bVdoSavings = block() ?: BigInteger.ZERO }
@@ -109,6 +122,7 @@ class StorageDomainEntity(
 		private var bCommitedDiskSize: BigInteger? = null; fun commitedDiskSize(block: () -> BigInteger?) { bCommitedDiskSize = block() ?: BigInteger.ZERO }
 		private var bActualImagesSize: BigInteger? = null; fun actualImagesSize(block: () -> BigInteger?) { bActualImagesSize = block() ?: BigInteger.ZERO }
 		private var bStatus: Int? = null; fun status(block: () -> Int?) { bStatus = block() }
+		private var bStoragePoolId: UUID? = null; fun storagePoolId(block: () -> UUID?) { bStoragePoolId = block() }
 		private var bStoragePoolName: String = ""; fun storagePoolName(block: () -> String?) { bStoragePoolName = block() ?: "" }
 		private var bStorageType: Int? = null; fun storageType(block: () -> Int?) { bStorageType = block() }
 		private var bStorageDomainType: Int? = null; fun storageDomainType(block: () -> Int?) { bStorageDomainType = block() }
@@ -130,7 +144,7 @@ class StorageDomainEntity(
 		private var bIsHostedEngineStorage: Boolean = false; fun isHostedEngineStorage(block: () -> Boolean?) { bIsHostedEngineStorage = block() ?: false }
 
 
-		fun build(): StorageDomainEntity = StorageDomainEntity(bId, bStorage, bStorageName, bStorageDescription, bStorageComment, bStoragePoolId, bAvailableDiskSize, bConfirmedAvailableDiskSize, bVdoSavings, bUsedDiskSize, bCommitedDiskSize, bActualImagesSize, bStatus, bStoragePoolName, bStorageType, bStorageDomainType, bStorageDomainFormatType, bWipeAfterDelete, bDiscardAfterDelete, bFirstMetadataDevice, bVgMetadataDevice, bBackup, bBlockSize, bStorageDomainSharedStatus, bRecoverable, bContainsUnregisteredEntities, bWarningLowSpaceIndicator, bCriticalSpaceActionBlocker, bWarningLowConfirmedSpaceIndicator, bExternalStatus, bSupportsDiscard, bIsHostedEngineStorage, )
+		fun build(): StorageDomainEntity = StorageDomainEntity(bId, bStorage, bStorageName, bStorageDescription, bStorageComment, bAvailableDiskSize, bConfirmedAvailableDiskSize, bVdoSavings, bUsedDiskSize, bCommitedDiskSize, bActualImagesSize, bStatus, bStoragePoolId, bStoragePoolName, bStorageType, bStorageDomainType, bStorageDomainFormatType, bWipeAfterDelete, bDiscardAfterDelete, bFirstMetadataDevice, bVgMetadataDevice, bBackup, bBlockSize, bStorageDomainSharedStatus, bRecoverable, bContainsUnregisteredEntities, bWarningLowSpaceIndicator, bCriticalSpaceActionBlocker, bWarningLowConfirmedSpaceIndicator, bExternalStatus, bSupportsDiscard, bIsHostedEngineStorage, )
 	}
 
 	companion object {

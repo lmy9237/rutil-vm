@@ -14,13 +14,13 @@ import {
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
-import VmGeneral from "./VmGeneral";
-import VmNics from "./VmNics";
-import VmSnapshots from "./VmSnapshots";
-import VmApplications from "./VmApplications";
-import VmHostDevices from "./VmHostDevices";
-import VmEvents from "./VmEvents";
-import VmDisks from "./VmDisks";
+import VmGeneral              from "./VmGeneral";
+import VmNics                 from "./VmNics";
+import VmSnapshots            from "./VmSnapshots";
+import VmApplications         from "./VmApplications";
+import VmHostDevices          from "./VmHostDevices";
+import VmEvents               from "./VmEvents";
+import VmDisks                from "./VmDisks";
 import "./Vm.css";
 
 /**
@@ -52,11 +52,11 @@ const VmInfo = () => {
   } = useVm(vmId);
   const { setVmsSelected } = useGlobal()
 
-  const isUp = vm?.status === "UP";
-  const isDown = vm?.status === "DOWN";
-  const isPause = vm?.status === "SUSPENDED";
+  const isUp = vm?.running ?? false;
+  const isDown = vm?.notRunning ?? false;
+  const isPause = vm?.status === "paused" || vm?.status === "suspended"; 
   const isMaintenance = vm?.status === "MAINTENANCE";
-  const allOkay2PowerDown = vm?.status === "UP" || vm?.status === "POWERING_DOWN" || vm?.status === "SUSPENDED";
+  const allOkay2PowerDown = vm?.qualified4PowerDown;
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
 

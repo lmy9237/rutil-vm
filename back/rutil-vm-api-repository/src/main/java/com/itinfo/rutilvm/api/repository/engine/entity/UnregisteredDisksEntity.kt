@@ -68,7 +68,7 @@ data class UnregisteredDiskEntity(
 		get() = VolumeType.forValue(_volumeType)
 
 	val sparse: Boolean
-		get() = volumeType == VolumeType.Sparse
+		get() = volumeType == VolumeType.sparse
 
 	override fun toString(): String =
 		gson.toJson(this)

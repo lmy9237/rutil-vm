@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
@@ -12,7 +13,6 @@ import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.service.BaseService
@@ -20,7 +20,6 @@ import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
-import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -221,7 +220,7 @@ class StorageServiceImpl(
 		// return res.toStorageDomainsMenu(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
 		return res
-			.filter { it.storageType != com.itinfo.rutilvm.api.ovirt.business.StorageType.GLANCE.value }
+			.filter { it.storageType != StorageTypeB.glance }
 			.toStorageDomainEntities()
 	}
 

@@ -9,11 +9,9 @@ import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.toLocalDateTime
 
 import org.ovirt.engine.sdk4.types.Event
-import org.ovirt.engine.sdk4.types.LogSeverity
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.time.LocalDateTime
-import java.util.Date
 
 private val log = LoggerFactory.getLogger(EventVo::class.java)
 
@@ -33,22 +31,30 @@ private val log = LoggerFactory.getLogger(EventVo::class.java)
 class EventVo(
 	val id: String = "",
 	val name: String = "",
-    val severity: AuditLogSeverity? = AuditLogSeverity.UNKNOWN,
+    val severity: AuditLogSeverity? = AuditLogSeverity.unknown,
     val description: String = "",
 	private val _time: LocalDateTime? = null,
     val code: Int? = 0,
 	val correlationId: String = ""
 ): Serializable {
-	override fun toString(): String =
-		gson.toJson(this)
+
+	val severityCode: String
+		get() = severity?.code ?: AuditLogSeverity.unknown.code
+	val severityEn: String
+		get() = severity?.en ?: "N/A"
+	val severityKr: String
+		get() = severity?.kr ?: "알 수 없음"
 
 	val time: String
 		get() = ovirtDf.formatEnhancedFromLDT(_time)
 
+	override fun toString(): String =
+		gson.toJson(this)
+
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
-		private var bSeverity: AuditLogSeverity? = AuditLogSeverity.UNKNOWN;fun severity(block: () -> AuditLogSeverity?) { bSeverity = block() ?: AuditLogSeverity.UNKNOWN }
+		private var bSeverity: AuditLogSeverity? = AuditLogSeverity.unknown;fun severity(block: () -> AuditLogSeverity?) { bSeverity = block() ?: AuditLogSeverity.unknown }
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bTime: LocalDateTime? = null;fun time(block: () -> LocalDateTime?) { bTime = block() }
 		private var bCode: Int? = 0;fun code(block: () -> Int?) { bCode = block() ?: 0 }

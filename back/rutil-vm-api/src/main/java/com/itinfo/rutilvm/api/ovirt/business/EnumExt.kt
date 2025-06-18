@@ -12,7 +12,11 @@ import org.ovirt.engine.sdk4.types.LogSeverity
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
 import org.ovirt.engine.sdk4.types.OperatingSystem
+import org.ovirt.engine.sdk4.types.OperatingSystemInfo
 import org.ovirt.engine.sdk4.types.OsType
+import org.ovirt.engine.sdk4.types.StorageDomainStatus
+import org.ovirt.engine.sdk4.types.StorageDomainType
+import org.ovirt.engine.sdk4.types.StorageType
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmAffinity
 import org.ovirt.engine.sdk4.types.VmPlacementPolicy
@@ -107,6 +111,30 @@ fun MigrationOptions.findMigrationCompression(): Boolean? =
 
 fun MigrationSupport.toVmAffinity(): VmAffinity =
 	VmAffinity.fromValue(this@toVmAffinity.code)
+
+fun OperatingSystemInfo.toVmOsType(): VmOsType =
+	VmOsType.forCode(this@toVmOsType.id())
+
+fun List<OperatingSystemInfo>.toVmOsTypes(): List<VmOsType> =
+	this@toVmOsTypes.map { it.toVmOsType() }
+
+fun StorageDomainStatus?.toStorageDomainStatusB(): StorageDomainStatusB =
+	StorageDomainStatusB.forCode(this@toStorageDomainStatusB?.value())
+
+fun StorageDomainStatusB?.toStorageDomainStatus(): StorageDomainStatus =
+	StorageDomainStatus.fromValue(this@toStorageDomainStatus?.code)
+
+fun StorageDomainType.toStorageDomainTypeB(): StorageDomainTypeB =
+	StorageDomainTypeB.forCode(this@toStorageDomainTypeB.value())
+
+fun StorageDomainTypeB.toStorageDomainType(): StorageDomainType =
+	StorageDomainType.fromValue(this@toStorageDomainType.code)
+
+fun StorageType.toStorageTypeB(): StorageTypeB =
+	StorageTypeB.forCode(this@toStorageTypeB.value())
+
+fun StorageTypeB.toStorageType(): StorageType =
+	StorageType.fromValue(this@toStorageType.code)
 
 fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior =
 	VmResumeBehavior.forCode(this@toVmResumeBehavior.name)

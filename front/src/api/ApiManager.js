@@ -586,7 +586,7 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_CPU_PROFILES_FROM_CLUSTER
   }),
   /**
-   * @name ApiManager.findOsSystemsFromCluster
+   * @name ApiManager.findAllOperatingSystemsFromCluster
    * @description 운영시스템 목록 
    *
    * @param {string} clusterId
@@ -594,9 +594,9 @@ const ApiManager = {
    * 
    * @see
    */
-  findOsSystemsFromCluster: async (clusterId) => makeAPICall({
+  findAllOperatingSystemsFromCluster: async (clusterId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_OS_SYSTEM_FROM_CLUSTER(clusterId), 
+    url: ENDPOINTS.FIND_ALL_OPERATING_SYSTEMS_FROM_CLUSTER(clusterId), 
   }),
 
 

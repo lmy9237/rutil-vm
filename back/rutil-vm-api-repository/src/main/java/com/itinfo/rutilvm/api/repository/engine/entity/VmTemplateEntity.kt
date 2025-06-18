@@ -302,7 +302,7 @@ class VmTemplateEntity(
 	val origin: Int?
 		get() = originType?.value
 	val isHostedEngineVm: Boolean
-		get() = originType == OriginType.MANAGED_HOSTED_ENGINE
+		get() = originType == OriginType.managed_hosted_engine
 
 	val virtioScsiMultiQueuesEnabled: Boolean?
 		get() = (virtioScsiMultiQueues ?: 0) > 0
@@ -332,7 +332,7 @@ class VmTemplateEntity(
 		private var bClusterId: UUID? = null; fun clusterId(block: () -> UUID?) { bClusterId = block() }
 		private var bNumOfMonitors: Int? = null; fun numOfMonitors(block: () -> Int?) { bNumOfMonitors = block() }
 		private var bAllowConsoleReconnect: Boolean? = null; fun allowConsoleReconnect(block: () -> Boolean?) { bAllowConsoleReconnect = block() }
-		private var bStatus: TemplateStatusB? = TemplateStatusB.Unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block()?: TemplateStatusB.Unknown }
+		private var bStatus: TemplateStatusB? = TemplateStatusB.unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block()?: TemplateStatusB.unknown }
 		private var bUsbPolicy: Int? = null; fun usbPolicy(block: () -> Int?) { bUsbPolicy = block() }
 		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: "" }
 		private var bClusterName: String = ""; fun clusterName(block: () -> String?) { bClusterName = block() ?: "" }

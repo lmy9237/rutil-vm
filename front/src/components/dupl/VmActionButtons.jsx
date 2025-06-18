@@ -1,22 +1,25 @@
 import { useRef, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import CONSTANT         from "@/Constants";
-import { useValidationToast }     from "@/hooks/useSimpleToast";
-import useUIState       from "@/hooks/useUIState";
-import useGlobal        from "@/hooks/useGlobal";
-import useClickOutside  from "@/hooks/useClickOutside";
-import { openNewTab }   from "@/navigation";
+import { useNavigate }          from "react-router-dom";
+import CONSTANT                 from "@/Constants";
+import { useValidationToast }   from "@/hooks/useSimpleToast";
+import useUIState               from "@/hooks/useUIState";
+import useGlobal                from "@/hooks/useGlobal";
+import useClickOutside          from "@/hooks/useClickOutside";
+import { openNewTab }           from "@/navigation";
 import { 
   useRemoteViewerConnectionFileFromVm, 
   useSnapshotsFromVM,
 } from "@/api/RQHook";
-import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
+import {
+  ActionButtons, 
+  ActionButton
+} from "@/components/button/ActionButtons";
 import {
   rvi16ChevronUp,
   rvi16ChevronDown
 } from "@/components/icons/RutilVmIcons";
-import Localization from "@/utils/Localization";
-import Logger from "@/utils/Logger";
+import Localization             from "@/utils/Localization";
+import Logger                   from "@/utils/Logger";
 
 /**
  * @name VmActionButtons
@@ -47,22 +50,23 @@ const VmActionButtons = ({
 
   const selected1st = [...vmsSelected][0] ?? null
 
-  const isUp = selected1st?.status === "UP";
-  const isDown = selected1st?.status === "DOWN";
+  const isUp = selected1st?.running ?? false;
+  const isDown = selected1st?.notRunning ?? false;
   const isMaintenance = selected1st?.status === "MAINTENANCE";
-  const isPause = selected1st?.status === "SUSPENDED";
-  const isTemplate = selected1st?.status === "SUSPENDED" || selected1st?.status === "UP";
+  const isPause = selected1st?.status === "paused" || selected1st?.status === "suspended"; 
+  const isTemplate = selected1st?.upOrPaused;
   const isVmQualified2Migrate = selected1st?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
-  const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "UP");
+  const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
+  const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.notRunning ?? false);
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "SUSPENDED");
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm.status === "DOWN" || vm.status === "SUSPENDED"
   );
-  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.some(vm =>
-    ["UP", "POWERING_DOWN", "POWERING_UP", "SUSPENDED"].includes(vm?.status)
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm =>
+    vm?.qualified4PowerDown
   );
   const ollOkay2Migrate = vmsSelected.every(vm => vm?.qualified2Migrate === true)
   
@@ -92,7 +96,7 @@ const VmActionButtons = ({
   ];
 
   const consoleActions = [
-    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "noVNC", disabled: !allUp }, 
+    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "noVNC",           disabled: !allUp }, 
     { type: "remoteviewer",   onClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트", disabled: !allUp },
   ]
   
@@ -115,10 +119,8 @@ const VmActionButtons = ({
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
-    { type: "shutdown", onClick: () => setActiveModal("vm:shutdown"), label: Localization.kr.END, disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
-    { type: "powerOff", onClick: () => setActiveModal("vm:powerOff"),label: Localization.kr.POWER_OFF,disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
-    // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
-    // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown },
+    { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
     { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
     { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: vmsSelected.length === 0 || !ollOkay2Migrate },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
