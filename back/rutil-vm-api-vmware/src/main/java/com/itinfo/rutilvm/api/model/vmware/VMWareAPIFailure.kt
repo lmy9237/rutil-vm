@@ -2,14 +2,14 @@ package com.itinfo.rutilvm.api.model.vmware
 
 import java.io.Serializable
 
-class VMWareAPIFailure(
+open class VMWareAPIFailure(
 	val errorType: String = "",
-	val message: List<VMWareAPIFailureDetail> = listOf(),
+	val message: List<VWApiFailureDetail> = listOf(),
 ): Serializable {
 
 }
 
-class VMWareAPIFailureDetail(
+open class VWApiFailureDetail(
 	val args: List<String> = listOf(),
 	val defaultMessage: String = "",
 	val id: String = "",

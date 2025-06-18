@@ -6,11 +6,10 @@ import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.OriginType
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmTemplateStatusB
 import com.itinfo.rutilvm.api.ovirt.business.UsbPolicy
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
-import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
@@ -261,8 +260,8 @@ class VmTemplateEntity(
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
-	val status: TemplateStatusB?
-		get() = TemplateStatusB.forValue(_status)
+	val status: VmTemplateStatusB?
+		get() = VmTemplateStatusB.forValue(_status)
 
 	val biosType: BiosTypeB
 		get() = BiosTypeB.forValue(_biosType)
@@ -332,7 +331,7 @@ class VmTemplateEntity(
 		private var bClusterId: UUID? = null; fun clusterId(block: () -> UUID?) { bClusterId = block() }
 		private var bNumOfMonitors: Int? = null; fun numOfMonitors(block: () -> Int?) { bNumOfMonitors = block() }
 		private var bAllowConsoleReconnect: Boolean? = null; fun allowConsoleReconnect(block: () -> Boolean?) { bAllowConsoleReconnect = block() }
-		private var bStatus: TemplateStatusB? = TemplateStatusB.unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block()?: TemplateStatusB.unknown }
+		private var bStatus: VmTemplateStatusB? = VmTemplateStatusB.unknown; fun status(block: () -> VmTemplateStatusB?) { bStatus = block()?: VmTemplateStatusB.unknown }
 		private var bUsbPolicy: Int? = null; fun usbPolicy(block: () -> Int?) { bUsbPolicy = block() }
 		private var bTimeZone: String = ""; fun timeZone(block: () -> String?) { bTimeZone = block() ?: "" }
 		private var bClusterName: String = ""; fun clusterName(block: () -> String?) { bClusterName = block() ?: "" }

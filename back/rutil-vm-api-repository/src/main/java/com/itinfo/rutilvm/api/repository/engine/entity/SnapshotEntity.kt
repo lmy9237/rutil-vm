@@ -56,7 +56,8 @@ class SnapshotEntity(
 	@Column(name = "vm_id", unique = true, nullable = true)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val vmId: UUID? = null,
-	val snapshotType: String = "",
+	@Column(name = "snapshot_type", nullable=true)
+	private val _snapshotType: String = "",
 	val status: String = "",
 	val description: String = "",
 	val appList: String = "",
@@ -70,8 +71,8 @@ class SnapshotEntity(
 	val vmConfigurationBroken: Boolean = false,
 	val changedFields: String = "",
 ): Serializable {
-	val _snapshotType: SnapshotType
-		get() = SnapshotType.forCode(snapshotType.uppercase())
+	val snapshotType: SnapshotType
+		get() = SnapshotType.forCode(_snapshotType)
 
 	override fun toString(): String =
 		gson.toJson(this)

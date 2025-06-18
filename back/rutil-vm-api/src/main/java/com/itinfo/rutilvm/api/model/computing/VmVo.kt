@@ -36,6 +36,7 @@ import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toOsType
+import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
 import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
@@ -876,7 +877,7 @@ fun VmVo.toVmBootBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	}
 	os(
 		OperatingSystemBuilder()
-			.type(osType?.toOsType()?.value())
+			.type(osType?.toOsTypeCode())
 			.boot(BootBuilder().devices(bootDeviceList))
 	)
 	bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))

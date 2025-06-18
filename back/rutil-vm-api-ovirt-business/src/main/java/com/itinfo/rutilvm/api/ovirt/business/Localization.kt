@@ -209,11 +209,24 @@ class Localization {
 				val unknown			        = locEn?.get(VmStatusB.unknown.localizationKey)?.toString() ?: ""
 				val up			            = locEn?.get(VmStatusB.up.localizationKey)?.toString() ?: ""
 				val wait_for_launch			= locEn?.get(VmStatusB.wait_for_launch.localizationKey)?.toString() ?: ""
-
 			}
-
 		}
 		//endregion: VmStatusL
+
+		//region: VmTemplateStatusL
+		object VmTemplateStatusL {
+			object KR {
+				val ok						= locKr?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+				val locked					= locKr?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+				val illegal					= locKr?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val ok						= locEn?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+				val locked					= locEn?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+				val illegal					= locEn?.get(VmTemplateStatusB.ok.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: VmTemplateStatusL
 
 		//region: VmTypeL
 		object VmTypeL {
@@ -339,6 +352,14 @@ class Localization {
 			VmStatusB.up ->			            if (loc == "kr") VmStatusL.KR.up else VmStatusL.EN.up
 			VmStatusB.wait_for_launch ->		if (loc == "kr") VmStatusL.KR.wait_for_launch else VmStatusL.EN.wait_for_launch
 			VmStatusB.unknown ->				if (loc == "kr") VmStatusL.KR.unknown else VmStatusL.EN.unknown
+		}
+
+	fun findLocalizedName4VmTemplateStatusB(type: VmTemplateStatusB, loc: String = "kr"): String =
+		when(type) {
+			VmTemplateStatusB.ok ->				if (loc == "kr") VmTemplateStatusL.KR.ok else VmTemplateStatusL.EN.ok
+			VmTemplateStatusB.locked ->			if (loc == "kr") VmTemplateStatusL.KR.locked else VmTemplateStatusL.EN.locked
+			VmTemplateStatusB.illegal ->		if (loc == "kr") VmTemplateStatusL.KR.illegal else VmTemplateStatusL.EN.illegal
+			else -> if (loc == "kr") "알 수 없음" else "Unknown"
 		}
 
 	fun findLocalizedName4VmType(type: VmTypeB, loc: String = "kr"): String =

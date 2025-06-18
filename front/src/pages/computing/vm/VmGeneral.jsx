@@ -211,7 +211,6 @@ const snapshotList = useMemo(() =>
   return (
     <>
     {/* <div className="vm-detail-grid">
-
         <div className="vm-section section-top">
           <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
             <h3 className="box-title">게스트 운영체제</h3>
@@ -262,9 +261,9 @@ const snapshotList = useMemo(() =>
     </div> */}
       <GeneralLayout
         leftBox={<VmOsIcon dataUrl={vm?.urlLargeIcon} />}
-      topTable={generalTableRows}
-      topRightContent={<VmGeneralBarChart />}
-      bottomTables={[
+        topTable={generalTableRows}
+        topRightContent={<VmGeneralBarChart />}
+        bottomTables={[
         { title: "가상머신 하드웨어", rows: hardwareTableRows },
         { title: "관련 개체", rows: relatedTableRows },
         {

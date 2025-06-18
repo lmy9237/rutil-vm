@@ -21,12 +21,14 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
+import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
@@ -210,8 +212,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		cpuTopologySocket { vm?.cpu()?.topology()?.socketsAsInteger() }
 		cpuTopologyThread { vm?.cpu()?.topology()?.threadsAsInteger() }
 		cpuPinningPolicy {
-			CpuPinningPolicyB.forCode("${this@toUnregisteredVm.ovf?.virtualSystem?.cpuPinningPolicy}")
-			// vm?.cpuPinningPolicy()?.value()
+			this@toUnregisteredVm.ovf?.virtualSystem?.cpuPinningPolicy
 		}
 		creationTime {
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
@@ -303,18 +304,19 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Temp
 //region: VmEntity
 fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	val entity = this@toVmVoFromVmEntity
-	val hosts: List<IdentifiedVo> = if(!entity.dedicatedVmForVds.isNullOrEmpty()) {
-		entity.dedicatedVmForVds
-			.split(",")
-			.mapNotNull { id ->
-				id.trim().takeIf { it.isNotEmpty() }?.let {
-					IdentifiedVo.builder {
-						id { it }
-						name { "" }
-					}
+	val hosts: List<IdentifiedVo> = if (entity.dedicatedVmForVds.isNullOrEmpty()) {
+		emptyList()
+	} else entity.dedicatedVmForVds!!
+		.split(",")
+		.mapNotNull { id ->
+			id.trim().takeIf { it.isNotEmpty() }?.let {
+				IdentifiedVo.builder {
+					id { it }
+					name { "" }
 				}
 			}
-	} else emptyList()
+		}
+
 
 	return VmVo.builder {
 		id { entity.vmGuid.toString() }
@@ -351,8 +353,13 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		migrationEncrypt { entity.isMigrateEncrypted }
 		migrationAutoConverge { entity.isAutoConverge }
 		migrationCompression { entity.isMigrateCompressed }
-		// firstDevice { entity.bootableDiskVmElements?.firstOrNull() }
-		// secDevice {  }
+		firstDevice {
+			entity.defaultBootSequence?.toBootDevices()?.firstOrNull()?.value()
+		}
+		secDevice {
+			if ((entity.defaultBootSequence?.toBootDevices()?.size ?: 0) > 1) entity.defaultBootSequence?.toBootDevices()?.get(1)?.value()
+			else null
+		}
 		hostInCluster { entity.dedicatedVmForVds.isNullOrEmpty() }
 		startPaused { entity.isRunAndPause }
 		storageErrorResumeBehaviour { entity.vmResumeBehavior }
@@ -406,8 +413,8 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 			}
 		}
 		snapshotVos { snapshots.filter {
-			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.active &&
-			it._snapshotType != com.itinfo.rutilvm.api.ovirt.business.SnapshotType.preview
+			it.snapshotType != SnapshotType.active &&
+			it.snapshotType != SnapshotType.preview
 		}.toIdentifiedVosFromSnapshotEntities() }
 	}
 }

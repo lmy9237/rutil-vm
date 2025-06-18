@@ -13,7 +13,7 @@ import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
-import com.itinfo.rutilvm.api.ovirt.business.TemplateStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmTemplateStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
@@ -53,7 +53,7 @@ class TemplateVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	private val _status: TemplateStatusB? = TemplateStatusB.ok,
+	private val _status: VmTemplateStatusB? = VmTemplateStatusB.ok,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	private val _optimizeOption: VmTypeB? = VmTypeB.unknown,
@@ -126,7 +126,7 @@ class TemplateVo(
 	val versionNumber: Int = 0,             // <version><version_number>
 ): Serializable {
 	val status: String
-		get() = _status?.code ?: TemplateStatusB.unknown.code
+		get() = _status?.code ?: VmTemplateStatusB.unknown.code
 
 	val urlSmallIcon: String
 		get() = iconSmall?.dataUrl ?: ""
@@ -169,7 +169,7 @@ class TemplateVo(
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		private var bStatus: TemplateStatusB? = TemplateStatusB.unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block() ?: TemplateStatusB.unknown }
+		private var bStatus: VmTemplateStatusB? = VmTemplateStatusB.unknown; fun status(block: () -> VmTemplateStatusB?) { bStatus = block() ?: VmTemplateStatusB.unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
 		private var bOptimizeOption: VmTypeB? = VmTypeB.unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.unknown }

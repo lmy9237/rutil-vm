@@ -18,6 +18,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.parseEnhanced2LDT
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.text.SimpleDateFormat
@@ -516,7 +517,7 @@ data class OvfContent(
 	private val _biosType: Int? = -1,
 
 	@field:JacksonXmlProperty(localName="CpuPinningPolicy")
-	val cpuPinningPolicy: Int? = 0,
+	val _cpuPinningPolicy: Int? = 0,
 
 	@field:JacksonXmlProperty(localName="DefaultDisplayType")
 	val defaultDisplayType: Int? = 0,
@@ -546,6 +547,9 @@ data class OvfContent(
 
 	val biosType: BiosTypeB?
 		get() = BiosTypeB.forValue(_biosType)
+
+	val cpuPinningPolicy: CpuPinningPolicyB?
+		get() = CpuPinningPolicyB?.forValue(_cpuPinningPolicy)
 
 	val creationDate: LocalDateTime?
 		get() = try {

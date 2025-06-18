@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.BootSequence
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
@@ -223,7 +224,8 @@ class VmEntity(
 	val balloonEnabled: Boolean? = null,
 	@Column(name="bios_type", nullable=true)
 	private val _biosType: Int? = -1,
-	val bootSequence: Int? = null,
+	@Column(name="boot_sequence", nullable=true)
+	private val _bootSequence: Int? = null,
 	val bootTime: LocalDateTime? = LocalDateTime.now(),
 	val changedFields: String = "",
 	val clientIp: String = "",
@@ -261,8 +263,9 @@ class VmEntity(
 	val customEmulatedMachine: String = "",
 	val customSerialNumber: String = "",
 	val dbGeneration: BigInteger? = BigInteger.ZERO,
-	val dedicatedVmForVds: String = "",
-	val defaultBootSequence: Int? = null,
+	val dedicatedVmForVds: String? = "",
+	@Column(name="default_boot_sequence", nullable=true)
+	private val _defaultBootSequence: Int? = null,
 	@Column(name="default_display_type", nullable=true)
 	private val _defaultDisplayType: Int? = null,
 	val description: String = "",
@@ -495,6 +498,12 @@ class VmEntity(
 
 	val virtioScsiMultiQueuesEnabled: Boolean?
 		get() = (virtioScsiMultiQueues ?: 0) > 0
+
+	val bootSequence: BootSequence?
+		get() = BootSequence.forValue(_bootSequence)
+
+	val defaultBootSequence: BootSequence?
+		get() = BootSequence.forValue(_defaultBootSequence)
 
 	val effectiveSmallIcon: VmIconEntity?
 		get() = this.iconDefaults?.smallIcon ?: this.smallIcon

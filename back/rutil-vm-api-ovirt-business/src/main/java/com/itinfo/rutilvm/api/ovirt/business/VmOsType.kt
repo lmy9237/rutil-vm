@@ -69,7 +69,8 @@ enum class VmOsType(
 	debian_7(1300, "Debian 7+"),
 	debian_9(1301, "Debian 9+"),
 	freebsd(1500, "FreeBSD 9.2"),
-	freebsdx64(1501, "FreeBSD 9.2 x64")
+	freebsdx64(1501, "FreeBSD 9.2 x64"),
+	unassigned(-1, "Unassigned")
 	/*
 	other_3(2001, "other_os", "Other OS"), // TODO: 왜 있는지 모르겠음
 	linux_3(2002, "linux", "Linux"), // TODO: 왜 있는지 모르겠음

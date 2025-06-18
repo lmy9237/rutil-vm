@@ -1,33 +1,38 @@
 package com.itinfo.rutilvm.api.service
 
 import com.itinfo.rutilvm.api.configuration.AuthService
-import com.itinfo.rutilvm.api.model.vmware.VMWareSessionId
+import com.itinfo.rutilvm.api.configuration.VWRestConfig
+import com.itinfo.rutilvm.api.model.vmware.VWPromptAuth
+import com.itinfo.rutilvm.api.model.vmware.VWSessionId
 import com.itinfo.rutilvm.common.LoggerDelegate
 import okhttp3.Credentials
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import retrofit2.Response
+import retrofit2.create
 
 interface ItVWAuthService {
 	/**
 	 * [ItVWAuthService.createSession]
 	 *
-	 * @param username [String]
-	 * @param password [String]
+	 * @param vwPromptAuth [VWPromptAuth]
 	 */
-	fun createSession(username: String, password: String): VMWareSessionId
+	fun createSession(vwPromptAuth: VWPromptAuth): VWSessionId
 }
 
 @Service
 open class VWAuthServiceImpl(
-	private val authService: AuthService
 ): ItVWAuthService {
-	@Throws(Exception::class)
-	override fun createSession(username: String, password: String): VMWareSessionId {
+	@Autowired private lateinit var vwRestConfig: VWRestConfig
+	private fun authService(baseUrl: String): AuthService =
+		vwRestConfig.vmWareRestRetrofit(baseUrl).create(AuthService::class.java)
+
+			@Throws(Exception::class)
+	override fun createSession(vwPromptAuth: VWPromptAuth): VWSessionId {
 		log.info("createSession...")
-		val basicAuth: String = Credentials.basic(username, password)
-		val call = authService.createSession(basicAuth)
+		val call = authService(vwPromptAuth.baseUrl).createSession(vwPromptAuth.toCredentialBasic)
 		// Execute the call synchronously
-		val response: Response<VMWareSessionId> = call.execute()
+		val response: Response<VWSessionId> = call.execute()
 		if (response.isSuccessful) {
 			return response.body() ?: throw RuntimeException("Response body is null")
 		} else {
@@ -37,5 +42,6 @@ open class VWAuthServiceImpl(
 
 	companion object {
 		private val log by LoggerDelegate()
+
 	}
 }
