@@ -43,16 +43,16 @@ class Localization {
 		//region: BiosTypeL
 		object BiosTypeL {
 			object KR {
-				val I440FX_SEA_BIOS		= locKr?.get(BiosTypeB.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
-				val Q35_SEA_BIOS		= locKr?.get(BiosTypeB.Q35_SEA_BIOS.localizationKey)?.toString() ?: ""
-				val Q35_OVMF			= locKr?.get(BiosTypeB.Q35_OVMF.localizationKey)?.toString() ?: ""
-				val Q35_SECURE_BOOT		= locKr?.get(BiosTypeB.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
+				val i440fx_sea_bios		= locKr?.get(BiosTypeB.i440fx_sea_bios.localizationKey)?.toString() ?: ""
+				val q35_sea_bios		= locKr?.get(BiosTypeB.q35_sea_bios.localizationKey)?.toString() ?: ""
+				val q35_ovmf			= locKr?.get(BiosTypeB.q35_ovmf.localizationKey)?.toString() ?: ""
+				val q35_secure_boot		= locKr?.get(BiosTypeB.q35_secure_boot.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val I440FX_SEA_BIOS	= locEn?.get(BiosTypeB.I440FX_SEA_BIOS.localizationKey)?.toString() ?: ""
-				val Q35_SEA_BIOS	= locEn?.get(BiosTypeB.Q35_SEA_BIOS.localizationKey)?.toString() ?: ""
-				val Q35_OVMF		= locEn?.get(BiosTypeB.Q35_OVMF.localizationKey)?.toString() ?: ""
-				val Q35_SECURE_BOOT	= locEn?.get(BiosTypeB.Q35_SECURE_BOOT.localizationKey)?.toString() ?: ""
+				val i440fx_sea_bios	= locEn?.get(BiosTypeB.i440fx_sea_bios.localizationKey)?.toString() ?: ""
+				val q35_sea_bios	= locEn?.get(BiosTypeB.q35_sea_bios.localizationKey)?.toString() ?: ""
+				val q35_ovmf		= locEn?.get(BiosTypeB.q35_ovmf.localizationKey)?.toString() ?: ""
+				val q35_secure_boot	= locEn?.get(BiosTypeB.q35_secure_boot.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion
@@ -174,14 +174,14 @@ class Localization {
 		//region: VmTypeL
 		object VmTypeL {
 			object KR {
-				val Desktop = locKr?.get(VmTypeB.Desktop.localizationKey)?.toString() ?: ""
-				val Server = locKr?.get(VmTypeB.Server.localizationKey)?.toString() ?: ""
-				val HighPerformance = locKr?.get(VmTypeB.HighPerformance.localizationKey)?.toString() ?: ""
+				val Desktop = locKr?.get(VmTypeB.desktop.localizationKey)?.toString() ?: ""
+				val Server = locKr?.get(VmTypeB.server.localizationKey)?.toString() ?: ""
+				val HighPerformance = locKr?.get(VmTypeB.high_performance.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val Desktop = locEn?.get(VmTypeB.Desktop.localizationKey)?.toString() ?: ""
-				val Server = locEn?.get(VmTypeB.Server.localizationKey)?.toString() ?: ""
-				val HighPerformance = locEn?.get(VmTypeB.HighPerformance.localizationKey)?.toString() ?: ""
+				val Desktop = locEn?.get(VmTypeB.desktop.localizationKey)?.toString() ?: ""
+				val Server = locEn?.get(VmTypeB.server.localizationKey)?.toString() ?: ""
+				val HighPerformance = locEn?.get(VmTypeB.high_performance.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion:
@@ -219,8 +219,8 @@ class Localization {
 			ProviderType.FOREMAN -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
 			ProviderType.OPENSTACK_IMAGE -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
 			ProviderType.OPENSTACK_VOLUME ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
-			ProviderType.VMWARE -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
 			ProviderType.EXTERNAL_NETWORK -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
+			ProviderType.VMWARE -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
 			ProviderType.KVM ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
 			ProviderType.XEN ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
 			ProviderType.KUBEVIRT ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
@@ -228,10 +228,10 @@ class Localization {
 
 	fun findLocalizedName4BiosType(type: BiosTypeB, loc: String = "kr"): String =
 		when(type) {
-			BiosTypeB.I440FX_SEA_BIOS ->		if (loc == "kr") BiosTypeL.KR.I440FX_SEA_BIOS		else BiosTypeL.EN.I440FX_SEA_BIOS
-			BiosTypeB.Q35_SEA_BIOS -> 			if (loc == "kr") BiosTypeL.KR.Q35_SEA_BIOS 			else BiosTypeL.EN.Q35_SEA_BIOS
-			BiosTypeB.Q35_OVMF -> 				if (loc == "kr") BiosTypeL.KR.Q35_OVMF				else BiosTypeL.EN.Q35_OVMF
-			BiosTypeB.Q35_SECURE_BOOT ->		if (loc == "kr") BiosTypeL.KR.Q35_SECURE_BOOT		else BiosTypeL.EN.Q35_SECURE_BOOT
+			BiosTypeB.i440fx_sea_bios ->		if (loc == "kr") BiosTypeL.KR.i440fx_sea_bios		else BiosTypeL.EN.i440fx_sea_bios
+			BiosTypeB.q35_sea_bios -> 			if (loc == "kr") BiosTypeL.KR.q35_sea_bios 			else BiosTypeL.EN.q35_sea_bios
+			BiosTypeB.q35_ovmf -> 				if (loc == "kr") BiosTypeL.KR.q35_ovmf				else BiosTypeL.EN.q35_ovmf
+			BiosTypeB.q35_secure_boot ->		if (loc == "kr") BiosTypeL.KR.q35_secure_boot		else BiosTypeL.EN.q35_secure_boot
 			else -> if (loc == "kr") "알 수 없음" else "Unknown"
 		}
 	fun findLocalizedName4DiskContentType(type: DiskContentType, loc: String = "kr"): String =
@@ -277,9 +277,9 @@ class Localization {
 
 	fun findLocalizedName4VmType(type: VmTypeB, loc: String = "kr"): String =
 		when(type) {
-			VmTypeB.Desktop -> 				if (loc == "kr") VmTypeL.KR.Desktop else VmTypeL.EN.Desktop
-			VmTypeB.Server ->				if (loc == "kr") VmTypeL.KR.Server else VmTypeL.EN.Server
-			VmTypeB.HighPerformance -> 		if (loc == "kr") VmTypeL.KR.HighPerformance else VmTypeL.EN.HighPerformance
+			VmTypeB.desktop -> 				if (loc == "kr") VmTypeL.KR.Desktop else VmTypeL.EN.Desktop
+			VmTypeB.server ->				if (loc == "kr") VmTypeL.KR.Server else VmTypeL.EN.Server
+			VmTypeB.high_performance -> 		if (loc == "kr") VmTypeL.KR.HighPerformance else VmTypeL.EN.HighPerformance
 			else -> if (loc == "kr") "알 수 없음" else "Unknown"
 		}
 

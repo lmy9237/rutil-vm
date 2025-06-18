@@ -43,7 +43,7 @@ fun VmType?.toVmTypeB(): VmTypeB? =
 	VmTypeB.forCode(this@toVmTypeB?.value())
 
 fun VmTypeB?.toVmType(): VmType? =
-	VmType.fromValue(this@toVmType?.code?.lowercase())
+	VmType.fromValue(this@toVmType?.name)
 
 fun BiosType?.toBiosTypeB(): BiosTypeB =
 	BiosTypeB.forCode(this@toBiosTypeB?.value())

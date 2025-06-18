@@ -33,10 +33,12 @@ import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
 import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.toVmType
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
@@ -189,9 +191,9 @@ class VmVo (
 	private val _status: VmStatusB? = VmStatusB.Unknown,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	private val _optimizeOption: VmTypeB? = VmTypeB.Unknown, // VmType
+	val optimizeOption: VmTypeB? = VmTypeB.unknown, // VmType
 	// val biosType: String = "", // chipsetFirmwareType
-	private val _biosType: BiosTypeB? = BiosTypeB.UNKNOWN,
+	val biosType: BiosTypeB? = BiosTypeB.cluster_default,
 	val biosBootMenu: Boolean = false,
 	private val _osType: VmOsType? = VmOsType.OTHER_OS,
 	val cpuArc: ArchitectureType = ArchitectureType.undefined,
@@ -265,11 +267,11 @@ class VmVo (
 	val urlLargeIcon: String
 		get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOption: String
-		get() = _optimizeOption?.code ?: VmTypeB.Unknown.code
+	val optimizeOptionCode: String
+		get() = optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosType: String
-		get() = _biosType?.name?.lowercase() ?: BiosTypeB.UNKNOWN.name.lowercase()
+	val biosTypeCode: String
+		get() = (biosType?.name ?: BiosTypeB.cluster_default.name).lowercase()
 
 	val osType: String
 		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
@@ -333,8 +335,8 @@ class VmVo (
 		private var bStatus: VmStatusB = VmStatusB.Unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.Unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
-		private var bOptimizeOption: VmTypeB? = VmTypeB.Unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.Unknown }
-		private var bBiosType: BiosTypeB? = BiosTypeB.UNKNOWN; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.UNKNOWN }
+		private var bOptimizeOption: VmTypeB? = VmTypeB.unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.unknown }
+		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
 		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
 		private var bCpuArc: ArchitectureType = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
@@ -805,8 +807,7 @@ fun VmVo.toEditVm(): Vm =
 		.id(id)
 		.bios(
 			BiosBuilder()
-				// VmOsType.forCode(osType).code
-				.type(BiosType.fromValue(BiosTypeB.forCode(biosType).name.lowercase()))
+				.type(biosType.toBiosType())
 				.bootMenu(BootMenuBuilder().enabled(biosBootMenu).build())
 		)
 		.build()
@@ -817,8 +818,8 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	description(description)
 	comment(comment)
 	cluster(ClusterBuilder().id(clusterVo.id))
-	bios(BiosBuilder().type(BiosType.fromValue(BiosTypeB.forCode(biosType).name.lowercase())).build())
-	type(VmType.fromValue(optimizeOption))
+	bios(BiosBuilder().type(biosType.toBiosType()).build())
+	type(optimizeOption.toVmType())
 	timeZone(
 		TimeZoneBuilder().name(
 			if(osType.contains("windows")) "GMT Standard Time"

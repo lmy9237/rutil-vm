@@ -96,11 +96,11 @@ class ClusterVo(
 ): Serializable {
 	val biosTypeNameLcKr: String
 		get() = (if (biosType.name.lowercase() == "cluster_default")
-			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.Q35_OVMF // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
+			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.q35_ovmf // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
 			else com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.valueOf(biosType.name.uppercase())).kr
 	val biosTypeNameLcEn: String
 		get() = (if (biosType.name.lowercase() == "cluster_default")
-			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.Q35_OVMF // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
+			com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.q35_ovmf // TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
 		else com.itinfo.rutilvm.api.ovirt.business.BiosTypeB.valueOf(biosType.name.uppercase())).en
 
 	override fun toString(): String =

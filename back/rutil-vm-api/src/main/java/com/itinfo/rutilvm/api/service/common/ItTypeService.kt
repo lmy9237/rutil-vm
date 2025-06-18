@@ -147,7 +147,7 @@ fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
 fun List<MigrationSupport>.toTypeVosFromMigrationSupports(): List<TypeVo> =
 	this@toTypeVosFromMigrationSupports.map { it.toTypeVoFromMigrationSupport() }
 fun VmTypeB.toTypeVoFromVmType(): TypeVo = TypeVo(
-	this@toTypeVoFromVmType.code.lowercase(),
+	this@toTypeVoFromVmType.name,
 	this@toTypeVoFromVmType.kr,
 	this@toTypeVoFromVmType.en,
 )

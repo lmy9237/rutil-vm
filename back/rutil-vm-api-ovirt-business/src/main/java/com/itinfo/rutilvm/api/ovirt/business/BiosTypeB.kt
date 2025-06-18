@@ -4,14 +4,16 @@ import java.util.concurrent.ConcurrentHashMap
 
 enum class BiosTypeB(
 	override val value: Int,
+	val code: String,
 	val chipset: ChipsetType?,
 	val ovmf: Boolean,
 ): Identifiable {
-	UNKNOWN(-1, null, false),
-	I440FX_SEA_BIOS(1, ChipsetType.I440FX, false),
-	Q35_SEA_BIOS(2, ChipsetType.Q35, false),
-	Q35_OVMF(3, ChipsetType.Q35, true),
-	Q35_SECURE_BOOT(4, ChipsetType.Q35, true);
+	// CLUSTER_DEFAULT(-1, null, false),
+	cluster_default(0, "CLUSTER_DEFAULT", null, false),
+	i440fx_sea_bios(1, "I440FX_SEA_BIOS", ChipsetType.I440FX, false),
+	q35_sea_bios(2, "Q35_SEA_BIOS", ChipsetType.Q35, false),
+	q35_ovmf(3, "Q35_OVMF", ChipsetType.Q35, true),
+	q35_secure_boot(4, "Q35_SECURE_BOOT", ChipsetType.Q35, true);
 
 	val localizationKey: String
 		get() = "${BiosTypeB::class.java.simpleName}.${this.name}"
@@ -29,13 +31,13 @@ enum class BiosTypeB(
 		init {
 			BiosTypeB.values().forEach {
 				valueMapping[it.value] = it
-				codeMapping[it.name] = it
+				codeMapping[it.code] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?): BiosTypeB = valueMapping[value] ?: UNKNOWN
-		@JvmStatic fun forCode(code: String?): BiosTypeB = codeMapping[code?.uppercase() ?: "UNKNOWN"] ?: UNKNOWN
+		@JvmStatic fun forValue(value: Int?): BiosTypeB = valueMapping[value] ?: cluster_default
+		@JvmStatic fun forCode(code: String?): BiosTypeB = codeMapping[code?.uppercase() ?: "CLUSTER_DEFAULT"] ?: cluster_default
 		val allBiosTypes: List<BiosTypeB> = BiosTypeB.values().toList().filter {
-			it != UNKNOWN
+			it != cluster_default
 		}
 	}
 }

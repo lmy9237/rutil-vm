@@ -55,9 +55,9 @@ class TemplateVo(
 	private val _status: TemplateStatusB? = TemplateStatusB.OK,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	private val _optimizeOption: VmTypeB? = VmTypeB.Unknown,
+	private val _optimizeOption: VmTypeB? = VmTypeB.unknown,
 	val biosBootMenu: Boolean = false,
-	private val _biosType: BiosTypeB? = BiosTypeB.UNKNOWN, // chipsetFirmwareType
+	private val _biosType: BiosTypeB? = BiosTypeB.cluster_default, // chipsetFirmwareType
 	private val _osType: VmOsType? = VmOsType.OTHER_OS,
 	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
@@ -133,10 +133,10 @@ class TemplateVo(
 		get() = iconLarge?.dataUrl ?: ""
 
 	val optimizeOption: String
-		get() = _optimizeOption?.code ?: VmTypeB.Unknown.code
+		get() = _optimizeOption?.code ?: VmTypeB.unknown.code
 
 	val biosType: String
-		get() = _biosType?.name?.lowercase() ?: BiosTypeB.UNKNOWN.name.lowercase()
+		get() = _biosType?.name?.lowercase() ?: BiosTypeB.cluster_default.name.lowercase()
 
 	val osType: String
 		get() = _osType?.code?.lowercase() ?: VmOsType.OTHER_OS.name.lowercase()
@@ -160,9 +160,9 @@ class TemplateVo(
 		private var bStatus: TemplateStatusB? = TemplateStatusB.Unknown; fun status(block: () -> TemplateStatusB?) { bStatus = block() ?: TemplateStatusB.Unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
-		private var bOptimizeOption: VmTypeB? = VmTypeB.Unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.Unknown }
+		private var bOptimizeOption: VmTypeB? = VmTypeB.unknown; fun optimizeOption(block: () -> VmTypeB?) { bOptimizeOption = block() ?: VmTypeB.unknown }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
-		private var bBiosType: BiosTypeB? = BiosTypeB.UNKNOWN; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.UNKNOWN }
+		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
 		private var bOsType: VmOsType? = VmOsType.OTHER_OS; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.OTHER_OS }
 		private var bCpuArc: ArchitectureType? = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }

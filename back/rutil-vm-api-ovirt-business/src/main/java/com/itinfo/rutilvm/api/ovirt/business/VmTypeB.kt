@@ -12,10 +12,10 @@ enum class VmTypeB(
 	override val value: Int,
 	val code: String,
 ): Identifiable {
-	Unknown(-1, "UNKNOWN"),
-	Desktop(0, "DESKTOP"),
-	Server(1, "SERVER"),
-	HighPerformance(2, "HIGH_PERFORMANCE");
+	unknown(-1, "UNKNOWN"),
+	desktop(0, "DESKTOP"),
+	server(1, "SERVER"),
+	high_performance(2, "HIGH_PERFORMANCE");
 
 	val localizationKey: String
 		get() = "${VmTypeB::class.java.simpleName}.${this.name}"
@@ -35,10 +35,10 @@ enum class VmTypeB(
 				codeMapping[it.code] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?): VmTypeB = valueMapping[value ?: -1] ?: Unknown
-		@JvmStatic fun forCode(code: String?): VmTypeB = codeMapping[code?.uppercase() ?: "UNKNOWN"] ?: Unknown
+		@JvmStatic fun forValue(value: Int?): VmTypeB = valueMapping[value ?: -1] ?: unknown
+		@JvmStatic fun forCode(code: String?): VmTypeB = codeMapping[code?.uppercase() ?: "UNKNOWN"] ?: unknown
 		val allVmTypes: List<VmTypeB> = VmTypeB.values().toList().filter {
-			it != Unknown
+			it != unknown
 		}
 	}
 }
