@@ -509,7 +509,7 @@ const TableColumnsInfo = {
     { accessor: 'id',   header: '스토리지 Id',          clickable: true },
   ],
   DISKS_FROM_STORAGE_DOMAIN: [
-    { accessor: '_alias',       header: Localization.kr.ALIAS,        clickable: false, width: '16%' },
+    { accessor: '_alias',       header: Localization.kr.ALIAS,        clickable: false },
     { accessor: 'icon1',        header: Localization.kr.IS_BOOTABLE,  clickable: false },
     { accessor: 'sharable',     header: Localization.kr.IS_SHARABLE,  clickable: false },
     { accessor: 'virtualSize',  header: Localization.kr.SIZE_VIRTUAL, clickable: false },

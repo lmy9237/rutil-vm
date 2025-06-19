@@ -1,8 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
@@ -51,9 +50,9 @@ const DiskDomains = ({
       status: domain?.status === 'ACTIVE' ? '활성화' : '비활성화',
       icon: status2Icon(domain.status),
       storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
-      domainType: domain?.domainType === 'data' 
+      domainType: domain?.storageDomainType === 'data' 
           ? '데이터'
-          : domain?.domainType === 'iso' 
+          : domain?.storageDomainType === 'iso' 
             ? 'ISO'
             : 'EXPORT',
       diskSize: sizeCheck(domain?.diskSize || 0),
@@ -65,10 +64,9 @@ const DiskDomains = ({
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
  
   return (
-    <>{/* v-start w-full으로 묶어짐*/}
+    <>
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDomains} />
-        {/*  */}
       </div>
       <TablesOuter target={"domain"}
         columns={TableColumnsInfo.STORAGE_DOMAINS_FROM_DISK}

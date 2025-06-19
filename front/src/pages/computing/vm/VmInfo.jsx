@@ -43,6 +43,7 @@ import "./Vm.css";
 const VmInfo = () => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal, } = useUIState()
+  const { setVmsSelected } = useGlobal()
   const { id: vmId, section } = useParams();
   const {
     data: vm,
@@ -50,8 +51,14 @@ const VmInfo = () => {
     isError: isVmError,
     isSuccess: isVmSuccess,
   } = useVm(vmId);
-  const { setVmsSelected } = useGlobal()
+  const { 
+    data: snapshots = [] 
+  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
 
+  const hasLockedSnapshot = useMemo(() => {
+    return snapshots.some(s => s.status === "locked");
+  }, [snapshots]);
+  
   const isUp = vm?.running ?? false;
   const isDown = vm?.notRunning ?? false;
   const isPause = vm?.status === "paused" || vm?.status === "suspended"; 
@@ -60,13 +67,6 @@ const VmInfo = () => {
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
 
-  const [activeTab, setActiveTab] = useState("general")
-  const { data: snapshots = [] } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
-
-  const hasLockedSnapshot = useMemo(() => {
-    return snapshots.some(s => s.status === "locked");
-  }, [snapshots]);
-
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
       navigate("/computing/vms");
@@ -74,6 +74,7 @@ const VmInfo = () => {
     setVmsSelected(vm)
   }, [vm]);
   
+  const [activeTab, setActiveTab] = useState("general")
   const tabs = useMemo(() => ([
     { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
     { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
@@ -103,7 +104,7 @@ const VmInfo = () => {
   ]), [vm, tabs, activeTab]);
 
   
-    // 탭 메뉴 관리
+  // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
     const SectionComponent = {

@@ -32,6 +32,7 @@ const DomainDisks = ({
 
   return (
     <>
+    <span>{disks[1]?.alias}</span>
       <DiskDupl columns={TableColumnsInfo.DISKS_FROM_STORAGE_DOMAIN}
         disks={disks}
         refetch={refetchDisks} isRefetching={isDisksRefetching}

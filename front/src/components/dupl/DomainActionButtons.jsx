@@ -33,14 +33,15 @@ const DomainActionButtons = ({
   const isActive = domain1st?.status === "ACTIVE";
   const isMaintenance = domain1st?.status === "MAINTENANCE";
   const isLocked = domain1st?.status === "LOCKED";
-  const isUnknown = domain1st?.status === "UNKNOWN";
-  const isUnattached = domain1st?.status === "UNATTACHED";
+  const isUnknown = domain1st?.status === "unknown";
+  // const isUnattached = domain1st?.status === "UNATTACHED";
+  const isUnattached = domain1st?.status === "unattached";
 
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },
     { type: "import",  onClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: isMaintenance, },
     { type: "update",  onClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1, },
-    { type: "remove",  onClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || !isUnattached, },
+    { type: "remove",  onClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || !isUnknown, },
     /* { type: "destory", onClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || !isUnattached || !isMaintenance }, */
   ];
 

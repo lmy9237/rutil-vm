@@ -6,9 +6,12 @@ import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainType
+import com.itinfo.rutilvm.api.ovirt.business.toStorageType
+import com.itinfo.rutilvm.api.ovirt.business.toStorageTypeB
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -18,6 +21,7 @@ import org.ovirt.engine.sdk4.types.DataCenter
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.StorageFormat
+import org.ovirt.engine.sdk4.types.StorageType
 import org.ovirt.engine.sdk4.types.StorageType.NFS
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -57,7 +61,7 @@ class StorageDomainVo(
 	val description: String = "",
 	val comment: String = "",
 	val status: StorageDomainStatusB = StorageDomainStatusB.unattached,
-	// val storagePoolStatus: StoragePoolStatus = UNINITIALIZED,
+	val storagePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized,
 	val storageType: StorageTypeB = StorageTypeB.unknown,
 	val storageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown,
 	val storageFormat: StorageFormat = StorageFormat.V5,
@@ -84,7 +88,7 @@ class StorageDomainVo(
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = "";fun comment(block: () -> String?) { bComment = block() ?: "" }
 		private var bStatus: StorageDomainStatusB = StorageDomainStatusB.unattached;fun status(block: () -> StorageDomainStatusB?) { bStatus = block() ?: StorageDomainStatusB.unattached }
-		// private var bStoragePoolStatus: StoragePoolStatus = StoragePoolStatus.UNINITIALIZED;fun storagePoolStatus(block: () -> StoragePoolStatus?) { bStoragePoolStatus = block() ?: StoragePoolStatus.UNINITIALIZED }
+		private var bStoragePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized;fun storagePoolStatus(block: () -> StoragePoolStatus?) { bStoragePoolStatus = block() ?: StoragePoolStatus.uninitialized }
 		private var bStorageType: StorageTypeB = StorageTypeB.unknown;fun storageType(block: () -> StorageTypeB?) { bStorageType = block() ?: StorageTypeB.unknown }
 		private var bStorageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown;fun storageDomainType(block: () -> StorageDomainTypeB?) { bStorageDomainType = block() ?: StorageDomainTypeB.unknown }
 		private var bStorageFormat: StorageFormat = StorageFormat.V5;fun storageFormat(block: () -> StorageFormat?) { bStorageFormat = block() ?: StorageFormat.V5 }
@@ -103,7 +107,7 @@ class StorageDomainVo(
 		private var bDiskImageVos: List<IdentifiedVo> = listOf();fun diskImageVos(block: () -> List<IdentifiedVo>?) { bDiskImageVos = block() ?: listOf() }
 		private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, /*bStoragePoolStatus,*/ bStorageType, bStorageDomainType, bStorageFormat, bMaster, bHostedEngine, bSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bWarning, bSpaceBlocker, bStorageVo, bDataCenterVo, bHostVo, bDiskImageVos, bDiskProfileVos, )
+		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, bStoragePoolStatus, bStorageType, bStorageDomainType, bStorageFormat, bMaster, bHostedEngine, bSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bWarning, bSpaceBlocker, bStorageVo, bDataCenterVo, bHostVo, bDiskImageVos, bDiskProfileVos, )
 	}
 
 	companion object {
@@ -136,6 +140,7 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 		// 	storagePoolStatus { StoragePoolStatus.forStatusValue(storageDomainStatus.status().value()) }
 		// }
 		storageType { StorageTypeB.forCode(storageDomain.type().value()) }
+		storageDomainType { StorageDomainTypeB.forCode(storageDomain.type().value()) }
 		storageVo { storageDomain.storage().toStorageVo() }
 		master { storageDomain.masterPresent() && storageDomain.master() }
 		hostedEngine { hostedVm }
@@ -248,7 +253,8 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 	log.info("toAddStorageDomain: {}", this)
 	return toStorageDomainBuilder()
 		.storage(
-			when (StorageTypeB.forCode(storageVo.type.value())) {
+			// when (StorageTypeB.forCode(storageVo.type.value())) {
+			when (storageVo.type) {
 				StorageTypeB.nfs -> storageVo.toAddNFS()
 				StorageTypeB.fcp, StorageTypeB.iscsi -> storageVo.toAddBlockStorage()
 				else -> throw IllegalArgumentException("Unsupported storage type")
@@ -264,11 +270,11 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
 fun StorageDomainVo.toImportStorageDomain(): StorageDomain {
 	log.info("toImportStorageDomain: {}", this)
 	val builder = toStorageDomainBuilder().import_(true)
-	if (storageVo.type != NFS) builder.id(id)
+	if (storageVo.type != StorageTypeB.nfs) builder.id(id)
 
 	return builder
 		.storage(
-			when (StorageTypeB.forCode(storageVo.type.value())) {
+			when (storageVo.type) {
 				StorageTypeB.nfs -> storageVo.toImportNFS()
 				StorageTypeB.fcp, StorageTypeB.iscsi -> storageVo.toImportBlockStorage()
 				else -> throw IllegalArgumentException("Unsupported storage type")

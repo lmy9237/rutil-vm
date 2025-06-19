@@ -40,13 +40,18 @@ import Logger                 from "@/utils/Logger";
 const DomainInfo = () => {
   const navigate = useNavigate();
   const { activeModal, setActiveModal, } = useUIState()
-  const { id: domainId, section } = useParams();
   const { 
     setDomainsSelected, setDatacentersSelected,
     setSourceContext
   } = useGlobal()
+  const { id: domainId, section } = useParams();
 
-  const { data: domain } = useStorageDomain(domainId);
+  const { 
+    data: domain,
+    isLoading: isDomainLoading,
+    isError: isDomainError,
+    isSuccess: isDomainSuccess
+  } = useStorageDomain(domainId);
   const { data: importVms = [], refetch: importVmsRefetch } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
   const { data: importTemplates = [], refetch: importTemplatesRefetch } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
   const { data: importDisks = [], refetch: importDisksRefetch } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
@@ -55,35 +60,19 @@ const DomainInfo = () => {
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
   const isACTIVE = domain?.status === "ACTIVE";
-  const isUNKNOWN = domain?.status === "UNKNOWN";
+  const isUNKNOWN = domain?.status === "unknown";
   const isMaintenance = domain?.status === "MAINTENANCE";
   const isUnattached = domain?.status === "UNATTACHED";
 
-  const [activeTab, setActiveTab] = useState("general");
   useEffect(() => {
-    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
-    setDatacentersSelected(domain?.dataCenterVo)
-    setDomainsSelected(domain);
-    setSourceContext("fromDomain");
-    importVmsRefetch();
-    importTemplatesRefetch();
-    importDisksRefetch();
-  }, [domain])
+    if (isDomainError || (!isDomainLoading && !domain)) {
+      navigate("/computing/vms");
+    }
+    setDomainsSelected(domain)
+  }, [domain]);
 
-  // const sections = useMemo(() => ([
-  //   { id: "general", label: Localization.kr.GENERAL },
-  //   { id: "datacenters", label: Localization.kr.DATA_CENTER },
-  //   { id: "vms", label: Localization.kr.VM },
-  //   { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}` },
-  //   { id: "templates", label: Localization.kr.TEMPLATE },
-  //   { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}` },
-  //   { id: "disks", label: Localization.kr.DISK },
-  //   { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}` },
-  //   { id: "diskSnapshots", label: "디스크 스냅샷" },
-  //   { id: "events", label: Localization.kr.EVENT },
-  // ]), []);
-  
-  /* 가져오기에 따른 탭 메뉴 활성화 */
+  const [activeTab, setActiveTab] = useState("general");
+/* 가져오기에 따른 탭 메뉴 활성화 */
   const tabs = useMemo(() => {
     const baseSections = [
       { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
@@ -96,7 +85,7 @@ const DomainInfo = () => {
     ];
 
     // domain이 UNATTACHED 상태가 아니고, 데이터가 있는 경우만 import 탭 추가
-    if (domain?.status !== "UNATTACHED") {
+    if (domain?.status !== "unknown") {
       if (importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0) {
         baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
         baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
@@ -105,12 +94,10 @@ const DomainInfo = () => {
     }
     return baseSections;
   }, [domainId, domain?.status, importVms, importTemplates, importDisks]);
-  
 
-  const pathData = useMemo(() => ([
-    domain?.name,
-    [...tabs].find((section) => section.id === activeTab)?.label,
-  ]), [domain, tabs, activeTab]);
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   const handleTabClick = useCallback((tab) => {
     const path = tab === "general"
@@ -119,11 +106,23 @@ const DomainInfo = () => {
     navigate(path);
     setActiveTab(tab);
   }, [domainId]);
-  
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
+  useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
+    setDatacentersSelected(domain?.dataCenterVo)
+    setDomainsSelected(domain);
+    setSourceContext("fromDomain");
+    importVmsRefetch();
+    importTemplatesRefetch();
+    importDisksRefetch();
+  }, [domain])
+
+  const pathData = useMemo(() => ([
+    domain?.name,
+    tabs.find((section) => section.id === activeTab)?.label,
+  ]), [domain, tabs, activeTab]);
+
+  
   const renderSectionContent = useCallback(() => {
     const SectionComponent = {
       general: DomainGeneral,

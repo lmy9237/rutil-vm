@@ -2,6 +2,9 @@ package com.itinfo.rutilvm.api.model.storage
 
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.computing.HostStorageVo
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toStorageType
+import com.itinfo.rutilvm.api.ovirt.business.toStorageTypeB
 import org.ovirt.engine.sdk4.builders.HostStorageBuilder
 import org.ovirt.engine.sdk4.builders.LogicalUnitBuilder
 import org.ovirt.engine.sdk4.builders.VolumeGroupBuilder
@@ -20,7 +23,7 @@ private val log = LoggerFactory.getLogger(StorageVo::class.java)
  * @property type [StorageType]
  */
 class StorageVo(
-    val type: StorageType = StorageType.NFS,
+    val type: StorageTypeB = StorageTypeB.nfs,
 	val address: String = "",
 	val path: String = "",
 	val originPath: String = "",
@@ -31,7 +34,7 @@ class StorageVo(
         gson.toJson(this)
 
     class Builder {
-        private var bType: StorageType = StorageType.NFS;fun type(block: () -> StorageType?) { bType = block() ?: StorageType.NFS }
+        private var bType: StorageTypeB = StorageTypeB.nfs;fun type(block: () -> StorageTypeB?) { bType = block() ?: StorageTypeB.nfs }
 		private var bAddress: String = "";fun address(block: () -> String?) { bAddress = block() ?: "" }
 		private var bPath: String = "";fun path(block: () -> String?) { bPath = block() ?: "" }
 		private var bOriginPath: String = "";fun originPath(block: () -> String?) { bOriginPath = block() ?: "" }
@@ -48,7 +51,7 @@ class StorageVo(
 fun HostStorage.toStorageVo() : StorageVo {
 	val storage = this@toStorageVo
 	return StorageVo.builder {
-		type { storage.type() }
+		type { storage.type().toStorageTypeB() }
 		address { if(storage.addressPresent()) storage.address() else null }
 		path { if(storage.pathPresent()) storage.path() else null }
 		originPath {
@@ -66,7 +69,7 @@ fun List<HostStorage>.toStorageVos(): List<StorageVo> =
 fun HostStorage.toNfsStorageVo() : StorageVo {
 	val nfs = this@toNfsStorageVo
     return StorageVo.builder {
-        type { nfs.type() }
+        type { nfs.type().toStorageTypeB() }
 		address { nfs.address() }
 		path { nfs.path() }
 		nfsVersion { nfs.nfsVersion() }
@@ -80,7 +83,7 @@ fun List<HostStorage>.toNfsStorageVos(): List<StorageVo> =
 fun HostStorage.toGroupHostStorageVo() : StorageVo {
 	val hostStorage = this@toGroupHostStorageVo
 	return StorageVo.builder {
-		type { hostStorage.type() }
+		type { hostStorage.type().toStorageTypeB() }
 		volumeGroupVo { if(hostStorage.volumeGroupPresent()) hostStorage.volumeGroup().toVolumeGroupVo() else null }
 	}
 }
@@ -90,7 +93,7 @@ fun List<HostStorage>.toGroupHostStorageVos(): List<StorageVo> =
 
 fun StorageVo.toHostStorageBuilder(): HostStorageBuilder {
 	return HostStorageBuilder()
-		.type(StorageType.fromValue(type.value()))
+		.type(type.toStorageType())
 }
 
 // NFS

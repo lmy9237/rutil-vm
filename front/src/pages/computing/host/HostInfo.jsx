@@ -40,6 +40,8 @@ import "./Host.css";
  */
 const HostInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
+  const { setHostsSelected } = useGlobal()
   const { id: hostId, section } = useParams();
   const { 
     data: host,
@@ -47,9 +49,11 @@ const HostInfo = () => {
     isError: isHostError, 
     isSuccess: isHostSuccess,
   } = useHost(hostId);
-  const { activeModal, setActiveModal, } = useUIState()
-  const { hostsSelected, setHostsSelected } = useGlobal()
-  const [activeTab, setActiveTab] = useState("general");
+
+  const isUp = host?.status === "UP";
+  const isMaintenance = host?.status === "MAINTENANCE";
+  const isNonOperational = host?.status === "NON_OPERATIONAL"
+  const isInstalling = host?.status === "INSTALLING";
 
   useEffect(() => {
     if (isHostError || (!isHostLoading && !host)) {
@@ -58,37 +62,34 @@ const HostInfo = () => {
     setHostsSelected(host)
   }, [host]);
 
-  const isUp = host?.status === "UP";
-  const isMaintenance = host?.status === "MAINTENANCE";
-  const isNonOperational = host?.status === "NON_OPERATIONAL"
-  const isInstalling = host?.status === "INSTALLING";
+  const [activeTab, setActiveTab] = useState("general");
+  const tabs = useMemo(() => ([
+    { id: "general",        label: Localization.kr.GENERAL,               onClick: () => handleTabClick("general") },
+    { id: "vms",            label: Localization.kr.VM,                    onClick: () => handleTabClick("vms") },
+    { id: "nics",           label: Localization.kr.NICS,                  onClick: () => handleTabClick("nics") },
+    { id: "networkAdapter", label: `${Localization.kr.NETWORK} 어댑터`,    onClick: () => handleTabClick("networkAdapter") },
+    { id: "devices",        label: `${Localization.kr.HOST} 장치`,         onClick: () => handleTabClick("devices") },
+    { id: "events",         label: Localization.kr.EVENT,                 onClick: () => handleTabClick("events") },
+  ]), [hostId])
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
 
   const handleTabClick = useCallback((tab) => {
-    Logger.debug(`HostInfo > handleTabClick ... tab: ${tab}`);
+    Logger.debug(`HostInfo > handleTabClick ... hostId: ${hostId}`);
     const path = tab === "general"
         ? `/computing/hosts/${hostId}`
         : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
-  }, [navigate, activeTab, hostId]);
-
-  const tabs = useMemo(() => ([
-    { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
-    { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
-    { id: "nics",           label: Localization.kr.NICS,    onClick: () => handleTabClick("nics") },
-    { id: "networkAdapter", label: "네트워크 어댑터",          onClick: () => handleTabClick("networkAdapter") },
-    { id: "devices",        label: `${Localization.kr.HOST} 장치`, onClick: () => handleTabClick("devices") },
-    { id: "events",         label: Localization.kr.EVENT,    onClick: () => handleTabClick("events") },
-  ]), [hostId])
+  }, [hostId]);
 
   const pathData = useMemo(() => ([
     host?.name,
-    [...tabs].find((section) => section.id === activeTab)?.label,
-  ]), [host]);  
+    tabs.find((section) => section.id === activeTab)?.label,
+  ]), [host, tabs, activeTab]);  
 
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
   // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
@@ -122,10 +123,10 @@ const HostInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Host()}
-        title={host?.name}
-        status={Localization.kr.renderStatus(host?.status)}
+      <HeaderButton title={host?.name}
+        titleIcon={rvi24Host()}
         buttons={sectionHeaderButtons}
+        status={Localization.kr.renderStatus(host?.status)}
         popupItems={popupItems}
       />
       <div className="content-outer">

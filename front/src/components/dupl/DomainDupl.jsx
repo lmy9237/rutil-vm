@@ -14,9 +14,7 @@ import {
   status2Icon
 } from "@/components/icons/RutilVmIcons";
 import { getStatusSortKey }          from "@/components/icons/GetStatusSortkey";
-import { convertBytesToGB } from "@/util";
 import Localization                  from "@/utils/Localization";
-import Logger                        from "@/utils/Logger";
 /**
  * @name DomainDupl
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
@@ -44,28 +42,27 @@ const DomainDupl = ({
         {domain?.name}
       </TableRowClick>
     ),
-    icon: status2Icon(domain.status),
+    icon: status2Icon(domain.status === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
+    // icon: status2Icon(domain?.storagePoolStatus),    
     iconSortKey: getStatusSortKey(domain?.status), 
     _status: Localization.kr.renderStatus(domain?.status),
-    // _status: Localization.kr.renderDomainStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
-    storageDomainType: domain?.storageDomainType
-        ? `데이터 ${domain?.master === true ? "(마스터)": ""}`
-        : domain?.type === "ISO"
-          ? `ISO ${domain?.master === true ? "(마스터)": ""}`
-          : `EXPORT ${domain?.master === true ? "(마스터)": ""}`,
-    storageType: domain?.storageType === "NFS"
+    storageDomainType: 
+      domain?.storageDomainType === "master"
+        ? `데이터 (마스터)`
+        : domain?.storageDomainType === "data"
+          ? `데이터`
+          : `${domain?.storageDomainType}`,
+    storageType: domain?.storageType === "nfs"
         ? "NFS"
-        : domain?.storageVo?.type === "ISCSI"
+        : domain?.storageType === "iscsi"
             ? "iSCSI"
             : "Fibre Channel",
-      
-    
     format: domain?.storageFormat,
     size: domain?.size + " GiB",
     availableSize: domain?.availableSize + " GiB",
     usedSize: domain?.usedSize + " GiB",
-    searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${convertBytesToGB(domain?.diskSize)}GB`
+    searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${domain?.size}GB`
   }));
 
   // ✅ 검색 기능 적용

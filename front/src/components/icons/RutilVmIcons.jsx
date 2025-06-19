@@ -487,11 +487,11 @@ export const RVI24 = forwardRef(({
 export const severity2Icon = (severity, isLined=false) => {  
   let iconDef = rvi16QuestionMark();
   switch (severity) {
-  case "ALERT":   iconDef = isLined ? rvi16SeverityAlertLined() : rvi16SeverityAlert();break;
-  case "ERROR":   iconDef = isLined ? rvi16SeverityErrorLined() : rvi16SeverityError();break;
-  case "WARNING": iconDef = isLined ? rvi16SeverityWarningLined() : rvi16SeverityWarning();break;
+  case "alert":   iconDef = isLined ? rvi16SeverityAlertLined() : rvi16SeverityAlert();break;
+  case "error":   iconDef = isLined ? rvi16SeverityErrorLined() : rvi16SeverityError();break;
+  case "warning": iconDef = isLined ? rvi16SeverityWarningLined() : rvi16SeverityWarning();break;
   // case "NORMAL":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16SeverityNormal();break;
-  case "NORMAL":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16Check();break;
+  case "normal":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16Check();break;
   default:        iconDef = rvi16QuestionMark();break;
   }
   return (

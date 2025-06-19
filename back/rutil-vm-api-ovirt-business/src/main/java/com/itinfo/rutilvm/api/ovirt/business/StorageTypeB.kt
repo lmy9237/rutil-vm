@@ -43,6 +43,6 @@ enum class StorageTypeB(
 		}
 
 		@JvmStatic fun forValue(value: Int?): StorageTypeB = valueMapping[value ?: unknown.value] ?: unknown
-		@JvmStatic fun forCode(value: String?): StorageTypeB = codeMapping[value ?: unknown.code] ?: unknown
+		@JvmStatic fun forCode(code: String?): StorageTypeB = codeMapping[code ?: unknown.code] ?: unknown
 	}
 }

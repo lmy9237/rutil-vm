@@ -22,6 +22,8 @@ import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus.Companion
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
@@ -131,7 +133,7 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		name { storageName }
 		description { storageDescription }
 		status { status }
-		// storagePoolStatus { StoragePoolStatus.forValue(storageDomainSharedStatus) }
+		storagePoolStatus { StoragePoolStatus.forValue(storageDomainSharedStatus) }
 		storageType { storageType }
 		storageDomainType { storageDomainType }
 		// storageVo { storage().toStorageVo() }

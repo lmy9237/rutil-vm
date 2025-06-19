@@ -4,7 +4,6 @@ import { ActionButton }      from "@/components/button/ActionButtons";
 import { rvi24Close, RVI36, rvi36EditHover, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
-import LabelCheckbox from "@/components/label/LabelCheckbox";
 import VmCreateDiskModal from "./VmCreateDiskModal";
 import VmCreateDiskConnectionModal from "./VmCreateDiskConnectionModal";
 
@@ -14,8 +13,6 @@ const VmDisk = ({
   diskListState, setDiskListState,
   disabled = false,
 }) => {
-  console.log("$diskAttachments", diskListState)
-
   const [createOpen, setCreateOpen] = useState(null);
   const [updateOpen, setUpdateOpen] = useState(null);
   const [connOpen, setConnOpen] = useState(false);
