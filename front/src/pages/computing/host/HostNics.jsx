@@ -33,6 +33,7 @@ import {
 } from "./hostNics/TransHostNicData";
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
+import { background } from "storybook/internal/theming";
 
 const HostNics = ({
   hostId
@@ -1150,7 +1151,7 @@ const HostNics = ({
         )}
       </div>
 
-      <SnapshotHostBackground className="f-btw w-full" style={{ padding: "inherit", position: "relative" }}>
+      <SnapshotHostBackground className="split-outer f-btw w-full">
         {/* 작업 탭 */}
         <div className="split-item split-item-two-thirds"
           onDragOver={e => {

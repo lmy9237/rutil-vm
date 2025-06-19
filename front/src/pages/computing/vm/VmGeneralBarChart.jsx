@@ -20,21 +20,21 @@ import "./VmGeneralBarChart.css";
 const usageData = [
   {
     label: "CPU",
-    value: 53,
+    value: 53,        //값
     color: "#f57171",
     icon: <RVI24 iconDef={rvi24DeveloperBoard()}/>,
     description: "1 CPU 할당됨 | 47% 사용 가능",
   },
   {
     label: "메모리",
-    value: 34,
+    value: 34,      //값
     color: "#98db6b",
     icon: <RVI24 iconDef={rvi24Memory()}/>,
     description: "4096 MB 할당됨 | 66% 사용 가능",
   },
   {
     label: "네트워크",
-    value: 10,
+    value: 10,        //값
     color: "#98db6b",
     icon: <RVI24 iconDef={rvi24Storage()} />,
     description: "90% 사용 가능",

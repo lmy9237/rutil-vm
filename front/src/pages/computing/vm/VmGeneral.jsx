@@ -129,82 +129,82 @@ const VmGeneral = ({
 
   // 게스트 운영 체제
 const generalTableRows = [
-    { label: "이름", value: vm?.name },
-    { label: "상태", value: <div className="f-start">{status2Icon(vm?.status)} {Localization.kr.renderStatus(vm?.status)}</div> },
-    { label: "업타임", value: vm?.uptime },
-    { label: "운영 시스템", value: vm?.guestOsType || vm?.osTypeName },
-    { label: "고가용성", value: vm?.highAvailability ? "예" : "아니요" },
-    { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" },
-    { label: "설명", value: vm?.description },
-  ];
+  { label: "이름", value: vm?.name },
+  { label: "상태", value: <div className="f-start">{status2Icon(vm?.status)} {Localization.kr.renderStatus(vm?.status)}</div> },
+  { label: "업타임", value: vm?.upTime },
+  { label: "운영 시스템", value: vm?.guestOsType || vm?.osTypeName },
+  { label: "고가용성", value: vm?.ha ? "예" : "아니요" }, // ✅ 수정
+  { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" },
+  { label: "설명", value: vm?.description },
+];
+
   //가상머신 하드웨어
   const hardwareTableRows = [
-  { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-  { label: "메모리", value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` },
-  { label: "할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)} MB` },
-  {
-    label: "네트워크 어댑터",
-    value: (
-      <>
-        {vm?.nicVos?.map((nic, idx) => (
-          <div key={idx}>
-            {nic?.name} ({nic?.network?.name}) | {nic?.macAddress}
-          </div>
-        ))}
-      </>
-    )
-  },
-  {
-    label: "디스크",
-    value: (
-      <>
-        {vm?.diskAttachmentVos?.map((disk, idx) => (
-          <div key={idx}>
-            {convertBytesToMB(disk?.disk?.provisionedSize ?? 0)} MiB | {disk?.disk?.storageDomainName} | 씬 {disk?.bootable ? "| 부팅" : ""}
-          </div>
-        ))}
-      </>
-    )
-  }
-];
-//관련 개체
-const relatedTableRows = [
-  { label: "Data Center", value: vm?.dataCenter?.name || "Default" },
-  { label: "Cluster", value: vm?.clusterVo?.name },
-  {
-    label: "호스트", value: (
-      <div>
-        {vm?.hostVo?.name} ({vm?.hostVo?.address})
-      </div>
-    )
-  },
-  {
-    label: "스토리지 도메인",
-    value: [...new Set(vm?.diskAttachmentVos?.map(disk => disk?.disk?.storageDomainName))].join(", ")
-  },
-  {
-    label: "네트워크",
-    value: [...new Set(vm?.nicVos?.map(nic => nic?.network?.name))].join(", ")
-  }
-];
+    { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
+    { label: "메모리", value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` },
+    { label: "할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)} MB` },
+    {
+      label: "네트워크 어댑터",
+      value: (
+        <>
+          {vm?.nicVos?.map((nic, idx) => (
+            <div key={idx}>
+              {nic?.name} ({nic?.network?.name}) | {nic?.macAddress}
+            </div>
+          ))}
+        </>
+      )
+    },
+    {
+      label: "디스크",
+      value: (
+        <>
+          {vm?.diskAttachmentVos?.map((disk, idx) => (
+            <div key={idx}>
+              {convertBytesToMB(disk?.disk?.provisionedSize ?? 0)} MiB | {disk?.disk?.storageDomainName} | 씬 {disk?.bootable ? "| 부팅" : ""}
+            </div>
+          ))}
+        </>
+      )
+    }
+  ];
+  //관련 개체
+  const relatedTableRows = [
+    { label: "Data Center", value: vm?.dataCenterVo?.name || "Default" },
+    { label: "Cluster", value: vm?.clusterVo?.name },
+    {
+      label: "호스트", value: (
+        <div>
+          {vm?.hostVo?.name} {/*({vm?.hostVo?.address})*/}
+        </div>
+      )
+    },
+    {
+      label: "스토리지 도메인",
+      value: [...new Set(vm?.diskAttachmentVos?.map(disk => disk?.disk?.storageDomainName))].join(", ")
+    },
+    {
+      label: "네트워크",
+      value: [...new Set(vm?.nicVos?.map(nic => nic?.network?.name))].join(", ")
+    }
+  ];
 
-
-const { setActiveModal } = useUIState();
-const {
-  data: snapshots = [],
-  isLoading: isSnapshotsLoading,
-} = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
-const snapshotList = useMemo(() =>
-  (snapshots || [])
-    .filter(s => !/(Active\sVM|before\sthe\spreview)/gi.test(s.description))
-    .map(s => ({
-      id: s.id,
-      description: s.description,
-      date: s.date?.replace("T", " ").slice(0, 16),
-      icon: s.persistMemory ? rvi16DesktopFlag(CONSTANT.color.blue1) : rvi16Desktop(),
-      statusIcon: status2Icon(s.status),
-    }))
-, [snapshots]);
+  const { setActiveModal } = useUIState();
+  const {
+    data: snapshots = [],
+    isLoading: isSnapshotsLoading,
+  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  const snapshotList = useMemo(() =>
+    (snapshots || [])
+      .filter(s => !/(Active\sVM|before\sthe\spreview)/gi.test(s.description))
+      .map(s => ({
+        id: s.id,
+        description: s.description,
+        date: s.date?.replace("T", " ").slice(0, 16),
+        icon: s.persistMemory ? rvi16DesktopFlag(CONSTANT.color.blue1) : rvi16Desktop(),
+        statusIcon: status2Icon(s.status),
+      }))
+  , [snapshots]);
   return (
     
     // <div className="vm-detail-grid">
@@ -261,7 +261,6 @@ const snapshotList = useMemo(() =>
     <GeneralLayout
       top={
         <>
-         
           <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
             <h3 className="box-title">게스트 운영체제</h3>
             <hr className="w-full" />

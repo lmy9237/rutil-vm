@@ -1,28 +1,4 @@
 /*일반파트*/
-.vm-detail-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  height: 100%;
-  width: 100%;
-}
-.vm-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-.section-top {
-  /* background-color: #fff3cd;  */
-  
-  width: 100%;
-}
-
-.section-bottom {
-  /* background-color: #f3e8ff;  */
- 
-  width: 100%;
-  height: 100%;
-}
 
 .grid-col-span-2 {
   grid-column: span 2;
@@ -34,9 +10,7 @@
   height: 100%;
   overflow: hidden;
 }
-.vm-info-box-outer > .flex {
-  flex-wrap: wrap;
-}
+
 
 .half-box {
   padding: 0 20px;
@@ -95,7 +69,7 @@
 /* 공통 */
 
 /* 반응형 */
-@media (max-width: 1024px) {
+@media (max-width: 1424px) {
  .vm-section{
     display: flex;
     flex-direction: column;
@@ -105,7 +79,9 @@
   .grid-col-span-2 {
     grid-column: auto;
   }
-
+  .vm-info-box-outer > .flex {
+    flex-wrap: wrap;
+  }
   .vm-info-box-outer {
     flex-direction: column;
     align-items: stretch;

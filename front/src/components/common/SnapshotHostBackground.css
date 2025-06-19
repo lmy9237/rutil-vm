@@ -1,16 +1,24 @@
+.split-outer{
+  height: 100%;
+  padding: inherit;
+  position: relative;
+}
 .split-layout-group {
   display: flex;
-  width: 100%;
+  width: 100%;  height: 100%;
+  align-items: stretch; 
   gap: 24px; 
 }
 
 .split-item {
   width: auto;
   padding: 20px;
+  height: 100%;
   border-radius: 8px;
   min-height: 220px;
   background: var(--color-white-1);
 }
+
 .snapshot-item {
   cursor: pointer;
   padding: 4px 20px;
@@ -18,7 +26,7 @@
 }
 
 .split-item:first-child {
-  width: 60%;
+  width: 60% !important;
 }
 .split-item:last-child {
   width: 38.5%;

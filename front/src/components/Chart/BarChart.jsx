@@ -99,12 +99,14 @@ const BarChart = ({
     chart: {
       type: "bar",
       redrawOnParentResize: true,
+      offsetX: -15,
       events: {
         dataPointSelection: (_, __, config) => {
           const index = config.dataPointIndex;
           const id = ids[index];
           // if (!id) return;
 
+          
           if (type === "domain") {
             navigate(`/storages/domains/${id}`); 
           } else {
@@ -216,7 +218,7 @@ const BarChart = ({
         id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
         options={chartOptions}
         series={series}
-        height="85%" // 부모 기준
+        height="89%" // 부모 기준
         // width={chartSize.width}
         // height={chartSize.height || "250px"}
         {...props}

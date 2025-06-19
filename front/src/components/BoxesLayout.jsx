@@ -276,7 +276,7 @@ export const BoxChartAllGraphs = ({ type }) => {
 
   const updateHeightGraphRest = () => {
     const isWide = window.innerWidth >= 2300;
-    const newHoriz = isWide ? 360 : 240;
+    const newHoriz = isWide ? 360 : 225;
     setHeightGraphHoriz(newHoriz);
 
     const heightSubstract = 64 + 40 + 110 + 4 + 28 + 32 + 20 + 20 + 8 + 8 + newHoriz;
@@ -454,22 +454,10 @@ const WaveChartCpu = ({
 }) => {
   const {
     data: host,
-    /*isRefetching: isHostRefetching,
-    refetch: hossRefetch,
-    isError: isHostError,
-    error: hostError,
-    isLoading: isHostLoading,
-    */
   } = useDashboardHosts();
   
   const {
     data: domain,
-    /*
-    isRefetching: isDomainRefetching,
-    refetch: domainRefetch,
-    isError: isDomainError,
-    error: domainError,
-    isLoading: isDomainLoading,*/
   } = useDashboardDomain();
 
   const _per = useMemo(() => {
@@ -490,27 +478,6 @@ const WaveChartCpu = ({
   )
 }
 
-// const BarChartWrapper = ({ 
-//   data, 
-//   keyName, 
-//   keyPercent,
-//   ...props
-// }) => {
-//   const names = useMemo(() => 
-//     [...data]?.map((e) => e[keyName]) ?? []
-//   , [data, keyName]);
-
-//   const percentages = useMemo(() => 
-//     [...data]?.map((e) => e[keyPercent]) ?? []
-//   , [data, keyPercent]);
-
-  
-//   return <BarChart 
-//     names={names}
-//     percentages={percentages}
-//     {...props} 
-//   />;
-// };
 const BarChartWrapper = ({ 
   data, 
   keyName, 
@@ -521,11 +488,11 @@ const BarChartWrapper = ({
   const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
   const percentages = useMemo(() => data.map((e) => e[keyPercent]), [data, keyPercent]);
   const ids = useMemo(() => {
-    const originalIds = data.map((e) => e.id);
+    const originalIds = data.map((e) => e.id); 
     const padded = [...originalIds];
     while (padded.length < 3) {
-      padded.push(null); // 빈 항목은 null로
-    }
+    padded.push(`placeholder-${padded.length}`);
+  }
     return padded;
   }, [data]);
 

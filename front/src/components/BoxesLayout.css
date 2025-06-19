@@ -11,7 +11,7 @@
   height: 100%;
 }
 .box {
-  min-width: 100px; height: var(--h-dash-nav-box);
+  min-width: 130px; height: var(--h-dash-nav-box);
   flex: 1 1 calc(100% / 6 - 8px);
   padding: 17px 20px;
   cursor: pointer;
@@ -21,6 +21,7 @@
 }
 .box.box-graph {
   flex-grow: 1;
+  min-width: 500px;
   width: calc(100% / 3 - 8px); /* 1열 */
   cursor: default;
 }
@@ -68,7 +69,7 @@
 .warning { color: var(--color-yellow); }
 
 .bar-chart-title{
-  margin-left: 18%;
+  margin-left: 12%;
 }
  
 .graphs {
@@ -87,10 +88,12 @@
 }
 .boxes-grid {
   align-items:flex-start !important;
+  min-height: 176px;
 }
 .box-grid {
   flex-wrap: wrap;
 }
+
 .grid-matrix {
   display: grid;
   grid-template-columns: repeat(5, 1fr); 
@@ -100,7 +103,7 @@
   height: 100%;
 }
 @media screen and (min-width:2300px) {
-  .bar-chart-title{ margin-left: 29%;}
+  .bar-chart-title{ margin-left: 16%;}
 }
 @media screen and (max-width:1650px) {
   .dash-boxes {
@@ -114,7 +117,6 @@
     flex: 1 1 calc(100% / 3 - 8px);/* 한 줄에 3개씩 총 2줄*/
   }
   .box.box-graph {/* 한 줄에 3개씩 총 2줄*/
-    min-width: 480px;
     height: auto !important;
   }
 }

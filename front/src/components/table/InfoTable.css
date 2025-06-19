@@ -1,5 +1,5 @@
 .info-table-wrapper {
-  min-width:500px;max-height:500px;
+  min-width:500px;max-height:500px; width: 100%;
   padding: 12px 16px;
   background: var(--color-white-1);
   border-radius: 8px;

@@ -135,6 +135,7 @@
 .split-item-one-third {
   width: 30%;
   padding: 16px; 
+  height: 100%;
   border-radius: 6px; 
 }
 
