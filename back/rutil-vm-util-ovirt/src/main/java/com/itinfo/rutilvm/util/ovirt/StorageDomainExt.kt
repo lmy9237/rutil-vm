@@ -1,5 +1,11 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+
 import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
@@ -175,10 +181,10 @@ fun Connection.expectStorageDomainDeleted(storageDomainId: String, timeout: Long
 			Term.STORAGE_DOMAIN.logSuccess("삭제")
 			return true
 		} else if (System.currentTimeMillis() - startTime > timeout){
-			log.error("{} {} 삭제 시간 초과", Term.STORAGE_DOMAIN.desc, storageDomainToRemove.name())
+			log.error("{} {} 삭제 시간 초과", Term.STORAGE_DOMAIN.description, storageDomainToRemove.name())
 			return false
 		}
-		log.debug("{} 삭제 진행중 ... ", Term.STORAGE_DOMAIN.desc)
+		log.debug("{} 삭제 진행중 ... ", Term.STORAGE_DOMAIN.description)
 		Thread.sleep(interval)
 	}
 }

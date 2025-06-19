@@ -13,6 +13,7 @@ import {
   useEditDataCenter,
   useDataCenter,
   useAllClusterLevels,
+  useAllQuotaEnforcementTypes,
 } from "@/api/RQHook";
 import {
   checkKoreanName, checkName 
@@ -62,9 +63,24 @@ const DataCenterModal = ({
     isSuccess: isDataCenterSuccess,
   } = useDataCenter(datacenterId);
   const { 
-    data: clusterLevels=[],
+    data: clusterLevels = [],
   } = useAllClusterLevels("id", (e) => e);
   // 지정된 데이터센터의 버전보다 높은것만 출력되도록
+  const {
+    data: quotaEnforcementTypes=[],
+    isLoading: isQuotaEnforcementTypesLoading
+  } = useAllQuotaEnforcementTypes((e) => ({ 
+     ...e,
+     value: e?.id,
+     label: e?.kr
+  }))
+  /*
+  const quotaModes = [
+    { value: "DISABLED", label: `${Localization.kr.DEACTIVATE}` },
+    { value: "AUDIT", label: "감사" },
+    { value: "ENABLED", label: `${Localization.kr.ACTIVATE}` },
+  ];
+  */
 
   const initialVersionRef = useRef(null);
   const minVersion = editMode && initialVersionRef.current ? initialVersionRef.current : null;
@@ -180,8 +196,10 @@ const DataCenterModal = ({
       />
       <LabelSelectOptions id="quota-mode" label="쿼터 모드"
         value={formState.quotaMode}
+        options={quotaEnforcementTypes}
+        loading={isQuotaEnforcementTypesLoading}
         onChange={handleInputChange(setFormState, "quotaMode", validationToast)}
-        options={quotaModes}
+        
       />
       <LabelSelectOptions id="version-compatible" label="호환버전"
         value={formState.version}
@@ -193,12 +211,6 @@ const DataCenterModal = ({
 };
 
 export default DataCenterModal;
-
-const quotaModes = [
-  { value: "DISABLED", label: `${Localization.kr.DEACTIVATE}` },
-  { value: "AUDIT", label: "감사" },
-  { value: "ENABLED", label: `${Localization.kr.ACTIVATE}` },
-];
 
 // 버전 비교 함수
 function versionCompare(a, b) {

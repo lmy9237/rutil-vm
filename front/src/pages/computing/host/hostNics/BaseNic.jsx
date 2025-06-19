@@ -23,7 +23,7 @@ const BaseNic = ({
       onDrop={(e) => { handleDrop(e, "bond", nic)}}
       onDragOver={(e) => handleDragOver(e, "nic", "bond")}
     >
-      <RVI16 iconDef={nic.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
+      <RVI16 iconDef={nic.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-1.5" />
       {nic.name}
       <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
     </div>

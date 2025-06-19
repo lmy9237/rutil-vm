@@ -1,20 +1,25 @@
 package com.itinfo.rutilvm.api.model.common
 
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.util.ovirt.Term
+
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmTemplateStatusB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.api.ovirt.business.toVmTemplateStatusB
+import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+
 
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskStatus
 import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.NetworkStatus
 import org.ovirt.engine.sdk4.types.Template
-import org.ovirt.engine.sdk4.types.TemplateStatus
 import org.ovirt.engine.sdk4.types.Vm
-import org.ovirt.engine.sdk4.types.VmStatus
 import java.io.Serializable
 
 open class TreeNavigational<out T: Any?>(
-	val type: TreeNavigationalType? = TreeNavigationalType.UNKNOWN,
+	val type: TreeNavigatableType? = TreeNavigatableType.UNKNOWN,
 	val id: String? = "",
 	val name: String? = "",
 	val status: T? = null,
@@ -23,7 +28,7 @@ open class TreeNavigational<out T: Any?>(
 		gson.toJson(this)
 
 	class Builder<T> {
-		private var bType: TreeNavigationalType? = TreeNavigationalType.UNKNOWN;fun type(block: () -> TreeNavigationalType?) { bType = block() ?: TreeNavigationalType.UNKNOWN }
+		private var bType: TreeNavigatableType? = TreeNavigatableType.UNKNOWN;fun type(block: () -> TreeNavigatableType?) { bType = block() ?: TreeNavigatableType.UNKNOWN }
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bStatus: T? = null; fun status(block: () -> T?) { bStatus = block() }
@@ -34,61 +39,56 @@ open class TreeNavigational<out T: Any?>(
 	}
 }
 
-enum class TreeNavigationalType(
-	val term: Term,
-) {
-	DATACENTER(Term.DATACENTER),
-	CLUSTER(Term.CLUSTER),
-	STORAGE_DOMAIN(Term.STORAGE_DOMAIN),
-	DISK(Term.DISK),
-	VM(Term.VM),
-	TEMPLATE(Term.TEMPLATE),
-	HOST(Term.HOST),
-	NETWORK(Term.NETWORK),
-	UNKNOWN(Term.UNKNOWN);
-}
-
 //region: Disk
-fun Disk.toNavigationalWithStorageDomains(): TreeNavigational<DiskStatus> = TreeNavigational.builder {
-	type { TreeNavigationalType.DISK }
-	id { this@toNavigationalWithStorageDomains.id() }
-	name { this@toNavigationalWithStorageDomains.name() }
-	status { this@toNavigationalWithStorageDomains.status() }
+fun Disk.toNavigationalFromDisks(): TreeNavigational<DiskStatus> = TreeNavigational.builder {
+	type { TreeNavigatableType.DISK }
+	id { this@toNavigationalFromDisks.id() }
+	name { this@toNavigationalFromDisks.name() }
+	status { this@toNavigationalFromDisks.status() }
 }
-fun List<Disk>.fromDisksToTreeNavigationals(): List<TreeNavigational<DiskStatus>> =
-	this@fromDisksToTreeNavigationals.map { it.toNavigationalWithStorageDomains() }
+fun List<Disk>.toNavigationalsFromDisks(): List<TreeNavigational<DiskStatus>> =
+	this@toNavigationalsFromDisks.map { it.toNavigationalFromDisks() }
 //endregion
 
 //region: Vm
-fun Vm.toNavigationalWithStorageDomains(): TreeNavigational<VmStatus> = TreeNavigational.builder {
-	type { TreeNavigationalType.VM }
-	id { this@toNavigationalWithStorageDomains.id() }
-	name { this@toNavigationalWithStorageDomains.name() }
-	status { this@toNavigationalWithStorageDomains.status() }
+fun Vm.toNavigationalFromVms(): TreeNavigational<VmStatusB> = TreeNavigational.builder {
+	type { TreeNavigatableType.VM }
+	id { this@toNavigationalFromVms.id() }
+	name { this@toNavigationalFromVms.name() }
+	status { this@toNavigationalFromVms.status().toVmStatusB() }
 }
-fun List<Vm>.fromVmsToTreeNavigationals(): List<TreeNavigational<VmStatus>> =
-	this@fromVmsToTreeNavigationals.map { it.toNavigationalWithStorageDomains() }
+fun List<Vm>.toNavigationalsFromVms(): List<TreeNavigational<VmStatusB>> =
+	this@toNavigationalsFromVms.map { it.toNavigationalFromVms() }
+
+fun VmEntity.toNavigationalFromVmEntity(): TreeNavigational<VmStatusB> = TreeNavigational.builder {
+	type { TreeNavigatableType.VM }
+	id { this@toNavigationalFromVmEntity.vmGuid.toString() }
+	name { this@toNavigationalFromVmEntity.vmName }
+	status { this@toNavigationalFromVmEntity.status }
+}
+fun List<VmEntity>.toNavigationalsFromVmEntitiess(): List<TreeNavigational<VmStatusB>> =
+	this@toNavigationalsFromVmEntitiess.map { it.toNavigationalFromVmEntity() }
 //endregion
 
 //region: Template
-fun Template.fromTemplateToTreeNavigational(): TreeNavigational<TemplateStatus> = TreeNavigational.builder {
-	type { TreeNavigationalType.TEMPLATE }
-	id { this@fromTemplateToTreeNavigational.id() }
-	name { this@fromTemplateToTreeNavigational.name() }
-	status { this@fromTemplateToTreeNavigational.status() }
+fun Template.toNavigationalFromTemplate(): TreeNavigational<VmTemplateStatusB> = TreeNavigational.builder {
+	type { TreeNavigatableType.TEMPLATE }
+	id { this@toNavigationalFromTemplate.id() }
+	name { this@toNavigationalFromTemplate.name() }
+	status { this@toNavigationalFromTemplate.status().toVmTemplateStatusB() }
 }
 
-fun List<Template>.fromTemplateToTreeNavigationals(): List<TreeNavigational<TemplateStatus>> =
-	this@fromTemplateToTreeNavigationals.map { it.fromTemplateToTreeNavigational() }
+fun List<Template>.toNavigationalsFromTemplates(): List<TreeNavigational<VmTemplateStatusB>> =
+	this@toNavigationalsFromTemplates.map { it.toNavigationalFromTemplate() }
 //endregion
 
 //region: Network
-fun Network.toNavigationalWithStorageDomains(): TreeNavigational<NetworkStatus> = TreeNavigational.builder {
-	type { TreeNavigationalType.NETWORK }
-	id { this@toNavigationalWithStorageDomains.id() }
-	name { this@toNavigationalWithStorageDomains.name() }
-	status { this@toNavigationalWithStorageDomains.status() }
+fun Network.toNavigationalFromNetwork(): TreeNavigational<NetworkStatus> = TreeNavigational.builder {
+	type { TreeNavigatableType.NETWORK }
+	id { this@toNavigationalFromNetwork.id() }
+	name { this@toNavigationalFromNetwork.name() }
+	status { this@toNavigationalFromNetwork.status() }
 }
-fun List<Network>.fromNetworksToTreeNavigationals(): List<TreeNavigational<NetworkStatus>> =
-	this@fromNetworksToTreeNavigationals.map { it.toNavigationalWithStorageDomains() }
+fun List<Network>.toNavigationalsFromNetworks(): List<TreeNavigational<NetworkStatus>> =
+	this@toNavigationalsFromNetworks.map { it.toNavigationalFromNetwork() }
 //endregion

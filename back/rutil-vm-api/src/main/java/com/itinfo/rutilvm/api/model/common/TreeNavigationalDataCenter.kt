@@ -1,5 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllAttachedStorageDomainsFromDataCenter
 import com.itinfo.rutilvm.util.ovirt.findAllClustersFromDataCenter
@@ -19,10 +21,10 @@ class TreeNavigationalDataCenter (
     id: String = "",
 	name: String = "",
 	status: DataCenterStatus? = null,
-    val clusters: List<TreeNavigational<Unit>> = listOf(),
-    val networks: List<TreeNavigational<NetworkStatus>> = listOf(),
-    val storageDomains: List<TreeNavigational<StorageDomainStatus>> = listOf(),
-): TreeNavigational<DataCenterStatus>(TreeNavigationalType.DATACENTER, id, name, status), Serializable {
+    val clusters: List<TreeNavigational<Unit>> = emptyList(),
+    val networks: List<TreeNavigational<NetworkStatus>> = emptyList(),
+    val storageDomains: List<TreeNavigational<StorageDomainStatus>> = emptyList(),
+): TreeNavigational<DataCenterStatus>(TreeNavigatableType.DATACENTER, id, name, status), Serializable {
     override fun toString(): String =
         gson.toJson(this)
 
@@ -30,9 +32,9 @@ class TreeNavigationalDataCenter (
         private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bStatus: DataCenterStatus? = null;fun status(block: () -> DataCenterStatus?) { bStatus = block() }
-        private var bClusters: List<TreeNavigational<Unit>> = listOf(); fun clusters(block: () -> List<TreeNavigational<Unit>>?) { bClusters = block() ?: listOf() }
-        private var bNetworks: List<TreeNavigational<NetworkStatus>> = listOf(); fun networks(block: () -> List<TreeNavigational<NetworkStatus>>?) { bNetworks = block() ?: listOf() }
-        private var bStorageDomains: List<TreeNavigational<StorageDomainStatus>> = listOf(); fun storageDomains(block: () -> List<TreeNavigational<StorageDomainStatus>>?) { bStorageDomains = block() ?: listOf() }
+        private var bClusters: List<TreeNavigational<Unit>> = emptyList(); fun clusters(block: () -> List<TreeNavigational<Unit>>?) { bClusters = block() ?: emptyList() }
+        private var bNetworks: List<TreeNavigational<NetworkStatus>> = emptyList(); fun networks(block: () -> List<TreeNavigational<NetworkStatus>>?) { bNetworks = block() ?: emptyList() }
+        private var bStorageDomains: List<TreeNavigational<StorageDomainStatus>> = emptyList(); fun storageDomains(block: () -> List<TreeNavigational<StorageDomainStatus>>?) { bStorageDomains = block() ?: emptyList() }
         fun build(): TreeNavigationalDataCenter = TreeNavigationalDataCenter(bId, bName, bStatus, bClusters, bNetworks, bStorageDomains)
     }
     companion object {
@@ -40,44 +42,50 @@ class TreeNavigationalDataCenter (
     }
 }
 
-fun DataCenter.toNavigationalWithClusters(conn: Connection): TreeNavigationalDataCenter {
-    val clusters: List<Cluster> = conn.findAllClustersFromDataCenter(this.id()).getOrDefault(listOf())
+fun DataCenter.toNavigationalFromDataCenter4Clusters(conn: Connection?, rVm: VmRepository?=null): TreeNavigationalDataCenter {
+    val clusters: List<Cluster> = conn?.findAllClustersFromDataCenter(this.id())
+		?.getOrDefault(emptyList())
+		?: emptyList()
 
     return TreeNavigationalDataCenter.builder {
-        id { this@toNavigationalWithClusters.id() }
-        name { this@toNavigationalWithClusters.name() }
-		status { this@toNavigationalWithClusters.status() }
-        clusters { clusters.toNavigationals(conn) }
+        id { this@toNavigationalFromDataCenter4Clusters.id() }
+        name { this@toNavigationalFromDataCenter4Clusters.name() }
+		status { this@toNavigationalFromDataCenter4Clusters.status() }
+        clusters { clusters.toNavigationalsFromClusters(conn, rVm) }
     }
 }
-fun List<DataCenter>.toNavigationalsWithClusters(conn: Connection): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsWithClusters.map { it.toNavigationalWithClusters(conn) }
+fun List<DataCenter>.toNavigationalsFromDataCenter4Clusters(conn: Connection?, rVm: VmRepository?=null): List<TreeNavigationalDataCenter> =
+    this@toNavigationalsFromDataCenter4Clusters.map { it.toNavigationalFromDataCenter4Clusters(conn, rVm) }
 
-fun DataCenter.toNavigationalWithNetworks(conn: Connection): TreeNavigationalDataCenter {
+fun DataCenter.toNavigationalFromNetwork(conn: Connection?): TreeNavigationalDataCenter {
     val networks: List<Network> =
-        conn.findAllNetworksFromDataCenter(this.id()).getOrDefault(listOf())
+        conn?.findAllNetworksFromDataCenter(this.id())
+			?.getOrDefault(emptyList())
+			?: emptyList()
 
     return TreeNavigationalDataCenter.builder {
-        id { this@toNavigationalWithNetworks.id() }
-        name { this@toNavigationalWithNetworks.name() }
-        networks { networks.fromNetworksToTreeNavigationals() }
+        id { this@toNavigationalFromNetwork.id() }
+        name { this@toNavigationalFromNetwork.name() }
+        networks { networks.toNavigationalsFromNetworks() }
     }
 }
 
-fun List<DataCenter>.totoNavigationalsWithNetworks(conn: Connection): List<TreeNavigationalDataCenter> =
-    this@totoNavigationalsWithNetworks.map { it.toNavigationalWithNetworks(conn) }
+fun List<DataCenter>.toNavigationalsFromNetworks(conn: Connection?): List<TreeNavigationalDataCenter> =
+    this@toNavigationalsFromNetworks.map { it.toNavigationalFromNetwork(conn) }
 
-fun DataCenter.toNavigationalWithStorageDomains(conn: Connection): TreeNavigationalDataCenter {
+fun DataCenter.toNavigationalFromDataCenter4StorageDomains(conn: Connection?): TreeNavigationalDataCenter {
     val storageDomains: List<StorageDomain> =
-        conn.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalWithStorageDomains.id(), follow = "disks")
-            .getOrDefault(listOf())
+        conn?.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalFromDataCenter4StorageDomains.id(), follow = "disks")
+            ?.getOrDefault(emptyList())
+			?: emptyList()
 
     return TreeNavigationalDataCenter.builder {
-        id { this@toNavigationalWithStorageDomains.id() }
-        name { this@toNavigationalWithStorageDomains.name() }
+        id { this@toNavigationalFromDataCenter4StorageDomains.id() }
+        name { this@toNavigationalFromDataCenter4StorageDomains.name() }
         storageDomains { storageDomains.fromDisksToTreeNavigationals(conn) }
     }
 }
-fun List<DataCenter>.toNavigationalsWithStorageDomains(conn: Connection): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsWithStorageDomains.map { it.toNavigationalWithStorageDomains(conn) }
+
+fun List<DataCenter>.toNavigationalsFromDataCenters4StorageDomains(conn: Connection?): List<TreeNavigationalDataCenter> =
+    this@toNavigationalsFromDataCenters4StorageDomains.map { it.toNavigationalFromDataCenter4StorageDomains(conn) }
 

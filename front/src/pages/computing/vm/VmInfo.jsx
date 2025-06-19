@@ -56,13 +56,13 @@ const VmInfo = () => {
   } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
 
   const hasLockedSnapshot = useMemo(() => {
-    return snapshots.some(s => s.status === "locked");
+    return snapshots.some(s => s.status?.toUpperCase() === "locked");
   }, [snapshots]);
   
   const isUp = vm?.running ?? false;
   const isDown = vm?.notRunning ?? false;
-  const isPause = vm?.status === "paused" || vm?.status === "suspended"; 
-  const isMaintenance = vm?.status === "MAINTENANCE";
+  const isPause = vm?.status?.toUpperCase() === "paused" || vm?.status?.toUpperCase() === "suspended"; 
+  const isMaintenance = vm?.status?.toUpperCase() === "MAINTENANCE";
   const allOkay2PowerDown = vm?.qualified4PowerDown;
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;

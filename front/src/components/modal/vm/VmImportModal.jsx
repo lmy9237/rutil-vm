@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import BaseModal from "../BaseModal";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import LabelInput from "../../label/LabelInput";
-import LabelCheckbox from "../../label/LabelCheckbox";
-import Localization from "../../../utils/Localization";
-import { useAllDataCenters, useAllNetworkProviders } from "../../../api/RQHook";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "@/components/modal/BaseModal";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelInput                       from "@/components/label/LabelInput";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
+import {
+  useAllDataCenters, useAllNetworkProviders
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MVm.css";
+
 
 const VmImportModal = ({ 
   isOpen,

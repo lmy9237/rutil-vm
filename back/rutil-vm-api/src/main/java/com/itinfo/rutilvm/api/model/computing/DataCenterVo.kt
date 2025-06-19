@@ -3,6 +3,13 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.QuotaEnforcementType
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
+import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.toQuotaEnforcementType
+import com.itinfo.rutilvm.api.ovirt.business.toQuotaModeType
+import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainStatusB
+import com.itinfo.rutilvm.api.ovirt.business.toStoragePoolStatus
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DataCenterBuilder
@@ -21,11 +28,11 @@ private val log = LoggerFactory.getLogger(DataCenterVo::class.java)
  * @property name [String]
  * @property comment [String] 코멘트
  * @property description [String] 설명
- * @property storageType [Boolean] 스토리지 유형(공유됨, 로컬)   api에 local로 표시됨
- * @property version [String] 상태(contend, maintenance, not_operational, problematic, uninitialized, up)
- * @property quotaMode [QuotaModeType] 쿼터모드(비활성화됨, 감사, 강제적용)
- * @property status [DataCenterStatus]
- * @property domainStatus [StorageDomainStatus] 스토리지 도메인 상태관리
+ * @property storageType [Boolean] 스토리지 유형 (공유됨, 로컬)
+ * @property version [String]
+ * @property quotaMode [QuotaEnforcementType] 쿼터모드 (비활성화됨, 감사, 강제적용)
+ * @property status [StoragePoolStatus] 상태 (contend, maintenance, not_operational, problematic, uninitialized, up)
+ * @property domainStatus [StorageDomainStatusB] 스토리지 도메인 상태관리
  * @property clusterCnt [Int] 클러스터 개수
  * @property hostCnt [Int] 호스트 개수
  * @property clusterVos List<[clusterVos]>
@@ -41,12 +48,12 @@ class DataCenterVo (
 	val version: String = "",
 	val versionMajor: Int = 0,
 	val versionMinor: Int = 0,
-	val quotaMode: QuotaModeType = QuotaModeType.DISABLED,
-	val status: DataCenterStatus = DataCenterStatus.NOT_OPERATIONAL,
-	val domainStatus: StorageDomainStatus = StorageDomainStatus.UNKNOWN,
+	val quotaMode: QuotaEnforcementType? = QuotaEnforcementType.disabled,
+	val status: StoragePoolStatus? = StoragePoolStatus.not_operational,
+	val domainStatus: StorageDomainStatusB? = StorageDomainStatusB.uninitialized,
 	val clusterCnt: Int = 0,
 	val hostCnt: Int = 0,
-	val clusterVos: List<IdentifiedVo> = listOf(),
+	val clusterVos: List<ClusterVo> = listOf(),
 	val networkVos: List<IdentifiedVo> = listOf(),
 	val storageDomainVos: List<StorageDomainVo> = listOf(),
 ): Serializable {
@@ -62,12 +69,12 @@ class DataCenterVo (
 		private var bVersion: String = "";fun version(block: () -> String?) { bVersion = block() ?: "" }
 		private var bVersionMajor: Int = 0;fun versionMajor(block: () -> Int?) { bVersionMajor = block() ?: 0 }
 		private var bVersionMinor: Int = 0;fun versionMinor(block: () -> Int?) { bVersionMinor = block() ?: 0 }
-		private var bQuotaMode: QuotaModeType = QuotaModeType.DISABLED;fun quotaMode(block: () -> QuotaModeType?) { bQuotaMode = block() ?: QuotaModeType.DISABLED }
-		private var bStatus: DataCenterStatus = DataCenterStatus.NOT_OPERATIONAL;fun status(block: () -> DataCenterStatus?) { bStatus = block() ?: DataCenterStatus.NOT_OPERATIONAL }
-		private var bDomainStatus: StorageDomainStatus = StorageDomainStatus.UNKNOWN;fun domainStatus(block: () -> StorageDomainStatus?) { bDomainStatus = block() ?: StorageDomainStatus.UNKNOWN }
+		private var bQuotaMode: QuotaEnforcementType? = QuotaEnforcementType.disabled;fun quotaMode(block: () -> QuotaEnforcementType?) { bQuotaMode = block() ?: QuotaEnforcementType.disabled }
+		private var bStatus: StoragePoolStatus? = StoragePoolStatus.not_operational;fun status(block: () -> StoragePoolStatus?) { bStatus = block() ?: StoragePoolStatus.not_operational }
+		private var bDomainStatus: StorageDomainStatusB? = StorageDomainStatusB.unknown;fun domainStatus(block: () -> StorageDomainStatusB?) { bDomainStatus = block() ?: StorageDomainStatusB.unknown }
 		private var bClusterCnt: Int = 0; fun clusterCnt(block: () -> Int?) { bClusterCnt = block() ?: 0 }
 		private var bHostCnt: Int = 0; fun hostCnt(block: () -> Int?) { bHostCnt = block() ?: 0 }
-		private var bClusterVos: List<IdentifiedVo> = listOf();fun clusterVos(block: () -> List<IdentifiedVo>?) { bClusterVos = block() ?: listOf() }
+		private var bClusterVos: List<ClusterVo> = listOf();fun clusterVos(block: () -> List<ClusterVo>?) { bClusterVos = block() ?: listOf() }
 		private var bNetworkVos: List<IdentifiedVo> = listOf();fun networkVos(block: () -> List<IdentifiedVo>?) { bNetworkVos = block() ?: listOf() }
 		private var bStorageDomainVos: List<StorageDomainVo> = listOf();fun storageDomainVos(block: () -> List<StorageDomainVo>?) { bStorageDomainVos = block() ?: listOf() }
 
@@ -104,12 +111,13 @@ fun DataCenter.toDataCenterMenu(conn: Connection): DataCenterVo {
 		comment { dc.comment() }
 		description { dc.description() }
 		storageType { dc.local() }
-		status { dc.status() }
+		status { dc.status().toStoragePoolStatus() }
 		version { dc.version().major().toString() + "." + dc.version().minor() }
 		clusterCnt { dc.clusters().size }
 		hostCnt { hostSize }
 	}
 }
+
 fun List<DataCenter>.toDataCentersMenu(conn: Connection): List<DataCenterVo> =
 	this@toDataCentersMenu.map { it.toDataCenterMenu(conn) }
 
@@ -126,8 +134,8 @@ fun DataCenter.toDataCenterVoInfo(): DataCenterVo {
 		comment { dc.comment() }
 		description { dc.description() }
 		storageType { dc.local() }
-		status { dc.status() }
-		quotaMode { dc.quotaMode() }
+		status { dc.status().toStoragePoolStatus() }
+		quotaMode { dc.quotaMode().toQuotaEnforcementType() }
 		version { dc.version().major().toString() + "." + dc.version().minor() }
 		versionMajor { dc.version().major().toInt() }
 		versionMinor { dc.version().minor().toInt() }
@@ -154,7 +162,7 @@ fun DataCenter.toDataCenterVo(
 	val storageDomainVoList: List<StorageDomainVo> = if (conn == null || !findStorageDomains) listOf() else storageDomains.toStorageDomainIdNames()
 //	val storageDomainVos: List<IdentifiedVo> = if (conn == null || !findStorageDomains) listOf() else storageDomains.fromStorageDomainsToIdentifiedVos()
 	val networkVos: List<IdentifiedVo> = if (conn == null || !findNetworks) listOf() else networks.fromNetworksToIdentifiedVos()
-	val clusterVos: List<IdentifiedVo> = if (conn == null || !findClusters) listOf() else clusters.fromClustersToIdentifiedVos()
+	val clusterVos: List<ClusterVo> = if (conn == null || !findClusters) listOf() else clusters.toDcClustersMenu()
 
 	return DataCenterVo.builder {
 		id { this@toDataCenterVo.id() }
@@ -181,13 +189,15 @@ fun StorageDomain.toStorageDomainDataCenter(conn: Connection): List<DataCenterVo
 
 	return dataCenterIds.mapNotNull { dataCenterId ->
 		val dataCenter = conn.findDataCenter(dataCenterId, "storagedomains").getOrNull()
-		val storageDomainStatus = dataCenter?.storageDomains()?.find { it.id() == this@toStorageDomainDataCenter.id() }?.status()
+		val storageDomainStatus = dataCenter?.storageDomains()?.find {
+			it.id() == this@toStorageDomainDataCenter.id()
+		}?.status()
 
 		dataCenter?.let {
 			DataCenterVo.builder {
 				id { dataCenter.id() }
 				name { dataCenter.name() }
-				domainStatus { storageDomainStatus }
+				domainStatus { storageDomainStatus.toStorageDomainStatusB() }
 			}
 		}
 	}
@@ -207,7 +217,7 @@ fun DataCenterVo.toDataCenterBuilder(): DataCenterBuilder = DataCenterBuilder()
 			.major(versionMajor)
 			.minor(versionMinor)
 	)
-	.quotaMode(quotaMode)
+	.quotaMode(quotaMode?.toQuotaModeType())
 	.comment(comment)
 
 /**
@@ -224,5 +234,4 @@ fun DataCenterVo.toEditDataCenter(): DataCenter {
 		.id(this.id)
 		.build()
 }
-
 // endregion

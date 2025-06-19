@@ -54,7 +54,7 @@ const VmDeleteModal = ({
     if (!Array.isArray(diskQueries)) return;
   
     const isAllFetched = diskQueries.every(
-      (query) => query.status === 'success' || query.status === 'error'
+      (query) => query.status?.toUpperCase() === 'success' || query.status?.toUpperCase() === 'error'
     );
   
     if (!isAllFetched) return;

@@ -32,7 +32,7 @@ const VmHa = ({
 
   return (
     <>
-      <LabelCheckbox id="ha_mode_box" label={Localization.kr.HA}
+      <LabelCheckbox id="ha-mode" label={Localization.kr.HA}
         checked={formHaState.ha}
         onChange={(e) => {
           const isChecked = e.target.checked;
@@ -43,6 +43,7 @@ const VmHa = ({
               ? (domains[0] ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" })
               : { ...prev.storageDomainVo }, // 값 유지
           }));
+          import.meta.env.DEV && (validationToast?.debug(`field: ha, value: ${isChecked}\nfield: storageDomainVo.id, value: ${formHaState?.storageDomainVo.id}`))
         }}
       />
       <LabelSelectOptionsID
@@ -51,10 +52,13 @@ const VmHa = ({
         disabled={!formHaState.ha}  // ha가 체크되어야만 활성화됨
         options={[ ...domains ]}
         onChange={(e) => {
-          const selectedDomain = [...domains]?.find((domain) => domain.id === (e?.target?.value ?? e?.id));
+          const selectedDomain = [...domains]?.find((domain) =>
+             domain.id === (e?.target?.value ?? e?.id)
+          );
+          import.meta.env.DEV && validationToast?.debug(`field: storageDomainVo, value: ${selectedDomain.id}`)
           if (selectedDomain) {
             setFormHaState((prev) => ({
-              ...prev, 
+              ...prev,
               storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
             }));
           } else {

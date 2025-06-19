@@ -3667,13 +3667,35 @@ export const useAllMigrationSupports = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allAllMigrationSupports'],
+  queryKey: ['allMigrationSupports'],
   queryFn: async () => {
     const res = await ApiManager.findAllMigrationSupports();
     const _res = mapPredicate
       ? validate(res)?.map(mapPredicate) ?? []
       : validate(res) ?? []
     Logger.debug(`RQHook > useAllMigrationSupports ... res: `, _res);
+    return _res;
+  },
+});
+/**
+ * @name useAllQuotaEnforcementTypes
+ * @description 마이그레이션 모드 목록 조회 useQuery훅
+ * 
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllMigrationSupports
+ */
+export const useAllQuotaEnforcementTypes = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allQuotaEnforcementTypes'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllQuotaEnforcementTypes();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? []
+      : validate(res) ?? []
+    Logger.debug(`RQHook > useAllQuotaEnforcementTypes ... res: `, _res);
     return _res;
   },
 });

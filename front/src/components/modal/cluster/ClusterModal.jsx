@@ -213,11 +213,11 @@ const ClusterModal = ({
       <LabelSelectOptions id="cpu-type" label="CPU 유형"
         value={formState.cpuType}
         options={cpuOptions}
-         disabled={!(!editMode || editCpuArc)}
+        disabled={!(!editMode || editCpuArc)}
         onChange={handleInputChange(setFormState, "cpuType", validationToast)}
       />
 
-      {!["PPC64", "S390X", "UNDEFINED"].includes(formState.cpuArc) && (
+      {!["ppc64", "s390x", "undefined"].includes(formState.cpuArc) && (
         <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
           value={formState.biosType}
           options={biosTypeFiltered}
@@ -239,7 +239,7 @@ export default ClusterModal;
 
 // name이 value고, description이 label
 const cpuTypeOptions = {
-  X86_64: [
+  x86_64: [
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },
@@ -265,17 +265,17 @@ const cpuTypeOptions = {
     { value: "AMD EPYC", label: "AMD EPYC" },
     { value: "Secure AMD EPYC", label: "Secure AMD EPYC" }
   ],
-  PPC64: [
+  ppc64: [
     { value: "IBM POWER8", label: "IBM POWER8" },
     { value: "IBM POWER9", label: "IBM POWER9" },
   ],
-  S390X: [
+  s390x: [
     { value: "IBM z114, z196", label: "IBM z114, z196" },
     { value: "IBM zBC12, zEC12", label: "IBM zBC12, zEC12" },
     { value: "IBM z13s, z13", label: "IBM z13s, z13" },
     { value: "IBM z14", label: "IBM z14" },
   ],
-  UNDEFINED: [
+  undefined: [
     { value: "none", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
@@ -311,15 +311,15 @@ const cpuTypeOptions = {
 };
 
 const biosTypeOptions = [
-  { value: "CLUSTER_DEFAULT", label: "자동 감지" },
-  { value: "Q35_OVMF", label: "UEFI의 Q35 칩셋" },
-  { value: "I440FX_SEA_BIOS", label: "BIOS의 I440FX 칩셋" },
-  { value: "Q35_SEA_BIOS", label: "BIOS의 Q35 칩셋" },
-  { value: "Q35_SECURE_BOOT", label: "UEFI SecureBoot의 Q35 칩셋" },
+  { value: "cluster_default", label: "자동 감지" },
+  { value: "q35_ovmf", label: "UEFI의 Q35 칩셋" },
+  { value: "i440fx_sea_bios", label: "BIOS의 I440FX 칩셋" },
+  { value: "q35_sea_bios", label: "BIOS의 Q35 칩셋" },
+  { value: "q35_secure_boot", label: "UEFI SecureBoot의 Q35 칩셋" },
 ];
 
 const errorHandlingOptions = [
-  { value: "migrate", label: `${Localization.kr.VM}을 ${Localization.kr.MIGRATION}함` },
+  { value: "migrate",                  label: `${Localization.kr.VM}을 ${Localization.kr.MIGRATION}함` },
   { value: "migrate_highly_available", label: `${Localization.kr.HOST} ${Localization.kr.VM}만 ${Localization.kr.MIGRATION}` },
-  { value: "do_not_migrate", label: `${Localization.kr.VM}은 ${Localization.kr.MIGRATION} 하지 않음` },
+  { value: "do_not_migrate",           label: `${Localization.kr.VM}은 ${Localization.kr.MIGRATION} 하지 않음` },
 ];

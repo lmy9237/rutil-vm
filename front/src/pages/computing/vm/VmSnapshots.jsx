@@ -80,11 +80,11 @@ const VmSnapshots = ({
 
 
   const hasLockedSnapshot = useMemo(() => (
-    [...transformedData]?.some(snap => snap?.status === "locked")
+    [...transformedData]?.some(snap => snap?.status?.toUpperCase() === "locked")
   ), [transformedData]) // NOTE: 하나 이상 잠겨있는 스냅샷이 있을 때 나머지 종작이 안됨
   
   const inPreview = useMemo(() => (
-    [...transformedData]?.some(snap => snap?.status === "in_preview")
+    [...transformedData]?.some(snap => snap?.status?.toUpperCase() === "in_preview")
   ), [transformedData]) // NOTE: 하나 이상 미리보기 스냅샷이 있을 때 커밋/돌아가기 동작만 됨
 
   const snapshotItemRef = useRef()

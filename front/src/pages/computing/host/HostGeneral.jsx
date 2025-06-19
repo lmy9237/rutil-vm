@@ -116,7 +116,7 @@ const HostGeneral = ({
   
   const systemTableRows = [
     { label: "호스트 이름/IP", value: host?.name }, 
-    { label: "부팅 시간", value: host?.bootingTime }, 
+    { label: "부팅 시간",    value: host?.bootingTime }, 
     { label: "활성 가상머신", value: host?.vmSizeVo?.upCnt },
     { label: "SELinux 모드", value: host?.seLinux }, 
     { label: "Hosted Engine HA", value: host?.hostedActive ? `활성화 (점수: ${host?.hostedScore})` : "비활성화" },

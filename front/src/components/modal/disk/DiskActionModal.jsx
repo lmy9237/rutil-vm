@@ -86,9 +86,9 @@ const DiskActionModal = ({
         const filteredDomains = domains
           .filter(d => {
             if (activeModal().includes("disk:move")) {
-              return d.status === "ACTIVE" && d.id !== currentDomainId;
+              return d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId;
             }
-            return d.status === "ACTIVE";
+            return d.status?.toUpperCase() === "ACTIVE";
           })
           .map(d => ({
             id: d.id,

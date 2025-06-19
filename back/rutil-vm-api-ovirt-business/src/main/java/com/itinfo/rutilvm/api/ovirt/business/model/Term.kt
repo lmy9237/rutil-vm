@@ -1,7 +1,11 @@
-package com.itinfo.rutilvm.util.ovirt
+package com.itinfo.rutilvm.api.ovirt.business.model
+
+import org.slf4j.LoggerFactory
+
+private val log = LoggerFactory.getLogger(Term::class.java)
 
 enum class Term(
-	val desc: String
+	val description: String
 ) {
 	OVIRT_USER("ovirt 사용자"),
 	DATACENTER("데이터센터"),
@@ -82,16 +86,16 @@ fun Term.logSuccessWithin(withinItem: Term, action: String, target: String = "")
 
 fun Term.logFail(action: String, t: Throwable? = null, target: String = "") {
 	if (t == null)
-		log.error("실패: {} {} ... {}", this@logFail.desc, action, target)
+		log.error("실패: {} {} ... {}", this@logFail.description, action, target)
 	else
-		log.error("실패: {} {} ... {}, 이유: {}", this@logFail.desc, action, target, t.stackTraceToString())
+		log.error("실패: {} {} ... {}, 이유: {}", this@logFail.description, action, target, t.stackTraceToString())
 
 }
 
 fun Term.logFailWithin(withinItem: Term, action: String, t: Throwable? = null, target: String = "") {
 	if (t == null)
-		log.error("실패: {} 내 {} {} ... {} ", this@logFailWithin.desc, withinItem.desc, action, target)
+		log.error("실패: {} 내 {} {} ... {} ", this@logFailWithin.description, withinItem.description, action, target)
 	else
-		log.error("실패: {} 내 {} {} ... {}, 이유: {}", this@logFailWithin.desc, withinItem.desc, action, target, t.localizedMessage)
+		log.error("실패: {} 내 {} {} ... {}, 이유: {}", this@logFailWithin.description, withinItem.description, action, target, t.localizedMessage)
 
 }

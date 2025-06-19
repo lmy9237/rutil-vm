@@ -1,25 +1,27 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.util.ovirt.findAllHosts
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.findAllHostsFromCluster
-import com.itinfo.rutilvm.util.ovirt.findAllVms
-import com.itinfo.rutilvm.util.ovirt.findAllVmsFromCluster
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostStatus
-import org.ovirt.engine.sdk4.types.Vm
-import org.ovirt.engine.sdk4.types.VmStatus
 import java.io.Serializable
 
 class TreeNavigationalCluster (
     id: String = "",
     name: String = "",
     val hosts: List<TreeNavigational<HostStatus>> = listOf(),
-    val vmDowns: List<TreeNavigational<VmStatus>> = listOf(),
-): TreeNavigational<Unit>(TreeNavigationalType.CLUSTER, id, name), Serializable {
+    val vmDowns: List<VmVo> = listOf(),
+): TreeNavigational<Unit>(TreeNavigatableType.CLUSTER, id, name), Serializable {
     override fun toString(): String =
         gson.toJson(this)
 
@@ -27,7 +29,7 @@ class TreeNavigationalCluster (
         private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
         private var bHosts: List<TreeNavigational<HostStatus>> = listOf(); fun hosts(block: () -> List<TreeNavigational<HostStatus>>?) { bHosts = block() ?: listOf() }
-        private var bVmDowns: List<TreeNavigational<VmStatus>> = listOf(); fun vmDowns(block: () -> List<TreeNavigational<VmStatus>>?) { bVmDowns = block() ?: listOf() }
+        private var bVmDowns: List<VmVo> = listOf(); fun vmDowns(block: () -> List<VmVo>?) { bVmDowns = block() ?: listOf() }
         fun build(): TreeNavigationalCluster = TreeNavigationalCluster(bId, bName, bHosts, bVmDowns)
     }
     companion object {
@@ -35,16 +37,25 @@ class TreeNavigationalCluster (
     }
 }
 
-fun Cluster.toNavigational(conn: Connection): TreeNavigationalCluster {
-    val hosts: List<Host> = conn.findAllHostsFromCluster(this@toNavigational.id()).getOrDefault(listOf())
-    val vmDowns: List<Vm> = conn.findAllVmsFromCluster(this@toNavigational.id(), "status=down or status=notresponding or status=rebootinprogress or status=imagelocked or status=suspended").getOrDefault(listOf())
+fun Cluster.toNavigationalFromCluster(conn: Connection?=null, rVm: VmRepository?=null): TreeNavigationalCluster {
+    val hosts: List<Host> = conn?.findAllHostsFromCluster(this@toNavigationalFromCluster.id())
+		?.getOrDefault(emptyList()) ?: emptyList()
+    val vmDowns: List<VmEntity> = rVm?.findAllByClusterIdWithSnapshotsOrderByVmNameAsc(this@toNavigationalFromCluster.id().toUUID())
+		?.filter {
+			it.status === VmStatusB.down ||
+			it.status === VmStatusB.not_responding ||
+			it.status === VmStatusB.reboot_in_progress ||
+			it.status === VmStatusB.image_locked ||
+			it.status === VmStatusB.suspended
+		} ?: emptyList()
+	// conn.findAllVmsFromCluster(this@toNavigational.id(), "status=down or status=notresponding or status=rebootinprogress or status=imagelocked or status=suspended").getOrDefault(listOf())
 
     return TreeNavigationalCluster.builder {
-        id { this@toNavigational.id() }
-        name { this@toNavigational.name() }
-        hosts { hosts.fromDisksToTreeNavigationals(conn) }
-        vmDowns { vmDowns.fromVmsToTreeNavigationals() }
+        id { this@toNavigationalFromCluster.id() }
+        name { this@toNavigationalFromCluster.name() }
+        hosts { hosts.toNavigationalsFromHosts(conn, rVm) }
+        vmDowns { vmDowns.toVmVosFromVmEntities(listOf()) }
     }
 }
-fun List<Cluster>.toNavigationals(conn: Connection): List<TreeNavigationalCluster> =
-    this@toNavigationals.map { it.toNavigational(conn) }
+fun List<Cluster>.toNavigationalsFromClusters(conn: Connection?, rVm: VmRepository?=null): List<TreeNavigationalCluster> =
+    this@toNavigationalsFromClusters.map { it.toNavigationalFromCluster(conn, rVm) }

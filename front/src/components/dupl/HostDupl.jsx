@@ -45,7 +45,7 @@ const HostDupl = ({
     memoryUsage: host?.usageDto?.memoryPercent !== null ? `${host?.usageDto?.memoryPercent}%` : "",
     cpuUsage: host?.usageDto?.cpuPercent !== null ? `${host?.usageDto?.cpuPercent}%` : "",
     networkUsage: host?.usageDto?.networkPercent !== null ? `${host?.usageDto?.networkPercent}%` : "",
-    upTime: host?.status === "INSTALLING" ? Localization.kr.NOT_ASSOCIATED : host?.upTime,
+    upTime: host?.status?.toUpperCase() === "INSTALLING" ? Localization.kr.NOT_ASSOCIATED : host?.upTime,
     cluster: <TableRowClick type="cluster" id={host?.clusterVo?.id}>{host?.clusterVo?.name}</TableRowClick>,
     dataCenter: <TableRowClick type="datacenter" id={host?.dataCenterVo?.id}>{host?.dataCenterVo?.name}</TableRowClick>,
     // ✅ 검색 필드 추가

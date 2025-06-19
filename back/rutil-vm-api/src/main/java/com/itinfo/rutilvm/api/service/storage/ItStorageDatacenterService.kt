@@ -2,20 +2,14 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
-import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
-import org.ovirt.engine.sdk4.builders.*
-import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 import org.springframework.stereotype.Service
-import java.util.*
 
-import javax.net.ssl.*
 import kotlin.Error
 
 interface ItStorageDatacenterService {
@@ -121,7 +115,7 @@ class StorageDatacenterServiceImpl(
 		val res: List<Host>  = if(storageDomain.dataCentersPresent()){
 			conn.findAllHostsFromDataCenter(storageDomain.dataCenters().first().id()).getOrDefault(emptyList())
 		}else emptyList()
-		return res.toHostsIdName()
+		return res.toIdentifiedVosFromHosts()
 	}
 
 	@Throws(Error::class)

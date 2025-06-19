@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainType
+import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageType
 import com.itinfo.rutilvm.api.ovirt.business.toStorageTypeB
 import com.itinfo.rutilvm.common.gson
@@ -60,7 +61,7 @@ class StorageDomainVo(
 	val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val status: StorageDomainStatusB = StorageDomainStatusB.unattached,
+	val status: StorageDomainStatusB? = StorageDomainStatusB.unattached,
 	val storagePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized,
 	val storageType: StorageTypeB = StorageTypeB.unknown,
 	val storageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown,
@@ -80,8 +81,10 @@ class StorageDomainVo(
 	val diskImageVos: List<IdentifiedVo> = listOf(),
 	val diskProfileVos: List<IdentifiedVo> = listOf(),
 ): Serializable {
+
 	override fun toString(): String =
 		gson.toJson(this)
+
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
@@ -135,7 +138,7 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
-		status { StorageDomainStatusB.forCode(dcStatus?.status()?.value()) }
+		status { dcStatus?.status().toStorageDomainStatusB() }
 		// if (storageDomainStatus != null) {
 		// 	storagePoolStatus { StoragePoolStatus.forStatusValue(storageDomainStatus.status().value()) }
 		// }
@@ -205,7 +208,7 @@ fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
 		status { domain.status().toStorageDomainStatusB() }
 		hostedEngine { hostedVm }
 		comment { domain.comment() }
-		storageType { StorageTypeB.forCode(domain.type().value()) }
+		storageType { domain.storage().type().toStorageTypeB() }
 		master { domain.masterPresent() && domain.master() }
 		storageFormat { domain.storageFormat() }
 		usedSize { domain.used() }
@@ -268,7 +271,7 @@ fun StorageDomainVo.toAddStorageDomain(): StorageDomain {
  * 도메인 가져오기
  */
 fun StorageDomainVo.toImportStorageDomain(): StorageDomain {
-	log.info("toImportStorageDomain: {}", this)
+	log.info("toImportStorageDomain ... {}", this)
 	val builder = toStorageDomainBuilder().import_(true)
 	if (storageVo.type != StorageTypeB.nfs) builder.id(id)
 

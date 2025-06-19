@@ -1,6 +1,13 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+
 import com.itinfo.rutilvm.util.ovirt.error.*
+
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
@@ -49,7 +56,7 @@ fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<Storag
 
 	storageDomains
 }.onSuccess {
-	Term.DISK.logSuccess("{} 목록조회", Term.STORAGE_DOMAIN.desc)
+	Term.DISK.logSuccess("{} 목록조회", Term.STORAGE_DOMAIN.description)
 }.onFailure {
 	Term.DISK.logFail("목록조회")
 	throw if (it is Error) it.toItCloudException() else it
@@ -114,10 +121,10 @@ fun Connection.expectDiskDeleted(diskId: String, interval: Long = 1000L, timeout
 			Term.DISK.logSuccess("삭제")
 			return true
 		} else if (System.currentTimeMillis() - startTime > timeout) {
-			log.error("{} {} 삭제 실패 ... 시간 초과", Term.DISK.desc, diskToRemove)
+			log.error("{} {} 삭제 실패 ... 시간 초과", Term.DISK.description, diskToRemove)
 			return false
 		}
-		log.debug("{} 삭제 진행중 ... ", Term.DISK.desc)
+		log.debug("{} 삭제 진행중 ... ", Term.DISK.description)
 		Thread.sleep(interval)
 	}
 }

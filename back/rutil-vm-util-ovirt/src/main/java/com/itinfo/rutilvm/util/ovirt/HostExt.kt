@@ -1,5 +1,11 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+
 import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
@@ -99,7 +105,7 @@ fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	}
 
 	if (host.status() != HostStatus.MAINTENANCE) {
-		log.warn("{} 삭제 실패... {} 가 유지관리 상태가 아님 ", Term.HOST.desc, hostId)
+		log.warn("{} 삭제 실패... {} 가 유지관리 상태가 아님 ", Term.HOST.description, hostId)
 		throw ErrorPattern.HOST_NOT_MAINTENANCE.toError()
 	}
 
@@ -127,10 +133,10 @@ fun Connection.expectHostDeleted(hostId: String, timeout: Long = 60000L, interva
 			Term.HOST.logSuccess("삭제")
 			return true
 		} else if (System.currentTimeMillis() - startTime > timeout) {
-			log.error("{} {} 삭제 시간 초과", Term.HOST.desc, hostToRemove.name())
+			log.error("{} {} 삭제 시간 초과", Term.HOST.description, hostToRemove.name())
 			return false
 		}
-		log.debug("{} 삭제 진행중 ... ", Term.HOST.desc)
+		log.debug("{} 삭제 진행중 ... ", Term.HOST.description)
 		Thread.sleep(interval)
 	}
 }

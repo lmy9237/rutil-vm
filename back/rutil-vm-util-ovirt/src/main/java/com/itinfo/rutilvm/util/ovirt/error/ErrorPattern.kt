@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.util.ovirt.error
 
-import com.itinfo.rutilvm.util.ovirt.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
 import org.ovirt.engine.sdk4.Error
 import java.util.concurrent.ConcurrentHashMap
 
@@ -162,7 +162,7 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.CERT_ID_NOT_FOUND,
 			ErrorPattern.JOB_ID_NOT_FOUND,
 			ErrorPattern.EVENT_ID_NOT_FOUND
-		) -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+		) -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
 
 		// NOT_FOUND 종류
 		this in listOf(
@@ -186,21 +186,21 @@ fun ErrorPattern.toError(): Error {
 			ErrorPattern.CERT_NOT_FOUND,
 			ErrorPattern.JOB_NOT_FOUND,
 			ErrorPattern.EVENT_NOT_FOUND
-		) -> Error("[${code}] (${failureType.code})${failureType.message} ${term.desc}")
+		) -> Error("[${code}] (${failureType.code})${failureType.message} ${term.description}")
 
 		// VO_INVALID, AUTH_INVALID 등 BAD_REQUEST 관련
 		this.name.endsWith("_VO_INVALID") ||
 			this == ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID ||
 			this == ErrorPattern.OVIRTUSER_AUTH_INVALID ||
 			this == ErrorPattern.CERT_MISSING_REQUIRED_VALUE ||
-			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+			this == ErrorPattern.OVIRTUSER_LOCKED -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
 
 		// *_DUPLICATE 항목들 공통 처리
-		this.name.endsWith("_DUPLICATE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_DUPLICATE") -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
 
-		this.name.endsWith("_ACTIVE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
-		this.name.endsWith("_INACTIVE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
-		this.name.endsWith("_MAINTENANCE") -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_ACTIVE") -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_INACTIVE") -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
+		this.name.endsWith("_MAINTENANCE") -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}")
 
 		// 특별한 추가 메시지 필요할 때
 		this == ErrorPattern.NIC_UNLINKED_REQUIRED ||
@@ -209,8 +209,8 @@ fun ErrorPattern.toError(): Error {
 		this == ErrorPattern.DISK_ATTACHMENT_DUPLICATE ||
 		this == ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE ||
 		this == ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT ||
-		this == ErrorPattern.CD_ROM_CONFLICT_WHILE_VM_UPDATING -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}}: $additional")
-		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.desc} (${failureType.code})${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
+		this == ErrorPattern.CD_ROM_CONFLICT_WHILE_VM_UPDATING -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}}: $additional")
+		this == ErrorPattern.DISK_BOOT_OPTION -> Error("[${code}] ${term.description} (${failureType.code})${failureType.message}: 부팅가능한 디스크는 오직 한개만 가능합니다")
 
 		// 기본 처리
 		else -> Error(failureType.message)
@@ -239,7 +239,7 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.TICKET_ID_NOT_FOUND,
 		ErrorPattern.CERT_ID_NOT_FOUND,
 		ErrorPattern.JOB_ID_NOT_FOUND,
-		ErrorPattern.EVENT_ID_NOT_FOUND, -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.EVENT_ID_NOT_FOUND, -> Error("[${code}] ${term.description} ${failureType.message}")
 		ErrorPattern.OVIRTUSER_NOT_FOUND,
 		ErrorPattern.ROLE_NOT_FOUND,
 		ErrorPattern.DATACENTER_NOT_FOUND,
@@ -258,7 +258,7 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.TICKET_NOT_FOUND,
 		ErrorPattern.CERT_NOT_FOUND,
 		ErrorPattern.JOB_NOT_FOUND,
-		ErrorPattern.EVENT_NOT_FOUND, -> Error("[${code}] ${failureType.message} ${term.desc}")
+		ErrorPattern.EVENT_NOT_FOUND, -> Error("[${code}] ${failureType.message} ${term.description}")
 		ErrorPattern.OVIRTUSER_VO_INVALID,
 		ErrorPattern.OVIRTUSER_AUTH_INVALID,
 		ErrorPattern.OVIRTUSER_LOCKED,
@@ -278,10 +278,10 @@ fun ErrorPattern.toError(): Error {
 		ErrorPattern.CONSOLE_VO_INVALID,
 		ErrorPattern.TICKET_VO_INVALID,
 		ErrorPattern.JOB_VO_INVALID,
-		ErrorPattern.EVENT_VO_INVALID, -> Error("[${code}] ${term.desc} ${failureType.message}")
+		ErrorPattern.EVENT_VO_INVALID, -> Error("[${code}] ${term.description} ${failureType.message}")
 		ErrorPattern.OVIRTUSER_DUPLICATE,
-		ErrorPattern.TEMPLATE_DUPLICATE, -> Error("[${code}] ${term.desc} ${failureType.message}")
-		ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.desc} ${failureType.message}: $additional")
+		ErrorPattern.TEMPLATE_DUPLICATE, -> Error("[${code}] ${term.description} ${failureType.message}")
+		ErrorPattern.NIC_UNLINKED_REQUIRED -> Error("[${code}] ${term.description} ${failureType.message}: $additional")
 		else -> Error(failureType.message)
 	}
 }

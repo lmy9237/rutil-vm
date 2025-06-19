@@ -50,7 +50,7 @@ const JobFooter = ({
   // job 데이터 변환
   const transformedData = useMemo(() => ([...jobs].map((e) => ({
     ...e,
-    isFinished: e?.status === "FINISHED" || e?.status === "FAILED" ,
+    isFinished: e?.status?.toUpperCase() === "FINISHED" || e?.status?.toUpperCase() === "FAILED" ,
     _description: [...e?.steps]?.length > 1 ? (
       <TableRowClick type="job" id={e?.id} onClick={() => handleDescriptionClick(e)}>
         {e?.description}
@@ -59,20 +59,20 @@ const JobFooter = ({
     // steps: e?.steps,
     numSteps: [...e?.steps]?.length > 1 
       ? <BadgeNumber 
-        text={`${[...e?.steps]?.filter((s) => s?.status === "FINISHED" || s?.status === "FAILED")?.length}/${[...e?.steps].length}`}
-        status={e?.status === "FAILED" ? "alert" : "number"}
+        text={`${[...e?.steps]?.filter((s) => s?.status?.toUpperCase() === "FINISHED" || s?.status?.toUpperCase() === "FAILED")?.length}/${[...e?.steps].length}`}
+        status={e?.status?.toUpperCase() === "FAILED" ? "alert" : "number"}
       /> : "",
     /* 
-    status: (e?.status === "FINISHED" || e?.status === "FAILED") 
+    status: (e?.status?.toUpperCase() === "FINISHED" || e?.status?.toUpperCase() === "FAILED") 
       ? <BadgeStatus status={
-        e?.status === "FINISHED" 
+        e?.status?.toUpperCase() === "FINISHED" 
           ? "running"
           : "default"
       } text={e?.status} />
       : <Spinner />,
     */
-    status: (e?.status === "FINISHED" || e?.status === "FAILED")
-    ? (e?.status === "FINISHED" ? "성공" : "실패")
+    status: (e?.status?.toUpperCase() === "FINISHED" || e?.status?.toUpperCase() === "FAILED")
+    ? (e?.status?.toUpperCase() === "FINISHED" ? "성공" : "실패")
     : <Spinner />,
     startTime: e?.startTime,
     endTime: e?.endTime === "" 

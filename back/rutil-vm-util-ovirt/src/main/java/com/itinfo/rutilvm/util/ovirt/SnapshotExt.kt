@@ -1,5 +1,9 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.toError
 import com.itinfo.rutilvm.util.ovirt.error.toItCloudException

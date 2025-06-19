@@ -53,6 +53,7 @@ class TypeController: BaseController(){
 		log.info("/types/bios ... BIOS 유형 (a.k.a. 칩셋옵션) 목록")
 		return ResponseEntity.ok(iType.findAllBiosTypes())
 	}
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="디스크 유형 목록 조회",
@@ -68,6 +69,24 @@ class TypeController: BaseController(){
 		log.info("/types/diskContentType ... 디스크 유형 목록")
 		return ResponseEntity.ok(iType.findAllDiskContentTypes())
 	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="(클러스터) FIPS 유형 목록 조회",
+		notes="(클러스터) FIPS 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("fipsMode")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allFipsModes(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/fipsMode ... (클러스터) FIPS 유형 목록")
+		return ResponseEntity.ok(iType.findAllFipsModes())
+	}
+
+
 	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 디스플레이 유형 목록 조회",
@@ -98,6 +117,22 @@ class TypeController: BaseController(){
 	fun allMigrationSupports(): ResponseEntity<List<TypeVo>> {
 		log.info("/types/migrationSupport ... 마이그레이션 모드 목록")
 		return ResponseEntity.ok(iType.findAllMigrationSupports())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 풀 (a.k.a. 데이터센터) 쿼터 모드 목록 조회",
+		notes="스토리지 풀 (a.k.a. 데이터센터) 쿼터 모드 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("quotaEnforcementType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allQuotaEnforcementTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/quotaEnforcementType ... 스토리지 풀 (a.k.a. 데이터센터) 쿼터 모드 목록")
+		return ResponseEntity.ok(iType.findAllQuotaEnforcementTypes())
 	}
 
 	@ApiOperation(

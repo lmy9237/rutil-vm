@@ -30,10 +30,10 @@ const HostActionButtons = ({
 
   const selected1st = [...hostsSelected][0] ?? null
 
-  const isUp = selected1st?.status === "UP";
-  const isNonOperational = selected1st?.status === "NON_OPERATIONAL";
-  const isMaintenance = selected1st?.status === "MAINTENANCE";
-  const isInstalling = selected1st?.status === "INSTALLING";
+  const isUp = selected1st?.status?.toUpperCase() === "UP";
+  const isNonOperational = selected1st?.status?.toUpperCase() === "NON_OPERATIONAL";
+  const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
+  const isInstalling = selected1st?.status?.toUpperCase() === "INSTALLING";
   const isGlobalMaintenance = selected1st?.globalMaintenance === true
   const isHostedConfigured = selected1st?.hostedConfigured === true
 

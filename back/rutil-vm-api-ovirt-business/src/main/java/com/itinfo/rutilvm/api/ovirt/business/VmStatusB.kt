@@ -145,12 +145,13 @@ enum class VmStatusB(
 			values().forEach {
 				valueMapping[it.value] = it
 				codeMapping[it.code] = it
+				codeMapping[it.name] = it
 			}
 		}
 
 		val allVmStatuses: List<VmStatusB> = VmStatusB.values().toList()
 
 		@JvmStatic fun forValue(value: Int?): VmStatusB = valueMapping[value ?: unassigned.value] ?: unassigned
-		@JvmStatic fun forCode(code: String?): VmStatusB = codeMapping[code?.uppercase() ?: unassigned.code] ?: unassigned
+		@JvmStatic fun forCode(code: String?): VmStatusB = codeMapping[code ?: unassigned.code] ?: unassigned
 	}
 }

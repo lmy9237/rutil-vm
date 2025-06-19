@@ -48,7 +48,7 @@ const NetworkVms = ({
 
   // 필터링된 VM 데이터 계산
   const filteredVms = activeFilter === "running"
-    ? [...vms].filter((nic) => nic?.vmVo?.status === "UP")
+    ? [...vms].filter((nic) => nic?.vmVo?.status?.toUpperCase() === "UP")
     : [...vms].filter((nic) => nic?.vmVo?.status !== "UP");
 
   const transformedFilteredData = [...filteredVms].map((nic) => {

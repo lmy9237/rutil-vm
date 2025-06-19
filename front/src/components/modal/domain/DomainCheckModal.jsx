@@ -52,7 +52,7 @@ const DomainCheckModal = ({
     
         <div className="modal-lun-box mt-3">
           <div className="lun-info">
-            {/* <div><b>Status:</b> {domain?.status === "USED" ? "사용중" : domain?.status}</div> */}
+            {/* <div><b>Status:</b> {domain?.status?.toUpperCase() === "USED" ? "사용중" : domain?.status}</div> */}
             <div><b>Volume Group ID:</b> {domain?.volumeGroupId}</div>
             <div><b>LUN ID:</b> {domain?.id}</div>
             <div><b>Serial:</b> {domain?.serial}</div>

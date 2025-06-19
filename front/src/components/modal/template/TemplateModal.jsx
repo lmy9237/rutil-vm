@@ -278,7 +278,7 @@ const TemplateModal = ({
                     const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
                     const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
 
-                    const availableDomains = domains.filter((d) => d.status === "ACTIVE");
+                    const availableDomains = domains.filter((d) => d.status?.toUpperCase() === "ACTIVE");
                     const selectedDomain = availableDomains.find((d) => d.id === storageDomainId);
 
                     const profileOptions = diskProfilesList[storageDomainId] || [];

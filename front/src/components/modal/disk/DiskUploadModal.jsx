@@ -67,7 +67,7 @@ const DiskUploadModal = ({
     isLoading: isDatacentersLoading,
   } = useAllActiveDataCenters((e) => ({ ...e }));
 
-  // const filteredDatacenters = datacenters.filter((d) => d.status === "UP");
+  // const filteredDatacenters = datacenters.filter((d) => d.status?.toUpperCase() === "UP");
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {

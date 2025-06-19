@@ -33,6 +33,8 @@ import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toOsType
@@ -184,12 +186,12 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property usageDto [UsageDto]
  */
 class VmVo (
-	val id: String = "",
-	val name: String = "",
+	override val id: String = "",
+	override val name: String = "",
 	val description: String = "",
 	val comment: String = "",
 	// val status: String = "",
-	val status: VmStatusB? = VmStatusB.unknown,
+	override val status: VmStatusB? = VmStatusB.unknown,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: VmTypeB? = VmTypeB.unknown, // VmType
@@ -260,7 +262,8 @@ class VmVo (
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 	val usageDto: UsageDto = UsageDto(),
-): Serializable {
+): Serializable, TreeNavigatable<VmStatusB> {
+	override val type: TreeNavigatableType	get() = TreeNavigatableType.VM
 	val statusCode: String 			get() = status?.code ?: VmStatusB.unknown.code
 	val statusKr: String			get() = status?.kr ?: "알 수 없음"
 	val statusEn: String 			get() = status?.en ?: "N/A"

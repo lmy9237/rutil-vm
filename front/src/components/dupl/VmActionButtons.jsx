@@ -52,23 +52,33 @@ const VmActionButtons = ({
 
   const isUp = selected1st?.running ?? false;
   const isDown = selected1st?.notRunning ?? false;
-  const isMaintenance = selected1st?.status === "MAINTENANCE";
-  const isPause = selected1st?.status === "paused" || selected1st?.status === "suspended"; 
+  const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
+  const isPause = selected1st?.status?.toUpperCase() === "paused" || selected1st?.status?.toUpperCase() === "suspended"; 
   const isTemplate = selected1st?.upOrPaused;
-  const isVmQualified2Migrate = selected1st?.qualified2Migrate ?? false;
+  const isVmQualified2Migrate = selected1st?.qualified2Migrate || (
+    selected1st?.status?.toUpperCase() === "up" || 
+    selected1st?.status?.toUpperCase() === "powering_up" || 
+    selected1st?.status?.toUpperCase() === "reboot_in_progress"
+  ) || false;
   const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.notRunning ?? false);
-  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status === "SUSPENDED");
+  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status?.toUpperCase() === "suspended");
   const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
-    vm.status === "DOWN" || vm.status === "SUSPENDED"
+    vm.status?.toUpperCase() === "down" || vm.status?.toUpperCase() === "suspended"
   );
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm =>
     vm?.qualified4PowerDown
   );
-  const ollOkay2Migrate = vmsSelected.every(vm => vm?.qualified2Migrate === true)
+  const ollOkay2Migrate = vmsSelected.every(vm => 
+    vm?.qualified2Migrate || (
+      vm?.status?.toUpperCase() === "up" || 
+      vm?.status?.toUpperCase() === "powering_up" || 
+      vm?.status?.toUpperCase() === "reboot_in_progress"
+    )
+  )
   
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
@@ -80,10 +90,10 @@ const VmActionButtons = ({
   // 스냅샷 미리보기 있으면 가상머신 시작 취소
   const { data: snapshots = [] } = useSnapshotsFromVM(selected1st?.id, (e) => ({ ...e }));
   const hasPreviewSnapshot = useMemo(() => {
-    return snapshots.some(s => s.status === "in_preview");
+    return snapshots.some(s => s.status?.toUpperCase() === "in_preview");
   }, [snapshots]);
   const hasLockedSnapshot = useMemo(() => {
-    return snapshots.some(s => s.status === "locked");
+    return snapshots.some(s => s.status?.toUpperCase() === "locked");
   }, [snapshots]);
 
   const manageActions = [

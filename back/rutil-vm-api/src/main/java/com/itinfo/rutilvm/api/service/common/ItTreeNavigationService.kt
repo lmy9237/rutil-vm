@@ -2,13 +2,15 @@ package com.itinfo.rutilvm.api.service.common
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.common.TreeNavigationalDataCenter
-import com.itinfo.rutilvm.api.model.common.toNavigationalsWithClusters
-import com.itinfo.rutilvm.api.model.common.totoNavigationalsWithNetworks
-import com.itinfo.rutilvm.api.model.common.toNavigationalsWithStorageDomains
+import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenter4Clusters
+import com.itinfo.rutilvm.api.model.common.toNavigationalsFromNetworks
+import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenters4StorageDomains
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.findAllDataCenters
 
 import org.ovirt.engine.sdk4.types.DataCenter
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 interface ItTreeNavigationService {
@@ -42,27 +44,28 @@ interface ItTreeNavigationService {
 class TreeNavigationServiceImpl (
 
 ): BaseService(), ItTreeNavigationService {
+	@Autowired private lateinit var rVm: VmRepository
 
     @Throws(Error::class)
     override fun findAllNavigationalsWithClusters(): List<TreeNavigationalDataCenter> {
         log.info("toComputing ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.toNavigationalsWithClusters(conn)
+        return dataCenters.toNavigationalsFromDataCenter4Clusters(conn, rVm)
     }
 
     override fun findAllNavigationalsWithNetworks(): List<TreeNavigationalDataCenter> {
         log.info("toNetwork ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.totoNavigationalsWithNetworks(conn)
+        return dataCenters.toNavigationalsFromNetworks(conn)
     }
 
     override fun findAllNavigationalsWithStorageDomains(): List<TreeNavigationalDataCenter> {
         log.info("toStorageDomain ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.toNavigationalsWithStorageDomains(conn)
+        return dataCenters.toNavigationalsFromDataCenters4StorageDomains(conn)
     }
 
     companion object{

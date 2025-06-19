@@ -8,7 +8,7 @@ const ClusterNetworkList = ({ network, handleDragStart }) => {
       onDragStart={(e) => handleDragStart(e, network, "network", "attach")}
     >
       <div className="f-start text-left">
-        <RVI16 className="mr-1.5" iconDef={network?.status === "OPERATIONAL" ? rvi16TriangleUp() : rvi16TriangleDown()} />
+        <RVI16 className="mr-1.5" iconDef={network?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp() : rvi16TriangleDown()} />
         {network?.name}
         {network?.vlan === 0 ? "" : <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {network.vlan})</span>}
       </div>

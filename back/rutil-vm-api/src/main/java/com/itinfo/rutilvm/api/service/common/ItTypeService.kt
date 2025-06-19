@@ -5,7 +5,9 @@ import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
+import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
+import com.itinfo.rutilvm.api.ovirt.business.QuotaEnforcementType
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -46,6 +48,14 @@ interface ItTypeService {
 	@Throws(Error::class)
 	fun findAllDisplayTypes(): List<TypeVo>
 	/**
+	 * [ItTypeService.findAllFipsModes]
+	 * (클러스터) FIPS 유형 목록
+	 *
+	 * @return List<[TypeVo]> (클러스터) FIPS 유형 목록
+	 */
+	@Throws(Error::class)
+	fun findAllFipsModes(): List<TypeVo>
+	/**
 	 * [ItTypeService.findAllMigrationSupports]
 	 * 마이그레이션 모드 목록
 	 *
@@ -53,6 +63,14 @@ interface ItTypeService {
 	 */
 	@Throws(Error::class)
 	fun findAllMigrationSupports(): List<TypeVo>
+	/**
+	 * [ItTypeService.findAllQuotaEnforcementTypes]
+	 * 마이그레이션 모드 목록
+	 *
+	 * @return List<[TypeVo]> 마이그레이션 모드 목록
+	 */
+	@Throws(Error::class)
+	fun findAllQuotaEnforcementTypes(): List<TypeVo>
 	/**
 	 * [ItTypeService.findAllVmTypes]
 	 * 가상머신 유형 (a.k.a. 최적화 옵션) 목록
@@ -89,6 +107,11 @@ class TypeServiceImpl(
 		return DisplayTypeB.allDisplayTypes.toTypeVosFromDisplayTypes()
 	}
 
+	override fun findAllFipsModes(): List<TypeVo> {
+		log.info("findAllFipsModes ... ")
+		return FipsModeB.allFipsModes.toTypeVosFromFipsModes()
+	}
+
 	override fun findAllVmTypes(): List<TypeVo> {
 		log.info("findAllVmTypes ... ")
 		return VmTypeB.allVmTypes.toTypeVosFromVmTypes()
@@ -97,6 +120,11 @@ class TypeServiceImpl(
 	override fun findAllMigrationSupports(): List<TypeVo> {
 		log.info("findAllMigrationSupports ... ")
 		return MigrationSupport.allMigrationSupports.toTypeVosFromMigrationSupports()
+	}
+
+	override fun findAllQuotaEnforcementTypes(): List<TypeVo> {
+		log.info("findAllQuotaEnforcementTypes ... ")
+		return QuotaEnforcementType.allQuotaEnforcementTypes.toTypeVosQuotaEnforcementTypes()
 	}
 
 	companion object {
@@ -139,13 +167,27 @@ fun DisplayTypeB.toTypeVoFromDisplayType(): TypeVo = TypeVo(
 )
 fun List<DisplayTypeB>.toTypeVosFromDisplayTypes(): List<TypeVo> =
 	this@toTypeVosFromDisplayTypes.map { it.toTypeVoFromDisplayType() }
+fun FipsModeB.toTypeVoFromFipsMode(): TypeVo = TypeVo(
+	this@toTypeVoFromFipsMode.name,
+	this@toTypeVoFromFipsMode.kr,
+	this@toTypeVoFromFipsMode.en,
+)
+fun List<FipsModeB>.toTypeVosFromFipsModes(): List<TypeVo> =
+	this@toTypeVosFromFipsModes.map { it.toTypeVoFromFipsMode() }
 fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
-	this@toTypeVoFromMigrationSupport.name.uppercase(),
+	this@toTypeVoFromMigrationSupport.name,
 	this@toTypeVoFromMigrationSupport.kr,
 	this@toTypeVoFromMigrationSupport.en,
 )
 fun List<MigrationSupport>.toTypeVosFromMigrationSupports(): List<TypeVo> =
 	this@toTypeVosFromMigrationSupports.map { it.toTypeVoFromMigrationSupport() }
+fun QuotaEnforcementType.toTypeVoFromQuotaEnforcementType(): TypeVo = TypeVo(
+	this@toTypeVoFromQuotaEnforcementType.name,
+	this@toTypeVoFromQuotaEnforcementType.kr,
+	this@toTypeVoFromQuotaEnforcementType.en,
+)
+fun List<QuotaEnforcementType>.toTypeVosQuotaEnforcementTypes(): List<TypeVo> =
+	this@toTypeVosQuotaEnforcementTypes.map { it.toTypeVoFromQuotaEnforcementType() }
 fun VmTypeB.toTypeVoFromVmType(): TypeVo = TypeVo(
 	this@toTypeVoFromVmType.name,
 	this@toTypeVoFromVmType.kr,

@@ -231,7 +231,7 @@ const DomainModal = ({
         .map(f => f.logicalUnitVos[0])
         .find(lun => lun?.id === lunId);
 
-      if (selectedLogicalUnit.status === "USED") {
+      if (selectedLogicalUnit.status?.toUpperCase() === "USED") {
         setSelectedLunData(selectedLogicalUnit);
         setIsOverwrite(true);
         setDomainCheckOpen(true); // 확인 모달 열기

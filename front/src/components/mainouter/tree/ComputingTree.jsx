@@ -155,11 +155,12 @@ const ComputingTree = ({}) => {
                             <TreeMenuItem level={4}
                               title={host.name}
                               iconDef={
-                                host?.status === "UNKNOWN" 
+                                host?.status?.toUpperCase() === "UNKNOWn".toUpperCase() 
                                   ? rvi16QuestionMark("currentColor")
-                                  : host?.status === "MAINTENANCE"
+                                  : host?.status?.toUpperCase() === "MAINTENANCE"
                                     ? rvi16Wrench("currentColor")
-                                    : host?.status === "PREPARING_FOR_MAINTENANCE" || host?.status === "REBOOT"
+                                    : host?.status?.toUpperCase() === "PREPARING_FOR_MAINTENANCE" || 
+                                      host?.status?.toUpperCase() === "REBOOT"
                                       ? rvi16Refresh("currentColor") // (질문)TODO: 새로 디자인 된 아이콘 추가 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
                                       : rvi16Host("currentColor")
                               }
@@ -236,7 +237,7 @@ const ComputingTree = ({}) => {
                         <div key={vm?.id} className="tmi-g">
                           <TreeMenuItem level={4}
                             title={vm?.name}
-                            iconDef={vm?.status === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep("currentColor")}
+                            iconDef={vm?.status?.toUpperCase() === "SUSPENDED" ? rvi16Pause : rvi16DesktopSleep("currentColor")}
                             isSelected={() => location.pathname.includes(vm?.id)}
                             isContextSelected={contextMenuType() === "vm" && contextMenu()?.item?.id === vm?.id}
                             isNextLevelVisible={false}

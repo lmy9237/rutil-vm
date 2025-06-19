@@ -50,10 +50,10 @@ const HostInfo = () => {
     isSuccess: isHostSuccess,
   } = useHost(hostId);
 
-  const isUp = host?.status === "UP";
-  const isMaintenance = host?.status === "MAINTENANCE";
-  const isNonOperational = host?.status === "NON_OPERATIONAL"
-  const isInstalling = host?.status === "INSTALLING";
+  const isUp = host?.status?.toUpperCase() === "UP";
+  const isMaintenance = host?.status?.toUpperCase() === "MAINTENANCE";
+  const isNonOperational = host?.status?.toUpperCase() === "NON_OPERATIONAL"
+  const isInstalling = host?.status?.toUpperCase() === "INSTALLING";
 
   useEffect(() => {
     if (isHostError || (!isHostLoading && !host)) {

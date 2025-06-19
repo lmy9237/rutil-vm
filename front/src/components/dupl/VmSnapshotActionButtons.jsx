@@ -23,8 +23,8 @@ const VmSnapshotActionButtons = ({
   const isContextMenu = useMemo(() => actionType === "context", [actionType])
 
   const selected1st = [...vmsSelected][0] ?? null
-  const isVmUp = useMemo(() => selected1st?.status === "UP", [actionType, vmsSelected])
-  const isVmPause = useMemo(() => selected1st?.status === "SUSPENDED", [actionType, vmsSelected])
+  const isVmUp = useMemo(() => selected1st?.status?.toUpperCase() === "UP", [actionType, vmsSelected])
+  const isVmPause = useMemo(() => selected1st?.status?.toUpperCase() === "SUSPENDED", [actionType, vmsSelected])
   const snapshotSelected1st =  [...snapshotsSelected][0] ?? null
  
   const basicActions = useMemo(() => ([

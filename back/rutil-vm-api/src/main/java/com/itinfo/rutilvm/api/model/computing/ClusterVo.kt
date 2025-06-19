@@ -3,9 +3,21 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
+import com.itinfo.rutilvm.api.ovirt.business.FirewallTypeB
+import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.api.ovirt.business.toArchitecture
+import com.itinfo.rutilvm.api.ovirt.business.toArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toFirewallTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnError
+import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnErrorB
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
@@ -36,8 +48,8 @@ private val log = LoggerFactory.getLogger(ClusterVo::class.java)
  * @property biosType [BiosType] 칩셋/펌웨어 유형
  * @property cpuArc [Architecture] cpu 아키텍쳐 cpu().architecture()
  * @property cpuType [String] cpu 유형 cpu().type()
- * @property errorHandling [MigrateOnError] 복구정책 <error_handling> <on_error>migrate_highly_available</on_error> </error_handling>
- * @property fipsMode [FipsMode] FIPS 모드
+ * @property errorHandling [MigrateOnErrorB] 복구정책 <error_handling> <on_error>migrate_highly_available</on_error> </error_handling>
+ * @property fipsMode [FipsModeB] FIPS 모드
  * @property firewallType [FirewallType] 방화벽 유형
  * @property glusterService [Boolean] Gluster 서비스 활성화
  * @property haReservation [Boolean]
@@ -62,18 +74,19 @@ private val log = LoggerFactory.getLogger(ClusterVo::class.java)
  * @property required [Boolean]
  **/
 class ClusterVo(
-    val id: String = "",
-    val name: String = "",
+	override val id: String = "",
+    override val name: String = "",
+	override val status: Unit? = null,
     val description: String = "",
     val comment: String = "",
     val isConnected: Boolean = false,
     val ballooningEnabled: Boolean = false,
     val biosType: BiosTypeB? = BiosTypeB.cluster_default,
-    val cpuArc: Architecture? = Architecture.UNDEFINED,
+    val cpuArc: ArchitectureType? = ArchitectureType.undefined,
     val cpuType: String = "",
-    val errorHandling: String = "",   /* MigrateOnError */
-    val fipsMode: FipsMode = FipsMode.UNDEFINED,
-    val firewallType: FirewallType = FirewallType.FIREWALLD,
+    val errorHandling: MigrateOnErrorB? = MigrateOnErrorB.do_not_migrate,   /* MigrateOnError */
+    val fipsMode: FipsModeB? = FipsModeB.undefined,
+    val firewallType: FirewallTypeB? = FirewallTypeB.firewalld,
     val glusterService: Boolean = false,
     val haReservation: Boolean = false,
     val logMaxMemory: Long = 0L,
@@ -94,14 +107,19 @@ class ClusterVo(
     val hostVos: List<IdentifiedVo> = listOf(),
     val networkVos: List<IdentifiedVo> = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
     val templateVos: List<IdentifiedVo> = listOf(),
-	val required: Boolean = false, // 네트워크 생성시 필수 지정
-): Serializable {
-	val biosTypeCode: String
-		get() = biosType?.code ?: BiosTypeB.cluster_default.code
-	val biosTypeEn: String
-		get() = biosType?.en ?: "N/A"
-	val biosTypeKr: String
-		get() = biosType?.kr ?: "알 수 없음"
+	val required: Boolean = false,
+): Serializable, TreeNavigatable<Unit> {
+	override val type: TreeNavigatableType = TreeNavigatableType.CLUSTER // 네트워크 생성시 필수 지정
+	val biosTypeCode: String		get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String			get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String			get() = biosType?.kr ?: "알 수 없음"
+	val cpuArcCode: String			get() = cpuArc?.code ?: ArchitectureType.undefined.code
+	val errorHandlingCode: String	get() = errorHandling?.code ?: MigrateOnErrorB.do_not_migrate.code
+	val errorHandlingEn: String		get() = errorHandling?.en ?: "N/A"
+	val errorHandlingKr: String		get() = errorHandling?.kr ?: "알 수 없음"
+	val fipsModeCode: String		get() = fipsMode?.code ?: FipsModeB.undefined.code
+	val fipsModeEn: String			get() = fipsMode?.en ?: "N/A"
+	val fipsModeKr: String			get() = fipsMode?.kr ?: "알 수 없음"
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -114,11 +132,11 @@ class ClusterVo(
 		private var bIsConnected: Boolean = false; fun isConnected(block: () -> Boolean?) { bIsConnected = block() ?: false }
 		private var bBallooningEnabled: Boolean = false; fun ballooningEnabled(block: () -> Boolean?) { bBallooningEnabled = block() ?: false }
 		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
-		private var bCpuArc: Architecture? = Architecture.UNDEFINED; fun cpuArc(block: () -> Architecture?) { bCpuArc = block() ?: Architecture.UNDEFINED }
+		private var bCpuArc: ArchitectureType? = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
 		private var bCpuType: String = ""; fun cpuType(block: () -> String?) { bCpuType = block() ?: "" }
-		private var bErrorHandling: String = ""; fun errorHandling(block: () -> String?) { bErrorHandling = block() ?: "" }
-		private var bFipsMode: FipsMode = FipsMode.UNDEFINED; fun fipsMode(block: () -> FipsMode?) { bFipsMode = block() ?: FipsMode.UNDEFINED}
-		private var bFirewallType: FirewallType = FirewallType.FIREWALLD; fun firewallType(block: () -> FirewallType?) { bFirewallType = block() ?: FirewallType.FIREWALLD}
+		private var bErrorHandling: MigrateOnErrorB? = MigrateOnErrorB.do_not_migrate; fun errorHandling(block: () -> MigrateOnErrorB?) { bErrorHandling = block() ?: MigrateOnErrorB.do_not_migrate }
+		private var bFipsMode: FipsModeB? = FipsModeB.undefined; fun fipsMode(block: () -> FipsModeB?) { bFipsMode = block() ?: FipsModeB.undefined }
+		private var bFirewallType: FirewallTypeB? = FirewallTypeB.firewalld; fun firewallType(block: () -> FirewallTypeB?) { bFirewallType = block() ?: FirewallTypeB.firewalld}
 		private var bGlusterService: Boolean = false; fun glusterService(block: () -> Boolean?) { bGlusterService = block() ?: false }
 		private var bHaReservation: Boolean = false; fun haReservation(block: () -> Boolean?) { bHaReservation = block() ?: false }
 		private var bLogMaxMemory: Long = 0L; fun logMaxMemory(block: () -> Long?) { bLogMaxMemory = block() ?: 0L }
@@ -141,7 +159,7 @@ class ClusterVo(
 		private var bTemplateVos: List<IdentifiedVo> = listOf();fun templateVos(block: () -> List<IdentifiedVo>?) { bTemplateVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
 
-		fun build(): ClusterVo = ClusterVo(bId, bName, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, bHostSize, bVmSize, bHostVos, bNetworkVos, bTemplateVos, /*bNetworkProperty, bAttached, */bRequired)
+		fun build(): ClusterVo = ClusterVo(bId, bName, null, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, bHostSize, bVmSize, bHostVos, bNetworkVos, bTemplateVos, /*bNetworkProperty, bAttached, */bRequired)
 	}
 
 	companion object {
@@ -161,16 +179,16 @@ fun List<Cluster>.toClustersIdName(): List<ClusterVo> =
 fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 	val cluster = this@toClusterMenu
 	val dataCenter =
-		if(cluster.dataCenterPresent()) { conn.findDataCenter(cluster.dataCenter().id()).getOrNull() }
+		if (cluster.dataCenterPresent()) { conn.findDataCenter(cluster.dataCenter().id()).getOrNull() }
 		else { null }
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
-		comment { cluster.comment() }
-		cpuArc { if(cluster.cpuPresent()) cluster.cpu().architecture() else null}
-		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		description { cluster.description() }
+		comment { cluster.comment() }
+		cpuArc { cluster.cpu()?.architecture()?.toArchitectureType() }
 		cpuType { if(cluster.cpuPresent()) cluster.cpu().type().toString() else null }
+		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		hostSize { cluster.findHostCntFromCluster(conn) }
 		vmSize { cluster.findVmCntFromCluster(conn) }
@@ -202,15 +220,15 @@ fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 		description {cluster.description() }
 		comment { cluster.comment() }
 		biosType { cluster.biosType().toBiosTypeB() }
-		cpuArc { if(cluster.cpuPresent()) cluster.cpu().architecture() else null}
+		cpuArc { cluster?.cpu()?.architecture()?.toArchitectureType() }
 		cpuType { if (cluster.cpuPresent()) cluster.cpu().type() else null }
-		firewallType { cluster.firewallType() }
+		firewallType { cluster.firewallType().toFirewallTypeB() }
 		haReservation { cluster.haReservation() }
 		logMaxMemory { cluster.logMaxMemoryUsedThresholdAsLong() }
 		logMaxMemoryType { cluster.logMaxMemoryUsedThresholdType() }
 		memoryOverCommit { cluster.memoryPolicy().overCommit().percentAsInteger() }
 		migrationPolicy { cluster.migration().autoConverge() }
-		errorHandling { cluster.errorHandling().onError().value() }
+		errorHandling { cluster.errorHandling().onError().toMigrateOnErrorB() }
 		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
 		networkVo { cluster.networks().firstOrNull() { it.display() }?.toNetworkIdName() }
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
@@ -233,7 +251,7 @@ fun Cluster.toNetworkClusterVo(conn: Connection, networkId: String): ClusterVo{
 		networkVo { network?.toClusterNetworkMenu() }
 	}
 }
-fun List<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List<ClusterVo> =
+fun Collection<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List<ClusterVo> =
 	this@toNetworkClusterVos.map { it.toNetworkClusterVo(conn, networkId) }
 
 
@@ -254,13 +272,13 @@ fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
 		.description(description)
 		.comment(comment)
 		.managementNetwork(NetworkBuilder().id(networkVo.id).build())
-		.biosType(BiosType.fromValue(biosType.toString()))
+		.biosType(biosType.toBiosType())
 		.version(VersionBuilder().major(4).minor(7).build())
 		.switchType(SwitchType.LEGACY)  // 편집에선 선택불가
 		.firewallType(FirewallType.FIREWALLD)
 		.virtService(true)
 		.glusterService(false)
-		.errorHandling(ErrorHandlingBuilder().onError(MigrateOnError.fromValue(errorHandling)))
+		.errorHandling(ErrorHandlingBuilder().onError(errorHandling?.toMigrateOnError()))
 		.externalNetworkProviders(conn.findAllOpenStackNetworkProviders().getOrDefault(listOf()).first())// 무조건 들어가게 해뒀음
 		.fencingPolicy(
 			FencingPolicyBuilder()
@@ -277,14 +295,14 @@ fun ClusterVo.toClusterBuilder(conn: Connection): ClusterBuilder {
 //				.encrypted(builder.encrypted)
 //		)
 
-	if (cpuArc == Architecture.UNDEFINED && cpuType == "none") {
+	if (cpuArc == ArchitectureType.undefined && cpuType == "none") {
 		// 아무것도 안함
-	} else if (cpuArc == Architecture.UNDEFINED && cpuType != "none") {
+	} else if (cpuArc == ArchitectureType.undefined && cpuType != "none") {
 		builder.cpu(CpuBuilder().type(cpuType))
 	} else {
 		builder.cpu(
 			CpuBuilder()
-				.architecture(Architecture.fromValue(cpuArc.toString()))
+				.architecture(cpuArc.toArchitecture())
 				.type(cpuType)
 		)
 	}

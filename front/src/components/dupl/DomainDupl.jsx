@@ -42,7 +42,7 @@ const DomainDupl = ({
         {domain?.name}
       </TableRowClick>
     ),
-    icon: status2Icon(domain.status === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
+    icon: status2Icon(domain.status?.toUpperCase() === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
     // icon: status2Icon(domain?.storagePoolStatus),    
     iconSortKey: getStatusSortKey(domain?.status), 
     _status: Localization.kr.renderStatus(domain?.status),

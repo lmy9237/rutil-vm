@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllDisksFromStorageDomain
 
@@ -16,7 +17,7 @@ class TreeNavigationalStorageDomain (
     name: String = "",
 	status: StorageDomainStatus? = null,
     val disks: List<TreeNavigational<DiskStatus>> = listOf()
-): TreeNavigational<StorageDomainStatus>(TreeNavigationalType.STORAGE_DOMAIN, id, name, status), Serializable {
+): TreeNavigational<StorageDomainStatus>(TreeNavigatableType.STORAGE_DOMAIN, id, name, status), Serializable {
     override fun toString(): String =
         gson.toJson(this)
 
@@ -51,7 +52,7 @@ fun StorageDomain.toNavigationalWithStorageDomains(conn: Connection?=null): Tree
         id { this@toNavigationalWithStorageDomains.id() }
         name { this@toNavigationalWithStorageDomains.name() }
 		status { this@toNavigationalWithStorageDomains.status() }
-        disks { disks.fromDisksToTreeNavigationals() }
+        disks { disks.toNavigationalsFromDisks() }
     }
 }
 

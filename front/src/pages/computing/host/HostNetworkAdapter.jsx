@@ -53,7 +53,7 @@ const HostNetworkAdapter = ({
     macAddress: e?.macAddress,
     mtu: e?.mtu,
     autoNegotiation: "자동 협상",
-    icon: <RVI16 iconDef={e?.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />,
+    icon: <RVI16 iconDef={e?.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />,
     network: (
       <TableRowClick type="network" id={e?.networkVo?.id}>
         {e?.networkVo?.name}

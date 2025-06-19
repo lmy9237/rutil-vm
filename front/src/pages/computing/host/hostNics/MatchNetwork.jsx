@@ -35,7 +35,7 @@ const MatchNetwork = ({
       >
         <div className="f-start">
           <RVI16 className="mr-1.5"
-            iconDef={networkAttach.networkVo?.status === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
+            iconDef={networkAttach.networkVo?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
           {/* TODO: X 와 refresh 가 겹쳐진 아이콘 필요 */}
           {networkAttach.inSync === false 

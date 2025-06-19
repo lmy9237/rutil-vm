@@ -2,6 +2,8 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
+import com.itinfo.rutilvm.api.model.computing.ClusterVo
+import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
@@ -31,6 +33,7 @@ import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
+import com.itinfo.rutilvm.api.ovirt.business.toDataCenterStatus
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
@@ -171,6 +174,64 @@ fun List<EngineSessionsEntity>.toUserSessionVos(): List<UserSessionVo> =
 	this@toUserSessionVos.map { it.toUserSessionVo() }
 //endregion: EngineSessionsEntity
 
+
+//region: StoragePoolEntity
+fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
+	id { this@toDataCenterVo.id.toString() }
+	name { this@toDataCenterVo.name }
+	comment { this@toDataCenterVo.freeTextComment }
+	description { this@toDataCenterVo.description }
+	storageType { this@toDataCenterVo.isLocal }
+	version { this@toDataCenterVo.compatibilityVersion }
+	versionMajor { this@toDataCenterVo.majorVersion }
+	versionMinor { this@toDataCenterVo.minorVersion }
+	status { this@toDataCenterVo.status }
+	// domainStatus {  }
+	// storageDomainVos {  }
+	clusterCnt { this@toDataCenterVo.clusters?.size ?: 0 }
+	clusterVos { this@toDataCenterVo.clusters?.toClusterVosFromClusterViewEntities() }
+	quotaMode { this@toDataCenterVo.quotaEnforcementType }
+}
+fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =
+	this@toDataCenterVos.map { it.toDataCenterVo() }
+fun StoragePoolEntity.toIdentifiedVoFromStoragePoolEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromStoragePoolEntity.id.toString() }
+	id { this@toIdentifiedVoFromStoragePoolEntity.name }
+}
+fun Collection<StoragePoolEntity>.toIdentifiedVosFromStoragePoolEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromStoragePoolEntities.map { it.toIdentifiedVoFromStoragePoolEntity() }
+//endregion: StoragePoolEntity
+
+//region: ClusterViewEntity
+fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.builder {
+	id { this@toClusterVoFromClusterViewEntity.clusterId.toString() }
+	name { this@toClusterVoFromClusterViewEntity.name }
+	description { this@toClusterVoFromClusterViewEntity.description }
+	comment { this@toClusterVoFromClusterViewEntity.freeTextComment }
+	// isConnected { this@toClusterVoFromClusterViewEntity. }
+	ballooningEnabled { this@toClusterVoFromClusterViewEntity.enableBalloon }
+	biosType { this@toClusterVoFromClusterViewEntity.biosType }
+	cpuArc { this@toClusterVoFromClusterViewEntity.architecture }
+	// cpuType { this@toClusterVoFromClusterViewEntity }
+	errorHandling { this@toClusterVoFromClusterViewEntity.migrateOnError }
+	fipsMode { this@toClusterVoFromClusterViewEntity.fipsMode }
+	firewallType { this@toClusterVoFromClusterViewEntity.firewallType }
+	glusterService { this@toClusterVoFromClusterViewEntity.glusterService }
+	haReservation { this@toClusterVoFromClusterViewEntity.haReservation }
+	// logMaxMemory { this@toClusterVoFromClusterViewEntity.logMaxMemoryUsedThreshold }
+}
+fun Collection<ClusterViewEntity>.toClusterVosFromClusterViewEntities(): List<ClusterVo> =
+	this@toClusterVosFromClusterViewEntities.map { it.toClusterVoFromClusterViewEntity() }
+
+fun ClusterViewEntity.toIdentifiedVoFromClusterViewEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromClusterViewEntity.clusterId.toString() }
+	name { this@toIdentifiedVoFromClusterViewEntity.name }
+}
+fun Collection<ClusterViewEntity>.toIdentifiedVosFromClusterViewEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromClusterViewEntities.map { it.toIdentifiedVoFromClusterViewEntity() }
+
+
+//endregion: ClusterViewEntity
 
 //region: UnregisteredDiskEntity
 fun UnregisteredDiskEntity.toUnregisteredDiskImageVo(disk: Disk?=null): DiskImageVo =

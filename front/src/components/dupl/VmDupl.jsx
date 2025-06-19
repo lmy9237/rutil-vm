@@ -77,7 +77,7 @@ const VmDupl = ({
     networkUsage:
       vm.usageDto?.networkPercent !== null && vm.usageDto?.networkPercent !== undefined
         ? `${vm.usageDto.networkPercent}%`
-        : vm.status === "UP"
+        : vm.status?.toUpperCase() === "UP"
         ? "0%"
         : "",      
     snapshotExist: vm?.snapshotVos?.length > 0 ? "O" : "X",

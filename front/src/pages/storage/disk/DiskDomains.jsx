@@ -47,7 +47,7 @@ const DiskDomains = ({
   const transformedData = useMemo(() => 
     [...domains].map((domain) => ({
       ...domain,
-      status: domain?.status === 'ACTIVE' ? '활성화' : '비활성화',
+      status: domain?.status?.toUpperCase() === 'ACTIVE' ? '활성화' : '비활성화',
       icon: status2Icon(domain.status),
       storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
       domainType: domain?.storageDomainType === 'data' 

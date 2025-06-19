@@ -9,7 +9,6 @@ import com.itinfo.rutilvm.api.model.network.toHostNicVos
 import com.itinfo.rutilvm.api.model.network.toSlaveHostNicVos
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
-import com.itinfo.rutilvm.common.differenceInMillis
 import com.itinfo.rutilvm.common.toTimeElapsedKr
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -114,27 +113,18 @@ class HostVo (
     val usageDto: UsageDto = UsageDto(),
 	// val certificate: HCertificateVo = HCertificateVo(),
 
-): Serializable{
+): Serializable {
     override fun toString(): String =
 		gson.toJson(this)
 
-	val bootingTime: String
-		get() = ovirtDf.formatEnhanced(_bootingTime)
-	val uptimeInMilli: Long
-		get() = Date().time - (_bootingTime?.time ?: 0L)
-
-	val isHostedEngine: Boolean
-		get() = hostedEngine != null
-	val hostedActive: Boolean
-		get() = hostedEngine?.active == true
-	val hostedConfigured: Boolean
-		get() = hostedEngine?.configured == true
-	val hostedScore: Int
-		get() = hostedEngine?.score ?: 0
-	val isGlobalMaintenance: Boolean
-		get() = hostedEngine?.globalMaintenance == true
-	val isLocalMaintenance: Boolean
-		get() = hostedEngine?.localMaintenance == true
+	val bootingTime: String				get() = ovirtDf.formatEnhanced(_bootingTime)
+	val uptimeInMilli: Long				get() = Date().time - (_bootingTime?.time ?: 0L)
+	val isHostedEngine: Boolean			get() = hostedEngine != null
+	val hostedActive: Boolean			get() = hostedEngine?.active == true
+	val hostedConfigured: Boolean		get() = hostedEngine?.configured == true
+	val hostedScore: Int				get() = hostedEngine?.score ?: 0
+	val isGlobalMaintenance: Boolean	get() = hostedEngine?.globalMaintenance == true
+	val isLocalMaintenance: Boolean		get() = hostedEngine?.localMaintenance == true
 
 	val upTime: String
 		get() = if (
@@ -201,12 +191,12 @@ class HostVo (
 /**
  * 호스트 id & name
  */
-fun Host.toHostIdName(): HostVo = HostVo.builder {
-    id { this@toHostIdName.id() }
-    name { this@toHostIdName.name() }
+fun Host.toIdentifiedVoFromHost(): HostVo = HostVo.builder {
+    id { this@toIdentifiedVoFromHost.id() }
+    name { this@toIdentifiedVoFromHost.name() }
 }
-fun List<Host>.toHostsIdName(): List<HostVo> =
-    this@toHostsIdName.map { it.toHostIdName() }
+fun List<Host>.toIdentifiedVosFromHosts(): List<HostVo> =
+    this@toIdentifiedVosFromHosts.map { it.toIdentifiedVoFromHost() }
 
 /**
  * 호스트 메뉴 목록

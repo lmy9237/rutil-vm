@@ -23,9 +23,9 @@ const VmDiskActionButtons = ({
   const noneSelected = disksSelected.length === 0
 
   const isActive = selected1st?.active === true;
-  const isOK = selected1st?.status === "OK" ? "true" : "false";
-  const isLocked = selected1st?.diskImageVo?.status === "LOCKED";
-  const isPoweringUp = vm?.status === "POWERING_UP";
+  const isOK = selected1st?.status?.toUpperCase() === "OK" ? "true" : "false";
+  const isLocked = selected1st?.diskImageVo?.status?.toUpperCase() === "LOCKED";
+  const isPoweringUp = vm?.status?.toUpperCase() === "POWERING_UP";
 
   const basicActions = [
     { type: "create",      onClick: () => setActiveModal("vmdisk:create"),     label: Localization.kr.CREATE,     disabled: false },

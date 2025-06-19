@@ -6,6 +6,7 @@ enum class ArchitectureType(
 	override val value: Int,
 	val family: ArchitectureType? = null,
 ): Identifiable{
+
 	// Base architectures
 	undefined(0),
 	x86(4),	/* Guest architecture */
@@ -29,7 +30,6 @@ enum class ArchitectureType(
 			else -> family?.hotplugMemorySizeFactorMb
 		}
 
-
 	companion object {
 		const val HOTPLUG_MEMORY_FACTOR_PPC_MB: Int = 256
 		const val HOTPLUG_MEMORY_FACTOR_X86_MB: Int = 128
@@ -42,9 +42,14 @@ enum class ArchitectureType(
 				codeMapping[it.name] = it
 			}
 		}
-		val allArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().filterNot { it == undefined }
-
 		@JvmStatic fun forValue(value: Int?): ArchitectureType = valueMapping[value ?: undefined.value] ?: undefined
 		@JvmStatic fun forCode(code: String?): ArchitectureType = codeMapping[code ?: undefined.code] ?: undefined
+		val allArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().toList()
+		val necessaryArchitectureTypes: List<ArchitectureType> = ArchitectureType.values().filter {
+			it == undefined ||
+			it == x86_64 ||
+			it == ppc64 ||
+			it == s390x
+		}
 	}
 }

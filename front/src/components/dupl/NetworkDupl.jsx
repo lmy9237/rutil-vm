@@ -39,7 +39,7 @@ const NetworkDupl = ({
       </TableRowClick>
     ),
     status: Localization.kr.renderStatus(network?.status),
-    // status: network?.status === "OPERATIONAL" ? "가동 중" : "비 가동 중",
+    // status: network?.status?.toUpperCase() === "OPERATIONAL" ? "가동 중" : "비 가동 중",
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (

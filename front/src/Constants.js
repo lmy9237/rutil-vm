@@ -44,9 +44,9 @@ const chipsetOptions = () => [
 // CPU 아키텍쳐
 const cpuArcs = () => [
   { value: "UNDEFINED", label: "정의되지 않음" },
-  { value: "X86_64", label: "x86_64" },
-  { value: "PPC64", label: "ppc64" },
-  { value: "S390X", label: "s390x" },
+  { value: "x86_64",    label: "x86_64" },
+  { value: "ppc64",     label: "ppc64" },
+  { value: "s390x",     label: "s390x" },
 ];
 
 // 도메인 유형

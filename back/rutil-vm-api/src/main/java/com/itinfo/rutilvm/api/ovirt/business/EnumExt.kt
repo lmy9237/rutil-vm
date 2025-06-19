@@ -7,15 +7,20 @@ import org.ovirt.engine.sdk4.types.BiosType
 import org.ovirt.engine.sdk4.types.BootDevice
 import org.ovirt.engine.sdk4.types.Cpu
 import org.ovirt.engine.sdk4.types.CpuPinningPolicy
+import org.ovirt.engine.sdk4.types.DataCenterStatus
 import org.ovirt.engine.sdk4.types.Display
 import org.ovirt.engine.sdk4.types.DisplayType
+import org.ovirt.engine.sdk4.types.FipsMode
+import org.ovirt.engine.sdk4.types.FirewallType
 import org.ovirt.engine.sdk4.types.InheritableBoolean
 import org.ovirt.engine.sdk4.types.LogSeverity
+import org.ovirt.engine.sdk4.types.MigrateOnError
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
 import org.ovirt.engine.sdk4.types.OperatingSystem
 import org.ovirt.engine.sdk4.types.OperatingSystemInfo
 import org.ovirt.engine.sdk4.types.OsType
+import org.ovirt.engine.sdk4.types.QuotaModeType
 import org.ovirt.engine.sdk4.types.StorageDomainStatus
 import org.ovirt.engine.sdk4.types.StorageDomainType
 import org.ovirt.engine.sdk4.types.StorageType
@@ -26,6 +31,12 @@ import org.ovirt.engine.sdk4.types.VmStatus
 import org.ovirt.engine.sdk4.types.TemplateStatus
 import org.ovirt.engine.sdk4.types.VmStorageErrorResumeBehaviour
 import org.ovirt.engine.sdk4.types.VmType
+
+fun DataCenterStatus?.toStoragePoolStatus(): StoragePoolStatus =
+	StoragePoolStatus.forCode(this@toStoragePoolStatus?.value())
+
+fun StoragePoolStatus?.toDataCenterStatus(): DataCenterStatus =
+	DataCenterStatus.fromValue(this@toDataCenterStatus?.code)
 
 fun LogSeverity?.toAuditLogSeverity(): AuditLogSeverity =
 	AuditLogSeverity.forCode(this@toAuditLogSeverity?.value())
@@ -39,11 +50,11 @@ fun Vm.findStatus(): VmStatusB =
 fun VmTemplateStatusB.toTemplateStatus(): TemplateStatus =
 	TemplateStatus.fromValue(this@toTemplateStatus.code)
 
-fun TemplateStatus?.toTemplateStatusB(): VmTemplateStatusB =
-	VmTemplateStatusB.forCode(this@toTemplateStatusB?.value())
+fun TemplateStatus?.toVmTemplateStatusB(): VmTemplateStatusB =
+	VmTemplateStatusB.forCode(this@toVmTemplateStatusB?.value())
 
 fun Template.findTemplateStatus(): VmTemplateStatusB =
-	this@findTemplateStatus.status().toTemplateStatusB()
+	this@findTemplateStatus.status().toVmTemplateStatusB()
 
 fun VmType?.toVmTypeB(): VmTypeB? =
 	VmTypeB.forCode(this@toVmTypeB?.value())
@@ -108,12 +119,15 @@ fun VmOsType?.toOsType(): OsType = when(this@toOsType) {
 }
 
 fun VmOsType?.toOsTypeCode(): String = when(this@toOsTypeCode) {
+	// NOTE: SDK OsType 에서 없는 것들은 강제로 주입
 	VmOsType.rhel_7x64,
 	VmOsType.rhel_8x64,
 	VmOsType.rhel_9x64,
 	VmOsType.rhel_core_os,
 	VmOsType.red_hat_atomic_7x64,
 	VmOsType.other_linux_kernel_4,
+	VmOsType.windows_10,
+	VmOsType.windows_10x64,
 	VmOsType.windows_11,
 	VmOsType.windows_2008r2x64,
 	VmOsType.windows_2012,
@@ -159,6 +173,18 @@ fun DisplayType?.toGraphicsTypeB(): GraphicsTypeB? =
 fun Display?.findGraphicsTypeB(): GraphicsTypeB? =
 	this@findGraphicsTypeB?.type().toGraphicsTypeB()
 
+fun FipsMode.toFipsModeB(): FipsModeB =
+	FipsModeB.forCode(this@toFipsModeB.value())
+
+fun FipsModeB.toFipsMode(): FipsMode =
+	FipsMode.fromValue(this@toFipsMode.code)
+
+fun FirewallType.toFirewallTypeB(): FirewallTypeB =
+	FirewallTypeB.forCode(this@toFirewallTypeB.value())
+
+fun FirewallTypeB.toFirewallType(): FirewallType =
+	FirewallType.fromValue(this@toFirewallType.code)
+
 fun VmAffinity?.toMigrationSupport(): MigrationSupport =
 	MigrationSupport.forCode(this@toMigrationSupport?.value())
 
@@ -176,6 +202,12 @@ fun MigrationOptions.findMigrationCompression(): Boolean? =
 
 fun MigrationSupport.toVmAffinity(): VmAffinity =
 	VmAffinity.fromValue(this@toVmAffinity.code)
+
+fun MigrateOnError.toMigrateOnErrorB(): MigrateOnErrorB =
+	MigrateOnErrorB.forCode(this@toMigrateOnErrorB.value())
+
+fun MigrateOnErrorB.toMigrateOnError(): MigrateOnError =
+	MigrateOnError.fromValue(this@toMigrateOnError.code)
 
 fun OperatingSystemInfo.toVmOsType(): VmOsType =
 	VmOsType.forCode(this@toVmOsType.id())
@@ -200,6 +232,12 @@ fun StorageType.toStorageTypeB(): StorageTypeB =
 
 fun StorageTypeB.toStorageType(): StorageType =
 	StorageType.fromValue(this@toStorageType.code)
+
+fun QuotaEnforcementType.toQuotaModeType(): QuotaModeType =
+	QuotaModeType.fromValue(this@toQuotaModeType.name)
+
+fun QuotaModeType.toQuotaEnforcementType(): QuotaEnforcementType =
+	QuotaEnforcementType.forCode(this@toQuotaEnforcementType.value())
 
 fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior =
 	VmResumeBehavior.forCode(this@toVmResumeBehavior.name)

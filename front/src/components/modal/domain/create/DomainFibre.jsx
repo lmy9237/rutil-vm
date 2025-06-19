@@ -66,7 +66,7 @@ const DomainFibre = ({
 
       // fc가 켜져있고 스토리지도메인에 연결되지 않았을때
       const isSelectable = fc.serial && fc.storageDomainId === "";
-      const isUsed = fc.status === "USED";
+      const isUsed = fc.status?.toUpperCase() === "USED";
 
       return {
         id: fc.id,

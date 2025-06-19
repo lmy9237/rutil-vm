@@ -43,7 +43,7 @@ const BondNic = ({
             onDragStart={e => handleDragStart(e, slave, "nic", "slave", nic)}
           >
             <div className="f-start gap-1">
-              <RVI16 iconDef={slave.status === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
+              <RVI16 iconDef={slave.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
               {slave.name}
               {/* {idView(slave)} */}
             </div>

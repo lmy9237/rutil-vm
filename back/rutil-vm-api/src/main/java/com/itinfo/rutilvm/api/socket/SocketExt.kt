@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.api.socket
 
-import com.itinfo.rutilvm.util.ovirt.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
 
 
 fun Term.simpleNotify(isSuccess: Boolean = true, title: String = "", content: String): WSMessage = when(this) {

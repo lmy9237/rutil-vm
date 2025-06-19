@@ -38,7 +38,7 @@ const VmDisks = ({
   } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
 
   const hasPreviewSnapshot = useMemo(() => {
-    return snapshots.some(snap => snap?.status === "in_preview");
+    return snapshots.some(snap => snap?.status?.toUpperCase() === "in_preview");
   }, [snapshots]);
 
   return (

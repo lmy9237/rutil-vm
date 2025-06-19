@@ -53,7 +53,7 @@ const HostModal = ({
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
   const clusterId = useMemo(() => [...clustersSelected][0]?.id, [clustersSelected]);
-  const isMaintenance = hostsSelected[0]?.status === "MAINTENANCE";
+  const isMaintenance = hostsSelected[0]?.status?.toUpperCase() === "MAINTENANCE";
 
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState({ id: "", name: "" });

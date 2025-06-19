@@ -29,13 +29,13 @@ const DomainActionButtons = ({
 
   const domain1st = useMemo(() => [...domainsSelected][0], [domainsSelected])
 
-  const isUp = domain1st?.status === "UP";
-  const isActive = domain1st?.status === "ACTIVE";
-  const isMaintenance = domain1st?.status === "MAINTENANCE";
-  const isLocked = domain1st?.status === "LOCKED";
-  const isUnknown = domain1st?.status === "unknown";
-  // const isUnattached = domain1st?.status === "UNATTACHED";
-  const isUnattached = domain1st?.status === "unattached";
+  const isUp = domain1st?.status?.toUpperCase() === "UP";
+  const isActive = domain1st?.status?.toUpperCase() === "ACTIVE";
+  const isMaintenance = domain1st?.status?.toUpperCase() === "MAINTENANCE";
+  const isLocked = domain1st?.status?.toUpperCase() === "LOCKED";
+  const isUnknown = domain1st?.status?.toUpperCase() === "unknown";
+  // const isUnattached = domain1st?.status?.toUpperCase() === "UNATTACHED";
+  const isUnattached = domain1st?.status?.toUpperCase() === "unattached";
 
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },

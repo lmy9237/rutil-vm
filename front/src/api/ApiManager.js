@@ -2015,6 +2015,18 @@ const ApiManager = {
     url: ENDPOINTS.FIND_ALL_MIGRATION_SUPPORTS(),
   }),
   /**
+   * @name ApiManager.findAllQuotaEnforcementTypes
+   * @description 복구정책 모드 목록 조회
+   *
+   * @returns 
+   * 
+   * @see RQHook.useAllQuotaEnforcementTypes
+   */
+  findAllQuotaEnforcementTypes : async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_QUOTA_ENFORCEMENT_TYPES(),
+  }),
+  /**
    * @name ApiManager.findAllVmTypes
    * @description 가상머신 유형 (a.k.a. 최적화 옵션) 목록 조회
    *

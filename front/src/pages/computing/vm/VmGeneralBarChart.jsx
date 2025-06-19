@@ -8,12 +8,8 @@ import {
   Tooltip,
 } from "recharts";
 import {
-  RVI16,
-  rvi16Host,
-  RVI24,
-  rvi24DeveloperBoard,
-  rvi24Memory,
-  rvi24Storage,
+  RVI16, rvi16Host,
+  RVI24, rvi24DeveloperBoard, rvi24Memory, rvi24Storage,
 } from "@/components/icons/RutilVmIcons";
 import "./VmGeneralBarChart.css";
 

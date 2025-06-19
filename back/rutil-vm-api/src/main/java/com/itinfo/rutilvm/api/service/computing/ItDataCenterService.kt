@@ -12,14 +12,15 @@ import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
+import com.itinfo.rutilvm.api.repository.engine.StoragePoolRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.VmTemplateRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.DiskVmElementEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.StoragePoolEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toDataCenterVos
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskIds
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
@@ -205,7 +206,9 @@ interface ItDataCenterService {
 @Service
 class DataCenterServiceImpl(
 ): BaseService(), ItDataCenterService {
+
 	@Autowired private lateinit var itGraphService: ItGraphService
+	@Autowired private lateinit var rStoragePools: StoragePoolRepository
 	@Autowired private lateinit var rDiskVmElements: DiskVmElementRepository
 	@Autowired private lateinit var rVms: VmRepository
 	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
@@ -216,7 +219,8 @@ class DataCenterServiceImpl(
 	override fun findAll(): List<DataCenterVo> {
 		log.info("findAll ... ")
 		val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
-		return res.toDataCentersMenu(conn)
+		val storagePools: List<StoragePoolEntity> = rStoragePools.findAllWithClusters()
+		return storagePools.toDataCenterVos()
 	}
 
 	@Throws(Error::class)

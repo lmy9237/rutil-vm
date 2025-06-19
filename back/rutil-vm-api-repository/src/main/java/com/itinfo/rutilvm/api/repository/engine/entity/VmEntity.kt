@@ -12,6 +12,8 @@ import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -32,7 +34,7 @@ import kotlin.math.pow
 
 /**
  * [VmEntity]
- * 가상머신
+ * 가상머신 정보
  *
  * @property acpiEnable [Boolean]
  * @property allowConsoleReconnect [Boolean]
@@ -453,20 +455,13 @@ class VmEntity(
 	)
 	val diskVmElements: Set<DiskVmElementEntity>? = emptySet(),
 ): Serializable {
-	val status: VmStatusB?
-		get() = VmStatusB.forValue(_status)
-
-	val biosType: BiosTypeB
-		get() = BiosTypeB.forValue(_biosType)
-
+	val status: VmStatusB?	get() = VmStatusB.forValue(_status)
+	val biosType: BiosTypeB	get() = BiosTypeB.forValue(_biosType)
 	val vmType: VmTypeB? /* a.k.a. 최적화 옵션 (optmizationOption) */
 		get() = VmTypeB.forValue(_vmType)
 
-	val osType: VmOsType?
-		get() = dwhOsInfo?.toVmOsType()
-
-	val architecture: ArchitectureType?
-		get() = ArchitectureType.forValue(_architecture)
+	val osType: VmOsType?					get() = dwhOsInfo?.toVmOsType()
+	val architecture: ArchitectureType? 	get() = ArchitectureType.forValue(_architecture)
 
 	val memSize: BigInteger?
 		get() = memSizeMb?.times(MEGABYTE_2_BYTE)
@@ -513,43 +508,6 @@ class VmEntity(
 
 	val bootableDiskVmElements: Set<DiskVmElementEntity>
 		get() = this@VmEntity.diskVmElements?.filter { it.isBoot }?.toSet() ?: emptySet()
-
-	/*
-	val isVmNotRunning: Boolean *//* '실행 중'이 아닌 상태 *//*
-		get() = _status?.notRunning ?: false
-	val isVmQualified2Migrate: Boolean *//* 마이그레이션이 가능한 상태 *//*
-		get() = _status?.qualified2Migrate ?: false
-	val isVmQualified4SnapshotMerge: Boolean *//* 스냅샷 머지 가능한 상태 *//*
-		get() = _status?.qualified4SnapshotMerge ?: false
-	val isVmQualified4LiveSnapshotMerge: Boolean *//* 라이브 스냅샷 머지 가능한 상태 *//*
-		get() = _status?.qualified4LiveSnapshotMerge ?: false
-	val isVmQualified4VmBackup: Boolean *//* 가상머신 백업 가능한 상태 *//*
-		get() = _status?.qualified4VmBackup ?: false
-	val isVmQualified4ConsoleConnect: Boolean *//* 콘솔로 가상머신 접근 가능한 상태 *//*
-		get() = _status?.qualified4ConsoleConnect ?: false
-	val isVmRunningOrPaused: Boolean *//* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*//*
-		get() = _status?.runningOrPaused ?: false
-	val isVmRunning: Boolean *//* '실행 중' 인 상태 *//*
-		get() = _status?.running ?: false
-	val isVmUpOrPaused: Boolean
-		get() = _status?.upOrPaused ?: false
-	val isVmStarting: Boolean
-		get() = _status?.starting ?: false
-	val isVmStartingOrUp: Boolean
-		get() = _status?.startingOrUp ?: false
-	val isVmHibernating: Boolean *//* '수면 중' 인 상태 *//*
-		get() = _status?.hibernating ?: false
-	val isVmDownOrSuspended: Boolean
-		get() = _status?.downOrSuspended ?: false
-	val isVmQualified4QosChange: Boolean
-		get() = _status?.qualified4QosChange ?: false
-	val isVmGuestCpuRunning: Boolean
-		get() = _status?.guestCpuRunning ?: false
-	val isVmPoweringUpOrMigrating: Boolean
-		get() = _status?.poweringUpOrMigrating ?: false
-	val isVmMigrating: Boolean
-		get() = _status?.migrating ?: false
-	*/
 
 	override fun toString(): String =
 		gson.toJson(this)

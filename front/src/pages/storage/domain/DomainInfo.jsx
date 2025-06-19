@@ -59,10 +59,10 @@ const DomainInfo = () => {
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
-  const isACTIVE = domain?.status === "ACTIVE";
-  const isUNKNOWN = domain?.status === "unknown";
-  const isMaintenance = domain?.status === "MAINTENANCE";
-  const isUnattached = domain?.status === "UNATTACHED";
+  const isACTIVE = domain?.status?.toUpperCase() === "ACTIVE";
+  const isUNKNOWN = domain?.status?.toUpperCase() === "unknown";
+  const isMaintenance = domain?.status?.toUpperCase() === "MAINTENANCE";
+  const isUnattached = domain?.status?.toUpperCase() === "UNATTACHED";
 
   useEffect(() => {
     if (isDomainError || (!isDomainLoading && !domain)) {

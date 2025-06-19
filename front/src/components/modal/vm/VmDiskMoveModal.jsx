@@ -64,7 +64,7 @@ const VmDiskMoveModal = ({
       if (disk && queryResult.data && queryResult.isSuccess) {
         const domains = queryResult.data?.body ?? [];
         const filteredDomains = domains
-          .filter(d => d.status === "ACTIVE" && d.id !== currentDomainId)
+          .filter(d => d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId)
           .map(d => ({
             id: d.id,
             name: d.name,

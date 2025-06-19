@@ -1,5 +1,11 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+
 import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error
@@ -201,10 +207,10 @@ fun Connection.expectVmDeleted(vmId: String, timeout: Long = 60000L, interval: L
 			Term.VM.logSuccess("삭제")
 			return true
 		} else if (System.currentTimeMillis() - startTime > timeout){
-			log.error("{} {} 삭제 시간 초과", Term.VM.desc, vmToRemove.name())
+			log.error("{} {} 삭제 시간 초과", Term.VM.description, vmToRemove.name())
 			return false
 		}
-		log.debug("{} 삭제 진행중 ... ", Term.VM.desc)
+		log.debug("{} 삭제 진행중 ... ", Term.VM.description)
 		Thread.sleep(interval)
 	}
 }

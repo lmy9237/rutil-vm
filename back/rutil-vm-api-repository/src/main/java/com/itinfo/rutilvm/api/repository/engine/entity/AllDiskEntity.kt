@@ -18,7 +18,7 @@ import javax.persistence.Table
 /**
  *
  * [AllDiskEntity]
- * 디스크 기본정보
+ * 디스크 기본정보 뷰
  *
  * @property diskId [UUID]
  * @property storageId [String]

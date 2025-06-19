@@ -127,20 +127,52 @@ class Localization {
 		//endregion: DisplayTypeL
 
 
+		//region: FipsModeL
+		object FipsModeL {
+			object KR {
+				val undefined		= locKr?.get(FipsModeB.undefined.localizationKey)?.toString() ?: ""
+				val enabled			= locKr?.get(FipsModeB.enabled.localizationKey)?.toString() ?: ""
+				val disabled		= locKr?.get(FipsModeB.disabled.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val undefined		= locEn?.get(FipsModeB.undefined.localizationKey)?.toString() ?: ""
+				val enabled			= locEn?.get(FipsModeB.enabled.localizationKey)?.toString() ?: ""
+				val disabled		= locEn?.get(FipsModeB.disabled.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: FipsModeL
+
+
 		//region MigrationSupportL
 		object MigrationSupportL {
 			object KR {
-				val migratable = locKr?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
-				val user_migratable = locKr?.get(MigrationSupport.user_migratable.localizationKey)?.toString() ?: ""
-				val pinned = locKr?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
+				val migratable 		= locKr?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
+				val user_migratable	= locKr?.get(MigrationSupport.user_migratable.localizationKey)?.toString() ?: ""
+				val pinned 			= locKr?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val migratable = locEn?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
+				val migratable 		= locEn?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
 				val user_migratable = locEn?.get(MigrationSupport.user_migratable.localizationKey)?.toString() ?: ""
-				val pinned = locEn?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
+				val pinned			= locEn?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion
+
+
+		//region: MigrateOnErrorBL
+		object MigrateOnErrorBL {
+			object KR {
+				val do_not_migrate				= locKr?.get(MigrateOnErrorB.do_not_migrate.localizationKey)?.toString() ?: ""
+				val migrate						= locKr?.get(MigrateOnErrorB.migrate.localizationKey)?.toString() ?: ""
+				val migrate_highly_available	= locKr?.get(MigrateOnErrorB.migrate_highly_available.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val do_not_migrate				= locEn?.get(MigrateOnErrorB.do_not_migrate.localizationKey)?.toString() ?: ""
+				val migrate						= locEn?.get(MigrateOnErrorB.migrate.localizationKey)?.toString() ?: ""
+				val migrate_highly_available	= locEn?.get(MigrateOnErrorB.migrate_highly_available.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: MigrateOnErrorBL
 
 
 		//region ProviderTypeL
@@ -168,7 +200,22 @@ class Localization {
 				val KUBEVIRT			= locEn?.get(ProviderType.kubevirt.localizationKey)?.toString() ?: ""
 			}
 		}
-		//endregion
+		//endregion: ProviderTypeL
+
+		//region: QuotaEnforcementTypeL
+		object QuotaEnforcementTypeL {
+			object KR {
+				val disabled 			= locKr?.get(QuotaEnforcementType.disabled.localizationKey)?.toString() ?: ""
+				val enabled				= locKr?.get(QuotaEnforcementType.enabled.localizationKey)?.toString() ?: ""
+				val audit				= locKr?.get(QuotaEnforcementType.audit.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val disabled 			= locEn?.get(QuotaEnforcementType.disabled.localizationKey)?.toString() ?: ""
+				val enabled				= locEn?.get(QuotaEnforcementType.enabled.localizationKey)?.toString() ?: ""
+				val audit				= locEn?.get(QuotaEnforcementType.audit.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: QuotaEnforcementTypeL
 
 		//region: VmStatusL
 		object VmStatusL {
@@ -316,51 +363,66 @@ class Localization {
 			DiskInterface.sata -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
 		}
 
-	fun findLocalizedName4DisplayType(type: DisplayTypeB, loc: String = "kr"): String =
-		when(type) {
-			DisplayTypeB.cirrus ->					if (loc == "kr") DisplayTypeL.KR.cirrus else DisplayTypeL.EN.cirrus
-			DisplayTypeB.qxl	->						if (loc == "kr") DisplayTypeL.KR.qxl else DisplayTypeL.EN.qxl
-			DisplayTypeB.vga	->						if (loc == "kr") DisplayTypeL.KR.vga else DisplayTypeL.EN.vga
-			DisplayTypeB.bochs -> 					if (loc == "kr") DisplayTypeL.KR.bochs else DisplayTypeL.EN.bochs
-			DisplayTypeB.none ->						if (loc == "kr") DisplayTypeL.KR.none else DisplayTypeL.EN.none
-		}
+	fun findLocalizedName4DisplayType(type: DisplayTypeB, loc: String = "kr"): String = when(type) {
+		DisplayTypeB.cirrus ->					if (loc == "kr") DisplayTypeL.KR.cirrus else DisplayTypeL.EN.cirrus
+		DisplayTypeB.qxl ->						if (loc == "kr") DisplayTypeL.KR.qxl else DisplayTypeL.EN.qxl
+		DisplayTypeB.vga ->						if (loc == "kr") DisplayTypeL.KR.vga else DisplayTypeL.EN.vga
+		DisplayTypeB.bochs -> 					if (loc == "kr") DisplayTypeL.KR.bochs else DisplayTypeL.EN.bochs
+		DisplayTypeB.none ->					if (loc == "kr") DisplayTypeL.KR.none else DisplayTypeL.EN.none
+	}
 
-	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String =
-		when(type) {
-			MigrationSupport.migratable ->				if (loc == "kr") MigrationSupportL.KR.migratable else MigrationSupportL.EN.migratable
-			MigrationSupport.user_migratable ->			if (loc == "kr") MigrationSupportL.KR.user_migratable else MigrationSupportL.EN.user_migratable
-			MigrationSupport.pinned -> 					if (loc == "kr") MigrationSupportL.KR.pinned else MigrationSupportL.EN.pinned
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
+	fun findLocalizedName4FipsMode(type: FipsModeB, loc: String = "kr"): String = when(type) {
+		FipsModeB.undefined ->					if (loc == "kr") FipsModeL.KR.undefined else FipsModeL.EN.undefined
+		FipsModeB.enabled ->					if (loc == "kr") FipsModeL.KR.enabled else FipsModeL.EN.enabled
+		FipsModeB.disabled ->					if (loc == "kr") FipsModeL.KR.disabled else FipsModeL.EN.disabled
+	}
 
-	fun findLocalizedName4VmStatusB(type: VmStatusB, loc: String = "kr"): String =
-		when(type) {
-			VmStatusB.down ->			        if (loc == "kr") VmStatusL.KR.down else VmStatusL.EN.down
-			VmStatusB.image_illegal ->			if (loc == "kr") VmStatusL.KR.image_illegal else VmStatusL.EN.image_illegal
-			VmStatusB.image_locked ->			if (loc == "kr") VmStatusL.KR.image_locked else VmStatusL.EN.image_locked
-			VmStatusB.migrating_from ->			if (loc == "kr") VmStatusL.KR.migrating_from else VmStatusL.EN.migrating_from
-			VmStatusB.migrating_to ->			if (loc == "kr") VmStatusL.KR.migrating_to else VmStatusL.EN.migrating_to
-			VmStatusB.not_responding ->			if (loc == "kr") VmStatusL.KR.not_responding else VmStatusL.EN.not_responding
-			VmStatusB.paused ->			        if (loc == "kr") VmStatusL.KR.paused else VmStatusL.EN.paused
-			VmStatusB.powering_down ->			if (loc == "kr") VmStatusL.KR.powering_down else VmStatusL.EN.powering_down
-			VmStatusB.reboot_in_progress ->		if (loc == "kr") VmStatusL.KR.reboot_in_progress else VmStatusL.EN.reboot_in_progress
-			VmStatusB.restoring_state ->		if (loc == "kr") VmStatusL.KR.restoring_state else VmStatusL.EN.restoring_state
-			VmStatusB.powering_up ->			if (loc == "kr") VmStatusL.KR.powering_up else VmStatusL.EN.powering_up
-			VmStatusB.saving_state ->			if (loc == "kr") VmStatusL.KR.saving_state else VmStatusL.EN.saving_state
-			VmStatusB.suspended ->			    if (loc == "kr") VmStatusL.KR.suspended else VmStatusL.EN.suspended
-			VmStatusB.unassigned ->			    if (loc == "kr") VmStatusL.KR.unassigned else VmStatusL.EN.unassigned
-			VmStatusB.up ->			            if (loc == "kr") VmStatusL.KR.up else VmStatusL.EN.up
-			VmStatusB.wait_for_launch ->		if (loc == "kr") VmStatusL.KR.wait_for_launch else VmStatusL.EN.wait_for_launch
-			VmStatusB.unknown ->				if (loc == "kr") VmStatusL.KR.unknown else VmStatusL.EN.unknown
-		}
+	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String = when(type) {
+		MigrationSupport.migratable ->				if (loc == "kr") MigrationSupportL.KR.migratable else MigrationSupportL.EN.migratable
+		MigrationSupport.user_migratable ->			if (loc == "kr") MigrationSupportL.KR.user_migratable else MigrationSupportL.EN.user_migratable
+		MigrationSupport.pinned -> 					if (loc == "kr") MigrationSupportL.KR.pinned else MigrationSupportL.EN.pinned
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
 
-	fun findLocalizedName4VmTemplateStatusB(type: VmTemplateStatusB, loc: String = "kr"): String =
-		when(type) {
-			VmTemplateStatusB.ok ->				if (loc == "kr") VmTemplateStatusL.KR.ok else VmTemplateStatusL.EN.ok
-			VmTemplateStatusB.locked ->			if (loc == "kr") VmTemplateStatusL.KR.locked else VmTemplateStatusL.EN.locked
-			VmTemplateStatusB.illegal ->		if (loc == "kr") VmTemplateStatusL.KR.illegal else VmTemplateStatusL.EN.illegal
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
+	fun findLocalizedName4MigrateOnErrorB(type: MigrateOnErrorB, loc: String = "kr"): String = when(type) {
+		MigrateOnErrorB.do_not_migrate ->				if (loc == "kr") MigrateOnErrorBL.KR.do_not_migrate else MigrateOnErrorBL.EN.do_not_migrate
+		MigrateOnErrorB.migrate ->		                if (loc == "kr") MigrateOnErrorBL.KR.migrate else MigrateOnErrorBL.EN.migrate
+		MigrateOnErrorB.migrate_highly_available ->		if (loc == "kr") MigrateOnErrorBL.KR.migrate_highly_available else MigrateOnErrorBL.EN.migrate_highly_available
+	}
+
+
+	fun findLocalizedName4QuotaEnforcementType(type: QuotaEnforcementType, loc: String = "kr"): String = when(type) {
+		QuotaEnforcementType.disabled -> 				if (loc == "kr") QuotaEnforcementTypeL.KR.disabled else QuotaEnforcementTypeL.EN.disabled
+		QuotaEnforcementType.audit -> 					if (loc == "kr") QuotaEnforcementTypeL.KR.audit else QuotaEnforcementTypeL.EN.audit
+		QuotaEnforcementType.enabled ->					if (loc == "kr") QuotaEnforcementTypeL.KR.enabled else QuotaEnforcementTypeL.EN.enabled
+	}
+
+	fun findLocalizedName4VmStatusB(type: VmStatusB, loc: String = "kr"): String = when(type) {
+		VmStatusB.down ->			        if (loc == "kr") VmStatusL.KR.down else VmStatusL.EN.down
+		VmStatusB.image_illegal ->			if (loc == "kr") VmStatusL.KR.image_illegal else VmStatusL.EN.image_illegal
+		VmStatusB.image_locked ->			if (loc == "kr") VmStatusL.KR.image_locked else VmStatusL.EN.image_locked
+		VmStatusB.migrating_from ->			if (loc == "kr") VmStatusL.KR.migrating_from else VmStatusL.EN.migrating_from
+		VmStatusB.migrating_to ->			if (loc == "kr") VmStatusL.KR.migrating_to else VmStatusL.EN.migrating_to
+		VmStatusB.not_responding ->			if (loc == "kr") VmStatusL.KR.not_responding else VmStatusL.EN.not_responding
+		VmStatusB.paused ->			        if (loc == "kr") VmStatusL.KR.paused else VmStatusL.EN.paused
+		VmStatusB.powering_down ->			if (loc == "kr") VmStatusL.KR.powering_down else VmStatusL.EN.powering_down
+		VmStatusB.reboot_in_progress ->		if (loc == "kr") VmStatusL.KR.reboot_in_progress else VmStatusL.EN.reboot_in_progress
+		VmStatusB.restoring_state ->		if (loc == "kr") VmStatusL.KR.restoring_state else VmStatusL.EN.restoring_state
+		VmStatusB.powering_up ->			if (loc == "kr") VmStatusL.KR.powering_up else VmStatusL.EN.powering_up
+		VmStatusB.saving_state ->			if (loc == "kr") VmStatusL.KR.saving_state else VmStatusL.EN.saving_state
+		VmStatusB.suspended ->			    if (loc == "kr") VmStatusL.KR.suspended else VmStatusL.EN.suspended
+		VmStatusB.unassigned ->			    if (loc == "kr") VmStatusL.KR.unassigned else VmStatusL.EN.unassigned
+		VmStatusB.up ->			            if (loc == "kr") VmStatusL.KR.up else VmStatusL.EN.up
+		VmStatusB.wait_for_launch ->		if (loc == "kr") VmStatusL.KR.wait_for_launch else VmStatusL.EN.wait_for_launch
+		VmStatusB.unknown ->				if (loc == "kr") VmStatusL.KR.unknown else VmStatusL.EN.unknown
+	}
+
+	fun findLocalizedName4VmTemplateStatusB(type: VmTemplateStatusB, loc: String = "kr"): String = when(type) {
+		VmTemplateStatusB.ok ->				if (loc == "kr") VmTemplateStatusL.KR.ok else VmTemplateStatusL.EN.ok
+		VmTemplateStatusB.locked ->			if (loc == "kr") VmTemplateStatusL.KR.locked else VmTemplateStatusL.EN.locked
+		VmTemplateStatusB.illegal ->		if (loc == "kr") VmTemplateStatusL.KR.illegal else VmTemplateStatusL.EN.illegal
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
 
 	fun findLocalizedName4VmType(type: VmTypeB, loc: String = "kr"): String =
 		when(type) {

@@ -1,10 +1,6 @@
 package com.itinfo.rutilvm.api.model
 
-import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdName
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.util.ovirt.findDisk
-import com.itinfo.rutilvm.util.ovirt.findVm
-import org.ovirt.engine.sdk4.Connection
 
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
@@ -49,8 +45,8 @@ fun Cluster.fromClusterToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
-fun List<Cluster>.fromClustersToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromClustersToIdentifiedVos.map { it.fromClusterToIdentifiedVo() }
+fun List<Cluster>.toIdentifiedVosFromClusters(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromClusters.map { it.fromClusterToIdentifiedVo() }
 
 fun Host.fromHostToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }

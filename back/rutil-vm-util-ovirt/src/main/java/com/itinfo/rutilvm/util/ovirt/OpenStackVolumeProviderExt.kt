@@ -1,5 +1,9 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.model.Term
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
+import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+
 import com.itinfo.rutilvm.util.ovirt.error.*
 
 import org.ovirt.engine.sdk4.Error

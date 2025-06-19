@@ -3,16 +3,13 @@ import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
 import {
   handleInputChange,
 } from "@/components/label/HandleInput";
+import {
+  useAllMigrationSupports
+} from "@/api/RQHook"
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import { useValidationToast } from "@/hooks/useSimpleToast";
 
-// 마이그레이션 모드
-const migrationModeOptionList = [
-  { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
-  { value: "user_migratable", label: `수동 마이그레이션만 허용` },
-  { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
-];
 
 const VmHost = ({
   hosts,
@@ -20,14 +17,22 @@ const VmHost = ({
   setFormHostState
 }) => {
   const { validationToast } = useValidationToast()
-  // const {
-  //   data: migrationSupports = [],
-  //   isLoading: isMigrationSupportsLoading
-  // } = useAllMigrationSupports((e) => ({ 
-  //   ...e,
-  //   value: e?.id,
-  //   label: e?.kr
-  // }))
+  const {
+    data: migrationSupports = [],
+    isLoading: isMigrationSupportsLoading
+  } = useAllMigrationSupports((e) => ({ 
+    ...e,
+    value: e?.id,
+    label: e?.kr
+  }))
+  // 마이그레이션 모드
+  /*
+  const migrationModeOptionList = [
+    { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
+    { value: "user_migratable", label: `수동 마이그레이션만 허용` },
+    { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
+  ];
+  */
 
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {
@@ -145,7 +150,8 @@ const VmHost = ({
         <div className="py-2" style={{ fontWeight: 600 }}>{Localization.kr.MIGRATION} 옵션</div>
         <LabelSelectOptions label={`${Localization.kr.MIGRATION} 모드`}
           value={formHostState.migrationMode}
-          options={migrationModeOptionList}
+          options={migrationSupports}
+          loading={isMigrationSupportsLoading}
           onChange={handleInputChange(setFormHostState, "migrationMode", validationToast)}
         />
       </div>
