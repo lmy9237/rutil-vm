@@ -630,14 +630,14 @@ const TableColumnsInfo = {
     { accessor: 'dateCreated',  header: Localization.kr.DATE_CREATED,  clickable: false },
   ],
   VMS_FROM_DISK: [
-    { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false /* width: DEFAULT_WIDTH_ICON_COLUMN */ },
+    { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false ,width: DEFAULT_WIDTH_ICON_COLUMN},
     { accessor: 'name',         header: Localization.kr.NAME,         clickable: false },
     { accessor: 'cluster',      header: Localization.kr.CLUSTER,      clickable: false },
     { accessor: 'ipAddress',    header: Localization.kr.IP_ADDRESS,   clickable: false },
     { accessor: 'uptime',       header: Localization.kr.UP_TIME,      clickable: false },
   ],
   STORAGE_DOMAINS_FROM_DISK: [
-    { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false, /*width: DEFAULT_WIDTH_ICON_COLUMN*/ },
+    { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false,width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'storageDomain',header: '도메인 이름',                clickable: false },
     { accessor: 'domainType',   header: '도메인 유형',                clickable: false },
     { accessor: 'status',       header: Localization.kr.STATUS,       clickable: false },

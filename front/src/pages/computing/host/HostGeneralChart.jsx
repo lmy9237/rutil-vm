@@ -75,7 +75,7 @@ const HostGeneralChart = () => {
           options={chartOptions}
           series={series}
           type="line"
-          height={270}
+          height={260}
         />
       </div>
     </div>

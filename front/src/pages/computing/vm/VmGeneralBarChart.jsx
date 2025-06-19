@@ -81,7 +81,7 @@ const VmGeneralBarChart = () => {
                   dataKey="value"
                   fill={item.color}
                   background={{ fill: "#D9D9D9" }}
-                  radius={0} // ✅ 둥근 모서리 제거
+                  radius={0} 
                 />
               </BarChart>
             </ResponsiveContainer>

@@ -16,6 +16,7 @@ import Localization               from "@/utils/Localization";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 import VmGeneralBarChart from "@/pages/computing/vm/VmGeneralBarChart";
 import DomainStorageUsageBarChart from "./DomainGeneralBarChart";
+import GeneralLayout from "@/components/GeneralLayout";
 
 const overCommit = (commit, disk) => ((commit / disk) * 100).toFixed(0);
 
@@ -62,21 +63,36 @@ const DomainGeneral = ({
 
   return (
     <>
-    <div className="vm-detail-grid">
+    {/* <div className="vm-detail-grid">
       <div className="vm-section section-top">
-
-      <div className="grid-col-span-2 vm-box-default box-content">
-        <h3 className="box-title">게스트 운영체제</h3>
-        <hr className="w-full" />
-          <InfoTable tableRows={tableRows} />
-      </div>
-
-        {/* <InfoTable tableRows={tableRows} /> */}
+        <div className="grid-col-span-2 vm-box-default box-content">
+          <h3 className="box-title">게스트 운영체제</h3>
+          <hr className="w-full" />
+            <InfoTable tableRows={tableRows} />
+        </div>
         <GeneralBoxProps title="용량 및 사용량">
           <DomainStorageUsageBarChart />
         </GeneralBoxProps>
       </div>
-    </div>
+    </div> */}
+    <GeneralLayout
+      top={
+      <>
+      <div className="grid-col-span-2 vm-box-default box-content">
+        <h3 className="box-title">게스트 운영체제</h3>
+        <hr className="w-full" />
+        <InfoTable tableRows={tableRows} />
+      </div>
+      <GeneralBoxProps title="용량 및 사용량">
+        <DomainStorageUsageBarChart />
+      </GeneralBoxProps>
+      </>
+    }
+    bottom={
+      <>
+      </>
+      }
+    />
     <OVirtWebAdminHyperlink
       name={`${Localization.kr.DOMAIN}>${Localization.kr.DOMAIN}>${domainsSelected[0]?.name}`}
       path={`storage-general;name=${domainsSelected[0]?.name}`}

@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import ReactApexChart             from "react-apexcharts";
 import useGlobal                  from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import { InfoTable }              from "@/components/table/InfoTable";
-import SuperAreaChart             from "@/components/Chart/SuperAreaChart";
 import VmGeneralBarChart          from "../vm/VmGeneralBarChart";
 import HostGeneralChart           from "./HostGeneralChart";
 import { 
@@ -11,10 +8,9 @@ import {
   useHost
 } from "@/api/RQHook";
 import { convertBytesToMB }       from "@/util";
-import Localization               from "@/utils/Localization";
-import Logger                     from "@/utils/Logger";
 import "./Host.css";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
+import GeneralLayout from "@/components/GeneralLayout";
 
 /**
  * @name HostGeneral
@@ -155,27 +151,23 @@ const HostGeneral = ({
 
   return (
     <>
-      <div className="vm-section section-top">
-        <GeneralBoxProps title="시스템 정보">
-          <InfoTable tableRows={systemTableRows} />
-        </GeneralBoxProps>
-
-        <GeneralBoxProps title="하드웨어">
-          <InfoTable tableRows={hardwareTableRows} />
-        </GeneralBoxProps>
-
-        <GeneralBoxProps title="소프트웨어">
-          <InfoTable tableRows={softwareTableRows} />
-        </GeneralBoxProps>
-      </div>
-      <div className="vm-section section-bottom">
-        <div className=" grid-col-span-2">
-          <HostGeneralChart />
-        </div>
-        <GeneralBoxProps title="용량 및 사용량">
-          <VmGeneralBarChart />
-        </GeneralBoxProps>
-      </div>
+    <GeneralLayout
+      top={
+        <>
+          <GeneralBoxProps title="시스템 정보"><InfoTable tableRows={systemTableRows} /></GeneralBoxProps>
+          <GeneralBoxProps title="하드웨어"> <InfoTable tableRows={hardwareTableRows} /></GeneralBoxProps>
+          <GeneralBoxProps title="소프트웨어"><InfoTable tableRows={softwareTableRows} /></GeneralBoxProps>
+        </>
+      }
+      bottom={
+        <>
+          <div className=" grid-col-span-2">
+            <HostGeneralChart />
+          </div>
+          <GeneralBoxProps title="용량 및 사용량"><VmGeneralBarChart /></GeneralBoxProps>
+        </>
+      }
+    />
       {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
         path={`hosts-general;name=${hostsSelected[0]?.name}`} 
