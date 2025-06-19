@@ -154,15 +154,15 @@ export const BoxDetail = ({
             <span className="down v-end">{cntDown}</span>
           </div>)}
           {alert && (<div className="box-detail-icon f-end gap-2 fw-500">
-            {severity2Icon("ALERT", true)}
+            {severity2Icon("alsert", true)}
             <span className="alert v-end">{alert}</span>
           </div>)}
           {error && (<div className="box-detail-icon f-end gap-2 fw-500">
-            {severity2Icon("ERROR", true)}
+            {severity2Icon("error", true)}
             <span className="error v-end">{error}</span>
           </div>)}
           {warning && (<div className="box-detail-icon f-end gap-2 fw-500 ">
-            {severity2Icon("WARNING", true)}
+            {severity2Icon("warning", true)}
             <span className="warning v-end">{warning}</span>
           </div>)}
         </div>
