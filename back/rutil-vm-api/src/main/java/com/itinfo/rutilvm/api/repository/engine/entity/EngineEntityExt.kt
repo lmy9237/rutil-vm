@@ -304,6 +304,113 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Temp
 
 
 //region: VmEntity
+fun VmEntity.toVmVo(): VmVo {
+	val entity = this@toVmVo
+
+	return VmVo.builder {
+		id { entity.vmGuid.toString() }
+		name { entity.vmName }
+		description { entity.description }
+		comment { entity.freeTextComment }
+		status { entity.status }
+		iconSmall { entity.effectiveSmallIcon?.toVmIconVoFromVmEntity() }
+		iconLarge { entity.effectiveLargeIcon?.toVmIconVoFromVmEntity() }
+		creationTime { entity.creationDate }
+		stopTime { entity.lastStopTime }
+		timeElapsed { entity.elapsedTime?.toLong() }
+		optimizeOption { entity.vmType }
+		nextRun { entity.nextRunConfigExists }
+		biosType { entity.biosType }
+		biosBootMenu { entity.isBootMenuEnabled }
+		osType { entity.osType }
+		cpuArc { entity.architecture }
+		cpuTopologyCnt { entity.numOfCpus }
+		cpuTopologyCore { entity.cpuPerSocket } // TODO: 이거 맞는지 모르겠음
+		cpuTopologySocket { entity.numOfSockets }
+		cpuTopologyThread { entity.threadsPerCpu } // TODO: 이거 맞는지 모르겠음
+		cpuPinningPolicy { entity.cpuPinningPolicy }
+		memorySize { entity.memSize }
+		memoryGuaranteed { entity.memSize }
+		memoryMax { entity.maxMemorySize }
+		deleteProtected { entity.isDeleteProtected }
+		monitor { entity.numOfMonitors }
+		displayType { entity.defaultDisplayType }
+		ha { entity.autoStartup }
+		haPriority { entity.priority }
+		ioThreadCnt { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
+		migrationMode { entity.migrationSupport }
+		migrationEncrypt { entity.isMigrateEncrypted }
+		migrationAutoConverge { entity.isAutoConverge }
+		migrationCompression { entity.isMigrateCompressed }
+		firstDevice {
+			entity.defaultBootSequence?.toBootDevices()?.firstOrNull()?.value()
+		}
+		secDevice {
+			if ((entity.defaultBootSequence?.toBootDevices()?.size ?: 0) > 1) entity.defaultBootSequence?.toBootDevices()?.get(1)?.value()
+			else null
+		}
+		hostInCluster { entity.dedicatedVmForVds.isNullOrEmpty() }
+		startPaused { entity.isRunAndPause }
+		storageErrorResumeBehaviour { entity.vmResumeBehavior }
+		usb { entity.usbPolicy?.isEnabled }
+		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }
+		hostedEngineVm { entity.isHostedEngineVm }
+		// timeOffset {  }
+		usageDto {
+			UsageDto.builder {
+				cpuPercent { usageCpuPercent }
+				memoryPercent { usageMemPercent }
+				networkPercent { usageNetworkPercent }
+			}
+		}
+		ipv4 { listOf(entity.vmIp) }
+		fqdn { entity.vmHost }
+		cdRomVo {
+			IdentifiedVo.builder {
+				id { entity.isoPath }
+			}
+		}
+		templateVo {
+			IdentifiedVo.builder {
+				id { entity.originalTemplateId.toString() }
+				name { entity.originalTemplateName }
+			}
+		}
+		hostVo {
+			IdentifiedVo.builder {
+				id { entity.runOnVds.toString() }
+				name { entity.runOnVdsName }
+			}
+		}
+		clusterVo {
+			IdentifiedVo.builder {
+				id { entity.clusterId.toString() }
+				name { entity.clusterName }
+			}
+		}
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { entity.storagePoolId.toString() }
+				name { entity.storagePoolName }
+			}
+		}
+		storageDomainVo {
+			IdentifiedVo.builder {
+				id { entity.leaseSdId.toString() }
+				// name { entity. }
+			}
+		}
+		snapshotVos { snapshots.filter {
+			it.snapshotType != SnapshotType.active &&
+				it.snapshotType != SnapshotType.preview
+		}.toIdentifiedVosFromSnapshotEntities() }
+	}
+}
+fun List<VmEntity>.toVmVos(): List<VmVo> {
+	return this@toVmVos.map { it.toVmVo() }
+}
+
+
 fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	val entity = this@toVmVoFromVmEntity
 	val hosts: List<IdentifiedVo> = if (entity.dedicatedVmForVds.isNullOrEmpty()) {

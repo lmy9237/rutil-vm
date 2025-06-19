@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVoFromVmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVmVos
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
@@ -142,11 +143,12 @@ class VmServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<VmVo> {
 		log.info("findAll ... ")
-		val vms: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices,snapshots")
-			.getOrDefault(emptyList()) // TODO: 다 연결 됐을때 제거
+		// val vms: List<Vm> = conn.findAllVms(follow = "cluster.datacenter,reporteddevices,snapshots")
+		// 	.getOrDefault(emptyList()) // TODO: 다 연결 됐을때 제거
 		// return res.toVmMenus(conn) // 3.86
 		val res: List<VmEntity> = rVms.findAllWithSnapshotsOrderByVmNameAsc()
-		return res.toVmVosFromVmEntities(vms) // TODO: 다 연결 됐을때 제거
+		return res.toVmVos()
+		// return res.toVmVosFromVmEntities(vms) // TODO: 다 연결 됐을때 제거
 	}
 
 	@Throws(Error::class)
