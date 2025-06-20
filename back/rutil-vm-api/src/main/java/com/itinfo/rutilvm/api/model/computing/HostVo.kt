@@ -9,8 +9,10 @@ import com.itinfo.rutilvm.api.model.network.toHostNicVos
 import com.itinfo.rutilvm.api.model.network.toSlaveHostNicVos
 import com.itinfo.rutilvm.api.ovirt.business.SELinuxModeB
 import com.itinfo.rutilvm.api.ovirt.business.VdsSpmStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.api.ovirt.business.toSELinuxModeB
 import com.itinfo.rutilvm.api.ovirt.business.toVdsSpmStatus
+import com.itinfo.rutilvm.api.ovirt.business.toVdsStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
 import com.itinfo.rutilvm.common.toTimeElapsedKr
@@ -45,12 +47,12 @@ private val log = LoggerFactory.getLogger(HostVo::class.java)
  * @property hostedEngineVM [Boolean] Hosted Engine VM 여부 [ 금장, 은장, null ]
  * @property spmPriority [Int] spm 우선순위
  * @property spmStatus [VdsSpmStatus] spm 상태
- * @property status [HostStatus]
+ * @property status [VdsStatus] 호스트 상태
  * @property transparentPage [Boolean] 자동으로 페이지를 크게
- * @property vmTotalCnt [Int] summary
- * @property vmActiveCnt [Int] summary
+ * @property vmTotalCnt [Int] 총 가상머신 ㅅ
+ * @property vmActiveCnt [Int] 실행 중인 가상머신 수
  * @property vmSizeVo [SizeVo]
- * @property vmMigratingCnt [Int] summary
+ * @property vmMigratingCnt [Int] 마이그레이션 중인 가상머신 수
  * @property vgpu [String]   VgpuPlacement
  * 전원관리는 항상 비활성상태
  * <statistics>
@@ -90,7 +92,7 @@ class HostVo (
     val spmPriority: Int = 0,
     val spmStatus: VdsSpmStatus? = VdsSpmStatus.none,
 	val ssh: SshVo? = SshVo(),
-    val status: HostStatus = HostStatus.NON_RESPONSIVE,
+    val status: VdsStatus? = VdsStatus.non_responsive,
     val transparentPage: Boolean = false,
     val vmMigratingCnt: Int = 0,
     val vgpu: String = "", /*VgpuPlacement*/
@@ -124,6 +126,9 @@ class HostVo (
 	val spmStatusCode: String			get() = spmStatus?.code ?: VdsSpmStatus.none.code
 	val spmStatusEn: String				get() = spmStatus?.en ?: "N/A"
 	val spmStatusKr: String				get() = spmStatus?.kr ?: "알 수 없음"
+	val statusCode: String				get() = status?.code ?: VdsStatus.non_responsive.code
+	val statusEn: String				get() = status?.en ?: "N/A"
+	val statusKr: String				get() = status?.kr ?: "알 수 없음"
 
 	val bootingTime: String				get() = ovirtDf.formatEnhanced(_bootingTime)
 	val uptimeInMilli: Long				get() = Date().time - (_bootingTime?.time ?: 0L)
@@ -136,13 +141,13 @@ class HostVo (
 
 	val upTime: String
 		get() = if (
-			status == HostStatus.INSTALLING ||
-			status == HostStatus.INITIALIZING ||
-			status == HostStatus.INSTALLING_OS ||
-			status == HostStatus.INSTALL_FAILED ||
-			status == HostStatus.CONNECTING ||
-			status == HostStatus.NON_RESPONSIVE ||
-			status == HostStatus.REBOOT
+			status == VdsStatus.installing ||
+			status == VdsStatus.initializing ||
+			status == VdsStatus.installing_os ||
+			status == VdsStatus.install_failed ||
+			status == VdsStatus.connecting ||
+			status == VdsStatus.non_responsive ||
+			status == VdsStatus.reboot
 		) "N/A" else uptimeInMilli.div(1000L).toTimeElapsedKr()
 
 	override fun toString(): String =
@@ -165,7 +170,7 @@ class HostVo (
         private var bSpmPriority: Int = 0; fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
         private var bSpmStatus: VdsSpmStatus? = VdsSpmStatus.none; fun spmStatus(block: () -> VdsSpmStatus?) { bSpmStatus = block() ?: VdsSpmStatus.none }
         private var bSsh: SshVo? = null; fun ssh(block: () -> SshVo?) { bSsh = block() }
-        private var bStatus: HostStatus = HostStatus.NON_RESPONSIVE; fun status(block: () -> HostStatus?) { bStatus = block() ?: HostStatus.NON_RESPONSIVE }
+        private var bStatus: VdsStatus? = VdsStatus.non_responsive; fun status(block: () -> VdsStatus?) { bStatus = block() ?: VdsStatus.non_responsive }
         private var bTransparentPage: Boolean = false; fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
         private var bVmMigratingCnt: Int = 0; fun vmMigratingCnt(block: () -> Int?) { bVmMigratingCnt = block() ?: 0 }
         private var bVgpu: String = ""; fun vgpu(block: () -> String?) { bVgpu = block() ?: "" }
@@ -225,7 +230,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         id { host.id() }
         name { host.name() }
         comment { host.comment() }
-        status { host.status() }
+        status { host.status().toVdsStatus() }
         ksm { host.ksm().enabled() }
         hostedEngine {
 			if (host.hostedEnginePresent())
@@ -262,7 +267,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         id { host.id() }
         name { host.name() }
         comment { host.comment() }
-        status { host.status() }
+        status { host.status().toVdsStatus() }
         address { host.address() }
         hostedEngine { if (host.hostedEnginePresent()) host.hostedEngine().toHostedEngineVo() else null }
         iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
@@ -303,7 +308,7 @@ fun Host.toNetworkHostMenu(conn: Connection, networkId: String): HostVo {
     return HostVo.builder {
         id { host.id() }
         name { host.name() }
-        status { host.status() }
+        status { host.status().toVdsStatus() }
         clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
         dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
         hostNicVos { filteredNics.toSlaveHostNicVos(conn) }
@@ -320,7 +325,7 @@ fun Host.toNetworkDisConnectedHostMenu(): HostVo {
     return HostVo.builder {
         id { host.id() }
         name { host.name() }
-        status { host.status() }
+        status { host.status().toVdsStatus() }
         clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
         dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
     }
@@ -356,7 +361,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
         spmPriority { host.spm().priorityAsInteger() }
         spmStatus { host.spm().status().toVdsSpmStatus() }
 		ssh { host.ssh().toSshVo() }
-        status { host.status() }
+        status { host.status().toVdsStatus() }
         transparentPage { host.transparentHugePages().enabled() }
         vmSizeVo { host.findVmCntFromHost() }
         vmMigratingCnt { host.summary().migratingAsInteger() }

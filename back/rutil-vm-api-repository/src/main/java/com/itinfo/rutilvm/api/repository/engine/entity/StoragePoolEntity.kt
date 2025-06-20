@@ -75,7 +75,15 @@ class StoragePoolEntity(
 		insertable=false,
 		updatable=false
 	)
-	val clusters: Set<ClusterViewEntity>? = emptySet()
+	val clusters: Set<ClusterViewEntity>? = emptySet(),
+	/*@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="storage_pool_id",
+		referencedColumnName="id",
+		insertable=false,
+		updatable=false
+	)
+	val hosts: Set<VdsEntity>? = emptySet()*/
 ) : Serializable {
 	val status: StoragePoolStatus						get() = StoragePoolStatus.forValue(_status)
 	val storagePoolFormatType: StorageFormatType		get() = StorageFormatType.forValue(_storagePoolFormatType)

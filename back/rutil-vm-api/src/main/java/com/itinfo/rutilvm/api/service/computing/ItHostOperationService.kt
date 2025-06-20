@@ -152,7 +152,6 @@ class HostOperationServiceImpl(
 				remoteConnMgmt?.rebootSystem(vdcOption.optionValue)
 			else	remoteConnMgmt?.rebootSystem()
 		log.info("restart ... hostId: {}, vdcOption: {}, vdsDynamic: {}", hostId, vdcOption, vdsDynamic2Update)
-		log.info("restart ... hostId: {}, vdcOption: {}, vdsDynamic2: {}", hostId, vdcOption, vdsDynamic2Update)
 
 		vdsDynamics.save(vdsDynamic2Update)
 		// TODO: 이 명령어를 실행 후 최근 작업 및 다른 곳에서 추이를 확인 할 수 있는 기능 필요
@@ -185,9 +184,8 @@ class HostOperationServiceImpl(
     override fun globalHaActivate(hostId: String): Boolean {
         log.info("globalHaActivate ... hostId: {}", hostId)
 		val resHost2EnableGlobalHA: HostVo? = iHost.findOne(hostId)
-		if (resHost2EnableGlobalHA?.status == HostStatus.DOWN) {
+		if (resHost2EnableGlobalHA?.status == VdsStatus.down) {
 			throw ErrorPattern.HOST_INACTIVE.toError()
-			// throw Result.failure(Error("resHost2EnableGobalHA 실패 ... ${resHost2EnableGobalHA.name()}가 비활성화 된 상태"))
 		}
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2EnableGlobalHA?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
 		val res: Result<Boolean>? = remoteConnMgmt?.activateGlobalHA()
@@ -199,9 +197,8 @@ class HostOperationServiceImpl(
         log.info("globalHaDeactivate ... hostId: {}", hostId)
         // val res: Result<Boolean> = conn.deactiveGlobalHaFromHost(hostId)
 		val resHost2EnableGlobalHA: HostVo? = iHost.findOne(hostId)
-		if (resHost2EnableGlobalHA?.status == HostStatus.DOWN) {
+		if (resHost2EnableGlobalHA?.status == VdsStatus.down) {
 			throw ErrorPattern.HOST_INACTIVE.toError()
-			// throw Result.failure(Error("resHost2EnableGobalHA 실패 ... ${resHost2EnableGobalHA.name()}가 비활성화 된 상태"))
 		}
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2EnableGlobalHA?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
 		val res: Result<Boolean>? = remoteConnMgmt?.deactivateGlobalHA()

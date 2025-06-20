@@ -12,6 +12,7 @@ import org.ovirt.engine.sdk4.types.Display
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.FipsMode
 import org.ovirt.engine.sdk4.types.FirewallType
+import org.ovirt.engine.sdk4.types.HostStatus
 import org.ovirt.engine.sdk4.types.InheritableBoolean
 import org.ovirt.engine.sdk4.types.LogMaxMemoryUsedThresholdType
 import org.ovirt.engine.sdk4.types.LogSeverity
@@ -135,8 +136,9 @@ fun VmOsType?.toOsTypeCode(): String = when(this@toOsTypeCode) {
 	VmOsType.windows_10x64,
 	VmOsType.windows_11,
 	VmOsType.windows_2008r2x64,
-	VmOsType.windows_2012,
+	VmOsType.windows_2012x64,
 	VmOsType.windows_2012r2x64,
+	VmOsType.windows_2012,
 	VmOsType.sles_11,
 	VmOsType.ubuntu_12_04,
 	VmOsType.ubuntu_12_10,
@@ -261,6 +263,9 @@ fun QuotaModeType.toQuotaEnforcementType(): QuotaEnforcementType = QuotaEnforcem
 
 fun SpmStatus.toVdsSpmStatus(): VdsSpmStatus = VdsSpmStatus.forCode(this@toVdsSpmStatus.value())
 fun VdsSpmStatus.toSpmStatus(): SpmStatus = SpmStatus.fromValue(this@toSpmStatus.code)
+
+fun HostStatus.toVdsStatus(): VdsStatus = VdsStatus.forCode(this@toVdsStatus.value())
+fun VdsStatus.toHostStatus(): HostStatus = HostStatus.fromValue(this@toHostStatus.code)
 
 fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior = VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
 fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())

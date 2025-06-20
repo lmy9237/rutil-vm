@@ -11,14 +11,16 @@ interface StoragePoolRepository: JpaRepository<StoragePoolEntity, UUID> {
 
 	@Query("""
 SELECT DISTINCT sp FROM StoragePoolEntity sp
-LEFT JOIN FETCH sp.clusters
+LEFT JOIN FETCH sp.clusters AS c
+LEFT JOIN FETCH c.hosts AS h
 WHERE 1=1
 """)
 	fun findAllWithClusters(): List<StoragePoolEntity>
 
 	@Query("""
 SELECT DISTINCT sp FROM StoragePoolEntity sp
-LEFT JOIN FETCH sp.clusters
+LEFT JOIN FETCH sp.clusters AS c
+LEFT JOIN FETCH c.hosts AS h
 WHERE 1=1
 AND sp.id = :storagePoolId
 """)

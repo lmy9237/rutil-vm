@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.service
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.toCountByStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 import com.itinfo.rutilvm.api.service.computing.ItHostService
@@ -97,8 +98,8 @@ class DashboardServiceImpl(
 		log.info("getHosts ... type: $type")
 		return host.findAll().count {
 			when (type) {
-				"up" -> it.status == HostStatus.UP
-				"down" -> it.status != HostStatus.UP
+				"up" -> it.status == VdsStatus.up
+				"down" -> it.status != VdsStatus.up
 				else -> true
 			}
 		}

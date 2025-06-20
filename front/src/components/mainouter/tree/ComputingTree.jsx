@@ -161,7 +161,7 @@ const ComputingTree = ({}) => {
                                     ? rvi16Wrench("currentColor")
                                     : host?.status?.toUpperCase() === "PREPARING_FOR_MAINTENANCE" || 
                                       host?.status?.toUpperCase() === "REBOOT"
-                                      ? rvi16Refresh("currentColor") // (질문)TODO: 새로 디자인 된 아이콘 추가 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
+                                      ? rvi16Refresh("currentColor") // (질문) TODO: 새 아이콘 디자인 필요 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
                                       : rvi16Host("currentColor")
                               }
                               isSelected={() => location.pathname.includes(host?.id)}

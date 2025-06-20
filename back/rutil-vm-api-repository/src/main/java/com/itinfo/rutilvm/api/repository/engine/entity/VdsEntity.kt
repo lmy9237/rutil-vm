@@ -34,7 +34,7 @@ class VdsEntity(
 
 	val hostName: String? = "",
 	val freeTextComment: String? = "",
-	val port: Int? = -1,
+	val port: Int? = 0,
 	val serverSslEnabled: Boolean? = true,
 	@Column(name="vds_type")
 	private val _vdsType: Int? = null,
@@ -56,42 +56,18 @@ class VdsEntity(
 	val physicalMemMb: Int? = 0,
 	val pendingVcpusCount: Int? = 0,
 	val pendingVmemSize: Int? = 0,
-
-	@Column(name = "mem_commited")
 	val memCommited: Int? = null,
-
-	@Column(name = "vm_active")
 	val vmActive: Int? = null,
-
-	@Column(name = "vm_count")
 	val vmCount: Int? = null,
-
-	@Column(name = "vm_migrating")
 	val vmMigrating: Int? = null,
-
-	@Column(name = "incoming_migrations")
 	val incomingMigrations: Int? = null,
-
-	@Column(name = "outgoing_migrations")
 	val outgoingMigrations: Int? = null,
-
-	@Column(name = "kernel_args")
 	val kernelArgs: String? = null,
-
-	@Column(name = "pretty_name")
 	val prettyName: String? = null,
-
-	@Column(name = "hosted_engine_configured")
 	val hostedEngineConfigured: Boolean? = null,
 
-	@Column(name = "vms_cores_count")
 	val vmsCoresCount: Int? = null,
-
-	@Column(name = "cpu_over_commit_time_stamp")
 	val cpuOverCommitTimeStamp: LocalDateTime? = null,
-
-	@Column(name = "max_vds_memory_over_commit")
-	val maxVdsMemoryOverCommit: Int? = null,
 
 	@Column(name = "net_config_dirty")
 	val netConfigDirty: Boolean? = null,
@@ -153,16 +129,10 @@ class VdsEntity(
 	@Column(name = "ksm_cpu_percent")
 	val ksmCpuPercent: Int? = null,
 
-	@Column(name = "ksm_pages")
 	val ksmPages: Long? = null,
-
-	@Column(name = "ksm_state")
 	val ksmState: Boolean? = null,
 
-	@Column(name = "cpu_flags")
 	val cpuFlags: String? = null,
-
-	@Column(name = "cpu_sockets")
 	val cpuSockets: Int? = null,
 
 	@Column(name = "vds_spm_id")
@@ -220,7 +190,7 @@ class VdsEntity(
 	val anonymousHugepages: Int? = null,
 
 	@Column(name = "hugepages")
-	val hugepages: Int? = null,
+	val hugepages: String? = "",
 
 	@Column(name = "non_operational_reason")
 	val nonOperationalReason: Int? = null,
@@ -264,7 +234,7 @@ class VdsEntity(
 
 	@Column(name = "supported_rng_sources")
 	val supportedRngSources: String? = null,
-	val sshPort: BigInteger? = BigInteger.ZERO,
+	val sshPort: Int? = null,
 	val sshUsername: String? = null,
 
 	val haScore: Int? = null,
@@ -273,18 +243,12 @@ class VdsEntity(
 	val haGlobalMaintenance: Boolean? = null,
 	val haLocalMaintenance: Boolean? = null,
 
-	@Column(name = "disable_auto_pm")
 	val disableAutoPm: Boolean? = null,
-
-	@Column(name = "controlled_by_pm_policy")
 	val controlledByPmPolicy: Boolean? = null,
-
-	@Column(name = "boot_time")
 	val bootTime: Long? = null,
 
 	@Column(name = "kdump_status")
 	val kdumpStatus: Int? = null,
-
 	@Column(name = "selinux_enforce_mode")
 	private val _selinuxEnforceMode: Int? = null,
 
@@ -371,11 +335,8 @@ class VdsEntity(
 
 	@Column(name = "cd_change_pdiv")
 	val cdChangePdiv: String? = null,
-
-	@Column(name = "ovn_configured")
 	val ovnConfigured: Boolean? = null,
 
-	@Column(name = "ssh_public_key")
 	val sshPublicKey: String? = null,
 	val cpuTopology: String? = null,
 	val vdsmCpusAffinity: String? = null,
@@ -443,7 +404,6 @@ class VdsEntity(
 		private var bHostedEngineConfigured: Boolean? = null; fun hostedEngineConfigured(block: () -> Boolean?) { bHostedEngineConfigured = block() }
 		private var bVmsCoresCount: Int? = null; fun vmsCoresCount(block: () -> Int?) { bVmsCoresCount = block() }
 		private var bCpuOverCommitTimeStamp: LocalDateTime? = null; fun cpuOverCommitTimeStamp(block: () -> LocalDateTime?) { bCpuOverCommitTimeStamp = block() }
-		private var bMaxVdsMemoryOverCommit: Int? = null; fun maxVdsMemoryOverCommit(block: () -> Int?) { bMaxVdsMemoryOverCommit = block() }
 		private var bNetConfigDirty: Boolean? = null; fun netConfigDirty(block: () -> Boolean?) { bNetConfigDirty = block() }
 		private var bReservedMem: Int? = null; fun reservedMem(block: () -> Int?) { bReservedMem = block() }
 		private var bGuestOverhead: Int? = null; fun guestOverhead(block: () -> Int?) { bGuestOverhead = block() }
@@ -492,7 +452,7 @@ class VdsEntity(
 		private var bIscsiInitiatorName: String? = null; fun iscsiInitiatorName(block: () -> String?) { bIscsiInitiatorName = block() }
 		private var bTransparentHugepagesState: Int? = null; fun transparentHugepagesState(block: () -> Int?) { bTransparentHugepagesState = block() }
 		private var bAnonymousHugepages: Int? = null; fun anonymousHugepages(block: () -> Int?) { bAnonymousHugepages = block() }
-		private var bHugepages: Int? = null; fun hugepages(block: () -> Int?) { bHugepages = block() }
+		private var bHugepages: String? = ""; fun hugepages(block: () -> String?) { bHugepages = block() ?: "" }
 		private var bNonOperationalReason: Int? = null; fun nonOperationalReason(block: () -> Int?) { bNonOperationalReason = block() }
 		private var bRecoverable: Boolean? = null; fun recoverable(block: () -> Boolean?) { bRecoverable = block() }
 		private var bSshkeyfingerprint: String? = null; fun sshkeyfingerprint(block: () -> String?) { bSshkeyfingerprint = block() }
@@ -507,7 +467,7 @@ class VdsEntity(
 		private var bHbas: String? = null; fun hbas(block: () -> String?) { bHbas = block() }
 		private var bSupportedEmulatedMachines: String? = null; fun supportedEmulatedMachines(block: () -> String?) { bSupportedEmulatedMachines = block() }
 		private var bSupportedRngSources: String? = null; fun supportedRngSources(block: () -> String?) { bSupportedRngSources = block() }
-		private var bSshPort: BigInteger? = BigInteger.ZERO; fun sshPort(block: () -> BigInteger?) { bSshPort = block() ?: BigInteger.ZERO }
+		private var bSshPort: Int? = null; fun sshPort(block: () -> Int?) { bSshPort = block() }
 		private var bSshUsername: String? = null; fun sshUsername(block: () -> String?) { bSshUsername = block() }
 		private var bHaScore: Int? = null; fun haScore(block: () -> Int?) { bHaScore = block() }
 		private var bHaConfigured: Boolean? = null; fun haConfigured(block: () -> Boolean?) { bHaConfigured = block() }
@@ -554,7 +514,7 @@ class VdsEntity(
 		private var bStoragePool: StoragePoolEntity? = null; fun storagePool(block: () -> StoragePoolEntity?) { bStoragePool = block() }
 		private var bCluster: ClusterViewEntity? = null; fun cluster(block: () -> ClusterViewEntity?) { bCluster = block() }
 
-		fun build(): VdsEntity = VdsEntity(bVdsId, bVdsName, bVdsUniqueId, bHostName, bFreeTextComment, bPort, bServerSslEnabled, bVdsType, bPmEnabled, bPmProxyPreferences, bPmDetectKdump, bVdsSpmPriority, bHooks, bStatus, bExternalStatus, bCpuCores, bCpuThreads, bCpuModel, bCpuSpeedMh, bIfTotalSpeed, bKvmEnabled, bPhysicalMemMb, bPendingVcpusCount, bPendingVmemSize, bMemCommited, bVmActive, bVmCount, bVmMigrating, bIncomingMigrations, bOutgoingMigrations, bKernelArgs, bPrettyName, bHostedEngineConfigured, bVmsCoresCount, bCpuOverCommitTimeStamp, bMaxVdsMemoryOverCommit, bNetConfigDirty,  bReservedMem, bGuestOverhead, bRpmVersion, bSoftwareVersion, bVersionName, bBuildName, bPreviousStatus, bCpuIdle, bCpuLoad, bCpuSys, bCpuUser, bUsageMemPercent, bUsageCpuPercent, bUsageNetworkPercent, bMemFree, bMemShared, bSwapFree, bSwapTotal, bKsmCpuPercent, bKsmPages, bKsmState, bCpuFlags, bCpuSockets, bVdsSpmId, bOtpValidity, bSpmStatus, bSupportedClusterLevels, bSupportedEngines, bHostOs, bKvmVersion, bLibvirtVersion, bSpiceVersion, bGlusterVersion, bLibrbd1Version, bGlusterfsCliVersion, bOpenvswitchVersion, bNmstateVersion, bKernelVersion, bIscsiInitiatorName, bTransparentHugepagesState, bAnonymousHugepages, bHugepages, bNonOperationalReason, bRecoverable, bSshkeyfingerprint, bHostProviderId, bHwManufacturer, bHwProductName, bHwVersion, bHwSerialNumber, bHwUuid, bHwFamily, bConsoleAddress, bHbas, bSupportedEmulatedMachines, bSupportedRngSources, bSshPort, bSshUsername, bHaScore, bHaConfigured, bHaActive, bHaGlobalMaintenance, bHaLocalMaintenance, bDisableAutoPm, bControlledByPmPolicy, bBootTime, bKdumpStatus, bSelinuxEnforceMode, bAutoNumaBalancing, bIsNumaSupported, bOnlineCpus, bMaintenanceReason, bIsUpdateAvailable, bIsHostdevEnabled, bIsHostedEngineHost, bKernelCmdline, bLastStoredKernelCmdline, bFencingEnabled, bGlusterPeerStatus, bInFenceFlow, bReinstallRequired, bKernelFeatures, bVncEncryptionEnabled, bVgpuPlacement, bConnectorInfo, bBackupEnabled, bColdBackupEnabled, bClearBitmapsEnabled, bSupportedDomainVersions, bSupportedBlockSize, bClusterSmtDisabled, bTscFrequency, bTscScaling, bFipsEnabled, bBootUuid, bCdChangePdiv, bOvnConfigured, bSshPublicKey, bCpuTopology, bVdsmCpusAffinity, bStoragePool, bCluster)
+		fun build(): VdsEntity = VdsEntity(bVdsId, bVdsName, bVdsUniqueId, bHostName, bFreeTextComment, bPort, bServerSslEnabled, bVdsType, bPmEnabled, bPmProxyPreferences, bPmDetectKdump, bVdsSpmPriority, bHooks, bStatus, bExternalStatus, bCpuCores, bCpuThreads, bCpuModel, bCpuSpeedMh, bIfTotalSpeed, bKvmEnabled, bPhysicalMemMb, bPendingVcpusCount, bPendingVmemSize, bMemCommited, bVmActive, bVmCount, bVmMigrating, bIncomingMigrations, bOutgoingMigrations, bKernelArgs, bPrettyName, bHostedEngineConfigured, bVmsCoresCount, bCpuOverCommitTimeStamp, bNetConfigDirty,  bReservedMem, bGuestOverhead, bRpmVersion, bSoftwareVersion, bVersionName, bBuildName, bPreviousStatus, bCpuIdle, bCpuLoad, bCpuSys, bCpuUser, bUsageMemPercent, bUsageCpuPercent, bUsageNetworkPercent, bMemFree, bMemShared, bSwapFree, bSwapTotal, bKsmCpuPercent, bKsmPages, bKsmState, bCpuFlags, bCpuSockets, bVdsSpmId, bOtpValidity, bSpmStatus, bSupportedClusterLevels, bSupportedEngines, bHostOs, bKvmVersion, bLibvirtVersion, bSpiceVersion, bGlusterVersion, bLibrbd1Version, bGlusterfsCliVersion, bOpenvswitchVersion, bNmstateVersion, bKernelVersion, bIscsiInitiatorName, bTransparentHugepagesState, bAnonymousHugepages, bHugepages, bNonOperationalReason, bRecoverable, bSshkeyfingerprint, bHostProviderId, bHwManufacturer, bHwProductName, bHwVersion, bHwSerialNumber, bHwUuid, bHwFamily, bConsoleAddress, bHbas, bSupportedEmulatedMachines, bSupportedRngSources, bSshPort, bSshUsername, bHaScore, bHaConfigured, bHaActive, bHaGlobalMaintenance, bHaLocalMaintenance, bDisableAutoPm, bControlledByPmPolicy, bBootTime, bKdumpStatus, bSelinuxEnforceMode, bAutoNumaBalancing, bIsNumaSupported, bOnlineCpus, bMaintenanceReason, bIsUpdateAvailable, bIsHostdevEnabled, bIsHostedEngineHost, bKernelCmdline, bLastStoredKernelCmdline, bFencingEnabled, bGlusterPeerStatus, bInFenceFlow, bReinstallRequired, bKernelFeatures, bVncEncryptionEnabled, bVgpuPlacement, bConnectorInfo, bBackupEnabled, bColdBackupEnabled, bClearBitmapsEnabled, bSupportedDomainVersions, bSupportedBlockSize, bClusterSmtDisabled, bTscFrequency, bTscScaling, bFipsEnabled, bBootUuid, bCdChangePdiv, bOvnConfigured, bSshPublicKey, bCpuTopology, bVdsmCpusAffinity, bStoragePool, bCluster)
 	}
 
 	companion object {

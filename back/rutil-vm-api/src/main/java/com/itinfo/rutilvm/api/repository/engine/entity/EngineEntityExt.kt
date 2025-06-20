@@ -5,6 +5,8 @@ import com.itinfo.rutilvm.api.model.auth.UserSessionVo
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
+import com.itinfo.rutilvm.api.model.computing.HostHwVo
+import com.itinfo.rutilvm.api.model.computing.HostSwVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
 import com.itinfo.rutilvm.api.model.computing.HostedEngineVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
@@ -50,6 +52,7 @@ import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.data.domain.Page
+import java.util.Date
 
 //region: AuditLogEntity
 fun AuditLogEntity.toEventVo(): EventVo = EventVo.builder {
@@ -214,7 +217,7 @@ fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.
 	ballooningEnabled { this@toClusterVoFromClusterViewEntity.enableBalloon }
 	biosType { this@toClusterVoFromClusterViewEntity.biosType }
 	cpuArc { this@toClusterVoFromClusterViewEntity.architecture }
-	// cpuType { this@toClusterVoFromClusterViewEntity }
+	cpuType { this@toClusterVoFromClusterViewEntity.cpuName }
 	errorHandling { this@toClusterVoFromClusterViewEntity.migrateOnError }
 	fipsMode { this@toClusterVoFromClusterViewEntity.fipsMode }
 	firewallType { this@toClusterVoFromClusterViewEntity.firewallType }
@@ -232,7 +235,7 @@ fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.
 	virtService { this@toClusterVoFromClusterViewEntity.virtService }
 	networkProvider { this@toClusterVoFromClusterViewEntity.defaultNetworkProviderId != null }
 	dataCenterVo { this@toClusterVoFromClusterViewEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
-	// hostVos { this@toClusterVoFromClusterViewEntity.hosts?.toHostVosFromVdsEntities() }
+	hostVos { this@toClusterVoFromClusterViewEntity.hosts?.toHostVosFromVdsEntities() }
 	// networkVo { this@toClusterVoFromClusterViewEntity }
 	// hostSize { this@toClusterVoFromClusterViewEntity.hosts.size ?: 0 }
 	// required { this@toClusterVoFromClusterViewEntity }
@@ -407,14 +410,65 @@ fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
 		SshVo.builder {
 			id { this@toHostVoFromVdsEntity.sshUsername }
 			name { this@toHostVoFromVdsEntity.sshUsername }
-			port {  this@toHostVoFromVdsEntity.sshPort }
+			port {  this@toHostVoFromVdsEntity.sshPort?.toBigInteger() }
 			fingerprint { this@toHostVoFromVdsEntity.sshkeyfingerprint }
 			publicKey { this@toHostVoFromVdsEntity.sshPublicKey }
 			// rootPassword { this@toHostVoFromVdsEntity.sshPort }
 			// authenticationMethod {  }
 		}
 	}
+	status { this@toHostVoFromVdsEntity.vdsStatus }
 	// transparentPage { this@toHostVoFromVdsEntity.transparentHugepagesState }
+	vmMigratingCnt { this@toHostVoFromVdsEntity.vmMigrating }
+	// vgpu { this@toHostVoFromVdsEntity.vgpuPlacement }
+	memoryTotal { this@toHostVoFromVdsEntity.physicalMemMb?.toBigInteger() } // TODO: 값 확인필요
+	memoryUsed { this@toHostVoFromVdsEntity.memCommited?.toBigInteger() } // TODO: 값 확인필요
+	memoryFree { this@toHostVoFromVdsEntity.memFree?.toBigInteger() }
+	// memoryMax { this@toHostVoFromVdsEntity }
+	memoryShared { this@toHostVoFromVdsEntity.memShared?.toBigInteger() }
+	swapTotal { this@toHostVoFromVdsEntity.swapTotal?.toBigInteger() }
+	swapFree { this@toHostVoFromVdsEntity.swapFree?.toBigInteger() }
+	// hugePage2048Free { }
+	// hugePage2048Total { }
+	// hugePage1048576Free { }
+	// hugePage1048576Total { }
+	bootingTime { Date(this@toHostVoFromVdsEntity.bootTime ?: 0) }
+	hostHwVo {
+		HostHwVo.builder {
+			manufacturer { this@toHostVoFromVdsEntity.hwManufacturer }
+			family { this@toHostVoFromVdsEntity.hwFamily }
+			productName { this@toHostVoFromVdsEntity.hwProductName }
+			serialNum { this@toHostVoFromVdsEntity.hwSerialNumber }
+			uuid { this@toHostVoFromVdsEntity.hwUuid }
+			hwVersion { this@toHostVoFromVdsEntity.hwVersion }
+			cpuName { this@toHostVoFromVdsEntity.cpuModel }
+			cpuType { this@toHostVoFromVdsEntity.cluster?.cpuName }
+			cpuTopologyCore { this@toHostVoFromVdsEntity.cpuCores }
+			cpuTopologySocket { this@toHostVoFromVdsEntity.cpuSockets }
+			cpuTopologyThread { this@toHostVoFromVdsEntity.cpuThreads }
+			// cpuTopologyAll { this@toHostVoFromVdsEntity.cpuTopology }
+			// cpuOnline { this@toHostVoFromVdsEntity.onlineCpus } // JSON 값임으로 파싱 필요
+		}
+	}
+	hostSwVo {
+		HostSwVo.builder {
+			osVersion { this@toHostVoFromVdsEntity.hostOs }
+			osInfo { this@toHostVoFromVdsEntity.prettyName } // oVirt Node 4.5.5
+			kernalVersion { this@toHostVoFromVdsEntity.kernelVersion }
+			kvmVersion { this@toHostVoFromVdsEntity.kvmVersion }
+			libvirtVersion { this@toHostVoFromVdsEntity.libvirtVersion }
+			vdsmVersion { this@toHostVoFromVdsEntity.rpmVersion }
+			spiceVersion { this@toHostVoFromVdsEntity.spiceVersion }
+			glustersfsVersion { this@toHostVoFromVdsEntity.glusterVersion }
+			// cephVersion { this@toHostVoFromVdsEntity }
+			openVswitchVersion { this@toHostVoFromVdsEntity.openvswitchVersion }
+			nmstateVersion { this@toHostVoFromVdsEntity.nmstateVersion }
+		}
+	}
+	clusterVo { this@toHostVoFromVdsEntity.cluster?.toIdentifiedVoFromClusterViewEntity() }
+	dataCenterVo { this@toHostVoFromVdsEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+
+	// usageDto { }
 }
 
 fun Collection<VdsEntity>.toHostVosFromVdsEntities(): List<HostVo> =

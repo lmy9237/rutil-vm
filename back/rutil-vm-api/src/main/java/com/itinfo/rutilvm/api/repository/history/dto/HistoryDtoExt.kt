@@ -23,7 +23,6 @@ import org.ovirt.engine.sdk4.types.Statistic
 
 import java.time.LocalDateTime
 
-
 //region: HostUsageDto
 fun HostSamplesHistoryEntity.toHostUsageDto(): HostUsageDto {
     return HostUsageDto.builder {

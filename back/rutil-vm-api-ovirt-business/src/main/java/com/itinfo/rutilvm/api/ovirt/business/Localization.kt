@@ -310,6 +310,48 @@ class Localization {
 		}
 		//endregion: SwitchTypeL
 
+		//region: VdsStatusL
+		object VdsStatusL {
+			object KR {
+				val unassigned						= locKr?.get(VdsStatus.unassigned.localizationKey)?.toString() ?: ""
+				val down							= locKr?.get(VdsStatus.down.localizationKey)?.toString() ?: ""
+				val maintenance                     = locKr?.get(VdsStatus.maintenance.localizationKey)?.toString() ?: ""
+				val up                              = locKr?.get(VdsStatus.up.localizationKey)?.toString() ?: ""
+				val non_responsive                  = locKr?.get(VdsStatus.non_responsive.localizationKey)?.toString() ?: ""
+				val error                           = locKr?.get(VdsStatus.error.localizationKey)?.toString() ?: ""
+				val installing                      = locKr?.get(VdsStatus.installing.localizationKey)?.toString() ?: ""
+				val install_failed                  = locKr?.get(VdsStatus.install_failed.localizationKey)?.toString() ?: ""
+				val reboot                          = locKr?.get(VdsStatus.reboot.localizationKey)?.toString() ?: ""
+				val preparing_for_maintenance       = locKr?.get(VdsStatus.preparing_for_maintenance.localizationKey)?.toString() ?: ""
+				val non_operational                 = locKr?.get(VdsStatus.non_operational.localizationKey)?.toString() ?: ""
+				val pending_approval                = locKr?.get(VdsStatus.pending_approval.localizationKey)?.toString() ?: ""
+				val initializing                    = locKr?.get(VdsStatus.initializing.localizationKey)?.toString() ?: ""
+				val connecting                      = locKr?.get(VdsStatus.connecting.localizationKey)?.toString() ?: ""
+				val installing_os                   = locKr?.get(VdsStatus.installing_os.localizationKey)?.toString() ?: ""
+				val kdumping                        = locKr?.get(VdsStatus.kdumping.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val unassigned						= locEn?.get(VdsStatus.unassigned.localizationKey)?.toString() ?: ""
+				val down							= locEn?.get(VdsStatus.down.localizationKey)?.toString() ?: ""
+				val maintenance                     = locEn?.get(VdsStatus.maintenance.localizationKey)?.toString() ?: ""
+				val up                              = locEn?.get(VdsStatus.up.localizationKey)?.toString() ?: ""
+				val non_responsive                  = locEn?.get(VdsStatus.non_responsive.localizationKey)?.toString() ?: ""
+				val error                           = locEn?.get(VdsStatus.error.localizationKey)?.toString() ?: ""
+				val installing                      = locEn?.get(VdsStatus.installing.localizationKey)?.toString() ?: ""
+				val install_failed                  = locEn?.get(VdsStatus.install_failed.localizationKey)?.toString() ?: ""
+				val reboot                          = locEn?.get(VdsStatus.reboot.localizationKey)?.toString() ?: ""
+				val preparing_for_maintenance       = locEn?.get(VdsStatus.preparing_for_maintenance.localizationKey)?.toString() ?: ""
+				val non_operational                 = locEn?.get(VdsStatus.non_operational.localizationKey)?.toString() ?: ""
+				val pending_approval                = locEn?.get(VdsStatus.pending_approval.localizationKey)?.toString() ?: ""
+				val initializing                    = locEn?.get(VdsStatus.initializing.localizationKey)?.toString() ?: ""
+				val connecting                      = locEn?.get(VdsStatus.connecting.localizationKey)?.toString() ?: ""
+				val installing_os                   = locEn?.get(VdsStatus.installing_os.localizationKey)?.toString() ?: ""
+				val kdumping                        = locEn?.get(VdsStatus.kdumping.localizationKey)?.toString() ?: ""
+
+			}
+		}
+		//endregion: VdsStatusL
+
 		//region: VdsSpmStatusL
 		object VdsSpmStatusL {
 			object KR {
@@ -559,6 +601,26 @@ class Localization {
 	fun findLocalizedName4SwitchType(type: SwitchTypeB, loc: String = "kr"): String = when(type) {
 		SwitchTypeB.legacy -> 		if (loc == "kr") SwitchTypeL.KR.legacy else SwitchTypeL.EN.legacy
 		SwitchTypeB.ovs ->			if (loc == "kr") SwitchTypeL.KR.ovs else SwitchTypeL.EN.ovs
+	}
+
+	fun findLocalizedName4VdsStatus(type: VdsStatus, loc: String = "kr"): String = when(type) {
+		VdsStatus.unassigned ->                     if (loc == "kr") VdsStatusL.KR.unassigned else VdsStatusL.EN.unassigned
+		VdsStatus.down ->                           if (loc == "kr") VdsStatusL.KR.down else VdsStatusL.EN.down
+		VdsStatus.maintenance ->                    if (loc == "kr") VdsStatusL.KR.maintenance else VdsStatusL.EN.maintenance
+		VdsStatus.up ->                             if (loc == "kr") VdsStatusL.KR.up else VdsStatusL.EN.up
+		VdsStatus.non_responsive ->                 if (loc == "kr") VdsStatusL.KR.non_responsive else VdsStatusL.EN.non_responsive
+		VdsStatus.error ->                          if (loc == "kr") VdsStatusL.KR.error else VdsStatusL.EN.error
+		VdsStatus.installing ->                     if (loc == "kr") VdsStatusL.KR.installing else VdsStatusL.EN.installing
+		VdsStatus.install_failed ->                 if (loc == "kr") VdsStatusL.KR.install_failed else VdsStatusL.EN.install_failed
+		VdsStatus.reboot ->							if (loc == "kr") VdsStatusL.KR.reboot else VdsStatusL.EN.reboot
+		VdsStatus.preparing_for_maintenance ->		if (loc == "kr") VdsStatusL.KR.preparing_for_maintenance else VdsStatusL.EN.preparing_for_maintenance
+		VdsStatus.non_operational ->                if (loc == "kr") VdsStatusL.KR.non_operational else VdsStatusL.EN.non_operational
+		VdsStatus.pending_approval ->               if (loc == "kr") VdsStatusL.KR.pending_approval else VdsStatusL.EN.pending_approval
+		VdsStatus.initializing ->                   if (loc == "kr") VdsStatusL.KR.initializing else VdsStatusL.EN.initializing
+		VdsStatus.connecting ->                     if (loc == "kr") VdsStatusL.KR.connecting else VdsStatusL.EN.connecting
+		VdsStatus.installing_os ->                  if (loc == "kr") VdsStatusL.KR.installing_os else VdsStatusL.EN.installing_os
+		VdsStatus.kdumping ->                       if (loc == "kr") VdsStatusL.KR.kdumping else VdsStatusL.EN.kdumping
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
 	}
 
 	fun findLocalizedName4VdsSpmStatus(type: VdsSpmStatus, loc: String = "kr"): String = when(type) {

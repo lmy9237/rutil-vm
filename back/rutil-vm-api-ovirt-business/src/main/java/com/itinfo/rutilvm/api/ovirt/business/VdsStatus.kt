@@ -6,8 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
  * [VdsStatus]
  * 호스트 상태 값 유형
  *
- * [VdsStatus.Unassigned]
- * [VdsStatus.Down]
+ * @author 이찬희 (@chanhi2000)
  */
 enum class VdsStatus(
 	override val value: Int,
@@ -56,6 +55,15 @@ enum class VdsStatus(
 				this != installing_os &&
 				this != down &&
 				this != kdumping
+
+	val localizationKey: String
+		get() = "${VdsStatus::class.java.simpleName}.${this.name}"
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val en: String
+		get() = loc.findLocalizedName4VdsStatus(this, "en")
+	val kr: String
+		get() = loc.findLocalizedName4VdsStatus(this, "kr")
 
 	companion object {
 		private val valueMapping: MutableMap<Int, VdsStatus> = ConcurrentHashMap<Int, VdsStatus>()

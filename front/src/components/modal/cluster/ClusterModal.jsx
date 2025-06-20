@@ -249,7 +249,7 @@ const ClusterModal = ({
       {!["ppc64", "s390x", "undefined"].includes(formState.cpuArc) && (
         <LabelSelectOptions id="firmware-type" label="칩셋/펌웨어 유형"
           value={formState.biosType}
-          options={biosTypeFiltered}
+          options={biosTypeOptions}
           onChange={handleInputChange(setFormState, "biosType", validationToast)}
           placeholderLabel="자동 감지"
           placeholderValue="none"
