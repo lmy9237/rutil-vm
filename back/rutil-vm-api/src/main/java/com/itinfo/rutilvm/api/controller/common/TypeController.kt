@@ -86,6 +86,21 @@ class TypeController: BaseController(){
 		return ResponseEntity.ok(iType.findAllFipsModes())
 	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="마이그레이션 복구정책 유형 목록 조회",
+		notes="마이그레이션 복구정책 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("migrateOnError")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allMigrateOnErrors(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/migrateOnError ... 마이그레이션 복구정책 유형 목록")
+		return ResponseEntity.ok(iType.findAllFipsModes())
+	}
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -133,6 +148,38 @@ class TypeController: BaseController(){
 	fun allQuotaEnforcementTypes(): ResponseEntity<List<TypeVo>> {
 		log.info("/types/quotaEnforcementType ... 스토리지 풀 (a.k.a. 데이터센터) 쿼터 모드 목록")
 		return ResponseEntity.ok(iType.findAllQuotaEnforcementTypes())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="스토리지 도메인 유형 목록 조회",
+		notes="스토리지 도메인 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("storageDomainType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allStorageDomainTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/storageDomainType ... 스토리지 도메인 유형 목록")
+		return ResponseEntity.ok(iType.findAllStorageDomainTypes())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="네트워크 스위치 유형 목록 조회",
+		notes="네트워크 스위치 유형 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("switchType")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun allSwitchTypes(): ResponseEntity<List<TypeVo>> {
+		log.info("/types/switchType ... 네트워크 스위치 유형 목록")
+		return ResponseEntity.ok(iType.findAllSwitchTypes())
 	}
 
 	@ApiOperation(

@@ -28,9 +28,9 @@ const initialFormState = {
   name: "",
   description: "",
   comment: "",
-  cpuArc: "UNDEFINED",
+  cpuArc: "undefined",
   cpuType: "",
-  biosType: "CLUSTER_DEFAULT",
+  biosType: "cluster_default",
   errorHandling: "migrate",
 };
 
@@ -54,7 +54,7 @@ const ClusterModal = ({
   const [cpuOptions, setCpuOptions] = useState([]);
 
   const biosTypeFiltered = editMode
-    ? biosTypeOptions.filter(opt => opt.value !== "CLUSTER_DEFAULT")
+    ? biosTypeOptions.filter(opt => opt.value !== "cluster_default")
     : biosTypeOptions;
 
   const { mutate: addCluster } = useAddCluster(onClose, onClose);

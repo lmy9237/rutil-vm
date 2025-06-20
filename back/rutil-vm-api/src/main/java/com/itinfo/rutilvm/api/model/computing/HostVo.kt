@@ -7,6 +7,10 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.toHostNicVos
 import com.itinfo.rutilvm.api.model.network.toSlaveHostNicVos
+import com.itinfo.rutilvm.api.ovirt.business.SELinuxModeB
+import com.itinfo.rutilvm.api.ovirt.business.VdsSpmStatus
+import com.itinfo.rutilvm.api.ovirt.business.toSELinuxModeB
+import com.itinfo.rutilvm.api.ovirt.business.toVdsSpmStatus
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.repository.history.entity.HostConfigurationEntity
 import com.itinfo.rutilvm.common.toTimeElapsedKr
@@ -36,11 +40,11 @@ private val log = LoggerFactory.getLogger(HostVo::class.java)
  * @property iscsi [String]
  * @property kdump  [KdumpStatus]   kdumpStatus(disabled, enabled, unknown)
  * @property ksm [Boolean]  hosted engine
- * @property seLinux [SeLinuxMode] SeLinuxMode(disabled, enforcing, permissive)
+ * @property seLinux [SELinuxModeB] SeLinuxMode(disabled, enforcing, permissive)
  * @property hostedEngine [HostedEngineVo] Hosted Engine 이동 여부 [ 금장, 은장, null ]
  * @property hostedEngineVM [Boolean] Hosted Engine VM 여부 [ 금장, 은장, null ]
  * @property spmPriority [Int] spm 우선순위
- * @property spmStatus [SpmStatus] spm 상태
+ * @property spmStatus [VdsSpmStatus] spm 상태
  * @property status [HostStatus]
  * @property transparentPage [Boolean] 자동으로 페이지를 크게
  * @property vmTotalCnt [Int] summary
@@ -80,11 +84,11 @@ class HostVo (
     val iscsi: String = "",
     val kdump: KdumpStatus = KdumpStatus.UNKNOWN,
     val ksm: Boolean = false,
-    val seLinux: SeLinuxMode = SeLinuxMode.DISABLED,
+    val seLinux: SELinuxModeB? = SELinuxModeB.disabled,
 	val hostedEngine: HostedEngineVo? = null,
 	val hostedEngineVM: Boolean = false,
     val spmPriority: Int = 0,
-    val spmStatus: SpmStatus = SpmStatus.NONE,
+    val spmStatus: VdsSpmStatus? = VdsSpmStatus.none,
 	val ssh: SshVo? = SshVo(),
     val status: HostStatus = HostStatus.NON_RESPONSIVE,
     val transparentPage: Boolean = false,
@@ -114,8 +118,12 @@ class HostVo (
 	// val certificate: HCertificateVo = HCertificateVo(),
 
 ): Serializable {
-    override fun toString(): String =
-		gson.toJson(this)
+	val seLinuxCode: String				get() = seLinux?.code ?: SELinuxModeB.disabled.code
+	val seLinuxEn: String				get() = seLinux?.en ?: "N/A"
+	val seLinuxKr: String				get() = seLinux?.kr ?: "알 수 없음"
+	val spmStatusCode: String			get() = spmStatus?.code ?: VdsSpmStatus.none.code
+	val spmStatusEn: String				get() = spmStatus?.en ?: "N/A"
+	val spmStatusKr: String				get() = spmStatus?.kr ?: "알 수 없음"
 
 	val bootingTime: String				get() = ovirtDf.formatEnhanced(_bootingTime)
 	val uptimeInMilli: Long				get() = Date().time - (_bootingTime?.time ?: 0L)
@@ -137,8 +145,10 @@ class HostVo (
 			status == HostStatus.REBOOT
 		) "N/A" else uptimeInMilli.div(1000L).toTimeElapsedKr()
 
+	override fun toString(): String =
+		gson.toJson(this)
 
-    class Builder{
+    class Builder {
         private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
         private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: ""}
         private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: ""}
@@ -149,11 +159,11 @@ class HostVo (
         private var bIscsi: String = ""; fun iscsi (block: () -> String?) { bIscsi = block() ?: ""}
         private var bKdump: KdumpStatus = KdumpStatus.UNKNOWN; fun kdump (block: () -> KdumpStatus?) { bKdump = block() ?: KdumpStatus.UNKNOWN}
         private var bKsm: Boolean = false; fun ksm(block: () -> Boolean?) { bKsm = block() ?: false }
-        private var bSeLinux: SeLinuxMode = SeLinuxMode.DISABLED; fun seLinux(block: () -> SeLinuxMode?) { bSeLinux = block() ?: SeLinuxMode.DISABLED }
+        private var bSeLinux: SELinuxModeB? = SELinuxModeB.disabled; fun seLinux(block: () -> SELinuxModeB?) { bSeLinux = block() ?: SELinuxModeB.disabled }
         private var bHostedEngine: HostedEngineVo? = null; fun hostedEngine(block: () -> HostedEngineVo?) { bHostedEngine = block() }
         private var bHostedEngineVM: Boolean = false; fun hostedEngineVM(block: () -> Boolean?) { bHostedEngineVM = block() ?: false }
         private var bSpmPriority: Int = 0; fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
-        private var bSpmStatus: SpmStatus = SpmStatus.NONE; fun spmStatus(block: () -> SpmStatus?) { bSpmStatus = block() ?: SpmStatus.NONE }
+        private var bSpmStatus: VdsSpmStatus? = VdsSpmStatus.none; fun spmStatus(block: () -> VdsSpmStatus?) { bSpmStatus = block() ?: VdsSpmStatus.none }
         private var bSsh: SshVo? = null; fun ssh(block: () -> SshVo?) { bSsh = block() }
         private var bStatus: HostStatus = HostStatus.NON_RESPONSIVE; fun status(block: () -> HostStatus?) { bStatus = block() ?: HostStatus.NON_RESPONSIVE }
         private var bTransparentPage: Boolean = false; fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
@@ -230,7 +240,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
         usageDto { usageDto }
-        spmStatus { host.spm().status() }
+        spmStatus { host.spm().status().toVdsSpmStatus() }
 		bootingTime { Date(statistics.findBootTime() * 1000) }
     }
 }
@@ -258,7 +268,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
         kdump { host.kdumpStatus() }
         ksm { host.ksm().enabled() }
-        seLinux { host.seLinux().mode() }
+        seLinux { host.seLinux().mode().toSELinuxModeB() }
 		ssh { host.ssh().toSshVo() }
         spmPriority { host.spm().priorityAsInteger() }
         vgpu { host.vgpuPlacement().value() }
@@ -342,9 +352,9 @@ fun Host.toHostVo(conn: Connection): HostVo {
         iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
         kdump { host.kdumpStatus() }
         ksm { host.ksm().enabled() }
-        seLinux { host.seLinux().mode() }
+        seLinux { host.seLinux().mode().toSELinuxModeB() }
         spmPriority { host.spm().priorityAsInteger() }
-        spmStatus { host.spm().status() }
+        spmStatus { host.spm().status().toVdsSpmStatus() }
 		ssh { host.ssh().toSshVo() }
         status { host.status() }
         transparentPage { host.transparentHugePages().enabled() }

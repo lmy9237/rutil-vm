@@ -3,19 +3,18 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.api.model.computing.ClusterLevelVo
 
 import com.itinfo.rutilvm.common.LoggerDelegate
-import com.itinfo.rutilvm.api.error.toException
+
 import com.itinfo.rutilvm.api.model.computing.ClusterLevelByArchitectureVo
 import com.itinfo.rutilvm.api.model.computing.CpuTypeVo
 import com.itinfo.rutilvm.api.model.computing.toClusterLevelVo
 import com.itinfo.rutilvm.api.model.computing.toClusterLevelVos
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
+
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.Error
-import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.types.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import kotlin.Throws
 
@@ -43,7 +42,7 @@ interface ItClusterLevelService {
 	 * @return List<[ClusterLevelByArchitectureVo]> 클러스터 레벨 목록
 	 */
 	@Throws(Error::class)
-	fun findAllCpuTypesByArchitecture(): Map<Architecture?, List<CpuTypeVo>>
+	fun findAllCpuTypesByArchitecture(): Map<ArchitectureType?, List<CpuTypeVo>>
 	/**
 	 * [ItClusterLevelService.findOne]
 	 * 클러스터 레벨 상세정보
@@ -70,7 +69,7 @@ class ClusterLevelServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllCpuTypesByArchitecture(): Map<Architecture?, List<CpuTypeVo>> {
+	override fun findAllCpuTypesByArchitecture(): Map<ArchitectureType?, List<CpuTypeVo>> {
 		log.info("findAllCpuTypesByArchitecture ...")
 		val res: List<ClusterLevel> = conn.findAllClusterLevels()
 			.getOrDefault(emptyList())

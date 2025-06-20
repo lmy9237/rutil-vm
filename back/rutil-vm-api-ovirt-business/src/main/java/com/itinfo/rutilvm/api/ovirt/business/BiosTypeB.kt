@@ -1,12 +1,13 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
+import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
 enum class BiosTypeB(
 	override val value: Int,
 	val chipset: ChipsetType?,
 	val ovmf: Boolean,
-): Identifiable {
+): Identifiable, Serializable {
 	// CLUSTER_DEFAULT(-1, null, false),
 	cluster_default(0,  null, false),
 	i440fx_sea_bios(1,  ChipsetType.i440fx, false),
@@ -38,7 +39,7 @@ enum class BiosTypeB(
 				codeMapping[it.name] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int?): BiosTypeB = valueMapping[value] ?: cluster_default
+		@JvmStatic fun forValue(value: Int?): BiosTypeB = valueMapping[value ?: cluster_default.value] ?: cluster_default
 		@JvmStatic fun forCode(code: String?): BiosTypeB = codeMapping[code ?: cluster_default.code] ?: cluster_default
 		val allBiosTypes: List<BiosTypeB> = BiosTypeB.values().toList().filter {
 			it != cluster_default

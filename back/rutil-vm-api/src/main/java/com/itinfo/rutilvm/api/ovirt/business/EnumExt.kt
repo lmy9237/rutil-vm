@@ -13,17 +13,22 @@ import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.FipsMode
 import org.ovirt.engine.sdk4.types.FirewallType
 import org.ovirt.engine.sdk4.types.InheritableBoolean
+import org.ovirt.engine.sdk4.types.LogMaxMemoryUsedThresholdType
 import org.ovirt.engine.sdk4.types.LogSeverity
 import org.ovirt.engine.sdk4.types.MigrateOnError
+import org.ovirt.engine.sdk4.types.MigrationBandwidthAssignmentMethod
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
 import org.ovirt.engine.sdk4.types.OperatingSystem
 import org.ovirt.engine.sdk4.types.OperatingSystemInfo
 import org.ovirt.engine.sdk4.types.OsType
 import org.ovirt.engine.sdk4.types.QuotaModeType
+import org.ovirt.engine.sdk4.types.SeLinuxMode
+import org.ovirt.engine.sdk4.types.SpmStatus
 import org.ovirt.engine.sdk4.types.StorageDomainStatus
 import org.ovirt.engine.sdk4.types.StorageDomainType
 import org.ovirt.engine.sdk4.types.StorageType
+import org.ovirt.engine.sdk4.types.SwitchType
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmAffinity
 import org.ovirt.engine.sdk4.types.VmPlacementPolicy
@@ -185,11 +190,26 @@ fun FirewallType.toFirewallTypeB(): FirewallTypeB =
 fun FirewallTypeB.toFirewallType(): FirewallType =
 	FirewallType.fromValue(this@toFirewallType.code)
 
+fun LogMaxMemoryUsedThresholdType?.toLogMaxMemoryUsedThresholdTypeB(): LogMaxMemoryUsedThresholdTypeB =
+	LogMaxMemoryUsedThresholdTypeB.forCode(this@toLogMaxMemoryUsedThresholdTypeB?.value())
+
+fun LogMaxMemoryUsedThresholdTypeB?.toLogMaxMemoryUsedThresholdType(): LogMaxMemoryUsedThresholdType =
+	LogMaxMemoryUsedThresholdType.fromValue(this@toLogMaxMemoryUsedThresholdType?.code)
+
 fun VmAffinity?.toMigrationSupport(): MigrationSupport =
 	MigrationSupport.forCode(this@toMigrationSupport?.value())
 
 fun VmPlacementPolicy.findMigrationSupport(): MigrationSupport =
 	this@findMigrationSupport.affinity().toMigrationSupport()
+
+fun MigrationBandwidthAssignmentMethod?.toMigrationBandwidthLimitType(): MigrationBandwidthLimitType? =
+	MigrationBandwidthLimitType.forCode(this@toMigrationBandwidthLimitType?.value())
+
+fun MigrationBandwidthLimitType?.toMigrationBandwidthAssignmentMethod(): MigrationBandwidthAssignmentMethod? =
+	MigrationBandwidthAssignmentMethod.fromValue(this@toMigrationBandwidthAssignmentMethod?.code)
+
+fun MigrationOptions.findMigrationBandwidthLimitType(): MigrationBandwidthLimitType? =
+	this@findMigrationBandwidthLimitType.bandwidth().assignmentMethod().toMigrationBandwidthLimitType()
 
 fun MigrationOptions.findMigrationEncrypt(): Boolean? =
 	this@findMigrationEncrypt.encrypted().toBoolean()
@@ -215,11 +235,11 @@ fun OperatingSystemInfo.toVmOsType(): VmOsType =
 fun List<OperatingSystemInfo>.toVmOsTypes(): List<VmOsType> =
 	this@toVmOsTypes.map { it.toVmOsType() }
 
-fun StorageDomainStatus?.toStorageDomainStatusB(): StorageDomainStatusB =
-	StorageDomainStatusB.forCode(this@toStorageDomainStatusB?.value())
+fun SeLinuxMode?.toSELinuxModeB(): SELinuxModeB? = SELinuxModeB.forCode(this@toSELinuxModeB?.value())
+fun SELinuxModeB?.toSeLinuxMode(): SeLinuxMode? = SeLinuxMode.fromValue(this@toSeLinuxMode?.code)
 
-fun StorageDomainStatusB?.toStorageDomainStatus(): StorageDomainStatus =
-	StorageDomainStatus.fromValue(this@toStorageDomainStatus?.code)
+fun StorageDomainStatus?.toStorageDomainStatusB(): StorageDomainStatusB = StorageDomainStatusB.forCode(this@toStorageDomainStatusB?.value())
+fun StorageDomainStatusB?.toStorageDomainStatus(): StorageDomainStatus = StorageDomainStatus.fromValue(this@toStorageDomainStatus?.code)
 
 fun StorageDomainType.toStorageDomainTypeB(): StorageDomainTypeB =
 	StorageDomainTypeB.forCode(this@toStorageDomainTypeB.value())
@@ -233,17 +253,17 @@ fun StorageType.toStorageTypeB(): StorageTypeB =
 fun StorageTypeB.toStorageType(): StorageType =
 	StorageType.fromValue(this@toStorageType.code)
 
-fun QuotaEnforcementType.toQuotaModeType(): QuotaModeType =
-	QuotaModeType.fromValue(this@toQuotaModeType.name)
+fun SwitchType.toSwitchTypeB(): SwitchTypeB =	SwitchTypeB.forCode(this@toSwitchTypeB.value())
+fun SwitchTypeB.toSwitchType(): SwitchType =	SwitchType.fromValue(this@toSwitchType.code)
 
-fun QuotaModeType.toQuotaEnforcementType(): QuotaEnforcementType =
-	QuotaEnforcementType.forCode(this@toQuotaEnforcementType.value())
+fun QuotaEnforcementType.toQuotaModeType(): QuotaModeType =	QuotaModeType.fromValue(this@toQuotaModeType.name)
+fun QuotaModeType.toQuotaEnforcementType(): QuotaEnforcementType = QuotaEnforcementType.forCode(this@toQuotaEnforcementType.value())
 
-fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior =
-	VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
+fun SpmStatus.toVdsSpmStatus(): VdsSpmStatus = VdsSpmStatus.forCode(this@toVdsSpmStatus.value())
+fun VdsSpmStatus.toSpmStatus(): SpmStatus = SpmStatus.fromValue(this@toSpmStatus.code)
 
-fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour =
-	VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())
+fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior = VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
+fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())
 
 fun InheritableBoolean.toBoolean(): Boolean? = when(this@toBoolean.name) {
 	"true" -> true

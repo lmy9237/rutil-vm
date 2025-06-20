@@ -142,8 +142,23 @@ class Localization {
 		}
 		//endregion: FipsModeL
 
+		//region: MigrationBandwidthLimitTypeL
+		object MigrationBandwidthLimitTypeL {
+			object KR {
+				val auto				= locKr?.get(MigrationBandwidthLimitType.auto.localizationKey)?.toString() ?: ""
+				val hypervisor_default	= locKr?.get(MigrationBandwidthLimitType.hypervisor_default.localizationKey)?.toString() ?: ""
+				val custom				= locKr?.get(MigrationBandwidthLimitType.custom.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val auto				= locEn?.get(MigrationBandwidthLimitType.auto.localizationKey)?.toString() ?: ""
+				val hypervisor_default	= locEn?.get(MigrationBandwidthLimitType.hypervisor_default.localizationKey)?.toString() ?: ""
+				val custom				= locEn?.get(MigrationBandwidthLimitType.custom.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: MigrationBandwidthLimitTypeL
 
-		//region MigrationSupportL
+
+		//region: MigrationSupportL
 		object MigrationSupportL {
 			object KR {
 				val migratable 		= locKr?.get(MigrationSupport.migratable.localizationKey)?.toString() ?: ""
@@ -156,11 +171,11 @@ class Localization {
 				val pinned			= locEn?.get(MigrationSupport.pinned.localizationKey)?.toString() ?: ""
 			}
 		}
-		//endregion
+		//endregion: MigrationSupportL
 
 
 		//region: MigrateOnErrorBL
-		object MigrateOnErrorBL {
+		object MigrateOnErrorL {
 			object KR {
 				val do_not_migrate				= locKr?.get(MigrateOnErrorB.do_not_migrate.localizationKey)?.toString() ?: ""
 				val migrate						= locKr?.get(MigrateOnErrorB.migrate.localizationKey)?.toString() ?: ""
@@ -216,6 +231,100 @@ class Localization {
 			}
 		}
 		//endregion: QuotaEnforcementTypeL
+
+		//region: SELinuxModeL
+		object SELinuxModeL {
+			object KR {
+				val enforcing 		= locKr?.get(SELinuxModeB.enforcing.localizationKey)?.toString() ?: ""
+				val permissive		= locKr?.get(SELinuxModeB.permissive.localizationKey)?.toString() ?: ""
+			 	val disabled 		= locKr?.get(SELinuxModeB.disabled.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val enforcing 		= locEn?.get(SELinuxModeB.enforcing.localizationKey)?.toString() ?: ""
+				val permissive		= locEn?.get(SELinuxModeB.permissive.localizationKey)?.toString() ?: ""
+				val disabled 		= locEn?.get(SELinuxModeB.disabled.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: SELinuxModeL
+
+
+		//region: StorageDomainTypeL
+		object StorageDomainTypeL {
+			object KR {
+				val master				 		= locKr?.get(StorageDomainTypeB.master.localizationKey)?.toString() ?: ""
+				val data				 		= locKr?.get(StorageDomainTypeB.data.localizationKey)?.toString() ?: ""
+				val iso					 		= locKr?.get(StorageDomainTypeB.iso.localizationKey)?.toString() ?: ""
+				val import_export		 		= locKr?.get(StorageDomainTypeB.import_export.localizationKey)?.toString() ?: ""
+				val image				 		= locKr?.get(StorageDomainTypeB.image.localizationKey)?.toString() ?: ""
+				// val volume					= locKr?.get(StorageDomainTypeB.volume.localizationKey)?.toString() ?: ""
+				// val unknown					= locKr?.get(StorageDomainTypeB.unknown.localizationKey)?.toString() ?: ""
+				val managed_block_storage		= locKr?.get(StorageDomainTypeB.managed_block_storage.localizationKey)?.toString() ?: ""
+				// val unmanaged				= locKr?.get(StorageDomainTypeB.unmanaged.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val master				 		= locEn?.get(StorageDomainTypeB.master.localizationKey)?.toString() ?: ""
+				val data				 		= locEn?.get(StorageDomainTypeB.data.localizationKey)?.toString() ?: ""
+				val iso					 		= locEn?.get(StorageDomainTypeB.iso.localizationKey)?.toString() ?: ""
+				val import_export		 		= locEn?.get(StorageDomainTypeB.import_export.localizationKey)?.toString() ?: ""
+				val image				 		= locEn?.get(StorageDomainTypeB.image.localizationKey)?.toString() ?: ""
+				// val volume					= locEn?.get(StorageDomainTypeB.volume.localizationKey)?.toString() ?: ""
+				// val unknown					= locEn?.get(StorageDomainTypeB.unknown.localizationKey)?.toString() ?: ""
+				val managed_block_storage		= locEn?.get(StorageDomainTypeB.managed_block_storage.localizationKey)?.toString() ?: ""
+				// val unmanaged				= locEn?.get(StorageDomainTypeB.unmanaged.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: StorageDomainTypeL
+
+
+		//region: StoragePoolStatusL
+		object StoragePoolStatusL {
+			object KR {
+				val uninitialized				= locKr?.get(StoragePoolStatus.uninitialized.localizationKey)?.toString() ?: ""
+				val up							= locKr?.get(StoragePoolStatus.up.localizationKey)?.toString() ?: ""
+				val maintenance					= locKr?.get(StoragePoolStatus.maintenance.localizationKey)?.toString() ?: ""
+				val not_operational				= locKr?.get(StoragePoolStatus.not_operational.localizationKey)?.toString() ?: ""
+				val non_responsive				= locKr?.get(StoragePoolStatus.non_responsive.localizationKey)?.toString() ?: ""
+				val contend						= locKr?.get(StoragePoolStatus.contend.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val uninitialized				= locEn?.get(StoragePoolStatus.uninitialized.localizationKey)?.toString() ?: ""
+				val up							= locEn?.get(StoragePoolStatus.up.localizationKey)?.toString() ?: ""
+				val maintenance					= locEn?.get(StoragePoolStatus.maintenance.localizationKey)?.toString() ?: ""
+				val not_operational				= locEn?.get(StoragePoolStatus.not_operational.localizationKey)?.toString() ?: ""
+				val non_responsive				= locEn?.get(StoragePoolStatus.non_responsive.localizationKey)?.toString() ?: ""
+				val contend						= locEn?.get(StoragePoolStatus.contend.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: StoragePoolStatusL
+
+		//region: SwitchTypeL
+		object SwitchTypeL {
+			object KR {
+				val legacy 			= locKr?.get(SwitchTypeB.legacy.localizationKey)?.toString() ?: ""
+				val ovs				= locKr?.get(SwitchTypeB.ovs.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val legacy 			= locEn?.get(SwitchTypeB.legacy.localizationKey)?.toString() ?: ""
+				val ovs				= locEn?.get(SwitchTypeB.ovs.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: SwitchTypeL
+
+		//region: VdsSpmStatusL
+		object VdsSpmStatusL {
+			object KR {
+				val none 			= locKr?.get(VdsSpmStatus.none.localizationKey)?.toString() ?: ""
+				val contending		= locKr?.get(VdsSpmStatus.contending.localizationKey)?.toString() ?: ""
+				val spm 			= locKr?.get(VdsSpmStatus.spm.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val none 			= locEn?.get(VdsSpmStatus.none.localizationKey)?.toString() ?: ""
+				val contending		= locEn?.get(VdsSpmStatus.contending.localizationKey)?.toString() ?: ""
+				val spm 			= locEn?.get(VdsSpmStatus.spm.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: VdsSpmStatusL
+
 
 		//region: VmStatusL
 		object VmStatusL {
@@ -308,51 +417,48 @@ class Localization {
 		//endregion: VmEntityTypeL
 	}
 
-	fun findLocalizedName4AuditLogSeverity(type: AuditLogSeverity, loc: String = "kr"): String =
-		when(type) {
-			AuditLogSeverity.normal ->	if (loc == "kr") AuditLogSeverityL.KR.NORMAL else type.name
-			AuditLogSeverity.warning -> if (loc == "kr") AuditLogSeverityL.KR.WARNING else type.name
-			AuditLogSeverity.error ->	if (loc == "kr") AuditLogSeverityL.KR.ERROR else type.name
-			AuditLogSeverity.alert ->	if (loc == "kr") AuditLogSeverityL.KR.ALERT else type.name
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
+	fun findLocalizedName4AuditLogSeverity(type: AuditLogSeverity, loc: String = "kr"): String = when(type) {
+		AuditLogSeverity.normal ->	if (loc == "kr") AuditLogSeverityL.KR.NORMAL else type.name
+		AuditLogSeverity.warning -> if (loc == "kr") AuditLogSeverityL.KR.WARNING else type.name
+		AuditLogSeverity.error ->	if (loc == "kr") AuditLogSeverityL.KR.ERROR else type.name
+		AuditLogSeverity.alert ->	if (loc == "kr") AuditLogSeverityL.KR.ALERT else type.name
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
 
-	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String =
-		when(type) {
-			ProviderType.openstack_network ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
-			ProviderType.foreman -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
-			ProviderType.openstack_image -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
-			ProviderType.openstack_volume ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
-			ProviderType.external_network -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
-			ProviderType.vmware -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
-			ProviderType.kvm ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
-			ProviderType.xen ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
-			ProviderType.kubevirt ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
-		}
+	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String = when(type) {
+		ProviderType.openstack_network ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
+		ProviderType.foreman -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
+		ProviderType.openstack_image -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
+		ProviderType.openstack_volume ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
+		ProviderType.external_network -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
+		ProviderType.vmware -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
+		ProviderType.kvm ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
+		ProviderType.xen ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
+		ProviderType.kubevirt ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+	}
 
-	fun findLocalizedName4BiosType(type: BiosTypeB, loc: String = "kr"): String =
-		when(type) {
-			BiosTypeB.i440fx_sea_bios ->		if (loc == "kr") BiosTypeL.KR.i440fx_sea_bios		else BiosTypeL.EN.i440fx_sea_bios
-			BiosTypeB.q35_sea_bios -> 			if (loc == "kr") BiosTypeL.KR.q35_sea_bios 			else BiosTypeL.EN.q35_sea_bios
-			BiosTypeB.cluster_default,			// TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
-			BiosTypeB.q35_ovmf -> 				if (loc == "kr") BiosTypeL.KR.q35_ovmf				else BiosTypeL.EN.q35_ovmf
-			BiosTypeB.q35_secure_boot ->		if (loc == "kr") BiosTypeL.KR.q35_secure_boot		else BiosTypeL.EN.q35_secure_boot
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
-	fun findLocalizedName4DiskContentType(type: DiskContentType, loc: String = "kr"): String =
-		when(type) {
-			DiskContentType.data -> 							if (loc == "kr") DiskContentTypeL.KR.DATA else DiskContentTypeL.EN.DATA
-			DiskContentType.ovf_store -> 						if (loc == "kr") DiskContentTypeL.KR.OVF_STORE else DiskContentTypeL.EN.OVF_STORE
-			DiskContentType.memory_dump_volume -> 				if (loc == "kr") DiskContentTypeL.KR.MEMORY_DUMP_VOLUME else DiskContentTypeL.EN.MEMORY_DUMP_VOLUME
-			DiskContentType.memory_metadata_volume -> 			if (loc == "kr") DiskContentTypeL.KR.MEMORY_METADATA_VOLUME else DiskContentTypeL.EN.MEMORY_METADATA_VOLUME
-			DiskContentType.iso -> 								if (loc == "kr") DiskContentTypeL.KR.ISO else DiskContentTypeL.EN.ISO
-			DiskContentType.hosted_engine -> 					if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE else DiskContentTypeL.EN.HOSTED_ENGINE
-			DiskContentType.hosted_engine_sanlock -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_SANLOCK else DiskContentTypeL.EN.HOSTED_ENGINE_SANLOCK
-			DiskContentType.hosted_engine_metadata -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_METADATA else DiskContentTypeL.EN.HOSTED_ENGINE_METADATA
-			DiskContentType.hosted_engine_configuration -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
-			DiskContentType.backup_scratch -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
-			DiskContentType.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
-		}
+	fun findLocalizedName4BiosType(type: BiosTypeB, loc: String = "kr"): String = when(type) {
+		BiosTypeB.i440fx_sea_bios ->		if (loc == "kr") BiosTypeL.KR.i440fx_sea_bios		else BiosTypeL.EN.i440fx_sea_bios
+		BiosTypeB.q35_sea_bios -> 			if (loc == "kr") BiosTypeL.KR.q35_sea_bios 			else BiosTypeL.EN.q35_sea_bios
+		BiosTypeB.cluster_default,			// TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
+		BiosTypeB.q35_ovmf -> 				if (loc == "kr") BiosTypeL.KR.q35_ovmf				else BiosTypeL.EN.q35_ovmf
+		BiosTypeB.q35_secure_boot ->		if (loc == "kr") BiosTypeL.KR.q35_secure_boot		else BiosTypeL.EN.q35_secure_boot
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
+
+	fun findLocalizedName4DiskContentType(type: DiskContentType, loc: String = "kr"): String = when(type) {
+		DiskContentType.data -> 							if (loc == "kr") DiskContentTypeL.KR.DATA else DiskContentTypeL.EN.DATA
+		DiskContentType.ovf_store -> 						if (loc == "kr") DiskContentTypeL.KR.OVF_STORE else DiskContentTypeL.EN.OVF_STORE
+		DiskContentType.memory_dump_volume -> 				if (loc == "kr") DiskContentTypeL.KR.MEMORY_DUMP_VOLUME else DiskContentTypeL.EN.MEMORY_DUMP_VOLUME
+		DiskContentType.memory_metadata_volume -> 			if (loc == "kr") DiskContentTypeL.KR.MEMORY_METADATA_VOLUME else DiskContentTypeL.EN.MEMORY_METADATA_VOLUME
+		DiskContentType.iso -> 								if (loc == "kr") DiskContentTypeL.KR.ISO else DiskContentTypeL.EN.ISO
+		DiskContentType.hosted_engine -> 					if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE else DiskContentTypeL.EN.HOSTED_ENGINE
+		DiskContentType.hosted_engine_sanlock -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_SANLOCK else DiskContentTypeL.EN.HOSTED_ENGINE_SANLOCK
+		DiskContentType.hosted_engine_metadata -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_METADATA else DiskContentTypeL.EN.HOSTED_ENGINE_METADATA
+		DiskContentType.hosted_engine_configuration -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
+		DiskContentType.backup_scratch -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
+		DiskContentType.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
+	}
 
 	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String =
 		when(type) {
@@ -377,6 +483,12 @@ class Localization {
 		FipsModeB.disabled ->					if (loc == "kr") FipsModeL.KR.disabled else FipsModeL.EN.disabled
 	}
 
+	fun findLocalizedName4MigrationBandwidthLimitType(type: MigrationBandwidthLimitType, loc: String = "kr"): String = when(type) {
+		MigrationBandwidthLimitType.auto ->					if (loc == "kr") MigrationBandwidthLimitTypeL.KR.auto else MigrationBandwidthLimitTypeL.EN.auto
+		MigrationBandwidthLimitType.custom ->				if (loc == "kr") MigrationBandwidthLimitTypeL.KR.custom else MigrationBandwidthLimitTypeL.EN.custom
+		MigrationBandwidthLimitType.hypervisor_default ->	if (loc == "kr") MigrationBandwidthLimitTypeL.KR.hypervisor_default else MigrationBandwidthLimitTypeL.EN.hypervisor_default
+	}
+
 	fun findLocalizedName4MigrationSupport(type: MigrationSupport, loc: String = "kr"): String = when(type) {
 		MigrationSupport.migratable ->				if (loc == "kr") MigrationSupportL.KR.migratable else MigrationSupportL.EN.migratable
 		MigrationSupport.user_migratable ->			if (loc == "kr") MigrationSupportL.KR.user_migratable else MigrationSupportL.EN.user_migratable
@@ -385,16 +497,43 @@ class Localization {
 	}
 
 	fun findLocalizedName4MigrateOnErrorB(type: MigrateOnErrorB, loc: String = "kr"): String = when(type) {
-		MigrateOnErrorB.do_not_migrate ->				if (loc == "kr") MigrateOnErrorBL.KR.do_not_migrate else MigrateOnErrorBL.EN.do_not_migrate
-		MigrateOnErrorB.migrate ->		                if (loc == "kr") MigrateOnErrorBL.KR.migrate else MigrateOnErrorBL.EN.migrate
-		MigrateOnErrorB.migrate_highly_available ->		if (loc == "kr") MigrateOnErrorBL.KR.migrate_highly_available else MigrateOnErrorBL.EN.migrate_highly_available
+		MigrateOnErrorB.do_not_migrate ->				if (loc == "kr") MigrateOnErrorL.KR.do_not_migrate else MigrateOnErrorL.EN.do_not_migrate
+		MigrateOnErrorB.migrate ->		                if (loc == "kr") MigrateOnErrorL.KR.migrate else MigrateOnErrorL.EN.migrate
+		MigrateOnErrorB.migrate_highly_available ->		if (loc == "kr") MigrateOnErrorL.KR.migrate_highly_available else MigrateOnErrorL.EN.migrate_highly_available
 	}
-
 
 	fun findLocalizedName4QuotaEnforcementType(type: QuotaEnforcementType, loc: String = "kr"): String = when(type) {
 		QuotaEnforcementType.disabled -> 				if (loc == "kr") QuotaEnforcementTypeL.KR.disabled else QuotaEnforcementTypeL.EN.disabled
 		QuotaEnforcementType.audit -> 					if (loc == "kr") QuotaEnforcementTypeL.KR.audit else QuotaEnforcementTypeL.EN.audit
 		QuotaEnforcementType.enabled ->					if (loc == "kr") QuotaEnforcementTypeL.KR.enabled else QuotaEnforcementTypeL.EN.enabled
+	}
+
+	fun findLocalizedName4SELinuxMode(type: SELinuxModeB, loc: String = "kr"): String = when(type) {
+		SELinuxModeB.enforcing ->			if (loc == "kr") SELinuxModeL.KR.enforcing else SELinuxModeL.KR.enforcing
+		SELinuxModeB.permissive ->			if (loc == "kr") SELinuxModeL.KR.permissive else SELinuxModeL.KR.permissive
+		SELinuxModeB.disabled ->			if (loc == "kr") SELinuxModeL.KR.disabled else SELinuxModeL.KR.disabled
+	}
+
+	fun findLocalizedName4StorageDomainType(type: StorageDomainTypeB, loc: String = "kr"): String = when(type) {
+		StorageDomainTypeB.master ->				 	if (loc == "kr") StorageDomainTypeL.KR.master else StorageDomainTypeL.EN.master
+		StorageDomainTypeB.data ->				 		if (loc == "kr") StorageDomainTypeL.KR.data else StorageDomainTypeL.EN.data
+		StorageDomainTypeB.iso ->					 	if (loc == "kr") StorageDomainTypeL.KR.iso else StorageDomainTypeL.EN.iso
+		StorageDomainTypeB.import_export ->		 		if (loc == "kr") StorageDomainTypeL.KR.import_export else StorageDomainTypeL.EN.import_export
+		StorageDomainTypeB.image ->				 		if (loc == "kr") StorageDomainTypeL.KR.image else StorageDomainTypeL.EN.image
+		// StorageDomainTypeB.volume ->					if (loc == "kr") StorageDomainTypeL.KR.volume else StorageDomainTypeL.EN.volume
+		// StorageDomainTypeB.unknown -> 				if (loc == "kr") StorageDomainTypeL.KR.unknown else StorageDomainTypeL.EN.unknown
+		StorageDomainTypeB.managed_block_storage ->		if (loc == "kr") StorageDomainTypeL.KR.managed_block_storage else StorageDomainTypeL.EN.managed_block_storage
+		// StorageDomainTypeB.unmanaged ->				if (loc == "kr") StorageDomainTypeL.KR.unmanaged else StorageDomainTypeL.EN.unmanaged
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
+
+	fun findLocalizedName4StoragePoolStatus(type: StoragePoolStatus, loc: String = "kr"): String = when(type) {
+		StoragePoolStatus.uninitialized -> 				if (loc == "kr") StoragePoolStatusL.KR.uninitialized else StoragePoolStatusL.EN.uninitialized
+		StoragePoolStatus.up -> 						if (loc == "kr") StoragePoolStatusL.KR.up else StoragePoolStatusL.EN.up
+		StoragePoolStatus.maintenance -> 				if (loc == "kr") StoragePoolStatusL.KR.maintenance else StoragePoolStatusL.EN.maintenance
+		StoragePoolStatus.not_operational -> 			if (loc == "kr") StoragePoolStatusL.KR.not_operational else StoragePoolStatusL.EN.not_operational
+		StoragePoolStatus.non_responsive -> 			if (loc == "kr") StoragePoolStatusL.KR.non_responsive else StoragePoolStatusL.EN.non_responsive
+		StoragePoolStatus.contend -> 				    if (loc == "kr") StoragePoolStatusL.KR.contend else StoragePoolStatusL.EN.contend
 	}
 
 	fun findLocalizedName4VmStatusB(type: VmStatusB, loc: String = "kr"): String = when(type) {
@@ -417,6 +556,17 @@ class Localization {
 		VmStatusB.unknown ->				if (loc == "kr") VmStatusL.KR.unknown else VmStatusL.EN.unknown
 	}
 
+	fun findLocalizedName4SwitchType(type: SwitchTypeB, loc: String = "kr"): String = when(type) {
+		SwitchTypeB.legacy -> 		if (loc == "kr") SwitchTypeL.KR.legacy else SwitchTypeL.EN.legacy
+		SwitchTypeB.ovs ->			if (loc == "kr") SwitchTypeL.KR.ovs else SwitchTypeL.EN.ovs
+	}
+
+	fun findLocalizedName4VdsSpmStatus(type: VdsSpmStatus, loc: String = "kr"): String = when(type) {
+		VdsSpmStatus.none ->			if (loc == "kr") VdsSpmStatusL.KR.none else VdsSpmStatusL.EN.none
+		VdsSpmStatus.contending ->		if (loc == "kr") VdsSpmStatusL.KR.contending else VdsSpmStatusL.EN.contending
+		VdsSpmStatus.spm ->				if (loc == "kr") VdsSpmStatusL.KR.spm else VdsSpmStatusL.EN.spm
+	}
+
 	fun findLocalizedName4VmTemplateStatusB(type: VmTemplateStatusB, loc: String = "kr"): String = when(type) {
 		VmTemplateStatusB.ok ->				if (loc == "kr") VmTemplateStatusL.KR.ok else VmTemplateStatusL.EN.ok
 		VmTemplateStatusB.locked ->			if (loc == "kr") VmTemplateStatusL.KR.locked else VmTemplateStatusL.EN.locked
@@ -424,21 +574,18 @@ class Localization {
 		else -> if (loc == "kr") "알 수 없음" else "Unknown"
 	}
 
-	fun findLocalizedName4VmType(type: VmTypeB, loc: String = "kr"): String =
-		when(type) {
-			VmTypeB.desktop ->				if (loc == "kr") VmTypeL.KR.Desktop else VmTypeL.EN.Desktop
-			VmTypeB.server ->				if (loc == "kr") VmTypeL.KR.Server else VmTypeL.EN.Server
-			VmTypeB.high_performance ->		if (loc == "kr") VmTypeL.KR.HighPerformance else VmTypeL.EN.HighPerformance
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
+	fun findLocalizedName4VmType(type: VmTypeB, loc: String = "kr"): String = when(type) {
+		VmTypeB.desktop ->				if (loc == "kr") VmTypeL.KR.Desktop else VmTypeL.EN.Desktop
+		VmTypeB.server ->				if (loc == "kr") VmTypeL.KR.Server else VmTypeL.EN.Server
+		VmTypeB.high_performance ->		if (loc == "kr") VmTypeL.KR.HighPerformance else VmTypeL.EN.HighPerformance
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
 
-	fun findLocalizedName4VmEntityType(type: VmEntityType, loc: String = "kr"): String =
-		when(type) {
-			VmEntityType.VM ->						if (loc == "kr") VmEntityTypeL.KR.VM else VmEntityTypeL.EN.VM
-			VmEntityType.TEMPLATE ->				if (loc == "kr") VmEntityTypeL.KR.TEMPLATE else VmEntityTypeL.EN.TEMPLATE
-			VmEntityType.INSTANCE_TYPE ->			if (loc == "kr") VmEntityTypeL.KR.INSTANCE_TYPE else VmEntityTypeL.EN.INSTANCE_TYPE
-			VmEntityType.IMAGE_TYPE -> 				if (loc == "kr") VmEntityTypeL.KR.IMAGE_TYPE else VmEntityTypeL.EN.IMAGE_TYPE
-			else -> if (loc == "kr") "알 수 없음" else "Unknown"
-		}
-
+	fun findLocalizedName4VmEntityType(type: VmEntityType, loc: String = "kr"): String = when(type) {
+		VmEntityType.VM ->						if (loc == "kr") VmEntityTypeL.KR.VM else VmEntityTypeL.EN.VM
+		VmEntityType.TEMPLATE ->				if (loc == "kr") VmEntityTypeL.KR.TEMPLATE else VmEntityTypeL.EN.TEMPLATE
+		VmEntityType.INSTANCE_TYPE ->			if (loc == "kr") VmEntityTypeL.KR.INSTANCE_TYPE else VmEntityTypeL.EN.INSTANCE_TYPE
+		VmEntityType.IMAGE_TYPE -> 				if (loc == "kr") VmEntityTypeL.KR.IMAGE_TYPE else VmEntityTypeL.EN.IMAGE_TYPE
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
 }

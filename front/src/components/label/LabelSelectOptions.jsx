@@ -74,7 +74,7 @@ const LabelSelectOptions = forwardRef(({
       {label && <label htmlFor={label} className="select-label">{label}</label>}
 
       {loading ? (
-        <div className="h-10 py-2 border rounded-md bg-muted text-muted-foreground">
+        <div className="h-9 py-2 border rounded-md bg-muted text-muted-foreground">
           <Loading />
         </div>
       ) : (

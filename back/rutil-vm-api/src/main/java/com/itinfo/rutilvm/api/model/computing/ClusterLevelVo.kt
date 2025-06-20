@@ -1,7 +1,8 @@
 package com.itinfo.rutilvm.api.model.computing
 
+import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
+import com.itinfo.rutilvm.api.ovirt.business.toArchitectureType
 import com.itinfo.rutilvm.common.gson
-import org.ovirt.engine.sdk4.types.Architecture
 import org.ovirt.engine.sdk4.types.ClusterLevel
 import org.ovirt.engine.sdk4.types.CpuType
 import org.ovirt.engine.sdk4.types.Permit
@@ -36,7 +37,7 @@ class ClusterLevelVo(
 }
 
 class CpuTypeVo(
-	val architecture: Architecture? = Architecture.UNDEFINED,
+	val architecture: ArchitectureType? = ArchitectureType.undefined,
 	val level: BigInteger? = BigInteger.ZERO,
 	val name: String? = "",
 ): Serializable {
@@ -44,7 +45,7 @@ class CpuTypeVo(
 		gson.toJson(this)
 
 	class Builder {
-		private var bArchitecture: Architecture? = Architecture.UNDEFINED;fun architecture(block: () -> Architecture?) { bArchitecture = block() ?: Architecture.UNDEFINED }
+		private var bArchitecture: ArchitectureType? = ArchitectureType.undefined;fun architecture(block: () -> ArchitectureType?) { bArchitecture = block() ?: ArchitectureType.undefined }
 		private var bLevel: BigInteger? = BigInteger.ZERO;fun level(block: () -> BigInteger?) { bLevel = block() ?: BigInteger.ZERO }
 		private var bName: String? = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		fun build(): CpuTypeVo = CpuTypeVo(bArchitecture, bLevel, bName)
@@ -76,7 +77,7 @@ class PermitVo(
 }
 
 fun CpuType.toCpuTypeVo(): CpuTypeVo = CpuTypeVo.builder {
-	architecture { if (this@toCpuTypeVo.architecturePresent()) this@toCpuTypeVo.architecture() else Architecture.UNDEFINED }
+	architecture { if (this@toCpuTypeVo.architecturePresent()) this@toCpuTypeVo.architecture().toArchitectureType() else ArchitectureType.undefined }
 	level { if (this@toCpuTypeVo.levelPresent()) this@toCpuTypeVo.level() else BigInteger.ZERO }
 	name { if (this@toCpuTypeVo.namePresent()) this@toCpuTypeVo.name() else "" }
 }
@@ -106,14 +107,14 @@ fun List<ClusterLevel>.toClusterLevelVos(): List<ClusterLevelVo> = this.map {
 }
 
 class ClusterLevelByArchitectureVo(
-	val architecture: Architecture? = Architecture.UNDEFINED,
+	val architecture: ArchitectureType? = ArchitectureType.undefined,
 	val identifiables: List<ClusterLevelIdentifiableVo>? = listOf(),
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
 
 	class Builder {
-		private var bArchitecture: Architecture? = Architecture.UNDEFINED;fun architecture(block: () -> Architecture?) { bArchitecture = block() ?: Architecture.UNDEFINED }
+		private var bArchitecture: ArchitectureType? = ArchitectureType.undefined;fun architecture(block: () -> ArchitectureType?) { bArchitecture = block() ?: ArchitectureType.undefined }
 		private var bIdentifiables: List<ClusterLevelIdentifiableVo> = listOf();fun identifiables(block: () -> List<ClusterLevelIdentifiableVo>?) { bIdentifiables = block() ?: listOf() }
 		fun build(): ClusterLevelByArchitectureVo = ClusterLevelByArchitectureVo(bArchitecture, bIdentifiables)
 	}
@@ -141,11 +142,11 @@ class ClusterLevelIdentifiableVo(
 	}
 }
 
-fun List<CpuType>.toCpuTypeByArchitectureVos(architecture: Architecture): ClusterLevelByArchitectureVo = ClusterLevelByArchitectureVo.builder {
+fun List<CpuType>.toCpuTypeByArchitectureVos(architecture: ArchitectureType): ClusterLevelByArchitectureVo = ClusterLevelByArchitectureVo.builder {
 	architecture { architecture }
 	identifiables {
 		this@toCpuTypeByArchitectureVos.filter {
-			it.architecturePresent() && it.architecture() === architecture
+			it.architecturePresent() && it.architecture().toArchitectureType() === architecture
 		}.map {
 			it.toClusterLevelIdentifiableVo()
 		}

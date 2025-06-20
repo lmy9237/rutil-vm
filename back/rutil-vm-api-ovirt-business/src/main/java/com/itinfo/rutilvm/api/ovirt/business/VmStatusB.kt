@@ -127,7 +127,6 @@ enum class VmStatusB(
 		get() = this@VmStatusB == migrating_from ||
 			this@VmStatusB == migrating_to
 
-
 	private val loc: Localization
 		get() = Localization.getInstance()
 	val localizationKey: String

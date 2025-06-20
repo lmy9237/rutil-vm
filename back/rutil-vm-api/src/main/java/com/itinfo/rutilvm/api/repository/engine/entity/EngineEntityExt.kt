@@ -6,7 +6,9 @@ import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
+import com.itinfo.rutilvm.api.model.computing.HostedEngineVo
 import com.itinfo.rutilvm.api.model.computing.SnapshotVo
+import com.itinfo.rutilvm.api.model.computing.SshVo
 import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
@@ -149,7 +151,7 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		dataCenterVo { IdentifiedVo.builder {
 			id { storagePoolId.toString() }
 			name { storagePoolName }
-		} }
+		}}
 	}
 }
 fun List<StorageDomainEntity>.toStorageDomainEntities(): List<StorageDomainVo> =
@@ -196,7 +198,7 @@ fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =
 	this@toDataCenterVos.map { it.toDataCenterVo() }
 fun StoragePoolEntity.toIdentifiedVoFromStoragePoolEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromStoragePoolEntity.id.toString() }
-	id { this@toIdentifiedVoFromStoragePoolEntity.name }
+	name { this@toIdentifiedVoFromStoragePoolEntity.name }
 }
 fun Collection<StoragePoolEntity>.toIdentifiedVosFromStoragePoolEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromStoragePoolEntities.map { it.toIdentifiedVoFromStoragePoolEntity() }
@@ -218,7 +220,22 @@ fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.
 	firewallType { this@toClusterVoFromClusterViewEntity.firewallType }
 	glusterService { this@toClusterVoFromClusterViewEntity.glusterService }
 	haReservation { this@toClusterVoFromClusterViewEntity.haReservation }
-	// logMaxMemory { this@toClusterVoFromClusterViewEntity.logMaxMemoryUsedThreshold }
+	logMaxMemory { this@toClusterVoFromClusterViewEntity.logMaxMemoryUsedThreshold?.toLong() }
+	logMaxMemoryType { this@toClusterVoFromClusterViewEntity.logMaxMemoryUsedThresholdType }
+	memoryOverCommit { this@toClusterVoFromClusterViewEntity.maxVdsMemoryOverCommit }
+	migrationPolicy { this@toClusterVoFromClusterViewEntity.isAutoConverge }
+	bandwidth { this@toClusterVoFromClusterViewEntity.migrationBandwidthLimitType }
+	encrypted { this@toClusterVoFromClusterViewEntity.isMigrateEncrypted }
+	switchType { this@toClusterVoFromClusterViewEntity.switchType }
+	threadsAsCores { this@toClusterVoFromClusterViewEntity.countThreadsAsCores }
+	version { this@toClusterVoFromClusterViewEntity.compatibilityVersion }
+	virtService { this@toClusterVoFromClusterViewEntity.virtService }
+	networkProvider { this@toClusterVoFromClusterViewEntity.defaultNetworkProviderId != null }
+	dataCenterVo { this@toClusterVoFromClusterViewEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	// hostVos { this@toClusterVoFromClusterViewEntity.hosts?.toHostVosFromVdsEntities() }
+	// networkVo { this@toClusterVoFromClusterViewEntity }
+	// hostSize { this@toClusterVoFromClusterViewEntity.hosts.size ?: 0 }
+	// required { this@toClusterVoFromClusterViewEntity }
 }
 fun Collection<ClusterViewEntity>.toClusterVosFromClusterViewEntities(): List<ClusterVo> =
 	this@toClusterVosFromClusterViewEntities.map { it.toClusterVoFromClusterViewEntity() }
@@ -326,7 +343,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		memoryMax { template?.memoryPolicy()?.max() }
 		osType { template?.os()?.findVmOsType() }
 		optimizeOption { template?.type()?.toVmTypeB() }
-		usb { if(template?.usbPresent() == true) template.usb()?.enabled() else false }
+		usb { if (template?.usbPresent() == true) template.usb()?.enabled() else false }
 		diskAttachmentVos { disksFromOvf.toDiskAttachmentIdentifiedVos() }
 	}
 }
@@ -345,16 +362,16 @@ fun OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.
 	}
 }
 
-fun List<OvfDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
+fun Collection<OvfDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
 	this@toDiskAttachmentIdentifiedVos.map { it.toDiskAttachmentIdentifiedVo() }
 
-fun List<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm>): List<VmVo> {
+fun Collection<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm>): List<VmVo> {
 	val itemById: Map<String, Vm> =
 		vms.associateBy { it.id() }
 	return this@toUnregisteredVms.map { it.toUnregisteredVm(itemById[it.id?.entityGuid.toString()]) }
 }
 
-fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Template>): List<TemplateVo> {
+fun Collection<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Template>): List<TemplateVo> {
 	val itemById: Map<String, Template> =
 		templates.associateBy { it.id() }
 	return this@toUnregisteredTemplates.map {
@@ -363,6 +380,46 @@ fun List<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Temp
 }
 //endregion: UnregisteredOvfOfEntities
 
+//region: VdsEntity
+fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
+	id { this@toHostVoFromVdsEntity.vdsId.toString() }
+	name { this@toHostVoFromVdsEntity.vdsName }
+	comment { this@toHostVoFromVdsEntity.freeTextComment }
+	address { this@toHostVoFromVdsEntity.hostName }
+	// devicePassThrough { this@toHostVoFromVdsEntity. }
+	iscsi { this@toHostVoFromVdsEntity.iscsiInitiatorName }
+	// kdump {  }
+	ksm { this@toHostVoFromVdsEntity.ksmState }
+	seLinux { this@toHostVoFromVdsEntity.selinuxEnforceMode }
+	hostedEngine {
+		HostedEngineVo.builder {
+			active { this@toHostVoFromVdsEntity.haActive }
+			configured { this@toHostVoFromVdsEntity.haConfigured }
+			globalMaintenance { this@toHostVoFromVdsEntity.haGlobalMaintenance }
+			localMaintenance { this@toHostVoFromVdsEntity.haLocalMaintenance }
+			score { this@toHostVoFromVdsEntity.haScore }
+		}
+	}
+	hostedEngineVM { this@toHostVoFromVdsEntity.hostedEngineConfigured } // TODO: 확실하지 않음
+	spmPriority { this@toHostVoFromVdsEntity.vdsSpmPriority }
+	spmStatus { this@toHostVoFromVdsEntity.spmStatus }
+	ssh {
+		SshVo.builder {
+			id { this@toHostVoFromVdsEntity.sshUsername }
+			name { this@toHostVoFromVdsEntity.sshUsername }
+			port {  this@toHostVoFromVdsEntity.sshPort }
+			fingerprint { this@toHostVoFromVdsEntity.sshkeyfingerprint }
+			publicKey { this@toHostVoFromVdsEntity.sshPublicKey }
+			// rootPassword { this@toHostVoFromVdsEntity.sshPort }
+			// authenticationMethod {  }
+		}
+	}
+	// transparentPage { this@toHostVoFromVdsEntity.transparentHugepagesState }
+}
+
+fun Collection<VdsEntity>.toHostVosFromVdsEntities(): List<HostVo> =
+	this@toHostVosFromVdsEntities.map { it.toHostVoFromVdsEntity() }
+//endregion: VdsEntity
 
 //region: VmEntity
 fun VmEntity.toVmVo(): VmVo {

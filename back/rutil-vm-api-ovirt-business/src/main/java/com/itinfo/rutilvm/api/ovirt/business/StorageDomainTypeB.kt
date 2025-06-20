@@ -15,6 +15,15 @@ enum class StorageDomainTypeB(
 	managed_block_storage(7),
 	unmanaged(8);
 
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val localizationKey: String
+		get() = "${StorageDomainTypeB::class.java.simpleName}.${this.name}"
+	val kr: String
+		get() = loc.findLocalizedName4StorageDomainType(this, "kr")
+	val en: String
+		get() = loc.findLocalizedName4StorageDomainType(this, "en")
+
 	override fun toString(): String = code
 	val code: String
 		get() = this@StorageDomainTypeB.name.uppercase()
@@ -32,7 +41,7 @@ enum class StorageDomainTypeB(
 		}
 
 		val allStorageDomainTypes: List<StorageDomainTypeB> = StorageDomainTypeB.values().filterNot {
-			it == unknown
+			it == unknown || it == unmanaged || it == volume
 		}
 
 		@JvmStatic fun forValue(value: Int?): StorageDomainTypeB = valueMapping[value ?: unknown.value] ?: unknown

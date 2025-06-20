@@ -6,7 +6,10 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
 import com.itinfo.rutilvm.api.ovirt.business.FirewallTypeB
+import com.itinfo.rutilvm.api.ovirt.business.LogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
+import com.itinfo.rutilvm.api.ovirt.business.MigrationBandwidthLimitType
+import com.itinfo.rutilvm.api.ovirt.business.SwitchTypeB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -27,6 +30,14 @@ import javax.persistence.Table
 /**
  * [ClusterViewEntity]
  * 클러스터 정보
+ *
+ * @property logMaxMemoryUsedThreshold [Int] 클러스터 로그의 최대 메모리 한계
+ * @property logMaxMemoryUsedThresholdType [LogMaxMemoryUsedThresholdTypeB] 클러스터 로그 최대 메모리 한계 설정 유형 코드
+ * @property isAutoConverge [Boolean] 마이그레이션 정책 > 자동 병합 여부
+ * @property migrationBandwidthLimitType [MigrationBandwidthLimitType] 클러스터 마이그레이션 대역폭 제한 유형
+ * @property customMigrationBandwidthLimit [Int] 마이그레이션 대역폭 제한 수치
+ * @property isMigrateEncrypted [Boolean] 마이그레이션 추가속성- 암호화 사용
+ *
  */
 @Entity
 @Immutable
@@ -89,7 +100,8 @@ class ClusterViewEntity(
 	val glusterTunedProfile: String? = "",
 	val glusterCliBasedSnapshotScheduled: Boolean? = false,
 	val ksmMergeAcrossNodes: Boolean? = false,
-	val migrationBandwidthLimitType: String? = "",
+	@Column(name = "migration_bandwidth_limit_type")
+	private val _migrationBandwidthLimitType: String? = "",
 	val customMigrationBandwidthLimit: Int? = 0,
 	@Column(name = "migration_policy_id")
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
@@ -98,7 +110,8 @@ class ClusterViewEntity(
 	@Column(name = "mac_pool_id")
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val macPoolId: UUID? = null,
-	val switchType: String? = null,
+	@Column(name = "switch_type")
+	private val _switchType: String? = "legacy",
 
 	val skipFencingIfGlusterBricksUp: Boolean? = false,
 	val skipFencingIfGlusterQuorumNotMet: Boolean? = false,
@@ -108,9 +121,9 @@ class ClusterViewEntity(
 	@Column(name = "default_network_provider_id")
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val defaultNetworkProviderId: UUID? = null,
-
 	val logMaxMemoryUsedThreshold: Int? = null,
-	val logMaxMemoryUsedThresholdType: String? = "",
+	@Column(name="log_max_memory_used_threshold_type")
+	private val _logMaxMemoryUsedThresholdType: Int? = 0,
 	val vncEncryptionEnabled: Boolean? = false,
 	val upgradeRunning: Boolean? = false,
 	val smtDisabled: Boolean? = false,
@@ -138,10 +151,13 @@ class ClusterViewEntity(
 	val hosts: Set<VdsEntity>? = emptySet()
 ) : Serializable {
 	val architecture: ArchitectureType? 	get() = ArchitectureType.forValue(_architecture)
-	val biosType: BiosTypeB				get() = BiosTypeB.forValue(_biosType)
+	val biosType: BiosTypeB?				get() = BiosTypeB.forValue(_biosType)
 	val migrateOnError: MigrateOnErrorB	get() = MigrateOnErrorB.forValue(_migrateOnError)
 	val fipsMode: FipsModeB				get() = FipsModeB.forValue(_fipsMode)
 	val firewallType: FirewallTypeB		get() = FirewallTypeB.forValue(_firewallType)
+	val logMaxMemoryUsedThresholdType: LogMaxMemoryUsedThresholdTypeB get() = LogMaxMemoryUsedThresholdTypeB.forValue(_logMaxMemoryUsedThresholdType)
+	val migrationBandwidthLimitType: MigrationBandwidthLimitType get() = MigrationBandwidthLimitType.forCode(_migrationBandwidthLimitType)
+	val switchType: SwitchTypeB			get() = SwitchTypeB.forCode(_switchType)
 
 	override fun toString(): String =
 		gson.toJson(this@ClusterViewEntity)
@@ -197,7 +213,7 @@ class ClusterViewEntity(
 		private var bFirewallType: Int? = 1;fun firewallType(block: () -> Int?) { bFirewallType = block() ?: 1 }
 		private var bDefaultNetworkProviderId: UUID? = null;fun defaultNetworkProviderId(block: () -> UUID?) { bDefaultNetworkProviderId = block() }
 		private var bLogMaxMemoryUsedThreshold: Int? = null;fun logMaxMemoryUsedThreshold(block: () -> Int?) { bLogMaxMemoryUsedThreshold = block() }
-		private var bLogMaxMemoryUsedThresholdType: String? = "";fun logMaxMemoryUsedThresholdType(block: () -> String?) { bLogMaxMemoryUsedThresholdType = block() }
+		private var bLogMaxMemoryUsedThresholdType: Int? = 0;fun logMaxMemoryUsedThresholdType(block: () -> Int?) { bLogMaxMemoryUsedThresholdType = block() ?: 0 }
 		private var bVncEncryptionEnabled: Boolean? = null;fun vncEncryptionEnabled(block: () -> Boolean?) { bVncEncryptionEnabled = block() }
 		private var bUpgradeRunning: Boolean? = null;fun upgradeRunning(block: () -> Boolean?) { bUpgradeRunning = block() }
 		private var bSmtDisabled: Boolean? = null;fun smtDisabled(block: () -> Boolean?) { bSmtDisabled = block() }

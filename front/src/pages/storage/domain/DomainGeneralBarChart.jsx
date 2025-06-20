@@ -1,6 +1,5 @@
 import React from "react";
 
-
 import { RVI16, rvi16Storage } from "@/components/icons/RutilVmIcons";
 
 const DomainStorageUsageBarChart = () => {

@@ -2925,7 +2925,7 @@ data class VmDeviceVo(
 	companion object {
 		@JvmStatic inline fun vmDeviceVo(block: Builder.() -> Unit): VmDeviceVo = Builder().apply(block).build()
 	}
-	
+
 }
 
 class VmNetworkUsageVo(
@@ -2943,7 +2943,7 @@ class VmNetworkUsageVo(
 	companion object {
 		@JvmStatic inline fun vmNetworkUsageVo(block: Builder.() -> Unit): VmNetworkUsageVo = Builder().apply(block).build()
 	}
-	
+
 }
 
 data class VmNicVo(
@@ -3329,7 +3329,7 @@ fun VmVo.reboot(connection: Connection): Boolean = connection.rebootVm(id)
 
 fun List<VmVo>.rebootAllVms(connection: Connection): Boolean =
 	this.map { it.reboot(connection) }.reduce { acc, b -> acc && b }
-		
+
 data class VnicProfileVo(
 	var name: String,
 	var id: String,

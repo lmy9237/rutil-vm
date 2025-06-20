@@ -172,14 +172,12 @@ const generalTableRows = [
   const relatedTableRows = [
     { label: "Data Center", value: vm?.dataCenterVo?.name || "Default" },
     { label: "Cluster", value: vm?.clusterVo?.name },
-    {
-      label: "호스트", value: (
+    { label: "호스트", value: (
         <div>
           {vm?.hostVo?.name} {/*({vm?.hostVo?.address})*/}
         </div>
       )
-    },
-    {
+    }, {
       label: "스토리지 도메인",
       value: [...new Set(vm?.diskAttachmentVos?.map(disk => disk?.disk?.storageDomainName))].join(", ")
     },

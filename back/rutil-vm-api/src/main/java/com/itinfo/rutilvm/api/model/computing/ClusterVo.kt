@@ -8,16 +8,23 @@ import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
 import com.itinfo.rutilvm.api.ovirt.business.FirewallTypeB
+import com.itinfo.rutilvm.api.ovirt.business.LogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
+import com.itinfo.rutilvm.api.ovirt.business.MigrationBandwidthLimitType
+import com.itinfo.rutilvm.api.ovirt.business.SwitchTypeB
+import com.itinfo.rutilvm.api.ovirt.business.findMigrationBandwidthLimitType
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toArchitecture
 import com.itinfo.rutilvm.api.ovirt.business.toArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toBoolean
 import com.itinfo.rutilvm.api.ovirt.business.toFirewallTypeB
+import com.itinfo.rutilvm.api.ovirt.business.toLogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnError
 import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnErrorB
+import com.itinfo.rutilvm.api.ovirt.business.toMigrationBandwidthLimitType
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
@@ -54,12 +61,12 @@ private val log = LoggerFactory.getLogger(ClusterVo::class.java)
  * @property glusterService [Boolean] Gluster 서비스 활성화
  * @property haReservation [Boolean]
  * @property logMaxMemory [Long] 로그의 최대 메모리 한계
- * @property logMaxMemoryType [LogMaxMemoryUsedThresholdType] 로그의 최대 메모리 타입 (absolute_value_in_mb, percentage)
+ * @property logMaxMemoryType [LogMaxMemoryUsedThresholdTypeB] 로그의 최대 메모리 타입 (absolute_value_in_mb, percentage)
  * @property memoryOverCommit [Int]
- * @property migrationPolicy [InheritableBoolean] 마이그레이션 정책 migration-auto_coverage
- * @property bandwidth [MigrationBandwidthAssignmentMethod]  마이그레이션 대역폭
- * @property encrypted [InheritableBoolean]  마이그레이션 추가속성- 암호화 사용
- * @property switchType [SwitchType] 스위치 유형
+ * @property migrationPolicy [Boolean] 마이그레이션 정책 migration-auto_coverage
+ * @property bandwidth [MigrationBandwidthLimitType]  마이그레이션 대역폭 제한 유형
+ * @property encrypted [Boolean]  마이그레이션 추가속성 - 암호화 사용
+ * @property switchType [SwitchTypeB] 네트워크 스위치 유형
  * @property threadsAsCores [Boolean]
  * @property version [String]
  * @property virtService [Boolean] virt 서비스 활성화
@@ -68,7 +75,7 @@ private val log = LoggerFactory.getLogger(ClusterVo::class.java)
  * @property networkVo [NetworkVo] // 관리네트워크
  * @property hostSize [SizeVo]
  * @property vmSize [SizeVo]
- * @property hostVos List<[IdentifiedVo]>
+ * @property hostVos List<[HostVo]>
  * @property networkVos List<[IdentifiedVo]>
  * @property templateVos List<[IdentifiedVo]>
  * @property required [Boolean]
@@ -87,15 +94,15 @@ class ClusterVo(
     val errorHandling: MigrateOnErrorB? = MigrateOnErrorB.do_not_migrate,   /* MigrateOnError */
     val fipsMode: FipsModeB? = FipsModeB.undefined,
     val firewallType: FirewallTypeB? = FirewallTypeB.firewalld,
-    val glusterService: Boolean = false,
-    val haReservation: Boolean = false,
-    val logMaxMemory: Long = 0L,
-    val logMaxMemoryType: LogMaxMemoryUsedThresholdType = LogMaxMemoryUsedThresholdType.PERCENTAGE,
-    val memoryOverCommit: Int = 0,
-    val migrationPolicy: InheritableBoolean = InheritableBoolean.INHERIT,
-    val bandwidth: MigrationBandwidthAssignmentMethod = MigrationBandwidthAssignmentMethod.AUTO,
-    val encrypted: InheritableBoolean = InheritableBoolean.INHERIT,
-    val switchType: SwitchType = SwitchType.LEGACY,
+    val glusterService: Boolean? = false,
+    val haReservation: Boolean? = false,
+    val logMaxMemory: Long? = 0L,
+    val logMaxMemoryType: LogMaxMemoryUsedThresholdTypeB? = LogMaxMemoryUsedThresholdTypeB.percentage,
+    val memoryOverCommit: Int? = 0,
+    val migrationPolicy: Boolean? = null,
+    val bandwidth: MigrationBandwidthLimitType? = MigrationBandwidthLimitType.auto,
+    val encrypted: Boolean? = null,
+    val switchType: SwitchTypeB? = SwitchTypeB.legacy,
     val threadsAsCores: Boolean = false,
     val version: String = "",
     val virtService: Boolean = false,
@@ -104,7 +111,7 @@ class ClusterVo(
     val networkVo: NetworkVo = NetworkVo(), // 관리네트워크
     val hostSize: SizeVo = SizeVo(),
     val vmSize: SizeVo = SizeVo(),
-    val hostVos: List<IdentifiedVo> = listOf(),
+    val hostVos: List<HostVo> = listOf(),
     val networkVos: List<IdentifiedVo> = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
     val templateVos: List<IdentifiedVo> = listOf(),
 	val required: Boolean = false,
@@ -120,6 +127,14 @@ class ClusterVo(
 	val fipsModeCode: String		get() = fipsMode?.code ?: FipsModeB.undefined.code
 	val fipsModeEn: String			get() = fipsMode?.en ?: "N/A"
 	val fipsModeKr: String			get() = fipsMode?.kr ?: "알 수 없음"
+	val firewallTypeCode: String	get() = firewallType?.code ?: ""
+	val logMaxMemoryTypeCode: String get() = logMaxMemoryType?.code ?: ""
+	val bandwidthCode: String		get() = bandwidth?.code ?: ""
+	val bandwidthEn: String 		get() = bandwidth?.en ?: "N/A"
+	val bandwidthKr: String 		get() = bandwidth?.kr ?: "알 수 없음"
+	val switchTypeCode: String		get() = switchType?.code ?: ""
+	val switchTypeEn: String		get() = switchType?.en ?: "N/A"
+	val switchTypeKr: String		get() = switchType?.kr ?: "알 수 없음"
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -136,16 +151,16 @@ class ClusterVo(
 		private var bCpuType: String = ""; fun cpuType(block: () -> String?) { bCpuType = block() ?: "" }
 		private var bErrorHandling: MigrateOnErrorB? = MigrateOnErrorB.do_not_migrate; fun errorHandling(block: () -> MigrateOnErrorB?) { bErrorHandling = block() ?: MigrateOnErrorB.do_not_migrate }
 		private var bFipsMode: FipsModeB? = FipsModeB.undefined; fun fipsMode(block: () -> FipsModeB?) { bFipsMode = block() ?: FipsModeB.undefined }
-		private var bFirewallType: FirewallTypeB? = FirewallTypeB.firewalld; fun firewallType(block: () -> FirewallTypeB?) { bFirewallType = block() ?: FirewallTypeB.firewalld}
-		private var bGlusterService: Boolean = false; fun glusterService(block: () -> Boolean?) { bGlusterService = block() ?: false }
-		private var bHaReservation: Boolean = false; fun haReservation(block: () -> Boolean?) { bHaReservation = block() ?: false }
-		private var bLogMaxMemory: Long = 0L; fun logMaxMemory(block: () -> Long?) { bLogMaxMemory = block() ?: 0L }
-		private var bLogMaxMemoryType: LogMaxMemoryUsedThresholdType = LogMaxMemoryUsedThresholdType.PERCENTAGE; fun logMaxMemoryType(block: () -> LogMaxMemoryUsedThresholdType?) { bLogMaxMemoryType = block() ?: LogMaxMemoryUsedThresholdType.PERCENTAGE }
-		private var bMemoryOverCommit: Int = 0; fun memoryOverCommit(block: () -> Int?) { bMemoryOverCommit = block() ?: 0 }
-		private var bMigrationPolicy: InheritableBoolean = InheritableBoolean.INHERIT; fun migrationPolicy(block: () -> InheritableBoolean?) { bMigrationPolicy = block() ?: InheritableBoolean.INHERIT }
-		private var bBandwidth: MigrationBandwidthAssignmentMethod = MigrationBandwidthAssignmentMethod.AUTO; fun bandwidth(block: () -> MigrationBandwidthAssignmentMethod?) { bBandwidth = block() ?: MigrationBandwidthAssignmentMethod.AUTO }
-		private var bEncrypted: InheritableBoolean = InheritableBoolean.INHERIT; fun encrypted(block: () -> InheritableBoolean?) { bEncrypted = block() ?: InheritableBoolean.INHERIT }
-		private var bSwitchType: SwitchType = SwitchType.LEGACY; fun switchType(block: () -> SwitchType?) { bSwitchType = block() ?: SwitchType.LEGACY }
+		private var bFirewallType: FirewallTypeB? = FirewallTypeB.firewalld; fun firewallType(block: () -> FirewallTypeB?) { bFirewallType = block() ?: FirewallTypeB.firewalld }
+		private var bGlusterService: Boolean? = false; fun glusterService(block: () -> Boolean?) { bGlusterService = block() ?: false }
+		private var bHaReservation: Boolean? = false; fun haReservation(block: () -> Boolean?) { bHaReservation = block() ?: false }
+		private var bLogMaxMemory: Long? = 0L; fun logMaxMemory(block: () -> Long?) { bLogMaxMemory = block() ?: 0L }
+		private var bLogMaxMemoryType: LogMaxMemoryUsedThresholdTypeB? = LogMaxMemoryUsedThresholdTypeB.percentage; fun logMaxMemoryType(block: () -> LogMaxMemoryUsedThresholdTypeB?) { bLogMaxMemoryType = block() ?: LogMaxMemoryUsedThresholdTypeB.percentage }
+		private var bMemoryOverCommit: Int? = 0; fun memoryOverCommit(block: () -> Int?) { bMemoryOverCommit = block() ?: 0 }
+		private var bMigrationPolicy: Boolean? = null; fun migrationPolicy(block: () -> Boolean?) { bMigrationPolicy = block() }
+		private var bBandwidth: MigrationBandwidthLimitType? = MigrationBandwidthLimitType.auto; fun bandwidth(block: () -> MigrationBandwidthLimitType?) { bBandwidth = block() ?: MigrationBandwidthLimitType.auto }
+		private var bEncrypted: Boolean? = null; fun encrypted(block: () -> Boolean?) { bEncrypted = block() }
+		private var bSwitchType: SwitchTypeB = SwitchTypeB.legacy; fun switchType(block: () -> SwitchTypeB?) { bSwitchType = block() ?: SwitchTypeB.legacy }
 		private var bThreadsAsCores: Boolean = false; fun threadsAsCores(block: () -> Boolean?) { bThreadsAsCores = block() ?: false }
 		private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
 		private var bVirtService: Boolean = false; fun virtService(block: () -> Boolean?) { bVirtService = block() ?: false }
@@ -154,7 +169,7 @@ class ClusterVo(
 		private var bNetworkVo: NetworkVo = NetworkVo(); fun networkVo(block: () -> NetworkVo?) { bNetworkVo = block() ?: NetworkVo() }
 		private var bHostSize: SizeVo = SizeVo(); fun hostSize(block: () -> SizeVo?) { bHostSize = block() ?: SizeVo() }
 		private var bVmSize: SizeVo = SizeVo(); fun vmSize(block: () -> SizeVo?) { bVmSize = block() ?: SizeVo() }
-		private var bHostVos: List<IdentifiedVo> = listOf();fun hostVos(block: () -> List<IdentifiedVo>?) { bHostVos = block() ?: listOf() }
+		private var bHostVos: List<HostVo> = listOf();fun hostVos(block: () -> List<HostVo>?) { bHostVos = block() ?: listOf() }
 		private var bNetworkVos: List<IdentifiedVo> = listOf();fun networkVos(block: () -> List<IdentifiedVo>?) { bNetworkVos = block() ?: listOf() }
 		private var bTemplateVos: List<IdentifiedVo> = listOf();fun templateVos(block: () -> List<IdentifiedVo>?) { bTemplateVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
@@ -220,16 +235,16 @@ fun Cluster.toClusterInfo(conn: Connection): ClusterVo {
 		description {cluster.description() }
 		comment { cluster.comment() }
 		biosType { cluster.biosType().toBiosTypeB() }
-		cpuArc { cluster?.cpu()?.architecture()?.toArchitectureType() }
+		cpuArc { cluster.cpu()?.architecture()?.toArchitectureType() }
 		cpuType { if (cluster.cpuPresent()) cluster.cpu().type() else null }
 		firewallType { cluster.firewallType().toFirewallTypeB() }
 		haReservation { cluster.haReservation() }
 		logMaxMemory { cluster.logMaxMemoryUsedThresholdAsLong() }
-		logMaxMemoryType { cluster.logMaxMemoryUsedThresholdType() }
+		logMaxMemoryType { cluster.logMaxMemoryUsedThresholdType().toLogMaxMemoryUsedThresholdTypeB() }
 		memoryOverCommit { cluster.memoryPolicy().overCommit().percentAsInteger() }
-		migrationPolicy { cluster.migration().autoConverge() }
+		migrationPolicy { cluster.migration().autoConverge()?.toBoolean() }
 		errorHandling { cluster.errorHandling().onError().toMigrateOnErrorB() }
-		bandwidth { cluster.migration().bandwidth().assignmentMethod() }
+		bandwidth { cluster.migration().findMigrationBandwidthLimitType() }
 		networkVo { cluster.networks().firstOrNull() { it.display() }?.toNetworkIdName() }
 		version { cluster.version().major().toString() + "." + cluster.version().minor() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }

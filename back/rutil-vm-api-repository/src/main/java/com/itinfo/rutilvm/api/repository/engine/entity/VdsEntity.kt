@@ -1,5 +1,9 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.SELinuxModeB
+import com.itinfo.rutilvm.api.ovirt.business.VdsSpmStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
+import com.itinfo.rutilvm.api.ovirt.business.VdsTransparentHugePages
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -13,6 +17,7 @@ import javax.persistence.OneToMany
 import javax.persistence.Table
 import java.io.Serializable
 import java.math.BigDecimal
+import java.math.BigInteger
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -167,7 +172,7 @@ class VdsEntity(
 	val otpValidity: Long? = null,
 
 	@Column(name = "spm_status")
-	val spmStatus: Int? = null,
+	private val _spmStatus: Int? = null,
 
 	@Column(name = "supported_cluster_levels")
 	val supportedClusterLevels: String? = null,
@@ -209,7 +214,7 @@ class VdsEntity(
 	val iscsiInitiatorName: String? = null,
 
 	@Column(name = "transparent_hugepages_state")
-	val transparentHugepagesState: Int? = null,
+	private val _transparentHugepagesState: Int? = null,
 
 	@Column(name = "anonymous_hugepages")
 	val anonymousHugepages: Int? = null,
@@ -259,26 +264,13 @@ class VdsEntity(
 
 	@Column(name = "supported_rng_sources")
 	val supportedRngSources: String? = null,
-
-	@Column(name = "ssh_port")
-	val sshPort: Int? = null,
-
-	@Column(name = "ssh_username")
+	val sshPort: BigInteger? = BigInteger.ZERO,
 	val sshUsername: String? = null,
 
-	@Column(name = "ha_score")
 	val haScore: Int? = null,
-
-	@Column(name = "ha_configured")
 	val haConfigured: Boolean? = null,
-
-	@Column(name = "ha_active")
 	val haActive: Boolean? = null,
-
-	@Column(name = "ha_global_maintenance")
 	val haGlobalMaintenance: Boolean? = null,
-
-	@Column(name = "ha_local_maintenance")
 	val haLocalMaintenance: Boolean? = null,
 
 	@Column(name = "disable_auto_pm")
@@ -294,7 +286,7 @@ class VdsEntity(
 	val kdumpStatus: Int? = null,
 
 	@Column(name = "selinux_enforce_mode")
-	val selinuxEnforceMode: Int? = null,
+	private val _selinuxEnforceMode: Int? = null,
 
 	@Column(name = "auto_numa_balancing")
 	val autoNumaBalancing: Int? = null,
@@ -406,6 +398,12 @@ class VdsEntity(
 	val cluster: ClusterViewEntity? = null,
 ) : Serializable {
 
+	val selinuxEnforceMode: SELinuxModeB?		get() = SELinuxModeB.forValue(_selinuxEnforceMode)
+	val spmStatus: VdsSpmStatus?				get() = VdsSpmStatus.forValue(_spmStatus)
+	val vdsStatus: VdsStatus? 				get() = VdsStatus.forValue(_status)
+	val transparentHugepagesState: VdsTransparentHugePages get() = VdsTransparentHugePages.forValue(_transparentHugepagesState)
+
+
 	override fun toString(): String =
 		gson.toJson(this@VdsEntity)
 
@@ -509,7 +507,7 @@ class VdsEntity(
 		private var bHbas: String? = null; fun hbas(block: () -> String?) { bHbas = block() }
 		private var bSupportedEmulatedMachines: String? = null; fun supportedEmulatedMachines(block: () -> String?) { bSupportedEmulatedMachines = block() }
 		private var bSupportedRngSources: String? = null; fun supportedRngSources(block: () -> String?) { bSupportedRngSources = block() }
-		private var bSshPort: Int? = null; fun sshPort(block: () -> Int?) { bSshPort = block() }
+		private var bSshPort: BigInteger? = BigInteger.ZERO; fun sshPort(block: () -> BigInteger?) { bSshPort = block() ?: BigInteger.ZERO }
 		private var bSshUsername: String? = null; fun sshUsername(block: () -> String?) { bSshUsername = block() }
 		private var bHaScore: Int? = null; fun haScore(block: () -> Int?) { bHaScore = block() }
 		private var bHaConfigured: Boolean? = null; fun haConfigured(block: () -> Boolean?) { bHaConfigured = block() }

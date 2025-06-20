@@ -26,8 +26,8 @@ import Logger                           from "@/utils/Logger";
 // 일반 정보
 const initialFormState = {
   id: "",
-  domainType: "DATA", // 기본값 설정
-  storageType: "NFS", // 기본값 설정
+  domainType: "data", // 기본값 설정
+  storageType: "nfs", // 기본값 설정
   name: "",
   comment: "",
   description: "",
@@ -70,8 +70,8 @@ const DomainImportModal = ({
   } = useSearchFcFromHost(hostVo?.id, (e) => ({ ...e }));
   
   
-  const isNfs = formState.storageType === "NFS";
-  const isFibre = formState.storageType === "FCP";
+  const isNfs = formState.storageType === "nfs";
+  const isFibre = formState.storageType === "fcp";
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -160,7 +160,7 @@ const DomainImportModal = ({
     const storageVo = isNfs
       ? (() => {
           const [storageAddress, storagePath] = nfsAddress.split(":");
-          return { type: "NFS", address: storageAddress, path: storagePath };
+          return { type: "nfs", address: storageAddress, path: storagePath };
         })()
       : (() => {
           const selectedFibre = fibres.find((f) => f.id === id);
@@ -283,20 +283,20 @@ export default DomainImportModal;
 
 
 const domainTypes = [
-  { value: "DATA", label: "데이터" },
-  { value: "ISO", label: "ISO" },
-  { value: "EXPORT", label: Localization.kr.EXPORT },
+  { value: "data", label: "데이터" },
+  { value: "iso", label: "ISO" },
+  { value: "export", label: Localization.kr.EXPORT },
 ];
 
 const storageTypeOptions = (dType) => {
   switch (dType) {
-    case "ISO":
-    case "EXPORT":
-      return [{ value: "NFS", label: "NFS" }];
+    case "iso":
+    case "export":
+      return [{ value: "nfs", label: "NFS" }];
     default: // data
       return [
-        { value: "NFS", label: "NFS" },
-        { value: "FCP", label: "Fibre Channel" },
+        { value: "nfs", label: "NFS" },
+        { value: "fcp", label: "Fibre Channel" },
       ];
   }
 };

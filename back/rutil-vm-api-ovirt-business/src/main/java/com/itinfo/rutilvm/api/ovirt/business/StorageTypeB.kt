@@ -38,10 +38,7 @@ enum class StorageTypeB(
 				codeMapping[it.name] = it
 			}
 		}
-		val allStorageTypes: List<StorageTypeB> = StorageTypeB.values().filterNot {
-			it == unknown
-		}
-
+		val allStorageTypes: List<StorageTypeB> = StorageTypeB.values().filterNot { it == unknown }
 		@JvmStatic fun forValue(value: Int?): StorageTypeB = valueMapping[value ?: unknown.value] ?: unknown
 		@JvmStatic fun forCode(code: String?): StorageTypeB = codeMapping[code ?: unknown.code] ?: unknown
 	}

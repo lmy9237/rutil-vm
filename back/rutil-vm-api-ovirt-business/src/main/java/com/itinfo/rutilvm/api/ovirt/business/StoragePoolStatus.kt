@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * [StoragePoolStatus]
- * 스토리지풀 (데이터센터) 상태
+ * 스토리지풀 (a.k.a 데이터센터) 상태
  *
  * @author 이찬희 (@chanhi2000)
  */
@@ -22,6 +22,15 @@ enum class StoragePoolStatus(
 	override fun toString(): String = code
 	val code: String
 		get() = this@StoragePoolStatus.name.uppercase()
+
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val localizationKey: String
+		get() = "${StoragePoolStatus::class.java.simpleName}.${this.name}"
+	val kr: String
+		get() = loc.findLocalizedName4StoragePoolStatus(this, "kr")
+	val en: String
+		get() = loc.findLocalizedName4StoragePoolStatus(this, "en")
 
 	companion object {
 		private val valueMapping: MutableMap<Int, StoragePoolStatus> = ConcurrentHashMap<Int, StoragePoolStatus>()

@@ -6,8 +6,11 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
+import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.QuotaEnforcementType
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
+import com.itinfo.rutilvm.api.ovirt.business.SwitchTypeB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -56,6 +59,14 @@ interface ItTypeService {
 	@Throws(Error::class)
 	fun findAllFipsModes(): List<TypeVo>
 	/**
+	 * [ItTypeService.findAllMigrateOnErrors]
+	 * 마이그레이션 복구정책 목록
+	 *
+	 * @return List<[TypeVo]> 마이그레이션 복구정책 목록
+	 */
+	@Throws(Error::class)
+	fun findAllMigrateOnErrors(): List<TypeVo>
+	/**
 	 * [ItTypeService.findAllMigrationSupports]
 	 * 마이그레이션 모드 목록
 	 *
@@ -72,6 +83,22 @@ interface ItTypeService {
 	@Throws(Error::class)
 	fun findAllQuotaEnforcementTypes(): List<TypeVo>
 	/**
+	 * [ItTypeService.findAllStorageDomainTypes]
+	 * 스토리지 도메인 유형 목록
+	 *
+	 * @return List<[TypeVo]> 스토리지 도메인 유형 목록
+	 */
+	@Throws(Error::class)
+	fun findAllStorageDomainTypes(): List<TypeVo>
+	/**
+	 * [ItTypeService.findAllSwitchTypes]
+	 * 네트워크 스위치 유형 목록
+	 *
+	 * @return List<[TypeVo]> 네트워크 스위치 유형 목록
+	 */
+	@Throws(Error::class)
+	fun findAllSwitchTypes(): List<TypeVo>
+	/**
 	 * [ItTypeService.findAllVmTypes]
 	 * 가상머신 유형 (a.k.a. 최적화 옵션) 목록
 	 *
@@ -79,6 +106,7 @@ interface ItTypeService {
 	 */
 	@Throws(Error::class)
 	fun findAllVmTypes(): List<TypeVo>
+
 }
 
 @Service
@@ -112,9 +140,9 @@ class TypeServiceImpl(
 		return FipsModeB.allFipsModes.toTypeVosFromFipsModes()
 	}
 
-	override fun findAllVmTypes(): List<TypeVo> {
-		log.info("findAllVmTypes ... ")
-		return VmTypeB.allVmTypes.toTypeVosFromVmTypes()
+	override fun findAllMigrateOnErrors(): List<TypeVo> {
+		log.info("findAllMigrateOnErrors ... ")
+		return MigrateOnErrorB.allMigrateOnErrors.toTypeVosFromMigrateOnErrors()
 	}
 
 	override fun findAllMigrationSupports(): List<TypeVo> {
@@ -124,7 +152,22 @@ class TypeServiceImpl(
 
 	override fun findAllQuotaEnforcementTypes(): List<TypeVo> {
 		log.info("findAllQuotaEnforcementTypes ... ")
-		return QuotaEnforcementType.allQuotaEnforcementTypes.toTypeVosQuotaEnforcementTypes()
+		return QuotaEnforcementType.allQuotaEnforcementTypes.toTypeVosFromQuotaEnforcementTypes()
+	}
+
+	override fun findAllStorageDomainTypes(): List<TypeVo> {
+		log.info("findAllStorageDomainTypes ... ")
+		return StorageDomainTypeB.allStorageDomainTypes.toTypeVosFromStorageDomainTypes()
+	}
+
+	override fun findAllSwitchTypes(): List<TypeVo> {
+		log.info("findAllSwitchTypes ... ")
+		return SwitchTypeB.allSwitchTypes.toTypeVosFromSwitchTypes()
+	}
+
+	override fun findAllVmTypes(): List<TypeVo> {
+		log.info("findAllVmTypes ... ")
+		return VmTypeB.allVmTypes.toTypeVosFromVmTypes()
 	}
 
 	companion object {
@@ -174,6 +217,13 @@ fun FipsModeB.toTypeVoFromFipsMode(): TypeVo = TypeVo(
 )
 fun List<FipsModeB>.toTypeVosFromFipsModes(): List<TypeVo> =
 	this@toTypeVosFromFipsModes.map { it.toTypeVoFromFipsMode() }
+fun MigrateOnErrorB.toTypeVoFromMigrateOnError(): TypeVo = TypeVo (
+	this@toTypeVoFromMigrateOnError.name,
+	this@toTypeVoFromMigrateOnError.kr,
+	this@toTypeVoFromMigrateOnError.en,
+)
+fun List<MigrateOnErrorB>.toTypeVosFromMigrateOnErrors(): List<TypeVo> =
+	this@toTypeVosFromMigrateOnErrors.map { it.toTypeVoFromMigrateOnError() }
 fun MigrationSupport.toTypeVoFromMigrationSupport(): TypeVo = TypeVo(
 	this@toTypeVoFromMigrationSupport.name,
 	this@toTypeVoFromMigrationSupport.kr,
@@ -186,8 +236,22 @@ fun QuotaEnforcementType.toTypeVoFromQuotaEnforcementType(): TypeVo = TypeVo(
 	this@toTypeVoFromQuotaEnforcementType.kr,
 	this@toTypeVoFromQuotaEnforcementType.en,
 )
-fun List<QuotaEnforcementType>.toTypeVosQuotaEnforcementTypes(): List<TypeVo> =
-	this@toTypeVosQuotaEnforcementTypes.map { it.toTypeVoFromQuotaEnforcementType() }
+fun List<QuotaEnforcementType>.toTypeVosFromQuotaEnforcementTypes(): List<TypeVo> =
+	this@toTypeVosFromQuotaEnforcementTypes.map { it.toTypeVoFromQuotaEnforcementType() }
+fun StorageDomainTypeB.toTypeVoFromStorageDomainType(): TypeVo = TypeVo(
+	this@toTypeVoFromStorageDomainType.name,
+	this@toTypeVoFromStorageDomainType.kr,
+	this@toTypeVoFromStorageDomainType.en,
+)
+fun List<StorageDomainTypeB>.toTypeVosFromStorageDomainTypes(): List<TypeVo> =
+	this@toTypeVosFromStorageDomainTypes.map { it.toTypeVoFromStorageDomainType() }
+fun SwitchTypeB.toTypeVoFromSwitchType(): TypeVo = TypeVo(
+	this@toTypeVoFromSwitchType.name,
+	this@toTypeVoFromSwitchType.kr,
+	this@toTypeVoFromSwitchType.en,
+)
+fun List<SwitchTypeB>.toTypeVosFromSwitchTypes(): List<TypeVo> =
+	this@toTypeVosFromSwitchTypes.map { it.toTypeVoFromSwitchType()}
 fun VmTypeB.toTypeVoFromVmType(): TypeVo = TypeVo(
 	this@toTypeVoFromVmType.name,
 	this@toTypeVoFromVmType.kr,

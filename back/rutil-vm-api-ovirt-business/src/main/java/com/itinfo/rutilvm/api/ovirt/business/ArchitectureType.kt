@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 enum class ArchitectureType(
 	override val value: Int,
 	val family: ArchitectureType? = null,
-): Identifiable{
+): Identifiable {
 
 	// Base architectures
 	undefined(0),

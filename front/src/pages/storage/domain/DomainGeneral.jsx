@@ -13,8 +13,8 @@ import {
   convertBytesToGB
 } from "@/util";
 import Localization               from "@/utils/Localization";
-import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import VmGeneralBarChart from "@/pages/computing/vm/VmGeneralBarChart";
+import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
+import VmGeneralBarChart          from "@/pages/computing/vm/VmGeneralBarChart";
 import DomainStorageUsageBarChart from "./DomainGeneralBarChart";
 import GeneralLayout from "@/components/GeneralLayout";
 
@@ -51,7 +51,7 @@ const DomainGeneral = ({
     ...(diskSnapshots?.length > 0
       ? [{ label: "디스크 스냅샷 개수",value: diskSnapshots?.length || 0 }]
       : []),
-    ...(domain?.storageVo?.type === "NFS"
+    ...(domain?.storageVo?.type === "nfs"
       ? [{ label: "경로", value: `${domain?.storageVo?.address}:${domain?.storageVo?.path}` }]
       : []),
     { 
@@ -78,14 +78,14 @@ const DomainGeneral = ({
     <GeneralLayout
       top={
       <>
-      <div className="grid-col-span-2 vm-box-default box-content">
-        <h3 className="box-title">게스트 운영체제</h3>
-        <hr className="w-full" />
-        <InfoTable tableRows={tableRows} />
-      </div>
-      <GeneralBoxProps title="용량 및 사용량">
-        <DomainStorageUsageBarChart />
-      </GeneralBoxProps>
+        <div className="grid-col-span-2 vm-box-default box-content">
+          <h3 className="box-title">게스트 운영체제</h3>
+          <hr className="w-full" />
+          <InfoTable tableRows={tableRows} />
+        </div>
+        <GeneralBoxProps title="용량 및 사용량">
+          <DomainStorageUsageBarChart />
+        </GeneralBoxProps>
       </>
     }
     bottom={

@@ -43,7 +43,7 @@ const chipsetOptions = () => [
 
 // CPU 아키텍쳐
 const cpuArcs = () => [
-  { value: "UNDEFINED", label: "정의되지 않음" },
+  { value: "undefined", label: "정의되지 않음" },
   { value: "x86_64",    label: "x86_64" },
   { value: "ppc64",     label: "ppc64" },
   { value: "s390x",     label: "s390x" },
