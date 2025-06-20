@@ -29,7 +29,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
-## 0.3.3 - 2025-06-13
+## 0.3.5 - 2025-06-20
+
+- [`api-v0.3.4`][api-v0.3.4]: 백엔드
+- [`web-v0.3.4`][web-v0.3.4]: 프론트앤드
+
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`: 상태 값 관리를 위한 enum 생성 및 기능 정리
+  - `${back}`/`${front}`: 가상머신의 운영시스템에 대한 아이콘 조회
+  - `${back}`: VMWare API 구현 (v2v용)
+- [@dhj27][dhj27]
+  - `${back}`: Entity 생성
+    - `DwhHostConfigurationFullCheckEntity`, `DwhHostConfigurationFullCheckRepository`, `VmTemplateEntity`, `VmTemplateRepository`, `VmTemplateStatus`
+  - `${front}`: 가상머신
+      - 가상머신 모달에 들어가는 디스크 모달 추가 (`VmCreateDiskConnectionModal`, `VmCreateDiskModal`)
+  - `${front}`: util: emptyIdNameVo(), checkDuplicateName() 추가
+- [@lmy9237][lmy9237]
+  - `${front}`: 리액트차트 추가
+  - `${front}`: vm-box-default 컴포넌트분리(클래스이름변경 필요)
+  - `${front}`: GeneralLayout 컴포넌트분리
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: 호스트 > 네트워크: 목록출력 오류
+  - `${back}`/`${front}`:  트리메뉴 우클릭 기능 정상화
+    - 우클릭했을때 상태 반영 오류(ex 켜진 가상머신은 마이그레이션 활성화)
+    - 스토리지 도메인 > 일반: 경로 값 누락 (NFS만 해당)
+- [@dhj27][dhj27]
+  - `${back}`: entity Type 수정
+  - `${back}`: findUnattachedDiskImageFromDataCenter 수정
+  - `${front}`: 가상머신: 모달 수정 (VmModal, VmDiskModal, VmDiskConnectionModal, VmDiskDeleteModal )
+  - `${front}`: 스토리지 도메인: 모달 수정
+  - `${front}`: DataCenterModal 쿼터모드 수정
+  - `${front}`: ClusterModal cpuArc, cpuType, bisoType 수정
+- [@lmy9237][lmy9237]
+  - `${front}`: 가상머신 ,호스트,루틸매니저,도메인 일반페이지 디자인수정
+  - `${front}`: 일반페이지 스냅샷, 콘솔버튼 연결
+  - `${front}`: lable 문자열 Localization 변경
+  - `${front}`: 도메인 테이이블 컬럼 사이즈
+  - `${front}`: 호스트네트워크 높이 맞추기(반응형)
+  - `${front}`: 도메인 상세페이지 정보 틀린 것 수정(제목,데이터)
+  - `${front}`: path.jsx 쪽에 margin-bottom값 주기 (여백)
+  - `${front}`: rutil상세페이지 용량 및 사용량 네트워크가 아니라 스토리지로 변경
+  - `${front}`: 대시보드
+    - 대시보드 bar차트 navigate경로 오류 수정
+    - bar 범위 넘는오류 수정
+    - sidebar 넓게 늘렸을 때 그래프 겹치는 오류 수정(아래로 떨어지게)
+  - `${front}`: 가상머신
+    - 그래프 값 넣기
+    - 일반: 용량 및 사용량  바 색 (`#6396d8` ) → 가상머신은 빨간색으로 고정
+    - 상세페이지 콘솔박스 상세페이지 크기줄이기
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+---
+
+## 0.3.4 - 2025-06-13
 
 - [`api-v0.3.4`][api-v0.3.4]: 백엔드
 - [`web-v0.3.4`][web-v0.3.4]: 프론트앤드
@@ -1277,6 +1340,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.5]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.4...web-v0.3.5
+[web-v0.3.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.4...api-v0.3.5
 [api-v0.3.4]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.3...web-v0.3.4
 [web-v0.3.4]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.3...api-v0.3.4
 [web-v0.3.3]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.2...web-v0.3.3
