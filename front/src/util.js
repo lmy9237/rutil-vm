@@ -1,6 +1,15 @@
 import Localization from "./utils/Localization";
 import Logger from "./utils/Logger";
 
+/**
+ * vo에 {id="", name=""} 일때 사용
+ * @returns 
+ */
+export function emptyIdNameVo() {
+  return { id: "", name: "" };
+}
+
+
 export function checkEmpty(value) {
   Logger.debug(`util > checkKoreanName ... value: ${value}`);
   return (value == null || value === undefined || value === "")
@@ -18,6 +27,7 @@ export function checkKoreanName(name) {
   Logger.debug(`util > checkKoreanName ... name: ${name}, res: ${res}`);
   return res; // 한글이 포함되면 true 반환
 }
+
 
 /**
  * @name checkSpaceName
@@ -43,6 +53,25 @@ export function checkName(name) {
   if (checkKoreanName(name)) return `${Localization.kr.NAME}이 유효하지 않습니다.`;
   if (checkSpaceName(name)) return `${Localization.kr.NAME}에 공백은 허용되지 않습니다.`;
   return null; // 유효성 문제 없음
+}
+
+/**
+ * 중복 이름 체크
+ * @param {Array} options 전체 리스트
+ * @param {string} name 확인할 이름
+ * @param {string=} id (선택) 제외할 항목 id
+ * @returns {string | undefined} 중복 시 에러 메시지 반환, 아니면 undefined
+ */
+export function checkDuplicateName(options, name, id) {
+  if (!name || !Array.isArray(options)) return;
+
+  const duplicate = options.find(option =>
+    option?.name === name && (!id || option?.id !== id)
+  );
+
+  if (duplicate) {
+    return `${name}는 중복된 이름입니다.`;
+  }
 }
 
 /**

@@ -179,6 +179,7 @@ const TableColumnsInfo = {
     { accessor: 'sharable',       header: Localization.kr.IS_SHARABLE,    clickable: false, width: '4%' },
     { accessor: 'readOnly',       header: Localization.kr.IS_READ_ONLY,   clickable: false, width: '4%' },
     { accessor: 'virtualSize',    header: Localization.kr.SIZE_VIRTUAL,   clickable: false, width: '4%'},
+    { accessor: 'storageDomain',  header: Localization.kr.DOMAIN,       clickable: false },
     // { accessor: 'connectionvm',   header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, clickable: false },
     { accessor: 'interface',      header: '인터페이스',                     clickable: false },
     { accessor: 'logicalName',    header: '논리적 이름',                    clickable: false },

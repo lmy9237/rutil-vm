@@ -46,7 +46,7 @@ const VmDiskMoveModal = ({
         }
       }
     })),
-  });  
+  });
 
   useEffect(() => {
     console.log("$diskList", diskList);

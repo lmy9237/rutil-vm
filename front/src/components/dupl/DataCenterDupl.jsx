@@ -42,7 +42,7 @@ const DataCenterDupl = ({
       ),
       icon: status2Icon(status),
       iconSortKey: getStatusSortKey(status), // 그 다음에 사용
-      status: Localization.kr.renderStatus(status),
+      status: dc?.status === "up" ? "실행 중" : "초기화되지 않음",
       storageType: dc?.storageType ? "로컬" : "공유됨",
       searchText: `${dc?.name} ${status} ${dc?.storageType ? "로컬" : "공유됨"}`,
     };
