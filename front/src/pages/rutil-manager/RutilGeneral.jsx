@@ -106,26 +106,22 @@ const RutilGeneral = () => {
     <GeneralLayout
       top={
       <>
-
         <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
-          <h3 className="box-title">게스트 운영체제</h3>
-          <hr className="w-full" />
           <div className="flex h-full">
             <div className="half-box">
               <RutilVmLogo className="big"
                 details={`v${dashboard?.version} (${dashboard?.releaseDate})`}
               />
-               
             </div>
            <InfoTable tableRows={tableRows} /> 
           </div>
         </div>
 
         <div className="vm-box-default">
-          <h3 className="box-title">용량 및 사용량</h3>
+          <h3 className="box-title ">용량 및 사용량</h3>
           <hr className="w-full" />
           <div className="box-content">
-           <VmGeneralBarChart/>
+           <VmGeneralBarChart type="rutil"/>
           </div>
         </div>
       
@@ -133,7 +129,6 @@ const RutilGeneral = () => {
     }
     bottom={
       <>
-      
         <RutilGeneralBoxProps title="Data Center" icon={<RVI16 iconDef={rvi16DataCenter()} />} badge={1}>
           <div>Default :</div>
           <div>1 클러스터</div>

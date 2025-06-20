@@ -1,6 +1,6 @@
 .summary-box {
   background: var(--color-white-1);
-  border: 1px solid #e2e8f0;
+  border: var(--border-default);
   border-radius: 2px;
   padding: 12px 14px;
   min-height: 158px;
@@ -29,7 +29,7 @@
 .badge {
   background: var(--color-white);
   padding: 3px 13px;
-  border-radius: 9999px;
+  border-radius: 30%;
   font-size: 12px;
   font-weight: 700;
 }

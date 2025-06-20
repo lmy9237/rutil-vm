@@ -177,6 +177,7 @@ html {
   --fs-default: 12px;
   --fs-13: 13px;
   --fs-14: 14px;
+  --fs-15: 15px;
   --fs-16: 16px;
   --fs-18: 18px;
   --fs-22: 22px;
@@ -219,6 +220,9 @@ body {
 .fs-14,.fs-14 > * {/*폰트14px*/
   font-size:var(--fs-14) !important;line-height:var(--fs-14) !important;
 }
+.fs-15,.fs-15 > * {/*폰트14px*/
+  font-size:var(--fs-15) !important;line-height:var(--fs-15) !important;
+}
 .fs-16,.fs-16 > * {/*폰트16ㅔx*/
   font-size:var(--fs-16) !important;line-height:var(--fs-16) !important;
 }
@@ -248,6 +252,7 @@ body {
 
 hr {
   height: var(--border-w);
+  z-index: 99999;
   background-color: var(--color-border-default);
 }
 ul {
@@ -355,13 +360,13 @@ svg.btn { cursor: pointer; }
   overflow: hidden; 
 }
 
-.select-box {
+/* .select-box {
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.2rem;
-}
-.select-box select,
-.select-box input,
+} */
+/* .select-box select,
+.select-box input, */
 .img-input-box input,
 .img-select-box select {
   width: 55%;
@@ -377,8 +382,52 @@ svg.btn { cursor: pointer; }
   border: none !important;
   color: inherit !important;
 }
-.no-search-box{
-  margin-bottom: 15px;
+/*일반페이지*/
+.half-box {
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-
+.grid-col-span-2 {
+  grid-column: span 2;
+  min-width: 971px !important;
+}
+.box-title {
+  font-size: var(--fs-15);
+  font-weight: bold;
+  margin-bottom: 13px;
+}
+.vm-info-box-outer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.box-content  .info-table-wrapper{
+  min-width: 448px !important;
+  padding: 5px 3px !important;
+}
+.box-content .info-table th,
+.box-content .info-table td
+{
+  padding: 8px 0 !important;
+}
+.box-content {
+  font-size: 14px;
+  flex: 1;
+}
+@media (max-width: 1424px) {
+  .grid-col-span-2 {
+    grid-column: auto;
+    min-width: 0 !important;
+  }
+  .vm-info-box-outer > .flex {
+    flex-wrap: wrap;
+  }
+  .vm-info-box-outer {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+  }
+}

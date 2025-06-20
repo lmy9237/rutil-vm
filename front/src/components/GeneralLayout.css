@@ -3,12 +3,13 @@
   flex-direction: column;
   gap: 8px;
   height: 100%;
+  padding: 3px 10px;
   width: 100%;
 }
 .vm-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
 .section-top {
   /* background-color: #fff3cd;  */
@@ -18,5 +19,13 @@
 .section-bottom {
   /* background-color: #f3e8ff;  */
   width: 100%;
+  max-height: 355px;
   height: 100%;
+}
+@media (max-width: 1424px) {
+ .vm-section{
+    display: flex;
+    flex-direction: column;
+    width: auto;
+  }
 }

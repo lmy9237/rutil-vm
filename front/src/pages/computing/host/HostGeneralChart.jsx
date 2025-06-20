@@ -68,14 +68,14 @@ const HostGeneralChart = () => {
 
   return (
     <div className="vm-box-default show-yaxis" style={{ minWidth: "100%", padding: "16px" }}>
-      <h3 className="box-title">실시간 사용량</h3>
+      <h3 className="box-title ">실시간 사용량</h3>
       <hr className="w-full" />
       <div className="box-content" style={{ padding: "12px 0" }}>
         <ReactApexChart
           options={chartOptions}
           series={series}
           type="line"
-          height={269}
+          height={255}
         />
       </div>
     </div>

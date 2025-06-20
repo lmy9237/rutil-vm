@@ -1,58 +1,17 @@
 /*일반파트*/
-
-.grid-col-span-2 {
-  grid-column: span 2;
-}
-
-.vm-info-box-outer {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
-
-
-.half-box {
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.box-content  .info-table-wrapper{
-  min-width: 448px !important;
-}
 .vm-info-content {
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
 }
-
-.vm-info-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 14px;
-}
-
 .vm-box-default {
   background: var(--color-white-1);
-  border: 1px solid #ddd;
+  border: var(--border-default);
   padding: 16px;
   border-radius: 2px;
   display: flex;
+  min-height: 200px;
   flex-direction: column;
-}
-
-.box-title {
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 13px;
-}
-
-.box-content {
-  font-size: 14px;
-  flex: 1;
 }
 
 .box-content.snapshots > .snapshot-add {
@@ -64,30 +23,8 @@
 .snapshots .snapshot-entry{
   padding:3px 0;
 }
-
-/**/
-/* 공통 */
-
 /* 반응형 */
 @media (max-width: 1424px) {
- .vm-section{
-    display: flex;
-    flex-direction: column;
-    width: auto;
-  }
-
-  .grid-col-span-2 {
-    grid-column: auto;
-  }
-  .vm-info-box-outer > .flex {
-    flex-wrap: wrap;
-  }
-  .vm-info-box-outer {
-    flex-direction: column;
-    align-items: stretch;
-    height: auto;
-  }
-
   .half-box {
     flex: 1 1 100%;
     min-width: 100%;

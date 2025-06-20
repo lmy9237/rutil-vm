@@ -128,23 +128,35 @@ const VmGeneral = ({
   // ];
 
   // 게스트 운영 체제
-const generalTableRows = [
-  { label: "이름", value: vm?.name },
-  { label: "상태", value: <div className="f-start">{status2Icon(vm?.status)} {Localization.kr.renderStatus(vm?.status)}</div> },
-  { label: "업타임", value: vm?.upTime },
-  { label: "운영 시스템", value: vm?.guestOsType || vm?.osTypeName },
-  { label: "고가용성", value: vm?.ha ? "예" : "아니요" }, // ✅ 수정
-  { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" },
-  { label: "설명", value: vm?.description },
-];
+  const generalTableRows = [
+    { label: Localization.kr.NAME, value: vm?.name },
+    { 
+      label: Localization.kr.STATUS, 
+      value: <div className="f-start">{status2Icon(vm?.status)} {Localization.kr.renderStatus(vm?.status)}</div> 
+    },
+    { label: Localization.kr.UP_TIME, value: Localization.kr.renderTime(vm?.upTime) },
+    { label: Localization.kr.OPERATING_SYSTEM, value: vm?.guestOsType || vm?.osTypeName },
+    { label: Localization.kr.HA, value: vm?.ha ? Localization.kr.YES : Localization.kr.NO },
+    { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" }, // Localization에 정의 없으므로 그대로 유지
+    { label: Localization.kr.DESCRIPTION, value: vm?.description },
+  ];
 
   //가상머신 하드웨어
   const hardwareTableRows = [
-    { label: "CPU", value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` },
-    { label: "메모리", value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` },
-    { label: "할당할 실제 메모리", value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)} MB` },
+    { 
+      label: Localization.kr.CPU, 
+      value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` 
+    },
+    { 
+      label: Localization.kr.MEMORY, 
+      value: `${convertBytesToMB(vm?.memorySize ?? 0)} MB` 
+    },
+    { 
+      label: "할당할 실제 메모리", // Localization.kr에 없음
+      value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)} MB` 
+    },
     {
-      label: "네트워크 어댑터",
+      label: `${Localization.kr.NETWORK} 어댑터`,
       value: (
         <>
           {vm?.nicVos?.map((nic, idx) => (
@@ -156,7 +168,7 @@ const generalTableRows = [
       )
     },
     {
-      label: "디스크",
+      label: Localization.kr.DISK,
       value: (
         <>
           {vm?.diskAttachmentVos?.map((disk, idx) => (
@@ -168,21 +180,22 @@ const generalTableRows = [
       )
     }
   ];
+
   //관련 개체
   const relatedTableRows = [
-    { label: "Data Center", value: vm?.dataCenterVo?.name || "Default" },
-    { label: "Cluster", value: vm?.clusterVo?.name },
-    { label: "호스트", value: (
-        <div>
-          {vm?.hostVo?.name} {/*({vm?.hostVo?.address})*/}
-        </div>
-      )
-    }, {
-      label: "스토리지 도메인",
+    { label: Localization.kr.DATA_CENTER, value: vm?.dataCenterVo?.name || "Default" },
+    { label: Localization.kr.CLUSTER, value: vm?.clusterVo?.name },
+    {
+      label: Localization.kr.HOST, 
+      value: <div>{vm?.hostVo?.name}</div>
+    },
+    {
+      label: Localization.kr.DOMAIN,
+
       value: [...new Set(vm?.diskAttachmentVos?.map(disk => disk?.disk?.storageDomainName))].join(", ")
     },
     {
-      label: "네트워크",
+      label: Localization.kr.NETWORK,
       value: [...new Set(vm?.nicVos?.map(nic => nic?.network?.name))].join(", ")
     }
   ];
@@ -273,14 +286,13 @@ const generalTableRows = [
           </div>
 
           <GeneralBoxProps title="용량 및 사용량">
-            <VmGeneralBarChart />
+            <VmGeneralBarChart type="vm" usageDto={vm?.usageDto} />
           </GeneralBoxProps>
        
         </>
       }
       bottom={
         <>
-        
           <GeneralBoxProps title="가상머신 하드웨어">
             <InfoTable tableRows={hardwareTableRows} />
           </GeneralBoxProps>

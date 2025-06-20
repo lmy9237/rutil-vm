@@ -1,13 +1,13 @@
 /* max supported dimensions in oVirt API */
 .icon-os-wrapper {
-  width: 240px;
+  width: 210px;
  
 }
 .icon-os-wrapper>div{
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 25px 0;
+  padding: 10px 0;
   border: 1px solid rgb(182, 182, 182);
   background: var(--color-white);
 }
