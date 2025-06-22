@@ -33,9 +33,8 @@ const DomainActionButtons = ({
   const isActive = domain1st?.status?.toUpperCase() === "ACTIVE";
   const isMaintenance = domain1st?.status?.toUpperCase() === "MAINTENANCE";
   const isLocked = domain1st?.status?.toUpperCase() === "LOCKED";
-  const isUnknown = domain1st?.status?.toUpperCase() === "unknown";
-  // const isUnattached = domain1st?.status?.toUpperCase() === "UNATTACHED";
-  const isUnattached = domain1st?.status?.toUpperCase() === "unattached";
+  const isUnknown = domain1st?.status?.toUpperCase() === "UNKNOWN";
+  const isUnattached = domain1st?.status?.toUpperCase() === "UNATTACHED";
 
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },

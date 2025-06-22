@@ -20,6 +20,7 @@ import {
   useHostsFromDataCenter,
   useFibreFromHost,
   useAllNfsStorageDomains,
+  useAllStorageDomains,
 } from "@/api/RQHook";
 import { checkName }                    from "@/util";
 import Localization                     from "@/utils/Localization";
@@ -76,12 +77,19 @@ const DomainModal = ({
     data: datacenters = [],
     isLoading: isDatacentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: domains = [],
+    isLoading: isDomainsLoading 
+  } = useAllStorageDomains((e) => ({ ...e }));
+
   const {
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
-  const { data: nfsList = [] } = useAllNfsStorageDomains((e) => ({ ...e }));
+  const { 
+    data: nfsList = [] 
+  } = useAllNfsStorageDomains((e) => ({ ...e }));
   const {
     data: fibres = [],
     refetch: refetchFibres,
@@ -89,6 +97,15 @@ const DomainModal = ({
     isError: isFibresError, 
     isSuccess: isFibresSuccess
   } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+
+  const getAvailableDomainTypes = useMemo(() => {
+    const hasImportExport = domains.some(d => d.storageDomainType === "import_export");
+    return [
+      { value: "data", label: "데이터" },
+      { value: "iso", label: "ISO" },
+      ...(hasImportExport ? [] : [{ value: "import_export", label: Localization.kr.EXPORT }])
+    ];
+  }, [domains]);
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -170,6 +187,7 @@ const DomainModal = ({
       refetchFibres();
     }
   }, [hostVo?.id, isFibre, editMode, refetchFibres]);
+  
 
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
@@ -288,7 +306,7 @@ const DomainModal = ({
           <LabelSelectOptions id="domain-type" label={`도메인 기능`}
             value={formState.domainType}
             disabled={editMode}
-            options={domainTypes}
+            options={getAvailableDomainTypes}
             onChange={handleInputChange(setFormState, "domainType", validationToast)}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"
@@ -391,16 +409,10 @@ const DomainModal = ({
 export default DomainModal;
 
 
-const domainTypes = [
-  { value: "data", label: "데이터" },
-  { value: "iso", label: "ISO" },
-  // { value: "EXPORT", label: Localization.kr.EXPORT },
-];
-
 const storageTypeOptions = (dType) => {
   switch (dType) {
     case "iso":
-    case "export":
+    case "import_export":
       return [{ value: "nfs", label: "NFS" }];
     default: // data
       return [

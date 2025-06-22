@@ -146,6 +146,7 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		storageDomainType { storageDomainType }
 		// storageVo { storage().toStorageVo() }
 		// master { master() }
+		storageFormat { storageDomainFormatType.toString() }
 		hostedEngine { isHostedEngineStorage }
 		comment { storageComment }
 		size { usedDiskSize?.add(availableDiskSize) }

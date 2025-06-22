@@ -23,7 +23,8 @@ import Localization                  from "@/utils/Localization";
  * @param {Boolean} actionType datacenter-domain, domain-datacenter 버튼활성화,
  * @returns {JSX.Element}
  */
-const DomainDupl = ({
+const 
+DomainDupl = ({
   domains = [], columns = [],
   actionType, sourceContext = "all", 
   refetch, isRefetching, isLoading, isError, isSuccess,
@@ -42,23 +43,25 @@ const DomainDupl = ({
         {domain?.name}
       </TableRowClick>
     ),
-    icon: status2Icon(domain.status?.toUpperCase() === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
+    icon: status2Icon(domain.status === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
     // icon: status2Icon(domain?.storagePoolStatus),    
     iconSortKey: getStatusSortKey(domain?.status), 
     _status: Localization.kr.renderStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
+    format: `V${domain?.storageFormat === "0" ? 1 : domain?.storageFormat }`,
     storageDomainType: 
       domain?.storageDomainType === "master"
         ? `데이터 (마스터)`
         : domain?.storageDomainType === "data"
           ? `데이터`
-          : `${domain?.storageDomainType}`,
+          : domain?.storageDomainType === "import_export"
+            ?  `내보내기`
+            :`${domain?.storageDomainType}`,
     storageType: domain?.storageType === "nfs"
         ? "NFS"
         : domain?.storageType === "iscsi"
             ? "iSCSI"
             : "Fibre Channel",
-    format: domain?.storageFormat,
     size: domain?.size + " GiB",
     availableSize: domain?.availableSize + " GiB",
     usedSize: domain?.usedSize + " GiB",

@@ -21,6 +21,7 @@ import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.DataCenter
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.StorageDomain
+import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.ovirt.engine.sdk4.types.StorageFormat
 import org.ovirt.engine.sdk4.types.StorageType
 import org.ovirt.engine.sdk4.types.StorageType.NFS
@@ -65,7 +66,7 @@ class StorageDomainVo(
 	val storagePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized,
 	val storageType: StorageTypeB = StorageTypeB.unknown,
 	val storageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown,
-	val storageFormat: StorageFormat = StorageFormat.V5,
+	val storageFormat: String = "",
 	val master: Boolean = false,
 	val hostedEngine: Boolean = false,
 	val size: BigInteger = BigInteger.ZERO,
@@ -94,7 +95,7 @@ class StorageDomainVo(
 		private var bStoragePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized;fun storagePoolStatus(block: () -> StoragePoolStatus?) { bStoragePoolStatus = block() ?: StoragePoolStatus.uninitialized }
 		private var bStorageType: StorageTypeB = StorageTypeB.unknown;fun storageType(block: () -> StorageTypeB?) { bStorageType = block() ?: StorageTypeB.unknown }
 		private var bStorageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown;fun storageDomainType(block: () -> StorageDomainTypeB?) { bStorageDomainType = block() ?: StorageDomainTypeB.unknown }
-		private var bStorageFormat: StorageFormat = StorageFormat.V5;fun storageFormat(block: () -> StorageFormat?) { bStorageFormat = block() ?: StorageFormat.V5 }
+		private var bStorageFormat: String = "";fun storageFormat(block: () -> String?) { bStorageFormat = block() ?: "" }
 		private var bMaster: Boolean = false;fun master(block: () -> Boolean?) { bMaster = block() ?: false }
 		private var bHostedEngine: Boolean = false;fun hostedEngine(block: () -> Boolean?) { bHostedEngine = block() ?: false }
 		private var bSize: BigInteger = BigInteger.ZERO;fun size(block: () -> BigInteger?) { bSize = block() ?: BigInteger.ZERO }
@@ -148,7 +149,7 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 		master { storageDomain.masterPresent() && storageDomain.master() }
 		hostedEngine { hostedVm }
 		comment { storageDomain.comment() }
-		storageFormat { storageDomain.storageFormat() }
+		storageFormat { storageDomain.storageFormat().toString() }
 		size { storageDomain.toDomainSize() }
 		usedSize { if(storageDomain.usedPresent()) storageDomain.used() else null }
 		availableSize { if(storageDomain.availablePresent()) storageDomain.available() else null }
@@ -177,7 +178,7 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		storageDomainType { StorageDomainTypeB.forCode(storageDomain.type().value()) }
 		status { dcStatus?.status().toStorageDomainStatusB() }
 		master { if(storageDomain.masterPresent()) storageDomain.master() else false}
-		storageFormat { storageDomain.storageFormat() }
+		storageFormat { storageDomain.storageFormat().toString() }
 		size { storageDomain.toDomainSize() }
 		usedSize { storageDomain.used() }
 		availableSize { storageDomain.available() }
@@ -210,7 +211,7 @@ fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
 		comment { domain.comment() }
 		storageType { domain.storage().type().toStorageTypeB() }
 		master { domain.masterPresent() && domain.master() }
-		storageFormat { domain.storageFormat() }
+		storageFormat { domain.storageFormat().toString() }
 		usedSize { domain.used() }
 		availableSize { domain.available() }
 		size { domain.toDomainSize() }
@@ -240,7 +241,10 @@ fun List<StorageDomain>.toActiveDomains(): List<StorageDomainVo> =
 fun StorageDomainVo.toStorageDomainBuilder(): StorageDomainBuilder {
 	return StorageDomainBuilder()
 		.name(name)
-		.type(storageDomainType.toStorageDomainType())
+		.type(
+			if(storageDomainType === StorageDomainTypeB.import_export){ EXPORT }
+			else { storageDomainType.toStorageDomainType() }
+		)
 		.description(description)
 		.comment(comment)
 		.warningLowSpaceIndicator(warning)
