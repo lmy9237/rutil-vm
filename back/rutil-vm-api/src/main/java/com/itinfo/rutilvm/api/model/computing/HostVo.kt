@@ -258,7 +258,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
  * @param hostConfigurationEntity [HostConfigurationEntity]? 호스트 사용량
  * @return [HostVo]
  */
-fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfigurationEntity): HostVo {
+fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfigurationEntity, usageDto: UsageDto?): HostVo {
     val host = this@toHostInfo
     val statistics: List<Statistic> = conn.findAllStatisticsFromHost(this@toHostInfo.id()).getOrDefault(emptyList())
     val cluster: Cluster? = if(host.clusterPresent()) conn.findCluster(host.cluster().id()).getOrNull() else null
@@ -295,6 +295,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
         hostSwVo { host.toHostSwVo(hostConfigurationEntity) }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
+		usageDto { usageDto }
     }
 }
 

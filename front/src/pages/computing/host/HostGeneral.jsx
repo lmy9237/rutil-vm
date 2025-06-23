@@ -117,7 +117,7 @@ const HostGeneral = ({
   
   const systemTableRows = [
     { label: `${Localization.kr.HOST} ${Localization.kr.NAME}/IP`, value: host?.name },
-    { label: `부팅${Localization.kr.TIME} (${Localization.kr.UP_TIME})`, value: host?.bootingTime },
+    { label: `부팅${Localization.kr.TIME} (${Localization.kr.UP_TIME})`, value: `${host?.bootingTime === "1970. 01. 01. 09:00:00" ? "해당없음": host?.bootingTime} (${host?.upTime})` },
     { label: `활성 ${Localization.kr.VM}`, value: host?.vmSizeVo?.upCnt },
     { label: "SELinux 모드", value: host?.seLinux },
     { 
@@ -125,7 +125,7 @@ const HostGeneral = ({
       value: host?.hostedActive ? `활성화 (점수: ${host?.hostedScore})` : "비활성화"
     },
     { label: "SPM 우선순위", value: host?.spmPriority ?? "없음" },
-    { label: "장치통과", value: host?.devicePassThrough ? "활성" : "비활성" },
+    { label: "장치통과", value: host?.devicePassThrough ? "활성화됨" : "비활성화됨" },
     { label: `iSCSI 개시자 ${Localization.kr.NAME}`, value: host?.iscsi },
   ];
 
@@ -140,7 +140,7 @@ const HostGeneral = ({
     { label: `논리 ${Localization.kr.CPU} 코어 수`, value: host?.hostHwVo?.cpuTopologyAll },
     {
       label: Localization.kr.MEMORY,
-      value: `${convertBytesToMB(host?.memoryTotal)} MB (${convertBytesToMB(host?.memoryUsed)} MB 사용/${convertBytesToMB(host?.memoryMax)} MB 사용 가능)`
+      value: `${convertBytesToMB(host?.memoryTotal)} MB (${convertBytesToMB(host?.memoryUsed)} MB 사용/${convertBytesToMB(host?.memoryFree)} MB 사용 가능)`
     },
   ];
 

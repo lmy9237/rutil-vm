@@ -34,12 +34,13 @@ const HostActionButtons = ({
   const isNonOperational = selected1st?.status?.toUpperCase() === "NON_OPERATIONAL";
   const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
   const isInstalling = selected1st?.status?.toUpperCase() === "INSTALLING";
+  const isReboot = selected1st?.status?.toUpperCase() === "REBOOT";
   const isGlobalMaintenance = selected1st?.globalMaintenance === true
   const isHostedConfigured = selected1st?.hostedConfigured === true
 
   const basicActions = useMemo(() => [
     { type: "create",        onClick: () => setActiveModal("host:create"), label: Localization.kr.CREATE, disabled: isContextMenu && hostsSelected.length > 0, },
-    { type: "update",        onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1  || isInstalling, },
+    { type: "update",        onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: hostsSelected.length !== 1  || isInstalling || isReboot, },
     { type: "remove",        onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: hostsSelected.length === 0 || !isMaintenance || isInstalling },
   ], [actionType, hostsSelected]);
 

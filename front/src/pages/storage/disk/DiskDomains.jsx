@@ -50,11 +50,14 @@ const DiskDomains = ({
       status: domain?.status?.toUpperCase() === 'ACTIVE' ? '활성화' : '비활성화',
       icon: status2Icon(domain.status),
       storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
-      domainType: domain?.storageDomainType === 'data' 
-          ? '데이터'
-          : domain?.storageDomainType === 'iso' 
-            ? 'ISO'
-            : 'EXPORT',
+      domainType: 
+        domain?.storageDomainType === "master"
+          ? `데이터 (마스터)`
+          : domain?.storageDomainType === "data"
+            ? `데이터`
+            : domain?.storageDomainType === "import_export"
+              ?  `내보내기`
+              :`${domain?.storageDomainType}`,
       diskSize: sizeCheck(domain?.diskSize || 0),
       availableSize: sizeCheck(domain?.availableSize || 0),
       usedSize: sizeCheck(domain?.usedSize || 0),

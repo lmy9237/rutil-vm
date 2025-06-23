@@ -21,6 +21,7 @@ import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.DataCenter
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.StorageDomain
+import org.ovirt.engine.sdk4.types.StorageDomainType
 import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.ovirt.engine.sdk4.types.StorageFormat
 import org.ovirt.engine.sdk4.types.StorageType
@@ -175,7 +176,10 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		name { storageDomain.name() }
 		description { storageDomain.description() }
 		comment { storageDomain.comment() }
-		storageDomainType { StorageDomainTypeB.forCode(storageDomain.type().value()) }
+		storageDomainType {
+			if(storageDomain.type() == EXPORT) StorageDomainTypeB.import_export
+			else StorageDomainTypeB.forCode(storageDomain.type().value())
+		}
 		status { dcStatus?.status().toStorageDomainStatusB() }
 		master { if(storageDomain.masterPresent()) storageDomain.master() else false}
 		storageFormat { storageDomain.storageFormat().toString() }

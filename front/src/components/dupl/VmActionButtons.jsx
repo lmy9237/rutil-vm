@@ -116,11 +116,12 @@ const VmActionButtons = ({
     { 
       type: "start", 
       onClick: () => {
-        const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
-        if (!hasBootableDisk || hasPreviewSnapshot) {
-          validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
-          return;
-        }
+        // TODO: API 아직 덜됨
+        // const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
+        // if (!hasBootableDisk || hasPreviewSnapshot) {
+        //   validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
+        //   return;
+        // }
         setActiveModal("vm:start");
       }, 
       label: Localization.kr.START, 

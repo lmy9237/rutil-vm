@@ -54,6 +54,7 @@ const HostInfo = () => {
   const isMaintenance = host?.status?.toUpperCase() === "MAINTENANCE";
   const isNonOperational = host?.status?.toUpperCase() === "NON_OPERATIONAL"
   const isInstalling = host?.status?.toUpperCase() === "INSTALLING";
+  const isReboot = host?.status?.toUpperCase() === "REBOOT";
 
   useEffect(() => {
     if (isHostError || (!isHostLoading && !host)) {
@@ -107,7 +108,7 @@ const HostInfo = () => {
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = useMemo(() => ([
-    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: !isUp || isInstalling, }, 
+    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: isInstalling || isReboot, }, 
     { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance || isInstalling, },
   ]), [host])
 

@@ -269,7 +269,7 @@ class NetworkController: BaseController() {
 	@ResponseStatus(HttpStatus.OK)
 	fun clusters(
 		@PathVariable networkId: String? = null,
-	): ResponseEntity<List<ClusterVo>> {
+	): ResponseEntity<List<NetworkVo>> {
 		log.info("/networks/{}/clusters ... 네트워크 클러스터 목록", networkId)
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()

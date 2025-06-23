@@ -50,14 +50,12 @@ const VmNics = ({
     Success: isNicsSuccess,
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
 
-  // const sortedNics = [...nics].sort((a, b) => a.name.localeCompare(b.name));
-
   const transformedData = [...nics].sort((a, b) => a.name.localeCompare(b.name)).map((nic) => ({
     ...nic,
     id: nic?.id,
     name: nic?.name,
     status: nic?.status,
-    linked: nic?.linked,
+    linked: nic?.linked === true ? "연결됨": "연결해제됨",
     plugged: nic?.plugged,
     ipv4: nic?.ipv4 || "해당 없음",
     ipv6: nic?.ipv6 || "해당 없음",

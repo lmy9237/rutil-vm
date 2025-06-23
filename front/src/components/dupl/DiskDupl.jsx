@@ -67,6 +67,7 @@ const DiskDupl = ({
       sharable: d?.sharable ? "O" : "",
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
+      status: d?.status.toUpperCase(),
       sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
       type: d?.type,
       connect: [

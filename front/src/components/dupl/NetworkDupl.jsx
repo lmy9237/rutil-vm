@@ -12,6 +12,7 @@ import NetworkActionButtons   from "@/components/dupl/NetworkActionButtons";
 import Localization           from "@/utils/Localization"; 
 import Logger                 from "@/utils/Logger";
 import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
+import { status2Icon } from "../icons/RutilVmIcons";
 
 /**
  * @name NetworkDupl
@@ -33,6 +34,7 @@ const NetworkDupl = ({
   // 데이터를 변환 (검색 가능하도록 `searchText` 필드 추가)
   const transformedData = [...networks].map((network) => ({
     ...network,
+    icon: status2Icon(network?.status),
     _name: (
       <TableRowClick type="network" id={network?.id}>
         {network?.name}

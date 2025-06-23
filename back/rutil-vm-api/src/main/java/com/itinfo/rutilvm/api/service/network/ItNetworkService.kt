@@ -10,9 +10,13 @@ import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
+import com.itinfo.rutilvm.api.repository.engine.NetworkClusterViewRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.ClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toClusterVoFromNetworkClusterViewEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -119,7 +123,7 @@ interface ItNetworkService {
 	 * @return List<[ClusterVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllClustersFromNetwork(networkId: String): List<ClusterVo>
+	fun findAllClustersFromNetwork(networkId: String): List<NetworkVo>?
 	/**
 	 * [ItNetworkService.findConnectedHostsFromNetwork]
 	 * 네트워크 호스트 연결 목록
@@ -179,6 +183,7 @@ class NetworkServiceImpl(
 ): BaseService(), ItNetworkService {
 
 	@Autowired private lateinit var rNetwork: NetworkRepository
+	@Autowired private lateinit var rNetworkCluster: NetworkClusterViewRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
@@ -300,12 +305,14 @@ class NetworkServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun findAllClustersFromNetwork(networkId: String): List<ClusterVo> {
+	override fun findAllClustersFromNetwork(networkId: String): List<NetworkVo>? {
 		log.info("findAllClustersFromNetwork ... networkId: {}", networkId)
-		val network = checkNetwork(networkId)
-		val dcId = network.dataCenter().id()
-		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
-		return res.toNetworkClusterVos(conn, networkId)
+		// val network = checkNetwork(networkId)
+		// val dcId = network.dataCenter().id()
+		// val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
+		// return res.toNetworkClusterVos(conn, networkId)
+		val res: List<NetworkClusterViewEntity>? = rNetworkCluster.findByNetworkId(networkId.toUUID())
+		return res?.toClusterVoFromNetworkClusterViewEntities()
 	}
 
 	@Throws(Error::class)

@@ -45,6 +45,7 @@ const TableColumnsInfo = {
     { accessor: 'comment',       clickable: false,  header: Localization.kr.COMMENT, },
   ],
   NETWORK_FROM_CLUSTER: [
+    { accessor: "icon",          clickable: false , header: Localization.kr.STATUS, width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: '_name',         clickable: true,  header: Localization.kr.NAME, width: '18%' },
     { accessor: 'status',        clickable: false, header: Localization.kr.STATUS, width: '15%' },
     { accessor: 'role',          clickable: false, header: Localization.kr.ROLE,  },
@@ -164,6 +165,18 @@ const TableColumnsInfo = {
     { accessor: 'speed',              header: Localization.kr.SPEED,  clickable: false },
     { accessor: 'portMirroring',      header: '포트 미러링',            clickable: false },
     { accessor: 'guestInterfaceName', header: '게스트 인터페이스 이름',   clickable: false },
+  ],
+  NICS2_FROM_VM: [
+    { accessor: 'linked',             header: '링크상태',                 clickable: false, width: '7%' },
+    { accessor: 'plugged',            header: '연결상태',                 clickable: false, width: '7%' },
+    { accessor: 'name',               header: Localization.kr.NAME,                 clickable: false, width: '7%' },
+    { accessor: 'network',        header: `${Localization.kr.NETWORK}`, clickable: false },
+    { accessor: 'vnicProfile',    header: '프로파일',           clickable: false },
+    // { accessor: 'status',             header: '링크 상태',              clickable: false },
+    { accessor: 'ipv4',               header: 'IPv4',  clickable: false },
+    { accessor: 'ipv6',               header: 'IPv6',  clickable: false },
+    { accessor: 'interface_',         header: Localization.kr.TYPE,   clickable: false },
+    { accessor: 'speed',              header: Localization.kr.SPEED,  clickable: false },
   ],
   NICS_CALC_FROM_VM: [
     { accessor: 'rxSpeed',          header: Localization.kr.SPEED_RX,       clickable: false, width: '7%' },
@@ -327,12 +340,12 @@ const TableColumnsInfo = {
     { accessor: 'description',    header: Localization.kr.DESCRIPTION,    clickable: false },
   ],
   CLUSTERS_FRON_NETWORK: [
+    { accessor: 'status',      header: '네트워크 상태',               clickable: false, width: '10%' },
     { accessor: '_name',       header: Localization.kr.NAME,        clickable: true, width: '15%' },
     { accessor: 'connect',     header: '연결된 네트워크',             clickable: false, width: '9%' },
-    { accessor: 'status',      header: '네트워크 상태',               clickable: false, width: '10%' },
     { accessor: 'required',    header: '필수 네트워크',               clickable: false, width: '9%' },
     { accessor: 'networkRole', header: '네트워크 역할',               clickable: false },
-    { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
+    // { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
   ],
   HOSTS_FROM_NETWORK: [
     { accessor: "icon",                 header: Localization.kr.STATUS,         clickable: false /* width: DEFAULT_WIDTH_ICON_COLUMN */ },
@@ -394,7 +407,7 @@ const TableColumnsInfo = {
   ],
   TEMPLATES_FROM_NETWORK: [
     { accessor: 'name',         header: Localization.kr.NAME,     clickable: false },
-    { accessor: 'ver',          header: '버전',                   clickable: false },
+    // { accessor: 'ver',          header: '버전',                   clickable: false },
     { accessor: 'status',       header: Localization.kr.STATUS,   clickable: false },
     { accessor: 'clusterName',  header: Localization.kr.CLUSTER,  clickable: false },
     { accessor: 'nicName',      header: Localization.kr.VNIC,     clickable: false },
@@ -414,7 +427,7 @@ const TableColumnsInfo = {
   ],
   TEMPLATE_FROM_VNIC_PROFILE: [
     { accessor: '_name',      header: Localization.kr.NAME, clickable: false },
-    { accessor: 'versionNum', header: '버전',                clickable: false },
+    // { accessor: 'versionNum', header: '버전',                clickable: false },
   ],
 
   STORAGE_DOMAINS: [
@@ -621,7 +634,7 @@ const TableColumnsInfo = {
     { accessor: '_alias',       header: Localization.kr.ALIAS,         clickable: true },
     { accessor: 'id',           header: 'ID',                          clickable: false },
     // { accessor: 'icon1',      header: Localization.kr.IS_SHARABLE,   clickable: false },
-    { accessor: 'type',         header: '연결',                            clickable: false },
+    // { accessor: 'type',         header: '연결',                            clickable: false },
     { accessor: 'connect',      header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, clickable: false, align: "left" },
     { accessor: 'storageDomain',header: Localization.kr.DOMAIN,        clickable: false },
     { accessor: 'virtualSize',  header: Localization.kr.SIZE_VIRTUAL,  clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN},

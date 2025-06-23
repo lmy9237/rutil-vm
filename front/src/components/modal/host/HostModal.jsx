@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
@@ -15,9 +14,8 @@ import {
   useEditHost,
   useHost,
   useAllClusters,
-  useClustersFromDataCenter,
 } from "@/api/RQHook";
-import { checkName }                    from "@/util";
+import { checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MHost.css";
@@ -46,7 +44,6 @@ const HostModal = ({
   editMode=false
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
   const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
   const { datacentersSelected, clustersSelected, hostsSelected } = useGlobal();
@@ -56,7 +53,7 @@ const HostModal = ({
   const isMaintenance = hostsSelected[0]?.status?.toUpperCase() === "MAINTENANCE";
 
   const [formState, setFormState] = useState(initialFormState);
-  const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
+  const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
 
   const { data: host } = useHost(hostId);
   const { mutate: addHost } = useAddHost(onClose, onClose);
@@ -69,12 +66,11 @@ const HostModal = ({
     data: clusters = [], 
     isLoading: isClustersLoading 
   } = useAllClusters((e) => ({ ...e }));
-  // const clusterOptions = datacenterId ? dcClusters : clusters;
 
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
-      setClusterVo({id: "", name: ""});
+      setClusterVo(emptyIdNameVo());
     }
     if (editMode && host) {
       setFormState({
@@ -87,19 +83,28 @@ const HostModal = ({
         vgpu: host?.vgpu,
         deployHostedEngine: host?.hostedEngine != null,
       });
-      setClusterVo({id: host?.clusterVo?.id, name: host?.clusterVo?.name});
+      setClusterVo({
+        id: host?.clusterVo?.id, 
+        name: host?.clusterVo?.name
+      });
     }
   }, [isOpen, editMode, host]);
 
   useEffect(() => {
     if (clusterId) {
       const selected = clusters.find(c => c.id === clusterId);
-      setClusterVo({id: selected?.id, name: selected?.name});
+      setClusterVo({
+        id: selected?.id, 
+        name: selected?.name
+      });
     } else if (!editMode && clusters && clusters.length > 0) {
       // 만약 "Default"라는 이름이 있다면 우선 선택
       const defaultC = clusters.find(c => c.name === "Default");
       const firstC = defaultC || clusters[0];
-      setClusterVo({ id: firstC.id, name: firstC.name });
+      setClusterVo({ 
+        id: firstC.id, 
+        name: firstC.name 
+      });
     }
   }, [clusters, clusterId, editMode]);
 
@@ -143,7 +148,6 @@ const HostModal = ({
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
-        // disabled={editMode}
         disabled={editMode && !isMaintenance}
         loading={isClustersLoading}
         options={clusters}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
@@ -23,8 +22,8 @@ import {
   useNetwork,
 } from "@/api/RQHook";
 import {
-  checkName, 
-  isNameDuplicated
+  checkName,
+  emptyIdNameVo, 
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -51,19 +50,19 @@ const NetworkModal = ({
   editMode = false,
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
   const nLabel = editMode 
     ? Localization.kr.UPDATE
     : Localization.kr.CREATE;
   
-  const { networksSelected, datacentersSelected,networks, setNetworks } = useGlobal()
-  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
+  const { networksSelected, datacentersSelected } = useGlobal()
   const networkId = useMemo(() => [...networksSelected][0]?.id, [networksSelected])
+  const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
   const [clusterVoList, setClusterVoList] = useState([]);
   const [dnsServers, setDnsServers] = useState([]);
+  const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
 
   const { data: network } = useNetwork(networkId);
   const { mutate: addNetwork } = useAddNetwork(onClose, onClose);
@@ -85,24 +84,30 @@ const NetworkModal = ({
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
+      setDataCenterVo(emptyIdNameVo());
     }
     
     if (editMode && network) {
-      Logger.debug(`NetworkModal ... network: `, network);
       setFormState({
-        ...initialFormState,
+        // ...initialFormState,
         id: network?.id,
         name: network?.name,
         description: network?.description,
         comment: network?.comment,
         mtu: network?.mtu,
+        // useCustomMtu: false, 
+        // customMtu: "",  
+        // vlanEnabled
         vlan: network?.vlan != null && network?.vlan > 0 ? String(network.vlan) : "0",
         vlanEnabled: network?.vlan != null && network?.vlan > 0,
         usageVm: network?.usage?.vm,
         portIsolation: network?.portIsolation || false,
-       
+
       });
-      setDataCenterVo({ id: network?.dataCenterVo?.id, name: network?.dataCenterVo?.name });
+      setDataCenterVo({ 
+        id: network?.dataCenterVo?.id,
+        name: network?.dataCenterVo?.name 
+      });
       setDnsServers(network?.dnsNameServers || []); 
     }
   }, [isOpen, editMode, network]);  
@@ -110,12 +115,17 @@ const NetworkModal = ({
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ id: selected?.id, name: selected?.name });
+      setDataCenterVo({ 
+        id: selected?.id, 
+        name: selected?.name 
+      });
     } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
       const defaultDc = datacenters.find(dc => dc.name === "Default");
       const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+      setDataCenterVo({ 
+        id: firstDc.id, 
+        name: firstDc.name 
+      });
     }
   }, [datacenterId, datacenters, editMode]);
 
@@ -138,8 +148,6 @@ const NetworkModal = ({
     }
   }, [clusters]);  
 
-  // dns 
-  const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
 
   const validateForm = () => {
     Logger.debug(`NetworkModal > validateForm ... `);
@@ -147,7 +155,6 @@ const NetworkModal = ({
     if (nameError) return nameError;
 
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    
   };
 
   const handleFormSubmit = () => {
@@ -293,17 +300,10 @@ const NetworkModal = ({
               }));
             }}
           />
-
-        </div>
-
-          
-        <div>
-          <br/>
-          <span>DNS 수정 필요</span>
         </div>
 
         <div id="dns-settings-group" class="f-start">
-          <LabelCheckbox id="dns-settings" label="DNS 설정"
+          <LabelCheckbox id="dns-settings" label="DNS 설정 (DNS 수정이 안됨)"
             checked={dnsServers.length > 0}
             onChange={(e) => {
               const isChecked = e.target.checked;
@@ -312,6 +312,30 @@ const NetworkModal = ({
             }}
           />
         </div>
+
+        {dnsServers.length > 0 && (
+          <>
+            <div className="font-bold mt-1"> DNS 서버 </div>
+            <DynamicInputList
+              values={dnsServers.map((dns) => ({ value: dns }))}
+              inputType="text"
+              showLabel={false}
+              onChange={(index, value) => {
+                const updated = [...dnsServers];
+                updated[index] = value;
+                setDnsServers(updated);
+              }}
+              onAdd={() => setDnsServers((prev) => [...prev, ""])}
+              onRemove={(index) => {
+                const updated = [...dnsServers];
+                updated.splice(index, 1);
+                setDnsServers(updated);
+              }}
+            />
+          </>
+        )}
+
+
         
         {/* {formState.dnsEnabled && (
           <>
@@ -359,29 +383,7 @@ const NetworkModal = ({
           }
           </>
         )} */}
-    {dnsServers.length > 0 && (
-      <>
-        <div className="font-bold mt-1"> DNS 서버 </div>
-        <DynamicInputList
-          values={dnsServers.map((dns) => ({ value: dns }))}
-          inputType="text"
-          showLabel={false}
-          onChange={(index, value) => {
-            const updated = [...dnsServers];
-            updated[index] = value;
-            setDnsServers(updated);
-          }}
-          onAdd={() => setDnsServers((prev) => [...prev, ""])}
-          onRemove={(index) => {
-            const updated = [...dnsServers];
-            updated.splice(index, 1);
-            setDnsServers(updated);
-          }}
-        />
-      </>
-    )}
-
-
+    
         
         {!editMode && (
           <div className=" py-3">
@@ -491,6 +493,7 @@ const NetworkModal = ({
             />
           </div>
         )}
+        <br/>
       </div>
     </BaseModal>
   );

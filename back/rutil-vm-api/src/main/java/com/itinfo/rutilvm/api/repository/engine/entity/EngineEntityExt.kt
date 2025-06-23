@@ -15,6 +15,7 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
+import com.itinfo.rutilvm.api.model.network.NetworkVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
@@ -48,6 +49,8 @@ import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findStorageDomain
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
+import org.ovirt.engine.sdk4.types.NetworkStatus.NON_OPERATIONAL
+import org.ovirt.engine.sdk4.types.NetworkStatus.OPERATIONAL
 import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
@@ -253,6 +256,30 @@ fun Collection<ClusterViewEntity>.toIdentifiedVosFromClusterViewEntities(): List
 
 
 //endregion: ClusterViewEntity
+
+//region: NetworkClusterViewEntity
+
+fun NetworkClusterViewEntity.toClusterVoFromNetworkClusterViewEntity(): NetworkVo = NetworkVo.builder {
+	id { networkId.toString() }
+	name { networkName }
+	clusterVo {
+		IdentifiedVo.builder {
+			id { clusterId.toString() }
+			name { clusterName }
+		}
+	}
+	required { required }
+	// isConnected { isConnected }
+	status {
+		if(status == 0){ NON_OPERATIONAL }
+		else { OPERATIONAL }
+	}
+	display { isDisplay }
+}
+fun List<NetworkClusterViewEntity>.toClusterVoFromNetworkClusterViewEntities(): List<NetworkVo> =
+	this@toClusterVoFromNetworkClusterViewEntities.map { it.toClusterVoFromNetworkClusterViewEntity() }
+
+//endregion: NetworkClusterViewEntity
 
 //region: UnregisteredDiskEntity
 fun UnregisteredDiskEntity.toUnregisteredDiskImageVo(disk: Disk?=null): DiskImageVo =
@@ -573,6 +600,9 @@ fun VmEntity.toVmVo(): VmVo {
 				// name { entity. }
 			}
 		}
+		// diskAttachmentVos {
+		//
+		// }
 		snapshotVos { snapshots.filter {
 			it.snapshotType != SnapshotType.active &&
 				it.snapshotType != SnapshotType.preview

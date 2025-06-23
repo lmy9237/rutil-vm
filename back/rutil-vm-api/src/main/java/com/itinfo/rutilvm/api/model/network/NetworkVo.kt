@@ -36,7 +36,7 @@ private val log = LoggerFactory.getLogger(NetworkVo::class.java)
  * @property stp [Boolean] Spanning Tree Protocol 없어도 될듯
  * @property usage [UsageVo]  management 기본이 체크된 상태 (true, 가상머신 네트워크 (기본) (usage))
  * @property vdsmName [String]
- * @property datacenterVo [IdentifiedVo]
+ * @property dataCenterVo [IdentifiedVo]
  * @property openStackNetworkVo [OpenStackNetworkVo] 네트워크 공급자(한개만 있음) (생성시 여부(boolean)으로 처리,추가)
  * @property vlan [Int] vlan 태그 (태그 자체는 활성화를 해야 입력란이 생김)
  * @property dnsNameServers List<[String]> DNS 서버는 애매함
@@ -44,10 +44,10 @@ private val log = LoggerFactory.getLogger(NetworkVo::class.java)
  * @property display [Boolean] 클러스터-네트워크 관리
  * @property networkLabel [String] 네트워크 레이블
  * @property clusterVo [IdentifiedVo]
- * @property attached [Boolean] 할당 -> cluster-network-cluster<> 생성되고 아니면 cluster-network 에서 제외
- * @property required [Boolean] 클러스터-네트워크 관리 -> 필수(t,f)
  * @property vnicProfileVos List<[IdentifiedVo]> vnicProfile
  * @property clusterVos List<[ClusterVo]> clusters  // networks clusters
+ * @property required [Boolean] 클러스터-네트워크 관리 -> 필수(t,f)
+ * @property isConnected [Boolean] 클러스터-네트워크 관리 -> 필수(t,f)
  *
  */
 class NetworkVo (
@@ -71,6 +71,7 @@ class NetworkVo (
 	val vnicProfileVos: List<IdentifiedVo> = listOf(),
 	val clusterVos: List<ClusterVo> = listOf(),
 	val required: Boolean = false,
+	val isConnected: Boolean? = false,
 ):Serializable {
 	override fun toString(): String = gson.toJson(this)
 
@@ -95,8 +96,9 @@ class NetworkVo (
 		private var bVnicProfileVos: List<IdentifiedVo> = listOf(); fun vnicProfileVos(block: () -> List<IdentifiedVo>?) { bVnicProfileVos = block() ?: listOf() }
 		private var bClusterVos: List<ClusterVo> = listOf(); fun clusterVos(block: () -> List<ClusterVo>?) { bClusterVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
+		private var bIsConnected: Boolean = false; fun isConnected(block: () -> Boolean?) { bIsConnected = block() ?: false}
 
-		fun build(): NetworkVo = NetworkVo( bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bVdsmName, bVlan, bStatus, bDisplay, bNetworkLabel, bDnsNameServers, bOpenStackNetworkVo, bUsage, bDataCenterVo, bClusterVo, bVnicProfileVos, bClusterVos, bRequired)
+		fun build(): NetworkVo = NetworkVo( bId, bName, bDescription, bComment, bMtu, bPortIsolation, bStp, bVdsmName, bVlan, bStatus, bDisplay, bNetworkLabel, bDnsNameServers, bOpenStackNetworkVo, bUsage, bDataCenterVo, bClusterVo, bVnicProfileVos, bClusterVos, bRequired, bIsConnected)
 	}
 
 	companion object{

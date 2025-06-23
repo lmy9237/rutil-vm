@@ -122,8 +122,13 @@ class HostServiceImpl(
 	override fun findOne(hostId: String): HostVo? {
 		log.info("findOne ... hostId: {}", hostId)
 		val res: Host? = conn.findHost(hostId).getOrNull()
+		val hostNic: HostNic? = res?.id()?.let {
+			conn.findAllHostNicsFromHost(it).getOrDefault(emptyList())
+				.firstOrNull()
+		}
+		val usageDto: UsageDto? = res?.let { calculateUsage(it, hostNic) }
 		val sw: HostConfigurationEntity = hostConfigurationRepository.findFirstByHostIdOrderByUpdateDateDesc(UUID.fromString(hostId))
-		return res?.toHostInfo(conn, sw)
+		return res?.toHostInfo(conn, sw, usageDto)
 	}
 
 	@Throws(Error::class)

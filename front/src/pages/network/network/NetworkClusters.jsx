@@ -12,7 +12,7 @@ import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
 import TablesOuter             from "@/components/table/TablesOuter";
 import TableRowClick           from "@/components/table/TableRowClick";
 import NetworkClusterModal     from "@/components/modal/network/NetworkClusterModal";
-import { clusterStatus2Icon }  from "@/components/icons/RutilVmIcons";
+import { clusterStatus2Icon, rvi16TriangleUp, status2Icon }  from "@/components/icons/RutilVmIcons";
 import {
   useAllClustersFromNetwork
 } from "@/api/RQHook";
@@ -38,39 +38,40 @@ const NetworkClusters = ({
   } = useGlobal()
 
   const {
-    data: clusters = [],
-    isLoading: isClustersLoading,
-    isError: isClustersError,
-    isSuccess: isClustersSuccess,
-    refetch: refetchClusters,
-    isRefetching: isClustersRefetching,
+    data: networks = [],
+    isLoading: isNetworksLoading,
+    isError: isNetworksError,
+    isSuccess: isNetworksSuccess,
+    refetch: refetchNetworks,
+    isRefetching: isNetworksRefetching,
   } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
 
-  const transformedData = clusters.map((cluster) => ({
-    ...cluster,
+  const transformedData = networks.map((network) => ({
+    ...network,
     _name: (
-      <TableRowClick type="cluster" id={cluster?.id}>
-        {cluster?.name}
+      <TableRowClick type="cluster" id={network?.clusterVo?.id}>
+        {network?.clusterVo?.name}
       </TableRowClick>
     ),
-    connect: cluster?.connected ? (
+    //TODO: 연결
+    connect: network?.connected ? (
       <input type="checkbox" checked disabled />
     ) : (
       <input type="checkbox" disabled />
     ),
-    status: clusterStatus2Icon(cluster?.networkVo?.status, cluster?.connected),
-    required: cluster?.networkVo?.required ? (
+    status: status2Icon(network?.status),
+    required: network?.required ? (
       <input type="checkbox" checked disabled />
     ) : (
       <input type="checkbox" disabled />
     ),
-    networkRole: [
-      cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
-      cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
-      cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
-      cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
-      cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
-    ].filter(Boolean).join(" / "),
+    // networkRole: [
+    //   cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
+    //   cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
+    //   cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
+    //   cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
+    //   cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
+    // ].filter(Boolean).join(" / "),
   }));
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.CLUSTERS_FRON_NETWORK);
@@ -81,7 +82,7 @@ const NetworkClusters = ({
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchClusters} />
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNetworks} />
         <div className="header-right-btns">
           <ActionButton actionType="default"
             label={`${Localization.kr.NETWORK} 관리`}
@@ -106,7 +107,7 @@ const NetworkClusters = ({
             </button>
           </div>,
         ]}
-        isLoading={isClustersLoading} isRefetching={isClustersRefetching} isError={isClustersError} isSuccess={isClustersSuccess}
+        isLoading={isNetworksLoading} isRefetching={isNetworksRefetching} isError={isNetworksError} isSuccess={isNetworksSuccess}
       />
       <SelectedIdView item={clustersSelected}/>
       <OVirtWebAdminHyperlink

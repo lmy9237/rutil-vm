@@ -1,0 +1,132 @@
+import React, { useState, Suspense, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import useContextMenu         from "@/hooks/useContextMenu";
+import useClickOutside        from "@/hooks/useClickOutside";
+import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import TablesRow              from "@/components/table/TablesRow";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import NicActionButtons       from "@/components/dupl/VmNicActionButtons";
+import {
+  useNetworkInterfacesFromVM
+} from "@/api/RQHook";
+import {
+  RVI24,
+  rvi24ChevronDown,
+  rvi24ChevronRight,
+} from "@/components/icons/RutilVmIcons";
+import { checkZeroSizeToMbps } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
+import "./Vm.css"
+import VmNicModals from "@/components/modal/vm/VmNicModals";
+import TablesOuter from "@/components/table/TablesOuter";
+import useSearch from "@/hooks/useSearch";
+import TableRowClick from "@/components/table/TableRowClick";
+/**
+ * @name VmNics2
+ * @description 가상에 종속 된 네트워크 인터페이스 목록
+ * (/computing/vms/<VM_ID>/nics)
+ * 
+ * @param {string} vmId 가상머신 ID
+ * @returns
+ */
+const VmNics2 = ({ 
+  vmId
+}) => {
+  const { activeModal, closeModal, } = useUIState()
+  const {
+    contextMenu, setContextMenu
+  } = useContextMenu()
+  const {
+    vmsSelected,
+    nicsSelected, setNicsSelected
+  } = useGlobal()
+
+  const {
+    data: nics = [],
+    isLoading: isvmNicsLoading,
+    isError: isvmNicsError,
+    isSuccess: isvmNicsSuccess,
+    isRefetching: isvmNicsRefetching
+  } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
+
+console.log("nics: ", nics);
+  const transformedData = nics
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((nic) => ({
+      ...nic,
+      id: nic?.id,
+      name: nic?.name,
+      status: nic?.status,
+      linked: 
+        <FontAwesomeIcon
+          icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
+          style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+          fixedWidth
+        />,
+      // nic?.linked ? "연결됨": "연결해제됨",
+      plugged: 
+        <FontAwesomeIcon
+          icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
+          style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+          fixedWidth
+        />,
+      // nic?.plugged ? "연결됨" : "연결 해제됨",
+      ipv4: nic?.ipv4 || "해당 없음",
+      ipv6: nic?.ipv6 || "해당 없음",
+      macAddress : nic?.macAddress,
+      network: (
+        <TableRowClick type="network" id={nic?.networkVo?.id}>
+          {nic?.networkVo?.name}
+        </TableRowClick>
+      ),
+      vnicProfile : (
+        <TableRowClick type="vnicProfile" id={nic?.vnicProfileVo?.id}>
+          {nic?.vnicProfileVo?.name}
+        </TableRowClick>
+      ),
+      interface_: nic?.interface_,
+      portMirroring: nic?.portMirroring || "비활성화됨",
+      guestInterfaceName: nic?.guestInterfaceName,
+      speed: "10000",
+      rxSpeed: checkZeroSizeToMbps(nic?.rxSpeed),
+      txSpeed: checkZeroSizeToMbps(nic?.txSpeed),
+      rxTotalSpeed: nic?.rxTotalSpeed?.toLocaleString() || "0",
+      txTotalSpeed: nic?.txTotalSpeed?.toLocaleString() || "0",
+      pkts: `${nic?.rxTotalError}` || "1",    
+  }));
+
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+
+  return (
+    <>
+      <div className="dupl-header-group f-start align-start gap-4 w-full mb-2">
+        <NicActionButtons />
+      </div>
+      <TablesOuter target={"vnic"} 
+        columns={TableColumnsInfo.NICS2_FROM_VM}
+        data={filteredData}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+        shouldHighlight1stCol={true}
+        multiSelect={true}
+        onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
+        isLoading={isvmNicsLoading} isRefetching={isvmNicsRefetching} isError={isvmNicsError} isSuccess={isvmNicsSuccess}
+      />
+
+      <SelectedIdView items={nicsSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
+        path={`vms-network_interfaces;name=${vmsSelected[0]?.name}`} 
+      />
+      <VmNicModals type="vm" resourceId={vmId} />
+    </>
+    
+  );
+};
+
+
+export default VmNics2;
