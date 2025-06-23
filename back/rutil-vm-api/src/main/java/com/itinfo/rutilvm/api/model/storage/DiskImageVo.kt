@@ -76,7 +76,7 @@ class DiskImageVo(
 	val imageId: String = String(),
 	val virtualSize: BigInteger = BigInteger.ZERO,
 	val actualSize: BigInteger = BigInteger.ZERO,
-	val status: DiskStatus = DiskStatus.locked,
+	val status: DiskStatus? = DiskStatus.locked,
 	val contentType: DiskContentType? = DiskContentType.data, // unknown
 	val storageType: DiskStorageType? = DiskStorageType.image,
 	private val _dateCreated: LocalDateTime? = null,
@@ -88,18 +88,16 @@ class DiskImageVo(
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
-	val dateCreated: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
+	val dateCreated: String?		get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
+	val statusCode: String?			get() = status?.code
+	// val statusEn: String?			get() = status?.en ?: "N/A"
+	// val statusKr: String?			get() = status?.kr ?: "알 수 없음"
 
-	val contentTypeCode: String
-		get() = contentType?.code ?: DiskContentType.data.code
-	val contentTypeEn: String
-		get() = contentType?.en ?: "N/A"
-	val contentTypeKr: String
-		get() = contentType?.kr ?: "알 수 없음"
+	val contentTypeCode: String		get() = contentType?.code ?: DiskContentType.data.code
+	val contentTypeEn: String 		get() = contentType?.en ?: "N/A"
+	val contentTypeKr: String		get() = contentType?.kr ?: "알 수 없음"
 
-	val storageTypeCode: String
-		get() = storageType?.code ?: DiskStorageType.image.code
+	val storageTypeCode: String		get() = storageType?.code ?: DiskStorageType.image.code
 	/*
 	val storageTypeEn: String
 		get() = storageType?.en ?: "N/A"

@@ -1,10 +1,12 @@
 import React from "react";
 import PropTypes from 'prop-types'
-import useGlobal from "@/hooks/useGlobal";
-import { openNewTab } from "@/navigation";
+import useGlobal                  from "@/hooks/useGlobal";
+import Spinner                    from "@/components/common/Spinner";
+import { 
+  useValidationToast
+} from "@/hooks/useSimpleToast";
+import Logger                     from "@/utils/Logger";
 import "./VmOsIcon.css"
-import Logger from "@/utils/Logger";
-import { useValidationToast } from "@/hooks/useSimpleToast";
 
 /**
  * @name VmOsIcon
@@ -24,29 +26,11 @@ const VmOsIcon = ({
   const selected1st = [...vmsSelected][0];
   const vmId = selected1st?.id;
 
-  const handleStartConsole = () => {
-    Logger.debug(`VmOsIcon > handleStartConsole ... `);
-    if (vmId === undefined || vmId === null || vmId === "") {
-      validationToast.fail("웹 콘솔을 시작할 수 없습니다. (가상머신 ID 없음)");
-      return;
-    }
-    openNewTab("console", vmId); 
-  };
-
   return (
-    <span className="icon-os-wrapper">
-      <div>
-        {dataUrl 
-          ? <img src={dataUrl} className={`icon-os ${props.className}`} alt='' />
-          : null}
-      </div>
-      <button 
-        onClick={handleStartConsole}
-        className="mt-3 w-full fs-14"
-        disabled={!selected1st?.qualified4ConsoleConnect}
-      >
-        웹 콘솔 시작
-      </button>
+    <span className="icon-os-wrapper f-center">
+      {dataUrl 
+        ? <img src={dataUrl} className={`icon-os ${props.className}`} alt='' />
+        : <Spinner />}
     </span>
   );
 }

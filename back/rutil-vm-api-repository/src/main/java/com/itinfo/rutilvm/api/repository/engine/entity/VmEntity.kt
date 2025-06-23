@@ -236,6 +236,7 @@ class VmEntity(
 	val clusterCpuFlags: String = "",
 	val clusterCpuName: String = "",
 	val clusterCpuVerb: String = "",
+	@Column(name="cluster_id", nullable=false)
 	val clusterId: UUID? = null,
 	val clusterName: String = "",
 	val clusterSpiceProxy: String = "",
@@ -373,6 +374,7 @@ class VmEntity(
 	val reason: String = "",
 	@Column(name="resume_behavior", nullable=true)
 	private val _resumeBehavior: String = "",
+	@Column(name="run_on_vds", nullable=true)
 	val runOnVds: UUID? = null, // a.k.a. 호스트 ID
 	val runOnVdsName: String = "", // a.k.a. 호스트 ID
 	val runtimeName: String = "",
@@ -446,6 +448,24 @@ class VmEntity(
 		updatable=false
 	)
 	val iconDefaults: VmIconDefaultsEntity? = null,
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="cluster_id",
+		referencedColumnName="cluster_id",
+		insertable=false,
+		updatable=false
+	)
+	val cluster: ClusterViewEntity? = null,
+	/*
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="run_on_vds",
+		referencedColumnName="vds_id",
+		insertable=false,
+		updatable=false
+	)
+	val host: VdsEntity? = null,
+	*/
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(
 		name="vm_id",

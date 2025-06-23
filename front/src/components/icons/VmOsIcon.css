@@ -1,14 +1,8 @@
 /* max supported dimensions in oVirt API */
 .icon-os-wrapper {
-  width: 210px;
- 
-}
-.icon-os-wrapper>div{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 210px;aspect-ratio:210/130;
   padding: 10px 0;
-  border: 1px solid rgb(182, 182, 182);
+  border: 1px solid #b6b6b6;
   background: var(--color-white);
 }
 .icon-os {
@@ -17,10 +11,4 @@
   overflow: hidden;
   display: block;
   height: 106px;
-}
-
-.icon-os-wrapper button{
-  background-color: rgb(0, 30, 110);
-  color: white;
-  padding: 11px;
 }

@@ -199,12 +199,12 @@ class VmVo (
 	val biosType: BiosTypeB? = BiosTypeB.cluster_default,
 	val biosBootMenu: Boolean = false,
 	val osType: VmOsType? = VmOsType.other,
-	val cpuArc: ArchitectureType = ArchitectureType.undefined,
+	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
+	val cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -264,35 +264,39 @@ class VmVo (
 	val usageDto: UsageDto = UsageDto(),
 ): Serializable, TreeNavigatable<VmStatusB> {
 	override val type: TreeNavigatableType	get() = TreeNavigatableType.VM
-	val statusCode: String 			get() = status?.code ?: VmStatusB.unknown.code
-	val statusKr: String			get() = status?.kr ?: "알 수 없음"
-	val statusEn: String 			get() = status?.en ?: "N/A"
+	val statusCode: String 				get() = status?.code ?: VmStatusB.unknown.code
+	val statusKr: String				get() = status?.kr ?: "알 수 없음"
+	val statusEn: String 				get() = status?.en ?: "N/A"
 
-	val urlSmallIcon: String		get() = iconSmall?.dataUrl ?: ""
-	val urlLargeIcon: String		get() = iconLarge?.dataUrl ?: ""
+	val urlSmallIcon: String			get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String			get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOptionCode: String	get() = optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionCode: String		get() = optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosTypeCode: String		get() = biosType?.code ?: BiosTypeB.cluster_default.code
-	val biosTypeEn: String			get() = biosType?.en ?: "N/A"
-	val biosTypeKr: String			get() = biosType?.kr ?: "알 수 없음"
+	val biosTypeCode: String			get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String				get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String				get() = biosType?.kr ?: "알 수 없음"
 
-	val osTypeCode: String			get() = osType?.code ?: VmOsType.other.code
-	val osTypeName: String			get() = osType?.description ?: VmOsType.other.description
+	val osTypeCode: String				get() = osType?.code ?: VmOsType.other.code
+	val osTypeName: String				get() = osType?.description ?: VmOsType.other.description
 
-	val migrationModeCode: String	get() = migrationMode?.code ?: MigrationSupport.unknown.code
-	val migrationModeEn: String		get() = migrationMode?.en ?: "N/A"
-	val migrationModeKr: String		get() = migrationMode?.kr ?: "알 수 없음"
+	val cpuArcCode: String				get() = cpuArc?.code ?: ArchitectureType.undefined.code
 
-	val cpuPinningPolicy: String	get() = _cpuPinningPolicy?.name?.lowercase() ?: CpuPinningPolicyB.none.name.lowercase()
+	val migrationModeCode: String		get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String			get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String			get() = migrationMode?.kr ?: "알 수 없음"
 
-	val creationTime: String?		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
-	val startTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_startTime)
-	val stopTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
-	val upTime: String?				get() = timeElapsed?.toTimeElapsedKr()
+	val cpuPinningPolicyCode: String	get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
+	val cpuPinningPolicyEn: String		get() = cpuPinningPolicy?.en ?: "N/A"
+	val cpuPinningPolicyKr: String		get() = cpuPinningPolicy?.kr ?: "알 수 없음"
 
-	val notRunning: Boolean			get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
-	val qualified2Migrate: Boolean	get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
+	val creationTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	val upTime: String?					get() = timeElapsed?.toTimeElapsedKr()
+
+	val notRunning: Boolean				get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
+	val qualified2Migrate: Boolean		get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
 	val qualified4SnapshotMerge: Boolean /* 스냅샷 머지 가능한 상태 */
 		get() = status?.qualified4SnapshotMerge ?: false
 	val qualified4LiveSnapshotMerge: Boolean /* 라이브 스냅샷 머지 가능한 상태 */

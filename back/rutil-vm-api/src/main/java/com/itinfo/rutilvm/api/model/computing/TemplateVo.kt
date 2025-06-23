@@ -65,7 +65,7 @@ class TemplateVo(
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
 	val cpuTopologyThread: Int = 0,
-	private val _cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
+	val cpuPinningPolicy: CpuPinningPolicyB? = CpuPinningPolicyB.none,
 	val memorySize: BigInteger = BigInteger.ZERO,
 	val memoryGuaranteed: BigInteger = BigInteger.ZERO,
 	val memoryMax: BigInteger = BigInteger.ZERO,
@@ -128,27 +128,22 @@ class TemplateVo(
 	val status: String
 		get() = _status?.code ?: VmTemplateStatusB.unknown.code
 
-	val urlSmallIcon: String
-		get() = iconSmall?.dataUrl ?: ""
-	val urlLargeIcon: String
-		get() = iconLarge?.dataUrl ?: ""
+	val urlSmallIcon: String			get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String			get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOption: String
-		get() = _optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOption: String			get() = _optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosTypeCode: String
-		get() = biosType?.code ?: BiosTypeB.cluster_default.code
-	val biosTypeEn: String
-		get() = biosType?.en ?: "N/A"
-	val biosTypeKr: String
-		get() = biosType?.kr ?: "알 수 없음"
+	val biosTypeCode: String			get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String				get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String				get() = biosType?.kr ?: "알 수 없음"
 
-	val migrationModeCode: String
-		get() = migrationMode?.code ?: MigrationSupport.unknown.code
-	val migrationModeEn: String
-		get() = migrationMode?.en ?: "N/A"
-	val migrationModeKr: String
-		get() = migrationMode?.kr ?: "알 수 없음"
+	val cpuPinningPolicyCode: String	get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
+	val cpuPinningPolicyEn: String		get() = cpuPinningPolicy?.en ?: "N/A"
+	val cpuPinningPolicyKr: String		get() = cpuPinningPolicy?.kr ?: "알 수 없음"
+
+	val migrationModeCode: String		get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String			get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String			get() = migrationMode?.kr ?: "알 수 없음"
 
 	val osType: String
 		get() = _osType?.code?.lowercase() ?: VmOsType.other.name.lowercase()

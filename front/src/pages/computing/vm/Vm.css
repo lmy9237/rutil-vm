@@ -60,4 +60,22 @@
   .vm-detail-general-boxs {
     flex-wrap: wrap;
   }
+  .vm-info-vnc-group {
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
+.btn-vnc {
+  background-color: #001e6e;
+  color: white;
+  padding: 11px;
+}
+.vm-info-vnc {
+  width: 210px;
+}
+.vm-info-vnc-group {
+  display:flex;
+  justify-content:flex-start;
+  align-items: center;
 }

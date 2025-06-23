@@ -5,6 +5,12 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
+import com.itinfo.rutilvm.api.ovirt.business.InterfaceStatus
+import com.itinfo.rutilvm.api.ovirt.business.Ipv4BootProtocol
+import com.itinfo.rutilvm.api.ovirt.business.Ipv6BootProtocol
+import com.itinfo.rutilvm.api.ovirt.business.toInterfaceStatus
+import com.itinfo.rutilvm.api.ovirt.business.toIpv4BootProtocol
+import com.itinfo.rutilvm.api.ovirt.business.toIpv6BootProtocol
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Connection
@@ -12,6 +18,7 @@ import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory
 import java.io.Serializable
+import java.math.BigDecimal
 import java.math.BigInteger
 
 private val log = LoggerFactory.getLogger(HostNicVo::class.java)
@@ -25,7 +32,7 @@ private val log = LoggerFactory.getLogger(HostNicVo::class.java)
  * @property bridged [Boolean]
  * @property mtu [Int]
  // * @property customConfiguration [Boolean]
- * @property status [NicStatus]
+ * @property status [InterfaceStatus]
  * @property speed [BigInteger]
  * @property rxSpeed [BigInteger]
  * @property txSpeed [BigInteger]
@@ -50,18 +57,18 @@ class HostNicVo(
 	val macAddress: String = "",
 	val mtu: Int = 0,
 	val bridged: Boolean = false,
-	val status: NicStatus = NicStatus.DOWN,
-	val speed: BigInteger = BigInteger.ZERO,
-	val rxSpeed: BigInteger = BigInteger.ZERO,
-	val txSpeed: BigInteger = BigInteger.ZERO,
+	val status: InterfaceStatus? = InterfaceStatus.down,
+	val speed: BigInteger? = BigInteger.ZERO,
+	val rxSpeed: BigDecimal? = BigDecimal.ZERO,
+	val txSpeed: BigDecimal? = BigDecimal.ZERO,
 	val rxTotalSpeed: BigInteger = BigInteger.ZERO,
 	val txTotalSpeed: BigInteger = BigInteger.ZERO,
 	val rxTotalError: BigInteger = BigInteger.ZERO,
 	val txTotalError: BigInteger = BigInteger.ZERO,
 	val vlan: String = "",
 	val adAggregatorId: Int = 0,
-	val bootProtocol: BootProtocol = BootProtocol.NONE,
-	val ipv6BootProtocol: BootProtocol = BootProtocol.NONE,
+	val bootProtocol: Ipv4BootProtocol? = Ipv4BootProtocol.none,
+	val ipv6BootProtocol: Ipv6BootProtocol? = Ipv6BootProtocol.none,
 	val ip: IpVo = IpVo(),
 	val ipv6: IpVo = IpVo(),
 	val baseInterface: IdentifiedVo = IdentifiedVo(),
@@ -80,18 +87,18 @@ class HostNicVo(
 		private var bMtu: Int = 0; fun mtu(block: () -> Int?) { bMtu = block() ?: 0 }
 		private var bBridged: Boolean = false; fun bridged(block: () -> Boolean?) { bBridged = block() ?: false }
 		// private var bCustomConfiguration: Boolean = false; fun customConfiguration(block: () -> Boolean?) { bCustomConfiguration = block() ?: false }
-		private var bStatus: NicStatus = NicStatus.DOWN; fun status(block: () -> NicStatus?) { bStatus = block() ?: NicStatus.DOWN }
-		private var bSpeed: BigInteger = BigInteger.ZERO; fun speed(block: () -> BigInteger?) { bSpeed = block() ?: BigInteger.ZERO }
-		private var bRxSpeed: BigInteger = BigInteger.ZERO; fun rxSpeed(block: () -> BigInteger?) { bRxSpeed = block() ?: BigInteger.ZERO }
-		private var bTxSpeed: BigInteger = BigInteger.ZERO; fun txSpeed(block: () -> BigInteger?) { bTxSpeed = block() ?: BigInteger.ZERO }
+		private var bStatus: InterfaceStatus? = InterfaceStatus.down; fun status(block: () -> InterfaceStatus?) { bStatus = block() ?: InterfaceStatus.down }
+		private var bSpeed: BigInteger? = BigInteger.ZERO; fun speed(block: () -> BigInteger?) { bSpeed = block() ?: BigInteger.ZERO }
+		private var bRxSpeed: BigDecimal? = BigDecimal.ZERO; fun rxSpeed(block: () -> BigDecimal?) { bRxSpeed = block() ?: BigDecimal.ZERO }
+		private var bTxSpeed: BigDecimal? = BigDecimal.ZERO; fun txSpeed(block: () -> BigDecimal?) { bTxSpeed = block() ?: BigDecimal.ZERO }
 		private var bRxTotalSpeed: BigInteger = BigInteger.ZERO; fun rxTotalSpeed(block: () -> BigInteger?) { bRxTotalSpeed = block() ?: BigInteger.ZERO }
 		private var bTxTotalSpeed: BigInteger = BigInteger.ZERO; fun txTotalSpeed(block: () -> BigInteger?) { bTxTotalSpeed = block() ?: BigInteger.ZERO }
 		private var bRxTotalError: BigInteger = BigInteger.ZERO; fun rxTotalError(block: () -> BigInteger?) { bRxTotalError = block() ?: BigInteger.ZERO }
 		private var bTxTotalError: BigInteger = BigInteger.ZERO; fun txTotalError(block: () -> BigInteger?) { bTxTotalError = block() ?: BigInteger.ZERO }
 		private var bVlan: String = ""; fun vlan(block: () -> String?) { bVlan = block() ?: "" }
 		private var bAdAggregatorId: Int = 0; fun adAggregatorId(block: () -> Int?) { bAdAggregatorId = block() ?: 0 }
-		private var bBootProtocol: BootProtocol = BootProtocol.NONE; fun bootProtocol(block: () -> BootProtocol?) { bBootProtocol = block() ?: BootProtocol.NONE }
-		private var bIpv6BootProtocol: BootProtocol = BootProtocol.NONE; fun ipv6BootProtocol(block: () -> BootProtocol?) { bIpv6BootProtocol = block() ?: BootProtocol.NONE }
+		private var bBootProtocol: Ipv4BootProtocol? = Ipv4BootProtocol.none; fun bootProtocol(block: () -> Ipv4BootProtocol?) { bBootProtocol = block() ?: Ipv4BootProtocol.none }
+		private var bIpv6BootProtocol: Ipv6BootProtocol? = Ipv6BootProtocol.none; fun ipv6BootProtocol(block: () -> Ipv6BootProtocol?) { bIpv6BootProtocol = block() ?: Ipv6BootProtocol.none }
 		private var bIp: IpVo = IpVo(); fun ip(block: () -> IpVo?) { bIp = block() ?: IpVo() }
 		private var bIpv6: IpVo = IpVo(); fun ipv6(block: () -> IpVo?) { bIpv6 = block() ?: IpVo() }
 		private var bBaseInterface: IdentifiedVo = IdentifiedVo(); fun baseInterface(block: () -> IdentifiedVo?) { bBaseInterface = block() ?: IdentifiedVo() }
@@ -138,17 +145,17 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		bridged { hostNic.bridged() }
 		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		mtu { hostNic.mtuAsInteger() }
-		status { hostNic.status() }
+		status { hostNic.status().toInterfaceStatus() }
 		speed { hostNic.speed() }
-		rxSpeed { hostNic.statistics().findSpeed("data.current.rx.bps") }
-		txSpeed { hostNic.statistics().findSpeed("data.current.tx.bps") }
+		rxSpeed { hostNic.statistics().findSpeedDecimal("data.current.rx.bps") }
+		txSpeed { hostNic.statistics().findSpeedDecimal("data.current.tx.bps") }
 		rxTotalSpeed { hostNic.statistics().findSpeed("data.total.rx") }
 		txTotalSpeed { hostNic.statistics().findSpeed("data.total.tx") }
 		rxTotalError { hostNic.statistics().findSpeed("errors.total.rx") }
 		txTotalError { hostNic.statistics().findSpeed("errors.total.tx") }
 		adAggregatorId { if(hostNic.adAggregatorIdPresent()) { hostNic.adAggregatorIdAsInteger() } else null }
-		bootProtocol { hostNic.bootProtocol() }
-		ipv6BootProtocol { hostNic.ipv6BootProtocol() }
+		bootProtocol { hostNic.bootProtocol().toIpv4BootProtocol() }
+		ipv6BootProtocol { hostNic.ipv6BootProtocol().toIpv6BootProtocol() }
 		ip { if(hostNic.ipPresent()) hostNic.ip().toIpVo() else null }
 		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIpVo() else null }
 		bondingVo { bond?.toBondingVo(conn, hostNic.host().id()) }
@@ -167,11 +174,11 @@ fun HostNic.toSlaveHostNicVo(conn: Connection): HostNicVo {
 	return HostNicVo.builder {
 		id { hostNic.id() }
 		name { hostNic.name() }
-		status { hostNic.status() }
+		status { hostNic.status().toInterfaceStatus() }
 		speed { hostNic.speed() }
 		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
-		rxSpeed { statistics.findSpeed("data.current.rx.bps") }
-		txSpeed { statistics.findSpeed("data.current.tx.bps") }
+		rxSpeed { statistics.findSpeedDecimal("data.current.rx.bps") }
+		txSpeed { statistics.findSpeedDecimal("data.current.tx.bps") }
 		rxTotalSpeed { statistics.findSpeed("data.total.rx") }
 		txTotalSpeed { statistics.findSpeed("data.total.tx") }
 		rxTotalError { statistics.findSpeed("errors.total.rx") }

@@ -39,6 +39,24 @@ class Localization {
 		}
 		//endregion: AuditLogSeverityL
 
+		//region: CpuPinningPolicyL
+		object CpuPinningPolicyL {
+			object KR {
+				val none					= locKr?.get(CpuPinningPolicyB.none.localizationKey)?.toString() ?: ""
+				val manual					= locKr?.get(CpuPinningPolicyB.manual.localizationKey)?.toString() ?: ""
+				val resize_and_pin_numa		= locKr?.get(CpuPinningPolicyB.resize_and_pin_numa.localizationKey)?.toString() ?: ""
+				val dedicated			    = locKr?.get(CpuPinningPolicyB.dedicated.localizationKey)?.toString() ?: ""
+				val isolate_threads			= locKr?.get(CpuPinningPolicyB.isolate_threads.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val none					= locEn?.get(CpuPinningPolicyB.none.localizationKey)?.toString() ?: ""
+				val manual					= locEn?.get(CpuPinningPolicyB.manual.localizationKey)?.toString() ?: ""
+				val resize_and_pin_numa		= locEn?.get(CpuPinningPolicyB.resize_and_pin_numa.localizationKey)?.toString() ?: ""
+				val dedicated			    = locEn?.get(CpuPinningPolicyB.dedicated.localizationKey)?.toString() ?: ""
+				val isolate_threads			= locEn?.get(CpuPinningPolicyB.isolate_threads.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: CpuPinningPolicyL
 
 		//region: BiosTypeL
 		object BiosTypeL {
@@ -460,11 +478,19 @@ class Localization {
 	}
 
 	fun findLocalizedName4AuditLogSeverity(type: AuditLogSeverity, loc: String = "kr"): String = when(type) {
-		AuditLogSeverity.normal ->	if (loc == "kr") AuditLogSeverityL.KR.NORMAL else type.name
-		AuditLogSeverity.warning -> if (loc == "kr") AuditLogSeverityL.KR.WARNING else type.name
-		AuditLogSeverity.error ->	if (loc == "kr") AuditLogSeverityL.KR.ERROR else type.name
-		AuditLogSeverity.alert ->	if (loc == "kr") AuditLogSeverityL.KR.ALERT else type.name
+		AuditLogSeverity.normal ->		if (loc == "kr") AuditLogSeverityL.KR.NORMAL else type.name
+		AuditLogSeverity.warning -> 	if (loc == "kr") AuditLogSeverityL.KR.WARNING else type.name
+		AuditLogSeverity.error ->		if (loc == "kr") AuditLogSeverityL.KR.ERROR else type.name
+		AuditLogSeverity.alert ->		if (loc == "kr") AuditLogSeverityL.KR.ALERT else type.name
 		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
+
+	fun findLocalizedName4CpuPinningPolicy(type: CpuPinningPolicyB, loc: String = "kr"): String = when(type) {
+		CpuPinningPolicyB.none ->					if (loc == "kr") CpuPinningPolicyL.KR.none else CpuPinningPolicyL.EN.none
+		CpuPinningPolicyB.manual -> 				if (loc == "kr") CpuPinningPolicyL.KR.manual else CpuPinningPolicyL.EN.manual
+		CpuPinningPolicyB.resize_and_pin_numa ->	if (loc == "kr") CpuPinningPolicyL.KR.resize_and_pin_numa else CpuPinningPolicyL.EN.resize_and_pin_numa
+		CpuPinningPolicyB.dedicated ->       		if (loc == "kr") CpuPinningPolicyL.KR.dedicated else CpuPinningPolicyL.EN.dedicated
+		CpuPinningPolicyB.isolate_threads -> 		if (loc == "kr") CpuPinningPolicyL.KR.isolate_threads else CpuPinningPolicyL.EN.isolate_threads
 	}
 
 	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String = when(type) {

@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.util.ovirt
 
 import com.itinfo.rutilvm.common.toTimeElapsedKr
 import org.ovirt.engine.sdk4.types.Statistic
+import java.math.BigDecimal
 import java.math.BigInteger
 
 /**
@@ -17,6 +18,9 @@ import java.math.BigInteger
  *     <values/>
  * </statistic>
  */
+fun List<Statistic>.findSpeedDecimal(query: String): BigDecimal =
+	this@findSpeedDecimal.findSpeed(query).toBigDecimal()
+
 fun List<Statistic>.findSpeed(query: String): BigInteger {
 	// log.debug("List<Statistics>.findSpeed ... query: $query")
 	return this.firstOrNull { it.namePresent() && it.name() == query && it.valuesPresent() }

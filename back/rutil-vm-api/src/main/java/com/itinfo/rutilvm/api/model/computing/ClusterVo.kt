@@ -12,6 +12,7 @@ import com.itinfo.rutilvm.api.ovirt.business.LogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationBandwidthLimitType
 import com.itinfo.rutilvm.api.ovirt.business.SwitchTypeB
+import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationBandwidthLimitType
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
@@ -109,11 +110,12 @@ class ClusterVo(
     val networkProvider: Boolean = false,
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
     val networkVo: NetworkVo = NetworkVo(), // 관리네트워크
-    val hostSize: SizeVo = SizeVo(),
-    val vmSize: SizeVo = SizeVo(),
-    val hostVos: List<HostVo> = listOf(),
-    val networkVos: List<IdentifiedVo> = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
-    val templateVos: List<IdentifiedVo> = listOf(),
+	/*val hostSize: SizeVo = SizeVo(),
+	val vmSize: SizeVo = SizeVo(),*/
+	val vmVos: List<VmVo>? = listOf(),
+    val hostVos: List<HostVo>? = listOf(),
+    val networkVos: List<IdentifiedVo>? = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
+    val templateVos: List<IdentifiedVo>? = listOf(),
 	val required: Boolean = false,
 ): Serializable, TreeNavigatable<Unit> {
 	override val type: TreeNavigatableType = TreeNavigatableType.CLUSTER // 네트워크 생성시 필수 지정
@@ -135,6 +137,28 @@ class ClusterVo(
 	val switchTypeCode: String		get() = switchType?.code ?: ""
 	val switchTypeEn: String		get() = switchType?.en ?: "N/A"
 	val switchTypeKr: String		get() = switchType?.kr ?: "알 수 없음"
+	val vmSize: SizeVo
+		get() {
+			val all = vmVos?.size ?: 0
+			val up = vmVos?.filter { it.running }?.size ?: 0
+			val down = all - up
+			return SizeVo.builder {
+				allCnt { all }
+				upCnt { up }
+				downCnt { down }
+			}
+		}
+	val hostSize: SizeVo
+		get() {
+			val all = hostVos?.size ?: 0
+			val up = hostVos?.filter { it.status == VdsStatus.up }?.size ?: 0
+			val down = all - up
+			return SizeVo.builder {
+				allCnt { all }
+				upCnt { up }
+				downCnt { down }
+			}
+		}
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -169,12 +193,13 @@ class ClusterVo(
 		private var bNetworkVo: NetworkVo = NetworkVo(); fun networkVo(block: () -> NetworkVo?) { bNetworkVo = block() ?: NetworkVo() }
 		private var bHostSize: SizeVo = SizeVo(); fun hostSize(block: () -> SizeVo?) { bHostSize = block() ?: SizeVo() }
 		private var bVmSize: SizeVo = SizeVo(); fun vmSize(block: () -> SizeVo?) { bVmSize = block() ?: SizeVo() }
+		private var bVmVos: List<VmVo> = listOf();fun vmVos(block: () -> List<VmVo>?) { bVmVos = block() ?: listOf() }
 		private var bHostVos: List<HostVo> = listOf();fun hostVos(block: () -> List<HostVo>?) { bHostVos = block() ?: listOf() }
 		private var bNetworkVos: List<IdentifiedVo> = listOf();fun networkVos(block: () -> List<IdentifiedVo>?) { bNetworkVos = block() ?: listOf() }
 		private var bTemplateVos: List<IdentifiedVo> = listOf();fun templateVos(block: () -> List<IdentifiedVo>?) { bTemplateVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
 
-		fun build(): ClusterVo = ClusterVo(bId, bName, null, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, bHostSize, bVmSize, bHostVos, bNetworkVos, bTemplateVos, /*bNetworkProperty, bAttached, */bRequired)
+		fun build(): ClusterVo = ClusterVo(bId, bName, null, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, /*bHostSize, bVmSize,*/ bVmVos, bHostVos, bNetworkVos, bTemplateVos, /*bNetworkProperty, bAttached, */bRequired)
 	}
 
 	companion object {

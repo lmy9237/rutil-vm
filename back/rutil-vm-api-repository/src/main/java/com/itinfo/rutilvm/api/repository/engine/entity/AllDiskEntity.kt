@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
@@ -95,7 +96,7 @@ class AllDiskEntity(
 	val storageType: String = "",
 	val storagePoolId: UUID? = null,
 	val imageGuid: UUID? = null,
-	val creationDate: LocalDateTime? = LocalDateTime.now(),
+	val creationDate: LocalDateTime? = null,
 	val actualSize: BigInteger? = BigInteger.ZERO,
 	val readRate: BigInteger? = BigInteger.ZERO,
 	val readOps: BigInteger? = BigInteger.ZERO,
@@ -106,8 +107,9 @@ class AllDiskEntity(
 	val flushLatencySeconds: BigDecimal? = BigDecimal.ZERO,
 	val size: BigInteger? = BigInteger.ZERO,
 	val itGuid: UUID? = null,
-	val imagestatus: Int? = null,
-	val lastmodified: LocalDateTime? = LocalDateTime.now(),
+	@Column(name="imagestatus", nullable=true)
+	private val _imagestatus: Int? = null,
+	val lastmodified: LocalDateTime? = null,
 	val volumeType: Int? = null,
 	val volumeFormat: Int? = null,
 	val qcowCompat: Int? = null,
@@ -152,10 +154,10 @@ class AllDiskEntity(
 	val diskDescription: String = "",
 	val shareable: Boolean = false,
 	val sgio: Int? = null,
-	@Column(name = "disk_storage_type", nullable = true)
+	@Column(name="disk_storage_type", nullable=true)
 	private val _diskStorageType: Int? = null,
 	val cinderVolumeType: String = "",
-	@Column(name = "disk_content_type", nullable = true)
+	@Column(name="disk_content_type", nullable=true)
 	private val _diskContentType: Int? = null,
 	val backup: String = "",
 	val backupMode: String = "",
@@ -166,6 +168,8 @@ class AllDiskEntity(
 
 	val diskContentType: DiskContentType
 		get() = DiskContentType.forValue(_diskContentType)
+	val diskImageStatus: DiskStatus
+		get() = DiskStatus.forValue(_imagestatus)
 
 	override fun toString(): String =
 		gson.toJson(this)

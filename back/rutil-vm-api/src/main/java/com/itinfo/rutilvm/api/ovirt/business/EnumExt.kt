@@ -5,6 +5,7 @@ import org.ovirt.engine.sdk4.types.Architecture
 import org.ovirt.engine.sdk4.types.Bios
 import org.ovirt.engine.sdk4.types.BiosType
 import org.ovirt.engine.sdk4.types.BootDevice
+import org.ovirt.engine.sdk4.types.BootProtocol
 import org.ovirt.engine.sdk4.types.Cpu
 import org.ovirt.engine.sdk4.types.CpuPinningPolicy
 import org.ovirt.engine.sdk4.types.DataCenterStatus
@@ -20,6 +21,7 @@ import org.ovirt.engine.sdk4.types.MigrateOnError
 import org.ovirt.engine.sdk4.types.MigrationBandwidthAssignmentMethod
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
+import org.ovirt.engine.sdk4.types.NicStatus
 import org.ovirt.engine.sdk4.types.OperatingSystem
 import org.ovirt.engine.sdk4.types.OperatingSystemInfo
 import org.ovirt.engine.sdk4.types.OsType
@@ -266,6 +268,14 @@ fun VdsSpmStatus.toSpmStatus(): SpmStatus = SpmStatus.fromValue(this@toSpmStatus
 
 fun HostStatus.toVdsStatus(): VdsStatus = VdsStatus.forCode(this@toVdsStatus.value())
 fun VdsStatus.toHostStatus(): HostStatus = HostStatus.fromValue(this@toHostStatus.code)
+
+fun NicStatus.toInterfaceStatus(): InterfaceStatus = InterfaceStatus.forCode(this@toInterfaceStatus.value())
+fun InterfaceStatus.toNicStatus(): NicStatus = NicStatus.fromValue(this@toNicStatus.code)
+
+fun BootProtocol.toIpv4BootProtocol(): Ipv4BootProtocol? = Ipv4BootProtocol.forCode(this@toIpv4BootProtocol.value())
+fun Ipv4BootProtocol.toBootProtocol(): BootProtocol = BootProtocol.fromValue(this@toBootProtocol.code)
+fun BootProtocol.toIpv6BootProtocol(): Ipv6BootProtocol? = Ipv6BootProtocol.forCode(this@toIpv6BootProtocol.value())
+fun Ipv6BootProtocol.toBootProtocol(): BootProtocol = BootProtocol.fromValue(this@toBootProtocol.code)
 
 fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior = VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
 fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())

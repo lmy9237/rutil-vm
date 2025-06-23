@@ -148,7 +148,15 @@ class ClusterViewEntity(
 		insertable=false,
 		updatable=false
 	)
-	val hosts: Set<VdsEntity>? = emptySet()
+	val hosts: Set<VdsEntity>? = emptySet(),
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="cluster_id",
+		referencedColumnName="cluster_id",
+		insertable=false,
+		updatable=false
+	)
+	val vms: Set<VmEntity>? = emptySet(),
 ) : Serializable {
 	val architecture: ArchitectureType? 	get() = ArchitectureType.forValue(_architecture)
 	val biosType: BiosTypeB?				get() = BiosTypeB.forValue(_biosType)

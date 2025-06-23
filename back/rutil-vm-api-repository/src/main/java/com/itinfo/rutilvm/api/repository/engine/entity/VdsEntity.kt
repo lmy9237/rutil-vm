@@ -26,7 +26,7 @@ import java.util.UUID
 @Table(name = "vds")
 class VdsEntity(
 	@Id
-	@Column(name = "vds_id")
+	@Column(name="vds_id", nullable=false)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val vdsId: UUID? = null,
 	val vdsName: String? = null,
@@ -68,67 +68,31 @@ class VdsEntity(
 
 	val vmsCoresCount: Int? = null,
 	val cpuOverCommitTimeStamp: LocalDateTime? = null,
-
-	@Column(name = "net_config_dirty")
 	val netConfigDirty: Boolean? = null,
-
-	@Column(name = "reserved_mem")
 	val reservedMem: Int? = null,
-
-	@Column(name = "guest_overhead")
 	val guestOverhead: Int? = null,
-
-	@Column(name = "rpm_version")
 	val rpmVersion: String? = null,
-
-	@Column(name = "software_version")
 	val softwareVersion: String? = null,
-
-	@Column(name = "version_name")
 	val versionName: String? = null,
-
-	@Column(name = "build_name")
 	val buildName: String? = null,
-
-	@Column(name = "previous_status")
 	val previousStatus: Int? = null,
 
-	@Column(name = "cpu_idle")
 	val cpuIdle: BigDecimal? = null,
-
-	@Column(name = "cpu_load")
 	val cpuLoad: BigDecimal? = null,
-
-	@Column(name = "cpu_sys")
 	val cpuSys: BigDecimal? = null,
-
-	@Column(name = "cpu_user")
 	val cpuUser: BigDecimal? = null,
 
-	@Column(name = "usage_mem_percent")
 	val usageMemPercent: Int? = null,
-
-	@Column(name = "usage_cpu_percent")
 	val usageCpuPercent: Int? = null,
-
-	@Column(name = "usage_network_percent")
 	val usageNetworkPercent: Int? = null,
 
-	@Column(name = "mem_free")
 	val memFree: Long? = null,
-
-	@Column(name = "mem_shared")
 	val memShared: Long? = null,
 
-	@Column(name = "swap_free")
 	val swapFree: Long? = null,
-
-	@Column(name = "swap_total")
 	val swapTotal: Long? = null,
 
-	@Column(name = "ksm_cpu_percent")
 	val ksmCpuPercent: Int? = null,
-
 	val ksmPages: Long? = null,
 	val ksmState: Boolean? = null,
 
@@ -150,34 +114,16 @@ class VdsEntity(
 	@Column(name = "supported_engines")
 	val supportedEngines: String? = null,
 
-	@Column(name = "host_os")
 	val hostOs: String? = null,
-
-	@Column(name = "kvm_version")
 	val kvmVersion: String? = null,
-
-	@Column(name = "libvirt_version")
 	val libvirtVersion: String? = null,
-
-	@Column(name = "spice_version")
 	val spiceVersion: String? = null,
-
-	@Column(name = "gluster_version")
 	val glusterVersion: String? = null,
-
-	@Column(name = "librbd1_version")
+	@Column(name = "librbd1_version", nullable = true)
 	val librbd1Version: String? = null,
-
-	@Column(name = "glusterfs_cli_version")
 	val glusterfsCliVersion: String? = null,
-
-	@Column(name = "openvswitch_version")
 	val openvswitchVersion: String? = null,
-
-	@Column(name = "nmstate_version")
 	val nmstateVersion: String? = null,
-
-	@Column(name = "kernel_version")
 	val kernelVersion: String? = null,
 
 	@Column(name = "iscsi_initiator_name")
@@ -357,13 +303,28 @@ class VdsEntity(
 		updatable=false
 	)
 	val cluster: ClusterViewEntity? = null,
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="run_on_vds",
+		referencedColumnName="vds_id",
+		insertable=false,
+		updatable=false
+	)
+	val vms: Set<VmEntity>? = emptySet(),
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinColumn(
+		name="vds_id",
+		referencedColumnName="vds_id",
+		insertable=false,
+		updatable=false
+	)
+	val nics: Set<VdsInterfaceViewEntity>? = emptySet()
 ) : Serializable {
 
-	val selinuxEnforceMode: SELinuxModeB?		get() = SELinuxModeB.forValue(_selinuxEnforceMode)
-	val spmStatus: VdsSpmStatus?				get() = VdsSpmStatus.forValue(_spmStatus)
-	val vdsStatus: VdsStatus? 				get() = VdsStatus.forValue(_status)
-	val transparentHugepagesState: VdsTransparentHugePages get() = VdsTransparentHugePages.forValue(_transparentHugepagesState)
-
+	val selinuxEnforceMode: SELinuxModeB?						get() = SELinuxModeB.forValue(_selinuxEnforceMode)
+	val spmStatus: VdsSpmStatus?								get() = VdsSpmStatus.forValue(_spmStatus)
+	val vdsStatus: VdsStatus?									get() = VdsStatus.forValue(_status)
+	val transparentHugepagesState: VdsTransparentHugePages	get() = VdsTransparentHugePages.forValue(_transparentHugepagesState)
 
 	override fun toString(): String =
 		gson.toJson(this@VdsEntity)

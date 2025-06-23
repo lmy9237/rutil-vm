@@ -1,7 +1,9 @@
 import "./Spinner.css"
 
-const Spinner = () => (
-  <div className="spinner" />
+const Spinner = ({
+  ...props
+}) => (
+  <div className={`spinner ${props.className && props.className}`}/>
 )
 
 export default Spinner;

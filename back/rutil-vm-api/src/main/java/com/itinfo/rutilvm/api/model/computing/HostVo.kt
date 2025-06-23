@@ -114,7 +114,7 @@ class HostVo (
     val clusterVo: IdentifiedVo = IdentifiedVo(),
     val dataCenterVo: IdentifiedVo = IdentifiedVo(),
     val vmSizeVo: SizeVo = SizeVo(),
-    val vmVos: List<IdentifiedVo> = listOf(),
+    val vmVos: List<VmVo> = listOf(),
     val hostNicVos: List<HostNicVo> = listOf(),
     val usageDto: UsageDto = UsageDto(),
 	// val certificate: HCertificateVo = HCertificateVo(),
@@ -192,7 +192,7 @@ class HostVo (
         private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
         private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
         private var bVmSizeVo: SizeVo = SizeVo(); fun vmSizeVo(block: () -> SizeVo?) { bVmSizeVo = block() ?: SizeVo() }
-        private var bVmVos: List<IdentifiedVo> = listOf(); fun vmVos(block: () -> List<IdentifiedVo>?) { bVmVos = block() ?: listOf() }
+        private var bVmVos: List<VmVo> = listOf(); fun vmVos(block: () -> List<VmVo>?) { bVmVos = block() ?: listOf() }
         private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
         private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
@@ -385,7 +385,7 @@ fun Host.toHostVo(conn: Connection): HostVo {
         dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 //        hostNicVos { hostNics.fromHostNicsToIdentifiedVos() }
         hostNicVos { hostNics.toHostNicVos(conn) }
-        vmVos { vms.fromVmsToIdentifiedVos() }
+        vmVos { vms.toVmVos(conn) }
     }
 }
 fun List<Host>.toHostVos(conn: Connection): List<HostVo> =

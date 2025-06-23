@@ -16,6 +16,9 @@ import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
+import com.itinfo.rutilvm.api.model.network.BondingVo
+import com.itinfo.rutilvm.api.model.network.HostNicVo
+import com.itinfo.rutilvm.api.model.network.IpVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
@@ -51,6 +54,7 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.NetworkStatus.NON_OPERATIONAL
 import org.ovirt.engine.sdk4.types.NetworkStatus.OPERATIONAL
+import org.ovirt.engine.sdk4.types.HostNic
 import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
@@ -90,8 +94,8 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 		sharable { entity.shareable }
 		virtualSize { entity.size }
 		actualSize { entity.actualSize }
-		status { DiskStatus.forValue(entity.imagestatus) }
-		contentType { diskContentType }
+		status { entity.diskImageStatus }
+		contentType { entity.diskContentType }
 		storageType { entity.diskStorageType }
 		sparse { entity.volumeType == 2 }
 		description { entity.description }
@@ -243,6 +247,7 @@ fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.
 	// networkVo { this@toClusterVoFromClusterViewEntity }
 	// hostSize { this@toClusterVoFromClusterViewEntity.hosts.size ?: 0 }
 	// required { this@toClusterVoFromClusterViewEntity }
+	vmVos { this@toClusterVoFromClusterViewEntity.vms?.toVmVosFromVmEntities() }
 }
 fun Collection<ClusterViewEntity>.toClusterVosFromClusterViewEntities(): List<ClusterVo> =
 	this@toClusterVosFromClusterViewEntities.map { it.toClusterVoFromClusterViewEntity() }
@@ -495,12 +500,24 @@ fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
 	}
 	clusterVo { this@toHostVoFromVdsEntity.cluster?.toIdentifiedVoFromClusterViewEntity() }
 	dataCenterVo { this@toHostVoFromVdsEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
-
+	vmVos {
+		this@toHostVoFromVdsEntity.cluster?.vms?.filter {
+			it.runOnVds == this@toHostVoFromVdsEntity.vdsId
+		}?.toVmVosFromVmEntities()
+	}
+	hostNicVos {
+		this@toHostVoFromVdsEntity.nics?.toHostNicVosFromVdsInterfaceViewEntities()
+	}
 	// usageDto { }
 }
-
 fun Collection<VdsEntity>.toHostVosFromVdsEntities(): List<HostVo> =
 	this@toHostVosFromVdsEntities.map { it.toHostVoFromVdsEntity() }
+fun VdsEntity.toIdentifiedVoFromVdsEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromVdsEntity.vdsId.toString() }
+	name { this@toIdentifiedVoFromVdsEntity.vdsName }
+}
+fun Collection<VdsEntity>.toIdentifiedVosFromVdsEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromVdsEntities.map { it.toIdentifiedVoFromVdsEntity() }
 //endregion: VdsEntity
 
 //region: VmEntity
@@ -609,10 +626,9 @@ fun VmEntity.toVmVo(): VmVo {
 		}.toIdentifiedVosFromSnapshotEntities() }
 	}
 }
-fun List<VmEntity>.toVmVos(): List<VmVo> {
-	return this@toVmVos.map { it.toVmVo() }
+fun Collection<VmEntity>.toVmVosFromVmEntities(): List<VmVo> {
+	return this@toVmVosFromVmEntities.map { it.toVmVo() }
 }
-
 
 fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	val entity = this@toVmVoFromVmEntity
@@ -731,7 +747,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 	}
 }
 
-fun List<VmEntity>.toVmVosFromVmEntities(vms: List<Vm>? = null): List<VmVo> {  // TODO: 다 연결 되었을 때 vms없이 mapping
+fun Collection<VmEntity>.toVmVosFromVmEntities(vms: List<Vm>? = null): List<VmVo> {  // TODO: 다 연결 되었을 때 vms없이 mapping
 	val itemById: Map<String, Vm>? =
 		vms?.associateBy { it.id() }
 	return this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity(itemById?.get(it.vmGuid.toString())) }
@@ -741,7 +757,7 @@ fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromVmEntity.vmGuid.toString() }
 	name { this@toIdentifiedVoFromVmEntity.vmName }
 }
-fun List<VmEntity>.toIdentifiedVosFromVoEntities(): List<IdentifiedVo> =
+fun Collection<VmEntity>.toIdentifiedVosFromVoEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromVoEntities.map { it.toIdentifiedVoFromVmEntity() }
 //endregion: VmEntity
 
@@ -750,10 +766,70 @@ fun VmIconEntity.toVmIconVoFromVmEntity(): VmIconVo = VmIconVo.builder {
 	id { this@toVmIconVoFromVmEntity.id.toString() }
 	dataUrl { this@toVmIconVoFromVmEntity.dataUrl }
 }
-fun List<VmIconEntity>.toVmIconVosFromVmIconEntities(): List<VmIconVo> =
+fun Collection<VmIconEntity>.toVmIconVosFromVmIconEntities(): List<VmIconVo> =
 	this@toVmIconVosFromVmIconEntities.map { it.toVmIconVoFromVmEntity() }
 //endregion: VmIconEntity
 
+
+//region: VdsInterfaceViewEntities
+fun VdsInterfaceViewEntity.toHostNicVoFromVdsInterfaceViewEntity(): HostNicVo = HostNicVo.builder {
+	id { this@toHostNicVoFromVdsInterfaceViewEntity.id.toString() }
+	name { this@toHostNicVoFromVdsInterfaceViewEntity.name }
+	macAddress { this@toHostNicVoFromVdsInterfaceViewEntity.macAddr }
+	mtu { this@toHostNicVoFromVdsInterfaceViewEntity.mtu }
+	bridged { this@toHostNicVoFromVdsInterfaceViewEntity.bridged }
+	status { this@toHostNicVoFromVdsInterfaceViewEntity.ifaceStatus }
+	speed { this@toHostNicVoFromVdsInterfaceViewEntity.speed?.toBigInteger() }
+	rxSpeed { this@toHostNicVoFromVdsInterfaceViewEntity.rxRate }
+	txSpeed { this@toHostNicVoFromVdsInterfaceViewEntity.txRate }
+	rxTotalSpeed { this@toHostNicVoFromVdsInterfaceViewEntity.rxTotal }
+	txTotalSpeed { this@toHostNicVoFromVdsInterfaceViewEntity.txTotal }
+	rxTotalError { this@toHostNicVoFromVdsInterfaceViewEntity.rxDrop } // TODO: 맞는지 모르겠음 아님 offset
+	txTotalError { this@toHostNicVoFromVdsInterfaceViewEntity.txDrop } // TODO: 맞는지 모르겠음 아님 offset
+	// vlan { this@toHostNicVoFromVdsInterfaceViewEntity.vlanId }
+	adAggregatorId { this@toHostNicVoFromVdsInterfaceViewEntity.adAggregatorId }
+	bootProtocol { this@toHostNicVoFromVdsInterfaceViewEntity.bootProtocol }
+	ipv6BootProtocol { this@toHostNicVoFromVdsInterfaceViewEntity.ipv6BootProtocol }
+	ip {
+		IpVo.builder {
+			address { this@toHostNicVoFromVdsInterfaceViewEntity.addr }
+			gateway { this@toHostNicVoFromVdsInterfaceViewEntity.gateway }
+			netmask { this@toHostNicVoFromVdsInterfaceViewEntity.subnet }
+			// version { this@toHostNicVoFromVdsInterfaceViewEntity }
+		}
+	}
+	ipv6 {
+		IpVo.builder {
+			address { this@toHostNicVoFromVdsInterfaceViewEntity.ipv6Address }
+			gateway { this@toHostNicVoFromVdsInterfaceViewEntity.ipv6Gateway }
+			netmask { this@toHostNicVoFromVdsInterfaceViewEntity.subnet }
+			// version { this@toHostNicVoFromVdsInterfaceViewEntity }
+		}
+	}
+	bondingVo {
+		BondingVo.builder {
+			/*
+			activeSlaveVo {
+				if (this@toBondingVo.activeSlavePresent()) {
+					val activeSlaveId = this@toBondingVo.activeSlave().id()
+					val nic = conn.findNicFromHost(hostId, activeSlaveId).getOrNull()
+					nic?.fromHostNicToIdentifiedVo()
+				} else null
+			}
+			optionVos {
+				if (this@toBondingVo.optionsPresent()) {
+					this@toBondingVo.options().toOptionVos()
+				} else listOf()
+			}
+			slaveVos { slaves }
+			*/
+		}
+	}
+	hostVo { this@toHostNicVoFromVdsInterfaceViewEntity.host?.toIdentifiedVoFromVdsEntity() }
+}
+fun Collection<VdsInterfaceViewEntity>.toHostNicVosFromVdsInterfaceViewEntities(): List<HostNicVo> =
+	this@toHostNicVosFromVdsInterfaceViewEntities.map { it.toHostNicVoFromVdsInterfaceViewEntity() }
+//endregion: VdsInterfaceViewEntities
 
 //region: SnapshotEntity
 fun SnapshotEntity.fromSnapshotEntityToSnapshotVo(): SnapshotVo = SnapshotVo.builder {

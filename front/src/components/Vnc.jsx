@@ -1,6 +1,9 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect } from 'react'
 import { VncScreen } from 'react-vnc'
-import CONSTANT                   from '@/Constants';
+import CONSTANT                   from "@/Constants";
+import { useValidationToast }     from "@/hooks/useSimpleToast";
+import useUIState                 from "@/hooks/useUIState";
+import Spinner                    from "@/components/common/Spinner";
 import {
   useVmConsoleAccessInfo,
   useVm
@@ -11,10 +14,10 @@ import "./Vnc.css"
 
 const Vnc = forwardRef(({
   vmId, autoConnect = false,
-  isPreview = false,
+  isPreview=false,
+  onSuccess,
   ...props
 }, ref) => {
-
   // 1. VM 정보 가져오기 (상태 확인용)
   const { data: vm } = useVm(vmId);
   const status = vm?.status ?? "";
@@ -23,7 +26,8 @@ const Vnc = forwardRef(({
   // 2. 콘솔 정보: VM이 실행중일 때만 요청
   const {
     data: vmConsoleAccessInfo, 
-    error
+    error,
+    refetch: refetchVmConsoleAccessInfo,
   } = useVmConsoleAccessInfo(vmId, {
     enabled: isVmQualified4ConsoleConnect
   });
@@ -73,22 +77,33 @@ const Vnc = forwardRef(({
 
   return (
     <div
-      className={isPreview ? "vnc-size-preview" : "w-full h-full"}
-      ref={ref}
+      className={`${isPreview ? "vnc-size-preview" : "w-full h-full"} ${props.className}`}
+      {...props}
     >
       {isReady() && isValid(wsUrl) ? (
         <VncScreen
+          ref={ref}
+          loadingUI={`${Localization.kr.LOADING} ${Localization.kr.IN_PROGRESS}`}
           url={fullAccessUrl()}
+          viewOnly={isPreview}
           autoConnect={autoConnect}
           rfbOptions={{
             wsProtocols: ['binary']
           }}
+          retryDuration={3000}
           scaleViewport
-          background="#000000"
-          style={{ width: '100%', height: '100%' }}
+          background="#222222"
+          style={{width:'100%',height:'100%',}}
           debug
-          onConnect={() => Logger.debug("Vnc > 연결됨")}
-          onDisconnect={() => Logger.debug("Vnc > 연결 종료됨")}
+          onConnect={(rfb) => {
+            Logger.debug("Vnc > onConnect ... ")
+            setTimeout(() => {
+              onSuccess(rfb)
+            }, 400)
+          }}
+          onDisconnect={(rfb) => { 
+            Logger.debug("Vnc > onDisconnect ... ")
+          }}
           onCredentialsRequired={(rfb) => {
             Logger.debug("Vnc > 인증 필요");
             rfb.sendCredentials({
@@ -97,10 +112,12 @@ const Vnc = forwardRef(({
           }}
           onSecurityFailure={(e) => {
             Logger.error(`Vnc > 보안 오류: ${e?.detail?.reason}`);
+            refetchVmConsoleAccessInfo()
           }}
           onClipboard={(e) => {
             Logger.debug(`Vnc > 클립보드: ${e.detail}`);
           }}
+          showDotCursor={true}
         />
       ) : (
         <div className="vnc-status-message">

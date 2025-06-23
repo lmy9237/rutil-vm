@@ -19,6 +19,15 @@ enum class CpuPinningPolicyB(
 		get() = this@CpuPinningPolicyB == dedicated ||
 			this@CpuPinningPolicyB == isolate_threads
 
+	private val loc: Localization
+		get() = Localization.getInstance()
+	val localizationKey: String
+		get() = "${CpuPinningPolicyB::class.java.simpleName}.${this.name}"
+	val kr: String
+		get() = loc.findLocalizedName4CpuPinningPolicy(this, "kr")
+	val en: String
+		get() = loc.findLocalizedName4CpuPinningPolicy(this, "en")
+
 	companion object {
 		private val valueMapping: MutableMap<Int, CpuPinningPolicyB> = ConcurrentHashMap<Int, CpuPinningPolicyB>()
 		private val codeMapping: MutableMap<String, CpuPinningPolicyB> = ConcurrentHashMap<String, CpuPinningPolicyB>()
