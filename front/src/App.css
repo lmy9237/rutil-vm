@@ -152,6 +152,7 @@ html {
   --color-table:#E2E5EB;/*0*/
   --color-active:#449bff; /*0*/
   --color-border-default:#cfcfcf;
+  --color-general-box:#E8E8E8;
   --color-alert: #E71825;
   --color-orange: #FF7925;
   --color-yellow: #FBA80E;
@@ -252,8 +253,8 @@ body {
 
 hr {
   height: var(--border-w);
-  z-index: 99999;
   background-color: var(--color-border-default);
+  margin-bottom: 1px;
 }
 ul {
   list-style-type: circle;
@@ -391,12 +392,11 @@ svg.btn { cursor: pointer; }
 }
 .grid-col-span-2 {
   grid-column: span 2;
-  min-width: 971px !important;
 }
 .box-title {
-  font-size: var(--fs-15);
+  font-size: var(--fs-13);
   font-weight: bold;
-  margin-bottom: 13px;
+  margin-bottom: 10px;
 }
 .vm-info-box-outer {
   display: flex;

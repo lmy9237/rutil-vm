@@ -16,6 +16,7 @@ import Localization from "../../../utils/Localization";
 import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
 import { useDataCenter } from "../../../api/RQHook";
 import Logger from "../../../utils/Logger";
+import DataCenterGeneral from "./DataCenterGeneral";
 
 /**
  * @name DataCenterInfo
@@ -44,7 +45,7 @@ const DataCenterInfo = () => {
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
   const { activeModal, setActiveModal, } = useUIState()
   const { setDatacentersSelected, setSourceContext } = useGlobal()
-  const [activeTab, setActiveTab] = useState("clusters");
+  const [activeTab, setActiveTab] = useState("general");
 
   useEffect(() => {
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
@@ -75,6 +76,7 @@ const DataCenterInfo = () => {
   }, [homePath]);
 
   const tabs = useMemo(() => ([
+    { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
     { id: "clusters",       label: Localization.kr.CLUSTER, onClick: () => handleTabClick("clusters") },
     { id: "hosts",          label: Localization.kr.HOST,    onClick: () => handleTabClick("hosts") },
     { id: "vms",            label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
@@ -89,11 +91,12 @@ const DataCenterInfo = () => {
   ]), [dataCenter, activeTab]);
 
   useEffect(() => {
-    setActiveTab(section || "clusters");
+    setActiveTab(section || "general");
   }, [section]);
 
   const renderSectionContent = useCallback(() => {
     const SectionComponent = {
+      general: DataCenterGeneral,
       clusters: DataCenterClusters,
       hosts: DataCenterHosts,
       vms: DataCenterVms,
@@ -126,7 +129,7 @@ const DataCenterInfo = () => {
         <div className="info-content v-start gap-8 w-full h-full">
           <Path type={"datacenter"}
             pathElements={pathData}
-            basePath={`${homePath}/clusters`}
+            basePath={`${homePath}`}
           />
           {renderSectionContent()}
         </div>

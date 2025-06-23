@@ -126,6 +126,7 @@ const App = () => {
               <Route path="/" element={<Dashboard />} />
               <Route path="computing/rutil-manager" element={<RutilManager />} />
               <Route path="computing/rutil-manager/:section" element={<RutilManager />}  />
+              <Route path="computing/datacenters/:id" element={<DataCenterInfo />} />
               <Route path="computing/datacenters/:id/:section" element={<DataCenterInfo />} />
 
               <Route path="computing/clusters/:id" element={<ClusterInfo />} />
@@ -146,6 +147,7 @@ const App = () => {
               <Route path="networks" element={<AllNetwork />} />
               <Route path="networks/rutil-manager" element={<RutilManager />} />
               <Route path="networks/rutil-manager/:section" element={<RutilManager />} />
+              <Route path="networks/datacenters/:id" element={<DataCenterInfo />} />
               <Route path="networks/datacenters/:id/:section" element={<DataCenterInfo />} />
               <Route path="networks/:id" element={<NetworkInfo />} />
               <Route path="networks/:id/:section" element={<NetworkInfo />} />
@@ -157,6 +159,7 @@ const App = () => {
               <Route path="storages/rutil-manager/:section" element={<RutilManager />} />
 
               <Route path="storages/domains" element={<AllDomain />} />
+              <Route path="storages/datacenters/:id" element={<DataCenterInfo />} />
               <Route path="storages/datacenters/:id/:section" element={<DataCenterInfo />} />
               <Route path="storages/domains/:id" element={<DomainInfo />} />
               <Route path="storages/domains/:id/:section" element={<DomainInfo />} />

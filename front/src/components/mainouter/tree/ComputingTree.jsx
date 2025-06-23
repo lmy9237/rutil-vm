@@ -91,7 +91,7 @@ const ComputingTree = ({}) => {
               onChevronClick={() => toggleOpenDataCentersComputing(dc?.id)}
               onClick={() => {
                 setDatacentersSelected(dc)
-                dc?.id && navigate(`/computing/datacenters/${dc?.id}/clusters`);
+                dc?.id && navigate(`/computing/datacenters/${dc?.id}`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();

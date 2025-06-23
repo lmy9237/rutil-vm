@@ -19,7 +19,7 @@
 .section-bottom {
   /* background-color: #f3e8ff;  */
   width: 100%;
-  max-height: 355px;
+  max-height: 380px;
   height: 100%;
 }
 @media (max-width: 1424px) {

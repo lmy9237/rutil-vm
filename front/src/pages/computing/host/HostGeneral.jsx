@@ -152,6 +152,25 @@ const HostGeneral = ({
     { label: "VDSM 버전", value: host?.hostSwVo?.vdsmVersion },
     { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion || "-" }
   ];
+
+  // 그래프값
+  const usageItems = useMemo(() => [
+    {
+      label: "CPU",
+      value: 72,
+      description: "72% 사용됨 | 28% 사용 가능",
+    },
+    {
+      label: "메모리",
+      value: 64,
+      description: "64% 사용됨 | 36% 사용 가능",
+    },
+    {
+      label: "네트워크",
+      value: 35,
+      description: "35% 사용됨 | 65% 사용 가능",
+    },
+  ], []);
   return (
     <>
     <GeneralLayout
@@ -159,7 +178,10 @@ const HostGeneral = ({
         <>
           <GeneralBoxProps title="시스템 정보"><InfoTable tableRows={systemTableRows} /></GeneralBoxProps>
           <GeneralBoxProps title="하드웨어"> <InfoTable tableRows={hardwareTableRows} /></GeneralBoxProps>
-          <GeneralBoxProps title="소프트웨어"><InfoTable tableRows={softwareTableRows} /></GeneralBoxProps>
+          <GeneralBoxProps title="용량 및 사용량">
+            <VmGeneralBarChart items={usageItems} />
+          </GeneralBoxProps>
+          
         </>
       }
       bottom={
@@ -167,7 +189,7 @@ const HostGeneral = ({
           <div className=" grid-col-span-2">
             <HostGeneralChart />
           </div>
-          <GeneralBoxProps title="용량 및 사용량"><VmGeneralBarChart /></GeneralBoxProps>
+          <GeneralBoxProps title="소프트웨어"><InfoTable tableRows={softwareTableRows} /></GeneralBoxProps>
         </>
       }
     />

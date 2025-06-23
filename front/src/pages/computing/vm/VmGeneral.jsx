@@ -216,6 +216,31 @@ const VmGeneral = ({
         statusIcon: status2Icon(s.status),
       }))
   , [snapshots]);
+
+  //그래프 값
+const usageItems = useMemo(() => {
+  const cpu = vm?.usageDto?.cpuPercent ?? 0;
+  const memory = vm?.usageDto?.memoryPercent ?? 0;
+  const network = vm?.usageDto?.networkPercent ?? 0;
+
+  return [
+    {
+      label: "CPU",
+      value: cpu,
+      description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
+    },
+    {
+      label: "메모리",
+      value: memory,
+      description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
+    },
+    {
+      label: "네트워크",
+      value: network,
+      description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
+    }
+  ];
+}, [vm?.usageDto]);
   return (
     
     // <div className="vm-detail-grid">
@@ -286,7 +311,7 @@ const VmGeneral = ({
           </div>
 
           <GeneralBoxProps title="용량 및 사용량">
-            <VmGeneralBarChart type="vm" usageDto={vm?.usageDto} />
+            <VmGeneralBarChart items={usageItems} />
           </GeneralBoxProps>
        
         </>

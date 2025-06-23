@@ -1,0 +1,10 @@
+.count-badge {
+  display: inline-block;
+  min-width: 24px;
+  padding: 3px 13px;
+  font-size: var(--fs-default);
+  background: var(--color-white);
+  color: #111827;           
+  border-radius: 40%;
+  text-align: center;
+}

@@ -34,7 +34,10 @@ const HostGeneralChart = () => {
       toolbar: { show: false },
     },
     dataLabels: { enabled: false },
-    stroke: { curve: "straight" },
+    stroke: {
+      curve: "straight",
+      width: 2.2, 
+    },
 
     grid: {
       row: {
@@ -50,8 +53,8 @@ const HostGeneralChart = () => {
     },
     yaxis: {
       min: 0,
-      max: 120,
-      tickAmount: 6,
+      max: 100,
+      tickAmount: 5,
       labels: {
         formatter: (val) => `${val}%`,
       },
@@ -75,7 +78,7 @@ const HostGeneralChart = () => {
           options={chartOptions}
           series={series}
           type="line"
-          height={255}
+          height={258}
         />
       </div>
     </div>
