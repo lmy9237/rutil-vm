@@ -36,7 +36,7 @@ const HostGeneralChart = () => {
     dataLabels: { enabled: false },
     stroke: {
       curve: "straight",
-      width: 2.2, 
+      width: 2, 
     },
 
     grid: {

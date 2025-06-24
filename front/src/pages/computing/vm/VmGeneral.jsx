@@ -23,6 +23,8 @@ import {
   useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useSnapshotsFromVM,
+  useDisksFromVM,
+  useNetworkInterfacesFromVM,
 } from "@/api/RQHook";
 import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
@@ -59,6 +61,22 @@ const VmGeneral = ({
     isSuccess: isVmSuccess,
   } = useVm(vmId);
 
+  const { //디스크목록
+    data: disks = [],
+    isLoading: isDisksLoading,
+    isError: isDisksError,
+    isSuccess: isDisksSuccess,
+    refetch: refetchDisks,
+    isRefetching: isDisksRefetching,
+  } = useDisksFromVM(vmId, (e) => ({ ...e }));
+
+  // 네트워크 어뎁터
+  const {
+    data: nics = [],
+    isLoading: isNicsLoading,
+    isError: isNicsError,
+    Success: isNicsSuccess,
+  } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
   const { 
     data: osList = [], 
     isLoading: isOsListLoading,
@@ -116,26 +134,51 @@ const VmGeneral = ({
     }, { 
       label: "할당할 실제 메모리", // Localization.kr에 없음
       value: `${convertBytesToMB(vm?.memoryGuaranteed ?? 0)} MB` 
-    }, {
+    }, 
+    {
       label: `${Localization.kr.NETWORK} 어댑터`,
       value: (
         <>
-          {vm?.nicVos?.map((nic, idx) => (
-            <div key={idx}>
-              {nic?.name} ({nic?.network?.name}) | {nic?.macAddress}
+          {nics.length > 0 && (
+            <div className="mb-1.5">
+              {nics.length}
             </div>
-          ))}
+          )}
+          {nics.map((nic, idx) => {
+            const name = nic?.name || "-";
+            const network = nic?.networkVo?.name || "-";
+            const mac = nic?.macAddress || "-";
+            return (
+              <div key={nic.id}>
+                {`${name} (${network}) | ${mac}`}
+              </div>
+            );
+          })}
         </>
       )
-    }, {
+    },
+    {
       label: Localization.kr.DISK,
       value: (
         <>
-          {vm?.diskAttachmentVos?.map((disk, idx) => (
-            <div key={idx}>
-              {convertBytesToMB(disk?.disk?.provisionedSize ?? 0)} MiB | {disk?.disk?.storageDomainName} | 씬 {disk?.bootable ? "| 부팅" : ""}
+          {disks.length > 0 && (
+            <div className="mb-1.5">
+              {disks.length}
             </div>
-          ))}
+          )}
+          {disks.map((disk, idx) => {
+            const d = disk.diskImageVo;
+            const sizeGiB = convertBytesToMB(d?.virtualSize ?? 0) / 1024;
+            const storageName = d?.storageDomainVo?.name ?? "-";
+            const thin = d?.sparse ? "씬" : "씬 아님";
+            const boot = disk.bootable ? "| 부팅" : "";
+
+            return (
+              <div key={disk.id}>
+                {`${Math.round(sizeGiB)} GiB | ${storageName} | ${thin} ${boot}`}
+              </div>
+            );
+          })}
         </>
       )
     }
@@ -355,7 +398,7 @@ const VmGeneral = ({
             <InfoTable tableRows={relatedTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="스냅샷">
+          <GeneralBoxProps title="스냅샷" count={snapshotList.length}>
             <div className="box-content snapshots">
               <div
                 className="snapshot-add py-3 fs-13"

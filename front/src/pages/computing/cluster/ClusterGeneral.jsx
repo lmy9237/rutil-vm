@@ -5,6 +5,10 @@ import {
   useCluster
 } from "@/api/RQHook";
 import Localization               from "@/utils/Localization";
+import { useMemo } from "react";
+import GeneralBoxProps from "@/components/common/GeneralBoxProps";
+import VmGeneralBarChart from "../vm/VmGeneralBarChart";
+import GeneralLayout from "@/components/GeneralLayout";
 
 /**
  * @name ClusterGeneral
@@ -33,6 +37,24 @@ const ClusterGeneral = ({
     return b.id.toLowerCase() === biosType.toLowerCase()
   })[0]?.kr;
 
+  const usageItems = useMemo(() => [
+    {
+      label: "CPU",
+      value: 64,
+      description: "64 CPU 사용됨 | 총 128 CPU | 20 CPU 사용 가능",
+    },
+    {
+      label: "메모리",
+      value: 66,
+      description: "16.42 GB 사용됨 | 총 51.14 GB | 66% 사용 가능",
+    },
+    {
+      label: "스토리지",
+      value: 89,
+      description: "4.56 TB 사용됨 | 총 5.11 TB",
+    },
+  ], []);
+
   const tableRows = [
     { label: Localization.kr.NAME, value: cluster?.name },
     { label: Localization.kr.DESCRIPTION, value: cluster?.description },
@@ -50,7 +72,21 @@ const ClusterGeneral = ({
 
   return (
     <>
-      <InfoTable tableRows={tableRows} />
+      <GeneralLayout
+        top={
+          <>
+            <div className="grid-col-span-2 vm-box-default box-content">
+              <h3 className="box-title">일반</h3>
+              <hr className="w-full" />
+              <InfoTable tableRows={tableRows} />
+            </div>
+            <GeneralBoxProps title="용량 및 사용량">
+              <VmGeneralBarChart items={usageItems} />
+            </GeneralBoxProps>
+          </>
+        }
+        bottom={<></>}
+      />
       <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.CLUSTER}>${cluster?.name}`}
         path={`clusters-general;name=${cluster?.name}`} />

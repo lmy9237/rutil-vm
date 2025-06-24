@@ -157,6 +157,7 @@ const labelIconMap = {
   "메모리": <RVI24 iconDef={rvi24Memory()} />,
   "네트워크": <RVI24 iconDef={rvi24Network()} />,
   "스토리지": <RVI24 iconDef={rvi24Storage()} />,
+  "가상 디스크": <RVI24 iconDef={rvi24Storage()} />,
 };
 
 /**

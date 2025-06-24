@@ -39,6 +39,7 @@ const TemplateModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const { vmsSelected } = useGlobal()
+  const { validationToast } = useValidationToast();
   const vmSelected = useMemo(() => vmsSelected[0], [vmsSelected])
   
   const [formState, setFormState] = useState(initialFormState);
@@ -233,15 +234,15 @@ const TemplateModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formState.name}
         autoFocus
-        onChange={handleInputChange(setFormState, "name")}
+        onChange={handleInputChange(setFormState, "name",validationToast)}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
+        onChange={handleInputChange(setFormState, "description",validationToast)}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment")}
+        onChange={handleInputChange(setFormState, "comment",validationToast)}
       />
       <LabelSelectOptionsID id="cluster_select" label={`${Localization.kr.CLUSTER}`}
         loading={isClustersLoading}

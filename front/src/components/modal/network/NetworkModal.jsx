@@ -203,15 +203,15 @@ const NetworkModal = ({
         <LabelInput id="name" label={Localization.kr.NAME}
           autoFocus
           value={formState.name}
-          onChange={handleInputChange(setFormState, "name")}
+          onChange={handleInputChange(setFormState, "name", validationToast)}
         />
         <LabelInput id="description" label={Localization.kr.DESCRIPTION}
           value={formState.description}
-          onChange={handleInputChange(setFormState, "description")}
+          onChange={handleInputChange(setFormState, "description", validationToast)}
         />
         <LabelInput id="comment" label={Localization.kr.COMMENT}
           value={formState.comment}
-          onChange={handleInputChange(setFormState, "comment")}
+          onChange={handleInputChange(setFormState, "comment", validationToast)}
         />
         <hr />
 
@@ -219,7 +219,7 @@ const NetworkModal = ({
           className="f-btw">
          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
             checked={formState.vlanEnabled} 
-            onChange={(e) =>
+            onChange={(e) => //TODO 토스트 추가예정
               setFormState((prev) => ({
                 ...prev,
                 vlanEnabled: e.target.checked,

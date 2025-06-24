@@ -154,23 +154,29 @@ const HostGeneral = ({
   ];
 
   // 그래프값
-  const usageItems = useMemo(() => [
-    {
-      label: "CPU",
-      value: 72,
-      description: "72% 사용됨 | 28% 사용 가능",
-    },
-    {
-      label: "메모리",
-      value: 64,
-      description: "64% 사용됨 | 36% 사용 가능",
-    },
-    {
-      label: "네트워크",
-      value: 35,
-      description: "35% 사용됨 | 65% 사용 가능",
-    },
-  ], []);
+  const usageItems = useMemo(() => {
+    const cpu = host?.usageDto?.cpuPercent ?? 0;
+    const memory = host?.usageDto?.memoryPercent ?? 0;
+    const network = host?.usageDto?.networkPercent ?? 0;
+
+    return [
+      {
+        label: "CPU",
+        value: cpu,
+        description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
+      },
+      {
+        label: "메모리",
+        value: memory,
+        description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
+      },
+      {
+        label: "네트워크",
+        value: network,
+        description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
+      }
+    ];
+  }, [host]);
   return (
     <>
     <GeneralLayout

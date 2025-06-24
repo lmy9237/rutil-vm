@@ -4,6 +4,11 @@
   align-items: flex-start;
   justify-content: center;
 }
+.box-content {
+  max-height: 200px;     /* 원하는 높이 */
+  overflow: hidden;
+  position: relative;
+}
 .vm-box-default {
   background: var(--color-white-1);
   border: 1px solid var(--color-general-box);
@@ -11,6 +16,9 @@
   border-radius: 2px;
   display: flex;
   min-height: 200px;
+  max-height: 350px;
+  overflow: hidden;
+  padding-bottom: 2rem;
   flex-direction: column;
 }
 

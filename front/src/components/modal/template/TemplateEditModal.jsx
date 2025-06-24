@@ -61,6 +61,19 @@ const TemplateEditModal = ({
     { id: "console", label: Localization.kr.CONSOLE, onClick: () => setActiveTab("console") },
   ]), []);
 
+//   useEffect(() => {
+//     if (isOpen) {
+//       setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
+//     }
+//   }, [isOpen]);
+//   const [activeTab, setActiveTab] = useState("general");
+
+//   //해당데이터 상세정보 가져오기
+//   const { data: templateData } = useTemplate(templatesSelected[0]?.id);
+//   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
+//  // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
+
+
   // 초기값설정
   useEffect(() => {
     if (!isOpen) {

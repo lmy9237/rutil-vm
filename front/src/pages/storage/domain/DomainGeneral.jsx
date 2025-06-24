@@ -79,14 +79,18 @@ const DomainGeneral = ({
     },
   ];
 
-  //그래프
-  const usageItems = useMemo(() => [
-    {
+  //그래프(TODO 값 맞는지 확인필요)
+  const usageItems = useMemo(() => {
+    const totalTB = (domain?.size ?? 0) / 1024 ** 4;     // 바이트 → TB
+    const usedTB = (domain?.usedSize ?? 0) / 1024 ** 4;
+    const percent = totalTB ? Math.round((usedTB / totalTB) * 100) : 0;
+
+    return [{
       label: "스토리지",
-      value: 89, // 예시 값
-      description: "4.56 TB 사용됨 | 총 5.11 TB",
-    }
-  ], []);
+      value: percent,
+      description: `${usedTB.toFixed(2)} TB 사용됨 | 총 ${totalTB.toFixed(2)} TB`
+    }];
+  }, [domain]);
 
   return (
     <>

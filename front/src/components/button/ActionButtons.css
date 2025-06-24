@@ -6,17 +6,11 @@
   flex-wrap: wrap;
   min-height: var(--h-right-btn);
   margin-left: auto;
-  gap: 3px 0px; /* ✅ 버튼 간격 통일감 있게 */
+  gap: 3px 0px;
 }
 
 .right-click-menu-box {
   width: 186px;
-}
-@media screen and (max-width: 768px) {
-  .header-right-btns > button:last-child,
-  .manage-button {
-    margin-right: 4px !important;
-  }
 }
 
 button.btn-action {
@@ -53,3 +47,10 @@ button.btn-action[disabled]{
   background-color: var(--color-hover);
   width: 99%;
 }
+@media screen and (max-width: 768px) {
+  .header-right-btns > button:last-child,
+  .manage-button {
+    margin-right: 4px !important;
+  }
+}
+

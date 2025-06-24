@@ -53,10 +53,10 @@ const NetworkGeneral = ({
         <div className="py-3">
           {network?.vnicProfileVos?.length > 0 ? (
             network.vnicProfileVos.map((vnic, idx) => (
-              <div key={vnic.id || idx} className="">
-                {vnic.networkVo?.name || "이름없음"} : {vnic.name} 
-                {vnic.customProperties?.filter ? ` (${vnic.customProperties.filter} 필터)` : " (필터 없음)"} | 
-                {String(vnic.portMirroring)} (포트 미러링) | 
+              <div key={vnic.id || idx} className="mb-2">
+                - {vnic.name} : 
+                {vnic.customProperties?.filter ? ` (${vnic.customProperties.filter} 필터)` : " (필터 없음)"} |  {" "}
+                {`${network.portIsolation} (포트 미러링)`} | {" "}
                 {vnic.passThrough ? "통과 (예)" : "통과 (아니요)"}
               </div>
             ))
