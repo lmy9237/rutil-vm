@@ -39,7 +39,6 @@ const TemplateModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const { vmsSelected } = useGlobal()
-  const { validationToast } = useValidationToast();
   const vmSelected = useMemo(() => vmsSelected[0], [vmsSelected])
   
   const [formState, setFormState] = useState(initialFormState);
