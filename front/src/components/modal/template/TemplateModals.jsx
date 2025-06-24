@@ -13,13 +13,10 @@ const TemplateModals = ({
 }) => {
   const { activeModal, closeModal, } = useUIState()
   const { templatesSelected } = useGlobal()
-  //console.log("📌 TemplateModals > template?.id: ", template?.id);
   const modals = {
     update: (
       <TemplateEditModal isOpen={activeModal().includes("template:update")}
         onClose={() => closeModal("template:update")}
-        editMode
-        templateId={template?.id}
       />
     ), remove: (
       <DeleteModal isOpen={activeModal().includes("template:remove")}
@@ -40,8 +37,7 @@ const TemplateModals = ({
         onClose={() => closeModal("template:import")}
         type="template"
       />
-  ),
-    
+    ),
   };
   
   return (

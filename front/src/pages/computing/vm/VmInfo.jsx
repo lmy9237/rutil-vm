@@ -78,8 +78,8 @@ const VmInfo = () => {
   const [activeTab, setActiveTab] = useState("general")
   const tabs = useMemo(() => ([
     { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-    { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
-    { id: "nics2",        label: Localization.kr.NICS,        onClick: () => handleTabClick("nics2") },
+    // { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+    { id: "nics",        label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
     { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
     { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
     { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
@@ -111,8 +111,8 @@ const VmInfo = () => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
     const SectionComponent = {
       general: VmGeneral,
-      nics: VmNics,
-      nics2: VmNics2,
+      // nics: VmNics,
+      nics: VmNics2,
       disks: VmDisks,
       snapshots: VmSnapshots,
       applications: VmApplications,

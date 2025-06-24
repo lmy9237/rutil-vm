@@ -6,6 +6,7 @@ import {
   handleInputCheck,
   handleSelectIdChange
 } from "../../../label/HandleInput";
+import { emptyIdNameVo } from "@/util";
 
 const VmBoot = ({
   isos, 
@@ -49,12 +50,12 @@ const VmBoot = ({
           checked={formBootState.isCdDvdChecked}
           onChange={(e) => {
             const isChecked = e.target.checked;
-            const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : { id: "", name: "" };
+            const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : emptyIdNameVo();
             
             setFormBootState((prev) => ({
               ...prev,
               isCdDvdChecked: isChecked,
-              cdRomVo: isChecked ? firstIso : { id: "", name: "" },
+              cdRomVo: isChecked ? firstIso : emptyIdNameVo(),
             }));
           }}
         />

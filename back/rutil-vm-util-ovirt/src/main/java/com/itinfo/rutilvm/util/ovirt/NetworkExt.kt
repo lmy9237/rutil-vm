@@ -60,7 +60,7 @@ fun Connection.addNetwork(network: Network): Result<Network?> = runCatching {
 
 fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
 	val networkUpdated: Network? =
-		this.srvNetwork(network.id()).update().network(network).send().network()
+		this.srvNetwork(network.id()).update().network(network).async(true).send().network()
 
 	networkUpdated ?: throw ErrorPattern.NETWORK_NOT_FOUND.toError()
 }.onSuccess {

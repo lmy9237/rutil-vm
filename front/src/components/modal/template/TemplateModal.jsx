@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import toast from "react-hot-toast";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
   useAddTemplate,
+  useAllTemplates,
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
   useDisksFromVM,
@@ -12,7 +12,7 @@ import {
 import "../vm/MVm.css";
 import LabelInput from "../../label/LabelInput";
 import Localization from "../../../utils/Localization";
-import { checkName, checkZeroSizeToGiB } from "../../../util";
+import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo } from "../../../util";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
@@ -20,6 +20,7 @@ import LabelSelectOptions from "../../label/LabelSelectOptions";
 import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import { useValidationToast } from "@/hooks/useSimpleToast";
 
 const initialFormState = {
   name: "",
@@ -36,20 +37,22 @@ const TemplateModal = ({
   isOpen,
   onClose,
 }) => {
+  const { validationToast } = useValidationToast();
   const { vmsSelected } = useGlobal()
   const vmSelected = useMemo(() => vmsSelected[0], [vmsSelected])
   
   const [formState, setFormState] = useState(initialFormState);
 
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
-  const [cpuProfileVo, setCpuProfileVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
+  const [cpuProfileVo, setCpuProfileVo] = useState(emptyIdNameVo());
 
   const [diskVoList, setDiskVoList] = useState([]);
   const [diskProfilesList, setDiskProfilesList] = useState([]);
   
   const { mutate: addTemplate } = useAddTemplate(onClose, onClose);
 
+  const { data: templates = [] } = useAllTemplates();
   // 데이터센터 ID 기반으로 클러스터 목록 가져오기
   const {
     data: clusters = [],
@@ -88,8 +91,6 @@ const TemplateModal = ({
     })),
   });  
 
-  Logger.debug(`TemplateModal > domains: `, domains);
-  Logger.debug(`TemplateModal > disks: `, disks);
   useEffect(() => {
     if (isOpen && vmSelected?.dataCenterVo?.id) {
       setDataCenterVo({
@@ -113,16 +114,25 @@ const TemplateModal = ({
     if (clusters && clusters.length > 0) {
       const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
       if (defaultC) {
-        setClusterVo({ id: defaultC.id, name: defaultC.name });
+        setClusterVo({ 
+          id: defaultC.id, 
+          name: defaultC.name 
+        });
       } else {
-        setClusterVo({ id: clusters[0].id, name: clusters[0].name });
+        setClusterVo({ 
+          id: clusters[0].id, 
+          name: clusters[0].name 
+        });
       }
     }
   }, [clusters]);
 
   useEffect(() => {
     if (cpuProfiles && cpuProfiles.length > 0) {
-      setCpuProfileVo({ id: cpuProfiles[0].id, name: cpuProfiles[0].name });
+      setCpuProfileVo({ 
+        id: cpuProfiles[0].id, 
+        name: cpuProfiles[0].name 
+      });
     }
   }, [cpuProfiles]);
 
@@ -134,8 +144,8 @@ const TemplateModal = ({
           diskImageVo: {
             ...disk.diskImageVo,
             format: disk.diskImageVo?.format || "RAW",
-            storageDomainVo: disk.diskImageVo?.storageDomainVo || { id: "", name: "" },
-            diskProfileVo: disk.diskImageVo?.diskProfileVo || { id: "", name: "" },
+            storageDomainVo: disk.diskImageVo?.storageDomainVo || emptyIdNameVo(),
+            diskProfileVo: disk.diskImageVo?.diskProfileVo || emptyIdNameVo(),
           },
         }))
       );
@@ -160,16 +170,7 @@ const TemplateModal = ({
     }
   }, [getDiskProfiles, domains]); 
 
-  /*
-  const handleInputChange = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
 
-  const handleSelectIdChange = (setVo, voList) => (e) => {
-    const selected = voList.find((item) => item.id === e.target.value);
-    if (selected) setVo({ id: selected.id, name: selected.name });
-  };
-  */
   const handleDiskChange = (index, field, value, nested = false) => {
     setDiskVoList((prev) => {
       const updated = [...prev];
@@ -189,6 +190,8 @@ const TemplateModal = ({
   const validateForm = () => {
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
+    const duplicateError = checkDuplicateName(templates, formState.name, formState.id);
+    if (duplicateError) return duplicateError;
 
     return null;
   };
@@ -196,11 +199,7 @@ const TemplateModal = ({
   const handleFormSubmit = () => {
     const error = validateForm();
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
 
@@ -260,13 +259,13 @@ const TemplateModal = ({
 
       {disks && disks.length > 0 && (
         <>
-          <div className="font-bold">디스크 할당</div>
+          <div className="font-bold">{Localization.kr.DISK} 할당</div>
             <div className="section-table-outer py-1">
               <table>
                 <thead>
                   <tr>
                     <th >{Localization.kr.ALIAS}</th>
-                    <th>가상 크기</th>
+                    <th>{Localization.kr.SIZE_VIRTUAL}</th>
                     <th >포맷</th>
                     <th style={{width:"240px"}}>{Localization.kr.TARGET}</th>
                     <th >{Localization.kr.DISK_PROFILE}</th>
@@ -274,7 +273,7 @@ const TemplateModal = ({
                 </thead>
                 <tbody>
                   {diskVoList.map((disk, index) => {
-                      console.log("디버깅 - diskImageVo", disk.diskImageVo); // 💡 이 줄 추가
+                    console.log("디버깅 - diskImageVo", disk.diskImageVo); // 💡 이 줄 추가
                     const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
                     const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
 
@@ -286,10 +285,8 @@ const TemplateModal = ({
 
                     return (
                       <tr key={disk.id}>
-                        {/* 디스크 이름 */}
                         <td>
-                          <LabelInput
-                            label=""
+                          <LabelInput label=""
                             value={disk.diskImageVo?.alias || ""}
                             onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
                           />
@@ -325,7 +322,7 @@ const TemplateModal = ({
                           />
                           {selectedDomain && (
                             <div className="text-xs text-gray-500 mt-1">
-                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} / 총 용량: {checkZeroSizeToGiB(selectedDomain.size)}
+                              사용 가능: {selectedDomain.availableSize} GiB / 총 용량: {selectedDomain.size} GiB
                             </div>
                           )}
                         </td>
@@ -337,9 +334,7 @@ const TemplateModal = ({
                             value={selectedProfile?.id || ""}
                             loading={false}
                             options={profileOptions}
-                            onChange={(selected) =>
-                              handleDiskChange(index, "diskProfileVo", selected, true)
-                            }
+                            onChange={(selected) => handleDiskChange(index, "diskProfileVo", selected, true)}
                           />
                         </td>
                       </tr>

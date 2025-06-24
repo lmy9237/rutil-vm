@@ -18,8 +18,9 @@ import {
   useHostsFromDataCenter,
   useSearchFcFromHost,
   useAllNfsStorageDomains,
+  useAllStorageDomains,
 } from "../../../api/RQHook";
-import { checkName }                    from "@/util";
+import { checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -45,11 +46,14 @@ const DomainImportModal = ({
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [hostVo, setHostVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [hostVo, setHostVo] = useState(emptyIdNameVo());
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [id, setId] = useState(""); // fibre 사용 id
+
+  const isNfs = formState.storageType === "nfs";
+  const isFibre = formState.storageType === "fcp";
 
   const { mutate: importDomain } = useImportDomain(onClose, onClose);
   
@@ -57,6 +61,11 @@ const DomainImportModal = ({
     data: datacenters = [],
     isLoading: isDatacentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
+  const { 
+    data: domains = [],
+    isLoading: isDomainsLoading 
+  } = useAllStorageDomains((e) => ({ ...e }));
+
   const {
     data: hosts = [],
     isLoading: isHostsLoading 
@@ -69,13 +78,18 @@ const DomainImportModal = ({
     isSuccess: isFibresSuccess
   } = useSearchFcFromHost(hostVo?.id, (e) => ({ ...e }));
   
-  
-  const isNfs = formState.storageType === "nfs";
-  const isFibre = formState.storageType === "fcp";
+  const getAvailableDomainTypes = useMemo(() => {
+    const hasImportExport = domains.some(d => d.storageDomainType === "import_export");
+    return [
+      { value: "data", label: "데이터" },
+      { value: "iso", label: "ISO" },
+      ...(hasImportExport ? [] : [{ value: "import_export", label: Localization.kr.EXPORT }])
+    ];
+  }, [domains]);
 
   const resetFormStates = () => {
     setFormState(initialFormState);
-    setHostVo({ id: "", name: "" });
+    setHostVo(emptyIdNameVo());
     setStorageTypes([]);
     setNfsAddress("");
     setId("");
@@ -165,7 +179,7 @@ const DomainImportModal = ({
       : (() => {
           const selectedFibre = fibres.find((f) => f.id === id);
           return {
-            type: "FCP",
+            type: "fcp",
             id: selectedFibre.id,
             volumeGroupVo: { 
               id: selectedFibre.storageVo.volumeGroupVo.id, 
@@ -211,7 +225,7 @@ const DomainImportModal = ({
           />
           <LabelSelectOptions id="domain-type" label={`도메인 기능`}
             value={formState.domainType}
-            options={domainTypes}
+            options={getAvailableDomainTypes}
             onChange={handleInputChange(setFormState, "domainType", validationToast)}
           />
           <LabelSelectOptions id="storage-type" label={`${Localization.kr.STORAGE} ${Localization.kr.TYPE}`}
@@ -282,16 +296,10 @@ const DomainImportModal = ({
 export default DomainImportModal;
 
 
-const domainTypes = [
-  { value: "data", label: "데이터" },
-  { value: "iso", label: "ISO" },
-  { value: "export", label: Localization.kr.EXPORT },
-];
-
 const storageTypeOptions = (dType) => {
   switch (dType) {
     case "iso":
-    case "export":
+    case "import_export":
       return [{ value: "nfs", label: "NFS" }];
     default: // data
       return [

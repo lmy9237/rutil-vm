@@ -39,6 +39,8 @@ const TemplateDupl = ({
         {temp?.dataCenterVo?.name}
       </TableRowClick>
     ),
+    creationTime: temp?.creationTime === "2008. 04. 01. 06:00:00" ? "" : temp?.creationTime,
+    version: "",
     searchText: `${temp?.name} ${temp?.clusterVo?.name || ""} ${temp?.dataCenterVo?.name || ""}`.toLowerCase(),
   }));
 

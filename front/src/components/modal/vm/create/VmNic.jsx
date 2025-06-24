@@ -3,6 +3,7 @@ import Localization from "../../../../utils/Localization";
 import Logger from "../../../../utils/Logger";
 import "../../../label/DynamicInputList.jsx";
 import DynamicInputList from "../../../label/DynamicInputList.jsx";
+import { emptyIdNameVo } from "@/util";
 
 const VmNic = ({
   nics,
@@ -43,7 +44,7 @@ const VmNic = ({
     const newNic = {
       id: "",
       name: nextName,
-      vnicProfileVo: { id: "" },
+      vnicProfileVo: emptyIdNameVo(),
     };
     setNicsState([...nicsState, newNic]);
   };
@@ -65,7 +66,7 @@ const VmNic = ({
       setNicsState([{
         id: "",
         name: "nic1",
-        vnicProfileVo: { id: "" }
+        vnicProfileVo: emptyIdNameVo()
       }]);
     }
   }, [nicsState, setNicsState]);

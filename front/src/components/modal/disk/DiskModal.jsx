@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -21,7 +20,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
-import { checkName, checkZeroSizeToGiB, convertBytesToGB }  from "../../../util";
+import { checkName, convertBytesToGB, emptyIdNameVo }  from "../../../util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -47,10 +46,7 @@ const DiskModal = ({
   editMode = false, 
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
-  const dLabel = editMode 
-    ? Localization.kr.UPDATE
-    : Localization.kr.CREATE;
+  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
   const { 
     disksSelected, domainsSelected, datacentersSelected,
@@ -59,15 +55,14 @@ const DiskModal = ({
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [domainVo, setDomainVo] = useState({ id: "", name: "" });
-  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [domainVo, setDomainVo] = useState(emptyIdNameVo());
+  const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   
   const { mutate: addDisk } = useAddDisk(onClose, onClose);
   const { mutate: editDisk } = useEditDisk(onClose, onClose);
 
   const { data: disk } = useDisk(diskId);
-  diskId && Logger.debug(`DiskModal.diskId: ${diskId}`);
 
   const { 
     data: datacenters = [], 
@@ -92,8 +87,8 @@ const DiskModal = ({
    
     if (!isOpen) {
       setFormState(initialFormState);
-      setDataCenterVo({id: "", name: ""});
-      setDomainVo({id: "", name: ""});
+      setDataCenterVo(emptyIdNameVo());
+      setDomainVo(emptyIdNameVo());
       return;
     }
     if (editMode && disk) {
@@ -108,32 +103,52 @@ const DiskModal = ({
         backup: Boolean(disk?.backup),
         sparse: Boolean(disk?.sparse),
       });
-      setDataCenterVo({id: disk?.dataCenterVo?.id, name: disk?.dataCenterVo?.name});
-      setDomainVo({id: disk?.storageDomainVo?.id, name: disk?.storageDomainVo?.name});
-      setDiskProfileVo({id: disk?.diskProfileVo?.id, name: disk?.diskProfileVo?.name});
+      setDataCenterVo({
+        id: disk?.dataCenterVo?.id, 
+        name: disk?.dataCenterVo?.name
+      });
+      setDomainVo({
+        id: disk?.storageDomainVo?.id, 
+        name: disk?.storageDomainVo?.name
+      });
+      setDiskProfileVo({
+        id: disk?.diskProfileVo?.id, 
+        name: disk?.diskProfileVo?.name
+      });
     }
   }, [isOpen, editMode, disk, domainsSelected]);
 
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ id: selected?.id, name: selected?.name });
-      setDomainVo({id: "", name: ""});
+      setDataCenterVo({ 
+        id: selected?.id, 
+        name: selected?.name 
+      });
+      setDomainVo(emptyIdNameVo());
     } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
       const defaultDc = datacenters.find(dc => dc.name === "Default");
       const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
-      setDomainVo({id: "", name: ""});
+      setDataCenterVo({ 
+        id: firstDc.id, 
+        name: firstDc.name 
+      });
+      setDomainVo(emptyIdNameVo());
     }
   }, [datacenterId, datacenters, editMode]);
 
   useEffect(() => {
     if (domainsSelected && domainsSelected.length > 0) {
-      setDomainVo({id: domainsSelected[0]?.id, name: domainsSelected[0]?.name });
+      setDomainVo({
+        id: domainsSelected[0]?.id, 
+        name: domainsSelected[0]?.name 
+      });
     } else if (!editMode && domains && domains.length > 0) {
       const firstDomain = domains[0];
-      setDomainVo({id: firstDomain.id, name: firstDomain.name});
+      setDomainVo({id: 
+        firstDomain.id, 
+        name: firstDomain.name
+      });
     }
   }, [domainsSelected, domains, editMode]);
 
@@ -141,7 +156,10 @@ const DiskModal = ({
   useEffect(() => {
     if (!editMode && domainVo.id && diskProfiles.length > 0) {
       const firstProfile = diskProfiles[0];
-      setDiskProfileVo({id: firstProfile.id, name: firstProfile.name});
+      setDiskProfileVo({
+        id: firstProfile.id, 
+        name: firstProfile.name
+      });
     }
   }, [domainVo.id, diskProfiles, editMode]);
 
@@ -242,16 +260,14 @@ const DiskModal = ({
             onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
           />
           {domainVo && (() => {
-              const domainObj = domains.find((d) => d.id === domainVo.id);
-              if (!domainObj) return null;
-              return (
-                <div className="text-xs text-gray-500 mt-1">
-                  사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
-                  {" / "}
-                  총 용량: {checkZeroSizeToGiB(domainObj.size)}
-                </div>
-              );
-            })()}
+            const domainObj = domains.find((d) => d.id === domainVo.id);
+            if (!domainObj) return null;
+            return (
+              <div className="text-xs text-gray-500 mt-1">
+                사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+              </div>
+            );
+          })()}
           <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
             value={String(formState.sparse)}
             onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}

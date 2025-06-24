@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
@@ -301,9 +302,14 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllActiveStorageDomainsFromDataCenter(dataCenterId: String): List<StorageDomainVo> {
 		log.info("findAllFromDataCenter ... dataCenterId: {}", dataCenterId)
-		val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
-			.filter { it.status() == StorageDomainStatus.ACTIVE }
-		return res.toActiveDomains()
+		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
+		// 	.getOrDefault(emptyList())
+		// 	.filter { it.status() == StorageDomainStatus.ACTIVE }
+		// return res.toActiveDomains()
+		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
+		return res
+			.filter { it.storageType != StorageTypeB.glance && it.storageDomainType != StorageDomainTypeB.import_export }
+			.toStorageDomainEntities()
 	}
 
 	@Throws(Error::class)

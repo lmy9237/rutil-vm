@@ -8,7 +8,6 @@ import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralLayout              from "@/components/GeneralLayout";
 import Vnc                        from "@/components/Vnc"
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
-import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import TableRowClick              from "@/components/table/TableRowClick";
 import SemiCircleChart            from "@/components/Chart/SemiCircleChart";
 import VmOsIcon                   from "@/components/icons/VmOsIcon";
@@ -83,14 +82,6 @@ const VmGeneral = ({
     clearVncScreenshotDataUrl()
   }, [vm])
 
-  const osLabel = useMemo(() => (
-    [...osList].find((e) => e?.name === vm?.osType)?.description
-  ), [vmId, vm])
-    
-  const chipsetLabel = useMemo(() => (
-    [...biosTypes].find((option) => option.value === vm?.biosType)?.label || vm?.biosType
-  ), [vm])
-
   // 게스트 운영 체제
   const generalTableRows = [
     { label: Localization.kr.NAME, value: vm?.name },
@@ -99,7 +90,7 @@ const VmGeneral = ({
       value: <div className="f-start">{status2Icon(vm?.status)}&nbsp;&nbsp;{Localization.kr.renderStatus(vm?.status)}</div> 
     },
     { label: Localization.kr.UP_TIME, value: vm?.upTime }, // Localization.kr.renderTime(vm?.upTime)
-    { label: Localization.kr.OPERATING_SYSTEM, value: vm?.guestOsType || vm?.osTypeName },
+    { label: Localization.kr.OPERATING_SYSTEM, value: vm?.osTypeName },
     { label: "칩셋/펌웨어 유형", value: vm?.biosTypeKr },
     { label: Localization.kr.HA, value: vm?.ha ? Localization.kr.YES : Localization.kr.NO },
     { label: "게스트 에이전트", value: vm?.guestAgentVersion || "-" }, // Localization에 정의 없으므로 그대로 유지
@@ -110,7 +101,12 @@ const VmGeneral = ({
   const hardwareTableRows = [
     { 
       label: "최적화 옵션", 
-      value: vm?.optimizeOption.toUpperCase()
+      value: 
+        vm?.optimizeOption === "server"
+          ? "서버 "
+          : vm?.optimizeOption === "high_performance"
+            ? "고성능"
+            : "데스크톱"
     }, { 
       label: Localization.kr.CPU, 
       value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` 

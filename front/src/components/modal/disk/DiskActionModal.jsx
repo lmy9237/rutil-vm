@@ -14,7 +14,6 @@ import {
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
-import { checkZeroSizeToGiB } from "@/util";
 
 const DiskActionModal = ({ 
   isOpen,
@@ -48,7 +47,8 @@ const DiskActionModal = ({
       queryFn: async () => {
         try {
           const domains = await ApiManager.findAllDomainsFromDataCenter(disk?.dataCenterVo?.id);
-          return domains || [];
+          if (!Array.isArray(domains)) return [];
+          return domains.filter(domain => domain?.storageDomainType !== "import_export");
         } catch (error) {
           console.error(`Error fetching ${disk}`, error);
           return [];
@@ -233,9 +233,7 @@ const DiskActionModal = ({
                       if (!domainObj) return null;
                       return (
                         <div className="text-xs text-gray-500 mt-1">
-                          사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
-                          {" / "}
-                          총 용량: {checkZeroSizeToGiB(domainObj.size)}
+                          사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
                         </div>
                       );
                     })()}

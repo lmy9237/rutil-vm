@@ -23,7 +23,8 @@ import {
   useVm,
   useDisksFromVM,
   useNetworkInterfacesFromVM,
-  useStorageDomain, 
+  useStorageDomain,
+  useAllVMs, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
 import VmNic from './create/VmNic';
@@ -33,7 +34,7 @@ import VmInit from './create/VmInit';
 import VmHost from './create/VmHost';
 import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
-import { checkName }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import './MVm.css';
@@ -41,8 +42,8 @@ import './MVm.css';
 
 const defaultNic = {
   id: "", name: "nic1",
-  vnicProfileVo: { id: "", name: "" },
-  networkVo: { id: "", name: "" },
+  vnicProfileVo: emptyIdNameVo(),
+  networkVo: emptyIdNameVo(),
 };
 
 // 일반
@@ -86,10 +87,7 @@ const hostForm = {
 const haForm = {
   ha: false, // 고가용성(체크박스)
   haPriority: 1, // 초기값
-  storageDomainVo: { 
-    id: "",
-    name: "" 
-  },
+  storageDomainVo: emptyIdNameVo(),
 };
 
 // 부트옵션
@@ -97,10 +95,7 @@ const bootForm = {
   firstDevice: "hd", // 첫번째 장치
   secDevice: "", // 두번째 장치
   isCdDvdChecked: false, // cd/dvd 연결 체크박스
-  cdRomVo: { 
-    id: "", 
-    name: "" 
-  }, // iso 파일
+  cdRomVo: emptyIdNameVo(), // iso 파일
   biosBootMenu: false, // 부팅메뉴 활성화
 };
 
@@ -141,9 +136,9 @@ const VmModal = ({
   const [formBootState, setFormBootState] = useState(bootForm);
 
   const [architecture, setArchitecture] = useState("");
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [clusterVo, setClusterVo] = useState({ id: "", name: "" });
-  const [templateVo, setTemplateVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
+  const [templateVo, setTemplateVo] = useState(emptyIdNameVo());
   const [diskListState, setDiskListState] = useState([]);
   const [nicListState, setNicListState] = useState([ defaultNic ]);
   
@@ -165,6 +160,7 @@ const VmModal = ({
 
   // 가상머신 상세데이터 가져오기
   const { data: vm } = useVm(vmId);
+  const { data: vms } = useAllVMs();
 
   // 클러스터 목록 가져오기
   const { 
@@ -256,9 +252,9 @@ const VmModal = ({
       setFormHostState(hostForm);
       setFormHaState(haForm);
       setFormBootState(bootForm);
-      setDataCenterVo({ id: "", name: "" })
-      setClusterVo({ id: "", name: "" })
-      setTemplateVo({ id: "", name: "" })
+      setDataCenterVo(emptyIdNameVo())
+      setClusterVo(emptyIdNameVo())
+      setTemplateVo(emptyIdNameVo())
       setNicListState([ defaultNic ]);
       setDiskListState([]);
     }
@@ -537,6 +533,9 @@ const VmModal = ({
   const validateForm = () => {
     const nameError = checkName(formInfoState.name);
     if (nameError) return nameError;
+    
+    const duplicateError = checkDuplicateName(vms, formInfoState.name, formInfoState.id);
+    if (duplicateError) return duplicateError;
 
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     if(formSystemState.memorySize < formSystemState.memoryGuaranteed) return `최대 메모리 크기는 ${formSystemState.memorySize}입니다`

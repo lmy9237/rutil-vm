@@ -8,7 +8,7 @@ import LabelInput                       from "@/components/label/LabelInput";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import { 
-  handleInputChange, handleSelectIdChange,
+  handleInputChange, handleInputCheck, handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
   useAllActiveDataCenters,
@@ -20,6 +20,7 @@ import {
 import { 
   checkName, 
   convertBytesToGB,
+  emptyIdNameVo,
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -50,10 +51,10 @@ const DiskUploadModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
 
-  const [dataCenterVo, setDataCenterVo] = useState({id: "", name: "" });
-  const [domainVo, setDomainVo] = useState({id: "", name: "" });
-  const [diskProfileVo, setDiskProfileVo] = useState({id: "", name: "" });
-  const [hostVo, setHostVo] = useState({id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [domainVo, setDomainVo] = useState(emptyIdNameVo());
+  const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
+  const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
   const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
     /*if (progress < 1) onClose()*/
@@ -93,9 +94,15 @@ const DiskUploadModal = ({
     if (datacenters && datacenters.length > 0) {
     const defaultDc = datacenters.find(dc => dc.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
       if (defaultDc) {
-        setDataCenterVo({ id: defaultDc.id, name: defaultDc.name });
+        setDataCenterVo({ 
+          id: defaultDc.id, 
+          name: defaultDc.name 
+        });
       } else {
-        setDataCenterVo({ id: datacenters[0].id, name: datacenters[0].name });
+        setDataCenterVo({ 
+          id: datacenters[0].id, 
+          name: datacenters[0].name 
+        });
       }
     }
   }, [datacenters]);
@@ -117,10 +124,6 @@ const DiskUploadModal = ({
       setHostVo({id: hosts[0].id});
     }
   }, [hosts]);
-
-  const handleInputChangeCheck = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
-  };
 
   const validateForm = () => {
     const nameError = checkName(formState.alias);
@@ -262,7 +265,7 @@ const DiskUploadModal = ({
                 <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
                   id="wipeAfterDelete"
                   checked={formState.wipeAfterDelete}
-                  onChange={handleInputChangeCheck("wipeAfterDelete")}
+                  onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
                 />
               </div>
               {/* <div className='img-checkbox-outer'>

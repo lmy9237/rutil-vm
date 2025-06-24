@@ -17,6 +17,7 @@ import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
 import { useToast } from "@/hooks/use-toast";
+import { emptyIdNameVo } from "@/util";
 
 const initialFormState = {
   id: "",
@@ -46,7 +47,7 @@ const VmNicModal = ({
   // console.log("$ ", [...vmsSelected][0]?.hostVo, "+ ", hostId)
 
   const [formInfoState, setFormInfoState] = useState(initialFormState);
-  const [vnicProfileVo, setVnicProfileVo] = useState({ id: "", name: "" });
+  const [vnicProfileVo, setVnicProfileVo] = useState(emptyIdNameVo());
 
   // 편집 모드이고 vnic프로파일 존재하는 조건
   const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
@@ -87,7 +88,7 @@ const VmNicModal = ({
   useEffect(() => {
     if (!isOpen) {
       setFormInfoState(initialFormState);
-      setVnicProfileVo({ id: "", name: "" });
+      setVnicProfileVo(emptyIdNameVo());
     } else if (editMode && nicsdetail) {
       Logger.debug(`NIC 데이터: ${JSON.stringify(nicsdetail, null, 2)}`);
       setFormInfoState({
@@ -112,7 +113,10 @@ const VmNicModal = ({
     if (!editMode && vnics && vnics.length > 0) {
       const defaultVnic = vnics.find(n => n.name === "ovirtmgmt");
       const firstN = defaultVnic || vnics[0];
-      setVnicProfileVo({ id: firstN.id, name: firstN.name });
+      setVnicProfileVo({ 
+        id: firstN.id, 
+        name: firstN.name 
+      });
     }
   }, [vnics, editMode]);
 

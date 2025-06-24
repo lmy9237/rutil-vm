@@ -34,6 +34,7 @@ import {
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 import { background } from "storybook/internal/theming";
+import { emptyIdNameVo } from "@/util";
 
 const HostNics = ({
   hostId
@@ -149,8 +150,8 @@ const HostNics = ({
   const [networkAttachmentModalState, setNetworkAttachmentModalState] = useState({
     id: "",
     inSync: false,
-    // hostNicVo: { id: "", name: "" },
-    networkVo: { id: "", name: "" },
+    // hostNicVo: emptyIdNameVo(),
+    networkVo: emptyIdNameVo(),
     ipv4Values: { protocol: "none", address: "", gateway: "", netmask: "" },
     ipv6Values: { protocol: "none", address: "", gateway: "", netmask: "" },
     // dnsServers: []

@@ -10,6 +10,7 @@ import LabelCheckbox          from "@/components/label/LabelCheckbox";
 import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
 import { handleSelectIdChange } from "@/components/label/HandleInput";
 import Localization           from "@/utils/Localization";
+import { emptyIdNameVo } from "@/util";
 
 const DomainDeleteModal = ({ 
   isOpen,
@@ -20,7 +21,7 @@ const DomainDeleteModal = ({
   const { mutate: deleteDomain } = useDeleteDomain(onClose, onClose);
   
   const [format, setFormat] = useState(false);
-  const [hostVo, setHostVo] = useState({ id: "", name: "" });
+  const [hostVo, setHostVo] = useState(emptyIdNameVo());
   
   // 해당 도메인의 데이터센터가 가진 호스트 목록을 가져와야함
   const {

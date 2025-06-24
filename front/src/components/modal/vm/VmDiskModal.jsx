@@ -9,6 +9,7 @@ import LabelSelectOptions               from "@/components/label/LabelSelectOpti
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
   handleInputChange, 
+  handleInputCheck, 
   handleSelectIdChange
 } from "@/components/label/HandleInput";
 import {
@@ -20,10 +21,8 @@ import {
   useVm,
 } from "@/api/RQHook";
 import { 
-  checkKoreanName, 
-  checkZeroSizeToGiB, 
-  convertBytesToGB, 
-  convertGBToBytes
+  checkKoreanName, convertBytesToGB, convertGBToBytes,
+  emptyIdNameVo
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -62,23 +61,15 @@ const VmDiskModal = ({
   hasBootableDisk=false, // 부팅가능한 디스크 여부
 }) => {
   const { validationToast } = useValidationToast();
-  const dLabel = editMode 
-    ? Localization.kr.UPDATE 
-    : Localization.kr.CREATE;
+  const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
 
   const { vmsSelected, disksSelected } = useGlobal()
-
-  const vmId = useMemo(() => 
-      [...vmsSelected][0]?.id
-    , [vmsSelected]);
-
-  const diskId = useMemo(() => 
-      [...disksSelected][0]?.id
-    , [disksSelected]);
+  const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
   
   const [formState, setFormState] = useState(initialFormState);
-  const [storageDomainVo, setStorageDomainVo] = useState({ id: "", name: "" });
-  const [diskProfileVo, setDiskProfileVo] = useState({ id: "", name: "" });
+  const [storageDomainVo, setStorageDomainVo] = useState(emptyIdNameVo());
+  const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   
   const { mutate: addDiskVm } = useAddDiskFromVM(onClose, onClose);
   const { mutate: editDiskVm } = useEditDiskFromVM(onClose, onClose);
@@ -116,13 +107,19 @@ const VmDiskModal = ({
 
   useEffect(() => {
     if (!editMode && domains.length > 0 && !storageDomainVo.id) {
-      setStorageDomainVo({ id: domains[0].id, name: domains[0].name });
+      setStorageDomainVo({ 
+        id: domains[0].id, 
+        name: domains[0].name 
+      });
     }
   }, [domains, editMode, storageDomainVo.id]);
   
   useEffect(() => {
     if (!editMode && diskProfiles && diskProfiles.length > 0) {
-      setDiskProfileVo({id: diskProfiles[0].id, name: diskProfiles[0].id});
+      setDiskProfileVo({
+        id: diskProfiles[0].id, 
+        name: diskProfiles[0].id
+      });
     }
   }, [diskProfiles, editMode]);
 
@@ -134,34 +131,41 @@ const VmDiskModal = ({
 
   useEffect(() => {
     if (!isOpen) {
-      setFormState((prev) => ({
+      setFormState(() => ({
         ...initialFormState,
         alias: diskName || "", 
         bootable: hasBootableDisk ? false : initialFormState.bootable
       }));
-      setStorageDomainVo({ id: domains[0]?.id, name: domains[0]?.name });
-      setDiskProfileVo({ id: diskProfiles[0]?.id, name: diskProfiles[0]?.name });
+      setStorageDomainVo(emptyIdNameVo());
+      setDiskProfileVo(emptyIdNameVo());
     } 
     if (editMode && diskAttachment) {
+      const diskImage = diskAttachment?.diskImageVo;
       setFormState({
         id: diskAttachment?.id || "",
-        size: convertBytesToGB (diskAttachment?.diskImageVo?.virtualSize),
+        size: convertBytesToGB (diskImage?.virtualSize),
         appendSize: 0,
-        alias: diskAttachment?.diskImageVo?.alias || "",
-        description: diskAttachment?.diskImageVo?.description || "",
+        alias: diskImage?.alias || "",
+        description: diskImage?.description || "",
         interface_: diskAttachment?.interface_ || "VIRTIO_SCSI",
-        sparse: diskAttachment?.diskImageVo?.sparse || false,
+        sparse: diskImage?.sparse || false,
         active: diskAttachment?.active || false,
-        wipeAfterDelete: diskAttachment?.diskImageVo?.wipeAfterDelete || false,
+        wipeAfterDelete: diskImage?.wipeAfterDelete || false,
         bootable: diskAttachment?.bootable || false,
-        sharable: diskAttachment?.diskImageVo?.sharable || false,
+        sharable: diskImage?.sharable || false,
         readOnly: diskAttachment?.readOnly || false,
         // cancelActive: diskAttachment?.cancelActive || false,
-        backup: diskAttachment?.diskImageVo?.backup || false,
+        backup: diskImage?.backup || false,
         // shouldUpdateDisk: true
       });
-      setStorageDomainVo({ id: diskAttachment?.diskImageVo?.storageDomainVo?.id || "", name: diskAttachment?.diskImageVo?.storageDomainVo?.name || "" });
-      setDiskProfileVo({ id: diskAttachment?.diskImageVo?.diskProfileVo?.id || "", name: diskAttachment?.diskImageVo?.diskProfileVo?.name || "" });
+      setStorageDomainVo({ 
+        id: diskImage?.storageDomainVo?.id, 
+        name: diskImage?.storageDomainVo?.name
+      });
+      setDiskProfileVo({ 
+        id: diskImage?.diskProfileVo?.id,
+        name: diskImage?.diskProfileVo?.name 
+      });
     }
   }, [isOpen, editMode, diskAttachment, hasBootableDisk]);
 
@@ -184,20 +188,15 @@ const VmDiskModal = ({
         // shouldUpdateDisk: true
       });
       setStorageDomainVo({ 
-        id: diskAttachment?.diskImageVo?.storageDomainVo?.id || "", 
-        name: diskAttachment?.diskImageVo?.storageDomainVo?.name || ""  
+        id: diskAttachment?.diskImageVo?.storageDomainVo?.id, 
+        name: diskAttachment?.diskImageVo?.storageDomainVo?.name  
       });
       setDiskProfileVo({ 
-        id: diskAttachment?.diskImageVo?.diskProfileVo?.id || ""
+        id: diskAttachment?.diskImageVo?.diskProfileVo?.id
       });
     }
   }, [editMode, diskAttachment, hasBootableDisk]);
 
-  console.log("$ diskAttachment", diskAttachment)
-  
-  const handleInputChangeCheck = (field) => (e) => {
-    setFormState((prev) => ({ ...prev, [field]: e.target.checked }));
-  };
 
   const validateForm = useCallback(() => {
     Logger.debug(`VmDiskModal > validateForm ... `)
@@ -298,9 +297,7 @@ const VmDiskModal = ({
             if (!domainObj) return null;
             return (
               <div className="text-xs text-gray-500 f-end">
-                사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
-                {" / "}
-                총 용량: {checkZeroSizeToGiB(domainObj.size)}
+                사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
               </div>
             );
           })()}
@@ -321,29 +318,28 @@ const VmDiskModal = ({
         <div className="img-checkbox-outer f-end checkbox-outer">
           <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
             checked={Boolean(formState.wipeAfterDelete)} 
-            onChange={handleInputChangeCheck("wipeAfterDelete")}
+            onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
           />
           <LabelCheckbox id="bootable" label={Localization.kr.IS_BOOTABLE}
             checked={diskAttachment?.bootable}
             disabled={hasBootableDisk} // 이미 부팅 디스크가 있으면 비활성화
-            onChange={handleInputChangeCheck("bootable")}
+            onChange={handleInputCheck(setFormState, "bootable", validationToast)}
           />
           <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
             checked={Boolean(formState.sharable)} 
             disabled={editMode} 
-            onChange={handleInputChangeCheck("sharable")} 
+            onChange={handleInputCheck(setFormState, "sharable", validationToast)}
           />
           <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}
             checked={Boolean(formState.readOnly)} 
             disabled={editMode}
-            onChange={handleInputChangeCheck("readOnly")} 
+            onChange={handleInputCheck(setFormState, "readOnly", validationToast)}
           />
           <LabelCheckbox id="backup" label="증분 백업 사용"               
             checked={Boolean(formState.backup)} 
-            onChange={handleInputChangeCheck("backup")}
+            onChange={handleInputCheck(setFormState, "backup", validationToast)}
           />
         </div>
-        <div className='img-checkbox-outer'></div>
       </div>
     </BaseModal>
   );

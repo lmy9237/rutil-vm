@@ -22,7 +22,7 @@ import {
   useAllNfsStorageDomains,
   useAllStorageDomains,
 } from "@/api/RQHook";
-import { checkName }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -44,20 +44,15 @@ const DomainModal = ({
   editMode=false
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
-  const { 
-    datacentersSelected, domainsSelected,
-  } = useGlobal()
-  const dLabel = editMode 
-    ? Localization.kr.UPDATE 
-    : Localization.kr.CREATE;
+  const { datacentersSelected, domainsSelected, } = useGlobal()
+  const dLabel = editMode ? Localization.kr.UPDATE  : Localization.kr.CREATE;
 
   const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected]);
 
   const [formState, setFormState] = useState(initialFormState); // 일반정보
-  const [dataCenterVo, setDataCenterVo] = useState({ id: "", name: "" });
-  const [hostVo, setHostVo] = useState({ id: "", name: "" });
+  const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
+  const [hostVo, setHostVo] = useState(emptyIdNameVo());
   const [storageTypes, setStorageTypes] = useState([]);
   const [nfsAddress, setNfsAddress] = useState(""); // nfs
   const [lunId, setLunId] = useState(""); // fibre 사용
@@ -70,6 +65,7 @@ const DomainModal = ({
   const isFibre = formState.storageType === "fcp";
 
   const { data: domain } = useStorageDomain(domainId);
+  const { data: domains = [] } = useAllStorageDomains((e) => ({ ...e }));
   
   const { mutate: addDomain } = useAddDomain(onClose, onClose);
   const { mutate: editDomain } = useEditDomain(onClose, onClose); // 편집은 단순 이름, 설명 변경정도
@@ -77,10 +73,6 @@ const DomainModal = ({
     data: datacenters = [],
     isLoading: isDatacentersLoading 
   } = useAllDataCenters((e) => ({ ...e }));
-  const { 
-    data: domains = [],
-    isLoading: isDomainsLoading 
-  } = useAllStorageDomains((e) => ({ ...e }));
 
   const {
     data: hosts = [],
@@ -109,7 +101,7 @@ const DomainModal = ({
 
   const resetFormStates = () => {
     setFormState(initialFormState);
-    setHostVo({ id: "", name: "" });
+    setHostVo(emptyIdNameVo());
     setStorageTypes([]);
     setNfsAddress("");
     setLunId("");
@@ -154,19 +146,28 @@ const DomainModal = ({
   useEffect(() => {
     if (datacenterId) {
       const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ id: selected?.id, name: selected?.name });
+      setDataCenterVo({ 
+        id: selected?.id, 
+        name: selected?.name 
+      });
     } else if (!editMode && datacenters.length > 0) {
       // datacenterId가 없다면 기본 데이터센터 선택
       const defaultDc = datacenters.find(dc => dc.name === "Default");
       const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
+      setDataCenterVo({ 
+        id: firstDc.id, 
+        name: firstDc.name 
+      });
     }
   }, [datacenterId, datacenters, editMode]);
 
   useEffect(() => {
     if (!editMode && hosts && hosts.length > 0 && !hostVo.id) {
       const firstH = hosts[0];
-      setHostVo({ id: firstH.id, name: firstH.name });
+      setHostVo({ 
+        id: firstH.id, 
+        name: firstH.name 
+      });
     }
   }, [hosts, editMode, hostVo.id]);
 
@@ -208,6 +209,8 @@ const DomainModal = ({
     Logger.debug(`DomainModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
+    const duplicateError = checkDuplicateName(domains, formState.name, formState.id);
+    if (duplicateError) return duplicateError;
   
     if (!dataCenterVo.id) return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
     if (!hostVo.id) return `${Localization.kr.HOST}를 선택해주세요.`;

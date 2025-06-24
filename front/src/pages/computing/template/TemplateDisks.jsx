@@ -1,10 +1,8 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Tooltip } from "react-tooltip";
-import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
@@ -15,10 +13,8 @@ import {
 } from "@/api/RQHook";
 import { 
   checkZeroSizeToGiB,
-  convertBytesToGB,
 } from "@/util";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 
 /**
  * @name TemplateDisks
@@ -30,7 +26,6 @@ import Logger                 from "@/utils/Logger";
 const TemplateDisks = ({
   templateId 
 }) => {
-  const { activeModal, setActiveModal } = useUIState()
   const { disksSelected, setDisksSelected } = useGlobal()
   const {
     data: disks = [],
@@ -41,27 +36,28 @@ const TemplateDisks = ({
     isRefetching: isDisksRefetching,
   } = useAllDisksFromTemplate(templateId, ((e) => ({...e})));
   
-  const transformedData = [...disks].map((e) => {
-    const disk = e?.diskImageVo;
-    return {
-      id: e?.id,
-      interfaceType: e?.interface_ || Localization.kr.NOT_ASSOCIATED,
-      _alias: (
-        <TableRowClick type="disk" id={disk?.id}>
-          {disk?.alias}
-        </TableRowClick>
-      ),
-      virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
-      actualSize: checkZeroSizeToGiB(disk?.actualSize),
-      creationTime: disk?.createDate || Localization.kr.NOT_ASSOCIATED,
-      storageDomainId: disk?.storageDomainVo?.id,
-      storageDomainName: disk?.storageDomainVo ? (
-        <StorageDomainWithTooltip domainId={disk.storageDomainVo.id} />
-      ) : Localization.kr.NOT_ASSOCIATED,
-      storageType: disk?.storageType || 'Unknown',
-      status: disk?.status || 'Unknown',
-      policy: disk?.sparse ? '씬 프로비저닝' : '사전 할당',
-    };
+  const transformedData = [...disks]
+    .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+    .map((e) => {
+      const disk = e?.diskImageVo;
+      return {
+        id: e?.id,
+        interfaceType: e?.interface_ || Localization.kr.NOT_ASSOCIATED,
+        _alias: (
+          <TableRowClick type="disk" id={disk?.id}>
+            {disk?.alias}
+          </TableRowClick>
+        ),
+        virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
+        actualSize: checkZeroSizeToGiB(disk?.actualSize),
+        creationTime: disk?.createDate || Localization.kr.NOT_ASSOCIATED,
+        storageDomainName: disk?.storageDomainVo ? (
+          <StorageDomainWithTooltip domainId={disk.storageDomainVo.id} />
+        ) : Localization.kr.NOT_ASSOCIATED,
+        storageType: disk?.storageType || 'Unknown',
+        status: disk?.status || 'Unknown',
+        policy: disk?.sparse ? '씬 프로비저닝' : '사전 할당',
+      };
   });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
@@ -94,16 +90,15 @@ const StorageDomainWithTooltip = ({ domainId }) => {
       <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>
         <TableRowClick type="domain" id={domainId}>
           {storageDomain?.name || '불러오는 중...'}
-        </TableRowClick>
+        </TableRowClick> 
       </span>
       <Tooltip id={`storage-domain-tooltip-${domainId}`} place="top" effect="solid">
         {isLoading
           ? '로딩 중...'
           : <>
-              {/* {storageDomain?.name || '정보 없음'}<br /> */}
-              크기: {checkZeroSizeToGiB(storageDomain?.diskSize)}<br />
-              사용 가능: {checkZeroSizeToGiB(storageDomain?.availableSize)}<br />
-              사용됨: {checkZeroSizeToGiB(storageDomain?.usedSize)}<br />
+              크기: {checkZeroSizeToGiB(storageDomain?.size)}<br/>
+              사용 가능: {checkZeroSizeToGiB(storageDomain?.availableSize)}<br/>
+              사용됨: {checkZeroSizeToGiB(storageDomain?.usedSize)}
             </>
         }
       </Tooltip>

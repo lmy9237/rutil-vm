@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -170,7 +171,9 @@ class GraphServiceImpl(
 
 	override fun totalStorage(): StorageUsageDto {
 		log.info("totalStorage ... ")
-		val storageDomains: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(listOf())
+		val storageDomains: List<StorageDomain> = conn.findAllStorageDomains()
+			.getOrDefault(listOf())
+			.filter { it.type() != EXPORT }
 		return storageDomains.toStorageUsageDto()
 	}
 
@@ -192,6 +195,7 @@ class GraphServiceImpl(
 		log.info("storageChart ... ")
 		val page: Pageable = PageRequest.of(0, 3)
 		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart(page)
+			// .filter { it.() != EXPORT }
 		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
 	}
 

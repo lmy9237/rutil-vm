@@ -1,110 +1,104 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import LabelInput                       from "@/components/label/LabelInput";
-import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
+  useAllTemplates,
+  useAllVmTypes,
   useEditTemplate, 
   useTemplate
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
+import { checkDuplicateName, checkName, emptyIdNameVo } from "@/util";
+import { handleInputChange } from "@/components/label/HandleInput";
+
+const initialFormState = {
+  id: "",
+  name: "",
+  description: "",
+  comment: "",
+  optimizeOption: "server",
+  biosType: "q35_ovmf",
+  // stateless: false,
+  // startPaused: false,
+  // deleteProtected: false,
+  monitor: 1
+};
 
 const TemplateEditModal = ({
   isOpen,
   onClose,
-  editMode = false,
 }) => {
   const { validationToast } = useValidationToast();
-  // const { closeModal } = useUIState()
   const { templatesSelected } = useGlobal()
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [comment, setComment] = useState("");
-  const [osSystem, setOsSystem] = useState(""); // 운영체제 string
-  const [chipsetFirmwareType, setChipsetFirmwareType] = useState(""); // string
-  const [stateless, setStateless] = useState(false); // 상태비저장
-  const [startPaused, setStartPaused] = useState(false); // 일시정지상태에서시작
-  const [deleteProtected, setDeleteProtected] = useState(false); // 일시정지상태에서시작
-  const [clsuterVoId, setClsuterVoId] = useState("");
-  const [clsuterVoName, setClsuterVoName] = useState("");
-  const [monitor, setMonitor] = useState(1); // 숫자 타입
+  const templateId = templatesSelected[0]?.id;
+
+  const [formState, setFormState] = useState(initialFormState);
+  const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
 
   const { mutate: editTemplate } = useEditTemplate(onClose, onClose);
-  
-  // 최적화옵션(영어로 값바꿔야됨)
-  const [optimizeOption, setOptimizeOption] = useState([
-    { value: "desktop", label: "데스크톱" },
-    { value: "high_performance", label: "고성능" },
-    { value: "server", label: "서버" },
-  ]); // TODO: API 적용 (useVmTypes)
-  const monitorOptions = [
-    { value: 0, label: "0개" }, 
-    { value: 1, label: "1개" },
-    { value: 2, label: "2개" },
-    { value: 3, label: "3개" },
-  ];
+
+  const { data: template } = useTemplate(templateId);
+  const { data: templates = [] } = useAllTemplates();
+
+  // 최적화 옵션 가져오기
+  const {
+    data: vmTypes = [],
+    isLoading: isVmTypesLoading
+  } = useAllVmTypes((e) => ({ 
+    ...e,
+    value: e?.id?.toLowerCase(),
+    label: e?.kr
+  }))
+
+  const [activeTab, setActiveTab] = useState("general");
   const tabs = useMemo(() => ([
     { id: "general", label: Localization.kr.GENERAL, onClick: () => setActiveTab("general") },
     { id: "console", label: Localization.kr.CONSOLE, onClick: () => setActiveTab("console") },
   ]), []);
 
-  useEffect(() => {
-    if (isOpen) {
-      setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
-    }
-  }, [isOpen]);
-  const [activeTab, setActiveTab] = useState("general");
-
-  //해당데이터 상세정보 가져오기
-  const { data: templateData } = useTemplate(templatesSelected[0]?.id);
-  const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
- // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
-useEffect(() => {
-  if (isOpen && templateData) {
-    console.log("🧩 선택한 템플릿 정보:", templateData); 
-  }
-}, [isOpen, templateData]);
-
-useEffect(() => {
-  if (isOpen && templateData) {
-    console.log("🧩 templateData startPaused:", templateData.startPaused)
-    console.log("🧩 templateData stateless:", templateData.stateless)
-    console.log("🧩 templateData deleteProtected:", templateData.deleteProtected)
-  }
-}, [isOpen, templateData]);
-
   // 초기값설정
   useEffect(() => {
-    if (isOpen) {
-      const template = templateData;
-      if (template) {
-        setId(template?.id || "");
-        setName(template?.name || ""); 
-        setDescription(template?.description || "");
-        setComment(template?.comment || "");
-        setOsSystem(template?.osSystem || "");
-      
-        setClsuterVoId(template.clusterVo?.id || "");
-        setClsuterVoName(template.clusterVo?.name || "");
-        setMonitor(Number(template?.monitor ?? 1)); 
-        setStateless(Boolean(template?.stateless));
-        setStartPaused(Boolean(template?.startPaused));
-        setDeleteProtected(Boolean(template?.deleteProtected));
-        setSelectedOptimizeOption(template?.optimizeOption || "server");
-    //  setSelectedChipset(template?.chipsetFirmwareType || "Q35_OVMF");
-      }
+    if (!isOpen) {
+      setFormState(initialFormState);
+      setClusterVo(emptyIdNameVo());
+      setActiveTab("general");
     }
-  }, [isOpen, templateData]);
+    if (isOpen && template) {
+      setFormState({
+        id: template?.id || "",
+        name: template?.name || "",
+        description: template?.description || "",
+        comment: template?.comment || "",
+        optimizeOption: template?.optimizeOption?.toLowerCase() || "server",
+        biosType: template?.biosType || "q35_ovmf",
+        // stateless: Boolean(template?.stateless),
+        // startPaused: Boolean(template?.startPaused),
+        // deleteProtected: Boolean(template?.deleteProtected),
+        monitor: Number(template?.monitor?? 1),
+      });
+      setClusterVo({
+        id: template?.clusterVo?.id,
+        name: template?.clusterVo?.name
+      })
+    }
+  }, [isOpen, template]);
 
+  const dataToSubmit = {
+    ...formState,
+    clusterVo,
+    // monitor: Number(monitor)
+  };
+      
   const validateForm = () => {
-    Logger.debug(`TemplateEditModal > validateForm ... `)
-    if (name === "") return `${Localization.kr.NAME}을 입력해주세요.`
+    const nameError = checkName(formState.name);
+    if (nameError) return nameError;
+    const duplicateError = checkDuplicateName(templates, formState.name, formState.id);
+    if (duplicateError) return duplicateError;
     return null
   }
 
@@ -116,75 +110,49 @@ useEffect(() => {
       return;
     }
     
-    const dataToSubmit = {
-      clusterVo: {
-        id: clsuterVoId || "",
-        name: clsuterVoName || "",
-      },
-      id,
-      name,
-      description,
-      comment,
-      optimizeOption: selectedOptimizeOption,
-      osSystem,
-      stateless,
-      startPaused,
-      deleteProtected,
-      monitor: Number(monitor)
-    };
-    
-    Logger.debug(`ddddddddddTemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
-    if (editMode) {
-      dataToSubmit.id = id;
-      editTemplate({
-        templateId: id,
-        templateData: dataToSubmit,
-      });
-    }
+    Logger.debug(`$ dataToSubmit: `, dataToSubmit);
+
+    editTemplate({
+      templateId: formState.id,
+      templateData: dataToSubmit,
+    });
   };
 
   return (
-    
-    <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={editMode ? Localization.kr.UPDATE : Localization.kr.CREATE}
+    <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={Localization.kr.UPDATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "750px", height: "400px" }} 
     >
-  
       <div className="popup-content-outer flex">
         {/* 왼쪽 네비게이션 */}
-        <TabNavButtonGroup 
-          tabs={tabs} 
-          tabActive={activeTab}
-        />
+        <TabNavButtonGroup tabs={tabs} tabActive={activeTab} />
 
         <div className="w-full px-7">
           <div>
             <LabelSelectOptions id="optimization" label={Localization.kr.OPTIMIZATION_OPTION}
-              value={selectedOptimizeOption}
-              onChange={(e) => setSelectedOptimizeOption(e.target.value)}
-              options={optimizeOption}
+              value={formState.optimizeOption}
+              options={vmTypes}
+              loading={isVmTypesLoading}
+              onChange={handleInputChange(setFormState, "optimizeOption", validationToast)}
             />
           </div>
           <hr/>
           {activeTab === "general" && (
             <>
-              <LabelInput id="template_name" label={Localization.kr.NAME}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                autoFocus
+              <LabelInput id="name" label={Localization.kr.NAME}
+                value={formState.name}
+                onChange={handleInputChange(setFormState, "name", validationToast) }
               />
-              <LabelInput id="description"
-                label={Localization.kr.DESCRIPTION}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+              <LabelInput id="description" label={Localization.kr.DESCRIPTION}
+                value={formState.description}
+                onChange={handleInputChange(setFormState, "description", validationToast) }
               />
-              <LabelInput id="comment"
-                label={Localization.kr.COMMENT}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+              <LabelInput id="comment" label={Localization.kr.COMMENT}
+                value={formState.comment}
+                onChange={handleInputChange(setFormState, "comment", validationToast) }
               />
-{/*      
+              {/*      
               <LabelCheckbox id="stateless"
                 label={Localization.kr.STATELESS}
                 checked={stateless}
@@ -204,20 +172,23 @@ useEffect(() => {
                 checked={deleteProtected}
                 onChange={(e) => setDeleteProtected(e.target.checked)}
               /> */}
-           
             </>
           )}
           {activeTab  === "console" && (
            <>
             <div className="graphic-console font-bold pt-3">그래픽 콘솔</div>
-            <LabelSelectOptions
-              id="monitor"
-              label="모니터 수"
-              value={monitor} 
-              onChange={(e) => setMonitor(Number(e.target.value))}
-              options={monitorOptions}
+            <LabelInput id="name" label="모니터 수"
+              value={formState.monitor}
               disabled
+              onChange={handleInputChange(setFormState, "monitor", validationToast) }
             />
+            {/* <LabelSelectOptions label="모니터 수"
+              id="monitor"              
+              disabled
+              value={formState.monitor} 
+              options={monitorOptions}
+              onChange={handleInputChange(setFormState, "monitor")}
+            /> */}
           </>
           )}
         </div>

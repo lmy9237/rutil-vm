@@ -184,7 +184,10 @@ fun Connection.attachStorageDomainToDataCenter(dataCenterId: String, storageDoma
 }
 
 fun Connection.detachStorageDomainToDataCenter(dataCenterId: String, storageDomainId: String): Result<Boolean> = runCatching {
-	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().async(true).send()
+	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).remove().send()
+	log.info("cleanFinishedTasks~ ")
+	this.srvDataCenter(dataCenterId).cleanFinishedTasks().send()
+	log.info("cleanFinishedTasks~ fin ")
 
 	true
 }.onSuccess {
@@ -222,6 +225,10 @@ fun Connection.deactivateStorageDomainToDataCenter(dataCenterId: String, storage
 
 	// force == ovf 업데이트 여부
 	this.srvAttachedStorageDomainFromDataCenter(dataCenterId, storageDomainId).deactivate().force(ovf).send()
+	log.info("cleanFinishedTasks~ ")
+	this.srvDataCenter(dataCenterId).cleanFinishedTasks().send()
+	log.info("cleanFinishedTasks~ fin ")
+
 	true
 }.onSuccess {
 	Term.DATACENTER.logSuccessWithin(Term.STORAGE_DOMAIN,"유지보수", dataCenterId)

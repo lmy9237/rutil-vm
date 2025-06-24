@@ -14,8 +14,9 @@ import {
   useEditHost,
   useHost,
   useAllClusters,
+  useAllHosts,
 } from "@/api/RQHook";
-import { checkName, emptyIdNameVo }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MHost.css";
@@ -56,6 +57,7 @@ const HostModal = ({
   const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
 
   const { data: host } = useHost(hostId);
+  const { data: hosts } = useAllHosts();
   const { mutate: addHost } = useAddHost(onClose, onClose);
   const { mutate: editHost } = useEditHost(onClose, onClose);
   // const {
@@ -112,6 +114,8 @@ const HostModal = ({
     Logger.debug(`HostModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
+    const duplicateError = checkDuplicateName(hosts, formState.name, formState.id);
+    if (duplicateError) return duplicateError;
 
     if (!editMode && !formState.sshRootPassword) return "비밀번호를 입력해주세요.";
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;

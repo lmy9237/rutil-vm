@@ -8,6 +8,7 @@ import {
 } from "@/components/label/HandleInput";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
+import { emptyIdNameVo } from "@/util";
 
 const VmHa = ({
   editMode,
@@ -40,7 +41,10 @@ const VmHa = ({
             ...prev,
             ha: isChecked,
             storageDomainVo: isChecked
-              ? (domains[0] ? { id: domains[0].id, name: domains[0].name } : { id: "", name: "" })
+              ? (domains[0] ? { 
+                id: domains[0].id, 
+                name: domains[0].name 
+              } : emptyIdNameVo())
               : { ...prev.storageDomainVo }, // 값 유지
           }));
           import.meta.env.DEV && (validationToast?.debug(`field: ha, value: ${isChecked}\nfield: storageDomainVo.id, value: ${formHaState?.storageDomainVo.id}`))
@@ -59,12 +63,15 @@ const VmHa = ({
           if (selectedDomain) {
             setFormHaState((prev) => ({
               ...prev,
-              storageDomainVo: { id: selectedDomain.id, name: selectedDomain.name },
+              storageDomainVo: { 
+                id: selectedDomain.id, 
+                name: selectedDomain.name 
+              },
             }));
           } else {
             setFormHaState((prev) => ({
               ...prev,
-              storageDomainVo: { id: "", name: "" },
+              storageDomainVo: emptyIdNameVo(),
             }));
           }
         }}

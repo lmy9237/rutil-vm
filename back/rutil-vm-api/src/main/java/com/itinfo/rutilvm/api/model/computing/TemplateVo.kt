@@ -288,8 +288,10 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		status { template.findTemplateStatus() }
 		creationTime { template.creationTime().toLocalDateTime() }
 		osType { template.os().findVmOsType() }
+		cpuArc { template.cpu().findArchitectureType() }
+		monitor { template.display().monitorsAsInteger() }
 		biosType { template.bios().findBiosTypeB() }
-		optimizeOption { template.type().toVmTypeB() } // 최적화 옵션 template.type().findVmType()
+		optimizeOption { template.type().toVmTypeB() }
 		memorySize { template.memory() }
 		memoryGuaranteed { template.memoryPolicy().guaranteed() }
 		memoryGuaranteed { template.memoryPolicy().guaranteed() }

@@ -1,4 +1,4 @@
-import { checkZeroSizeToMbps } from "@/util";
+import { checkZeroSizeToMbps, emptyIdNameVo } from "@/util";
 
 /**
  * NIC 데이터를 변환합니다.
@@ -215,8 +215,8 @@ export function getNetworkAttachmentModalState(
   return {
     id: targetNA?.id,
     inSync: targetNA?.inSync ?? false,
-    networkVo: targetNA?.networkVo ?? { id: "", name: "" },
-    hostNicVo: targetNA?.hostNicVo ?? { id: "", name: "" },
+    networkVo: targetNA?.networkVo ?? emptyIdNameVo(),
+    hostNicVo: targetNA?.hostNicVo ?? emptyIdNameVo(),
     ipv4Values: {
       protocol: targetNA?.ipAddressAssignments?.find(ip => ip.ipVo?.version === "V4")?.assignmentMethod ?? "none",
       address: targetNA?.ipAddressAssignments?.find(ip => ip.ipVo?.version === "V4")?.ipVo?.address ?? "",

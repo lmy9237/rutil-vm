@@ -260,30 +260,17 @@ const NetworkModal = ({
           <ToggleSwitchButton id="mtuToggle" label="MTU 설정"
             checked={formState.mtu !== 0}
             onChange={(e) => {
-              const isCustom = e.target.checked;
-              setFormState((prev) => ({
-                 ...prev,
-                  mtu: isCustom ? 1500 : 0, 
-              }));
+              setFormState((prev) => ({ ...prev, mtu: e.target.checked ? 1500 : 0 }));
             }}
             tType="사용자 정의" fType="기본값 (1500)"
           />
-          <input
-            type="number"
-            className="ml-2"
-            style={{ width: "150px" }}
-            min="0"
-            max="1500"
-            step="1"
+          <input className="ml-2" style={{ width: "150px" }}
+            type="number"             
+            min="0" max="1500" step="1"
             value={formState.mtu === 0 ? 1500 : formState.mtu}
             disabled={formState.mtu === 0}
-            onChange={(e) => {
-              const value = e.target.value;
-              setFormState((prev) => ({
-                ...prev,
-                mtu: value,
-              }));
-            }}
+            onChange={handleInputChange(setFormState, "mtu")}
+            // onChange={(e) => { setFormState((prev) => ({ ...prev, mtu: e.target.value }))}}
             onBlur={(e) => {
               let value = parseInt(e.target.value || "0", 10);
 
@@ -294,10 +281,7 @@ const NetworkModal = ({
                 validationToast.fail("MTU는 최대 1500까지만 설정할 수 있습니다.");
                 value = 1500;
               }
-              setFormState((prev) => ({
-                ...prev,
-                mtu: value,
-              }));
+              setFormState((prev) => ({ ...prev, mtu: value }));
             }}
           />
         </div>
@@ -333,57 +317,7 @@ const NetworkModal = ({
               }}
             />
           </>
-        )}
-
-
-        
-        {/* {formState.dnsEnabled && (
-          <>
-            <div className="text-[15px] font-bold"> DNS 서버 </div>
-            {dnsServers.length !== 0 ?
-              (dnsServers.map((dns, index) => (
-              <div
-                key={index}
-                className="f-btw"
-                style={{ width: "100%", padding: 0 }}
-              >
-                <input
-                  type="text"
-                  value={dns}
-                  onChange={(e) => {
-                    const updated = [...dnsServers];
-                    updated[index] = e.target.value;
-                    setDnsServers(updated);
-                  }}
-                />
-                <div className="dynamic-btns f-end">
-                  <RVI36
-                    iconDef={rvi36Add(false)}
-                    className="btn-icon"
-                    currentColor="transparent"
-                    onClick={() => setDnsServers((prev) => [...prev, ""])}
-                  />
-                  <RVI36
-                    iconDef={rvi36Remove()}
-                    className="btn-icon"
-                    currentColor="transparent"
-                    onClick={() => {
-                      const updated = [...dnsServers];
-                      updated.splice(index, 1);
-                      setDnsServers(updated);
-                    }}
-                  />
-                </div> 
-              </div>
-            ))) :(
-              <>
-              <span>t</span>
-              </>
-            )
-          }
-          </>
-        )} */}
-    
+        )}    
         
         {!editMode && (
           <div className=" py-3">

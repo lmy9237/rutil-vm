@@ -26,9 +26,6 @@ const TemplateNics = ({
 }) => {
   const { activeModal } = useUIState()
   const {
-    contextMenu, setContextMenu
-  } = useGlobal()
-  const {
     templatesSelected,
     nicsSelected, setNicsSelected
   } = useGlobal()
@@ -42,8 +39,9 @@ const TemplateNics = ({
     isRefetching: isVnicProfilesRefetching,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
 
-  const columns = TableColumnsInfo.NICS_FROM_TEMPLATE;
-  const transformedData = [...vnicProfiles]?.map((nic) => ({
+  const transformedData = [...vnicProfiles]
+    .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
+    .map((nic) => ({
       ...nic,
       status: status2Icon(nic?.linked ? "UP" : "DOWN"),
       network: (
@@ -60,9 +58,9 @@ const TemplateNics = ({
       _plugged: (
         <input type="checkbox" checked={nic?.plugged === true} disabled />
       ),
-    }))
+  }))
 
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   return (
     <>
@@ -71,7 +69,7 @@ const TemplateNics = ({
         <TemplateNicActionbuttons />
       </div>
       <TablesOuter target={"templatenic"}
-        columns={columns}
+        columns={TableColumnsInfo.NICS_FROM_TEMPLATE}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
@@ -83,16 +81,6 @@ const TemplateNics = ({
         isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching}  isError={isVnicProfilesError} isSuccess={isVnicProfilesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>
-      {/* <VmNicModals type="template" resourceId={templateId} /> */}
-      {/* 
-        {activeModal().includes("nic:remove") && (
-          <TemplateNicDeleteModal
-            isOpen={activeModal().includes("nic:remove")}
-            data={selectedVnicProfiles[0]} // 선택된 NIC 데이터 전달
-            templateId={templateId}
-          />
-        )}
-      </Suspense> */}
     </>
   );
 };
