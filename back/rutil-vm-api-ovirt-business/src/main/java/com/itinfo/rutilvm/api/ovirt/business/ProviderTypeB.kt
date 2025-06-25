@@ -3,11 +3,11 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * [ProviderType]
+ * [ProviderTypeB]
  * 제공자 유형
  *
  */
-enum class ProviderType(
+enum class ProviderTypeB(
 	override val value: Int,
 	val isAuthUrlAware: Boolean,
 	val isReadOnlyAware: Boolean,
@@ -26,12 +26,12 @@ enum class ProviderType(
 
 	override fun toString(): String = code
 	val code: String
-		get() = this@ProviderType.name.uppercase()
+		get() = this@ProviderTypeB.name.uppercase()
 
 	private val loc: Localization
 		get() = Localization.getInstance()
 	val localizationKey: String
-		get() = "${ProviderType::class.java.simpleName}.${this.name}"
+		get() = "${ProviderTypeB::class.java.simpleName}.${this.name}"
 	val kr: String
 		get() = loc.findLocalizedName4ProviderType(this, "kr")
 	val en: String
@@ -53,16 +53,16 @@ enum class ProviderType(
 		get() = isTypeOpenstack
 
 	companion object {
-		private val valueMapping: MutableMap<Int, ProviderType> = ConcurrentHashMap<Int, ProviderType>()
-		private val codeMapping: MutableMap<String, ProviderType> = ConcurrentHashMap<String, ProviderType>()
+		private val valueMapping: MutableMap<Int, ProviderTypeB> = ConcurrentHashMap<Int, ProviderTypeB>()
+		private val codeMapping: MutableMap<String, ProviderTypeB> = ConcurrentHashMap<String, ProviderTypeB>()
 		init {
-			ProviderType.values().forEach {
+			ProviderTypeB.values().forEach {
 				valueMapping[it.value] = it
 				codeMapping[it.code] = it
 				codeMapping[it.name] = it
 			}
 		}
-		@JvmStatic fun forValue(value: Int): ProviderType? = valueMapping[value]
-		@JvmStatic fun findByName(name: String): ProviderType? = valueMapping.values.firstOrNull() { it.name == name }
+		@JvmStatic fun forValue(value: Int?): ProviderTypeB? = valueMapping[value ?: external_network.value] ?: external_network
+		@JvmStatic fun forCode(code: String?): ProviderTypeB? = codeMapping[code ?: external_network.code] ?: external_network
 	}
 }

@@ -6075,6 +6075,32 @@ export const useRemoveJobs = (
 //#endregion: job
 
 
+//#region: Provider
+/**
+ * @name useAllProviders
+ * @description 모든 공급자 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 
+ * @returns useQuery훅
+ */
+export const useAllProviders = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allProviders'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllProviders();
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllProviders ... res: `, _res);
+    return _res;
+  }
+})
+
+
+//#endregion: provider
+
 //#region: User
 /**
  * @name useAllUsers

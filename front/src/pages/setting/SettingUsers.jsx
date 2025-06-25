@@ -7,7 +7,6 @@ import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
 import SettingUsersActionButtons from "@/components/dupl/SettingUsersActionButtons";
 import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import {
   RVI16,
@@ -64,10 +63,7 @@ const SettingUsers = () => {
         setSearchQuery={setSearchQuery} 
         multiSelect={true}
         /*shouldHighlight1stCol={true}*/
-        onRowClick={(selectedRows) => {
-setUsersSelected(selectedRows)
-        } 
-          }
+        onRowClick={(selectedRows) => { setUsersSelected(selectedRows) } }
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isUsersLoading} isRefetching={isUsersRefetching} isError={isUsersError} isSuccess={isUsersSuccess}
         /*onContextMenuItems={(row) => [

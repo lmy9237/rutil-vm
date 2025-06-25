@@ -1,18 +1,47 @@
 package com.itinfo.rutilvm.api.model.setting
 
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType
-import com.itinfo.rutilvm.api.repository.engine.entity.ProvidersEntity
+import com.itinfo.rutilvm.api.ovirt.business.ProviderTypeB
+import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmware
 import com.itinfo.rutilvm.common.gson
+import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
+import org.ovirt.engine.sdk4.builders.ExternalProviderBuilder
+import org.ovirt.engine.sdk4.builders.PropertyBuilder
+import org.ovirt.engine.sdk4.types.ExternalHostProvider
+import org.ovirt.engine.sdk4.types.ExternalProvider
 import java.io.Serializable
 import java.time.LocalDateTime
-import java.util.*
 
+/**
+ * [ProviderVo]
+ *
+ * @property id [String]
+ * @property name [String]
+ * @property description [String]
+ * @property url [String]
+ * @property providerType [ProviderTypeB]
+ * @property authRequired [Boolean]
+ * @property authUsername [String]
+ * @property authPassword [String]
+ * @property createDate [LocalDateTime]
+ * @property updateDate [LocalDateTime]
+ * @property customProperties [String]
+ * @property tenantName [String]
+ * @property pluginType [String]
+ * @property authUrl [String]
+ * @property additionalProperties [String]
+ * @property readOnly [Boolean]
+ * @property isUnmanaged [Boolean]
+ * @property autoSync [Boolean]
+ * @property userDomainName [String]
+ * @property projectName [String]
+ * @property projectDomainName [String]
+ */
 class ProviderVo(
-	val id: UUID = UUID.randomUUID(),
+	val id: String = "",
 	val name: String = "",
 	val description: String = "",
 	var url: String? = "",
-	var providerType: ProviderType?,
+	var providerType: ProviderTypeB? = ProviderTypeB.external_network,
 	var authRequired: Boolean = false,
 	var authUsername: String? = "",
 	var authPassword: String? = "",
@@ -22,7 +51,7 @@ class ProviderVo(
 	var tenantName: String? = "",
 	var pluginType: String? = "",
 	var authUrl: String? = "",
-	var additionalProperties: String? = "",
+	var additionalProperties: AdditionalProperties4Vmware? = null,
 	var readOnly: Boolean = false,
 	var isUnmanaged: Boolean = false,
 	var autoSync: Boolean = false,
@@ -49,11 +78,11 @@ class ProviderVo(
 		gson.toJson(this)
 
 	class Builder {
-		private var bId: UUID = UUID.randomUUID();fun id(block: () -> UUID) { bId = block() }
+		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bUrl: String? = "";fun url(block: () -> String?) { bUrl = block() ?: "" }
-		private var bProviderType: ProviderType? = null;fun providerType(block: () -> ProviderType?) { bProviderType = block() }
+		private var bProviderTypeB: ProviderTypeB? = null;fun providerType(block: () -> ProviderTypeB?) { bProviderTypeB = block() }
 		private var bAuthRequired: Boolean = false;fun authRequired(block: () -> Boolean?) { bAuthRequired = block() ?: false }
 		private var bAuthUsername: String? = "";fun authUsername(block: () -> String?) { bAuthUsername = block() ?: "" }
 		private var bAuthPassword: String? = "";fun authPassword(block: () -> String?) { bAuthPassword = block() ?: "" }
@@ -63,14 +92,14 @@ class ProviderVo(
 		private var bTenantName: String? = "";fun tenantName(block: () -> String?) { bTenantName = block() ?: "" }
 		private var bPluginType: String? = "";fun pluginType(block: () -> String?) { bPluginType = block() ?: "" }
 		private var bAuthUrl: String? = "";fun authUrl(block: () -> String?) { bAuthUrl = block() ?: "" }
-		private var bAdditionalProperties: String? = "";fun additionalProperties(block: () -> String?) { bAdditionalProperties = block() ?: "" }
+		private var bAdditionalProperties: AdditionalProperties4Vmware? = null;fun additionalProperties(block: () -> AdditionalProperties4Vmware?) { bAdditionalProperties = block() }
 		private var bReadOnly: Boolean = false;fun readOnly(block: () -> Boolean?) { bReadOnly = block() ?: false }
 		private var bIsUnmanaged: Boolean = false;fun isUnmanaged(block: () -> Boolean?) { bIsUnmanaged = block() ?: false }
 		private var bAutoSync: Boolean = false;fun autoSync(block: () -> Boolean?) { bAutoSync = block() ?: false }
 		private var bUserDomainName: String? = "";fun userDomainName(block: () -> String?) { bUserDomainName = block() ?: "" }
 		private var bProjectName: String? = "";fun projectName(block: () -> String?) { bProjectName = block() ?: "" }
 		private var bProjectDomainName: String? = "";fun projectDomainName(block: () -> String?) { bProjectDomainName = block() ?: "" }
-		fun build(): ProviderVo = ProviderVo(bId, bName, bDescription, bUrl, bProviderType, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bCustomProperties, bTenantName, bPluginType, bAuthUrl, bAdditionalProperties, bReadOnly, bIsUnmanaged, bAutoSync, bUserDomainName, bProjectName, bProjectDomainName)
+		fun build(): ProviderVo = ProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bCustomProperties, bTenantName, bPluginType, bAuthUrl, bAdditionalProperties, bReadOnly, bIsUnmanaged, bAutoSync, bUserDomainName, bProjectName, bProjectDomainName)
 	}
 
 	companion object {
@@ -78,29 +107,29 @@ class ProviderVo(
 	}
 }
 
-fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
-	id { id }
-	name { name }
-	description { description }
-	url { url }
-	providerType { providerTypeB }
-	authRequired { authRequired }
-	authUsername { authUsername }
-	authPassword { authPassword }
-	createDate { createDate }
-	updateDate { updateDate }
-	customProperties { customProperties }
-	tenantName { tenantName }
-	pluginType { pluginType }
-	authUrl { authUrl }
-	additionalProperties { additionalProperties }
-	readOnly { readOnly }
-	isUnmanaged { isUnmanaged }
-	autoSync { autoSync }
-	userDomainName { userDomainName }
-	projectName { projectName }
-	projectDomainName { projectDomainName }
+
+fun ProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
+	// val props = listOf(
+	// 	PropertyVo("type", "vmware" },
+	// 	PropertyVo("vcenter", "192.168.0.117"),
+	// 	PropertyVo("esx", "192.168.0.411"),
+	// 	PropertyVo("dataCenter", "Datacenter/NFO"),
+	// 	PropertyVo("verifySSL", "false")
+	// )
+
+	return ExternalHostProviderBuilder()
+		.name(name)
+		.description(description)
+		.url(url)
+		.username(authUsername)
+		.password(authPassword)
+		// .properties()
 }
 
-fun List<ProvidersEntity>.toProviderVos(): List<ProviderVo> =
-	this.map { it.toProviderVo() }
+fun ProviderVo.toAddHostProvider(): ExternalHostProvider =
+	toExternalHostProviderBuilder().build()
+
+fun ProviderVo.toEditHostProvider(): ExternalHostProvider =
+	toExternalHostProviderBuilder()
+		.id(id)
+		.build()

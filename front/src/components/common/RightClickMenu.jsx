@@ -19,6 +19,7 @@ import DomainModals                  from "@/components/modal/domain/DomainModal
 import DomainDataCenterModals        from "@/components/modal/domain/DomainDataCenterModals";
 import EventModals                   from "@/components/modal/event/EventModals";
 import JobModals                     from "@/components/modal/job/JobModals";
+import SettingProviderModals        from "@/components/modal/settings/SettingProviderModals";
 import SettingUsersModals            from "@/components/modal/settings/SettingUsersModals";
 import SettingUserSessionsModal      from "@/components/modal/settings/SettingUserSessionsModal";
 import SettingCertModals             from "@/components/modal/settings/SettingCertModals";
@@ -42,6 +43,7 @@ import EventActionButtons            from "@/components/dupl/EventActionButtons"
 import JobActionButtons              from "@/components/dupl/JobActionButtons";
 import DiskSnapshotActionButtons     from "@/components/dupl/DiskSnapshotActionButtons";
 import "./RightClickMenu.css"
+import SettingProvidersActionButtons from "../dupl/SettingProvidersActionButtons";
 
 /**
  * @name RightClickMenu
@@ -67,6 +69,7 @@ const RightClickMenu = () => {
     nicsSelected, // setNicsSelected
     eventsSelected, // setEventsSelected,
     jobsSelected, // setJobsSelected,
+    providersSelected, // setProvidersSelected,
     usersSelected, // setUsersSelected,
     usersessionsSelected, // setUsersessionsSelected,
     sourceContext,
@@ -109,6 +112,7 @@ const RightClickMenu = () => {
       <TemplateNicModals nic={nicsSelected[0] ?? null} />
       <EventModals event={eventsSelected[0] ?? null}/>
       <JobModals job={jobsSelected[0] ?? null} />
+      <SettingProviderModals provider={providersSelected[0] ?? null} /> 
       <SettingUsersModals user={usersSelected[0] ?? null} />
       <SettingUserSessionsModal usersession={usersessionsSelected[0] ?? null} />
       <SettingCertModals />
@@ -185,6 +189,10 @@ const RightClickMenu = () => {
             />
           ) : (contextMenuType() === "templatenic") ? ( 
             <TemplateNicActionbuttons actionType={"context"} 
+              status={contextMenu()?.item?.status}
+            />
+          ) : (contextMenuType() === "provider") ? (
+            <SettingProvidersActionButtons actionType={"context"}
               status={contextMenu()?.item?.status}
             />
           ) : (contextMenuType() === "user") ? (

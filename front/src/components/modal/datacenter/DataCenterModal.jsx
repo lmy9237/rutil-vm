@@ -162,7 +162,6 @@ const DataCenterModal = ({
         options={quotaEnforcementTypes}
         loading={isQuotaEnforcementTypesLoading}
         onChange={handleInputChange(setFormState, "quotaMode", validationToast)}
-        
       />
       <LabelSelectOptions id="version-compatible" label="호환버전"
         value={formState.version}

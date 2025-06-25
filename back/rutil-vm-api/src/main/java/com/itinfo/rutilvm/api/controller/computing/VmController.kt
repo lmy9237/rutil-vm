@@ -38,6 +38,7 @@ import java.nio.file.Files
 @RequestMapping("/api/v1/computing/vms")
 class VmController: BaseController() {
 	@Autowired private lateinit var iVm: ItVmService
+	@Autowired private lateinit var iVmExport: ItVmImportService
 
 	@ApiOperation(
 		httpMethod="GET",
@@ -178,7 +179,7 @@ class VmController: BaseController() {
 		if (externalVmVo == null)
 			throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toException()
 		log.info("/computing/vms/vmware ... vmware 계정등록 {}", externalVmVo)
-		return ResponseEntity.ok(iVm.importExternalVm(externalVmVo))
+		return ResponseEntity.ok(iVmExport.importExternalVm(externalVmVo))
 	}
 
 

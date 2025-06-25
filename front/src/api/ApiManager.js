@@ -3240,6 +3240,23 @@ const ApiManager = {
   //#endregion: Job
 
 
+  //#region: Provider
+  /**
+   * @name ApiManager.findAllProviders
+   * @description providers 목록 
+   *
+   * @returns 
+   */
+  findAllProviders: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_PROVIDERS(), 
+  }),
+
+
+  //#endregion: provider
+
+
+
   //#region: User
   /**
    * @name ApiManager.findAllUsers
@@ -3249,7 +3266,7 @@ const ApiManager = {
    */
   findAllUsers: async () => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_ALL_USERS(), 
+    url: ENDPOINTS.FIND_ALL_PROVIDERS(), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_USERS
   }),
   /**

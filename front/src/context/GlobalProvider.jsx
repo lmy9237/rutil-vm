@@ -175,6 +175,15 @@ export const GlobalProvider = ({ children }) => {
       _setEventsSelected([{...newV}]);
   }
 
+  const [providersSelected, _setProvidersSelected] = useState([]);
+  const setProvidersSelected = (newV) => {
+    Logger.debug(`GlobalProvider > setProvidersSelected ... newV: `, newV)
+    if (Array.isArray(newV))
+      _setProvidersSelected([...newV]);
+    else if (!Array.isArray(newV) && typeof newV === "object")
+      _setProvidersSelected([{...newV}]);
+  }
+
   const [usersSelected, _setUsersSelected] = useState([]);
   const setUsersSelected = (newV) => {
     Logger.debug(`GlobalProvider > setUsersSelected ... newV: `, newV)
@@ -227,6 +236,7 @@ export const GlobalProvider = ({ children }) => {
     setTemplatesSelected([])
     setJobsSelected([])
     setEventsSelected([])
+    setProvidersSelected([])
     setUsersSelected([])
     setUsersessionsSelected([])
     setCertsSelected([])
@@ -253,6 +263,7 @@ export const GlobalProvider = ({ children }) => {
       templatesSelected, setTemplatesSelected,
       jobsSelected, setJobsSelected,
       eventsSelected, setEventsSelected,
+      providersSelected, setProvidersSelected,
       usersSelected, setUsersSelected,
       usersessionsSelected, setUsersessionsSelected,
       certsSelected, setCertsSelected,

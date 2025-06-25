@@ -35,7 +35,7 @@ class ProviderController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun events(): ResponseEntity<List<ProviderVo>> {
-		log.info("/providers ... 이벤트 목록")
+		log.info("/providers ... 공급자 목록")
 		return ResponseEntity.ok(iProvider.findAll())
 	}
 

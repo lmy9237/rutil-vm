@@ -211,26 +211,26 @@ class Localization {
 		//region ProviderTypeL
 		object ProviderTypeL {
 			object KR {
-				val OPENSTACK_NETWORK	= locKr?.get(ProviderType.openstack_network.localizationKey)?.toString() ?: ""
-				val FOREMAN 			= locKr?.get(ProviderType.foreman.localizationKey).toString() ?: ""
-				val OPENSTACK_IMAGE		= locKr?.get(ProviderType.openstack_image.localizationKey)?.toString() ?: ""
-				val OPENSTACK_VOLUME	= locKr?.get(ProviderType.openstack_volume.localizationKey)?.toString() ?: ""
-				val VMWARE				= locKr?.get(ProviderType.vmware.localizationKey)?.toString() ?: ""
-				val EXTERNAL_NETWORK	= locKr?.get(ProviderType.external_network.localizationKey)?.toString() ?: ""
-				val KVM					= locKr?.get(ProviderType.kvm.localizationKey)?.toString() ?: ""
-				val XEN					= locKr?.get(ProviderType.xen.localizationKey)?.toString() ?: ""
-				val KUBEVIRT			= locKr?.get(ProviderType.kubevirt.localizationKey)?.toString() ?: ""
+				val OPENSTACK_NETWORK	= locKr?.get(ProviderTypeB.openstack_network.localizationKey)?.toString() ?: ""
+				val FOREMAN 			= locKr?.get(ProviderTypeB.foreman.localizationKey).toString() ?: ""
+				val OPENSTACK_IMAGE		= locKr?.get(ProviderTypeB.openstack_image.localizationKey)?.toString() ?: ""
+				val OPENSTACK_VOLUME	= locKr?.get(ProviderTypeB.openstack_volume.localizationKey)?.toString() ?: ""
+				val VMWARE				= locKr?.get(ProviderTypeB.vmware.localizationKey)?.toString() ?: ""
+				val EXTERNAL_NETWORK	= locKr?.get(ProviderTypeB.external_network.localizationKey)?.toString() ?: ""
+				val KVM					= locKr?.get(ProviderTypeB.kvm.localizationKey)?.toString() ?: ""
+				val XEN					= locKr?.get(ProviderTypeB.xen.localizationKey)?.toString() ?: ""
+				val KUBEVIRT			= locKr?.get(ProviderTypeB.kubevirt.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val OPENSTACK_NETWORK	= locEn?.get(ProviderType.openstack_network.localizationKey)?.toString() ?: ""
-				val FOREMAN 			= locEn?.get(ProviderType.foreman.localizationKey)?.toString() ?: ""
-				val OPENSTACK_IMAGE		= locEn?.get(ProviderType.openstack_image.localizationKey)?.toString() ?: ""
-				val OPENSTACK_VOLUME	= locEn?.get(ProviderType.openstack_volume.localizationKey)?.toString() ?: ""
-				val VMWARE				= locEn?.get(ProviderType.vmware.localizationKey)?.toString() ?: ""
-				val EXTERNAL_NETWORK	= locEn?.get(ProviderType.external_network.localizationKey)?.toString() ?: ""
-				val KVM					= locEn?.get(ProviderType.kvm.localizationKey)?.toString() ?: ""
-				val XEN					= locEn?.get(ProviderType.xen.localizationKey)?.toString() ?: ""
-				val KUBEVIRT			= locEn?.get(ProviderType.kubevirt.localizationKey)?.toString() ?: ""
+				val OPENSTACK_NETWORK	= locEn?.get(ProviderTypeB.openstack_network.localizationKey)?.toString() ?: ""
+				val FOREMAN 			= locEn?.get(ProviderTypeB.foreman.localizationKey)?.toString() ?: ""
+				val OPENSTACK_IMAGE		= locEn?.get(ProviderTypeB.openstack_image.localizationKey)?.toString() ?: ""
+				val OPENSTACK_VOLUME	= locEn?.get(ProviderTypeB.openstack_volume.localizationKey)?.toString() ?: ""
+				val VMWARE				= locEn?.get(ProviderTypeB.vmware.localizationKey)?.toString() ?: ""
+				val EXTERNAL_NETWORK	= locEn?.get(ProviderTypeB.external_network.localizationKey)?.toString() ?: ""
+				val KVM					= locEn?.get(ProviderTypeB.kvm.localizationKey)?.toString() ?: ""
+				val XEN					= locEn?.get(ProviderTypeB.xen.localizationKey)?.toString() ?: ""
+				val KUBEVIRT			= locEn?.get(ProviderTypeB.kubevirt.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion: ProviderTypeL
@@ -493,16 +493,16 @@ class Localization {
 		CpuPinningPolicyB.isolate_threads -> 		if (loc == "kr") CpuPinningPolicyL.KR.isolate_threads else CpuPinningPolicyL.EN.isolate_threads
 	}
 
-	fun findLocalizedName4ProviderType(type: ProviderType, loc: String = "kr"): String = when(type) {
-		ProviderType.openstack_network ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
-		ProviderType.foreman -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
-		ProviderType.openstack_image -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
-		ProviderType.openstack_volume ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
-		ProviderType.external_network -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
-		ProviderType.vmware -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
-		ProviderType.kvm ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
-		ProviderType.xen ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
-		ProviderType.kubevirt ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+	fun findLocalizedName4ProviderType(type: ProviderTypeB, loc: String = "kr"): String = when(type) {
+		ProviderTypeB.openstack_network ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
+		ProviderTypeB.foreman -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
+		ProviderTypeB.openstack_image -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
+		ProviderTypeB.openstack_volume ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
+		ProviderTypeB.external_network -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
+		ProviderTypeB.vmware -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
+		ProviderTypeB.kvm ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
+		ProviderTypeB.xen ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
+		ProviderTypeB.kubevirt ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
 	}
 
 	fun findLocalizedName4BiosType(type: BiosTypeB, loc: String = "kr"): String = when(type) {

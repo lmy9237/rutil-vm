@@ -316,6 +316,11 @@ const ENDPOINTS = {
   FIND_JOB: (jobId) =>                                                     `${ENDPOINT_API_V1}/jobs/${jobId}`,
   END_JOB: (jobId) =>                                                      `${ENDPOINT_API_V1}/jobs/${jobId}/end`,
   //#endregion: Job
+
+  //#region: Provider
+  FIND_ALL_PROVIDERS: () =>                                                `${ENDPOINT_API_V1}/providers`,
+
+  //#endregion: provider
   
   //#region: User
   FIND_ALL_USERS: () =>                                                    `${ENDPOINT_API_V1}/auth/users`,

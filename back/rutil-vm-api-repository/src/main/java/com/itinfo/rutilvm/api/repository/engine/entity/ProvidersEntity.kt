@@ -1,6 +1,8 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.ProviderType
+import com.google.gson.annotations.SerializedName
+import com.itinfo.rutilvm.api.ovirt.business.ProviderTypeB
+import com.itinfo.rutilvm.common.fromJson
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
@@ -33,7 +35,7 @@ private val log = LoggerFactory.getLogger(DiskVmElementEntity::class.java)
  * @property tenantName [String]
  * @property pluginType [String] 네트워크 플러그인 유형
  * @property authUrl [String]
- * @property additionalProperties [String]
+ * @property _additionalProperties [String] 기타 속성
  * @property readOnly [Boolean]
  * @property isUnmanaged [Boolean]
  * @property autoSync [Boolean]
@@ -46,12 +48,13 @@ private val log = LoggerFactory.getLogger(DiskVmElementEntity::class.java)
 class ProvidersEntity(
 	@Id
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
-	@Column(unique = true, nullable = true)
+	@Column(name="id", unique = true, nullable = true)
 	val id: UUID = UUID.randomUUID(),
 	var name: String = "",
 	var description: String = "",
 	var url: String? = "",
-	var providerType: String? = "",
+	@Column(name="provider_type", unique=false, nullable = true)
+	private var _providerType: String? = "",
 	var authRequired: Boolean = false,
 	var authUsername: String? = "",
 	var authPassword: String? = "",
@@ -64,7 +67,8 @@ class ProvidersEntity(
 	var tenantName: String? = "",
 	var pluginType: String? = "",
 	var authUrl: String? = "",
-	var additionalProperties: String? = "",
+	@Column(name="additional_properties", nullable=true)
+	private var _additionalProperties: String? = "",
 	var readOnly: Boolean = false,
 	var isUnmanaged: Boolean = false,
 	var autoSync: Boolean = false,
@@ -75,11 +79,8 @@ class ProvidersEntity(
 	override fun toString(): String =
 		gson.toJson(this)
 
-	val providerTypeB: ProviderType?
-		get() = ProviderType.findByName(providerType ?: "")
-
-	val providerTypeName: String?
-		get() = providerTypeB?.name
+	val providerType: ProviderTypeB?		get() = ProviderTypeB.forCode(_providerType)
+	val additionalProperties: AdditionalProperties4Vmware? 	get() = gson.fromJson<AdditionalProperties4Vmware>(_additionalProperties ?: "")
 
 	class Builder {
 		private var bId: UUID = UUID.randomUUID();fun id(block: () -> UUID) { bId = block() }
@@ -110,3 +111,34 @@ class ProvidersEntity(
 		inline fun builder(block: Builder.() -> Unit): ProvidersEntity = Builder().apply(block).build()
 	}
 }
+
+/**
+ * [AdditionalProperties4Vmware]
+ * Vmware 외부공급자 기타 속성
+ */
+class AdditionalProperties4Vmware(
+	@SerializedName("storagePoolId") val storagePoolId: List<Any>? = emptyList(),
+	@SerializedName("proxyHostId") val proxyHostId: String? = "",
+	@SerializedName("vCenter") val vcenter: String? = "",
+	@SerializedName("esx") val esx: String? = "",
+	@SerializedName("dataCenter") val dataCenter: String? = "",
+	@SerializedName("verifySSL") val verifySSL: Boolean? = false,
+): Serializable {
+	override fun toString(): String =
+		gson.toJson(this@AdditionalProperties4Vmware)
+
+	class Builder {
+		private var bStoragePoolId: List<Any>? = emptyList(); fun storagePoolId(block: () -> List<Any>?) { bStoragePoolId = block() ?: emptyList() }
+		private var bProxyHostId: String? = ""; fun proxyHostId(block: () -> String?) { bProxyHostId = block() ?: "" }
+		private var bVcenter: String? = ""; fun vcenter(block: () -> String?) { bVcenter = block() ?: "" }
+		private var bEsx: String? = ""; fun esx(block: () -> String?) { bEsx = block() ?: "" }
+		private var bDataCenter: String? = ""; fun dataCenter(block: () -> String?) { bDataCenter = block() ?: "" }
+		private var bVerifySSL: Boolean? = false; fun verifySSL(block: () -> Boolean?) { bVerifySSL = block() ?: false }
+
+		fun build(): AdditionalProperties4Vmware = AdditionalProperties4Vmware( bStoragePoolId, bProxyHostId, bVcenter, bEsx, bDataCenter, bVerifySSL,)
+	}
+	companion object {
+		inline fun builder(block: Builder.() -> Unit): AdditionalProperties4Vmware = Builder().apply(block).build()
+	}
+}
+

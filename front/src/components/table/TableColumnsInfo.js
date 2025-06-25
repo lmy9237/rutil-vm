@@ -835,6 +835,12 @@ const TableColumnsInfo = {
     { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' ,align: "center"  },
     { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'100px' },
   ],
+  PROVIDER: [
+    { accessor: 'name',        header: Localization.kr.NAME,   clickable: false },
+    { accessor: 'type',        header: Localization.kr.TYPE,    clickable: false },
+    { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
+    { accessor: 'providerUrl', header: "공급자 URL", clickable: false },
+  ],
   // 사용자
   SETTING_USER: [
     { header: Localization.kr.STATUS, accessor: "icon", clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },

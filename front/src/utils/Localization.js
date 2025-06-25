@@ -89,6 +89,7 @@ export const Localization = {
     MANAGEMENT: "관리",
     TARGET: "대상",
     SYSTEM: "시스템",
+    PROVIDER: "공급자",
     USER: "사용자",
     USER_ID: "사용자ID",
     USER_SESSION: "사용자세션",

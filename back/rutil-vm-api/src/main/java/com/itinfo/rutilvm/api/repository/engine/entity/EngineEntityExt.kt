@@ -19,6 +19,8 @@ import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.BondingVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
+import com.itinfo.rutilvm.api.model.setting.PropertyVo
+import com.itinfo.rutilvm.api.model.setting.ProviderVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
@@ -943,3 +945,36 @@ fun VmTemplateEntity.fromVmTemplateToTemplateVo(): TemplateVo = TemplateVo.build
 
 
 //endregion: VmTemplateEntity
+
+
+//region: ProviderEntity
+
+fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
+	id { id.toString() }
+	name { name }
+	description { description }
+	url { url }
+	providerType { providerType }
+	authRequired { authRequired }
+	authUsername { authUsername }
+	authPassword { authPassword }
+	createDate { createDate }
+	updateDate { updateDate }
+	customProperties { customProperties }
+	tenantName { tenantName }
+	pluginType { pluginType }
+	authUrl { authUrl }
+	additionalProperties { additionalProperties }
+	readOnly { readOnly }
+	isUnmanaged { isUnmanaged }
+	autoSync { autoSync }
+	userDomainName { userDomainName }
+	projectName { projectName }
+	projectDomainName { projectDomainName }
+}
+
+fun List<ProvidersEntity>.toProviderVos(): List<ProviderVo> =
+	this.map { it.toProviderVo() }
+
+
+//endregion: ProviderEntity
