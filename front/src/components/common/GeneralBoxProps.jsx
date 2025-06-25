@@ -22,6 +22,7 @@
 // };
 
 // export default GeneralBoxProps;
+
 import React, { useEffect, useRef, useState } from "react";
 import "./GeneralBoxProps.css";
 

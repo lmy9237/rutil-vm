@@ -213,12 +213,12 @@ const BarChart = ({
   });
 
   return (
-    <div className="f-center h-full" style={{ marginTop: "-20px" }}>
+    <div className="f-center " style={{ marginTop: "-20px" }}>
       <ReactApexChart type="bar" 
         id="chart-bar" /* css id는 먹히지만 class명은 안먹힘 */
         options={chartOptions}
         series={series}
-        height="89%" // 부모 기준
+         height={props.height ?? 210}
         // width={chartSize.width}
         // height={chartSize.height || "250px"}
         {...props}

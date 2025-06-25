@@ -1,11 +1,15 @@
 .vm-bar-chart-container {
-  /* display: flex;
-  flex-direction: column;
-  justify-content: space-between; */
   height: 100%;
   padding: 15px 0;
 }
-
+.space-between-3{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.vm-bar-chart-container .vm-bar-row{
+  margin-bottom: 13px;
+}
 .vm-bar-row {
   display: flex;
   align-items: center; 

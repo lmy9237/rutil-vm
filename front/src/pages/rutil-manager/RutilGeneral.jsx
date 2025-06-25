@@ -124,7 +124,7 @@ const RutilGeneral = () => {
     <GeneralLayout
       top={
       <>
-        <div className="vm-info-box-outer grid-col-span-2 vm-box-default">
+        <div className="grid-col-span-2 vm-box-default">
           <div className="flex h-full">
             <div className="half-box mr-[40px]">
               <RutilVmLogo className="big"

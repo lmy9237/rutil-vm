@@ -189,12 +189,11 @@ export const BoxChartSummary = ({
       <div className="box-detail f-start gap-8 w-full"
         {...props}
       >
-        <div className="box-status v-start ml-1.5">
+        {/* <div className="box-status v-start ml-1.5">
           <h1 className="fs-24">{availablePercentageComputed}%</h1>
           <span className="fs-12">{Localization.kr.AVAILABLE}</span>
-          {/* (총 {total} {unit}) */}
-        </div>
-        <div className="box-status v-start">
+        </div> */}
+        <div className="box-status v-start  ml-1.5 ">
           <div className="box-status-metric f-start gap-2">
             <span className="fs-14">{used}</span>
             <span className="fs-12">(사용 중 {unit})</span>
@@ -294,12 +293,14 @@ export const BoxChartAllGraphs = ({ type }) => {
     <div id={`graphs-${type}`} className="graphs v-center w-full mt-auto">
       <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
         <RadialChartAll type={type} size={heightGraphHoriz} />
-        <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  title={
-            type === "cpu" ? "CPU Top3 가상머신" // "가상머신 CPU 사용률 Top3"
-            : type === "memory" ? " 메모리 Top3 가상머신" //"가상머신 메모리 사용률 Top3"
-            : type === "domain" ? " 스토리지 Top3" //"가상머신 스토리지 사용률 Top3"
-            : ""
-          }/>
+        <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  
+          // title={
+          //   type === "cpu" ? "CPU Top3 가상머신" // "가상머신 CPU 사용률 Top3"
+          //   : type === "memory" ? " 메모리 Top3 가상머신" //"가상머신 메모리 사용률 Top3"
+          //   : type === "domain" ? " 스토리지 Top3" //"가상머신 스토리지 사용률 Top3"
+          //   : ""
+          // }
+        />
       </div>
       <WaveChartCpu type={type} heightInn={heightGraphRest} style={{ height: `${heightGraphRest}px` }} />
       <BoxGrids type={type} title={
@@ -485,25 +486,40 @@ const BarChartWrapper = ({
   type,
   ...props
 }) => {
-  const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
+ const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
   const percentages = useMemo(() => data.map((e) => e[keyPercent]), [data, keyPercent]);
   const ids = useMemo(() => {
     const originalIds = data.map((e) => e.id); 
     const padded = [...originalIds];
     while (padded.length < 3) {
-    padded.push(`placeholder-${padded.length}`);
-  }
+      padded.push(`placeholder-${padded.length}`);
+    }
     return padded;
   }, [data]);
 
+  // ✅ 타이틀 텍스트 조건
+  const title = useMemo(() => {
+    if (type === "cpu") return "CPU Top3 가상머신";
+    if (type === "memory") return "메모리 Top3 가상머신";
+    if (type === "domain") return "스토리지 Top3";
+    return "";
+  }, [type]);
+
+
   return (
-    <BarChart
-      names={names}
-      percentages={percentages}
-      ids={ids}
-      type={type}
-      {...props}
-    />
+    <>
+      <div style={{ position: "relative" }}>
+        <div style={{ top:"2px", left:"15px" }}>{title}</div>
+      
+      <BarChart
+        names={names}
+        percentages={percentages}
+        ids={ids}
+        type={type}
+        {...props}
+      />
+      </div>
+    </>
   );
 };
 

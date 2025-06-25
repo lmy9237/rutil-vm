@@ -206,11 +206,11 @@ const VnicProfileModal = ({
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         value={formState.name}
-        onChange={handleInputChange(setFormState, "name")}
+        onChange={handleInputChange(setFormState, "name",validationToast)}
       />
       <LabelInput id="description" label={Localization.kr.DESCRIPTION}
         value={formState.description}
-        onChange={handleInputChange(setFormState, "description")}
+        onChange={handleInputChange(setFormState, "description",validationToast)}
       />
       <LabelSelectOptionsID id="network-man" label={Localization.kr.NETWORK_FILTER}
         value={networkFilterVo.id}

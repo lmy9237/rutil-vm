@@ -68,6 +68,8 @@
 .error { color: var(--color-orange); }
 .warning { color: var(--color-yellow); }
 
+
+
 .bar-chart-title{
   margin-left: 12%;
 }

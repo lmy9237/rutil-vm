@@ -20,7 +20,6 @@
   height: 80%;
   display: flex;
   padding: 0 30px;
-  align-items: den;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -30,6 +29,6 @@
   background: var(--color-white);
   padding: 3px 13px;
   border-radius: 40%;
-  font-size: 12px;
+  font-size: var(--fs-default);
   font-weight: 700;
 }

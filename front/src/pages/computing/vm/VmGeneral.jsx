@@ -346,11 +346,13 @@ const VmGeneral = ({
 */
       <>
       <GeneralLayout
-        top={<>
-          <div className="vm-info-box-outer grid-col-span-2 vm-box-default gap-8">
+        top={
+        <>
+          <div className=" grid-col-span-2 vm-box-default gap-8">
             <h3 className="box-title">게스트 운영체제</h3>
             <hr className="w-full" />
-            <div className="vm-info-vnc-group h-full">
+            
+            <div className="vm-info-vnc-group">
               <div className="vm-info-vnc v-center gap-8">
                 {
                   (vm?.running && vncScreenshotDataUrl(vmId) === "")
@@ -387,7 +389,8 @@ const VmGeneral = ({
             <VmGeneralBarChart items={usageItems} />
           </GeneralBoxProps>
        
-        </>}
+        </>
+        }
       bottom={
         <>
           <GeneralBoxProps title="가상머신 하드웨어">

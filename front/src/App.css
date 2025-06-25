@@ -333,7 +333,7 @@ svg.btn { cursor: pointer; }
 
 .info-content {
   width: calc(100% - var(--w-btn-tab-nav));
-  /* overflow-y: auto; */
+  overflow-y: auto; 
   /* height: calc(100% - var(--h-section-header)); */
 }
 .section-content,.info-content { 
@@ -398,12 +398,6 @@ svg.btn { cursor: pointer; }
   font-weight: bold;
   margin-bottom: 10px;
 }
-.vm-info-box-outer { /* 컴포넌트화 하세요 민영씨 */
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
 .box-content  .info-table-wrapper{
   min-width: 448px !important;
   padding: 5px 3px !important;
@@ -421,13 +415,5 @@ svg.btn { cursor: pointer; }
   .grid-col-span-2 {
     grid-column: auto;
     min-width: 0 !important;
-  }
-  .vm-info-box-outer > .flex { /* TODO: 컴포넌트화 하세요 민영씨 */
-    flex-wrap: wrap;
-  }
-  .vm-info-box-outer { /* TODO: 컴포넌트화 하세요 민영씨 */
-    flex-direction: column;
-    align-items: stretch;
-    height: auto;
   }
 }
