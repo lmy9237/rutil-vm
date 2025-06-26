@@ -3251,7 +3251,19 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_PROVIDERS(), 
   }),
-
+ /**
+   * @name ApiManager.findProvider
+   * @description provider
+   *
+   * @param {string} providerId
+   * @returns 
+   * 
+   * @see Computing.js (components/Computing)
+   */
+  findProvider: async (providerId) => makeAPICall({ 
+    method: "GET",  
+    url: ENDPOINTS.FIND_PROVIDER(providerId), 
+  }),
 
   //#endregion: provider
 
@@ -3266,7 +3278,7 @@ const ApiManager = {
    */
   findAllUsers: async () => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_ALL_PROVIDERS(), 
+    url: ENDPOINTS.FIND_ALL_USERS(), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_USERS
   }),
   /**

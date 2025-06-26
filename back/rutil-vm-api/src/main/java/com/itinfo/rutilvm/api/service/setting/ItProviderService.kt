@@ -1,13 +1,17 @@
 package com.itinfo.rutilvm.api.service.setting
 
+import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 import com.itinfo.rutilvm.api.repository.engine.ProvidersRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.ProvidersEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toProviderVo
 import com.itinfo.rutilvm.api.repository.engine.entity.toProviderVos
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
+import com.itinfo.rutilvm.common.toUUID
+import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -22,35 +26,51 @@ interface ItProviderService {
 	@Throws(Error::class)
 	fun findAll(): List<ProviderVo>
 	/**
+	 * [ItProviderService.findOne]
+	 * 공급자
+	 *
+	 * @param providerId [String]
+	 * @return [ProviderVo] 공급자
+	 */
+	@Throws(Error::class)
+	fun findOne(providerId: String): ProviderVo?
+	/**
 	 * [ItProviderService.add]
 	 * 공급자 생성
 	 *
 	 * @param providerVo [ProviderVo]
 	 * @return [ProviderVo]?
 	 */
-	// @Throws(Error::class)
-	// fun add(providerVo: ProviderVo): ProviderVo?
+	@Throws(Error::class)
+	fun add(providerVo: ProviderVo): ProviderVo?
 }
 
 @Service
 class ProviderServiceImpl (
 ): BaseService(), ItProviderService {
-	@Autowired private lateinit var providers: ProvidersRepository
+	@Autowired private lateinit var rProvider: ProvidersRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<ProviderVo> {
 		log.info("findAll ...")
-		val res: List<ProvidersEntity> = providers.findAll()
+		val res: List<ProvidersEntity> = rProvider.findAll()
 		return res.toProviderVos()
 	}
 
-	// @Throws(Error::class)
-	// override fun add(providerVo: ProviderVo): ProviderVo? {
-	// 	// log.info("add ...{}", providerVo)
-	// 	// val res: List<ProvidersEntity> = providers.findAll()
-	// 	// return res.toProviderVos()
-	// 	TODO("")
-	// }
+	@Throws(Error::class)
+	override fun findOne(providerId: String): ProviderVo? {
+		log.info("findOne ...")
+		val res: ProvidersEntity? = rProvider.findById(providerId.toUUID()).get()
+		return res?.toProviderVo()
+	}
+
+	@Throws(Error::class)
+	override fun add(providerVo: ProviderVo): ProviderVo? {
+		// log.info("add ...{}", providerVo)
+		// val res: List<ProvidersEntity> = providers.findAll()
+		// return res.toProviderVos()
+		TODO("")
+	}
 
 	companion object {
 		private val log by LoggerDelegate()

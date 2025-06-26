@@ -19,7 +19,6 @@ import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.BondingVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
-import com.itinfo.rutilvm.api.model.setting.PropertyVo
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
@@ -27,15 +26,8 @@ import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
-import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
-import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
-import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
-import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus.Companion
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
@@ -43,7 +35,6 @@ import com.itinfo.rutilvm.api.ovirt.business.findStatus
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
-import com.itinfo.rutilvm.api.ovirt.business.toDataCenterStatus
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.common.toDate
@@ -51,15 +42,14 @@ import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
 import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll4Template
 import com.itinfo.rutilvm.util.ovirt.findCluster
-import com.itinfo.rutilvm.util.ovirt.findStorageDomain
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.NetworkStatus.NON_OPERATIONAL
 import org.ovirt.engine.sdk4.types.NetworkStatus.OPERATIONAL
-import org.ovirt.engine.sdk4.types.HostNic
-import org.ovirt.engine.sdk4.types.StorageDomain
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
+import org.ovirt.engine.sdk4.builders.PropertyBuilder
+import org.ovirt.engine.sdk4.types.Property
 import org.springframework.data.domain.Page
 import java.util.Date
 
@@ -972,9 +962,18 @@ fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
 	projectName { projectName }
 	projectDomainName { projectDomainName }
 }
-
 fun List<ProvidersEntity>.toProviderVos(): List<ProviderVo> =
 	this.map { it.toProviderVo() }
 
+// fun AdditionalProperties4Vmware.toPropertyBuildersFromAdditionalProperties4Vmware(): List<Property> {
+// 	return listOf(
+// 		PropertyBuilder().name("storagePoolId").value(storagePoolIdFull).build(), // storagePoolId
+// 		PropertyBuilder().name("proxyHostId").value(proxyHostIdFull).build(), // proxyHostId
+// 		PropertyBuilder().name("vCenter").value(vcenter).build(),
+// 		PropertyBuilder().name("esx").value(esx).build(),
+// 		PropertyBuilder().name("dataCenter").value(dataCenter).build(),
+// 		PropertyBuilder().name("verifySSL").value(false.toString()).build(),
+// 	)
+// }
 
 //endregion: ProviderEntity

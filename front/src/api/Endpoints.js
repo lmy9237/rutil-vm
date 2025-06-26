@@ -319,7 +319,7 @@ const ENDPOINTS = {
 
   //#region: Provider
   FIND_ALL_PROVIDERS: () =>                                                `${ENDPOINT_API_V1}/providers`,
-
+  FIND_PROVIDER: (providerId) =>                                           `${ENDPOINT_API_V1}/providers/${providerId}`, 
   //#endregion: provider
   
   //#region: User

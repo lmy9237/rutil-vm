@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
@@ -11,6 +11,7 @@ import {
   useAllProviders,
   useAllDataCenters,
   useHostsFromDataCenter,
+  useProvider,
 } from "@/api/RQHook";
 import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
@@ -21,11 +22,11 @@ const initialFormState = {
   id: "",
   name: "",
   description: "",
-  type: "vmware",
-  vCenter: "",
-  esxi: "",
-  datacenter: "",
-  cluster: "",
+  providerType: "vmware",
+  vCenter: "",    // 192.168.0.7
+  esx: "",        // 192.168.0.4
+  dataCenter: "", // Datacenter
+  cluster: "",    // ITITINFO
   userName: "",
   password: ""
 };
@@ -52,7 +53,7 @@ const SettingProviderModal = ({
   const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
-  // const { data: provider } = useProvider(providerId);
+  const { data: provider } = useProvider(providerId);
   const { data: providers = [] } = useAllProviders((e) => ({ ...e  }));
   const { 
     data: datacenters = [], 
@@ -68,20 +69,33 @@ const SettingProviderModal = ({
     isRefetching: isHostsRefetching,
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
-  // useEffect(() => {
-  //   if (!isOpen) {
-  //     setFormState(initialFormState);
-  //   }
-  //   if (editMode && provider) {
-  //     setFormState({
-  //       id: provider?.id,
-  //       name: provider?.name,
-  //       comment: provider?.comment,
-        
-  //     });
+  console.log("$ provider", provider)
+  useEffect(() => {
+    if (!isOpen) {
+      setFormState(initialFormState);
+    }
+    if (editMode && provider) {
+      setFormState({
+        id: provider?.id,
+        name: provider?.name,
+        description: provider?.description,
+        providerType: provider?.providerType,
+        vCenter: provider?.vCenter,
+        esxi: provider?.esxi,
+        datacenter: provider?.datacenter,
+        cluster: provider?.cluster,
+        userName: provider?.userName,
+        password: provider?.password,
+      });
+      setDataCenterVo({
+        id: provider?.storagePoolId,
+      });
+      setHostVo({
+        id: provider?.proxyHostId,
+      })
       
-  //   }
-  // }, [isOpen, editMode]);
+    }
+  }, [isOpen, editMode]);
 
 
   const validateForm = () => {
@@ -130,8 +144,8 @@ const SettingProviderModal = ({
         onChange={handleInputChange(setFormState, "description", validationToast)}
       />
       {/* TODO:타입별 항목이 많이 달라짐 */}
-      <LabelSelectOptions id="type" label={Localization.kr.TYPE}
-        // value={"vmware"}
+      <LabelSelectOptions id="providerType" label={Localization.kr.TYPE}
+        value={formState.providerType}
         options={[]}
         disabled={editMode}
         onChange={handleInputChange(setFormState, "quotaMode", validationToast)}

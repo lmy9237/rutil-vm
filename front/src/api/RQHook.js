@@ -6097,6 +6097,26 @@ export const useAllProviders = (
     return _res;
   }
 })
+/**
+ * @name useProvider
+ * @description 공급자 상세조회 useQuery훅
+ * 
+ * @param {string} providerId 공급자 oVirt ID
+ * @returns useQuery훅
+ */
+export const useProvider = (
+  providerId,
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['provider', providerId], 
+  queryFn: async () => {
+    const res = await ApiManager.findProvider(providerId); 
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useProvider ... providerId: ${providerId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!providerId,
+});
 
 
 //#endregion: provider

@@ -4,10 +4,7 @@ import com.itinfo.rutilvm.api.ovirt.business.ProviderTypeB
 import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmware
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
-import org.ovirt.engine.sdk4.builders.ExternalProviderBuilder
-import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
-import org.ovirt.engine.sdk4.types.ExternalProvider
 import java.io.Serializable
 import java.time.LocalDateTime
 
@@ -123,7 +120,7 @@ fun ProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
 		.url(url)
 		.username(authUsername)
 		.password(authPassword)
-		// .properties()
+		// .properties(additionalProperties?.toPropertyBuildersFromAdditionalProperties4Vmware())
 }
 
 fun ProviderVo.toAddHostProvider(): ExternalHostProvider =
