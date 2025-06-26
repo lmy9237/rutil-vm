@@ -29,11 +29,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 0.3.6 - 2025-06-26
+
+- [`api-v0.3.6`][api-v0.3.6]: 백엔드
+- [`web-v0.3.6`][web-v0.3.6]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: 가상머신 > 일반 미리보기 화면
+- [@dhj27][dhj27]
+  - `${back}`: 도메인 생성 - 내보내기 기능 구현
+  - `${back}`:  Network - `NetworkClusterEntity`, `NetworkClusterViewRepository` 추가
+  - `${back}`: StorageDomain <비활성화, 분리> 코드 안정화(`cleanFinishedTasks`  추가)
+  - `${back}`: Graph 스토리지 도메인 import_export 제외
+  - `${back}`: 공급자 추가 (`ExternalHostProviderBuilder` , `addProvider`, `editProvider`, `deleteProvider` ) [기능안됨]
+  - `${front}`: 공급자 페이지 추가 (`SettingProviders`, `SettingProviderModals`, `SettingProviderModal`, `SettingProvidersActionButtons`)
+- [@lmy9237][lmy9237]
+  - `${front}`: 데이터센터, 네트워크, 클러스 일반페이지 추가
+  - `${front}`: 공급자 페이지 제작
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+  - `${front}`: DataCenter - `findAllActiveStorageDomainsFromDataCenter` 수정 (db로 변경 및 import_export 제외)
+  - `${front}`: Host - Host 업타임 추가
+  - `${front}`: Vm - vnicProfile 예시 페이지 추가
+  - `${front}`: Template: 모달 수정
+  - `${front}`: Network - 상태 추가, 모달 편집 수정(async 추가)
+  - `${front}`: VnicProfile - 편집 수정
+  - `${front}`: StorageDomain - 파괴 활성화
+  - `${front}`: 모달 중복 이름 검사 코드 추가 (Network, Disk 제외)
+  - `${front}`: emptyIdNameVo() 수정
+- [@lmy9237][lmy9237]
+  - `${front}`: bar 컴포넌트 재구성(폰트사이즈 변경)
+  - `${front}`: bar차트 라벨 안맞는것 수정 
+  - `${front}`: 일반페이지 박스들 제목 13px 통일
+  - `${front}`: 네트워크 일반페이지 수정
+  - `${front}`: 호스트 일반페이지 박스 순서변경
+  - `${front}`: 클러스터 일반페이지 수정
+  - `${front}`: 도메인,디스크 일반페이지 테이블 컬럼제목, 아이콘 변경
+  - `${front}`: VmGeneralBarChart 컴포넌트재구성(이름바꿔야함)
+  - `${front}`: 호스트,가상머신,도메인,디스크 그래프 값넣기
+  - `${front}`: 일반페이지 용량 및 사용량 그래프 개수에 따라  flex-direction: column 조건 걸어주기
+  - `${front}`: 모달 hr z-index줄이기
+  - `${front}`: 테이블 th,td간격 일정하게
+  - `${front}`: 디스크 목록 필터버튼 높이 수정
+  - `${front}`: 트리메뉴 데이터센터 경로 수정(클러스터로 가는문제)
+  - `${front}`: 가상머신 > 일반: 정보 연결
+      - 네트워크 어댑터 정보 (`vnicProfile`)
+      - 디스크 (`diskAttachment`)
+  - `${front}`: btn-tab-nav-group 선 잘리는 것 수정( + 고정)
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+  - `${front}`: 대시보드 그래프 사용가능 % 삭제
+  - `${front}`: vm-info-box-outer 삭제
+---
+
 ## 0.3.5 - 2025-06-20
 
-- [`api-v0.3.4`][api-v0.3.4]: 백엔드
-- [`web-v0.3.4`][web-v0.3.4]: 프론트앤드
-
+- [`api-v0.3.5`][api-v0.3.5]: 백엔드
+- [`web-v0.3.5`][web-v0.3.5]: 프론트앤드
 
 ### Added
 
@@ -1340,6 +1401,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.6]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.5...web-v0.3.6
+[web-v0.3.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.5...api-v0.3.6
 [api-v0.3.5]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.4...web-v0.3.5
 [web-v0.3.5]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.4...api-v0.3.5
 [api-v0.3.4]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.3...web-v0.3.4
