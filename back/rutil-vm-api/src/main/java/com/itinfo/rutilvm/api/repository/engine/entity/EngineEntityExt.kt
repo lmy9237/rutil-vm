@@ -19,6 +19,7 @@ import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.BondingVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
+import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
@@ -965,15 +966,46 @@ fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
 fun List<ProvidersEntity>.toProviderVos(): List<ProviderVo> =
 	this.map { it.toProviderVo() }
 
-// fun AdditionalProperties4Vmware.toPropertyBuildersFromAdditionalProperties4Vmware(): List<Property> {
-// 	return listOf(
-// 		PropertyBuilder().name("storagePoolId").value(storagePoolIdFull).build(), // storagePoolId
-// 		PropertyBuilder().name("proxyHostId").value(proxyHostIdFull).build(), // proxyHostId
-// 		PropertyBuilder().name("vCenter").value(vcenter).build(),
-// 		PropertyBuilder().name("esx").value(esx).build(),
-// 		PropertyBuilder().name("dataCenter").value(dataCenter).build(),
-// 		PropertyBuilder().name("verifySSL").value(false.toString()).build(),
-// 	)
-// }
+
+fun ProvidersEntity.toExternalHostProviderVo(): ExternalHostProviderVo = ExternalHostProviderVo.builder {
+	id { id.toString() }
+	name { name }
+	description { description }
+	url { url }
+	providerType { providerType }
+	authRequired { authRequired }
+	authUsername { authUsername }
+	authPassword { authPassword }
+	createDate { createDate }
+	updateDate { updateDate }
+	additionalProperties { additionalProperties }
+}
+fun List<ProvidersEntity>.toExternalHostProviderVos(): List<ExternalHostProviderVo> =
+	this.map { it.toExternalHostProviderVo() }
+
+
+fun AdditionalProperties4Vmware.toPropertyBuildersFromAdditionalProperties4Vmware(): List<Property> {
+	val props = mutableListOf<Property>()
+
+	listOf(
+		// "storagePoolId" to storagePoolIdFull,
+		// "proxyHostId" to proxyHostIdFull,
+		"vCenter" to vcenter,
+		"esx" to esx,
+		"dataCenter" to dataCenter,
+	).forEach { (key, value) ->
+		if (!value.isNullOrBlank()) {
+			props.add(PropertyBuilder().name(key).value(value).build())
+		}
+	}
+
+	props.add(
+		PropertyBuilder().name("verifySSL").value(verifySSL.toString()).build()
+	)
+
+	return props
+}
+
+
 
 //endregion: ProviderEntity

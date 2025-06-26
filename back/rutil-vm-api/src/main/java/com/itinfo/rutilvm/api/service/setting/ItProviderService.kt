@@ -2,16 +2,26 @@ package com.itinfo.rutilvm.api.service.setting
 
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
+import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
+import com.itinfo.rutilvm.api.model.setting.toAddExternalHostProviderVo
+import com.itinfo.rutilvm.api.model.setting.toAddHostProvider
+import com.itinfo.rutilvm.api.model.setting.toEditExternalHostProviderVo
 import com.itinfo.rutilvm.api.repository.engine.ProvidersRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.ProvidersEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toExternalHostProviderVo
+import com.itinfo.rutilvm.api.repository.engine.entity.toExternalHostProviderVos
 import com.itinfo.rutilvm.api.repository.engine.entity.toProviderVo
 import com.itinfo.rutilvm.api.repository.engine.entity.toProviderVos
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 import com.itinfo.rutilvm.common.toUUID
+import com.itinfo.rutilvm.util.ovirt.addExternalHostProvider
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import com.itinfo.rutilvm.util.ovirt.removeExternalHostProvider
+import com.itinfo.rutilvm.util.ovirt.updateExternalHostProvider
+import org.ovirt.engine.sdk4.types.ExternalHostProvider
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -21,28 +31,47 @@ interface ItProviderService {
 	 * [ItProviderService.findAll]
 	 * 공급자 목록
 	 *
-	 * @return List<[ProviderVo]> 공급자 목록
+	 * @return List<[ExternalHostProviderVo]> 공급자 목록
 	 */
 	@Throws(Error::class)
-	fun findAll(): List<ProviderVo>
+	fun findAll(): List<ExternalHostProviderVo>
 	/**
 	 * [ItProviderService.findOne]
 	 * 공급자
 	 *
 	 * @param providerId [String]
-	 * @return [ProviderVo] 공급자
+	 * @return [ExternalHostProviderVo] 공급자
 	 */
 	@Throws(Error::class)
-	fun findOne(providerId: String): ProviderVo?
+	fun findOne(providerId: String): ExternalHostProviderVo?
 	/**
 	 * [ItProviderService.add]
 	 * 공급자 생성
 	 *
-	 * @param providerVo [ProviderVo]
-	 * @return [ProviderVo]?
+	 * @param externalHostProviderVo [ExternalHostProviderVo]
+	 * @return [ExternalHostProviderVo]?
 	 */
 	@Throws(Error::class)
-	fun add(providerVo: ProviderVo): ProviderVo?
+	fun add(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo?
+	/**
+	 * [ItProviderService.update]
+	 * 공급자 편집
+	 *
+	 * @param externalHostProviderVo [ExternalHostProviderVo]
+	 * @return [ExternalHostProviderVo]?
+	 */
+	@Throws(Error::class)
+	fun update(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo?
+	/**
+	 * [ItProviderService.remove]
+	 * 공급자 삭제
+	 *
+	 * @param externalHostProviderId [String]
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun remove(externalHostProviderId: String): Boolean
+
 }
 
 @Service
@@ -51,25 +80,45 @@ class ProviderServiceImpl (
 	@Autowired private lateinit var rProvider: ProvidersRepository
 
 	@Throws(Error::class)
-	override fun findAll(): List<ProviderVo> {
+	override fun findAll(): List<ExternalHostProviderVo> {
 		log.info("findAll ...")
 		val res: List<ProvidersEntity> = rProvider.findAll()
-		return res.toProviderVos()
+		return res.toExternalHostProviderVos()
 	}
 
 	@Throws(Error::class)
-	override fun findOne(providerId: String): ProviderVo? {
+	override fun findOne(providerId: String): ExternalHostProviderVo? {
 		log.info("findOne ...")
-		val res: ProvidersEntity? = rProvider.findById(providerId.toUUID()).get()
-		return res?.toProviderVo()
+		val res: ProvidersEntity = rProvider.findById(providerId.toUUID()).get()
+		return res.toExternalHostProviderVo()
 	}
 
 	@Throws(Error::class)
-	override fun add(providerVo: ProviderVo): ProviderVo? {
-		// log.info("add ...{}", providerVo)
-		// val res: List<ProvidersEntity> = providers.findAll()
-		// return res.toProviderVos()
-		TODO("")
+	override fun add(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo? {
+		log.info("add ...{}", externalHostProviderVo)
+		val addProvider: ExternalHostProvider? = conn.addExternalHostProvider(
+			externalHostProviderVo.toAddExternalHostProviderVo()
+		).getOrNull()
+
+
+		val res: ProvidersEntity? = addProvider?.id()?.let { rProvider.findById(it.toUUID()).get() }
+		return res?.toExternalHostProviderVo()
+	}
+
+	@Throws(Error::class)
+	override fun update(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo? {
+		val updateProvider: ExternalHostProvider? = conn.updateExternalHostProvider(
+			externalHostProviderVo.toEditExternalHostProviderVo()
+		).getOrNull()
+
+		val res: ProvidersEntity? = updateProvider?.id()?.let { rProvider.findById(it.toUUID()).get() }
+		return res?.toExternalHostProviderVo()
+	}
+
+	@Throws(Error::class)
+	override fun remove(externalHostProviderId: String): Boolean {
+		val res: Result<Boolean> = conn.removeExternalHostProvider(externalHostProviderId)
+		return res.isSuccess
 	}
 
 	companion object {

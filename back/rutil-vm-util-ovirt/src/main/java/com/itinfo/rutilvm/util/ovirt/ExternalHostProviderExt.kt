@@ -38,13 +38,37 @@ fun Connection.findExternalHostProvider(externalHostProviderId: String): Result<
 }
 
 fun Connection.addExternalHostProvider(externalHostProvider: ExternalHostProvider): Result<ExternalHostProvider?> = runCatching {
-	val externalAdd = this.srvExternalHostProviders().add().provider(externalHostProvider).send().provider()
+	val externalAdd: ExternalHostProvider =
+		this.srvExternalHostProviders().add().provider(externalHostProvider).send().provider() ?: throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toError()
 
-	externalAdd ?: throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toError()
+	externalAdd
 }.onSuccess {
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("생성", it.id())
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("생성", it)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.updateExternalHostProvider(externalHostProvider: ExternalHostProvider): Result<ExternalHostProvider?> = runCatching {
+	val externalUpdate: ExternalHostProvider =
+		this.srvExternalHostProvider(externalHostProvider.id()).update().provider(externalHostProvider).send().provider() ?: throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toError()
+
+	externalUpdate
+}.onSuccess {
+	Term.EXTERNAL_HOST_PROVIDER.logSuccess("편집", it.id())
+}.onFailure {
+	Term.EXTERNAL_HOST_PROVIDER.logFail("편집", it)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.removeExternalHostProvider(externalHostProviderId: String): Result<Boolean> = runCatching {
+	this.srvExternalHostProvider(externalHostProviderId).remove().send()
+
+	true
+}.onSuccess {
+	Term.EXTERNAL_HOST_PROVIDER.logSuccess("삭제", externalHostProviderId)
+}.onFailure {
+	Term.EXTERNAL_HOST_PROVIDER.logFail("삭제", it, externalHostProviderId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

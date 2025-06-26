@@ -117,8 +117,8 @@ class ProvidersEntity(
  * Vmware 외부공급자 기타 속성
  */
 class AdditionalProperties4Vmware(
-	@SerializedName("storagePoolId") val storagePoolId: List<Any>? = emptyList(),
-	@SerializedName("proxyHostId") val proxyHostId: String? = "",
+	@SerializedName("storagePoolId") val _storagePoolId: List<Any>? = emptyList(),
+	@SerializedName("proxyHostId") val _proxyHostId: List<Any>? = emptyList(),
 	@SerializedName("vCenter") val vcenter: String? = "",
 	@SerializedName("esx") val esx: String? = "",
 	@SerializedName("dataCenter") val dataCenter: String? = "",
@@ -127,9 +127,18 @@ class AdditionalProperties4Vmware(
 	override fun toString(): String =
 		gson.toJson(this@AdditionalProperties4Vmware)
 
+	val storagePoolId: String			get() =
+		if (_storagePoolId.isNullOrEmpty()) "" else (gson.fromJson<AdditionalPropertiesUUIDWrapper>(_storagePoolId[1].toString())).uuid
+	val storagePoolIdFull: String		get() =
+		if (_storagePoolId.isNullOrEmpty()) "null" else ("[\"org.ovirt.engine.core.compat.Guid\", {\"uuid\": \"${storagePoolId}\"}]")
+	val proxyHostId: String 			get() =
+		if (_proxyHostId.isNullOrEmpty()) "" else (gson.fromJson<AdditionalPropertiesUUIDWrapper>(_proxyHostId[1].toString())).uuid
+	val proxyHostIdFull: String 		get() =
+		if (_proxyHostId.isNullOrEmpty()) "null" else ("[\"org.ovirt.engine.core.compat.Guid\", {\"uuid\": \"${proxyHostId}\"}]")
+
 	class Builder {
 		private var bStoragePoolId: List<Any>? = emptyList(); fun storagePoolId(block: () -> List<Any>?) { bStoragePoolId = block() ?: emptyList() }
-		private var bProxyHostId: String? = ""; fun proxyHostId(block: () -> String?) { bProxyHostId = block() ?: "" }
+		private var bProxyHostId: List<Any>? = emptyList(); fun proxyHostId(block: () -> List<Any>?) { bProxyHostId = block() ?: emptyList() }
 		private var bVcenter: String? = ""; fun vcenter(block: () -> String?) { bVcenter = block() ?: "" }
 		private var bEsx: String? = ""; fun esx(block: () -> String?) { bEsx = block() ?: "" }
 		private var bDataCenter: String? = ""; fun dataCenter(block: () -> String?) { bDataCenter = block() ?: "" }
@@ -142,3 +151,9 @@ class AdditionalProperties4Vmware(
 	}
 }
 
+data class AdditionalPropertiesUUIDWrapper(
+	@SerializedName("uuid") val uuid: String = "",
+): Serializable {
+	override fun toString(): String =
+		gson.toJson(this@AdditionalPropertiesUUIDWrapper)
+}

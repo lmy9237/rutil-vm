@@ -5,12 +5,13 @@ import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmwa
 import com.itinfo.rutilvm.api.repository.engine.entity.toPropertyBuildersFromAdditionalProperties4Vmware
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
+import org.ovirt.engine.sdk4.internal.containers.ExternalHostProviderContainer
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
 import java.io.Serializable
 import java.time.LocalDateTime
 
 /**
- * [ProviderVo]
+ * [ExternalHostProviderVo]
  *
  * @property id [String]
  * @property name [String]
@@ -22,19 +23,9 @@ import java.time.LocalDateTime
  * @property authPassword [String]
  * @property createDate [LocalDateTime]
  * @property updateDate [LocalDateTime]
- * @property customProperties [String]
- * @property tenantName [String]
- * @property pluginType [String]
- * @property authUrl [String]
  * @property additionalProperties [String]
- * @property readOnly [Boolean]
- * @property isUnmanaged [Boolean]
- * @property autoSync [Boolean]
- * @property userDomainName [String]
- * @property projectName [String]
- * @property projectDomainName [String]
  */
-class ProviderVo(
+class ExternalHostProviderVo(
 	val id: String = "",
 	val name: String = "",
 	val description: String = "",
@@ -45,17 +36,7 @@ class ProviderVo(
 	var authPassword: String? = "",
 	val createDate: LocalDateTime = LocalDateTime.now(),
 	var updateDate: LocalDateTime? = null,
-	var customProperties: String? = "",
-	var tenantName: String? = "",
-	var pluginType: String? = "",
-	var authUrl: String? = "",
 	var additionalProperties: AdditionalProperties4Vmware? = null,
-	var readOnly: Boolean = false,
-	var isUnmanaged: Boolean = false,
-	var autoSync: Boolean = false,
-	var userDomainName: String? = "",
-	var projectName: String? = "",
-	var projectDomainName: String? = "",
 ): Serializable {
 	val providerTypeLocalizationKey: String
 		get() = providerType?.localizationKey ?: ""
@@ -86,48 +67,35 @@ class ProviderVo(
 		private var bAuthPassword: String? = "";fun authPassword(block: () -> String?) { bAuthPassword = block() ?: "" }
 		private var bCreateDate: LocalDateTime = LocalDateTime.now();fun createDate(block: () -> LocalDateTime?) { bCreateDate = block() ?: LocalDateTime.now() }
 		private var bUpdateDate: LocalDateTime? = null;fun updateDate(block: () -> LocalDateTime?) { bUpdateDate = block() }
-		private var bCustomProperties: String? = "";fun customProperties(block: () -> String?) { bCustomProperties = block() ?: "" }
-		private var bTenantName: String? = "";fun tenantName(block: () -> String?) { bTenantName = block() ?: "" }
-		private var bPluginType: String? = "";fun pluginType(block: () -> String?) { bPluginType = block() ?: "" }
-		private var bAuthUrl: String? = "";fun authUrl(block: () -> String?) { bAuthUrl = block() ?: "" }
 		private var bAdditionalProperties: AdditionalProperties4Vmware? = null;fun additionalProperties(block: () -> AdditionalProperties4Vmware?) { bAdditionalProperties = block() }
-		private var bReadOnly: Boolean = false;fun readOnly(block: () -> Boolean?) { bReadOnly = block() ?: false }
-		private var bIsUnmanaged: Boolean = false;fun isUnmanaged(block: () -> Boolean?) { bIsUnmanaged = block() ?: false }
-		private var bAutoSync: Boolean = false;fun autoSync(block: () -> Boolean?) { bAutoSync = block() ?: false }
-		private var bUserDomainName: String? = "";fun userDomainName(block: () -> String?) { bUserDomainName = block() ?: "" }
-		private var bProjectName: String? = "";fun projectName(block: () -> String?) { bProjectName = block() ?: "" }
-		private var bProjectDomainName: String? = "";fun projectDomainName(block: () -> String?) { bProjectDomainName = block() ?: "" }
-		fun build(): ProviderVo = ProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bCustomProperties, bTenantName, bPluginType, bAuthUrl, bAdditionalProperties, bReadOnly, bIsUnmanaged, bAutoSync, bUserDomainName, bProjectName, bProjectDomainName)
+		fun build(): ExternalHostProviderVo = ExternalHostProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bAdditionalProperties,)
 	}
 
 	companion object {
-		inline fun builder(block: Builder.() -> Unit): ProviderVo = Builder().apply(block).build()
+		inline fun builder(block: Builder.() -> Unit): ExternalHostProviderVo = Builder().apply(block).build()
 	}
 }
 
 
-fun ProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
-	// val props = listOf(
-	// 	PropertyVo("type", "vmware" },
-	// 	PropertyVo("vcenter", "192.168.0.117"),
-	// 	PropertyVo("esx", "192.168.0.411"),
-	// 	PropertyVo("dataCenter", "Datacenter/NFO"),
-	// 	PropertyVo("verifySSL", "false")
-	// )
+fun ExternalHostProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
+	// val container = ExternalHostProviderContainer()
+	// container.name()
 
 	return ExternalHostProviderBuilder()
 		.name(name)
 		.description(description)
 		.url(url)
+		.requiresAuthentication(true)
 		.username(authUsername)
 		.password(authPassword)
 		.properties(additionalProperties?.toPropertyBuildersFromAdditionalProperties4Vmware())
+
 }
 
-fun ProviderVo.toAddHostProvider(): ExternalHostProvider =
+fun ExternalHostProviderVo.toAddExternalHostProviderVo(): ExternalHostProvider =
 	toExternalHostProviderBuilder().build()
 
-fun ProviderVo.toEditHostProvider(): ExternalHostProvider =
+fun ExternalHostProviderVo.toEditExternalHostProviderVo(): ExternalHostProvider =
 	toExternalHostProviderBuilder()
 		.id(id)
 		.build()
