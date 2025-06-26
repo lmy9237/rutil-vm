@@ -836,7 +836,7 @@ const TableColumnsInfo = {
     { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'100px' },
   ],
   PROVIDER: [
-    { accessor: 'name',        header: Localization.kr.NAME,   clickable: false },
+    { accessor: '_name',        header: Localization.kr.NAME,   clickable: false },
     { accessor: 'type',        header: Localization.kr.TYPE,    clickable: false },
     { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
     { accessor: 'providerUrl', header: "공급자 URL", clickable: false },

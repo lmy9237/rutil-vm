@@ -77,7 +77,7 @@ const StorageTree = ({}) => {
               onChevronClick={() => toggleDataCentersStorage(dc?.id)}
               onClick={() => {
                 setDatacentersSelected(dc)
-                dc?.id && navigate(`/storages/datacenters/${dc?.id}/clusters`);
+                dc?.id && navigate(`/storages/datacenters/${dc?.id}`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();

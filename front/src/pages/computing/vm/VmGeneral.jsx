@@ -348,11 +348,11 @@ const VmGeneral = ({
       <GeneralLayout
         top={
         <>
-          <div className=" grid-col-span-2 vm-box-default gap-8">
+          <div className=" grid-col-span-2 vm-box-default">
             <h3 className="box-title">게스트 운영체제</h3>
-            <hr className="w-full" />
+            <hr className="w-full"/>
             
-            <div className="vm-info-vnc-group">
+            <div className="vm-info-vnc-group ">
               <div className="vm-info-vnc v-center gap-8">
                 {
                   (vm?.running && vncScreenshotDataUrl(vmId) === "")

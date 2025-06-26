@@ -36,6 +36,7 @@ import DiskInfo         from "@/pages/storage/disk/DiskInfo";
 import Event            from "@/pages/event/Event";
 import SettingInfo      from "@/pages/setting/SettingInfo";
 import "./App.css";
+import SettingProvidersInfo from "./pages/setting/providers/SettingProvidersInfo";
 // import "./App-debug.css";
 
 const App = () => {
@@ -170,6 +171,8 @@ const App = () => {
 
               <Route path="events" element={<Event />} />
               <Route path="settings/:section" element={<SettingInfo />} />
+              <Route path="settings/provider/:id" element={<SettingProvidersInfo />} />
+              <Route path="settings/provider/:id/:section" element={<SettingProvidersInfo />} />
               {/* <Route path="error" element={<ErrorBoundary />} /> */}
             </Route>
           </Route>

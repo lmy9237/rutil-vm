@@ -68,7 +68,7 @@ const NetworkTree = ({}) => {
               onChevronClick={() => toggleOpenDataCentersNetwork(dc?.id)}
               onClick={() => {
                 setDatacentersSelected(dc);
-                dc?.id && navigate(`/networks/datacenters/${dc?.id}/clusters`);
+                dc?.id && navigate(`/networks/datacenters/${dc?.id}`);
               }}
               onContextMenu={(e) => {
                 e.preventDefault();

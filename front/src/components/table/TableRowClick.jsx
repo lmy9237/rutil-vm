@@ -36,6 +36,7 @@ const TableRowClick = ({
       disk: `/storages/disks/${id}`,
       network: `/networks/${id}`,
       vnicProfile: `/vnicProfiles/${id}/vms`,
+      provider:`/settings/provider/${id}`,
     };
 
     const path = paths[type];

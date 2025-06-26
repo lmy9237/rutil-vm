@@ -384,6 +384,18 @@ svg.btn { cursor: pointer; }
   color: inherit !important;
 }
 /*일반페이지*/
+.vm-box-default {
+  background: var(--color-white-1);
+  border: 1px solid var(--color-general-box);
+  padding: 16px;
+  border-radius: 2px;
+  display: flex;
+  min-height: 200px;
+  /* max-height: 350px; */
+  overflow: hidden;
+  padding-bottom: 2rem;
+  flex-direction: column;
+}
 .half-box {
   padding: 0 20px;
   display: flex;
@@ -406,6 +418,9 @@ svg.btn { cursor: pointer; }
 .box-content .info-table td
 {
   padding: 8px 0 !important;
+}
+.vm-detail-grid .info-table-wrapper th{
+  width: 150px;
 }
 .box-content {
   font-size: 14px;
