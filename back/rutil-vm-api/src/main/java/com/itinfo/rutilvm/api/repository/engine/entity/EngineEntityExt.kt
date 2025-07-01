@@ -561,6 +561,7 @@ fun VmEntity.toVmVo(): VmVo {
 		}
 		hostInCluster { entity.dedicatedVmForVds.isNullOrEmpty() }
 		startPaused { entity.isRunAndPause }
+		statusDetail { entity.pauseStatus }
 		storageErrorResumeBehaviour { entity.vmResumeBehavior }
 		usb { entity.usbPolicy?.isEnabled }
 		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }

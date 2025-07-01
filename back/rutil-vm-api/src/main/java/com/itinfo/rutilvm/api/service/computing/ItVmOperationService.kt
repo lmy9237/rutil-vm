@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.toStartOnceVm
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
@@ -30,6 +31,15 @@ interface ItVmOperationService {
 	 */
 	@Throws(Error::class, ItCloudException::class)
 	fun start(vmId: String): Boolean
+	/**
+	 * [ItVmOperationService.startOnce]
+	 * 가상머신 - 한번 실행
+	 *
+	 * @param vmVo [VmVo]
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class, ItCloudException::class)
+	fun startOnce(vmVo: VmVo): Boolean
 	/**
 	 * [ItVmOperationService.pause]
 	 * 가상머신 - 일시정지
@@ -141,6 +151,13 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	override fun start(vmId: String): Boolean {
 		log.info("start ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.startVm(vmId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class, ItCloudException::class)
+	override fun startOnce(vmVo: VmVo): Boolean {
+		log.info("startOnce ... vm: {}", vmVo.name)
+		val res: Result<Boolean> = conn.startOnceVm(vmVo.toStartOnceVm())
 		return res.isSuccess
 	}
 

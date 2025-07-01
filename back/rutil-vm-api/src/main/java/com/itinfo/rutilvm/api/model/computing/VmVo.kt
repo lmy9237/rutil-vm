@@ -21,6 +21,8 @@ import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmPauseStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VmPauseStatusB.none
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
@@ -63,9 +65,11 @@ import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.BiosBuilder
 import org.ovirt.engine.sdk4.builders.BootBuilder
 import org.ovirt.engine.sdk4.builders.BootMenuBuilder
+import org.ovirt.engine.sdk4.builders.CdromBuilder
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.CpuBuilder
 import org.ovirt.engine.sdk4.builders.CpuTopologyBuilder
+import org.ovirt.engine.sdk4.builders.FileBuilder
 import org.ovirt.engine.sdk4.builders.HighAvailabilityBuilder
 import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.InitializationBuilder
@@ -162,6 +166,8 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property fqdn [String]
  * @property nextRun [Boolean]
  * @property runOnce [Boolean]
+ * @property autoStartUp [Boolean]
+ * @property statusDetail [VmPauseStatusB]
  * @property upTime [String]
  * @property _creationTime [Date]
  * @property _startTime [Date]
@@ -170,7 +176,6 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property ipv6 List<[String]>
  * @property hostInCluster [Boolean]
  * @property hostVos List<[IdentifiedVo]>
- * @property autoStartUp [Boolean]
  * @property storageDomainVo [IdentifiedVo]
  * @property cpuProfileVo [IdentifiedVo]
  * @property cdRomVo [IdentifiedVo]
@@ -195,7 +200,6 @@ class VmVo (
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
 	val optimizeOption: VmTypeB? = VmTypeB.unknown, // VmType
-	// val biosType: String = "", // chipsetFirmwareType
 	val biosType: BiosTypeB? = BiosTypeB.cluster_default,
 	val biosBootMenu: Boolean = false,
 	val osType: VmOsType? = VmOsType.other,
@@ -240,6 +244,8 @@ class VmVo (
 	val fqdn: String = "",
 	val nextRun: Boolean = false,
 	val runOnce: Boolean = false,
+	val autoStartUp: Boolean = false,
+	val statusDetail: VmPauseStatusB? = none,
 	val timeElapsed: Long? = 0,
 	private val _creationTime: LocalDateTime? = null,
 	private val _startTime: LocalDateTime? = null,
@@ -248,7 +254,6 @@ class VmVo (
 	val ipv6: List<String> = listOf(),
 	val hostInCluster: Boolean = false,
 	val hostVos: List<IdentifiedVo> = listOf(),
-	val autoStartUp: Boolean = false,
 	val storageDomainVo: IdentifiedVo = IdentifiedVo(),
 	val cpuProfileVo: IdentifiedVo = IdentifiedVo(),
 	val cdRomVo: IdentifiedVo = IdentifiedVo(),
@@ -387,6 +392,8 @@ class VmVo (
 		private var bFqdn: String = ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
 		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
 		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
+		private var bAutoStartUp: Boolean = false; fun autoStartUp(block: () -> Boolean?) { bAutoStartUp = block() ?: false }
+		private var bStatusDetail: VmPauseStatusB? = none; fun statusDetail(block: () -> VmPauseStatusB?) { bStatusDetail = block() ?: none }
 		private var bTimeElapsed: Long? = 0L; fun timeElapsed(block: () -> Long?) { bTimeElapsed = block() ?: 0L }
 		private var bCreationTime: LocalDateTime? = null; fun creationTime(block: () -> LocalDateTime?) { bCreationTime = block() }
 		private var bStartTime: LocalDateTime? = null; fun startTime(block: () -> LocalDateTime?) { bStartTime = block() }
@@ -395,7 +402,6 @@ class VmVo (
 		private var bIpv6: List<String> = listOf(); fun ipv6(block: () -> List<String>?) { bIpv6 = block() ?: listOf() }
 		private var bHostInCluster: Boolean = false; fun hostInCluster(block: () -> Boolean?) { bHostInCluster = block() ?: false }
 		private var bHostVos: List<IdentifiedVo> = listOf(); fun hostVos(block: () -> List<IdentifiedVo>?) { bHostVos = block() ?: listOf() }
-		private var bAutoStartUp: Boolean = false; fun autoStartUp(block: () -> Boolean?) { bAutoStartUp = block() ?: false }
 		private var bStorageDomainVo: IdentifiedVo = IdentifiedVo(); fun storageDomainVo(block: () -> IdentifiedVo?) { bStorageDomainVo = block() ?: IdentifiedVo() }
 		private var bCpuProfileVo: IdentifiedVo = IdentifiedVo(); fun cpuProfileVo(block: () -> IdentifiedVo?) { bCpuProfileVo = block() ?: IdentifiedVo() }
 		private var bCdRomVo: IdentifiedVo = IdentifiedVo(); fun cdRomVo(block: () -> IdentifiedVo?) { bCdRomVo = block() ?: IdentifiedVo() }
@@ -409,7 +415,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bAutoStartUp, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
     }
 
     companion object {
@@ -831,6 +837,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 		TimeZoneBuilder().name(
 			if(osType?.isWindows == true) "GMT Standard Time"
 			else timeOffset
+			// Asia/Seoul   |    Korea Standard Time
 		)
 	)
 }
@@ -897,6 +904,18 @@ fun VmVo.toRegisterVm(): Vm {
 		.cluster(ClusterBuilder().id(this.clusterVo.id).build())
 		.build()
 }
+
+fun VmVo.toStartOnceVm(): Vm {
+	return VmBuilder()
+		.id(this.id)
+		.bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))
+		.cdroms(CdromBuilder().file(FileBuilder().id(this.cdRomVo.id)))
+		// .cdrom(CdromBuilder().file(FileBuilder().id(cdromId))).send().cdrom()
+		.build()
+}
+
+
+
 //endregion
 
 // CPU Topology 계산 최적화

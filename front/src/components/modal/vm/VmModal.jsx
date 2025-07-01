@@ -32,6 +32,7 @@ import VmDisk from './create/VmDisk';
 import VmSystem from './create/VmSystem';
 import VmInit from './create/VmInit';
 import VmHost from './create/VmHost';
+import VmConsole from "./create/VmConsole";
 import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
 import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
@@ -83,6 +84,13 @@ const hostForm = {
   // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
 };
 
+// 콘솔
+const cosoleForm = {
+  videoType: "",
+  graphicProtocol: "",
+  consoleDisconnet: ""
+};
+
 // 고가용성
 const haForm = {
   ha: false, // 고가용성(체크박스)
@@ -122,7 +130,8 @@ const VmModal = ({
   const tabs = useMemo(() => [
     { id: "common",    label: Localization.kr.GENERAL, onClick: () => setSelectedModalTab("common") },
     { id: "system",    label: Localization.kr.SYSTEM,  onClick: () => setSelectedModalTab("system") },
-    { id: "beginning", label: "초기 실행", onClick: () => setSelectedModalTab("beginning") },
+    { id: "beginning", label: "초기 실행",              onClick: () => setSelectedModalTab("beginning") },
+    { id: "console",   label: Localization.kr.CONSOLE, onClick: () => setSelectedModalTab("console") },
     { id: "host",      label: Localization.kr.HOST,    onClick: () => setSelectedModalTab("host") },
     { id: "ha",        label: Localization.kr.HA,      onClick: () => setSelectedModalTab("ha") },
     { id: "boot",      label: "부트 옵션", onClick: () => setSelectedModalTab("boot") },
@@ -131,6 +140,7 @@ const VmModal = ({
   const [formInfoState, setFormInfoState] = useState(infoform);
   const [formSystemState, setFormSystemState] = useState(systemForm);
   const [formCloudState, setFormCloudState] = useState(cloudForm);
+  const [formConsoleState, setFormConsoleState] = useState(cosoleForm);
   const [formHostState, setFormHostState] = useState(hostForm);
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
@@ -649,6 +659,12 @@ const VmModal = ({
               hosts={hosts}
               formHostState={formHostState}
               setFormHostState={setFormHostState}
+            />
+          )}
+          {selectedModalTab === "console" && (
+            <VmConsole
+              formConsoleState={formConsoleState}
+              setFormConsoleState={setFormConsoleState}
             />
           )}
           {selectedModalTab === "ha" && (

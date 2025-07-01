@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.OriginType
 import com.itinfo.rutilvm.api.ovirt.business.UsbPolicy
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmPauseStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
@@ -363,7 +364,9 @@ class VmEntity(
 	val dwhOsInfo: DwhOsinfoEntity? = null,
 	val ovirtGuestAgentStatus: Int? = null,
 	val parallelMigrations: Int? = null,
-	val pauseStatus: Int? = null,
+	@Column(name="pause_status", nullable=true)
+	private val _pauseStatus: Int? = -1,
+	// val pauseStatus: Int? = null,
 	val predefinedProperties: String = "",
 	val priority: Int? = null,
 	val providerId: UUID? = null,
@@ -482,6 +485,7 @@ class VmEntity(
 
 	val osType: VmOsType?					get() = dwhOsInfo?.toVmOsType()
 	val architecture: ArchitectureType? 	get() = ArchitectureType.forValue(_architecture)
+	val pauseStatus: VmPauseStatusB? 		get() = VmPauseStatusB.forValue(_pauseStatus)
 
 	val memSize: BigInteger?
 		get() = memSizeMb?.times(MEGABYTE_2_BYTE)

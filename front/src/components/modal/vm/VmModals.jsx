@@ -13,6 +13,7 @@ import VmImportModal from "./VmImportModal";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
 import DomainImportVmTemplateModal from "../domain/DomainImportVmTemplateModal";
+import VmStartOnceModal from "./VmStartOnceModal";
 
 /**
  * @name VmModals
@@ -88,6 +89,11 @@ const VmModals = ({
         onClose={() => closeModal(activeModal()[0])}     
         action={activeModal()[0]}
         data={vmsSelected}
+      />
+    ), startOnce: ( // 수정필요
+      <VmStartOnceModal key={"vm:startOnce"} isOpen={activeModal().includes("vm:startOnce")} 
+        onClose={() => closeModal("vm:startOnce")}
+        copyMode 
       />
     ),
   };

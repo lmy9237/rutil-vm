@@ -698,6 +698,7 @@ export const status2Icon = (
     // case "LOCKED":                                 iconDef = rvi16Lock();break;
 
     case "IN_PREVIEW":                             iconDef = <FontAwesomeIcon icon={faEye} color="#777" size="sm" />;break; // 임시
+    case "PAUSED":
     case "SUSPENDED":                              iconDef = rvi16Pause;break;
     case "NEXTRUN":                                iconDef = rvi16ExclamationMark();break;
     case "NON_RESPONSIVE":

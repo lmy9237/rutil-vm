@@ -127,6 +127,7 @@ const VmActionButtons = ({
       label: Localization.kr.START, 
       disabled: !(isDown || isPause || isMaintenance) 
     },
+    { type: "startOnce",  onClick: () => setActiveModal("vm:startOnce"),   label: `한번 ${Localization.kr.START}`,                          disabled: vmsSelected.length !== 1 || !(isDown || isPause || isMaintenance)  },
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },

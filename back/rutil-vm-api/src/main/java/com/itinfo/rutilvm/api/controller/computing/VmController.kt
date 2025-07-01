@@ -293,6 +293,33 @@ class VmController: BaseController() {
 		return ResponseEntity.ok(iVmOp.start(vmId))
 	}
 
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="가상머신 한번 실행",
+		notes="선택된 가상머신을 한번 실행한다(window 경우)"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmVo", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{vmId}/startOnce")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun startOnce(
+		@RequestBody vmVo: VmVo? = null,
+	): ResponseEntity<Boolean> {
+		if (vmVo == null)
+			throw ErrorPattern.VM_VO_INVALID.toException()
+		log.info("/computing/vms/{}/startOnce ... 가상머신 한번 시작", vmVo.name)
+		return ResponseEntity.ok(iVmOp.startOnce(vmVo))
+	}
+
+
+
 	@ApiOperation(
 		httpMethod="POST",
 		value="가상머신 일시정지",

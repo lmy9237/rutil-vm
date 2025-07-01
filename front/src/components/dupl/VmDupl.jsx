@@ -41,6 +41,7 @@ const VmDupl = ({
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
         {vm?.nextRun === true && status2Icon("NEXT_RUN")}
+        {(vm?.statusDetail === "noerr" || vm?.statusDetail === "none") ? "" : vm?.statusDetail}
       </div>
     ),
     iconSortKey: getStatusSortKey(vm?.status), 
