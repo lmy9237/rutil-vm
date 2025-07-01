@@ -263,7 +263,7 @@ const DiskModal = ({
             const domainObj = domains.find((d) => d.id === domainVo.id);
             if (!domainObj) return null;
             return (
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-500 f-end">
                 사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
               </div>
             );

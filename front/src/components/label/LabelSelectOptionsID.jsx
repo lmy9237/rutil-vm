@@ -26,10 +26,12 @@ const LabelSelectOptionsID = forwardRef(({
 }, ref) => {
 
   const OPTION_EMPTY = { id: placeholderValue, name: placeholderLabel }
-  const _options = [
-    OPTION_EMPTY,
-    ...options
-  ]
+  
+  // abc순
+  const _options = useMemo(() => {
+    const sorted = [...options].sort((a, b) => a.name.localeCompare(b.name));
+    return [OPTION_EMPTY, ...sorted];
+  }, [options]);
 
   const selectedLabel = useMemo(() => {
     if (loading) return <Loading />;

@@ -348,7 +348,7 @@ const TableColumnsInfo = {
     // { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
   ],
   HOSTS_FROM_NETWORK: [
-    { accessor: "icon",                 header: Localization.kr.STATUS,         clickable: false /* width: DEFAULT_WIDTH_ICON_COLUMN */ },
+    { accessor: "icon",                 header: Localization.kr.STATUS,         clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'host',                 header: Localization.kr.NAME,           clickable: false, width: '10%' },
     { accessor: 'cluster',              header: Localization.kr.CLUSTER,        clickable: true, width: '10%' },
     { accessor: 'dataCenter',           header: Localization.kr.DATA_CENTER,    clickable: true },
@@ -362,7 +362,7 @@ const TableColumnsInfo = {
     { accessor: 'totalTx',              header: Localization.kr.TOTAL_BYTE_TX,  clickable: false },
   ],
   HOSTS_DISCONNECT_FROM_NETWORK: [
-    { accessor: "icon",       header: Localization.kr.STATUS,       clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: "icon",       header: Localization.kr.STATUS,       clickable: false , width: 5 },
     { accessor: 'name',       header: Localization.kr.NAME,         clickable: false },
     { accessor: 'cluster',    header: Localization.kr.CLUSTER,      clickable: false },
     { accessor: 'dataCenter', header: Localization.kr.DATA_CENTER,  clickable: false },
@@ -596,7 +596,16 @@ const TableColumnsInfo = {
     { accessor: 'creationTime',   header: Localization.kr.DATE_CREATED, clickable: false },
     // { accessor: 'stopTime',     header: '중지 일자',                   clickable: false },
   ], 
-
+  
+  GET_IMPORT_VMS : [
+    { accessor: "clone",    header: "복제",            clickable: false },
+    { accessor: "name",     header: Localization.kr.NAME,  clickable: false },
+    { accessor: "source",   header: "소스",             clickable: false },
+    { accessor: "memory",   header: "메모리",           clickable: false },
+    { accessor: "cpu",      header: "CPU",              clickable: false },
+    { accessor: "arch",     header: Localization.kr.ARCH,  clickable: false },
+    { accessor: "disk",     header: "디스크",           clickable: false }
+  ],
   GET_DISK_TEMPLATES: [
     { accessor: 'alias',          header: Localization.kr.ALIAS,        clickable: true, width: '10%' },
     { accessor: 'virtualSize',    header: Localization.kr.SIZE_VIRTUAL, clickable: false },
@@ -852,6 +861,12 @@ const TableColumnsInfo = {
     { header: '네임스페이스', accessor: 'namespace', clickable: false, width:'8%'  },
     { header: Localization.kr.EMAIL, accessor: 'email', clickable: false },
     { header: '가입일자', accessor: 'createDate', clickable: false },
+  ],
+  SETTING_PROVIDER_TOKEN :[
+    { header: "UUID", accessor: "uuid", clickable: false },
+    { header: "유형", accessor: "type", clickable: false },
+    { header: "설명", accessor: "description", clickable: false },
+    { header: "생성일", accessor: "createdAt", clickable: false },
   ],
   // 활성사용사세션
   ACTIVE_USER_SESSION: [

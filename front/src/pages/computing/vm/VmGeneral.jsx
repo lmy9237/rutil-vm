@@ -404,7 +404,10 @@ const VmGeneral = ({
         }
       bottom={
         <>
-          <GeneralBoxProps title="가상머신 하드웨어">
+          <GeneralBoxProps
+            title="가상머신 하드웨어"
+            moreLink={`/computing/vms/${vmId}/disks`} 
+          >
             <InfoTable tableRows={hardwareTableRows} />
           </GeneralBoxProps>
 
@@ -412,7 +415,7 @@ const VmGeneral = ({
             <InfoTable tableRows={relatedTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="스냅샷" count={snapshotList.length}>
+          <GeneralBoxProps title="스냅샷" count={snapshotList.length}  moreLink={`/computing/vms/${vmId}/snapshots`} >
             <div className="box-content snapshots">
               <div
                 className="snapshot-add py-3 fs-13"

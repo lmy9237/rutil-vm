@@ -24,12 +24,13 @@
 // export default GeneralBoxProps;
 
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./GeneralBoxProps.css";
 
-const GeneralBoxProps = ({ title, icon, count, children }) => {
+const GeneralBoxProps = ({ title, icon, count, children, moreLink }) => {
   const contentRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const contentEl = contentRef.current;
@@ -39,9 +40,8 @@ const GeneralBoxProps = ({ title, icon, count, children }) => {
     }
   }, [children]);
 
-  const handleExpand = () => {
-    setIsExpanded(true);
-    setIsOverflow(false); // 버튼 숨기기
+  const handleMoreClick = () => {
+    if (moreLink) navigate(moreLink);
   };
 
   return (
@@ -50,19 +50,14 @@ const GeneralBoxProps = ({ title, icon, count, children }) => {
         {title}
         {icon && <span>{icon}</span>}
         {typeof count === "number" && (
-          <span className="count-badge">
-            {count}
-          </span>
+          <span className="count-badge">{count}</span>
         )}
       </h3>
       <hr className="w-full" />
-      <div
-        className={`box-content${isExpanded ? " expanded" : ""}`}
-        ref={contentRef}
-      >
+      <div className="box-content" ref={contentRef}>
         {children}
-        {isOverflow && !isExpanded && (
-          <div className="more-button" onClick={handleExpand}>
+        {isOverflow && moreLink && (
+          <div className="more-button" onClick={handleMoreClick}>
             + more
           </div>
         )}
@@ -72,3 +67,4 @@ const GeneralBoxProps = ({ title, icon, count, children }) => {
 };
 
 export default GeneralBoxProps;
+

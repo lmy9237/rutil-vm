@@ -12,6 +12,7 @@ import useGlobal from "@/hooks/useGlobal";
 import SettingProvidersGeneral from "./SettingProvidersGeneral";
 import SettingProvidersToken from "./SettingProvidersToken";
 import { useProvider } from "@/api/RQHook";
+import useUIState from "@/hooks/useUIState";
 
 /**
  * @name SettingInfo
@@ -23,6 +24,7 @@ import { useProvider } from "@/api/RQHook";
  */
 const SettingProvidersInfo = () => {
   const navigate = useNavigate();
+  const { activeModal, setActiveModal, } = useUIState()
   const { id: providerId, section } = useParams();
   const [activeTab, setActiveTab] = useState(section || "general");
   const { providersSelected, _setProvidersSelected } = useGlobal();
@@ -68,12 +70,18 @@ const SettingProvidersInfo = () => {
     return SectionComponent ? <SectionComponent /> : null;
   };
 
+  const sectionHeaderButtons = useMemo(() => [
+    { type: "update", onClick: () => setActiveModal("provider:update"), label: Localization.kr.UPDATE,  },
+    { type: "remove", onClick: () => setActiveModal("provider:remove"), label: Localization.kr.REMOVE,},
+  ], [])
+  
   return (
     <SectionLayout>
       <HeaderButton 
         title={"공급자 이름"}
         //title={provider?.name}
         titleIcon={rvi24Gear()}
+         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}

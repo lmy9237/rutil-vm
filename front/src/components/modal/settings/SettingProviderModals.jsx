@@ -32,7 +32,7 @@ const SettingProviderModals = ({
         onClose={() => closeModal("provider:remove")}
         label={Localization.kr.PROVIDER}
         data={providersSelected}
-        // api={useRemoveUser()}
+        // api={useRemoveUser()} // TODO api.필요
       />
     ),
   }
