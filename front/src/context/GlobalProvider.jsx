@@ -1,5 +1,10 @@
 // GlobalContext.jsx
 import React, { createContext, useState } from "react";
+import {
+  useDashboardVmCpu,
+  useDashboardVmMemory,
+  useDashboardStorageMemory,
+} from "@/api/RQHook";
 import Logger from "../utils/Logger";
 
 const GlobalContext = createContext();
@@ -211,6 +216,47 @@ export const GlobalProvider = ({ children }) => {
       _setCertsSelected([{...newV}]);
   }
 
+  const {
+    data: top3VmsCpuUsed = [],
+    status: vmCpuStatus,
+    isRefetching: isVmCpuRefetching,
+    refetch: vmCpuRefetch,
+    isError: isVmCpuError,
+    error: vmCpuError,
+    isLoading: isVmCpuLoading,
+  } = useDashboardVmCpu();
+  
+  /*
+  const [top3VmsCpuUsed, _setTop3VmsCpuUsed] = useState([]);
+  const setTop3VmsCpuUsed = (newV) => {
+    Logger.debug(`GlobalProvider > setTop3VmsCpuUsed ... newV: `, newV)
+    if (Array.isArray(newV))
+      _setTop3VmsCpuUsed([...newV]);
+    else if (!Array.isArray(newV) && typeof newV === "object")
+      _setTop3VmsCpuUsed([{...newV}]);
+  }
+  */
+
+  const {
+    data: top3VmsMemUsed = [],
+    status: vmMemoryStatus,
+    isRefetching: isVmMemoryRefetching,
+    refetch: vmMemoryRefetch,
+    isError: isVmMemoryError,
+    error: vmMemoryError,
+    isLoading: isVmMemoryLoading,
+  } = useDashboardVmMemory();
+
+  const {
+    data: top3StoragesUsed = [],
+    status: storageMemoryStatus,
+    isRefetching: isStorageMemoryRefetching,
+    refetch: storageMemoryRefetch,
+    isError: isStorageMemoryError,
+    error: storageMemoryError,
+    isLoading: isStorageMemoryeLoading,
+  } = useDashboardStorageMemory();
+
   const [sourceContext, _setSourceContext] = useState("all"); // "fromDomain" ... 
   const setSourceContext = (newV) => {
     Logger.debug(`GlobalProvider > setSourceContext ... newV: `, newV)
@@ -267,6 +313,9 @@ export const GlobalProvider = ({ children }) => {
       usersSelected, setUsersSelected,
       usersessionsSelected, setUsersessionsSelected,
       certsSelected, setCertsSelected,
+      top3VmsCpuUsed, /*setTop3VmsCpuUsed,*/
+      top3VmsMemUsed, /*setTop3VmsMemUsed,*/
+      top3StoragesUsed, /*setTop3StoragesUsed,*/
       sourceContext, setSourceContext,
       clearAllSelected,
     }}>

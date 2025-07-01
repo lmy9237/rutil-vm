@@ -16,13 +16,13 @@ import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import VmGeneral              from "./VmGeneral";
 import VmNics                 from "./VmNics";
+import VmNics2                from "./VmNics2";
 import VmSnapshots            from "./VmSnapshots";
 import VmApplications         from "./VmApplications";
 import VmHostDevices          from "./VmHostDevices";
 import VmEvents               from "./VmEvents";
 import VmDisks                from "./VmDisks";
 import "./Vm.css";
-import VmNics2 from "./VmNics2";
 
 /**
  * @name VmInfo

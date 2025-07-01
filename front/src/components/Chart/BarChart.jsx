@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import ReactApexChart from "react-apexcharts";
-import CONSTANT from "@/Constants";
+import { useNavigate }          from "react-router-dom";
+import ReactApexChart           from "react-apexcharts";
+import CONSTANT                 from "@/Constants";
+import useGlobal                from "@/hooks/useGlobal";
+import Logger                   from "@/utils/Logger";
 import "./BarChart.css";
-import { useNavigate } from "react-router-dom";
 
 const BarChart = ({ 
   names,
@@ -94,6 +96,10 @@ const BarChart = ({
     }));
   }, [names, percentages]);
 
+  const { 
+    top3VmsCpuUsed, top3VmsMemUsed, top3StoragesUsed
+  } = useGlobal()
+
   const [series, setSeries] = useState([{ data: percentages }]);
   const [chartOptions, setChartOptions] = useState({
     chart: {
@@ -101,18 +107,7 @@ const BarChart = ({
       redrawOnParentResize: true,
       offsetX: -15,
       events: {
-        dataPointSelection: (_, __, config) => {
-          const index = config.dataPointIndex;
-          const id = ids[index];
-          // if (!id) return;
-
-          
-          if (type === "domain") {
-            navigate(`/storages/domains/${id}`); 
-          } else {
-            navigate(`/computing/vms/${id}`);
-          }
-        },
+        dataPointSelection: onDataPointSelected,
       },
     },
     grid: {
@@ -211,6 +206,29 @@ const BarChart = ({
       },
     },
   });
+
+  function onDataPointSelected(_, __, opts) {
+    Logger.debug(`BarChart > onDataPointSelected ...`)
+
+    const srIndex = opts.seriesIndex;
+    const dpIndex = opts.dataPointIndex;
+    const d = opts.w.config.series[srIndex].data[dpIndex]
+    const id = ids[dpIndex];
+
+    Logger.debug(`BarChart ... id: ${d}, dpIndex: ${dpIndex}`)
+    const realIds = type === "cpu"
+      ? top3VmsCpuUsed 
+      : type === "memory" 
+        ? top3VmsMemUsed
+        : top3StoragesUsed
+    const realId = realIds[dpIndex]?.id;
+
+    if (type === "domain") {
+      navigate(`/storages/domains/${realId}`); 
+    } else {
+      navigate(`/computing/vms/${realId}`);
+    }
+  }
 
   return (
     <div className="f-center " style={{ marginTop: "-20px" }}>

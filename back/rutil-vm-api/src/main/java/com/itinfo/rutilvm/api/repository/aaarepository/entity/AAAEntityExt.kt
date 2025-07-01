@@ -13,7 +13,8 @@ fun OvirtUser.toUserVo(userDetail: UserDetail? = null, exposeDetail: Boolean = f
 	namespace { if (exposeDetail) userDetail?.namespace else "" }
 	email { if (exposeDetail) userDetail?.email else "" }
 	administrative { if (exposeDetail) userDetail?.lastAdminCheckStatus else false }
-	disabled { this@toUserVo.disabled != 0 }
+	disabled { this@toUserVo.disabled > 0 }
+	locked { this@toUserVo.locked }
 	consecutiveFailures { this@toUserVo.consecutiveFailures }
 	createDate { if (exposeDetail) userDetail?.createDate else null }
 	authProvider { if (exposeDetail) userDetail?.domain else "" }

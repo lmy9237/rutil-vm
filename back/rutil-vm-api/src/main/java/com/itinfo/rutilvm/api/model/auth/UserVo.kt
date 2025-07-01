@@ -29,6 +29,7 @@ class UserVo(
 	var email: String = "",
 	var authProvider: String = "",
 	var disabled: Boolean = false,
+	var locked: Boolean = false,
 	var consecutiveFailures: Int = OvirtUser.DEFAULT_CONSECUTIVE_FAILURE,
 	var principal: String = "",
 	var roleId: String = "",
@@ -49,13 +50,14 @@ class UserVo(
 		private var bEmail: String = "";fun email(block: () -> String?) { bEmail = block() ?: "" }
 		private var bAuthProvider: String = "";fun authProvider(block: () -> String?) { bAuthProvider = block() ?: "" }
 		private var bDisabled: Boolean = false;fun disabled(block: () -> Boolean?) { bDisabled = block() ?: false }
+		private var bLocked: Boolean = false;fun locked(block: () -> Boolean?) { bLocked = block() ?: false }
 		private var bConsecutiveFailures: Int = OvirtUser.DEFAULT_CONSECUTIVE_FAILURE;fun consecutiveFailures(block: () -> Int?) { bConsecutiveFailures = block() ?: OvirtUser.DEFAULT_CONSECUTIVE_FAILURE }
 		private var bPrincipal: String = "";fun principal(block: () -> String?) { bPrincipal = block() ?: "" }
 		private var bRoleId: String = "";fun roleId(block: () -> String?) { bRoleId = block() ?: "" }
 		private var bCreateDate: LocalDateTime? = null;fun createDate(block: () -> LocalDateTime?) { bCreateDate = block() }
 //		private var bLoginCount: Int = 0;fun loginCount(block: () -> Int?) { bLoginCount = block() ?: 0 }
 //		private var bBlockTime: String = "";fun blockTime(block: () -> String?) { bBlockTime = block() ?: "" }
-		fun build(): UserVo = UserVo(bUsername, bPassword, bAdministrative, bFirstName, bLastName, bNamespace, bEmail, bAuthProvider, bDisabled, bConsecutiveFailures, bPrincipal, bRoleId, bCreateDate)
+		fun build(): UserVo = UserVo(bUsername, bPassword, bAdministrative, bFirstName, bLastName, bNamespace, bEmail, bAuthProvider, bDisabled, bLocked, bConsecutiveFailures, bPrincipal, bRoleId, bCreateDate)
 	}
 	companion object {
 		@JvmStatic inline fun builder(block: Builder.() -> Unit): UserVo = Builder().apply(block).build()

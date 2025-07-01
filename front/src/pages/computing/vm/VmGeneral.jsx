@@ -265,8 +265,10 @@ const VmGeneral = ({
     ];
   }, [vm?.usageDto]);
 
-   const takeScreenshotFromRFB = (rfb) => {
+  const rfbRef = useRef(null);
+  const takeScreenshotFromRFB = useCallback((rfb) => {
     Logger.debug(`Vnc > takeScreenshotFromRFB ...`)
+    rfbRef.current = rfb
     if (rfb && rfb._display && rfb._display._target) {
       try {
         const canvas = rfb._display._target;
@@ -281,7 +283,14 @@ const VmGeneral = ({
         Logger.error(`VmVnc > takeScreenshotFromRFB ... error: ${error.message}`);
       }
     }
-  }
+  }, [vmId, rfbRef])
+
+  /* useEffect(() => {
+    Logger.debug(`VmGeneral > useEffect ... `)
+    if (vncScreenshotDataUrl(vmId) === "") {
+      takeScreenshotFromRFB(rfbRef.current)
+    }
+  }, [vmId, rfbRef]) */
 
   const handleStartConsole = useCallback(() => {
     Logger.debug(`VmOsIcon > handleStartConsole ... `);
@@ -290,7 +299,7 @@ const VmGeneral = ({
       return;
     }
     openNewTab("console", vmId); 
-  }, [vmId]);
+  }, [vmId, rfbRef]);
 
   return (
 /*    
@@ -356,7 +365,8 @@ const VmGeneral = ({
               <div className="vm-info-vnc v-center gap-8">
                 {
                   (vm?.running && vncScreenshotDataUrl(vmId) === "")
-                    ? <Vnc vmId={vmId}
+                    ? <Vnc                         
+                        vmId={vmId}
                         autoConnect={true} 
                         isPreview={true}
                         onSuccess={takeScreenshotFromRFB}
@@ -365,6 +375,7 @@ const VmGeneral = ({
                       ? <img src={vncScreenshotDataUrl(vmId)}
                           alt={`screenshot-${vmId}`} 
                           style={{cursor: 'pointer',width:'210px'}}
+                          loading="lazy"
                           onClick={handleStartConsole}
                         />
                       : <VmOsIcon dataUrl={vm?.urlLargeIcon}

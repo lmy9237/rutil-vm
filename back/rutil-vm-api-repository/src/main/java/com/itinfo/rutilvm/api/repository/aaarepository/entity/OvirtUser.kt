@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.common.gson
 import java.io.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Duration
 import java.time.Month
 import javax.persistence.*
 
@@ -29,7 +30,7 @@ class OvirtUser(
     var passwordValidTo: LocalDateTime? = LocalDateTime.now().plusYears(10),
     var loginAllowed: String,
     var nopasswd: Int,
-    var disabled: Int,
+	var disabled: Int,
     var unlockTime: LocalDateTime,
     var lastSuccessfulLogin: LocalDateTime,
     var lastUnsuccessfulLogin: LocalDateTime = DEFAULT_TIME_LOWEST,
@@ -43,6 +44,11 @@ class OvirtUser(
     var userDetail: UserDetail
     */
 ): Serializable {
+	val locked: Boolean			get() {
+		val current: LocalDateTime = LocalDateTime.now()
+		return unlockTime.isAfter(current)
+	}
+
 	override fun toString(): String =
 		gson.toJson(this)
 

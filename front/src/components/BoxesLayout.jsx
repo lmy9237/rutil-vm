@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   RVI16,
@@ -27,6 +27,7 @@ import BarChart               from "./Chart/BarChart";
 import SuperAreaChart         from "./Chart/SuperAreaChart";
 import Grid                   from "./Chart/Grid";
 import GridLegends            from "./Chart/GridLegends";
+import useGlobal from "@/hooks/useGlobal";
 
 /**
  * @name BoxesLayout
@@ -193,7 +194,7 @@ export const BoxChartSummary = ({
           <h1 className="fs-24">{availablePercentageComputed}%</h1>
           <span className="fs-12">{Localization.kr.AVAILABLE}</span>
         </div> */}
-        <div className="box-status v-start  ml-1.5 ">
+        <div className="box-status v-start ml-1.5 ">
           <div className="box-status-metric f-start gap-2">
             <span className="fs-14">{used}</span>
             <span className="fs-12">(사용 중 {unit})</span>
@@ -294,12 +295,14 @@ export const BoxChartAllGraphs = ({ type }) => {
       <div className="graphs-horizontal f-start w-full" style={{ height: `${heightGraphHoriz}px` }}>
         <RadialChartAll type={type} size={heightGraphHoriz} />
         <BarChartAll type={type} size={heightGraphHoriz} className="ml-auto"  
-          // title={
-          //   type === "cpu" ? "CPU Top3 가상머신" // "가상머신 CPU 사용률 Top3"
-          //   : type === "memory" ? " 메모리 Top3 가상머신" //"가상머신 메모리 사용률 Top3"
-          //   : type === "domain" ? " 스토리지 Top3" //"가상머신 스토리지 사용률 Top3"
-          //   : ""
-          // }
+        /*
+          title={
+            type === "cpu" ? "CPU Top3 가상머신" // "가상머신 CPU 사용률 Top3"
+            : type === "memory" ? " 메모리 Top3 가상머신" //"가상머신 메모리 사용률 Top3"
+            : type === "domain" ? " 스토리지 Top3" //"가상머신 스토리지 사용률 Top3"
+            : ""
+          }
+        */
         />
       </div>
       <WaveChartCpu type={type} heightInn={heightGraphRest} style={{ height: `${heightGraphRest}px` }} />
@@ -377,46 +380,6 @@ const BarChartAll = ({
   type, size, title,
   ...props
 }) => {
-  const {
-    data: vmCpu = [],
-    status: vmCpuStatus,
-    isRefetching: isVmCpuRefetching,
-    refetch: vmCpuRefetch,
-    isError: isVmCpuError,
-    error: vmCpuError,
-    isLoading: isVmCpuLoading,
-  } = useDashboardVmCpu();
-
-  const {
-    data: vmMemory = [],
-    status: vmMemoryStatus,
-    isRefetching: isVmMemoryRefetching,
-    refetch: vmMemoryRefetch,
-    isError: isVmMemoryError,
-    error: vmMemoryError,
-    isLoading: isVmMemoryLoading,
-  } = useDashboardVmMemory();
-  
-  const {
-    data: storageMemory = [],
-    status: storageMemoryStatus,
-    isRefetching: isStorageMemoryRefetching,
-    refetch: storageMemoryRefetch,
-    isError: isStorageMemoryError,
-    error: storageMemoryError,
-    isLoading: isStorageMemoryeLoading,
-  } = useDashboardStorageMemory();
-
-  const _data = useMemo(() => {
-    return type === "cpu" 
-      ? [...vmCpu] 
-      : type === "memory" 
-        ? [...vmMemory]
-        : type === "domain"
-          ? [...storageMemory]
-          : []
-  }, [type, vmCpu, vmMemory, storageMemory])
-
   const _keyPercent = useMemo(() => {
     return type === "cpu" 
     ? "cpuPercent"
@@ -433,15 +396,14 @@ const BarChartAll = ({
       }}
     >
       {title && (
-          <div className="bar-chart-title fs-12 fw-500 w-full">
-            {title}
-          </div>
+        <div className="bar-chart-title fs-12 fw-500 w-full">
+          {title}
+        </div>
       )}
       <BarChartWrapper 
-        data={_data}
         keyName="name"
         keyPercent={_keyPercent}
-         type={type}  
+        type={type}  
         {...props}
       />
     </div>
@@ -480,22 +442,38 @@ const WaveChartCpu = ({
 }
 
 const BarChartWrapper = ({ 
-  data, 
   keyName, 
   keyPercent,
   type,
   ...props
 }) => {
- const names = useMemo(() => data.map((e) => e[keyName]), [data, keyName]);
-  const percentages = useMemo(() => data.map((e) => e[keyPercent]), [data, keyPercent]);
-  const ids = useMemo(() => {
-    const originalIds = data.map((e) => e.id); 
+
+  const {
+    top3VmsCpuUsed,
+    top3VmsMemUsed,
+    top3StoragesUsed
+  } = useGlobal()
+  
+  const _data = useMemo(() => {
+    return type === "cpu" 
+      ? [...top3VmsCpuUsed] 
+      : type === "memory" 
+        ? [...top3VmsMemUsed]
+        : type === "domain"
+          ? [...top3StoragesUsed]
+          : []
+  }, [type, top3VmsCpuUsed, top3VmsMemUsed, top3StoragesUsed])
+
+  const names = useMemo(() => _data.map((e) => e[keyName]), [_data, keyName]);
+  const percentages = useMemo(() => _data.map((e) => e[keyPercent]), [_data, keyPercent]);
+  const ids = () => {
+    const originalIds = _data.map((e) => e.id); 
     const padded = [...originalIds];
     while (padded.length < 3) {
       padded.push(`placeholder-${padded.length}`);
     }
     return padded;
-  }, [data]);
+  };
 
   // ✅ 타이틀 텍스트 조건
   const title = useMemo(() => {
@@ -510,14 +488,13 @@ const BarChartWrapper = ({
     <>
       <div style={{ position: "relative" }}>
         <div style={{ top:"2px", left:"15px" }}>{title}</div>
-      
-      <BarChart
-        names={names}
-        percentages={percentages}
-        ids={ids}
-        type={type}
-        {...props}
-      />
+        <BarChart
+          names={names}
+          percentages={percentages}
+          ids={ids}
+          type={type}
+          {...props}
+        />
       </div>
     </>
   );

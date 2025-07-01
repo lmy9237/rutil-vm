@@ -292,7 +292,10 @@ class OvirtUserServiceImpl(
 		log.info("update ... username: {}, userVo: {}", username, userVo)
 		val user2Update: OvirtUser = findOneAAA(username).apply {
 			disabled = if (userVo?.disabled == true) 1 else 0
-			if (userVo?.disabled == false) consecutiveFailures = 0
+			if (userVo?.disabled == false) {
+				consecutiveFailures = 0
+				unlockTime = OvirtUser.DEFAULT_TIME_LOWEST
+			}
 		}
 		val resUserUpdated: OvirtUser = ovirtUsers.save(user2Update)
 

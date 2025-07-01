@@ -3264,9 +3264,7 @@ const ApiManager = {
     method: "GET",  
     url: ENDPOINTS.FIND_PROVIDER(providerId), 
   }),
-
   //#endregion: provider
-
 
 
   //#region: User

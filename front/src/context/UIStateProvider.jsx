@@ -76,10 +76,10 @@ export const UIStateProvider = ({ children }) => {
       const diff = Math.abs(currentDate - dateCreated);
       Logger.debug(`UIStateProvider > vncScreenshotDataUrl ... currentDate: ${currentDate.toJSON()}, dateCreated: ${dateCreated.toJSON()}, diff: ${diff}`)
       const seconds = Math.floor((diff/1000)); 
-      if (seconds > 10) { // 10초 지날 때 마다 새로운 값으로 갱신
+      /* if (seconds > 10) { // 10초 지날 때 마다 새로운 값으로 갱신
         clearVncScreenshotDataUrl(vmId)
         return ""
-      }
+      } */
     }
     return itemSelected?.url || ""
   }
