@@ -19,6 +19,7 @@ const DataCenterGeneral = ({ datacenterId }) => {
   const { data: datacenter } = useDataCenter(datacenterId);
 
 const tableRows = [
+  { label: "ID", value: datacenter?.id },
   { label: Localization.kr.NAME, value: datacenter?.name },
   { label: Localization.kr.DESCRIPTION, value: datacenter?.description },
   { label: Localization.kr.CLUSTER, value: datacenter?.clusterVos?.length ?? 0 },

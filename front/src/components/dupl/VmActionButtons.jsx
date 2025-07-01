@@ -106,7 +106,7 @@ const VmActionButtons = ({
   ];
 
   const consoleActions = [
-    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "noVNC",           disabled: !allUp }, 
+    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "웹콘솔 (noVNC)",           disabled: !allUp }, 
     { type: "remoteviewer",   onClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트", disabled: !allUp },
   ]
   

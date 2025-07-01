@@ -116,6 +116,7 @@ const HostGeneral = ({
   // ]), [tabs, activeTab])
   
   const systemTableRows = [
+    { label: "ID", value: host?.id },
     { label: `${Localization.kr.HOST} ${Localization.kr.NAME}/IP`, value: host?.name },
     { label: `부팅${Localization.kr.TIME} (${Localization.kr.UP_TIME})`, value: `${host?.bootingTime === "1970. 01. 01. 09:00:00" ? "해당없음": host?.bootingTime} (${host?.upTime})` },
     { label: `활성 ${Localization.kr.VM}`, value: host?.vmSizeVo?.upCnt },

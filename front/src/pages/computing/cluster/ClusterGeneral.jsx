@@ -56,6 +56,7 @@ const ClusterGeneral = ({
   ], []);
 
   const tableRows = [
+    { label: "ID", value: cluster?.id },
     { label: Localization.kr.NAME, value: cluster?.name },
     { label: Localization.kr.DESCRIPTION, value: cluster?.description },
     { label: Localization.kr.DATA_CENTER, value: cluster?.dataCenterVo?.name },

@@ -47,7 +47,8 @@ enum class VmOsType(
 	rhel_9x64(34, "Red Hat Enterprise Linux 9.x x64"),
 	rhel_core_os(35, "Red Hat Enterprise Linux CoreOS"),
 	windows_11(36, "Windows 11"),
-	windows_2012(37, "Windows 2022"),
+	windows_2022(37, "Windows 2022"),
+	windows_2025(38, "Windows 2025"), // TODO: 임의로 등록한 값이며, 차후 oVirt에서 갱신 할 시 값 맞춰줘야 함.
 	/*
 	other_2(1001, "other2", "Other OS"), // TODO: 왜 있는지 모르겠음
 	linux_2(1002, "linux2", "Linux"), // TODO: 왜 있는지 모르겠음
@@ -102,9 +103,10 @@ enum class VmOsType(
 			this@VmOsType == windows_2016x64 ||
 			this@VmOsType == windows_2019x64 ||
 			this@VmOsType == windows_11 ||
-			this@VmOsType == windows_2012
+			this@VmOsType == windows_2022 ||
+			this@VmOsType == windows_2025
 
-	companion object {
+			companion object {
 		private val valueMapping: MutableMap<Int, VmOsType> = ConcurrentHashMap<Int, VmOsType>()
 		private val codeMapping: MutableMap<String, VmOsType> = ConcurrentHashMap<String, VmOsType>()
 		init {

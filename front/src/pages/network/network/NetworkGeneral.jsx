@@ -27,8 +27,8 @@ const NetworkGeneral = ({
   const { data: network } = useNetwork(networkId);
 
   const tableRows = [
-    { label: Localization.kr.NAME, value: network?.name },
     { label: "ID", value: network?.id },
+    { label: Localization.kr.NAME, value: network?.name },
     { label: Localization.kr.DESCRIPTION, value: network?.description },
     { label: "VDSM 이름", value: network?.vdsmName },
     { label: `${Localization.kr.VM} 네트워크`, value: network?.usage?.vm ? Localization.kr.YES : Localization.kr.NO },

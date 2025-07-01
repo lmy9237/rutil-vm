@@ -20,6 +20,7 @@ import {
 import VmGeneralBarChart          from "@/pages/computing/vm/VmGeneralBarChart";
 import {
   useVm,
+  useVmScreenshot,
   useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useSnapshotsFromVM,
@@ -54,12 +55,17 @@ const VmGeneral = ({
     clustersSelected, setClustersSelected,
     setHostsSelected
   } = useGlobal()
+
   const {
     data: vm,
     isLoading: isVmLoading,
     isError: isVmError,
     isSuccess: isVmSuccess,
   } = useVm(vmId);
+
+  const {
+    data: vmScreenshot,
+  } = useVmScreenshot(vmId);
 
   const { //디스크목록
     data: disks = [],
@@ -102,6 +108,7 @@ const VmGeneral = ({
 
   // 게스트 운영 체제
   const generalTableRows = [
+    { label: "ID", value: vm?.id },
     { label: Localization.kr.NAME, value: vm?.name },
     { 
       label: Localization.kr.STATUS, 
@@ -115,7 +122,7 @@ const VmGeneral = ({
     { label: Localization.kr.DESCRIPTION, value: vm?.description },
   ];
 
-  //가상머신 하드웨어
+  // 가상머신 하드웨어
   const hardwareTableRows = [
     { 
       label: "최적화 옵션", 
@@ -248,19 +255,11 @@ const VmGeneral = ({
 
     return [
       {
-        label: "CPU",
-        value: cpu,
-        description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
-      },
-      {
-        label: "메모리",
-        value: memory,
-        description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
-      },
-      {
-        label: "네트워크",
-        value: network,
-        description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
+        label: "CPU", value: cpu, description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
+      }, {
+        label: Localization.kr.MEMORY, value: memory, description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
+      }, {
+        label: Localization.kr.NETWORK, value: network, description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
       }
     ];
   }, [vm?.usageDto]);
@@ -300,6 +299,15 @@ const VmGeneral = ({
     }
     openNewTab("console", vmId); 
   }, [vmId, rfbRef]);
+
+  /*
+  useEffect(() => {
+    Logger.debug(`VmGeneral > useEffect ... checking if vm's running`)
+    if (!vm?.running) {
+      clearVncScreenshotDataUrl(vmId);
+    }
+  }, [vm, vmId])
+  */
 
   return (
 /*    
@@ -364,23 +372,16 @@ const VmGeneral = ({
             <div className="vm-info-vnc-group ">
               <div className="vm-info-vnc v-center gap-8">
                 {
-                  (vm?.running && vncScreenshotDataUrl(vmId) === "")
-                    ? <Vnc                         
-                        vmId={vmId}
-                        autoConnect={true} 
-                        isPreview={true}
-                        onSuccess={takeScreenshotFromRFB}
-                      />
-                    : vncScreenshotDataUrl(vmId) !== ""
-                      ? <img src={vncScreenshotDataUrl(vmId)}
-                          alt={`screenshot-${vmId}`} 
-                          style={{cursor: 'pointer',width:'210px'}}
-                          loading="lazy"
-                          onClick={handleStartConsole}
-                        />
-                      : <VmOsIcon dataUrl={vm?.urlLargeIcon}
-                          onClick={handleStartConsole}
-                        />
+                  (vm?.running && !vm?.hostedEngineVm && vmScreenshot)
+                    ? <img src={vmScreenshot}
+                        alt={`screenshot-${vmId}`} 
+                        style={{cursor: 'pointer',width:'210px'}}
+                        loading="lazy"
+                        onClick={handleStartConsole}
+                      /> 
+                    : <VmOsIcon dataUrl={vm?.urlLargeIcon}
+                      onClick={handleStartConsole}
+                    />
                 }
                 <button 
                   onClick={handleStartConsole}

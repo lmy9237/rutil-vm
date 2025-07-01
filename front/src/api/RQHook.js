@@ -2868,7 +2868,7 @@ export const useMigration = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    return useMutation({
+  return useMutation({
     mutationFn: async ({ vmId, vm, affinityClosure }) => {
       closeModal()
       const res = await ApiManager.migrateVM(vmId, vm, affinityClosure);
@@ -2890,7 +2890,47 @@ export const useMigration = (
     },
   });
 };
+export const useVmScreenshot = (
+  vmId
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['vmScreenshot', vmId],
+  queryFn: async () => {
+    const res = await ApiManager.takeVmScreenshot(vmId);
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useVmScreenshot ... vmId: ${vmId}, res: `, _res);
+    return _res[[vmId]];
+  },
+  enabled: !!vmId
+})
 
+/*(
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+  return useMutation({
+    mutationFn: async ({ vmId }) => {
+      closeModal()
+      const res = await ApiManager.takeVmScreenshot(vmId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useVmScreenshot ... vmId: ${vmId}`);
+      return _res
+    },
+    onSuccess: (res, { vmId }) => {
+      Logger.debug(`RQHook > useVmScreenshot ... res: `, res);
+      apiToast.ok(`${Localization.kr.VM} 스크린샷 ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries(['allVms']);
+      postSuccess(res[`${vmId}`] ?? "");
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+} */
 /**
  * @name useExportVM
  * @description 가상머신 내보내기 useMutation 훅
@@ -2913,7 +2953,6 @@ export const useExportVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useExportVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.EXPORT} ${Localization.kr.REQ_COMPLETE}`)
       queryClient.invalidateQueries('allVMs');
       postSuccess(res);

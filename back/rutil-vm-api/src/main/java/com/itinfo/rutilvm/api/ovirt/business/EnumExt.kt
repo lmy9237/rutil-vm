@@ -140,7 +140,8 @@ fun VmOsType?.toOsTypeCode(): String = when(this@toOsTypeCode) {
 	VmOsType.windows_2008r2x64,
 	VmOsType.windows_2012x64,
 	VmOsType.windows_2012r2x64,
-	VmOsType.windows_2012,
+	VmOsType.windows_2022,
+	VmOsType.windows_2025,
 	VmOsType.sles_11,
 	VmOsType.ubuntu_12_04,
 	VmOsType.ubuntu_12_10,
@@ -176,11 +177,9 @@ fun CpuPinningPolicy?.toCpuPinningPolicyB(): CpuPinningPolicyB? =
 fun CpuPinningPolicyB?.toCpuPinningPolicy(): CpuPinningPolicy? =
 	CpuPinningPolicy.fromValue(this@toCpuPinningPolicy?.name?.lowercase())
 
-fun DisplayType?.toGraphicsTypeB(): GraphicsTypeB? =
-	GraphicsTypeB.forCode(this@toGraphicsTypeB?.value())
-
-fun Display?.findGraphicsTypeB(): GraphicsTypeB? =
-	this@findGraphicsTypeB?.type().toGraphicsTypeB()
+fun GraphicsTypeB?.toDisplayType(): DisplayType? = DisplayType.fromValue(this@toDisplayType?.code)
+fun DisplayType?.toGraphicsTypeB(): GraphicsTypeB? = GraphicsTypeB.forCode(this@toGraphicsTypeB?.value())
+fun Display?.findGraphicsTypeB(): GraphicsTypeB? = this@findGraphicsTypeB?.type().toGraphicsTypeB()
 
 fun FipsMode.toFipsModeB(): FipsModeB =
 	FipsModeB.forCode(this@toFipsModeB.value())

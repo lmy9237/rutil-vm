@@ -1,9 +1,5 @@
 package com.itinfo.security
 
-import com.itinfo.BootApplication
-
-import org.springframework.core.io.ClassPathResource
-
 import java.io.File
 import java.io.IOException
 

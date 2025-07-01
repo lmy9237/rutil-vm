@@ -46,7 +46,7 @@ fun Connection.findVm(vmId: String, follow: String = ""): Result<Vm?> = runCatch
 }
 
 
-fun Connection.startVm(vmId: String): Result<Boolean> = runCatching {
+fun Connection.startVm(vmId: String, usingInitialization: Vm? = null): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	val diskAttachments = this.findAllDiskAttachmentsFromVm(vmId).getOrDefault(listOf())
@@ -58,10 +58,14 @@ fun Connection.startVm(vmId: String): Result<Boolean> = runCatching {
 		// log.error("가상머신 상태가 up인 상태")
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
-	this.srvVm(vmId).start().send()
+	this.srvVm(vmId).start().apply {
+		/*
+		useInitialization(true) // windows는 _SysPrep_
+		vm(vm)
+		*/
+	}.send()
 	// this.expectVmStatus(vmId, VmStatus.UP)
 	true
-
 }.onSuccess {
 	Term.VM.logSuccess("시작", vmId)
 }.onFailure {
@@ -216,6 +220,23 @@ fun Connection.removeVm(vmId: String, diskDelete: Boolean = false): Result<Boole
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+/*
+fun Connection.takeVmScreenshot(vmId: String): Result<ByteArray> = runCatching {
+	val vm: Vm = checkVm(vmId)
+	if (vm.status() !== VmStatus.UP) {
+		throw ErrorPattern.VM_STATUS_ERROR.toError()
+	}
+	this.srvVm(vmId).screenshot()
+		.send()
+		.toString()
+}.onSuccess {
+	Term.VM.logSuccess("스크린샷", vmId)
+}.onFailure {
+	Term.VM.logFail("스크린샷", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+*/
+
 @Throws(InterruptedException::class)
 fun Connection.expectVmDeleted(vmId: String, timeout: Long = 60000L, interval: Long = 1000L): Boolean {
 	val startTime = System.currentTimeMillis()
@@ -252,7 +273,6 @@ fun Connection.exportVm(
 }.onFailure {
 	Term.VM.logFail("내보내기", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
-
 }
 
 fun Connection.migrationVm(vmId: String, clusterId: String, affinityClosure: Boolean): Result<Boolean> = runCatching {
@@ -288,7 +308,6 @@ fun Connection.migrationVmToHost(vmId: String, hostId: String, affinityClosure: 
 }
 
 
-
 fun Connection.cancelMigrationVm(vmId: String): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
 
@@ -313,7 +332,6 @@ fun Connection.findAllVmCdromsFromVm(vmId: String): Result<List<Cdrom>> = runCat
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "목록조회", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
-
 }
 
 private fun Connection.srvVmCdromFromVm(vmId: String, cdromId: String): VmCdromService =

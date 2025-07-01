@@ -34,8 +34,9 @@ const DiskGeneral = ({
   } = useDisk(diskId);
 
   const tableRows = [
-    { label: Localization.kr.ALIAS, value: disk?.alias },
     { label: "ID", value: disk?.id },
+    { label: Localization.kr.ALIAS, value: disk?.alias },
+    // { label: "ID", value: disk?.id },
     { label: Localization.kr.DESCRIPTION, value: disk?.description },
     { label: Localization.kr.DOMAIN, value: disk?.storageDomainVo?.name },
     { label: "가상 디스크 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },

@@ -542,12 +542,35 @@ class VmController: BaseController() {
 		log.info("/computing/vms/{}/export ... 가상머신 생성", vmId)
 		return ResponseEntity.ok(iVmOp.exportOva(vmId, vmExport))
 	}
+
+	@ApiOperation(
+		httpMethod="POST",
+		value="가상머신 스크린샷",
+		notes="가상머신 스크린샷을 이미지 정보 반환"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{vmId}/screenshot")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun takeScreenshot(
+		@PathVariable vmId: String? = null,
+	): ResponseEntity<Map<String, String>> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/screenshot ... 가상머신 스크린샷", vmId)
+		return ResponseEntity.ok(mapOf(vmId to iVmOp.takeScreenshotFromVm(vmId)))
+	}
 	//endregion
 
 
 	//region: vmNic
 	@Autowired private lateinit var vmNic: ItVmNicService
-
 	@ApiOperation(
 		httpMethod="GET",
 		value = "가상머신 네트워크 인터페이스 목록",

@@ -1,6 +1,5 @@
 package com.itinfo.rutilvm.api.service.computing
 
-import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
@@ -9,17 +8,42 @@ import com.itinfo.rutilvm.api.model.computing.toStartOnceVm
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.ItHostNicServiceImpl.Companion
-import com.itinfo.rutilvm.util.ovirt.*
+import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
+import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.model.SystemPropertiesVo
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
+import com.itinfo.rutilvm.util.ovirt.exportVm
+import com.itinfo.rutilvm.util.ovirt.findAllHosts
+import com.itinfo.rutilvm.util.ovirt.findAllHostsFromCluster
+import com.itinfo.rutilvm.util.ovirt.findAllNetworkAttachmentsFromHost
+import com.itinfo.rutilvm.util.ovirt.findAllVms
+import com.itinfo.rutilvm.util.ovirt.findVm
+import com.itinfo.rutilvm.util.ovirt.migrationVm
+import com.itinfo.rutilvm.util.ovirt.migrationVmToHost
+import com.itinfo.rutilvm.util.ovirt.rebootVm
+import com.itinfo.rutilvm.util.ovirt.resetVm
+import com.itinfo.rutilvm.util.ovirt.shutdownVm
+import com.itinfo.rutilvm.util.ovirt.startOnceVm
+import com.itinfo.rutilvm.util.ovirt.startVm
+import com.itinfo.rutilvm.util.ovirt.stopVm
+import com.itinfo.rutilvm.util.ovirt.suspendVm
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.Vm
-
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClientException
+import org.springframework.web.client.RestTemplate
+import java.util.*
 
 interface ItVmOperationService {
 	/**
@@ -142,6 +166,17 @@ interface ItVmOperationService {
 	 */
 	@Throws(Error::class)
 	fun exportOva(vmId: String, vmExportVo: VmExportVo): Boolean
+
+	/**
+	 * [ItVmOperationService.takeScreenshotFromVm]
+	 * 가상머신화면 스크린샷
+	 *
+	 * @param vmId [String]
+	 *
+	 * @return [String] 바이너리화 된 png 이미지 정보
+	 */
+	@Throws(Error::class, IllegalStateException::class, ItCloudException::class)
+	fun takeScreenshotFromVm(vmId: String): String
 }
 
 @Service
@@ -268,7 +303,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 
 	@Throws(Error::class, ItCloudException::class)
 	override fun exportOva(vmId: String, vmExportVo: VmExportVo): Boolean {
-		log.info("exportOva ... ")
+		log.info("exportOva ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.exportVm(
 			vmId,
 			vmExportVo.hostVo.name,
@@ -278,6 +313,47 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		return res.isSuccess
 	}
 
+	@Autowired private lateinit var iSystemProperties: ItSystemPropertiesService
+	@Autowired private lateinit var restTemplate: RestTemplate
+
+	@Throws(Error::class, IllegalStateException::class, ItCloudException::class)
+	override fun takeScreenshotFromVm(vmId: String): String {
+		log.info("takeScreenshotFromVm ... vmId: {}", vmId)
+		val sysProp: SystemPropertiesVo = iSystemProperties.findOne()
+		val baseUrl: String = sysProp.ovirtEngineApiUrl
+		val screenshotUrl: String = "$baseUrl/vms/${vmId}/screenshot"
+		val requestBody = "<action/>"
+		val headers = HttpHeaders().apply {
+			// The most important part: Add the authentication cookie.
+			setBasicAuth(sysProp.ovirtUserId, sysProp.password)
+			// Tell the server we can accept any image format.
+			contentType = MediaType.APPLICATION_XML
+			accept = listOf(MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG, MediaType.ALL)
+		}
+		val httpEntity = HttpEntity<String>(requestBody, headers).apply {}
+
+		// RestTemplate 객체 생성
+		val response: ResponseEntity<ByteArray> = try {
+			restTemplate.postForEntity(
+				screenshotUrl,
+				httpEntity,
+				ByteArray::class.java
+			)
+		} catch (e: RestClientException) {
+			log.error("something went wrong ... reason: {}", e.localizedMessage)
+			throw e
+		}
+		val imageBytes: ByteArray = response.body
+			?: throw IllegalStateException("Response body was null")
+		val contentType: String = response.headers.contentType?.toString()
+			?: "image/png" // Default if not provided
+
+		// 7. Encode the raw bytes into a Base64 string.
+		val base64EncodedData = Base64.getEncoder().encodeToString(imageBytes)
+
+		// 8. Construct and return the final data URI string.
+		return "data:image/png;base64,$base64EncodedData"
+	}
 
 	companion object {
 		private val log by LoggerDelegate()

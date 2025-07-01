@@ -311,8 +311,6 @@ class VmServiceImpl(
 		return res.toHostDeviceVos()
 	}
 
-	// 호스트 장치 추가
-
 	@Throws(Error::class)
 	override fun findAllEventsFromVm(vmId: String): List<EventVo> {
 		log.info("findAllEventsFromVm ... vmId: {}", vmId)
@@ -322,7 +320,6 @@ class VmServiceImpl(
 			.filter { it.vmPresent() && it.vm().name() == vm.name() }
 		return res.toEventVos()
 	}
-
 
 	companion object {
 		private val log by LoggerDelegate()

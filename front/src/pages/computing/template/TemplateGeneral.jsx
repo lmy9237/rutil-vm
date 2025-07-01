@@ -18,7 +18,7 @@ const TemplateGeneral = ({
   const { data: template } = useTemplate(templateId);
 
   const tableRows = [
-    { label: `${Localization.kr.TEMPLATE} ID`,     value: template?.id },
+    { label: `ID`, value: template?.id },
     { label: Localization.kr.NAME,                 value: template?.name },
     { label: Localization.kr.DESCRIPTION,          value: template?.description },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: template?.clusterVo?.name },

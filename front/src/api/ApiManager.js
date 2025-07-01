@@ -1736,6 +1736,20 @@ const ApiManager = {
     });
   },
   /**
+   * @name ApiManager.takeVmScreenshot
+   * @description 가상머신 스크린샷 출력
+   * 
+   * @param {String} vmId
+   * 
+   * @returns {Promise<Object>} 
+   */
+  takeVmScreenshot: async (vmId) => {
+    return makeAPICall({
+      method: "POST",
+      url : ENDPOINTS.TAKE_VM_SCREENSHOT(vmId),
+    })
+  },
+  /**
    * @name ApiManager.findVmConsoleAccessInfo
    * @description 가상머신의 그래픽 콘솔의 모든 정보를 구성
    * 

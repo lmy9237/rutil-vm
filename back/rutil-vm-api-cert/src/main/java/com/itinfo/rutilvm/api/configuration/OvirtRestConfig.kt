@@ -26,7 +26,7 @@ open class OvirtRestConfig {
 
 	@Bean
 	open fun ovirtRestRetrofit(): Retrofit {
-		log.info("retrofit ...")
+		log.info("ovirtRestRetrofit ...")
 		val baseUrl = "${ovirtBaseURL}/ovirt-engine/services/"
 		return Retrofit.Builder()
 				.baseUrl(baseUrl)

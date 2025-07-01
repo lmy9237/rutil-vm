@@ -39,6 +39,7 @@ import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.toDisplayType
 import com.itinfo.rutilvm.api.ovirt.business.toOsType
 import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
@@ -70,6 +71,7 @@ import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.CpuBuilder
 import org.ovirt.engine.sdk4.builders.CpuTopologyBuilder
 import org.ovirt.engine.sdk4.builders.FileBuilder
+import org.ovirt.engine.sdk4.builders.DisplayBuilder
 import org.ovirt.engine.sdk4.builders.HighAvailabilityBuilder
 import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.InitializationBuilder
@@ -833,6 +835,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	cluster(ClusterBuilder().id(clusterVo.id))
 	bios(BiosBuilder().type(biosType.toBiosType()).build())
 	type(optimizeOption.toVmType())
+	display(DisplayBuilder().type(displayType.toDisplayType()))
 	timeZone(
 		TimeZoneBuilder().name(
 			if(osType?.isWindows == true) "GMT Standard Time"

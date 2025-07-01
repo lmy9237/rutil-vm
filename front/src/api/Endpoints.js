@@ -172,6 +172,7 @@ const ENDPOINTS = {
     }
     return url;
   },
+  TAKE_VM_SCREENSHOT: (vmId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/screenshot`,
   //#endregion: Vm
 
   //#region: Template

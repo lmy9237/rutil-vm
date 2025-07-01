@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { VncScreen } from 'react-vnc'
 import CONSTANT                   from "@/Constants";
 import { useValidationToast }     from "@/hooks/useSimpleToast";
@@ -19,6 +19,7 @@ const Vnc = forwardRef(({
   ...props
 }, ref) => {
   // 1. VM 정보 가져오기 (상태 확인용)
+  // const [intervalId, setIntervalId] = useState("");
   const { data: vm } = useVm(vmId);
   const status = vm?.status ?? "";
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
@@ -38,12 +39,12 @@ const Vnc = forwardRef(({
     wsUrl = "wss://__RUTIL_VM_OVIRT_IP_ADDRESS__/ws";
   }
 
-  const isReady = () =>
+  const isReady = () => 
     isVmQualified4ConsoleConnect &&
-    vmConsoleAccessInfo &&
-    vmConsoleAccessInfo.address &&
-    vmConsoleAccessInfo.port &&
-    vmConsoleAccessInfo.token;
+    vmConsoleAccessInfo !== null &&
+    vmConsoleAccessInfo?.address !== null &&
+    vmConsoleAccessInfo?.port !== null &&
+    vmConsoleAccessInfo?.token !== null; 
 
   const isValid = (url) => url.startsWith("ws://") || url.startsWith("wss://");
 
@@ -75,6 +76,20 @@ const Vnc = forwardRef(({
     );
   };
 
+  useEffect(() => {
+    Logger.debug(`Vnc > useEffect ... `)
+    if (isValid(wsUrl) && isReady()) return;
+    
+    const intervalId = setInterval(() => {
+      // 2초간의 간격으로 상태를 확인하도록
+      refetchVmConsoleAccessInfo();
+    }, 2000);
+    
+    return () => {
+      clearInterval(intervalId)
+    }
+  }, [isVmQualified4ConsoleConnect, vmConsoleAccessInfo])
+
   return (
     <div
       className={`${isPreview ? "vnc-size-preview" : "w-full h-full"} ${props.className}`}
@@ -98,7 +113,7 @@ const Vnc = forwardRef(({
           onConnect={(rfb) => {
             Logger.debug("Vnc > onConnect ... ")
             setTimeout(() => {
-              onSuccess(rfb)
+              onSuccess && onSuccess(rfb)
             }, 400)
           }}
           onDisconnect={(rfb) => { 

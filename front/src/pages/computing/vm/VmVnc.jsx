@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+import CONSTANT from "@/Constants";
+import { useValidationToast } from "@/hooks/useSimpleToast";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import useCopyToClipboard     from "@/hooks/useCopyToClipboard";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Vnc                    from "@/components/Vnc";
@@ -12,10 +16,6 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./VmVnc.css"
-import CONSTANT from "@/Constants";
-import { useValidationToast } from "@/hooks/useSimpleToast";
-import useGlobal from "@/hooks/useGlobal";
-import useUIState from "@/hooks/useUIState";
 
 /**
  * @name VmVnc
@@ -71,8 +71,15 @@ const VmVnc = ({
     document.body.removeChild(link);
   }
 
+  const doSendCtrlAltDel = (rfb) => {
+    Logger.debug(`VmVnc > doSendCtrlAltDel ... `)
+    rfb.sendCtrlAltDel()
+    import.meta.env.DEV && validationToast.debug(`Ctrl+Alt+Del 입력 완료`);
+  }
+
   const sectionHeaderButtons = [
-    { type: "screenshot", label: "스크린샷", onClick: () => takeScreenshotFromRFB(screenRef.current.rfb)}
+    { type: "screenshot", label: "스크린샷", onClick: () => takeScreenshotFromRFB(screenRef.current.rfb) },
+    { type: "ctrlaltdel", label: "Ctrl+Alt+Del", onClick: () => doSendCtrlAltDel(screenRef.current.rfb) }
   ]
 
   // 텝 이름변경
