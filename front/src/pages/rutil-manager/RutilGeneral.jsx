@@ -125,7 +125,7 @@ const RutilGeneral = () => {
       top={
       <>
         <div className="grid-col-span-2 vm-box-default">
-          <div className="flex h-full">
+          <div className="vm-info-vnc-group flex h-full">
             <div className="half-box mr-[40px]">
               <RutilVmLogo className="big"
                 details={`v${dashboard?.version} (${dashboard?.releaseDate})`}

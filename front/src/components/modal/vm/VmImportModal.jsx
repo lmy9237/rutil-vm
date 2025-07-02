@@ -13,9 +13,7 @@ import Logger                           from "@/utils/Logger";
 import "./MVm.css";
 import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 import { useValidationToast } from "@/hooks/useSimpleToast";
-import { handleSelectIdChange } from "@/components/label/HandleInput";
-import TablesOuter from "@/components/table/TablesOuter";
-import TableColumnsInfo from "@/components/table/TableColumnsInfo";
+import VmImportRender2Modal from "./VmImportRender2Modal";
 
 
 const VmImportModal = ({ 
@@ -34,13 +32,13 @@ const VmImportModal = ({
     isLoading: isDatacentersLoading,
   } = useAllDataCenters()
 
-const transformedDatacenters = [
-  { value: "none", label: Localization.kr.NOT_ASSOCIATED },
-  ...(!Array.isArray(datacenters) ? [] : datacenters).map((dc) => ({
-    value: dc?.id,
-    label: dc?.name
-  }))
-];
+  const transformedDatacenters = [
+    { value: "none", label: Localization.kr.NOT_ASSOCIATED },
+    ...(!Array.isArray(datacenters) ? [] : datacenters).map((dc) => ({
+      value: dc?.id,
+      label: dc?.name
+    }))
+  ];
 
 
   const {
@@ -66,30 +64,24 @@ const [sourceVMs, setSourceVMs] = useState([
 const [targetVMs, setTargetVMs] = useState([]);
 const toggleSelect = (id, type) => {
   if (type === "source") {
-    setSourceVMs(prev =>
-      prev.map(vm =>
-        vm.id === id ? { ...vm, selected: !vm.selected } : vm
-      )
-    );
+    const vmToMove = sourceVMs.find(vm => vm.id === id);
+    if (!vmToMove) return;
+
+    // ✅ 먼저 오른쪽으로 옮긴 후, 체크는 유지된 상태
+    setSourceVMs(prev => prev.filter(vm => vm.id !== id));
+    setTargetVMs(prev => [...prev, { ...vmToMove, selected: true }]); // ✔ 유지
+
   } else if (type === "target") {
-    setTargetVMs(prev =>
-      prev.map(vm =>
-        vm.id === id ? { ...vm, selected: !vm.selected } : vm
-      )
-    );
+    const vmToMove = targetVMs.find(vm => vm.id === id);
+    if (!vmToMove) return;
+
+    // ✅ 왼쪽으로 옮긴 후, 체크는 해제된 상태로
+    setTargetVMs(prev => prev.filter(vm => vm.id !== id));
+    setSourceVMs(prev => [...prev, { ...vmToMove, selected: false }]); // ✔ 해제
   }
 };
-const moveToTarget = () => {
-  const selected = sourceVMs.filter(vm => vm.selected);
-  setSourceVMs(sourceVMs.filter(vm => !vm.selected));
-  setTargetVMs(prev => [...prev, ...selected.map(vm => ({ ...vm, selected: false }))]);
-};
 
-const moveToSource = () => {
-  const selected = targetVMs.filter(vm => vm.selected);
-  setTargetVMs(targetVMs.filter(vm => !vm.selected));
-  setSourceVMs(prev => [...prev, ...selected.map(vm => ({ ...vm, selected: false }))]);
-};
+
 const [selectAllSource, setSelectAllSource] = useState(false);
 const [selectAllTarget, setSelectAllTarget] = useState(false);
 const handleSelectAll = (type) => {
@@ -149,151 +141,92 @@ const handleSelectAll = (type) => {
 
       <button className="instance-disk-btn ml-0 mb-3">로드</button>
 
-  
       <div className="vm-import-list-outer f-btw mb-4">
         {/* 좌측 패널 */}
         <div className="vm-import-panel vm-import-source">
           <div className="vm-import-panel-title">소스 상의 가상 머신</div>
-          <table className="vm-import-table">
-            {/* <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={sourceVMs.length > 0 && sourceVMs.every(vm => vm.selected)}
-                    onChange={() => handleSelectAll("source")}
-                  />
-                </th>
-                <th>이름</th>
-              </tr>
-            </thead> */}
-            <tbody>
-              {sourceVMs.map(vm => (
-                <tr key={vm.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={vm.selected}
-                      onChange={() => toggleSelect(vm.id, "source")}
-                    />
-                  </td>
-                  <td>{vm.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="dd">
+            <div className="section-table-outer w-full mb-2 ">
+              <table className="vm-import-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input
+                        type="checkbox"
+                        checked={sourceVMs.length > 0 && sourceVMs.every(vm => vm.selected)}
+                        onChange={() => handleSelectAll("source")}
+                      />
+                    </th>
+                    <th>이름</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sourceVMs.map(vm => (
+                    <tr key={vm.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={vm.selected}
+                          onChange={() => toggleSelect(vm.id, "source")}
+                        />
+                      </td>
+                      <td>{vm.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
-        {/* 중앙 버튼 */}
-        <div className="vm-import-arrows">
-          <button className="vm-import-arrow-btn mb-2" onClick={moveToTarget}>&rarr;</button>
-          <button className="vm-import-arrow-btn" onClick={moveToSource}>&larr;</button>
-        </div>
 
         {/* 우측 패널 */}
         <div className="vm-import-panel vm-import-target">
           <div className="vm-import-panel-title">가져오기할 가상 머신</div>
-          <table className="vm-import-table">
-      {/* <thead>
-        <tr>
-          <th>
-            <input
-              type="checkbox"
-              checked={targetVMs.length > 0 && targetVMs.every(vm => vm.selected)}
-              onChange={() => handleSelectAll("target")}
-            />
-          </th>
-          <th>이름</th>
-        </tr>
-      </thead> */}
-            <tbody>
-              {targetVMs.map(vm => (
-                <tr key={vm.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={vm.selected}
-                      onChange={() => toggleSelect(vm.id, "target")}
-                    />
-                  </td>
-                  <td>{vm.name}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="dd">
+            <div className="section-table-outer w-full mb-2">
+              <table className="vm-import-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <input
+                        type="checkbox"
+                        checked={targetVMs.length > 0 && targetVMs.every(vm => vm.selected)}
+                        onChange={() => handleSelectAll("target")}
+                      />
+                    </th>
+                    <th>이름</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {targetVMs.map(vm => (
+                    <tr key={vm.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={vm.selected}
+                          onChange={() => toggleSelect(vm.id, "target")}
+                        />
+                      </td>
+                      <td>{vm.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-
-
-      {/* <div className="vm-import-table">
-        <table>
-          <thead>
-            <tr>
-              <th></th>
-              <th>이름</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><input type="checkbox" defaultChecked /></td>
-              <td>CentOS 7-1908 Minimum</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" /></td>
-              <td>CentOS 7.9</td>
-            </tr>
-            <tr>
-              <td><input type="checkbox" /></td>
-              <td>CentOS 7.9 Stream - LIS</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> */}
     </>
   );
 
-const renderStep2 = () => {
-
-  //임시데이터
-  const importTableData = targetVMs.map((vm) => ({
-    id: vm.id,
-    clone: <input type="checkbox" />,
-    name: vm.name,
-    source: "VMware",
-    memory: "16384 MB",
-    cpu: 4,
-    arch: "x86_64",
-    disk: 1
-  }));
-
-  return (
-    <>
-      {/* 왼쪽 컬럼 */}
-      <div className="vm-impor-outer">
-        <LabelSelectOptionsID label="스토리지 도메인" />
-        <LabelSelectOptionsID label="할당 정책" />
-        <LabelSelectOptionsID label="대상 클러스터" />
-        <div className="f-start items-center gap-2">
-          <LabelCheckbox
-            id="virtio"
-            label="VirtIO 드라이버 연결"
-            checked={virtioChecked}
-            onChange={(e) => setVirtioChecked(e.target.checked)}
-          />
-          <LabelSelectOptionsID  disabled={!virtioChecked} />
-        </div>
-        <LabelSelectOptionsID label="CPU 프로파일" />
-      </div>
-
-      <TablesOuter
-        target="vm-import"
-        columns={TableColumnsInfo.GET_IMPORT_VMS}
-        data={importTableData}
-        showSearchBox={false}
-      />
-    </>
+  const renderStep2 = () => (
+    <VmImportRender2Modal
+      targetVMs={targetVMs}
+      virtioChecked={virtioChecked}
+      setVirtioChecked={setVirtioChecked}
+    />
   );
-};
 
 
   return (

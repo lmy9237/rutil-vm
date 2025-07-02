@@ -16,8 +16,8 @@ import {
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import Logger from "../../../utils/Logger";
 import Localization from "../../../utils/Localization";
-import { useToast } from "@/hooks/use-toast";
 import { emptyIdNameVo } from "@/util";
+import { useValidationToast } from "@/hooks/useSimpleToast";
 
 const initialFormState = {
   id: "",
@@ -33,8 +33,7 @@ const VmNicModal = ({
   onClose,
   editMode=false,
 }) => {
-  const { toast } = useToast();
-
+  const { validationToast } = useValidationToast();
   const nLabel = editMode 
     ? Localization.kr.UPDATE
     : Localization.kr.CREATE;
@@ -137,15 +136,18 @@ const VmNicModal = ({
 
   const handleFormSubmit = () => {
     const error = validateForm();
+    // if (error) {
+    //   toast({
+    //     variant: "destructive",
+    //     title: "문제가 발생하였습니다.",
+    //     description: error,
+    //   });
+    //   return;
+    // }
     if (error) {
-      toast({
-        variant: "destructive",
-        title: "문제가 발생하였습니다.",
-        description: error,
-      });
+      validationToast.fail(error);
       return;
     }
-
     const dataToSubmit = {
       ...formInfoState,
       vnicProfileVo: { id: vnicProfileVo.id },
@@ -166,7 +168,7 @@ const VmNicModal = ({
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formInfoState.name}
-        onChange={handleInputChange(setFormInfoState, "name")}
+        onChange={handleInputChange(setFormInfoState, "name",validationToast)}
       />
       {/* <LabelSelectOptionsID label="프로파일"
         value={vnicProfileVo?.id}

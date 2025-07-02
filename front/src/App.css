@@ -101,7 +101,7 @@ html {
   --h-rutil-footer-open: calc(var(--h-rutil-footer) + var(--h-rutil-footer-content));
   --h-rutil-content: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer));
   --h-rutil-content-footer-open: calc(100% - var(--h-rutil-header) - var(--h-rutil-footer-open));
-  --h-section-header: 64px; /*section-header 높이 */
+  --h-section-header: 64px; /*section-header 높이 */ 
   --h-primary:26px;
   --h-32:32px;
   --h-text-input: 28px;
@@ -383,18 +383,19 @@ svg.btn { cursor: pointer; }
   padding: 16px;
   border-radius: 2px;
   display: flex;
-  min-height: 221px;
+  min-height: 241px;
   /* max-height: 350px; */
   overflow: hidden;
   padding-bottom: 2rem;
   flex-direction: column;
 }
 
-.box-content {
-  max-height: 221px;
+.box-content.overflowing {
+  max-height: 221px; 
   overflow: hidden;
   position: relative;
 }
+
 .half-box {
   padding: 0 20px;
   display: flex;

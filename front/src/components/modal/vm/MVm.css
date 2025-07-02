@@ -64,26 +64,37 @@
 .vm-impor-outer .input-select{
   width: 100% !important;
 }
-.vm-import-list-outer{
-
-}
-.vm-import-arrow-btn{
-  padding: 3px;
-}
 .vm-import-panel-title{
   font-size: var(--fs-13);
   margin-bottom: 4px;
   font-weight: 600;
 }
 .vm-import-table{
-
   width: 100%;
 }
-.vm-import-panel{
- border: 1px solid rgb(197, 197, 197);
-  width: 40%;
-  height: 180px;
+.dd{
+  border: var(--border-default);
+  min-height: 160px;
   overflow-y: auto;
+}
+.vm-import-panel{
+  width: 48%;
+}
+.vm-import-detail-box {
+  min-height: 300px;
+  border: var(--border-default);
+  border-radius: 2px;
+  padding: 10px;
+  overflow: auto;
+  background-color: #fff;
+}
+.vm-import-detail-box  .info-table-wrapper{
+  padding: 5px 3px !important;
+}
+.vm-import-detail-box  .info-table th,
+.vm-import-detail-box  .info-table td
+{
+  padding: 8px 0 !important;
 }
 /*호스트 장치(장치추가 팝업)*/
 .able-host-device-table {

@@ -205,7 +205,7 @@ const ClusterModal = ({
     <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "500px" }} 
+      contentStyle={{ width: "600px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
         value={dataCenterVo.id}

@@ -71,7 +71,7 @@ const DeleteModal = ({
       contentStyle={{ width: "660px" }}
     >
       {names.map((name, index) => (
-        <div className="p-1.5 font-bold flex f-start" key={index}> 
+        <div className="p-1.5 font-bold flex f-start fs-13" key={index}> 
           <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
           {name}
         </div>

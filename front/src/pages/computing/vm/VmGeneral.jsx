@@ -361,8 +361,9 @@ const VmGeneral = ({
               </div>
             </div>
           </div>
-
-          <GeneralBoxProps title="용량 및 사용량">
+        
+          
+          <GeneralBoxProps title="용량 및 사용량" className="vm-bar-chart-outer">
             <VmGeneralBarChart items={usageItems} />
           </GeneralBoxProps>
        
@@ -372,15 +373,16 @@ const VmGeneral = ({
           <GeneralBoxProps
             title="가상머신 하드웨어"
             moreLink={`/computing/vms/${vmId}/disks`} 
+            enableOverflowCheck={true}
           >
             <InfoTable tableRows={hardwareTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="관련 개체">
+          <GeneralBoxProps title="관련 개체"   enableOverflowCheck={true} >
             <InfoTable tableRows={relatedTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="스냅샷" count={snapshotList.length}  moreLink={`/computing/vms/${vmId}/snapshots`} >
+          <GeneralBoxProps title="스냅샷"   enableOverflowCheck={true} count={snapshotList.length}  moreLink={`/computing/vms/${vmId}/snapshots`} >
             <div className="box-content snapshots">
               <div
                 className="snapshot-add py-3 fs-13"
@@ -399,10 +401,10 @@ const VmGeneral = ({
           </GeneralBoxProps>
         </>}
       />
-      <OVirtWebAdminHyperlink
+      {/* <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 
-      />
+      /> */}
     </>
   );
 };

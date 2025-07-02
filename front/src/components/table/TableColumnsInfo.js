@@ -597,15 +597,15 @@ const TableColumnsInfo = {
     // { accessor: 'stopTime',     header: '중지 일자',                   clickable: false },
   ], 
   
-  GET_IMPORT_VMS : [
-    { accessor: "clone",    header: "복제",            clickable: false },
-    { accessor: "name",     header: Localization.kr.NAME,  clickable: false },
-    { accessor: "source",   header: "소스",             clickable: false },
-    { accessor: "memory",   header: "메모리",           clickable: false },
-    { accessor: "cpu",      header: "CPU",              clickable: false },
-    { accessor: "arch",     header: Localization.kr.ARCH,  clickable: false },
-    { accessor: "disk",     header: "디스크",           clickable: false }
-  ],
+GET_IMPORT_VMS: [
+  { accessor: "clone",    header: "복제", clickable: false },
+  { accessor: "name",     header: "이름", clickable: false },
+  { accessor: "source",   header: "소스", clickable: false },
+  { accessor: "memory",   header: "메모리", clickable: false },
+  { accessor: "cpu",      header: "CPU", clickable: false },
+  { accessor: "arch",     header: "아키텍처", clickable: false },
+  { accessor: "disk",     header: "디스크", clickable: false }
+],
   GET_DISK_TEMPLATES: [
     { accessor: 'alias',          header: Localization.kr.ALIAS,        clickable: true, width: '10%' },
     { accessor: 'virtualSize',    header: Localization.kr.SIZE_VIRTUAL, clickable: false },

@@ -7,6 +7,9 @@
   border-radius: 40%;
   text-align: center;
 }
+.box-inner-content{
+  height: 100%;
+}
 .more-button {
   position: absolute;
   bottom: 0;
@@ -15,4 +18,5 @@
   cursor: pointer;
   font-size: var(--fs-default);
   color: var(--color-accent);
+  background: white;
 }

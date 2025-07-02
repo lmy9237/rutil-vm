@@ -30,7 +30,7 @@ const DomainNfs = ({
         }}
       />
       {!editMode && (
-        <div className="text-xs text-gray-500 my-2">
+        <div className="text-xs text-gray-500 mb-2 f-end">
           예: <b>myserver.mydomain.com:/my/local/path</b>
         </div>
       )}
