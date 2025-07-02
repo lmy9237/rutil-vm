@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllVmGraphicsConsolesFromVm
+import com.itinfo.rutilvm.util.ovirt.findTicketFromVm
 import com.itinfo.rutilvm.util.ovirt.findTicketFromVmGraphicsConsole
 
 import org.ovirt.engine.sdk4.Connection
@@ -57,11 +58,8 @@ fun Vm.toAggregateConsoleVo(conn: Connection): AggregateConsoleVo {
 	val graphicsConsole: GraphicsConsole =
 		conn.findAllVmGraphicsConsolesFromVm(this@toAggregateConsoleVo.id()).getOrDefault(listOf()).firstOrNull()
 			?: throw ErrorPattern.CONSOLE_NOT_FOUND.toException() // VmStatus가 UP 상태 일 경우 하나 이상은 있어야 정상.
-	val graphicsConsoleId: String =
-		if (graphicsConsole.idPresent()) graphicsConsole.id()
-		else throw ErrorPattern.CONSOLE_NOT_FOUND.toException()
 	val ticket: Ticket =
-		conn.findTicketFromVmGraphicsConsole(this@toAggregateConsoleVo.id(), graphicsConsoleId).getOrNull()
+		conn.findTicketFromVm(this@toAggregateConsoleVo.id()).getOrNull()
 			?: throw ErrorPattern.TICKET_NOT_FOUND.toException()
 
 	return AggregateConsoleVo.builder {

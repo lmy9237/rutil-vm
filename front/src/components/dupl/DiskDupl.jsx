@@ -78,7 +78,7 @@ const DiskDupl = ({
     };
 
     // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)
-    diskData.searchText = `${diskData.alias} ${diskData.sparse} ${diskData.virtualSize} ${diskData.actualSize}`;
+    diskData.searchText = `[${diskData?.contentType}] ${diskData?.alias} ${diskData?.sparse} ${diskData?.virtualSize} ${diskData?.actualSize}`;
     return diskData;
   });
 

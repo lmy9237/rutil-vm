@@ -72,6 +72,7 @@ import org.ovirt.engine.sdk4.builders.CpuBuilder
 import org.ovirt.engine.sdk4.builders.CpuTopologyBuilder
 import org.ovirt.engine.sdk4.builders.FileBuilder
 import org.ovirt.engine.sdk4.builders.DisplayBuilder
+import org.ovirt.engine.sdk4.builders.FloppyBuilder
 import org.ovirt.engine.sdk4.builders.HighAvailabilityBuilder
 import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.InitializationBuilder
@@ -916,10 +917,7 @@ fun VmVo.toRegisterVm(): Vm {
 }
 
 fun VmVo.toStartOnceVm(): Vm {
-	val cdromList = mutableListOf<Cdrom>()
-
-	// 필수 Windows 설치 ISO
-	cdromList.add(
+	val cdromList = mutableListOf<Cdrom>(
 		CdromBuilder()
 			.file(FileBuilder().id(this.cdRomVo.id))
 			.build()
@@ -927,8 +925,21 @@ fun VmVo.toStartOnceVm(): Vm {
 
 	return VmBuilder()
 		.id(this.id)
-		.bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))
-		.cdroms(cdromList)
+		.bios(BiosBuilder()
+			.bootMenu(
+				BootMenuBuilder().enabled(biosBootMenu)
+			)
+		)
+		.cdroms(listOf(
+			CdromBuilder()
+				.file(FileBuilder().id(this.cdRomVo.id))
+				.build()
+		))
+		.floppies(listOf(
+			FloppyBuilder()
+				.file(FileBuilder().build())
+				.build()
+		))
 		.os(OperatingSystemBuilder().boot(BootBuilder().devices(listOf(HD, CDROM, NETWORK)).build()))
 		.build()
 }

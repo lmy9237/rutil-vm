@@ -2,13 +2,42 @@ import Localization from "./utils/Localization";
 import Logger from "./utils/Logger";
 
 /**
+ * @name readString
+ * 
+ * @param {string} buf 버퍼 값
+ * @returns {string} 변환된 버퍼의 문자열 값
+ */
+export function readString(buf) {
+  Logger.debug(`util > readString ... `)
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
+// Modern version using DataView, which is cleaner
+export function readUint32(buf) {
+  Logger.debug(`util > readUint32 ... `)
+  const view = new DataView(buf);
+  return view.getUint32(0, false); // false = big-endian
+}
+
+// Modern version using BigInt for full 64-bit precision, as recommended
+export function readBigUint64(buf) {
+  Logger.debug(`util > readBigUint64 ... `)
+  const view = new DataView(buf);
+  return view.getBigUint64(0, false); // false = big-endian
+}
+
+export function toGiB(bytes) {
+  if (typeof bytes !== 'bigint' && typeof bytes !== 'number') return 'N/A';
+  return (Number(bytes) / (1024 * 1024 * 1024)).toFixed(2);
+}
+
+/**
  * vo에 {id="", name=""} 일때 사용
  * @returns 
  */
 export function emptyIdNameVo() {
   return { id: "", name: "" };
 }
-
 
 export function checkEmpty(value) {
   Logger.debug(`util > checkKoreanName ... value: ${value}`);

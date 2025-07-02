@@ -79,10 +79,22 @@ fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runC
 		log.error("부팅 가능한 디스크가 없음")
 		throw ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE.toError()
 	}
-	if(vm.status() == VmStatus.UP){
+	if (vm.status() == VmStatus.UP){
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
-	this.srvVm(vm.id()).start().useSysprep(windowGuest).volatile_(true).vm(vm).send()
+
+	this.srvVm(vm.id()).start()
+		.useSysprep(windowGuest)
+		.volatile_(true)
+		.vm(vm)
+		/*.vm(VmBuilder()
+			.cdroms(
+				CdromBuilder()
+					.file(FileBuilder().id("virtio-win.iso"))
+			)
+			.virtioScsi(VirtioScsiBuilder().build())
+		)*/
+		.send()
 
 	true
 }.onSuccess {
@@ -780,7 +792,10 @@ private fun Connection.srvVmGraphicsConsolesFromVm(vmId: String): VmGraphicsCons
 	this.srvVm(vmId).graphicsConsolesService()
 
 fun Connection.findAllVmGraphicsConsolesFromVm(vmId: String): Result<List<GraphicsConsole>> = runCatching {
-	this.srvVmGraphicsConsolesFromVm(vmId).list().current(true).send().consoles()
+	this.srvVmGraphicsConsolesFromVm(vmId).list()
+		.current(true)
+		.send()
+		.consoles()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CONSOLE, "목록조회", vmId)
 }.onFailure {
@@ -797,6 +812,19 @@ fun Connection.findVmGraphicsConsoleFromVm(vmId: String, graphicsConsoleId: Stri
 	Term.VM.logSuccessWithin(Term.CONSOLE, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CONSOLE, "상세조회", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
+fun Connection.findTicketFromVm(vmId: String, expiry: BigInteger? = null): Result<Ticket?> = runCatching {
+	this.srvVm(vmId).ticket().apply {
+		if (expiry!=null) ticket(TicketBuilder()
+			.expiry(expiry)
+			.build())
+	}.send().ticket()
+}.onSuccess {
+	Term.CONSOLE.logSuccessWithin(Term.TICKET, "발행", vmId)
+}.onFailure {
+	Term.CONSOLE.logFailWithin(Term.TICKET, "발행", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
 }
 

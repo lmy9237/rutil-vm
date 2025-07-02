@@ -3,13 +3,14 @@ import {
   useValidationToast, useProgressToast,
 } from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import { 
   handleInputChange, handleInputCheck, handleSelectIdChange,
 } from "@/components/label/HandleInput";
+import { Input }                        from "@/components/ui/input"
 import {
   useAllActiveDataCenters,
   useAllActiveDomainsFromDataCenter,
@@ -21,6 +22,10 @@ import {
   checkName, 
   convertBytesToGB,
   emptyIdNameVo,
+  readString, 
+  readUint32, 
+  readBigUint64,
+  toGiB
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -171,7 +176,8 @@ const DiskUploadModal = ({
     >
       <div className="storage-upload-first f-btw fs-14">
         <p className="fs-16">파일 선택</p>
-        <div>
+        <DiskInspector />
+        {/* <div>
           <input id="file"
             type="file"
             accept=".iso,.qcow2,.vhd,.img,.raw"
@@ -188,14 +194,14 @@ const DiskUploadModal = ({
               }));
             }}
           />
-        </div>
+        </div> */}
       </div>
 
       <div>
         <div className="disk-option fs-16">디스크 옵션</div>
           <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
             <div>
-              <LabelInput id="size" label={Localization.kr.SIZE_ACTUAL}
+              <LabelInput id="size" label={`${Localization.kr.SIZE_ACTUAL} (GiB)`}
                 type="number"
                 value={sizeToGB(formState.size)}
                 onChange={handleInputChange(setFormState, "size", validationToast)}
@@ -280,6 +286,121 @@ const DiskUploadModal = ({
           </div>
         </div>
     </BaseModal>
+  );
+};
+
+const DiskInspector = ({
+  
+}) => {
+  const [imageInfo, setImageInfo] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    setImageInfo(null);
+    setError(null);
+
+    if (!file) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      try {
+        const buffer = e.target.result;
+        if (buffer.byteLength === 0) {
+          setError("Cannot read the selected file.");
+          return;
+        }
+
+        const isQcow = readString(buffer.slice(0, 4)) === 'QFI\xfb';
+        const info = {
+          format: isQcow ? "QCOW2" : "RAW",
+          actualSize: file.size,
+          virtualSize: BigInt(0),
+          backingFile: false,
+          qcowCompat: Localization.kr.NOT_ASSOCIATED,
+          content: Localization.kr.DATA,
+        };
+
+        if (isQcow) {
+          const version = readUint32(buffer.slice(4, 8));
+          info.qcowCompat = version === 2 
+            ? '0.10' 
+            : version === 3 
+              ? '1.1'
+              : Localization.kr.UNKNOWN;
+          
+          const backingFileOffset = readBigUint64(buffer.slice(8, 16));
+          info.backingFile = backingFileOffset !== BigInt(0)
+          info.virtualSize = readBigUint64(buffer.slice(24, 32));
+        } else {
+          // An ISO file contains 'CD001' at offset 0x8001
+          // Ensure we have enough data to check
+          if (buffer.byteLength > 0x8001 + 5) {
+              const isISO = readString(buffer.slice(0x8001, 0x8001 + 5)) === 'CD001';
+              if (isISO) {
+                  info.content = "ISO";
+              }
+          }
+          info.virtualSize = BigInt(file.size);
+        }
+        setImageInfo(info);
+      } catch (err) {
+        setError(`파일 분석 실패: ${err.message}`);
+        console.error(err);
+      }
+    };
+
+    reader.onerror = () => {
+      setError("파일 읽기 실패");
+    };
+
+    // Read just enough of the file to perform all checks (32774 bytes)
+    const blob = file.slice(0, 0x8001 + 5);
+    reader.readAsArrayBuffer(blob);
+  };
+
+  return (
+    <div className="f-center">
+      <Input id="file"
+        type="file"
+        className="f-center h-full"
+        accept=".iso,.qcow2,.vhd,.img,.raw"
+        onChange={handleFileChange} />
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      {imageInfo && (
+        <div 
+          className="fs-8 ml-auto"
+          style={
+          { border: '1px solid #ccc', padding: '10px' }
+        }>
+          {/* <h3>Detected Image Details</h3> */}
+          <p className="row">
+            <strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}
+          </p>
+          <p className="row">
+            <strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB
+          </p>
+          {imageInfo.format === "QCOW2" && 
+          <p className="row">
+            <strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB
+          </p>}
+          <p className="row">
+            <strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}
+          </p>
+          {imageInfo.format === "QCOW2" && <p className="row">
+            <strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}
+          </p>}
+          {imageInfo.format === "QCOW2" && <p className="row">
+            <strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}
+          </p>}
+        </div>
+      )}
+    </div>
   );
 };
 

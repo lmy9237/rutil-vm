@@ -5,17 +5,15 @@
 .img-checkbox-outer {
   margin-left: 24px;
 }
-/*디스크(업로드)*/
+/* 디스크(업로드) */
 .storage-upload-first {
-  height: 62px;
+  height: auto;
+  min-height: 62px;
   border-bottom: 1px solid var(--color-table);
 }
-.storage-upload-first > button {
-  font-weight: 600;
-  margin-right: 16px;
-}
-.storage-upload-first>div{
-  width: 45%;height: var(--h-32);
+.storage-upload-first > div {
+  width: 45%;
+  /* height: var(--h-32); */
 }
 .disk-option {
   padding-top: 16px;

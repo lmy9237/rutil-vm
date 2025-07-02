@@ -321,6 +321,10 @@ svg.btn { cursor: pointer; }
 .aside-outer.closed ~ #section {
   width: 100%; 
 }
+.container-fluid::before { display:table; }
+.container-fluid {
+  margin-left:auto;margin-right:auto;
+}
 .section-content {
   height: calc(100% - var(--h-section-header));
   flex: 1;               
@@ -336,7 +340,8 @@ svg.btn { cursor: pointer; }
   overflow-y: auto; 
   /* height: calc(100% - var(--h-section-header)); */
 }
-.section-content,.info-content { 
+.section-content,
+.info-content {
   padding: 10px;
   align-items:flex-start !important;
 }

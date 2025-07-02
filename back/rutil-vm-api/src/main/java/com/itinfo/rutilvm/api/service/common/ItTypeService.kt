@@ -192,7 +192,7 @@ fun BiosTypeB.toTypeVoFromBiosType(): TypeVo = TypeVo(
 fun List<BiosTypeB>.toTypeVosFromBiosTypes(): List<TypeVo> =
 	this@toTypeVosFromBiosTypes.map { it.toTypeVoFromBiosType() }
 fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
-	this@toTypeVoFromDiskContentType.storageValue,
+	this@toTypeVoFromDiskContentType.name,
 	this@toTypeVoFromDiskContentType.kr,
 	this@toTypeVoFromDiskContentType.en,
 )
