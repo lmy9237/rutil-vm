@@ -87,7 +87,7 @@ const hostForm = {
 // 콘솔
 const cosoleForm = {
   videoType: "",
-  graphicProtocol: "",
+  displayType: "",
   consoleDisconnet: ""
 };
 
@@ -303,6 +303,9 @@ const VmModal = ({
         storageDomainVo: {
           id: vm?.storageDomainVo?.id,
         }
+      });
+      setFormConsoleState({
+        displayType: vm?.displayType
       });
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",

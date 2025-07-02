@@ -73,7 +73,7 @@ fun Connection.startVm(vmId: String, usingInitialization: Vm? = null): Result<Bo
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.startOnceVm(vm: Vm): Result<Boolean> = runCatching {
+fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runCatching {
 	val diskAttachments = this.findAllDiskAttachmentsFromVm(vm.id()).getOrDefault(listOf())
 	if (!diskAttachments.any { it.bootable() }) {
 		log.error("부팅 가능한 디스크가 없음")
@@ -82,13 +82,13 @@ fun Connection.startOnceVm(vm: Vm): Result<Boolean> = runCatching {
 	if(vm.status() == VmStatus.UP){
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
-	this.srvVm(vm.id()).start().useSysprep(true).send()
+	this.srvVm(vm.id()).start().useSysprep(windowGuest).volatile_(true).vm(vm).send()
 
 	true
 }.onSuccess {
-	Term.VM.logSuccess("한번 시작", vm.name())
+	Term.VM.logSuccess("한번 시작", vm.id())
 }.onFailure {
-	Term.VM.logFail("한번 시작", it, vm.name())
+	Term.VM.logFail("한번 시작", it, vm.id())
 	throw if (it is Error) it.toItCloudException() else it
 }
 

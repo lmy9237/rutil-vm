@@ -300,6 +300,7 @@ class VmController: BaseController() {
 		notes="선택된 가상머신을 한번 실행한다(window 경우)"
 	)
 	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
 		ApiImplicitParam(name="vmVo", value="가상머신", dataTypeClass=VmVo::class, paramType="body"),
 	)
 	@ApiResponses(
@@ -310,8 +311,11 @@ class VmController: BaseController() {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun startOnce(
+		@PathVariable vmId: String? = null,
 		@RequestBody vmVo: VmVo? = null,
 	): ResponseEntity<Boolean> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
 		log.info("/computing/vms/{}/startOnce ... 가상머신 한번 시작", vmVo.name)

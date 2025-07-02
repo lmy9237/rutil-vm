@@ -154,6 +154,7 @@ const ENDPOINTS = {
   DELETE_VM: (vmId, detachOnly) =>                                         `${ENDPOINT_API_V1}/computing/vms/${vmId}?detachOnly=${detachOnly}`,
   
   START_VM: (vmId) =>                                                      `${ENDPOINT_API_V1}/computing/vms/${vmId}/start`, 
+  START_ONCE_VM: (vmId) =>                                                 `${ENDPOINT_API_V1}/computing/vms/${vmId}/startOnce`, 
   PAUSE_VM: (vmId) =>                                                      `${ENDPOINT_API_V1}/computing/vms/${vmId}/pause`, 
   POWER_OFF_VM: (vmId) =>                                                  `${ENDPOINT_API_V1}/computing/vms/${vmId}/powerOff`, 
   SHUT_DOWN_VM: (vmId) =>                                                  `${ENDPOINT_API_V1}/computing/vms/${vmId}/shutdown`, 

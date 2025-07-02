@@ -85,6 +85,10 @@ import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.builders.VmPlacementPolicyBuilder
 import org.ovirt.engine.sdk4.types.Architecture
 import org.ovirt.engine.sdk4.types.BootDevice
+import org.ovirt.engine.sdk4.types.BootDevice.CDROM
+import org.ovirt.engine.sdk4.types.BootDevice.HD
+import org.ovirt.engine.sdk4.types.BootDevice.NETWORK
+import org.ovirt.engine.sdk4.types.Cdrom
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskAttachment
@@ -170,6 +174,7 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property runOnce [Boolean]
  * @property autoStartUp [Boolean]
  * @property statusDetail [VmPauseStatusB]
+ * @property windowGuestTool [Boolean]
  * @property upTime [String]
  * @property _creationTime [Date]
  * @property _startTime [Date]
@@ -249,6 +254,7 @@ class VmVo (
 	val autoStartUp: Boolean = false,
 	val statusDetail: VmPauseStatusB? = none,
 	val timeElapsed: Long? = 0,
+	val windowGuestTool: Boolean = false,
 	private val _creationTime: LocalDateTime? = null,
 	private val _startTime: LocalDateTime? = null,
 	private val _stopTime: LocalDateTime? = null,
@@ -345,7 +351,6 @@ class VmVo (
 		private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = ""; fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: "" }
-		// private var bStatus: com.itinfo.rutilvm.api.ovirt.business.VmStatus = ""; fun status(block: () -> String?) { bStatus = block() ?: "" }
 		private var bStatus: VmStatusB = VmStatusB.unknown; fun status(block: () -> VmStatusB?) { bStatus = block() ?: VmStatusB.unknown }
 		private var bIconSmall: VmIconVo? = null;fun iconSmall(block: () -> VmIconVo?) { bIconSmall = block() }
 		private var bIconLarge: VmIconVo? = null;fun iconLarge(block: () -> VmIconVo?) { bIconLarge = block() }
@@ -397,6 +402,7 @@ class VmVo (
 		private var bAutoStartUp: Boolean = false; fun autoStartUp(block: () -> Boolean?) { bAutoStartUp = block() ?: false }
 		private var bStatusDetail: VmPauseStatusB? = none; fun statusDetail(block: () -> VmPauseStatusB?) { bStatusDetail = block() ?: none }
 		private var bTimeElapsed: Long? = 0L; fun timeElapsed(block: () -> Long?) { bTimeElapsed = block() ?: 0L }
+		private var bWindowGuestTool: Boolean = false; fun windowGuestTool(block: () -> Boolean?) { bWindowGuestTool = block() ?: false }
 		private var bCreationTime: LocalDateTime? = null; fun creationTime(block: () -> LocalDateTime?) { bCreationTime = block() }
 		private var bStartTime: LocalDateTime? = null; fun startTime(block: () -> LocalDateTime?) { bStartTime = block() }
 		private var bStopTime: LocalDateTime? = null; fun stopTime(block: () -> LocalDateTime?) { bStopTime = block() }
@@ -417,7 +423,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
     }
 
     companion object {
@@ -815,6 +821,7 @@ fun VmVo.toVmBuilder(): VmBuilder {
 fun VmVo.toAddVm(): Vm =
 	toVmBuilder()
 		.template(TemplateBuilder().id(templateVo.id).build())
+		.tpmEnabled(osType?.isWindows == true)
 		.build()
 
 fun VmVo.toEditVm(): Vm =
@@ -909,15 +916,22 @@ fun VmVo.toRegisterVm(): Vm {
 }
 
 fun VmVo.toStartOnceVm(): Vm {
+	val cdromList = mutableListOf<Cdrom>()
+
+	// 필수 Windows 설치 ISO
+	cdromList.add(
+		CdromBuilder()
+			.file(FileBuilder().id(this.cdRomVo.id))
+			.build()
+	)
+
 	return VmBuilder()
 		.id(this.id)
 		.bios(BiosBuilder().bootMenu(BootMenuBuilder().enabled(biosBootMenu).build()))
-		.cdroms(CdromBuilder().file(FileBuilder().id(this.cdRomVo.id)))
-		// .cdrom(CdromBuilder().file(FileBuilder().id(cdromId))).send().cdrom()
+		.cdroms(cdromList)
+		.os(OperatingSystemBuilder().boot(BootBuilder().devices(listOf(HD, CDROM, NETWORK)).build()))
 		.build()
 }
-
-
 
 //endregion
 

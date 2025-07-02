@@ -18,9 +18,9 @@ const VmConsole = ({
         onChange={handleInputChange(setFormConsoleState, "videoType", validationToast)}
       />
       <LabelSelectOptions label="그래픽 프로토콜"
-        value={formConsoleState.graphicProtocol}
+        value={formConsoleState.displayType}
         options={graphicProtocols}
-        onChange={handleInputChange(setFormConsoleState, "graphicProtocol", validationToast)}
+        onChange={handleInputChange(setFormConsoleState, "displayType", validationToast)}
       />
     </>
   );

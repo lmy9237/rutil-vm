@@ -566,7 +566,7 @@ fun VmEntity.toVmVo(): VmVo {
 		usb { entity.usbPolicy?.isEnabled }
 		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }
 		hostedEngineVm { entity.isHostedEngineVm }
-		// timeOffset {  }
+		timeOffset { entity.timeZone }
 		usageDto {
 			UsageDto.builder {
 				cpuPercent { usageCpuPercent }
@@ -575,7 +575,7 @@ fun VmEntity.toVmVo(): VmVo {
 			}
 		}
 		ipv4 { listOf(entity.vmIp) }
-		fqdn { entity.vmHost }
+		fqdn { entity.vmFqdn }
 		cdRomVo {
 			IdentifiedVo.builder {
 				id { entity.isoPath }
@@ -688,7 +688,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		usb { entity.usbPolicy?.isEnabled }
 		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }
 		hostedEngineVm { entity.isHostedEngineVm }
-		// timeOffset {  }
+		timeOffset { entity.timeZone }
 		usageDto {
 			UsageDto.builder {
 				cpuPercent { usageCpuPercent }
@@ -697,7 +697,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 			}
 		}
 		ipv4 { listOf(entity.vmIp) }
-		fqdn { entity.vmHost }
+		fqdn { entity.vmFqdn }
 		hostVos { hosts }
 		cdRomVo {
 			IdentifiedVo.builder {

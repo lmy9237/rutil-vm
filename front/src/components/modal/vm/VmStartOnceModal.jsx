@@ -2,7 +2,7 @@ import { useValidationToast }           from "@/hooks/useSimpleToast";
 import BaseModal                        from "@/components/modal/BaseModal";
 import {
   useCDFromDataCenter,
-  useStartVM,
+  useStartOnceVM,
   useVm
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
@@ -19,7 +19,7 @@ const initialFormState = {
   id: "",
   isCdDvdChecked: false,
   cdRomVo: emptyIdNameVo(),
-  windowGuest: false,
+  windowGuestTool: false,
   biosBootMenu: true,
 };
 
@@ -33,6 +33,7 @@ const VmStartOnceModal = ({
   
   const [formState, setFormState] = useState(initialFormState);
 
+  const { mutate: startOnceVm } = useStartOnceVM(onClose, onClose);
   const { data: vm } = useVm(vmId);
 
   // 부트 옵션 - cd/dvd 연결
@@ -62,7 +63,19 @@ const VmStartOnceModal = ({
       validationToast.fail(error);
       return;
     }
-    Logger.debug(`VmStartOnceModal > handleSubmit ... `)
+    const dataToSubmit = {
+      id: vmId,
+      isCdDvdChecked: formState.isCdDvdChecked,
+      cdRomVo: {id: formState.cdRomVo.id},
+      windowGuestTool: formState.windowGuestTool,
+      biosBootMenu: formState.biosBootMenu,
+    };
+
+    Logger.debug(`VmStartOnceModal > handleSubmit ... `, dataToSubmit)
+
+    startOnceVm({
+      vmId: vmId, vmData: dataToSubmit 
+    });
   };
 
   return (
@@ -71,7 +84,7 @@ const VmStartOnceModal = ({
       onSubmit={handleSubmit}
       contentStyle={{ width: "650px" }}
     > 
-      <span>- 부트 옵션</span>
+      <span>- 부트 옵션 {vmId}</span>
       <div className="f-btw">
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formState.isCdDvdChecked}
@@ -82,10 +95,11 @@ const VmStartOnceModal = ({
               ...prev,
               isCdDvdChecked: isChecked,
               cdRomVo: isChecked ? firstIso : emptyIdNameVo(),
-              windowGuest: isChecked ? prev.windowGuest : false,
+              windowGuestTool: isChecked ? prev.windowGuestTool : false,
             }));
           }}
         />
+        <span>{formState.isCdDvdChecked === true ? "T":"F"}</span>
         <div style={{width:"55%"}}>
           <LabelSelectOptionsID
             value={formState.cdRomVo?.id}
@@ -98,17 +112,19 @@ const VmStartOnceModal = ({
             }}
           />
         </div>
+
+        <div><span>{formState.cdRomVo?.name}</span></div>
       </div>
 
-      <LabelCheckbox id="windowGuest" label="Windows 게스트 툴 CD 첨부"
+      <LabelCheckbox id="windowGuestTool" label="Windows 게스트 툴 CD 첨부"
         disabled={!formState.isCdDvdChecked}
-        checked={formState.windowGuest}
-        onChange={handleInputCheck(setFormState, "windowGuest")}
+        checked={formState.windowGuestTool}
+        onChange={handleInputCheck(setFormState, "windowGuestTool", validationToast)}
       />
 
       <LabelCheckbox id="enableBootMenu" label="부팅 메뉴를 활성화"
         checked={formState.biosBootMenu}
-        onChange={handleInputCheck(setFormState, "biosBootMenu")}
+        onChange={handleInputCheck(setFormState, "biosBootMenu", validationToast)}
       />
 
     </BaseModal>

@@ -2632,6 +2632,39 @@ export const useStartVM = (
   });
 };
 /**
+ * @name useStartOnceVM
+ * @description 가상머신 한번 실행 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useStartOnceVM = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async ({vmId, vmData}) => {
+      closeModal();
+      const res = await ApiManager.startOnceVM(vmId, vmData);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useStartOnceVM ... vmData: ${vmData}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useStartOnceVM ... res: `, res);
+      apiToast.ok(`${Localization.kr.VM} 한번 ${Localization.kr.START} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allVMs');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
  * @name usePauseVM
  * @description 가상머신 일시정지 useMutation 훅
  * 

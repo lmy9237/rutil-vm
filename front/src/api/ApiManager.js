@@ -1603,6 +1603,21 @@ const ApiManager = {
       // defaultValues: DEFAULT_VALUES.START_VM
     });
   },
+
+  /**
+   * @name ApiManager.startOnceVM
+   * @description 가상머신 한번 시작
+   * 
+   * @param {String} vmData
+   * @returns {Promise<Object>} 
+   */
+  startOnceVM: async (vmId, vmData) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.START_ONCE_VM(vmId),
+      data: vmData
+    });
+  },
   /**
    * @name ApiManager.pauseVM
    * @description 가상머신 일시정지

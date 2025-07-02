@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.model.SystemPropertiesVo
+import com.itinfo.rutilvm.util.ovirt.addCdromFromVm
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import com.itinfo.rutilvm.util.ovirt.exportVm
@@ -29,6 +30,7 @@ import com.itinfo.rutilvm.util.ovirt.startVm
 import com.itinfo.rutilvm.util.ovirt.stopVm
 import com.itinfo.rutilvm.util.ovirt.suspendVm
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.types.Cdrom
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.Network
@@ -36,10 +38,8 @@ import org.ovirt.engine.sdk4.types.Vm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
@@ -191,8 +191,12 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 
 	@Throws(Error::class, ItCloudException::class)
 	override fun startOnce(vmVo: VmVo): Boolean {
-		log.info("startOnce ... vm: {}", vmVo.name)
-		val res: Result<Boolean> = conn.startOnceVm(vmVo.toStartOnceVm())
+		log.info("startOnce ... vm: {}", vmVo)
+		val res: Result<Boolean> = conn.startOnceVm(
+			vmVo.toStartOnceVm(),
+			vmVo.windowGuestTool
+		)
+
 		return res.isSuccess
 	}
 
