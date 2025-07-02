@@ -838,7 +838,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	display(DisplayBuilder().type(displayType.toDisplayType()))
 	timeZone(
 		TimeZoneBuilder().name(
-			if(osType?.isWindows == true) "GMT Standard Time"
+			if (osType?.isWindows == true) "GMT Standard Time"
 			else timeOffset
 			// Asia/Seoul   |    Korea Standard Time
 		)

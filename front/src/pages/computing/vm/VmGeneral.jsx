@@ -4,6 +4,7 @@ import { openNewTab }             from "@/navigation";
 import { useValidationToast }     from "@/hooks/useSimpleToast";
 import useUIState                 from "@/hooks/useUIState";
 import useGlobal                  from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralLayout              from "@/components/GeneralLayout";
 import Vnc                        from "@/components/Vnc"
@@ -217,7 +218,6 @@ const VmGeneral = ({
         <TableRowClick type="domain" id={diskAtt?.disk?.storageDomainVo?.id}>
           {diskAtt?.disk?.storageDomainVo?.name}
         </TableRowClick>
-        // diskAtt?.disk?.storageDomainName
       ))].join(", ")
     }, {
       label: Localization.kr.NETWORK,
@@ -252,7 +252,6 @@ const VmGeneral = ({
     const cpu = vm?.usageDto?.cpuPercent ?? 0;
     const memory = vm?.usageDto?.memoryPercent ?? 0;
     const network = vm?.usageDto?.networkPercent ?? 0;
-
     return [
       {
         label: "CPU", value: cpu, description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
@@ -265,31 +264,6 @@ const VmGeneral = ({
   }, [vm?.usageDto]);
 
   const rfbRef = useRef(null);
-  const takeScreenshotFromRFB = useCallback((rfb) => {
-    Logger.debug(`Vnc > takeScreenshotFromRFB ...`)
-    rfbRef.current = rfb
-    if (rfb && rfb._display && rfb._display._target) {
-      try {
-        const canvas = rfb._display._target;
-        const dataUrl = canvas.toDataURL('image/png');
-        
-        setVncScreenshotDataUrl(vmId, dataUrl);
-        Logger.debug(`VmVnc > takeScreenshotFromRFB ... dataUrl: ${dataUrl}`);
-        // copyToClipboard(dataUrl);
-        // rfb.disconnect();
-        rfb.blur();
-      } catch(error) {
-        Logger.error(`VmVnc > takeScreenshotFromRFB ... error: ${error.message}`);
-      }
-    }
-  }, [vmId, rfbRef])
-
-  /* useEffect(() => {
-    Logger.debug(`VmGeneral > useEffect ... `)
-    if (vncScreenshotDataUrl(vmId) === "") {
-      takeScreenshotFromRFB(rfbRef.current)
-    }
-  }, [vmId, rfbRef]) */
 
   const handleStartConsole = useCallback(() => {
     Logger.debug(`VmOsIcon > handleStartConsole ... `);
@@ -299,15 +273,6 @@ const VmGeneral = ({
     }
     openNewTab("console", vmId); 
   }, [vmId, rfbRef]);
-
-  /*
-  useEffect(() => {
-    Logger.debug(`VmGeneral > useEffect ... checking if vm's running`)
-    if (!vm?.running) {
-      clearVncScreenshotDataUrl(vmId);
-    }
-  }, [vm, vmId])
-  */
 
   return (
 /*    
@@ -403,8 +368,7 @@ const VmGeneral = ({
        
         </>
         }
-      bottom={
-        <>
+        bottom={<>
           <GeneralBoxProps
             title="가상머신 하드웨어"
             moreLink={`/computing/vms/${vmId}/disks`} 
@@ -433,13 +397,12 @@ const VmGeneral = ({
               ))}
             </div>
           </GeneralBoxProps>
-        </>
-      }
-    />
-    {/* <OVirtWebAdminHyperlink
+        </>}
+      />
+      <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 
-      /> */}
+      />
     </>
   );
 };

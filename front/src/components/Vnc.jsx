@@ -41,10 +41,10 @@ const Vnc = forwardRef(({
 
   const isReady = () => 
     isVmQualified4ConsoleConnect &&
-    vmConsoleAccessInfo !== null &&
-    vmConsoleAccessInfo?.address !== null &&
-    vmConsoleAccessInfo?.port !== null &&
-    vmConsoleAccessInfo?.token !== null; 
+    vmConsoleAccessInfo !== null && vmConsoleAccessInfo !== undefined &&
+    vmConsoleAccessInfo?.address !== null && vmConsoleAccessInfo?.address !== undefined &&
+    vmConsoleAccessInfo?.port !== null && vmConsoleAccessInfo?.port !== undefined && !isNaN(vmConsoleAccessInfo?.port) && 
+    vmConsoleAccessInfo?.token !== null && vmConsoleAccessInfo?.token !== undefined;
 
   const isValid = (url) => url.startsWith("ws://") || url.startsWith("wss://");
 
