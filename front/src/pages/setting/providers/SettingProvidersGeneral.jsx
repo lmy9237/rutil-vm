@@ -1,15 +1,21 @@
-import InfoTable from "@/components/table/InfoTable";
 import React from "react";
+import InfoTable from "@/components/table/InfoTable";
+import useGlobal from "@/hooks/useGlobal";
+import { useProvider } from "@/api/RQHook";
+import Localization from "@/utils/Localization";
 
-const SettingProvidersGeneral = () => {
-  const tableRows = [ // 샘플 데이터
-    { label: "이름", value: "ovirt-image-repository" },
-    { label: "유형", value: "OpenStack Image" },
-    { label: "설명", value: "Public Glance repository for oVirt" },
-    { label: "공급자 URL", value: "http://glance.ovirt.org:9292" },
+const SettingProvidersGeneral = ({ provider }) => {
+  if (!provider) return <div>로딩 중...</div>;
+
+  const tableRows = [
+    { label: Localization.kr.NAME, value: provider?.name },
+    { label: Localization.kr.TYPE, value: provider.providerTypeKr || provider.providerType },
+    { label: Localization.kr.DESCRIPTION, value: provider.description || "-" },
+    { label: "공급자 URL", value: provider.url },
   ];
 
   return <InfoTable tableRows={tableRows} />;
 };
+
 
 export default SettingProvidersGeneral;

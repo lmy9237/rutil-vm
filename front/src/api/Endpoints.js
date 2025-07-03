@@ -322,6 +322,8 @@ const ENDPOINTS = {
   //#region: Provider
   FIND_ALL_PROVIDERS: () =>                                                `${ENDPOINT_API_V1}/providers`,
   FIND_PROVIDER: (providerId) =>                                           `${ENDPOINT_API_V1}/providers/${providerId}`, 
+  VERIFY_VMS_FROM_PROVIDER : () =>                                         `${ENDPOINT_API_V1}/vw/auth`,
+  FIND_VMS_FROM_PROVIDER : () =>                                           `${ENDPOINT_API_V1}/vw/vms`,
   //#endregion: provider
   
   //#region: User

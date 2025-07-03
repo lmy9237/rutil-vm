@@ -3293,6 +3293,38 @@ const ApiManager = {
     method: "GET",  
     url: ENDPOINTS.FIND_PROVIDER(providerId), 
   }),
+
+
+ /**
+   * @name ApiManager.findProvider
+   * @description provider 아이디/비밀번호 검증
+   *
+   * @returns 
+   */
+  verifyVmsFromProvider: async ({ baseUrl, username, password }) => makeAPICall({
+    method: "POST",
+    url: ENDPOINTS.VERIFY_VMS_FROM_PROVIDER(),
+    data: {
+      baseUrl,
+      username,
+      password,
+    },
+  }),
+
+ /**
+   * @name ApiManager.findProvider
+   * @description provider VMWare 가상머신 목록 조회
+   *
+   * @returns 
+   */
+  findVmsFromProvider: async ({ baseUrl, sessionId }) => makeAPICall({
+    method: "POST",
+    url: ENDPOINTS.FIND_VMS_FROM_PROVIDER(),
+    data: {
+      baseUrl,
+      sessionId,
+    },
+  }),
   //#endregion: provider
 
 

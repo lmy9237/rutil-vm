@@ -6191,6 +6191,79 @@ export const useProvider = (
 });
 
 
+/**
+ *  !!! TODO 검토필요
+ * @name useVerifyVmsFromProvider
+ * @description VMware 사용자 ID/PW 인증 훅
+ *
+ * @param {Function} postSuccess - 성공 후 콜백
+ * @param {Function} postError - 실패 후 콜백
+ */
+export const useVerifyVmsFromProvider = (
+  postSuccess = () => {}, 
+  postError
+) => {
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+
+  return useMutation({
+    mutationFn: async ({ baseUrl, username, password }) => {
+      closeModal();
+      const res = await ApiManager.verifyVmsFromProvider({ baseUrl, username, password });
+      const _res = validate(res)?.body?.value;
+      Logger.debug("RQHook > useVerifyVmsFromProvider > token: ", _res);
+      return _res;
+    },
+    onSuccess: (token, { baseUrl, username }) => {
+      if (!token) {
+        throw new Error("인증 실패: 토큰이 존재하지 않습니다.");
+      }
+      // 이후 저장하거나 연결된 동작 추가 가능
+      Logger.debug(`인증 성공 - 사용자: ${username}, 토큰: ${token}`);
+      postSuccess(token);
+    },
+    onError: (error) => {
+      Logger.error("RQHook > useVerifyVmsFromProvider > error: ", error);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
+
+/**
+ *  !!! TODO 검토필요
+ * @name useFindVmsFromProvider
+ * @description VMware 인증된 세션으로 VM 목록 조회하는 훅
+ */
+export const useFindVmsFromProvider = (
+  postSuccess = () => {},
+  postError
+) => {
+  const { apiToast } = useApiToast();
+
+  return useMutation({
+    mutationFn: async ({ baseUrl, sessionId }) => {
+      const res = await ApiManager.findVmsFromProvider({ baseUrl, sessionId });
+      const _res = validate(res)?.body ?? [];
+      Logger.debug("RQHook > useFindVmsFromProvider", _res);
+      return _res;
+    },
+    onSuccess: (vms) => {
+      if (!Array.isArray(vms)) {
+        throw new Error("가상머신 목록 형식이 올바르지 않습니다.");
+      }
+      postSuccess(vms);
+    },
+    onError: (error) => {
+      apiToast.error("가상머신 목록 조회에 실패했습니다.");
+      Logger.error("useFindVmsFromProvider Error", error);
+      postError && postError(error);
+    },
+  });
+};
+
+
 //#endregion: provider
 
 //#region: User

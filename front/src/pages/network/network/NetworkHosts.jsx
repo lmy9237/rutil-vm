@@ -113,10 +113,10 @@ const NetworkHosts = ({
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
           refetch={activeFilter === "connected" ? refetchConnectedHosts : refetchDisconnectedHosts}
         />
+        <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <div className="header-right-btns">
           <ActionButton
             label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}

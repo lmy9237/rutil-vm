@@ -54,7 +54,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr); 
   gap: 0px 18px;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
 }
 .vm-import-form-item {
   width: 100%;
@@ -72,7 +72,7 @@
 .vm-import-table{
   width: 100%;
 }
-.dd{
+.vm-import-table-outer{
   border: var(--border-default);
   min-height: 160px;
   overflow-y: auto;
@@ -88,14 +88,28 @@
   overflow: auto;
   background-color: #fff;
 }
+
 .vm-import-detail-box  .info-table-wrapper{
   padding: 5px 3px !important;
+  background: none !important;
 }
-.vm-import-detail-box  .info-table th,
-.vm-import-detail-box  .info-table td
+
+.vm-import-render-tb .info-table-wrapper{
+  min-width: 200px;
+  height: 100%;
+}
+.vm-import-render-tb .info-table th{
+  min-width: 130px;
+}
+.vm-import-render-tb .info-table th,
+.vm-import-render-tb .info-table td
 {
-  padding: 8px 0 !important;
+  white-space: normal;      
+  word-break: break-word;     
+  word-wrap: break-word;  
+  padding: 7px 0 !important;
 }
+
 /*호스트 장치(장치추가 팝업)*/
 .able-host-device-table {
   height: 26vh;

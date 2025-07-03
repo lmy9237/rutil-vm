@@ -60,15 +60,13 @@ const SettingProvidersInfo = () => {
     [...tabs].find((tab) => tab?.id === activeTab)?.label,
   ], [provider,tabs, activeTab]);
 
-  const sectionComponents = {
-    general: SettingProvidersGeneral,    
-    token: SettingProvidersToken, 
-  };
-
-  const renderSectionContent = () => {
-    const SectionComponent = sectionComponents[activeTab];
-    return SectionComponent ? <SectionComponent /> : null;
-  };
+const renderSectionContent = useCallback(() => {
+  const SectionComponent = {
+    general: SettingProvidersGeneral,
+    token: SettingProvidersToken,
+  }[activeTab];
+  return SectionComponent ? <SectionComponent provider={provider} /> : null;
+}, [activeTab, provider]);
 
   const sectionHeaderButtons = useMemo(() => [
     { type: "update", onClick: () => setActiveModal("provider:update"), label: Localization.kr.UPDATE,  },
@@ -78,8 +76,7 @@ const SettingProvidersInfo = () => {
   return (
     <SectionLayout>
       <HeaderButton 
-        title={"공급자 이름"}
-        //title={provider?.name}
+        title={provider?.name}
         titleIcon={rvi24Gear()}
          buttons={sectionHeaderButtons}
       />

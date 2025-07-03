@@ -187,7 +187,7 @@ const TableColumnsInfo = {
   ],
   DISKS_FROM_VM: [
     { accessor: "icon",           header: Localization.kr.STATUS,         clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
-    { accessor: '_alias',         header: Localization.kr.ALIAS,          clickable: true, width: '10%' },
+    { accessor: '_alias',         header: Localization.kr.ALIAS,          clickable: true },
     { accessor: 'bootable',       header: Localization.kr.IS_BOOTABLE,    clickable: false, width: '4%' },
     { accessor: 'sharable',       header: Localization.kr.IS_SHARABLE,    clickable: false, width: '4%' },
     { accessor: 'readOnly',       header: Localization.kr.IS_READ_ONLY,   clickable: false, width: '4%' },

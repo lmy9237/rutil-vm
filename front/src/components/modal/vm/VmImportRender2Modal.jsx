@@ -40,17 +40,32 @@ const VmImportRender2Modal = ({ targetVMs = [], virtioChecked, setVirtioChecked 
   const vms = targetVMs.length > 0 ? targetVMs : sampleData;
   const selectedVm = vms.find(vm => vm.id === selectedId); 
 
-  const generalInfoRows = (vm) => [
+  const generalInfoRows1 = (vm) => [
     { label: "이름", value: vm.name },
-    { label: "운영 체제", value: vm.os },
-    { label: "설명", value: vm.description },
-    { label: "메모리", value: vm.memory },
-    { label: "CPU", value: vm.cpu },
-    { label: "USB", value: vm.usb ? "활성화" : "비활성화" },
-    { label: "아키텍처", value: vm.arch },
-    { label: "디스크 수", value: vm.disk },
+    { label: "운영 시스템", value: vm.os || "Other OS" },
+    { label: "설명", value: vm.description || "없음" },
+    { label: "템플릿", value: vm.template || "해당 없음" },
+    { label: "비디오 유형", value: vm.video || "해당 없음" },
+    { label: "우선 순위", value: vm.priority || "낮음" },
+    { label: "설정된 메모리", value: vm.memory },
+    { label: "최적화 옵션", value: vm.optimizedFor || "서버" },
   ];
 
+  const generalInfoRows2 = (vm) => [
+    { label: "할당할 실제 메모리", value: vm.memory || "16384 MB" },
+    { label: "CPU 코어 수", value: vm.cpuTopology || `${vm.cpu} (4:1:1)` },
+    { label: "게스트 CPU 수", value: vm.guestCpu || "해당 없음" },
+    { label: "모니터 수", value: vm.monitors || "1" },
+    { label: "USB", value: vm.usb ? "활성화됨" : "비활성화됨" },
+    { label: "소스", value: vm.source || "VMware" },
+    { label: "실행 호스트", value: vm.hostInCluster || "클러스터 내의 호스트" },
+    { label: "사용자 정의 속성", value: vm.userAttrs || "설정되지 않음" },
+  ];
+
+  const generalInfoRows3 = (vm) => [
+    { label: "클러스터 호환 버전", value: vm.clusterVersion || "4.7" },
+    { label: "가상 머신 ID", value: vm.uuid || "4217523a-cc3c-1ef3-9d0b-0a312051e715" },
+  ];
   return (
     <>
       {/* 상단 설정 영역 */}
@@ -115,33 +130,98 @@ const VmImportRender2Modal = ({ targetVMs = [], virtioChecked, setVirtioChecked 
       </div>
       
       <div className="vm-import-detail-box mb-3">
-        {/* 탭 및 상세 정보 (선택된 항목이 있을 때만 표시) */}
         {selectedVm ? (
             <>
             <div className="mb-2">
-                <FilterButtons
+              <FilterButtons
                 options={[
-                    { key: "general", label: "일반" },
-                    { key: "network", label: "네트워크" },
-                    { key: "disk", label: "디스크" },
+                  { key: "general", label: "일반" },
+                  { key: "network", label: "네트워크" },
+                  { key: "disk", label: "디스크" },
                 ]}
                 activeOption={activeFilter}
                 onClick={setActiveFilter}
-                />
+              />
             </div>
 
             <div className="vm-detail-content">
-                {activeFilter === "general" && (
-                <div className="get-template-info f-btw three-columns">
-                    <InfoTable tableRows={generalInfoRows(selectedVm)} />
+              {activeFilter === "general" && (
+                <div className="vm-import-render-tb f-btw h-[100px]">
+                  <InfoTable tableRows={generalInfoRows1(selectedVm)} />
+                  <InfoTable tableRows={generalInfoRows2(selectedVm)} />
+                  <InfoTable tableRows={generalInfoRows3(selectedVm)} />
                 </div>
-                )}
-                {activeFilter === "network" && (
-                <div className="mt-2">네트워크 어댑터 정보 없음</div>
-                )}
-                {activeFilter === "disk" && (
-                <div className="mt-2">디스크 정보 없음</div>
-                )}
+              )}
+              {activeFilter === "network" && (
+                <div className="mt-2">
+              <div className="section-table-outer w-full mb-2">
+                <table
+                  className="custom-table w-full"
+                  border="1"
+                  cellPadding="8"
+                  style={{ borderCollapse: "collapse", width: "100%" }}
+                >
+                  <thead style={{ background: "#f5f5f5" }}>
+                    <tr>
+                      <th>이름</th>
+                      <th>기존 네트워크 이름</th>
+                      <th>네트워크 이름</th>
+                      <th>프로파일 이름</th>
+                      <th>유형</th>
+                      <th>MAC</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {["nic1", "nic2", "nic3", "nic4"].map((nic, idx) => (
+                      <tr key={nic}>
+                        <td>{nic}</td>
+                        <td>oVirt Network</td>
+                        <td>
+                          <select>
+                            <option>ovirtmgmt</option>
+                          </select>
+                        </td>
+                        <td>
+                          <select>
+                            <option>ovirtmgmt</option>
+                          </select>
+                        </td>
+                        <td>VirtIO</td>
+                        <td>{`00:50:56:97:${(idx * 0x2f + 0xfa).toString(16).padStart(2, "0")}`}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+                </div>
+              )}
+              {activeFilter === "disk" && (
+                <div className="mt-2">
+                  <div className="section-table-outer w-full mb-2">
+                    <table
+                      className="custom-table w-full"
+                      border="1"
+                      cellPadding="8"
+                      style={{ borderCollapse: "collapse", width: "100%" }}
+                    >
+                      <thead style={{ background: "#f5f5f5" }}>
+                        <tr>
+                          <th>경로</th>
+                          <th>가상 크기</th>
+                          <th>실제 크기</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>[datastore1] CentOS 7.9/CentOS 7.9.vmdk</td>
+                          <td>200 GiB</td>
+                          <td>4 GiB</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
             </>
         ) : (

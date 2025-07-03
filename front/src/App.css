@@ -181,7 +181,7 @@ html {
   --fs-15: 15px;
   --fs-16: 16px;
   --fs-18: 18px;
-  --fs-22: 22px;
+  --fs-20: 20px;
   --fs-24: 24px;
   --letter-28: -0.28px;
 }
@@ -230,8 +230,8 @@ body {
 .fs-18,.fs-18 > * {/*폰트18px*/
   font-size:var(--fs-18) !important;line-height:var(--fs-18) !important;
 }
-.fs-22,.fs-22 > * {/*폰트22px*/
-  font-size:var(--fs-22) !important;line-height:var(--fs-22) !important;
+.fs-20,.fs-20 > * {/*폰트22px*/
+  font-size:var(--fs-20) !important;line-height:var(--fs-20) !important;
 }
 .fs-24,.fs-24 > * {/*폰트24px*/
   font-size:var(--fs-24) !important;line-height:var(--fs-24) !important;
@@ -389,9 +389,8 @@ svg.btn { cursor: pointer; }
   border-radius: 2px;
   display: flex;
   min-height: 241px;
-  /* max-height: 350px; */
   overflow: hidden;
-  padding-bottom: 2rem;
+  padding-bottom: 12px;
   flex-direction: column;
 }
 
@@ -417,7 +416,8 @@ svg.btn { cursor: pointer; }
 }
 .box-content  .info-table-wrapper{
   min-width: 448px !important;
-  padding: 5px 3px !important;
+  padding: 4px 3px !important;
+  margin-top: 1px;
 }
 .box-content .info-table th,
 .box-content .info-table td

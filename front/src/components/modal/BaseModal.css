@@ -16,7 +16,7 @@
 .popup-header {
   width: 100%;height: var(--h-modal-header);
   color: var(--color-black);
-  padding-bottom: 16px;
+  padding-bottom: 13px;
 }
 .popup-header > button {
   margin-top: 1px;
