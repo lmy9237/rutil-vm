@@ -19,7 +19,9 @@ open class VMWareVmServiceImpl (
 ): ItVWVmService {
 	@Autowired private lateinit var vwRestConfig: VWRestConfig
 	private fun vCenterVms(baseUrl: String): VCenterVMService =
-		vwRestConfig.vmWareRestRetrofit(baseUrl).create(VCenterVMService::class.java)
+		vwRestConfig.vmWareRestRetrofit(
+			baseUrl
+		).create(VCenterVMService::class.java)
 
 	override fun findAll(prompt: VWPrompt): List<VCenterVm> {
 		log.info("findAll ... sessionId: {}", prompt.sessionId)

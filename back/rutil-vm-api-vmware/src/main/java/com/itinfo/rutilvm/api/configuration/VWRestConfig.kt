@@ -3,11 +3,9 @@ package com.itinfo.rutilvm.api.configuration
 import com.google.gson.GsonBuilder
 import com.itinfo.rutilvm.api.model.vmware.VWSessionId
 import com.itinfo.rutilvm.api.model.vmware.VCenterVm
+import com.itinfo.rutilvm.api.model.vmware.VCenterVmDetail
 import com.itinfo.rutilvm.common.LoggerDelegate
-import okhttp3.Credentials
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -20,6 +18,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 import retrofit2.http.POST
+import retrofit2.http.Path
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.concurrent.TimeUnit
@@ -39,9 +38,14 @@ open class VWRestConfig {
 	@Autowired private lateinit var propConfig: PropertiesConfig
 
 	open fun vmWareRestRetrofit(baseURL: String): Retrofit {
-		log.info("retrofit ... baseURL: {}", baseURL)
+		val baseURLMod = when {
+			baseURL.startsWith("https://", ignoreCase = true) -> baseURL
+			baseURL.startsWith("http://", ignoreCase = true) -> "https://${baseURL.substring(7)}"
+			else -> "https://$baseURL"
+		}
+		log.info("retrofit ... baseURL: {}", baseURLMod)
 		return Retrofit.Builder()
-			.baseUrl(baseURL)
+			.baseUrl(baseURLMod)
 			.client(vmWareRestOkHttpClient())
 			.addConverterFactory(ScalarsConverterFactory.create())
 			.addConverterFactory(GsonConverterFactory.create(GsonBuilder()
@@ -89,7 +93,8 @@ open class VWRestConfig {
 	 * [VMWareRestConfig.basicAuthInterceptor]
 	 * VMWare REST API 기본 인증 방식 (ID/PW 결합한 암호화 된 값)
 	 */
-	/*@Bean
+	/*
+	@Bean
 	open fun basicAuthInterceptor(): Interceptor = object: Interceptor {
 		override fun intercept(chain: Interceptor.Chain): Response {
 			val req = chain.request()
@@ -128,4 +133,10 @@ interface VCenterVMService {
 	fun findAll(
 		@Header("vmware-api-session-id") sessionId: String,
 	): Call<List<VCenterVm>>
+
+	@GET("/api/vcenter/vm/{vmId}")
+	fun findOne(
+		@Header("vmware-api-session-id") sessionId: String,
+		@Path("vmId") vmId: String,
+	): Call<VCenterVmDetail>
 }

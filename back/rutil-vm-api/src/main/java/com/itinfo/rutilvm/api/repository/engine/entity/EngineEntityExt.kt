@@ -967,7 +967,6 @@ fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
 fun List<ProvidersEntity>.toProviderVos(): List<ProviderVo> =
 	this.map { it.toProviderVo() }
 
-
 fun ProvidersEntity.toExternalHostProviderVo(): ExternalHostProviderVo = ExternalHostProviderVo.builder {
 	id { id.toString() }
 	name { name }

@@ -7,7 +7,7 @@ import java.math.BigInteger
 
 /**
  * [VCenterVm]
- * VMWare 용 Vm 정보
+ * VMWare 용 Vm 기본정보
  *
  * @author 이찬희 (@chanhi2000)
  */

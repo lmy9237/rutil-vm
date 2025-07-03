@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 
 /**
  * [ProviderVo]
+ * 외부제공자
  *
  * @property id [String]
  * @property name [String]
@@ -33,6 +34,8 @@ import java.time.LocalDateTime
  * @property userDomainName [String]
  * @property projectName [String]
  * @property projectDomainName [String]
+ *
+ * @author 이찬희 (@chanhi2000)
  */
 class ProviderVo(
 	val id: String = "",
@@ -57,20 +60,13 @@ class ProviderVo(
 	var projectName: String? = "",
 	var projectDomainName: String? = "",
 ): Serializable {
-	val providerTypeLocalizationKey: String
-		get() = providerType?.localizationKey ?: ""
-
-	val providerTypeKr: String
-		get() = providerType?.kr ?: ""
-
-	val isProviderTypeNetwork: Boolean
-		get() = providerType?.isTypeNetwork ?: false
-
-	val isProviderTypeOpenstack: Boolean
-		get() = providerType?.isTypeOpenstack ?: false
-
-	val providerTypeSupportsAuthApiV3: Boolean
-		get() = providerType?.supportsAuthApiV3 ?: false
+	val providerTypeLocalizationKey: String		get() = providerType?.localizationKey ?: ""
+	val providerTypCode: String					get() = providerType?.code ?: ProviderTypeB.external_network.code
+	val providerTypeEn: String					get() = providerType?.en ?: "N/A"
+	val providerTypeKr: String					get() = providerType?.kr ?: "알 수 없음"
+	val isProviderTypeNetwork: Boolean			get() = providerType?.isTypeNetwork ?: false
+	val isProviderTypeOpenstack: Boolean		get() = providerType?.isTypeOpenstack ?: false
+	val providerTypeSupportsAuthApiV3: Boolean	get() = providerType?.supportsAuthApiV3 ?: false
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -125,7 +121,8 @@ fun ProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
 }
 
 fun ProviderVo.toAddHostProvider(): ExternalHostProvider =
-	toExternalHostProviderBuilder().build()
+	toExternalHostProviderBuilder()
+		.build()
 
 fun ProviderVo.toEditHostProvider(): ExternalHostProvider =
 	toExternalHostProviderBuilder()
