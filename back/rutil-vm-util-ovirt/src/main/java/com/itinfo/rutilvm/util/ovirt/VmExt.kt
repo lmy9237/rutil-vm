@@ -87,15 +87,15 @@ fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runC
 		.useSysprep(windowGuest)
 		.volatile_(true)
 		.vm(vm)
-		/*.vm(VmBuilder()
-			.cdroms(
-				CdromBuilder()
-					.file(FileBuilder().id("virtio-win.iso"))
-			)
-			.virtioScsi(VirtioScsiBuilder().build())
-		)*/
 		.send()
 
+	/*.vm(VmBuilder()
+		.cdroms(
+			CdromBuilder()
+				.file(FileBuilder().id("virtio-win.iso"))
+		)
+		.virtioScsi(VirtioScsiBuilder().build())
+	)*/
 	true
 }.onSuccess {
 	Term.VM.logSuccess("한번 시작", vm.id())

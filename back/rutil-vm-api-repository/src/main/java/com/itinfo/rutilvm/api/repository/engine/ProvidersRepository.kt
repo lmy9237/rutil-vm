@@ -7,4 +7,5 @@ import java.util.*
 
 @Repository
 interface ProvidersRepository : JpaRepository<ProvidersEntity, UUID> {
+	fun findByName(name: String): ProvidersEntity?
 }

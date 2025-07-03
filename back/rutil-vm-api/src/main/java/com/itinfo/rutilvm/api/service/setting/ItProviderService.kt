@@ -1,14 +1,18 @@
 package com.itinfo.rutilvm.api.service.setting
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
+import com.itinfo.rutilvm.api.model.setting.ProviderPropertyVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 import com.itinfo.rutilvm.api.model.setting.toAddExternalHostProviderVo
 import com.itinfo.rutilvm.api.model.setting.toAddHostProvider
 import com.itinfo.rutilvm.api.model.setting.toEditExternalHostProviderVo
+import com.itinfo.rutilvm.api.repository.aaarepository.entity.OvirtUser
 import com.itinfo.rutilvm.api.repository.engine.ProvidersRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.ProvidersEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toExternalHostProviderVo
@@ -25,6 +29,7 @@ import org.ovirt.engine.sdk4.types.ExternalHostProvider
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
 
 interface ItProviderService {
 	/**
@@ -95,15 +100,61 @@ class ProviderServiceImpl (
 
 	@Throws(Error::class)
 	override fun add(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo? {
-		log.info("add ...{}", externalHostProviderVo)
-		val addProvider: ExternalHostProvider? = conn.addExternalHostProvider(
-			externalHostProviderVo.toAddExternalHostProviderVo()
-		).getOrNull()
+		log.info("add ... externalHostProviderVo: {}", externalHostProviderVo)
 
+		val name = externalHostProviderVo.name
+		if (rProvider.findByName(name) != null)
+			throw ErrorPattern.EXTERNAL_HOST_PROVIDER_DUPLICATE.toException()
 
-		val res: ProvidersEntity? = addProvider?.id()?.let { rProvider.findById(it.toUUID()).get() }
-		return res?.toExternalHostProviderVo()
+		val propertyVo = externalHostProviderVo.providerPropertyVo
+		val noVerify = if (propertyVo?.verifySSL == true) 1 else 0
+		val url = "vpx://${propertyVo?.vCenter}/${propertyVo?.dataCenter}/${propertyVo?.cluster}/${propertyVo?.esxi}?no_verify=1"
+
+		val additionalPropertiesMap = mapOf(
+			"storagePoolId" to wrapGuid(propertyVo?.dataCenterVo?.id),
+			"proxyHostId" to wrapGuid(propertyVo?.hostVo?.id),
+			"vCenter" to propertyVo?.vCenter,
+			"esx" to propertyVo?.esxi,
+			"dataCenter" to listOfNotNull(
+				propertyVo?.dataCenter,
+				propertyVo?.cluster
+			).takeIf { it.isNotEmpty() }?.joinToString("/"),
+			"verifySSL" to propertyVo?.verifySSL
+		)
+
+		println("url: $url")
+
+		val objectMapper = ObjectMapper()
+		objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS) // null 포함
+		val additionalPropertiesJson = objectMapper.writeValueAsString(additionalPropertiesMap)
+
+		val uuid: UUID = UUID.randomUUID()
+		val providerAdd = ProvidersEntity.builder {
+			id { uuid }
+			name { name }
+			description { externalHostProviderVo.description }
+			url { url }
+			authUrl { null }
+			providerType { externalHostProviderVo.providerType.toString().uppercase() }
+			authRequired { externalHostProviderVo.authRequired }
+			authUsername { externalHostProviderVo.authUsername }
+			authPassword { externalHostProviderVo.authPassword }
+			additionalProperties { additionalPropertiesJson }
+		}
+
+		val providerAdded = rProvider.save(providerAdd)
+		return providerAdd.toExternalHostProviderVo()
 	}
+
+	fun wrapGuid(uuid: String?): List<Any>? {
+		return uuid?.takeIf { it.isNotBlank() }?.let {
+			listOf(
+				"org.ovirt.engine.core.compat.Guid",
+				mapOf("uuid" to it)
+			)
+		}
+	}
+
 
 	@Throws(Error::class)
 	override fun update(externalHostProviderVo: ExternalHostProviderVo): ExternalHostProviderVo? {

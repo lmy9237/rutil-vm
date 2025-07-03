@@ -918,29 +918,30 @@ fun VmVo.toRegisterVm(): Vm {
 
 fun VmVo.toStartOnceVm(): Vm {
 	val cdromList = mutableListOf<Cdrom>(
+		// 새로 적용할 window os
 		CdromBuilder()
 			.file(FileBuilder().id(this.cdRomVo.id))
+			.build(),
+		// 이미 지정된 부트옵션
+		CdromBuilder()
+			.file(FileBuilder().id(""))
 			.build()
 	)
 
 	return VmBuilder()
 		.id(this.id)
+		.os(OperatingSystemBuilder().boot(BootBuilder().devices(listOf(CDROM, HD, NETWORK)).build()))
 		.bios(BiosBuilder()
 			.bootMenu(
 				BootMenuBuilder().enabled(biosBootMenu)
 			)
 		)
-		.cdroms(listOf(
-			CdromBuilder()
-				.file(FileBuilder().id(this.cdRomVo.id))
-				.build()
-		))
-		.floppies(listOf(
-			FloppyBuilder()
-				.file(FileBuilder().build())
-				.build()
-		))
-		.os(OperatingSystemBuilder().boot(BootBuilder().devices(listOf(HD, CDROM, NETWORK)).build()))
+		.cdroms(cdromList)
+		// .floppies(listOf(
+		// 	FloppyBuilder()
+		// 		.file(FileBuilder().build())
+		// 		.build()
+		// ))
 		.build()
 }
 

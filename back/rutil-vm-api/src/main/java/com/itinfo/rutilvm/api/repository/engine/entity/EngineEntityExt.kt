@@ -989,21 +989,22 @@ fun AdditionalProperties4Vmware.toPropertyBuildersFromAdditionalProperties4Vmwar
 	val props = mutableListOf<Property>()
 
 	listOf(
-		// "storagePoolId" to storagePoolIdFull,
-		// "proxyHostId" to proxyHostIdFull,
+		"type" to "vmware",
+		"storagePoolId" to storagePoolIdFull,
+		"proxyHostId" to proxyHostIdFull,
 		"vCenter" to vcenter,
 		"esx" to esx,
 		"dataCenter" to dataCenter,
+		"verifySSL" to verifySSL.toString()
 	).forEach { (key, value) ->
 		if (!value.isNullOrBlank()) {
+			println(key + ": " + value)
 			props.add(PropertyBuilder().name(key).value(value).build())
 		}
 	}
-
-	props.add(
-		PropertyBuilder().name("verifySSL").value(verifySSL.toString()).build()
-	)
-
+	props.forEach {
+		println(it.name() + ": " + it.value())
+	}
 	return props
 }
 

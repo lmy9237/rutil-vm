@@ -4,12 +4,16 @@ import com.itinfo.rutilvm.api.ovirt.business.ProviderTypeB
 import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmware
 import com.itinfo.rutilvm.api.repository.engine.entity.toPropertyBuildersFromAdditionalProperties4Vmware
 import com.itinfo.rutilvm.common.gson
+import org.ovirt.engine.sdk4.builders.ExternalDiscoveredHostBuilder
 import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
+import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.internal.containers.ExternalHostProviderContainer
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.time.LocalDateTime
 
+private val log = LoggerFactory.getLogger(ExternalHostProviderVo::class.java)
 /**
  * [ExternalHostProviderVo]
  *
@@ -36,6 +40,7 @@ class ExternalHostProviderVo(
 	var authPassword: String? = "",
 	val createDate: LocalDateTime = LocalDateTime.now(),
 	var updateDate: LocalDateTime? = null,
+	var providerPropertyVo: ProviderPropertyVo? = ProviderPropertyVo(),
 	var additionalProperties: AdditionalProperties4Vmware? = null,
 ): Serializable {
 	val providerTypeLocalizationKey: String
@@ -67,8 +72,9 @@ class ExternalHostProviderVo(
 		private var bAuthPassword: String? = "";fun authPassword(block: () -> String?) { bAuthPassword = block() ?: "" }
 		private var bCreateDate: LocalDateTime = LocalDateTime.now();fun createDate(block: () -> LocalDateTime?) { bCreateDate = block() ?: LocalDateTime.now() }
 		private var bUpdateDate: LocalDateTime? = null;fun updateDate(block: () -> LocalDateTime?) { bUpdateDate = block() }
+		private var bProviderPropertyVo: ProviderPropertyVo? = ProviderPropertyVo();fun bProviderPropertyVo(block: () -> ProviderPropertyVo?) { bProviderPropertyVo = block() ?: ProviderPropertyVo() }
 		private var bAdditionalProperties: AdditionalProperties4Vmware? = null;fun additionalProperties(block: () -> AdditionalProperties4Vmware?) { bAdditionalProperties = block() }
-		fun build(): ExternalHostProviderVo = ExternalHostProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bAdditionalProperties,)
+		fun build(): ExternalHostProviderVo = ExternalHostProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bProviderPropertyVo, bAdditionalProperties,)
 	}
 
 	companion object {
@@ -80,15 +86,19 @@ class ExternalHostProviderVo(
 fun ExternalHostProviderVo.toExternalHostProviderBuilder(): ExternalHostProviderBuilder {
 	// val container = ExternalHostProviderContainer()
 	// container.name()
+	log.info("ExternalHostProviderVo {}", this@toExternalHostProviderBuilder)
 
 	return ExternalHostProviderBuilder()
 		.name(name)
 		.description(description)
+		.properties(listOf(PropertyBuilder().name("type").value("VMWARE").build()))
 		.url(url)
-		.requiresAuthentication(true)
+		.requiresAuthentication(false)
 		.username(authUsername)
-		.password(authPassword)
-		.properties(additionalProperties?.toPropertyBuildersFromAdditionalProperties4Vmware())
+		.password(authPassword)// 일단 빈값
+
+		// .properties(providerPropertyVo?.toProperties())
+		// .properties(additionalProperties?.toPropertyBuildersFromAdditionalProperties4Vmware())
 
 }
 

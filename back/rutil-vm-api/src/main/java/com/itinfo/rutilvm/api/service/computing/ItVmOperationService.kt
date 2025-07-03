@@ -196,7 +196,6 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 			vmVo.toStartOnceVm(),
 			vmVo.windowGuestTool
 		)
-
 		return res.isSuccess
 	}
 

@@ -56,25 +56,25 @@ class ProvidersEntity(
 	@Column(name="provider_type", unique=false, nullable = true)
 	private var _providerType: String? = "",
 	var authRequired: Boolean = false,
-	var authUsername: String? = "",
-	var authPassword: String? = "",
+	var authUsername: String? = null,
+	var authPassword: String? = null,
 	@Column(name="_create_date")
 	val createDate: LocalDateTime = LocalDateTime.now(),
 	@UpdateTimestamp
 	@Column(name="_update_date", nullable=true)
 	var updateDate: LocalDateTime? = null,
-	var customProperties: String? = "",
-	var tenantName: String? = "",
-	var pluginType: String? = "",
-	var authUrl: String? = "",
+	var customProperties: String? = null,
+	var tenantName: String? = null,
+	var pluginType: String? = null,
+	var authUrl: String? = null,
 	@Column(name="additional_properties", nullable=true)
-	private var _additionalProperties: String? = "",
+	private var _additionalProperties: String? = null,
 	var readOnly: Boolean = false,
 	var isUnmanaged: Boolean = false,
 	var autoSync: Boolean = false,
-	var userDomainName: String? = "",
-	var projectName: String? = "",
-	var projectDomainName: String? = "",
+	var userDomainName: String? = null,
+	var projectName: String? = null,
+	var projectDomainName: String? = null,
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -89,21 +89,21 @@ class ProvidersEntity(
 		private var bUrl: String? = "";fun url(block: () -> String?) { bUrl = block() ?: "" }
 		private var bProviderType: String = "";fun providerType(block: () -> String?) { bProviderType = block() ?: "" }
 		private var bAuthRequired: Boolean = false;fun authRequired(block: () -> Boolean?) { bAuthRequired = block() ?: false }
-		private var bAuthUsername: String? = "";fun authUsername(block: () -> String?) { bAuthUsername = block() ?: "" }
-		private var bAuthPassword: String? = "";fun authPassword(block: () -> String?) { bAuthPassword = block() ?: "" }
+		private var bAuthUsername: String? = null;fun authUsername(block: () -> String?) { bAuthUsername = block() }
+		private var bAuthPassword: String? = null;fun authPassword(block: () -> String?) { bAuthPassword = block() }
 		private var bCreateDate: LocalDateTime = LocalDateTime.now();fun createDate(block: () -> LocalDateTime?) { bCreateDate = block() ?: LocalDateTime.now() }
 		private var bUpdateDate: LocalDateTime? = null;fun updateDate(block: () -> LocalDateTime?) { bUpdateDate = block() }
-		private var bCustomProperties: String? = "";fun customProperties(block: () -> String?) { bCustomProperties = block() ?: "" }
-		private var bTenantName: String? = "";fun tenantName(block: () -> String?) { bTenantName = block() ?: "" }
-		private var bPluginType: String? = "";fun pluginType(block: () -> String?) { bPluginType = block() ?: "" }
-		private var bAuthUrl: String? = "";fun authUrl(block: () -> String?) { bAuthUrl = block() ?: "" }
-		private var bAdditionalProperties: String? = "";fun additionalProperties(block: () -> String?) { bAdditionalProperties = block() ?: "" }
+		private var bCustomProperties: String? = null;fun customProperties(block: () -> String?) { bCustomProperties = block() }
+		private var bTenantName: String? = null;fun tenantName(block: () -> String?) { bTenantName = block() }
+		private var bPluginType: String? = null;fun pluginType(block: () -> String?) { bPluginType = block() }
+		private var bAuthUrl: String? = null;fun authUrl(block: () -> String?) { bAuthUrl = block() }
+		private var bAdditionalProperties: String? = null;fun additionalProperties(block: () -> String?) { bAdditionalProperties = block() }
 		private var bReadOnly: Boolean = false;fun readOnly(block: () -> Boolean?) { bReadOnly = block() ?: false }
 		private var bIsUnmanaged: Boolean = false;fun isUnmanaged(block: () -> Boolean?) { bIsUnmanaged = block() ?: false }
 		private var bAutoSync: Boolean = false;fun autoSync(block: () -> Boolean?) { bAutoSync = block() ?: false }
-		private var bUserDomainName: String? = "";fun userDomainName(block: () -> String?) { bUserDomainName = block() ?: "" }
-		private var bProjectName: String? = "";fun projectName(block: () -> String?) { bProjectName = block() ?: "" }
-		private var bProjectDomainName: String? = "";fun projectDomainName(block: () -> String?) { bProjectDomainName = block() ?: "" }
+		private var bUserDomainName: String? = null;fun userDomainName(block: () -> String?) { bUserDomainName = block() }
+		private var bProjectName: String? = null;fun projectName(block: () -> String?) { bProjectName = block() }
+		private var bProjectDomainName: String? = null;fun projectDomainName(block: () -> String?) { bProjectDomainName = block() }
 		fun build(): ProvidersEntity = ProvidersEntity(bId, bName, bDescription, bUrl, bProviderType, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bCustomProperties, bTenantName, bPluginType, bAuthUrl, bAdditionalProperties, bReadOnly, bIsUnmanaged, bAutoSync, bUserDomainName, bProjectName, bProjectDomainName)
 	}
 
