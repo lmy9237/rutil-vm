@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.common.gson
@@ -166,8 +166,8 @@ class AllDiskEntity(
 	val diskStorageType: DiskStorageType
 		get() = DiskStorageType.forValue(_diskStorageType)
 
-	val diskContentType: DiskContentType
-		get() = DiskContentType.forValue(_diskContentType)
+	val diskContentType: DiskContentTypeB
+		get() = DiskContentTypeB.forValue(_diskContentType)
 	val diskImageStatus: DiskStatus
 		get() = DiskStatus.forValue(_imagestatus)
 

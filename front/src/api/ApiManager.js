@@ -3117,8 +3117,7 @@ const ApiManager = {
   // },
 
   uploadDisk: async (diskData, inProgress=null) => {
-    const msg = `디스크 업로드 중 ...`
-    const toastId = toast.loading(msg)
+    const msg = `디스크 업로드 중 ...`    
     try {
       const res = await axios({
           method: "POST",
@@ -3129,7 +3128,7 @@ const ApiManager = {
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total) {
               const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              if (progress > 0) inProgress && inProgress(progress, toastId)
+              if (progress > 0) inProgress && inProgress(progress)
             }
           },
           data: diskData

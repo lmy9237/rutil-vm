@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.service.common
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
@@ -125,8 +125,8 @@ class TypeServiceImpl(
 
 	override fun findAllDiskContentTypes(): List<TypeVo> {
 		log.info("findAllDiskContentTypes ... ")
-		return DiskContentType.allDiskContentTypes.filter {
-			it == DiskContentType.data || it == DiskContentType.iso  // NOTE: 실제 필드에서 사용 될 유형
+		return DiskContentTypeB.allDiskContentTypes.filter {
+			it == DiskContentTypeB.data || it == DiskContentTypeB.iso  // NOTE: 실제 필드에서 사용 될 유형
 		}.toTypeVosFromDiskContentTypes()
 	}
 
@@ -191,12 +191,12 @@ fun BiosTypeB.toTypeVoFromBiosType(): TypeVo = TypeVo(
 )
 fun List<BiosTypeB>.toTypeVosFromBiosTypes(): List<TypeVo> =
 	this@toTypeVosFromBiosTypes.map { it.toTypeVoFromBiosType() }
-fun DiskContentType.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
+fun DiskContentTypeB.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 	this@toTypeVoFromDiskContentType.name,
 	this@toTypeVoFromDiskContentType.kr,
 	this@toTypeVoFromDiskContentType.en,
 )
-fun List<DiskContentType>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
+fun List<DiskContentTypeB>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
 fun DiskInterface.toTypeVoFromDiskInterface(): TypeVo = TypeVo(
 	this@toTypeVoFromDiskInterface.name,

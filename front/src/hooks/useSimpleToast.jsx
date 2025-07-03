@@ -72,6 +72,7 @@ export const useProgressToast = () => {
     in: (title, progress=0) => {
       Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}`);
       toast({
+        id: 1,
         title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
         description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%`,
         update: () => ({

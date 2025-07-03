@@ -9,6 +9,8 @@ import org.ovirt.engine.sdk4.types.BootProtocol
 import org.ovirt.engine.sdk4.types.Cpu
 import org.ovirt.engine.sdk4.types.CpuPinningPolicy
 import org.ovirt.engine.sdk4.types.DataCenterStatus
+import org.ovirt.engine.sdk4.types.DiskContentType
+import org.ovirt.engine.sdk4.types.DiskFormat
 import org.ovirt.engine.sdk4.types.Display
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.FipsMode
@@ -171,15 +173,15 @@ fun ArchitectureType?.toArchitecture(): Architecture? =
 fun Cpu?.findArchitectureType(): ArchitectureType? =
 	this@findArchitectureType?.architecture()?.toArchitectureType()
 
-fun CpuPinningPolicy?.toCpuPinningPolicyB(): CpuPinningPolicyB? =
-	CpuPinningPolicyB.forCode(this@toCpuPinningPolicyB?.name?.lowercase())
+fun CpuPinningPolicy?.toCpuPinningPolicyB(): CpuPinningPolicyB? = CpuPinningPolicyB.forCode(this@toCpuPinningPolicyB?.name?.lowercase())
+fun CpuPinningPolicyB?.toCpuPinningPolicy(): CpuPinningPolicy? = CpuPinningPolicy.fromValue(this@toCpuPinningPolicy?.name?.lowercase())
 
-fun CpuPinningPolicyB?.toCpuPinningPolicy(): CpuPinningPolicy? =
-	CpuPinningPolicy.fromValue(this@toCpuPinningPolicy?.name?.lowercase())
-
-fun GraphicsTypeB?.toDisplayType(): DisplayType? = DisplayType.fromValue(this@toDisplayType?.code)
 fun DisplayType?.toGraphicsTypeB(): GraphicsTypeB? = GraphicsTypeB.forCode(this@toGraphicsTypeB?.value())
+fun GraphicsTypeB?.toDisplayType(): DisplayType? = DisplayType.fromValue(this@toDisplayType?.code)
 fun Display?.findGraphicsTypeB(): GraphicsTypeB? = this@findGraphicsTypeB?.type().toGraphicsTypeB()
+
+fun DiskContentType?.toDiskContentTypeB(): DiskContentTypeB? = DiskContentTypeB.forCode(this@toDiskContentTypeB?.value())
+fun DiskContentTypeB?.toDiskContentType(): DiskContentType = DiskContentType.fromValue(this@toDiskContentType?.code)
 
 fun FipsMode.toFipsModeB(): FipsModeB =
 	FipsModeB.forCode(this@toFipsModeB.value())
@@ -278,6 +280,9 @@ fun Ipv6BootProtocol.toBootProtocol(): BootProtocol = BootProtocol.fromValue(thi
 
 fun VmStorageErrorResumeBehaviour.toVmResumeBehavior(): VmResumeBehavior = VmResumeBehavior.forCode(this@toVmResumeBehavior.name)
 fun VmResumeBehavior.toVmStorageErrorResumeBehavior(): VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.fromValue(this@toVmStorageErrorResumeBehavior.name.lowercase())
+
+fun DiskFormat?.toVolumeFormat(): VolumeFormat? = VolumeFormat.forCode(this@toVolumeFormat?.value())
+fun VolumeFormat?.toDiskFormat(): DiskFormat? = DiskFormat.fromValue(this@toDiskFormat?.code)
 
 fun InheritableBoolean.toBoolean(): Boolean? = when(this@toBoolean.name) {
 	"true" -> true

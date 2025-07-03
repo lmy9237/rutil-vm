@@ -87,12 +87,12 @@ class ImageTransferServiceImpl(
 		imageTransferId: String
 	): Boolean {
 		log.info("uploadFile ... ")
-		val jobAdded = iJob.add(JobVo.builder {
+		/*val jobAdded = iJob.add(JobVo.builder {
 			name { "디스크 파일 업로드" }
 			description { "(RutilVM에서) 디스크 파일 업로드 <${imageTransferId}>" }
 			status { JobStatus.STARTED }
 			autoCleared { true }
-		})
+		})*/
 		val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
 		val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
 		log.debug("uploadFile ... transferUrl: $transferUrl")
@@ -107,26 +107,30 @@ class ImageTransferServiceImpl(
 			setFixedLengthStreamingMode(file.size)
 			setDoOutput(true)
 		}?.also { http ->
-			http.connect()
-			val bufferSize = calculateOptimalBufferSize(file.size)
-			val buffer = ByteArray(bufferSize)
-			val insBuffered: InputStream = BufferedInputStream(file.inputStream, bufferSize)
-			BufferedOutputStream(http.outputStream, bufferSize).use { outsBuffered ->
-				var bytesRead: Int
-				while (insBuffered.read(buffer).also { bytesRead = it } != -1) {
-					outsBuffered.write(buffer, 0, bytesRead)
+			try {
+				http.connect()
+				log.info("uploadFile ... CONNECTION MADE!")
+				val bufferSize = calculateOptimalBufferSize(file.size)
+				val buffer = ByteArray(bufferSize)
+				val insBuffered: InputStream = BufferedInputStream(file.inputStream, bufferSize)
+				BufferedOutputStream(http.outputStream, bufferSize).use { outsBuffered ->
+					var bytesRead: Int
+					while (insBuffered.read(buffer).also { bytesRead = it } != -1) {
+						outsBuffered.write(buffer, 0, bytesRead)
+					}
+					outsBuffered.flush()
 				}
-				outsBuffered.flush()
-			}.runCatching {
-
+				imageTransferService.finalize_().send()
+				http.disconnect()
+			} catch(e: IOException) {
+				log.info("uploadFile ... 실패!")
+				e.printStackTrace()
+				throw e
 			}
-			imageTransferService.finalize_().send()
-			http.disconnect()
-			jobAdded?.id?.let { id ->
+			/*jobAdded?.id?.let { id ->
 				log.info("uploadFile ... 최근작업 ({}) 종료처리!", id)
 				iJob.end(id)
-			}
-			log.info("uploadFile ... 완료!")
+			}*/
 		}
 		return true
 	}

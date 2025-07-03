@@ -22,10 +22,7 @@ import {
   checkName, 
   convertBytesToGB,
   emptyIdNameVo,
-  readString, 
-  readUint32, 
-  readBigUint64,
-  toGiB
+  readString, readUint32, readBigUint64, toGiB
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -42,6 +39,7 @@ const initialFormState = {
   size: "",
   alias: "",
   description: "",
+  contentType: "raw",
   wipeAfterDelete: false,
   // sharable: false,
 };
@@ -61,10 +59,9 @@ const DiskUploadModal = ({
   const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
-  const { mutate: uploadDisk } = useUploadDisk((progress, toastId) => {
+  const { mutate: uploadDisk } = useUploadDisk((progress) => {
     /*if (progress < 1) onClose()*/
     progressToast.in(`디스크 업로드 중 ... `, progress)
-    
   });
 
   // 전체 데이터센터 가져오기
@@ -149,7 +146,6 @@ const DiskUploadModal = ({
     }
 
     const sizeToBytes = parseInt(formState.size, 10) * 1024 * 1024 * 1024;    
-
     const dataToSubmit = {
       ...formState,
       size: sizeToBytes,
@@ -176,25 +172,22 @@ const DiskUploadModal = ({
     >
       <div className="storage-upload-first f-btw fs-14">
         <p className="fs-16">파일 선택</p>
-        <DiskInspector />
-        {/* <div>
-          <input id="file"
-            type="file"
-            accept=".iso,.qcow2,.vhd,.img,.raw"
-            onChange={(e) => {
-              const uploadedFile = e.target.files[0];
-              if (!uploadedFile) return
+        <DiskInspector 
+          setFormState={setFormState}
+          onUpload={(e) => {
+            Logger.debug(`DiskUploadModal > onUpload ...`)
+            const uploadedFile = e.target.files[0];
+            if (!uploadedFile) return
 
-              setFile(uploadedFile); // 파일 저장
-              setFormState((prev) => ({
-                ...prev,
-                alias: onlyFileName(uploadedFile.name),
-                description: uploadedFile.name,
-                size: uploadedFile.size, // bytes 단위
-              }));
-            }}
-          />
-        </div> */}
+            setFile(uploadedFile); // 파일 저장
+            setFormState((prev) => ({
+              ...prev,
+              alias: onlyFileName(uploadedFile.name),
+              description: uploadedFile.name,
+              size: uploadedFile.size, // bytes 단위
+            }));
+          }}
+        />
       </div>
 
       <div>
@@ -223,7 +216,7 @@ const DiskUploadModal = ({
                 onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
               />
               <LabelSelectOptionsID
-                label="스토리지 도메인"
+                label={Localization.kr.DOMAIN}
                 value={domainVo.id}
                 loading={isDomainsLoading}
                 options={domains}
@@ -290,7 +283,8 @@ const DiskUploadModal = ({
 };
 
 const DiskInspector = ({
-  
+  onUpload=()=>{},
+  setFormState,
 }) => {
   const [imageInfo, setImageInfo] = useState(null);
   const [error, setError] = useState(null);
@@ -299,13 +293,13 @@ const DiskInspector = ({
     const file = event.target.files[0];
     setImageInfo(null);
     setError(null);
+    onUpload(event);
 
     if (!file) {
       return;
     }
 
     const reader = new FileReader();
-
     reader.onload = (e) => {
       try {
         const buffer = e.target.result;
@@ -316,7 +310,7 @@ const DiskInspector = ({
 
         const isQcow = readString(buffer.slice(0, 4)) === 'QFI\xfb';
         const info = {
-          format: isQcow ? "QCOW2" : "RAW",
+          format: isQcow ? "qcow2" : "raw",
           actualSize: file.size,
           virtualSize: BigInt(0),
           backingFile: false,
@@ -338,15 +332,20 @@ const DiskInspector = ({
         } else {
           // An ISO file contains 'CD001' at offset 0x8001
           // Ensure we have enough data to check
-          if (buffer.byteLength > 0x8001 + 5) {
+          if (buffer.byteLength >= 0x8001 + 5) {
               const isISO = readString(buffer.slice(0x8001, 0x8001 + 5)) === 'CD001';
               if (isISO) {
-                  info.content = "ISO";
+                  info.content = "iso";
               }
           }
           info.virtualSize = BigInt(file.size);
         }
         setImageInfo(info);
+        setFormState((prev) => ({
+          ...prev,
+          contentType: info.content === "iso" ? "iso" : "data",
+          format: isQcow ? "cow" : "raw",
+        }));
       } catch (err) {
         setError(`파일 분석 실패: ${err.message}`);
         console.error(err);
@@ -385,17 +384,17 @@ const DiskInspector = ({
           <p className="row">
             <strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB
           </p>
-          {imageInfo.format === "QCOW2" && 
+          {imageInfo.format === "qcow2" && 
           <p className="row">
             <strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB
           </p>}
           <p className="row">
             <strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}
           </p>
-          {imageInfo.format === "QCOW2" && <p className="row">
+          {imageInfo.format === "qcow2" && <p className="row">
             <strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}
           </p>}
-          {imageInfo.format === "QCOW2" && <p className="row">
+          {imageInfo.format === "qcow2" && <p className="row">
             <strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}
           </p>}
         </div>

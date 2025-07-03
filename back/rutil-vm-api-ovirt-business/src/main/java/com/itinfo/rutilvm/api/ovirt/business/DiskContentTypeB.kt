@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
-enum class DiskContentType(
+enum class DiskContentTypeB(
 	override val value: Int,
 	val storageValue: String,
 ): Identifiable, Serializable {
@@ -21,10 +21,10 @@ enum class DiskContentType(
 
 	override fun toString(): String = code
 	val code: String
-		get() = this@DiskContentType.name.uppercase()
+		get() = this@DiskContentTypeB.name.uppercase()
 
 	val localizationKey: String
-		get() = "${DiskContentType::class.java.simpleName}.${this.name}"
+		get() = "${DiskContentTypeB::class.java.simpleName}.${this.name}"
 	private val loc: Localization
 		get() = Localization.getInstance()
 	val en: String
@@ -34,9 +34,9 @@ enum class DiskContentType(
 
 	companion object {
 		const val LEGACY_DISK_TYPE = "2"
-		private val valueMapping: MutableMap<Int, DiskContentType> = ConcurrentHashMap<Int, DiskContentType>()
-		private val codeMapping: MutableMap<String, DiskContentType> = ConcurrentHashMap<String, DiskContentType>()
-		private val storageMapping: MutableMap<String, DiskContentType> = ConcurrentHashMap<String, DiskContentType>()
+		private val valueMapping: MutableMap<Int, DiskContentTypeB> = ConcurrentHashMap<Int, DiskContentTypeB>()
+		private val codeMapping: MutableMap<String, DiskContentTypeB> = ConcurrentHashMap<String, DiskContentTypeB>()
+		private val storageMapping: MutableMap<String, DiskContentTypeB> = ConcurrentHashMap<String, DiskContentTypeB>()
 		init {
 			values().forEach {
 				valueMapping[it.value] = it
@@ -47,13 +47,13 @@ enum class DiskContentType(
 			storageMapping[LEGACY_DISK_TYPE] = `data`
 		}
 
-		val allDiskContentTypes: List<DiskContentType> = DiskContentType.values().filterNot {
+		val allDiskContentTypes: List<DiskContentTypeB> = DiskContentTypeB.values().filterNot {
 			it == unknown
 		}
 
-		@JvmStatic fun forValue(value: Int?): DiskContentType = valueMapping[value ?: -1] ?: unknown
-		@JvmStatic fun forCode(code: String?): DiskContentType = codeMapping[code ?: unknown.code] ?: unknown
-		@JvmStatic fun forStorageValue(code: String?): DiskContentType = storageMapping[code ?: unknown.code] ?: unknown
+		@JvmStatic fun forValue(value: Int?): DiskContentTypeB = valueMapping[value ?: -1] ?: unknown
+		@JvmStatic fun forCode(code: String?): DiskContentTypeB = codeMapping[code ?: unknown.code] ?: unknown
+		@JvmStatic fun forStorageValue(code: String?): DiskContentTypeB = storageMapping[code ?: unknown.code] ?: unknown
 	}
 }
 

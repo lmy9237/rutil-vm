@@ -78,30 +78,30 @@ class Localization {
 		//region: DiskContentTypeL
 		object DiskContentTypeL {
 			object KR {
-				val DATA 							= locKr?.get(DiskContentType.data.localizationKey)?.toString() ?: ""
-				val OVF_STORE 						= locKr?.get(DiskContentType.ovf_store.localizationKey)?.toString() ?: ""
-				val MEMORY_DUMP_VOLUME 				= locKr?.get(DiskContentType.memory_dump_volume.localizationKey)?.toString() ?: ""
-				val MEMORY_METADATA_VOLUME 			= locKr?.get(DiskContentType.memory_metadata_volume.localizationKey)?.toString() ?: ""
-				val ISO 							= locKr?.get(DiskContentType.iso.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE 					= locKr?.get(DiskContentType.hosted_engine.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_SANLOCK 			= locKr?.get(DiskContentType.hosted_engine_sanlock.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_METADATA 			= locKr?.get(DiskContentType.hosted_engine_metadata.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_CONFIGURATION 	= locKr?.get(DiskContentType.hosted_engine_configuration.localizationKey)?.toString() ?: ""
-				val BACKUP_SCRATCH 					= locKr?.get(DiskContentType.backup_scratch.localizationKey)?.toString() ?: ""
-				val UNKNOWN 						= locKr?.get(DiskContentType.unknown.localizationKey)?.toString() ?: ""
+				val DATA 							= locKr?.get(DiskContentTypeB.data.localizationKey)?.toString() ?: ""
+				val OVF_STORE 						= locKr?.get(DiskContentTypeB.ovf_store.localizationKey)?.toString() ?: ""
+				val MEMORY_DUMP_VOLUME 				= locKr?.get(DiskContentTypeB.memory_dump_volume.localizationKey)?.toString() ?: ""
+				val MEMORY_METADATA_VOLUME 			= locKr?.get(DiskContentTypeB.memory_metadata_volume.localizationKey)?.toString() ?: ""
+				val ISO 							= locKr?.get(DiskContentTypeB.iso.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE 					= locKr?.get(DiskContentTypeB.hosted_engine.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_SANLOCK 			= locKr?.get(DiskContentTypeB.hosted_engine_sanlock.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_METADATA 			= locKr?.get(DiskContentTypeB.hosted_engine_metadata.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_CONFIGURATION 	= locKr?.get(DiskContentTypeB.hosted_engine_configuration.localizationKey)?.toString() ?: ""
+				val BACKUP_SCRATCH 					= locKr?.get(DiskContentTypeB.backup_scratch.localizationKey)?.toString() ?: ""
+				val UNKNOWN 						= locKr?.get(DiskContentTypeB.unknown.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val DATA 							= locEn?.get(DiskContentType.data.localizationKey)?.toString() ?: ""
-				val OVF_STORE 						= locEn?.get(DiskContentType.ovf_store.localizationKey)?.toString() ?: ""
-				val MEMORY_DUMP_VOLUME 				= locEn?.get(DiskContentType.memory_dump_volume.localizationKey)?.toString() ?: ""
-				val MEMORY_METADATA_VOLUME 			= locEn?.get(DiskContentType.memory_metadata_volume.localizationKey)?.toString() ?: ""
-				val ISO 							= locEn?.get(DiskContentType.iso.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE 					= locEn?.get(DiskContentType.hosted_engine.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_SANLOCK 			= locEn?.get(DiskContentType.hosted_engine_sanlock.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_METADATA 			= locEn?.get(DiskContentType.hosted_engine_metadata.localizationKey)?.toString() ?: ""
-				val HOSTED_ENGINE_CONFIGURATION 	= locEn?.get(DiskContentType.hosted_engine_configuration.localizationKey)?.toString() ?: ""
-				val BACKUP_SCRATCH 					= locEn?.get(DiskContentType.backup_scratch.localizationKey)?.toString() ?: ""
-				val UNKNOWN 						= locEn?.get(DiskContentType.unknown.localizationKey)?.toString() ?: ""
+				val DATA 							= locEn?.get(DiskContentTypeB.data.localizationKey)?.toString() ?: ""
+				val OVF_STORE 						= locEn?.get(DiskContentTypeB.ovf_store.localizationKey)?.toString() ?: ""
+				val MEMORY_DUMP_VOLUME 				= locEn?.get(DiskContentTypeB.memory_dump_volume.localizationKey)?.toString() ?: ""
+				val MEMORY_METADATA_VOLUME 			= locEn?.get(DiskContentTypeB.memory_metadata_volume.localizationKey)?.toString() ?: ""
+				val ISO 							= locEn?.get(DiskContentTypeB.iso.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE 					= locEn?.get(DiskContentTypeB.hosted_engine.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_SANLOCK 			= locEn?.get(DiskContentTypeB.hosted_engine_sanlock.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_METADATA 			= locEn?.get(DiskContentTypeB.hosted_engine_metadata.localizationKey)?.toString() ?: ""
+				val HOSTED_ENGINE_CONFIGURATION 	= locEn?.get(DiskContentTypeB.hosted_engine_configuration.localizationKey)?.toString() ?: ""
+				val BACKUP_SCRATCH 					= locEn?.get(DiskContentTypeB.backup_scratch.localizationKey)?.toString() ?: ""
+				val UNKNOWN 						= locEn?.get(DiskContentTypeB.unknown.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion
@@ -514,18 +514,18 @@ class Localization {
 		else -> if (loc == "kr") "알 수 없음" else "Unknown"
 	}
 
-	fun findLocalizedName4DiskContentType(type: DiskContentType, loc: String = "kr"): String = when(type) {
-		DiskContentType.data -> 							if (loc == "kr") DiskContentTypeL.KR.DATA else DiskContentTypeL.EN.DATA
-		DiskContentType.ovf_store -> 						if (loc == "kr") DiskContentTypeL.KR.OVF_STORE else DiskContentTypeL.EN.OVF_STORE
-		DiskContentType.memory_dump_volume -> 				if (loc == "kr") DiskContentTypeL.KR.MEMORY_DUMP_VOLUME else DiskContentTypeL.EN.MEMORY_DUMP_VOLUME
-		DiskContentType.memory_metadata_volume -> 			if (loc == "kr") DiskContentTypeL.KR.MEMORY_METADATA_VOLUME else DiskContentTypeL.EN.MEMORY_METADATA_VOLUME
-		DiskContentType.iso -> 								if (loc == "kr") DiskContentTypeL.KR.ISO else DiskContentTypeL.EN.ISO
-		DiskContentType.hosted_engine -> 					if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE else DiskContentTypeL.EN.HOSTED_ENGINE
-		DiskContentType.hosted_engine_sanlock -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_SANLOCK else DiskContentTypeL.EN.HOSTED_ENGINE_SANLOCK
-		DiskContentType.hosted_engine_metadata -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_METADATA else DiskContentTypeL.EN.HOSTED_ENGINE_METADATA
-		DiskContentType.hosted_engine_configuration -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
-		DiskContentType.backup_scratch -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
-		DiskContentType.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
+	fun findLocalizedName4DiskContentType(type: DiskContentTypeB, loc: String = "kr"): String = when(type) {
+		DiskContentTypeB.data -> 							if (loc == "kr") DiskContentTypeL.KR.DATA else DiskContentTypeL.EN.DATA
+		DiskContentTypeB.ovf_store -> 						if (loc == "kr") DiskContentTypeL.KR.OVF_STORE else DiskContentTypeL.EN.OVF_STORE
+		DiskContentTypeB.memory_dump_volume -> 				if (loc == "kr") DiskContentTypeL.KR.MEMORY_DUMP_VOLUME else DiskContentTypeL.EN.MEMORY_DUMP_VOLUME
+		DiskContentTypeB.memory_metadata_volume -> 			if (loc == "kr") DiskContentTypeL.KR.MEMORY_METADATA_VOLUME else DiskContentTypeL.EN.MEMORY_METADATA_VOLUME
+		DiskContentTypeB.iso -> 								if (loc == "kr") DiskContentTypeL.KR.ISO else DiskContentTypeL.EN.ISO
+		DiskContentTypeB.hosted_engine -> 					if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE else DiskContentTypeL.EN.HOSTED_ENGINE
+		DiskContentTypeB.hosted_engine_sanlock -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_SANLOCK else DiskContentTypeL.EN.HOSTED_ENGINE_SANLOCK
+		DiskContentTypeB.hosted_engine_metadata -> 			if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_METADATA else DiskContentTypeL.EN.HOSTED_ENGINE_METADATA
+		DiskContentTypeB.hosted_engine_configuration -> 		if (loc == "kr") DiskContentTypeL.KR.HOSTED_ENGINE_CONFIGURATION else DiskContentTypeL.EN.HOSTED_ENGINE_CONFIGURATION
+		DiskContentTypeB.backup_scratch -> 					if (loc == "kr") DiskContentTypeL.KR.BACKUP_SCRATCH else DiskContentTypeL.EN.BACKUP_SCRATCH
+		DiskContentTypeB.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
 	}
 
 	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String =

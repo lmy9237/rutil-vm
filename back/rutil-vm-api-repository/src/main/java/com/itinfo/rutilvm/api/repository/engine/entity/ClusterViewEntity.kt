@@ -2,8 +2,6 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
-import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
 import com.itinfo.rutilvm.api.ovirt.business.FirewallTypeB
 import com.itinfo.rutilvm.api.ovirt.business.LogMaxMemoryUsedThresholdTypeB
@@ -16,8 +14,6 @@ import org.hibernate.annotations.Type
 import java.time.LocalDateTime
 import java.util.UUID
 import java.io.Serializable
-import java.math.BigDecimal
-import java.math.BigInteger
 import javax.persistence.Id
 import javax.persistence.Column
 import javax.persistence.Entity

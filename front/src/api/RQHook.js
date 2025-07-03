@@ -5563,7 +5563,7 @@ export const useDeleteDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useUploadDisk = (
-  inProgress = () => { }, postSuccess=()=>{}, postError
+  inProgress=()=>{},postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();

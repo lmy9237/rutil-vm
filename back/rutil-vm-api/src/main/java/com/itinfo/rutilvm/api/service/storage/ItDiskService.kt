@@ -9,7 +9,7 @@ import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
@@ -207,7 +207,7 @@ class DiskServiceImpl(
         // return res.toDiskMenus(conn)
 		val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
 		return res.toDiskEntities()
-			.filter { it.contentType == DiskContentType.data || it.contentType == DiskContentType.iso }
+			.filter { it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso }
     }
 
 	@Throws(Error::class)

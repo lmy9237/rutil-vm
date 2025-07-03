@@ -4,10 +4,12 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
-import com.itinfo.rutilvm.api.ovirt.business.DiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
-import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
+import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
+import com.itinfo.rutilvm.api.ovirt.business.toDiskContentType
+import com.itinfo.rutilvm.api.ovirt.business.toDiskFormat
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
@@ -47,12 +49,12 @@ import java.util.UUID
  * @property wipeAfterDelete [Boolean] 삭제 후 초기화
  * @property sharable [Boolean] 공유가능 (공유가능 o 이라면 증분백업 안됨 FRONT에서 막기?)
  * @property backup [Boolean] 증분 백업 사용 (기본이 true)
- * @property format [DiskFormat]
+ * @property format [VolumeFormat]
  * @property imageId [String]
  * @property virtualSize [BigInteger] 가상크기 (provisionedSize)
  * @property actualSize [BigInteger] 실제크기
  * @property status [DiskStatus] 디스크상태
- * @property contentType [DiskContentType]
+ * @property contentType [DiskContentTypeB]
  * @property storageType [DiskStorageType] 유형
  * @property createDate [String] 생성일자
  * @property connectVm [IdentifiedVo] 연결대상(가상머신)
@@ -72,12 +74,12 @@ class DiskImageVo(
 	val wipeAfterDelete: Boolean = false,
 	val sharable: Boolean = false,
 	val backup: Boolean = false,
-	val format: DiskFormat = DiskFormat.RAW,
+	val format: VolumeFormat = VolumeFormat.raw,
 	val imageId: String = String(),
 	val virtualSize: BigInteger = BigInteger.ZERO,
 	val actualSize: BigInteger = BigInteger.ZERO,
 	val status: DiskStatus? = DiskStatus.locked,
-	val contentType: DiskContentType? = DiskContentType.data, // unknown
+	val contentType: DiskContentTypeB? = DiskContentTypeB.data, // unknown
 	val storageType: DiskStorageType? = DiskStorageType.image,
 	private val _dateCreated: LocalDateTime? = null,
 	val type: String = "",
@@ -93,7 +95,7 @@ class DiskImageVo(
 	// val statusEn: String?			get() = status?.en ?: "N/A"
 	// val statusKr: String?			get() = status?.kr ?: "알 수 없음"
 
-	val contentTypeCode: String		get() = contentType?.code ?: DiskContentType.data.code
+	val contentTypeCode: String		get() = contentType?.code ?: DiskContentTypeB.data.code
 	val contentTypeEn: String 		get() = contentType?.en ?: "N/A"
 	val contentTypeKr: String		get() = contentType?.kr ?: "알 수 없음"
 
@@ -118,12 +120,12 @@ class DiskImageVo(
 		private var bWipeAfterDelete: Boolean = false;fun wipeAfterDelete(block: () -> Boolean?) { bWipeAfterDelete = block() ?: false }
 		private var bSharable: Boolean = false;fun sharable(block: () -> Boolean?) { bSharable = block() ?: false }
 		private var bBackup: Boolean = false;fun backup(block: () -> Boolean?) { bBackup = block() ?: false }
-		private var bFormat: DiskFormat = DiskFormat.RAW;fun format(block: () -> DiskFormat?) { bFormat = block() ?: DiskFormat.RAW }
+		private var bFormat: VolumeFormat = VolumeFormat.raw;fun format(block: () -> VolumeFormat?) { bFormat = block() ?: VolumeFormat.raw }
 		private var bImageId: String = "";fun imageId(block: () -> String?) { bImageId = block() ?: "" }
 		private var bVirtualSize: BigInteger = BigInteger.ZERO;fun virtualSize(block: () -> BigInteger?) { bVirtualSize = block() ?: BigInteger.ZERO }
 		private var bActualSize: BigInteger = BigInteger.ZERO;fun actualSize(block: () -> BigInteger?) { bActualSize = block() ?: BigInteger.ZERO }
 		private var bStatus: DiskStatus = DiskStatus.locked;fun status(block: () -> DiskStatus?) { bStatus = block() ?: DiskStatus.locked }
-		private var bContentType: DiskContentType? = DiskContentType.data;fun contentType(block: () -> DiskContentType?) { bContentType = block() ?: DiskContentType.data }
+		private var bContentType: DiskContentTypeB? = DiskContentTypeB.data;fun contentType(block: () -> DiskContentTypeB?) { bContentType = block() ?: DiskContentTypeB.data }
 		private var bStorageType: DiskStorageType? = DiskStorageType.image;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.image }
 		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
 		private var bType: String = "";fun type(block: () -> String?) { bType = block() ?: "" }
@@ -236,7 +238,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		actualSize { disk.actualSize() }
 		status { DiskStatus.forCode(disk.status().value()) }
 		sparse { disk.sparse() }
-		contentType { DiskContentType.forStorageValue(disk.contentType().toString()) }
+		contentType { DiskContentTypeB.forStorageValue(disk.contentType().toString()) }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		description { disk.description() }
 		connectVm { vmConn?.fromVmToIdentifiedVo() }
@@ -336,7 +338,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 			storageDomainVo { storageDomain.fromStorageDomainToIdentifiedVo() }
 		}
 		diskProfileVo { profile?.fromDiskProfileToIdentifiedVo() }
-		contentType { DiskContentType.forStorageValue(disk.contentType().toString()) }
+		contentType { DiskContentTypeB.forStorageValue(disk.contentType().toString()) }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
@@ -404,7 +406,7 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 		virtualSize { this@toDiskImageVo.provisionedSize() }
 		actualSize { this@toDiskImageVo.actualSize() }
 		status { DiskStatus.forCode(this@toDiskImageVo.status().value()) }
-		contentType { DiskContentType.forStorageValue(this@toDiskImageVo.contentType().toString()) }
+		contentType { DiskContentTypeB.forStorageValue(this@toDiskImageVo.contentType().toString()) }
 		storageType { DiskStorageType.forCode(this@toDiskImageVo.storageType().toString()) }
 		// dateCreated { this@toDiskImageVo. }
 //		connectVm { toConnectVm(conn, diskVmElementEntity) } } }  // TODO
@@ -439,7 +441,7 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 		virtualSize { this@toDiskVo.provisionedSize() }
 		actualSize { this@toDiskVo.actualSize() }
 		status { DiskStatus.forCode(this@toDiskVo.status().value()) }
-		contentType { DiskContentType.forStorageValue(this@toDiskVo.contentType().toString()) }
+		contentType { DiskContentTypeB.forStorageValue(this@toDiskVo.contentType().toString()) }
 		storageType { DiskStorageType.forCode(this@toDiskVo.storageType().toString()) }
 //		createDate { this@toDiskImageVo. } // TODO
 	}
@@ -561,17 +563,17 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
 	return DiskBuilder()
-		.contentType ( org.ovirt.engine.sdk4.types.DiskContentType.ISO )
+		.contentType ( this@toUploadDisk.contentType.toDiskContentType())
 		.provisionedSize(fileSize)
 		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
-		.alias(this.alias)
-		.description(this.description)
+		.alias(this@toUploadDisk.alias)
+		.description(this@toUploadDisk.description)
 		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 		.shareable(this.sharable)
 		.wipeAfterDelete(this.wipeAfterDelete)
 		.backup(DiskBackup.NONE) // 증분백업 되지 않음
-		.format(DiskFormat.RAW) // 이미지 업로드는 raw 형식만 가능 +front 처리?
+		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }
 
@@ -580,7 +582,7 @@ fun DiskImageVo.toAddTemplateDisk(): Disk {
 	return DiskBuilder()
 		.id(this.id)
 		.alias(this.alias)
-		.format(this.format)
+		.format(this.format.toDiskFormat())
 		.sparse(false)
 		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
