@@ -110,7 +110,7 @@ class StoragePoolEntity(
 		private var bFreeTextComment: String = ""; fun freeTextComment(block: () -> String?) { bFreeTextComment = block() ?: "" }
 		private var bIsLocal: Boolean? = false; fun isLocal(block: () -> Boolean?) { bIsLocal = block() ?: false }
 		private var bManaged: Boolean? = false; fun managed(block: () -> Boolean?) { bManaged = block() ?: false }
-		private var bClusters: Set<ClusterViewEntity>? = emptySet(); fun clusters(block: () -> Set<ClusterViewEntity>??) { bClusters = block() ?: emptySet() }
+		private var bClusters: Set<ClusterViewEntity>? = emptySet(); fun clusters(block: () -> Set<ClusterViewEntity>?) { bClusters = block() ?: emptySet() }
 		fun build(): StoragePoolEntity = StoragePoolEntity(bId, bName, bDescription, bStoragePoolType, bStoragePoolFormatType, bStatus, bMasterDomainVersion, bSpmVdsId, bCompatibilityVersion, bCreateDate, bUpdateDate, bQuotaEnforcementType, bFreeTextComment, bIsLocal, bManaged, bClusters)
 	}
 

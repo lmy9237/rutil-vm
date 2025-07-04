@@ -1,6 +1,8 @@
 package com.itinfo.rutilvm.api.model.setting
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmware
+import com.itinfo.rutilvm.api.repository.engine.entity.toWrapUuid
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.types.Property
@@ -17,6 +19,25 @@ class ProviderPropertyVo(
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
+
+	val vpxUrl: String					get() = """
+vpx://${this.vCenter}/${this.dataCenter}/${this.cluster}/${this.esxi}?no_verify=1
+""".trimIndent()
+
+	private val asMap: Map<String, Any?> = mapOf(
+		"storagePoolId" to this.dataCenterVo?.toWrapUuid(),
+		"proxyHostId" to this.hostVo?.toWrapUuid(),
+		"vCenter" to this.vCenter,
+		"esx" to this.esxi,
+		"dataCenter" to listOfNotNull(
+			this.dataCenter,
+			this.cluster
+		).takeIf { it.isNotEmpty() }?.joinToString("/"),
+		"verifySSL" to this.verifySSL
+	)
+
+	val additionalProperties2Json: String
+		get() = gson.toJson(asMap)
 
     class Builder {
 		private var bDataCenterVo: IdentifiedVo? = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
@@ -70,4 +91,25 @@ fun ProviderPropertyVo.toProperties(): List<Property> {
 	}
 
 	return props
+}
+
+fun IdentifiedVo?.toWrapUuid(): List<Any>? =
+	this@toWrapUuid?.id.toWrapUuid()
+
+fun AdditionalProperties4Vmware.toProviderPropertyVo(): ProviderPropertyVo {
+	val d: List<String>? = this@toProviderPropertyVo.dataCenter?.split("/")
+
+	return ProviderPropertyVo.builder {
+		dataCenterVo { IdentifiedVo.builder {
+			id { this@toProviderPropertyVo.storagePoolId }
+		} }
+		hostVo { IdentifiedVo.builder {
+			id { this@toProviderPropertyVo.proxyHostId }
+		} }
+		vCenter { this@toProviderPropertyVo.vcenter }
+		esxi { this@toProviderPropertyVo.esx }
+		dataCenter { d?.get(0) }
+		cluster { d?.get(1) }
+		verifySSL { this@toProviderPropertyVo.verifySSL }
+	}
 }

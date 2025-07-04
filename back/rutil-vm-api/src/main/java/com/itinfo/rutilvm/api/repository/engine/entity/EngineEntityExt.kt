@@ -21,6 +21,7 @@ import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
 import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
+import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
@@ -978,7 +979,7 @@ fun ProvidersEntity.toExternalHostProviderVo(): ExternalHostProviderVo = Externa
 	authPassword { authPassword }
 	createDate { createDate }
 	updateDate { updateDate }
-	additionalProperties { additionalProperties }
+	providerPropertyVo { additionalProperties?.toProviderPropertyVo() }
 }
 fun List<ProvidersEntity>.toExternalHostProviderVos(): List<ExternalHostProviderVo> =
 	this.map { it.toExternalHostProviderVo() }

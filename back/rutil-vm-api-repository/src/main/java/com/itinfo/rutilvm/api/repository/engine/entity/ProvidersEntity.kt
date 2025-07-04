@@ -49,13 +49,13 @@ class ProvidersEntity(
 	@Id
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	@Column(name="id", unique = true, nullable = true)
-	val id: UUID = UUID.randomUUID(),
-	var name: String = "",
-	var description: String = "",
+	val id: UUID? = UUID.randomUUID(),
+	var name: String? = "",
+	var description: String? = "",
 	var url: String? = "",
 	@Column(name="provider_type", unique=false, nullable = true)
-	private var _providerType: String? = "",
-	var authRequired: Boolean = false,
+	var _providerType: String? = "",
+	var authRequired: Boolean? = false,
 	var authUsername: String? = null,
 	var authPassword: String? = null,
 	@Column(name="_create_date")
@@ -68,7 +68,7 @@ class ProvidersEntity(
 	var pluginType: String? = null,
 	var authUrl: String? = null,
 	@Column(name="additional_properties", nullable=true)
-	private var _additionalProperties: String? = null,
+	var _additionalProperties: String? = null,
 	var readOnly: Boolean = false,
 	var isUnmanaged: Boolean = false,
 	var autoSync: Boolean = false,
@@ -83,7 +83,7 @@ class ProvidersEntity(
 	val additionalProperties: AdditionalProperties4Vmware? 	get() = gson.fromJson<AdditionalProperties4Vmware>(_additionalProperties ?: "")
 
 	class Builder {
-		private var bId: UUID = UUID.randomUUID();fun id(block: () -> UUID) { bId = block() }
+		private var bId: UUID? = UUID.randomUUID();fun id(block: () -> UUID?) { bId = block() }
 		private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bUrl: String? = "";fun url(block: () -> String?) { bUrl = block() ?: "" }
@@ -127,6 +127,7 @@ class AdditionalProperties4Vmware(
 	override fun toString(): String =
 		gson.toJson(this@AdditionalProperties4Vmware)
 
+
 	val storagePoolId: String			get() =
 		if (_storagePoolId.isNullOrEmpty()) "" else (gson.fromJson<AdditionalPropertiesUUIDWrapper>(_storagePoolId[1].toString())).uuid
 	val storagePoolIdFull: String		get() =
@@ -157,3 +158,11 @@ data class AdditionalPropertiesUUIDWrapper(
 	override fun toString(): String =
 		gson.toJson(this@AdditionalPropertiesUUIDWrapper)
 }
+
+fun String?.toWrapUuid(): List<Any>? =
+	this@toWrapUuid?.takeIf { it.isNotBlank() }?.let {
+		listOf(
+			"org.ovirt.engine.core.compat.Guid",
+			mapOf("uuid" to it)
+		)
+	}

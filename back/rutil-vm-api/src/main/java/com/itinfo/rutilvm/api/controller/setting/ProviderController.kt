@@ -127,7 +127,7 @@ class ProviderController: BaseController() {
 		notes="공급자 이미지를 삭제한다"
 	)
 	@ApiImplicitParams(
-		ApiImplicitParam(name = "ExternalHostProviderId", value = "공급자이미지 ID", dataTypeClass = String::class, required=true, paramType="path"),
+		ApiImplicitParam(name = "externalHostProviderId", value = "공급자이미지 ID", dataTypeClass = String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")

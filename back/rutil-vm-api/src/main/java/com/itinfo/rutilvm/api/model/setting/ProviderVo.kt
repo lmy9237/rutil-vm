@@ -68,6 +68,7 @@ class ProviderVo(
 	val isProviderTypeOpenstack: Boolean		get() = providerType?.isTypeOpenstack ?: false
 	val providerTypeSupportsAuthApiV3: Boolean	get() = providerType?.supportsAuthApiV3 ?: false
 
+
 	override fun toString(): String =
 		gson.toJson(this)
 

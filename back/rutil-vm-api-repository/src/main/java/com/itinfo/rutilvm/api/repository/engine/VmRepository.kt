@@ -53,7 +53,7 @@ LEFT JOIN FETCH ide.largeIcon
 WHERE v.clusterId = :clusterId
 ORDER BY v.vmName ASC
 """)
-	fun findAllByClusterIdWithSnapshotsOrderByVmNameAsc(clusterId: UUID): List<VmEntity>
+	fun findAllByClusterIdWithSnapshotsOrderByVmNameAsc(clusterId: UUID?): List<VmEntity>
 
 	@Query("""
 SELECT DISTINCT v FROM VmEntity v
@@ -69,7 +69,7 @@ WHERE 1=1
 AND v.runOnVds = :runOnVds
 ORDER BY v.vmName ASC
 """)
-	fun findAllByRunOnVdsWithSnapshotsOrderByVmNameAsc(runOnVds: UUID): List<VmEntity>
+	fun findAllByRunOnVdsWithSnapshotsOrderByVmNameAsc(runOnVds: UUID?): List<VmEntity>
 
 
 	@Query("""
@@ -85,7 +85,7 @@ LEFT JOIN FETCH ide.largeIcon
 WHERE 1=1
 AND v.vmGuid = :vmId
 """)
-	fun findByIdWithSnapshots(vmId: UUID): VmEntity?
+	fun findByIdWithSnapshots(vmId: UUID?): VmEntity?
 
 }
 
