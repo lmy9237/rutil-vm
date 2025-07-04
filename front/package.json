@@ -1,6 +1,6 @@
 {
   "name": "rutil-vm-front",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",

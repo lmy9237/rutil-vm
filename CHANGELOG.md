@@ -29,6 +29,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 0.3.7 - 2025-07-04
+
+- [`api-v0.3.7`][api-v0.3.7]: 백엔드
+- [`web-v0.3.7`][web-v0.3.7]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`: 가상머신 > 콘솔(VNC): <kbd>ctrl</kbd>+<kbd>alt</kbd>+<kbd>del</kbd> 입력
+  - `${back}`: 가상머신 생셩/편집: 운영시스템 유형 추가 (Windows Server 2025)
+  - `${back}`: VMWare API 연동: 가상머신 상세조회 API
+  - `${back}`: 외부 공급자 API 최종 정보 지정 및 마무리
+- [@dhj27][dhj27]
+  - `${back}`: Vmvo statusDetail 추가
+  - `${back}`: 외부 공급자 (vmware) DB로 추가
+  - `${back}`: 외부 공급자 수정
+  - `${front}`: `VmStartOnceModal`, `VmModal - VmConsole` 추가
+- [@lmy9237][lmy9237]
+  - `${front}`: 가상머신 가져오기 모달 추가/수정
+  - `${front}`: 가상머신 가져오기모달 상세정보 추가
+  - `${front}`: 공급자 페이지(일반, 인증 키) 제작
+  - `${front}`: 공급자 상세정보 추가
+  - `${front}`: select박스 정렬(abc 순) 기능추가
+  - `${front}`: 일반페이지 카드박스 데이터가 넘치면 more 라는 버튼을 만들고 누르면 해당페이지로 이동
+  - `${front}`: 가져오기 모달 컴포넌트 분리
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`/`${front}`: 가상머신 > 일반: (실행 중일 떄) 스크린샷 화면 연동
+  - `${back}`/`${front}`: .디스크 > 업로드
+    - 업로드 실 기능 복구
+    - 파일의 유형에 맞는 설명 추가
+    - 진행중 Toast 복구
+- [@dhj27][dhj27]
+  - `${back}`: Vm startOnce method 변경
+  - `${back}`: Vm fqdn 변경
+  - `${front}`: `SettingProviderModal` 수정
+  - `${front}`: vms 목록에 runOnce 항목 추가
+- [@lmy9237][lmy9237]
+  - `${front}`: 일반페이지 카드박스 클래스명 추가/수정
+  - `${front}`: 삭제모달 수정
+  - `${front}`: 공급자 path경로수정
+  - `${front}`: 가상머신 가져오기 모달 외부 공급자 누르면 input disabled처리(암호제외)
+  - `${front}`: 가상머신 가져오기모달 이름.,운영시스템, 가상머신 생성쪽 시스템 -> 메모리부분 넣기 / 네트워크쪽은 체크박스 하나만들어두기
+  - `${front}`:  템플릿 생성 모달: 총 용량 콘솔 diskImageVo 에 안뜸
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+---
+
 ## 0.3.6 - 2025-06-26
 
 - [`api-v0.3.6`][api-v0.3.6]: 백엔드
@@ -1401,6 +1455,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.6...web-v0.3.7
+[web-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.6...api-v0.3.7
 [api-v0.3.6]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.5...web-v0.3.6
 [web-v0.3.6]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.5...api-v0.3.6
 [api-v0.3.5]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.4...web-v0.3.5
