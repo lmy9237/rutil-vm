@@ -41,6 +41,7 @@ const VmDupl = ({
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
         {vm?.nextRun === true && status2Icon("NEXT_RUN")}
+        {vm?.runOnce === true && vm?.status==="up" ? "Run" : ""}
         {(vm?.statusDetail === "noerr" || vm?.statusDetail === "none") ? "" : vm?.statusDetail}
       </div>
     ),

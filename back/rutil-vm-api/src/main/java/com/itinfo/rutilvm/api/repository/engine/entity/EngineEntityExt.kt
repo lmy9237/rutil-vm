@@ -531,6 +531,7 @@ fun VmEntity.toVmVo(): VmVo {
 		timeElapsed { entity.elapsedTime?.toLong() }
 		optimizeOption { entity.vmType }
 		nextRun { entity.nextRunConfigExists }
+		runOnce { entity.isRunOnce }
 		biosType { entity.biosType }
 		biosBootMenu { entity.isBootMenuEnabled }
 		osType { entity.osType }
