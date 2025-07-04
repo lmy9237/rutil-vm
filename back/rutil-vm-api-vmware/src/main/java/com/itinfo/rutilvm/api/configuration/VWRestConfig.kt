@@ -138,5 +138,5 @@ interface VCenterVMService {
 	fun findOne(
 		@Header("vmware-api-session-id") sessionId: String,
 		@Path("vmId") vmId: String,
-	): Call<VCenterVmDetail>
+	): Call<VCenterVmDetail?>
 }
