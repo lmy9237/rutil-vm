@@ -106,24 +106,14 @@ fun List<BootDevice>.toBootSequence(): BootSequence = when {
 	else -> BootSequence.C
 }
 
-fun VmTypeB?.toVmType(): VmType? =
-	VmType.fromValue(this@toVmType?.name)
+fun VmTypeB?.toVmType(): VmType? = VmType.fromValue(this@toVmType?.name)
 
-fun BiosType?.toBiosTypeB(): BiosTypeB =
-	BiosTypeB.forCode(this@toBiosTypeB?.value())
+fun BiosType?.toBiosTypeB(): BiosTypeB = BiosTypeB.forCode(this@toBiosTypeB?.value())
+fun BiosTypeB?.toBiosType(): BiosType? = BiosType.fromValue(this@toBiosType?.name?.lowercase())
+fun Bios?.findBiosTypeB(): BiosTypeB = BiosTypeB.forCode(this@findBiosTypeB?.type()?.value())
+fun Bios?.findBiosType(): BiosType = BiosType.fromValue(this@findBiosType?.type()?.value())
 
-fun BiosTypeB?.toBiosType(): BiosType? =
-	BiosType.fromValue(this@toBiosType?.name?.lowercase())
-
-fun Bios?.findBiosTypeB(): BiosTypeB =
-	BiosTypeB.forCode(this@findBiosTypeB?.type()?.value())
-
-fun Bios?.findBiosType(): BiosType =
-	BiosType.fromValue(this@findBiosType?.type()?.value())
-
-fun OsType?.toVmOsType(): VmOsType =
-	VmOsType.forCode(this@toVmOsType?.value())
-
+fun OsType?.toVmOsType(): VmOsType = VmOsType.forCode(this@toVmOsType?.value())
 fun VmOsType?.toOsType(): OsType = when(this@toOsType) {
 	else -> OsType.fromValue(this@toOsType?.code ?: VmOsType.other.code)
 }
@@ -158,20 +148,12 @@ fun VmOsType?.toOsTypeCode(): String = when(this@toOsTypeCode) {
 	else -> OsType.fromValue(this@toOsTypeCode?.code ?: VmOsType.other.code).value()
 }
 
-fun OperatingSystem.findVmOsType(): VmOsType =
-	VmOsType.forCode(this@findVmOsType.type())
+fun OperatingSystem.findVmOsType(): VmOsType = VmOsType.forCode(this@findVmOsType.type())
+fun OperatingSystem.findOsType(): OsType = OsType.fromValue(this@findOsType.type())
 
-fun OperatingSystem.findOsType(): OsType =
-	OsType.fromValue(this@findOsType.type())
-
-fun Architecture?.toArchitectureType(): ArchitectureType? =
-	ArchitectureType.forCode(this@toArchitectureType?.value())
-
-fun ArchitectureType?.toArchitecture(): Architecture? =
-	Architecture.fromValue(this@toArchitecture?.name?.lowercase())
-
-fun Cpu?.findArchitectureType(): ArchitectureType? =
-	this@findArchitectureType?.architecture()?.toArchitectureType()
+fun Architecture?.toArchitectureType(): ArchitectureType? = ArchitectureType.forCode(this@toArchitectureType?.value())
+fun ArchitectureType?.toArchitecture(): Architecture? = Architecture.fromValue(this@toArchitecture?.name?.lowercase())
+fun Cpu?.findArchitectureType(): ArchitectureType? = this@findArchitectureType?.architecture()?.toArchitectureType()
 
 fun CpuPinningPolicy?.toCpuPinningPolicyB(): CpuPinningPolicyB? = CpuPinningPolicyB.forCode(this@toCpuPinningPolicyB?.name?.lowercase())
 fun CpuPinningPolicyB?.toCpuPinningPolicy(): CpuPinningPolicy? = CpuPinningPolicy.fromValue(this@toCpuPinningPolicy?.name?.lowercase())

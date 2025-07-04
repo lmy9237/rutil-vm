@@ -6,7 +6,10 @@ import com.itinfo.rutilvm.api.repository.engine.entity.toWrapUuid
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.types.Property
+import org.slf4j.LoggerFactory
 import java.io.Serializable
+
+private val log = LoggerFactory.getLogger(ProviderPropertyVo::class.java)
 
 class ProviderPropertyVo(
 	val dataCenterVo: IdentifiedVo? = IdentifiedVo(),
@@ -58,19 +61,19 @@ vpx://${this.vCenter}/${this.dataCenter}/${this.cluster}/${this.esxi}?no_verify=
 fun ProviderPropertyVo.toProperties(): List<Property> {
 	val props = mutableListOf<Property>()
 
-	if (!dataCenterVo?.id.isNullOrBlank()) {
+	if (dataCenterVo != null && dataCenterVo.id.isNotBlank()) {
 		props.add(
 			PropertyBuilder()
 				.name("storagePoolId")
-				.value(dataCenterVo!!.id)
+				.value(dataCenterVo.id)
 				.build()
 		)
 	}
-	if (!hostVo?.id.isNullOrBlank()) {
+	if (hostVo != null && hostVo.id.isNotBlank()) {
 		props.add(
 			PropertyBuilder()
 				.name("proxyHostId")
-				.value(hostVo!!.id)
+				.value(hostVo.id)
 				.build()
 		)
 	}
@@ -87,7 +90,7 @@ fun ProviderPropertyVo.toProperties(): List<Property> {
 		props.add(PropertyBuilder().name(key).value(value).build())
 	}
 	props.forEach {
-		println(it.name() +": "+it.value())
+		log.debug("{}: {}",it.name(), it.value())
 	}
 
 	return props
@@ -97,15 +100,16 @@ fun IdentifiedVo?.toWrapUuid(): List<Any>? =
 	this@toWrapUuid?.id.toWrapUuid()
 
 fun AdditionalProperties4Vmware.toProviderPropertyVo(): ProviderPropertyVo {
-	val d: List<String>? = this@toProviderPropertyVo.dataCenter?.split("/")
+	val d: List<String>? =
+		this@toProviderPropertyVo.dataCenter?.split("/")
 
 	return ProviderPropertyVo.builder {
-		dataCenterVo { IdentifiedVo.builder {
-			id { this@toProviderPropertyVo.storagePoolId }
-		} }
-		hostVo { IdentifiedVo.builder {
-			id { this@toProviderPropertyVo.proxyHostId }
-		} }
+		dataCenterVo {
+			IdentifiedVo.builder { id { this@toProviderPropertyVo.storagePoolId } }
+		}
+		hostVo {
+			IdentifiedVo.builder { id { this@toProviderPropertyVo.proxyHostId } }
+		}
 		vCenter { this@toProviderPropertyVo.vcenter }
 		esxi { this@toProviderPropertyVo.esx }
 		dataCenter { d?.get(0) }

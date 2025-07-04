@@ -1,15 +1,10 @@
 package com.itinfo.rutilvm.api.model.setting
 
 import com.itinfo.rutilvm.api.ovirt.business.ProviderTypeB
-import com.itinfo.rutilvm.api.repository.engine.entity.AdditionalProperties4Vmware
 import com.itinfo.rutilvm.api.repository.engine.entity.ProvidersEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toPropertyBuildersFromAdditionalProperties4Vmware
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.toUUID
-import org.ovirt.engine.sdk4.builders.ExternalDiscoveredHostBuilder
 import org.ovirt.engine.sdk4.builders.ExternalHostProviderBuilder
-import org.ovirt.engine.sdk4.builders.PropertyBuilder
-import org.ovirt.engine.sdk4.internal.containers.ExternalHostProviderContainer
 import org.ovirt.engine.sdk4.types.ExternalHostProvider
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -47,20 +42,12 @@ class ExternalHostProviderVo(
 	val providerPropertyVo: ProviderPropertyVo? = ProviderPropertyVo(),
 	// val additionalProperties: AdditionalProperties4Vmware? = null,
 ): Serializable {
-	val providerTypeLocalizationKey: String
-		get() = providerType?.localizationKey ?: ""
-
-	val providerTypeKr: String
-		get() = providerType?.kr ?: ""
-
-	val isProviderTypeNetwork: Boolean
-		get() = providerType?.isTypeNetwork ?: false
-
-	val isProviderTypeOpenstack: Boolean
-		get() = providerType?.isTypeOpenstack ?: false
-
-	val providerTypeSupportsAuthApiV3: Boolean
-		get() = providerType?.supportsAuthApiV3 ?: false
+	val providerTypeCode: String					get() = providerType?.code ?: ProviderTypeB.external_network.code
+	val providerTypeEn: String						get() = providerType?.en ?: "N/A"
+	val providerTypeKr: String						get() = providerType?.kr ?: "알 수 없음"
+	val isProviderTypeNetwork: Boolean				get() = providerType?.isTypeNetwork ?: false
+	val isProviderTypeOpenstack: Boolean			get() = providerType?.isTypeOpenstack ?: false
+	val providerTypeSupportsAuthApiV3: Boolean		get() = providerType?.supportsAuthApiV3 ?: false
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -77,7 +64,6 @@ class ExternalHostProviderVo(
 		private var bCreateDate: LocalDateTime? = LocalDateTime.now();fun createDate(block: () -> LocalDateTime?) { bCreateDate = block() ?: LocalDateTime.now() }
 		private var bUpdateDate: LocalDateTime? = null;fun updateDate(block: () -> LocalDateTime?) { bUpdateDate = block() }
 		private var bProviderPropertyVo: ProviderPropertyVo? = ProviderPropertyVo();fun providerPropertyVo(block: () -> ProviderPropertyVo?) { bProviderPropertyVo = block() ?: ProviderPropertyVo() }
-		// private var bAdditionalProperties: AdditionalProperties4Vmware? = null;fun additionalProperties(block: () -> AdditionalProperties4Vmware?) { bAdditionalProperties = block() }
 		fun build(): ExternalHostProviderVo = ExternalHostProviderVo(bId, bName, bDescription, bUrl, bProviderTypeB, bAuthRequired, bAuthUsername, bAuthPassword, bCreateDate, bUpdateDate, bProviderPropertyVo/*, bAdditionalProperties*/,)
 	}
 
