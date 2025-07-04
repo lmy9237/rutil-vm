@@ -35,9 +35,9 @@ const SettingCertRenewalPolicies = () => {
       className="f-start" defaultValue="item-1"
     >
     <AccordionItem value="item-1">
-      <AccordionTrigger className="f-start">
+      <AccordionTrigger className="f-start mb-2">
         {severity2Icon("WARNING", true)}
-        인증서 재갱신 정책
+        <span className="mx-1">인증서 재갱신 정책</span>
       </AccordionTrigger>
       <AccordionContent className="flex flex-col gap-4 text-balance">
         <ul>

@@ -3339,33 +3339,41 @@ const ApiManager = {
 
 
  /**
-   * @name ApiManager.findProvider
-   * @description provider 아이디/비밀번호 검증
+   * @name ApiManager.authenticate4VMWare
+   * @description VMWare API 아이디/비밀번호 검증
    *
    * @returns 
    */
-  verifyVmsFromProvider: async ({ baseUrl, username, password }) => makeAPICall({
+  authenticate4VMWare: async ({ baseUrl, username, password }) => makeAPICall({
     method: "POST",
-    url: ENDPOINTS.VERIFY_VMS_FROM_PROVIDER(),
+    url: ENDPOINTS.AUTHENTICATE_VMWARE(),
+    data: { baseUrl, username, password, },
+  }),
+ /**
+   * @name ApiManager.findAllVmsFromVMWare
+   * @description VMWare API를 통해 가상머신 목록 조회
+   *
+   * @returns 
+   */
+  findAllVmsFromVMWare: async ({ baseUrl, sessionId }) => makeAPICall({
+    method: "POST",
+    url: ENDPOINTS.FIND_VMS_FROM_VMWARE(),
     data: {
-      baseUrl,
-      username,
-      password,
+      baseUrl, sessionId,
     },
   }),
 
  /**
-   * @name ApiManager.findProvider
-   * @description provider VMWare 가상머신 목록 조회
+   * @name ApiManager.findVmFromVMWare
+   * @description VMWare API를 통해 가상머신 상세조회
    *
    * @returns 
    */
-  findVmsFromProvider: async ({ baseUrl, sessionId }) => makeAPICall({
+  findVmFromVMWare: async ({ baseUrl, sessionId, vmId }) => makeAPICall({
     method: "POST",
-    url: ENDPOINTS.FIND_VMS_FROM_PROVIDER(),
+    url: ENDPOINTS.FIND_VMS_FROM_VMWARE(vmId),
     data: {
-      baseUrl,
-      sessionId,
+      baseUrl, sessionId,
     },
   }),
   //#endregion: provider

@@ -29,7 +29,6 @@ const SettingProvidersInfo = () => {
   const [activeTab, setActiveTab] = useState(section || "general");
   const { providersSelected, _setProvidersSelected } = useGlobal();
 
-  // TODO 공급자 상세정보 필요
   const {
     data: provider,
     isError: isNetworkError,
@@ -55,18 +54,17 @@ const SettingProvidersInfo = () => {
   ], [handleTabClick]);
   
   const pathData = useMemo(() => [
-    Localization.kr.MANAGEMENT,
-    //provider?.name,
-    [...tabs].find((tab) => tab?.id === activeTab)?.label,
-  ], [provider,tabs, activeTab]);
+    provider?.name,
+    tabs.find((tab) => tab.id === activeTab)?.label,
+  ], [provider, tabs, activeTab]);
 
-const renderSectionContent = useCallback(() => {
-  const SectionComponent = {
-    general: SettingProvidersGeneral,
-    token: SettingProvidersToken,
-  }[activeTab];
-  return SectionComponent ? <SectionComponent provider={provider} /> : null;
-}, [activeTab, provider]);
+  const renderSectionContent = useCallback(() => {
+    const SectionComponent = {
+      general: SettingProvidersGeneral,
+      token: SettingProvidersToken,
+    }[activeTab];
+    return SectionComponent ? <SectionComponent provider={provider} /> : null;
+  }, [activeTab, provider]);
 
   const sectionHeaderButtons = useMemo(() => [
     { type: "update", onClick: () => setActiveModal("provider:update"), label: Localization.kr.UPDATE,  },

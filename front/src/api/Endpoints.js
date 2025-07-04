@@ -326,10 +326,13 @@ const ENDPOINTS = {
   ADD_PROVIDER: () =>                                                       `${ENDPOINT_API_V1}/providers`,
   EDIT_PROVIDER: (providerId) =>                                            `${ENDPOINT_API_V1}/providers/${providerId}`, 
   DELETE_PROVIDER: (providerId) =>                                          `${ENDPOINT_API_V1}/providers/${providerId}`, 
-
-  VERIFY_VMS_FROM_PROVIDER : () =>                                         `${ENDPOINT_API_V1}/vw/auth`,
-  FIND_VMS_FROM_PROVIDER : () =>                                           `${ENDPOINT_API_V1}/vw/vms`,
   //#endregion: provider
+
+  //#region: VMWare
+  AUTHENTICATE_VMWARE : () =>                                              `${ENDPOINT_API_V1}/vw/auth`,
+  FIND_VMS_FROM_VMWARE : () =>                                             `${ENDPOINT_API_V1}/vw/vms`,
+  FIND_VM_FROM_VMWARE : (vmId) =>                                          `${ENDPOINT_API_V1}/vw/vms/${vmId}`,
+  //#endregion: VMWare
   
   //#region: User
   FIND_ALL_USERS: () =>                                                    `${ENDPOINT_API_V1}/auth/users`,

@@ -321,7 +321,7 @@ const TemplateModal = ({
                             }}
                           />
                           {selectedDomain && (
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-gray-500 f-end">
                               사용 가능: {selectedDomain.availableSize} GiB / 총 용량: {selectedDomain.size} GiB
                             </div>
                           )}

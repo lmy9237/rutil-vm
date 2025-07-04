@@ -300,7 +300,7 @@ const TableColumnsInfo = {
     { accessor: 'upTime',   header: Localization.kr.UP_TIME,    clickable: false, width: '20%' },
   ],
   NICS_FROM_TEMPLATE: [
-    { accessor: 'status',       header: '',             clickable: false, width: '7%' },
+    { accessor: 'status',       header: '',             clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: 'name',         header: Localization.kr.NAME, clickable: false },
     { accessor: '_plugged',     header: '연결됨',        clickable: true },
     { accessor: 'network',      header: `${Localization.kr.NETWORK} ${Localization.kr.NAME}`, clickable: false },

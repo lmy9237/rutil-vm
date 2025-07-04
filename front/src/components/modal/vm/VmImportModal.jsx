@@ -8,8 +8,8 @@ import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import {
   useAllDataCenters, useAllHosts, useAllNetworkProviders,
   useAllProviders,
-  useFindVmsFromProvider,
-  useVerifyVmsFromProvider
+  useAuthenticate4VMWare,
+  useVmsFromVMWare,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -25,13 +25,24 @@ const VmImportModal = ({
   onSubmit
 }) => {
   const { validationToast } = useValidationToast();
+  const [virtioChecked, setVirtioChecked] = useState(false); // ← 체크 상태 저장
+  const [step, setStep] = useState(1);
+  const [selectedSource, setSelectedSource] = useState("VMware");
+  const [vcenter, setVcenter] = useState("");
+  const [vcDataCenter, setVcDataCenter] = useState("");
+  const [username, setUsername] = useState("");
+  const [esxi, setEsxi] = useState("");
+  const [cluster, setCluster] = useState("");
+  const [password, setPassword] = useState("");
+  const [authHostChecked, setAuthHostChecked] = useState(false);
+  const [selectedDatacenterId, setSelectedDatacenterId] = useState("");
+  const [selectedHostId, setSelectedHostId] = useState("");
 
   // 데이터센터 목록
   const {
-    data: datacenters,
+  data: datacenters = [],
     isLoading: isDatacentersLoading,
   } = useAllDataCenters()
-  const [selectedDatacenterId, setSelectedDatacenterId] = useState("");
   const transformedDatacenters = datacenters.map((dc) => ({
     value: dc?.id,
     label: dc?.name,
@@ -49,24 +60,27 @@ const VmImportModal = ({
     value: provider.id,
     label: provider.name,
   }));
+
   useEffect(() => {
     if (!selectedProvider || selectedProvider.providerType !== "vmware") return;
-    const props = selectedProvider.additionalProperties || {};
+    const props = selectedProvider.providerPropertyVo || {};
     setVcenter(props.vcenter || "");
     setEsxi(props.esx || "");
     setVcDataCenter(props.dataCenter || "");
-    setCluster(""); // 필요 시 props.cluster가 있으면 세팅
+    setCluster(props.cluster || ""); // 필요 시 props.cluster가 있으면 세팅
     setUsername(selectedProvider.authUsername || "");
-    setPassword(selectedProvider.authPassword || "");
+    // setPassword(selectedProvider.authPassword || "");
+    setPassword("");
   }, [selectedProviderId]);
 
+  const isAutoFillDisabled = !!selectedProvider;
   // 호스트 목록
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
     isError: isHostsError
   } = useAllHosts((e) => ({ ...e }));
-  const [selectedHostId, setSelectedHostId] = useState("");
+  
   const transformedHosts = hosts.map((host) => ({
     value: host.id,
     label: host.name
@@ -74,45 +88,41 @@ const VmImportModal = ({
 
   // 로드버튼 클릭시 가상머신목록 불러오기
   const [sessionId, setSessionId] = useState(null);
-  const verifyMutation = useVerifyVmsFromProvider(
-    (sessionId) => {
-      setSessionId(sessionId);
-      findMutation.mutate({ baseUrl: vcenter, sessionId });
-    },
-    (err) => validationToast?.error("인증 실패")
-  );
+  const {
+    mutate: authenticate4VmWare,
+  } = useAuthenticate4VMWare((res) => {
+    setSessionId(res);    
+  });
 
-  const findMutation = useFindVmsFromProvider(
-    (vms) => {
-      const transformed = vms.map((vm, idx) => ({
-        id: idx + 1,
-        name: vm.name || vm.vm,
-        selected: false,
-        memory: vm.memorySizeMiB,
-        cpu: vm.cpuCount,
-        powerState: vm.powerState,
-      }));
-      setSourceVMs(transformed);
-    },
-    (err) => validationToast?.error("VM 목록 조회 실패")
-  );
+  const {
+    data: vms = [],
+    isLoading: isVmsLoading,
+    isError: isVmsError,
+    isSuccess: isVmsSuccess,
+    refetch: refetchVms,
+    isRefetching: isVmsRefetching,
+  } = useVmsFromVMWare({ baseUrl: vcenter, sessionId: sessionId , mapPredicate: (e) => ({
+    ...e,
+    id:  e.vm || "",
+    name: e.name,
+    selected: false,
+    memory: e.memorySizeMiB,
+    cpu: e.cpuCount,
+    powerState: e.powerState,
+  })})
+
+  // setSourceVMs(transformed);
   const handleLoadVMs = () => {
     if (!vcenter || !username || !password) {
-      validationToast?.error("vCenter, 사용자 이름, 암호를 모두 입력해주세요.");
+      validationToast?.fail("vCenter, 사용자 이름, 암호를 모두 입력해주세요.");
       return;
     }
 
     Logger.debug("[handleLoadVMs] 인증 요청", {
-      baseUrl: vcenter,
-      username,
-      password,
+      baseUrl: vcenter, username, password,
     });
 
-    verifyMutation.mutate({
-      baseUrl: vcenter,
-      username,
-      password,
-    });
+    authenticate4VmWare({ baseUrl: vcenter, username, password, });
   };
 
 
@@ -120,6 +130,7 @@ const VmImportModal = ({
     data: networkProviders = [],
     isLoading: isNetworkProviders
   } = useAllNetworkProviders();
+
   const transformedNetorkProviders = [
     { value: "none", label: Localization.kr.NOT_ASSOCIATED },
     ...networkProviders.map((p) => ({
@@ -128,10 +139,13 @@ const VmImportModal = ({
     }))
   ];
   /*표 */
-  const [sourceVMs, setSourceVMs] = useState([
-    { id: 1, name: "vm-centos-01", selected: false },
-    { id: 2, name: "vm-ubuntu-test", selected: false },
-  ]);
+const [sourceVMs, setSourceVMs] = useState([]);
+
+useEffect(() => {
+  if (sessionId && vms && vms.length > 0) {
+    setSourceVMs(vms.map(vm => ({ ...vm, selected: false })));
+  }
+}, [sessionId, vms]);
   const [targetVMs, setTargetVMs] = useState([]);
   const toggleSelect = (id, type) => {
     if (type === "source") {
@@ -189,20 +203,6 @@ const VmImportModal = ({
       }
     }
   };
-  const [virtioChecked, setVirtioChecked] = useState(false); // ← 체크 상태 저장
-  /* */
-  
-  const [step, setStep] = useState(1);
-  const [selectedSource, setSelectedSource] = useState("VMware");
-
-  const [vcenter, setVcenter] = useState("");
-  const [vcDataCenter, setVcDataCenter] = useState("");
-  const [username, setUsername] = useState("");
-  const [esxi, setEsxi] = useState("");
-  const [cluster, setCluster] = useState("");
-  const [password, setPassword] = useState("");
-  const [authHostChecked, setAuthHostChecked] = useState(false);
-
  const isNextDisabled = step === 1 && targetVMs.every(vm => !vm.selected);//선택된 데이터가 없을 때 footer '다음'버튼 비활성화
 
   const goNext = () => setStep((prev) => prev + 1);
@@ -233,11 +233,42 @@ const VmImportModal = ({
         </div>
         <hr/>
         <div className="vm-impor-outer">
-          <LabelInput label="vCenter" id="vcenter" value={vcenter} onChange={(e) => setVcenter(e.target.value)} />
-          <LabelInput label="ESXi" id="esxi" value={esxi} onChange={(e) => setEsxi(e.target.value)} />
-          <LabelInput label="데이터 센터" id="vcDataCenter" value={vcDataCenter} onChange={(e) => setVcDataCenter(e.target.value)} />
-          <LabelInput label="클러스터" id="cluster" value={cluster} onChange={(e) => setCluster(e.target.value)} />
-          <LabelInput label="사용자 이름" id="username" value={username} onChange={(e) => setUsername(e.target.value)} />
+          <LabelInput label="vcenter" id="vcenter"
+            value={vcenter}
+            onChange={(e) => setVcenter(e.target.value)}
+            disabled={!!selectedProvider}
+          />
+
+          <LabelInput
+            label="ESXi"
+            id="esxi"
+            value={esxi}
+            onChange={(e) => setEsxi(e.target.value)}
+            disabled={!!selectedProvider}
+          />
+
+          <LabelInput label={Localization.kr.DATA_CENTER} id="vcDataCenter"
+            value={vcDataCenter}
+            onChange={(e) => setVcDataCenter(e.target.value)}
+            disabled={!!selectedProvider}
+          />
+
+          <LabelInput
+            label={Localization.kr.CLUSTER}
+            id="cluster"
+            value={cluster}
+            onChange={(e) => setCluster(e.target.value)}
+            disabled={!!selectedProvider}
+          />
+
+          <LabelInput
+            label="사용자 이름"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            disabled={!!selectedProvider}
+          />
+
           <LabelInput
             label="암호"
             id="password"
@@ -249,55 +280,52 @@ const VmImportModal = ({
       </div>
 
       <div className="vm-impor-outer">
-        <LabelSelectOptions
-          label="호스트 목록"
-          options={transformedHosts}
+        <LabelSelectOptions label="호스트 목록" options={transformedHosts}
           value={selectedHostId}
           onChange={(e) => setSelectedHostId(e.target.value)}
         />
       </div>
 
      <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>
-  로드
-</button>
+      로드
+     </button>
 
       <div className="vm-import-list-outer f-btw mb-4">
         {/* 좌측 패널 */}
         <div className="vm-import-panel vm-import-source">
           <div className="vm-import-panel-title">소스 상의 가상 머신</div>
-         <div className="vm-import-table-outer">
-  <div className="section-table-outer w-full mb-2 ">
-    <table className="vm-import-table">
-      <thead>
-        <tr>
-          <th style={{ width: "40px" }}>
-            <input
-              type="checkbox"
-              checked={sourceVMs.length > 0 && sourceVMs.every(vm => vm.selected)}
-              onChange={() => handleSelectAll("source")}
-            />
-          </th>
-          <th>이름</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sourceVMs.map(vm => (
-          <tr key={vm.id}>
-            <td>
-              <input
-                type="checkbox"
-                checked={vm.selected}
-                onChange={() => toggleSelect(vm.id, "source")}
-              />
-            </td>
-            <td>{vm.name}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-
+          <div className="vm-import-table-outer">
+            <div className="section-table-outer w-full ">
+              <table className="vm-import-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "40px" }}>
+                      <input
+                        type="checkbox"
+                        checked={sourceVMs.length > 0 && sourceVMs.every(vm => vm.selected)}
+                        onChange={() => handleSelectAll("source")}
+                      />
+                    </th>
+                    <th>이름</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sourceVMs.map(vm => (
+                    <tr key={vm.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={vm.selected}
+                          onChange={() => toggleSelect(vm.id, "source")}
+                        />
+                      </td>
+                      <td>{vm.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
 
@@ -305,7 +333,7 @@ const VmImportModal = ({
         <div className="vm-import-panel vm-import-target">
           <div className="vm-import-panel-title">가져오기할 가상 머신</div>
           <div className="vm-import-table-outer">
-            <div className="section-table-outer w-full mb-2">
+            <div className="section-table-outer w-full">
               <table className="vm-import-table">
                 <thead>
                   <tr>

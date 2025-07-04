@@ -74,19 +74,17 @@
 }
 .vm-import-table-outer{
   border: var(--border-default);
-  min-height: 160px;
-  overflow-y: auto;
+  height: 100%;
 }
 .vm-import-panel{
-  width: 48%;
+  width: 49%;
+  height: 200px;
+  overflow-y: auto;
 }
 .vm-import-detail-box {
-  min-height: 300px;
   border: var(--border-default);
   border-radius: 2px;
   padding: 10px;
-  overflow: auto;
-  background-color: #fff;
 }
 
 .vm-import-detail-box  .info-table-wrapper{
