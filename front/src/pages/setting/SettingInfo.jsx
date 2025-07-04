@@ -29,7 +29,7 @@ const SettingInfo = () => {
   const [activeTab, setActiveTab] = useState(section || "users"); // 초기값 설정
 
   const tabs = useMemo(() => [
-    { id: "provider",    label: "공급자",               onClick: () => handleTabClick("provider") },
+    { id: "providers",   label: "공급자",               onClick: () => handleTabClick("providers") },
     { id: "users",       label: Localization.kr.USER,  onClick: () => handleTabClick("users") },
     { id: "sessions",    label: "활성 사용자 세션",       onClick: () => handleTabClick("sessions") },
     // { id: "licenses",    label: "라이센싱",             onClick: () => handleTabClick("licenses") },
@@ -56,7 +56,7 @@ const SettingInfo = () => {
   ], [tabs, activeTab]);
 
   const sectionComponents = {
-    provider: SettingProviders,
+    providers: SettingProviders,
     users: SettingUsers,
     sessions: SettingSessions,
     // licenses: Setting,

@@ -6190,6 +6190,113 @@ export const useProvider = (
   enabled: !!providerId,
 });
 
+/**
+ * @name useAddProvider
+ * @description 외부공급자 생성 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.useAddProvider
+ */
+export const useAddProvider = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+  return useMutation({
+    mutationFn: async (providerData) => {
+      closeModal()
+      const res = await ApiManager.addProvider(providerData)
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useAddProvider ... providerData: ${JSON.stringify(providerData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useAddProvider ... res: `, res);
+      apiToast.ok(`${Localization.kr.PROVIDER} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allProviders'); // provider 추가 성공 시 'allProviders' 쿼리를 리패칭하여 목록을 최신화
+      postSuccess()
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useEditProvider
+ * @description 외부공급자 수정 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.useEditProvider
+ */
+export const useEditProvider = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+  return useMutation({
+    mutationFn: async ({ providerId, providerData }) => {
+      closeModal();
+      const res = await ApiManager.editProvider(providerId, providerData);
+      const _res = validate(res) ?? {}
+      Logger.debug(`RQHook > useEditProvider ... providerId: ${providerId}, providerData: ${JSON.stringify(providerData, null, 2)}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useEditProvider ... res: `, res)
+      apiToast.ok(`${Localization.kr.PROVIDER} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allProviders');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useDeleteProvider
+ * @description 외부공급자 삭제 useMutation 훅
+ * 
+ * @param {*} postSuccess 
+ * @param {*} postError 
+ * @returns 
+ */
+export const useDeleteProvider = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient()
+  const { setProvidersSelected } = useGlobal()
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (providerId) => {
+      closeModal();
+      const res = await ApiManager.deleteProvider(providerId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useDeleteProvider ... providerId: ${providerId}`)
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useDeleteProvider ... res: `, res);
+      apiToast.ok(`${Localization.kr.PROVIDER} ${Localization.kr.REMOVE}  ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.removeQueries(`allProviders,${QK.ALL_TREE_NAVIGATIONS}`);
+      queryClient.invalidateQueries(QK.ALL_TREE_NAVIGATIONS)
+      setProvidersSelected([])
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
 
 /**
  *  !!! TODO 검토필요

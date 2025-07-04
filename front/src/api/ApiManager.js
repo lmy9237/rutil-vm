@@ -3293,6 +3293,50 @@ const ApiManager = {
     url: ENDPOINTS.FIND_PROVIDER(providerId), 
   }),
 
+  /**
+   * @name ApiManager.addProvider
+   * @description 새 외부공급자 생성
+   * 
+   * @param {Object} providerData - 추가할 외부공급자 정보
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  addProvider: async (providerData) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.ADD_PROVIDER(),
+      data: providerData, // POST 요청 시 전송할 데이터
+    });
+  },
+  /**
+   * @name ApiManager.editProvider
+   * @description 외부공급자 편집
+   * 
+   * @param {string} providerId
+   * @param {Object} providerData - 추가할 외부공급자 정보
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  editProvider: async (providerId, providerData) => {
+    return makeAPICall({
+      method: "PUT",
+      url: ENDPOINTS.EDIT_PROVIDER(providerId),
+      data: providerData, // PUT 요청 시 전송할 데이터
+    });
+  },
+  /**
+   * @name ApiManager.deleteProvider
+   * @description 외부공급자 삭제
+   * 
+   * @param {String} providerId - 삭제할 외부공급자 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  deleteProvider: async (providerId) => {
+    return makeAPICall({
+      method: "DELETE",
+      url: ENDPOINTS.DELETE_PROVIDER(providerId),  // ID를 URL에 포함
+      data: providerId
+    });
+  },
+
 
  /**
    * @name ApiManager.findProvider

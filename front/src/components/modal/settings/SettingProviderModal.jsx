@@ -12,6 +12,8 @@ import {
   useAllDataCenters,
   useHostsFromDataCenter,
   useProvider,
+  useAddProvider,
+  useEditProvider,
 } from "@/api/RQHook";
 import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
 import Localization                     from "@/utils/Localization";
@@ -23,12 +25,12 @@ const initialFormState = {
   name: "",
   description: "",
   providerType: "vmware",
-  vCenter: "",    // 192.168.0.7
-  esx: "",        // 192.168.0.4
-  dataCenter: "", // Datacenter
-  cluster: "",    // ITITINFO
-  userName: "",
-  password: ""
+  vCenter: "",    
+  esxi: "",        
+  datacenter: "", 
+  cluster: "",    
+  authUsername: "",
+  // password: ""
 };
 
 /**
@@ -53,50 +55,59 @@ const SettingProviderModal = ({
   const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
+  const { mutate: addProvider } = useAddProvider(onClose, onClose);
+  const { mutate: editProvider } = useEditProvider(onClose, onClose);
+
   const { data: provider } = useProvider(providerId);
   const { data: providers = [] } = useAllProviders((e) => ({ ...e  }));
   const { 
     data: datacenters = [], 
     isLoading: isDataCentersLoading 
   } = useAllDataCenters();
-
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
-    isError: isHostsError,
-    isSuccess: isHostsSuccess,
-    refetch: refetchHosts,
-    isRefetching: isHostsRefetching,
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
-  console.log("$ provider", provider)
   useEffect(() => {
     if (!isOpen) {
       setFormState(initialFormState);
+      setDataCenterVo(emptyIdNameVo());
+      setHostVo(emptyIdNameVo());
     }
     if (editMode && provider) {
-      setFormState({
+      const property = provider.providerPropertyVo
+      setFormState((prev) => ({
+        ...prev,
         id: provider?.id,
         name: provider?.name,
         description: provider?.description,
         providerType: provider?.providerType,
-        vCenter: provider?.vCenter,
-        esxi: provider?.esxi,
-        datacenter: provider?.datacenter,
-        cluster: provider?.cluster,
-        userName: provider?.userName,
-        password: provider?.password,
-      });
+        vCenter: property?.vcenter,
+        esxi: property?.esxi,
+        datacenter: property?.dataCenter,
+        cluster: property?.cluster,
+        authUsername: provider?.authUsername,
+      }));
       setDataCenterVo({
-        id: provider?.storagePoolId,
+        id: property?.dataCenterVo?.id,
       });
       setHostVo({
-        id: provider?.proxyHostId,
+        id: property?.hostVo?.id,
       })
-      
     }
-  }, [isOpen, editMode]);
+  }, [isOpen, editMode, provider]);
 
+  useEffect(() => {
+    if (!editMode && datacenters.length > 0) {
+      const defaultDc = datacenters.find(dc => dc.name === "Default");
+      const firstDc = defaultDc || datacenters[0];
+      setDataCenterVo({ 
+        id: firstDc.id, 
+        name: firstDc.name 
+      });
+    }
+  }, [datacenters, editMode]);
 
   const validateForm = () => {
     const nameError = checkName(formState.name);
@@ -104,9 +115,6 @@ const SettingProviderModal = ({
     const duplicateError = checkDuplicateName(providers, formState.name, formState.id);
     if (duplicateError) return duplicateError;
 
-    if (!editMode && !formState.sshRootPassword) return "비밀번호를 입력해주세요.";
-    if (!dataCenterVo.id === "none") return `${Localization.kr.DATA_CENTER}를 선택해주세요.`;
-    if (!hostVo.id === "none") return `${Localization.kr.HOST}를 선택해주세요.`;
     return null;
   };
 
@@ -119,20 +127,29 @@ const SettingProviderModal = ({
 
     const dataToSubmit = {
       ...formState,
-      
+      authRequired: false,
+      providerPropertyVo: {
+        dataCenterVo: dataCenterVo,
+        hostVo: hostVo,
+        vCenter: formState.vCenter,
+        esxi: formState.esxi,
+        dataCenter: formState.datacenter,
+        cluster: formState.cluster,
+        verifySSL: false
+      },
     };
 
     Logger.debug(`SettingProviderModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
-    // editMode
-    //   ? editHost({ hostId: formState.id, hostData: dataToSubmit })
-    //   : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.deployHostedEngine), });
+    editMode
+      ? editProvider({ providerId: formState.id, providerData: dataToSubmit })
+      : addProvider(dataToSubmit);
   };
 
   return (
     <BaseModal targetName={Localization.kr.PROVIDER} submitTitle={pLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "600px" }} 
+      contentStyle={{ width: "500px" }} 
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
@@ -146,16 +163,15 @@ const SettingProviderModal = ({
       {/* TODO:타입별 항목이 많이 달라짐 */}
       <LabelSelectOptions id="providerType" label={Localization.kr.TYPE}
         value={formState.providerType}
-        options={[]}
+        options={providerTypes}
         disabled={editMode}
-        onChange={handleInputChange(setFormState, "quotaMode", validationToast)}
+        onChange={handleInputChange(setFormState, "providerType", validationToast)}
       />
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
         value={dataCenterVo.id}
-        disabled={editMode && !!dataCenterVo.id}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={handleSelectIdChange(setDataCenterVo, "datacenter", validationToast)}
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />
       <hr/>
       
@@ -184,19 +200,25 @@ const SettingProviderModal = ({
         value={hostVo.id}
         loading={isHostsLoading}
         options={hosts}
-        onChange={handleSelectIdChange(setHostVo, "host", validationToast)}
+        disabled={!dataCenterVo?.id || dataCenterVo.id === "none"}
+        onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
       />
-      <LabelInput id="userName" label={`${Localization.kr.USER} ${Localization.kr.NAME}`}
-        value={formState.userName}
-        onChange={handleInputChange(setFormState, "userName", validationToast)}
+      <LabelInput id="authUsername" label={`${Localization.kr.USER} ${Localization.kr.NAME}`}
+        value={formState.authUsername}
+        onChange={handleInputChange(setFormState, "authUsername", validationToast)}
       />
-      <LabelInput id="password" label="비밀번호" type="password"
+      {/* <LabelInput id="password" label="비밀번호" type="password"
         onChange={handleInputChange(setFormState, "password")}
         value={formState.password}
         required={true}
-      />
+      /> */}
+      <br/>
     </BaseModal>
   );
 };
 
 export default SettingProviderModal;
+
+const providerTypes = [
+  { value: "vmware",   label: "VMware" },
+];

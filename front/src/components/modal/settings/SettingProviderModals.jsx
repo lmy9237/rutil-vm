@@ -1,10 +1,10 @@
 import React from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
-import SettingUsersModal from './SettingUsersModal'
 import DeleteModal from "../../../utils/DeleteModal"
 import Localization from "../../../utils/Localization";
 import SettingProviderModal from "./SettingProviderModal";
+import { useDeleteProvider } from "@/api/RQHook";
 
 /**
  * @name SettingProviderModals
@@ -24,7 +24,8 @@ const SettingProviderModals = ({
         onClose={() => closeModal("provider:create")}
       />
     ), update: (
-      <SettingProviderModal key={"provider:update"} isOpen={activeModal().includes("provider:update")} editMode
+      <SettingProviderModal key={"provider:update"} isOpen={activeModal().includes("provider:update")} 
+        editMode
         onClose={() => closeModal("provider:update")}
       />
     ), remove: (
@@ -32,7 +33,7 @@ const SettingProviderModals = ({
         onClose={() => closeModal("provider:remove")}
         label={Localization.kr.PROVIDER}
         data={providersSelected}
-        // api={useRemoveUser()} // TODO api.필요
+        api={useDeleteProvider()} // TODO api.필요
       />
     ),
   }
