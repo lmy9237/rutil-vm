@@ -19,7 +19,9 @@ const SuperAreaChart = ({
       .toString()
       .padStart(2, "0")}`;
   }, []);
-
+  
+  // 최소높이
+  const safeHeight = Math.max(heightInn || 150, 180); 
   useEffect(() => {
     if (Array.isArray(per) && per.length > 0) {
       // `historyDatetime`을 정확히 Date 객체로 변환하여 **오름차순** 정렬
@@ -70,7 +72,8 @@ const SuperAreaChart = ({
     <AreaChart 
       series={series} 
       datetimes={datetimes} 
-      heightInn={heightInn}
+      // heightInn={heightInn}
+      heightInn={safeHeight}
       {...props}
     />
   );

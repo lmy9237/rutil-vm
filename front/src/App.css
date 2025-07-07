@@ -425,7 +425,7 @@ svg.btn { cursor: pointer; }
   padding: 8px 0 !important;
 }
 .vm-detail-grid .info-table-wrapper th{
-  width: 150px;
+  width: 180px;
 }
 
 @media (max-width: 1424px) {

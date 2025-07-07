@@ -87,7 +87,8 @@ const DynamicInputList = ({
         return (
           <div key={index} className="dynamic-input f-start w-full">
             {showLabel && (
-              <div className="nic-label">{`${item.name || ""}`}</div>
+              // <div className="nic-label">{`${item.name || ""}`}</div>
+              <div className="nic-label">{`nic${index + 1}`}</div>
             )}
 
             <div className="dynamic-select-outer f-end w-full">

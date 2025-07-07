@@ -112,23 +112,25 @@
     height: calc(2 * var(--h-dash-nav-box));
   }
   .dash-boxes:last-child {
-    /* width: calc(100% - 48px); */
     height: calc(100% - (2 * var(--h-dash-nav-box)));
   }
   .box {
-    flex: 1 1 calc(100% / 3 - 8px);/* 한 줄에 3개씩 총 2줄*/
+    flex: 1 1 calc(100% / 3 - 8px);
   }
-  .box.box-graph {/* 한 줄에 3개씩 총 2줄*/
+  .box.box-graph {
     height: auto !important;
   }
+  .graph-sub.graph-wave {
+  min-height: 200px !important;
+}
 }
 
 @media screen and (max-width: 768px) {
   .box {
-    flex: 1 3 calc(100% / 2 - 8px);/* 한 줄에 2개씩 총 3줄*/
+    flex: 1 3 calc(100% / 2 - 8px);
   }
   .box.box-graph {
-    flex: 1 1 calc(100% - 8px) !important;/* 한 줄에 3개씩 총 2줄*/
-    width: calc(100% - 8px); /*1열*/
+    flex: 1 1 calc(100% - 8px) !important;
+    width: calc(100% - 8px); 
   }
 }

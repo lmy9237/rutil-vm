@@ -255,7 +255,7 @@ const VmDiskModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "700px" }} 
+      contentStyle={{ width: "700px"}} 
     >
       <div className="disk-new-img">
         <div>              

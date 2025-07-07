@@ -14,7 +14,7 @@
   vertical-align: top;
   border: none;
 }
-.info-table th { padding-right: 10px; width: auto; }
+.info-table th { padding-right: 10px; width:180px; }
 .info-table td {
   color: #757575;
 }

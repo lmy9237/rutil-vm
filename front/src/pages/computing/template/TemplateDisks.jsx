@@ -15,6 +15,7 @@ import {
   checkZeroSizeToGiB,
 } from "@/util";
 import Localization           from "@/utils/Localization";
+import Tippy from "@tippyjs/react";
 
 /**
  * @name TemplateDisks
@@ -85,24 +86,33 @@ const TemplateDisks = ({
 
 const StorageDomainWithTooltip = ({ domainId }) => {
   const { data: storageDomain, isLoading } = useStorageDomain(domainId);
+
+  const tooltipContent = isLoading
+    ? '로딩 중...'
+    : (
+        <div className="v-start w-full tooltip-content">
+          크기: {checkZeroSizeToGiB(storageDomain?.size)}<br />
+          사용 가능: {checkZeroSizeToGiB(storageDomain?.availableSize)}<br />
+          사용됨: {checkZeroSizeToGiB(storageDomain?.usedSize)}
+        </div>
+      );
+
   return (
-    <>
-      <span data-tooltip-id={`storage-domain-tooltip-${domainId}`}>
+    <Tippy
+      content={tooltipContent}
+      placement="top"
+      animation="shift-away"
+      theme="dark-tooltip"
+      arrow={true}
+      delay={[200, 0]}
+      appendTo={() => document.body}
+    >
+      <div>
         <TableRowClick type="domain" id={domainId}>
           {storageDomain?.name || '불러오는 중...'}
-        </TableRowClick> 
-      </span>
-      <Tooltip id={`storage-domain-tooltip-${domainId}`} place="top" effect="solid">
-        {isLoading
-          ? '로딩 중...'
-          : <>
-              크기: {checkZeroSizeToGiB(storageDomain?.size)}<br/>
-              사용 가능: {checkZeroSizeToGiB(storageDomain?.availableSize)}<br/>
-              사용됨: {checkZeroSizeToGiB(storageDomain?.usedSize)}
-            </>
-        }
-      </Tooltip>
-    </>
+        </TableRowClick>
+      </div>
+    </Tippy>
   );
 };
 

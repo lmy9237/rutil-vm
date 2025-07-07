@@ -33,7 +33,6 @@ const VmActionButtons = ({
   actionType="default"
 }) => {
   const navigate = useNavigate();
-  const { validationToast } = useValidationToast();
   const { setActiveModal, setContextMenu } = useUIState()
   const { vmsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
@@ -66,12 +65,15 @@ const VmActionButtons = ({
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.notRunning ?? false);
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status?.toUpperCase() === "suspended");
-  const allDownOrSuspended = vmsSelected.length > 0 && vmsSelected.every(vm => 
-    vm.status?.toUpperCase() === "down" || vm.status?.toUpperCase() === "suspended"
-  );
-  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm =>
-    vm?.qualified4PowerDown
-  );
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
+    const status = vm.status?.toLowerCase();
+    return (
+      vm?.qualified4PowerDown ||
+      status === "down" ||
+      status === "suspended" ||
+      status === "reboot_in_progress"
+    );
+  });
   const ollOkay2Migrate = vmsSelected.every(vm => 
     vm?.qualified2Migrate || (
       vm?.status?.toUpperCase() === "up" || 

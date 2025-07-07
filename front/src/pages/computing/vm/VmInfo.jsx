@@ -15,7 +15,6 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import VmGeneral              from "./VmGeneral";
-import VmNics                 from "./VmNics";
 import VmNics2                from "./VmNics2";
 import VmSnapshots            from "./VmSnapshots";
 import VmApplications         from "./VmApplications";

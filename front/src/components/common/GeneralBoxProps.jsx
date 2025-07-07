@@ -66,9 +66,10 @@ const GeneralBoxProps = ({
 
     // 1프레임 이후 체크 → 정확하게 계산됨
     requestAnimationFrame(() => {
-      if (contentEl) {
-        setIsOverflow(contentEl.scrollHeight > contentEl.clientHeight);
-      }
+  if (contentEl) {
+      const diff = contentEl.scrollHeight - contentEl.clientHeight;
+      setIsOverflow(diff > 10); 
+    }
     });
   }, [children, enableOverflowCheck]);
 

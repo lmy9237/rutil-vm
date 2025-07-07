@@ -26,6 +26,7 @@ import VmNicModals from "@/components/modal/vm/VmNicModals";
 import TablesOuter from "@/components/table/TablesOuter";
 import useSearch from "@/hooks/useSearch";
 import TableRowClick from "@/components/table/TableRowClick";
+import Tippy from "@tippyjs/react";
 /**
  * @name VmNics2
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -54,7 +55,7 @@ const VmNics2 = ({
     isRefetching: isvmNicsRefetching
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
 
-console.log("nics: ", nics);
+  console.log("nics: ", nics);
   const transformedData = nics
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((nic) => ({
@@ -92,7 +93,28 @@ console.log("nics: ", nics);
       interface_: nic?.interface_,
       portMirroring: nic?.portMirroring || "비활성화됨",
       guestInterfaceName: nic?.guestInterfaceName,
-      speed: "10000",
+      speed: (
+        <Tippy
+          content={
+            <div className="v-start w-full tooltip-content">
+              <div>Rx 속도: {checkZeroSizeToMbps(nic?.rxSpeed)} Mbps</div>
+              <div>Tx 속도: {checkZeroSizeToMbps(nic?.txSpeed)} Mbps</div>
+              <div>Rx 총량: {nic?.rxTotalSpeed?.toLocaleString() ?? "0"} bytes</div>
+              <div>Tx 총량: {nic?.txTotalSpeed?.toLocaleString() ?? "0"} bytes</div>
+              <div>Rx 오류: {nic?.rxTotalError ?? "0"}</div>
+              <div>Tx 오류: {nic?.txTotalError ?? "0"}</div>
+            </div>
+          }
+          placement="top"
+          animation="shift-away"
+          theme="dark-tooltip"
+          arrow={true}
+          delay={[200, 0]}
+          appendTo={() => document.body}
+        >
+          <div>{checkZeroSizeToMbps(nic?.speed) || "0"}</div>
+        </Tippy>
+      ),
       rxSpeed: checkZeroSizeToMbps(nic?.rxSpeed),
       txSpeed: checkZeroSizeToMbps(nic?.txSpeed),
       rxTotalSpeed: nic?.rxTotalSpeed?.toLocaleString() || "0",

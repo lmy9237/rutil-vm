@@ -87,7 +87,7 @@ const DiskDupl = ({
   
   // selectoption
   const contentTypeFilteredData = useMemo(() => {
-    if (!selectedContentType) return filteredData;
+    if (selectedContentType === "__all__") return filteredData;
     return filteredData.filter(disk => String(disk?.contentType) === selectedContentType);
   }, [filteredData, selectedContentType]);
 
@@ -133,7 +133,7 @@ const DiskDupl = ({
       </div>
       <TablesOuter target={"disk"}
         columns={columns}
-        data={filteredData}
+        data={contentTypeFilteredData}
         // data={contentTypeFilteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}

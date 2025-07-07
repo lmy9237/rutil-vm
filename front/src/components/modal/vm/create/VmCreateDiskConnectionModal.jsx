@@ -111,7 +111,7 @@ const VmCreateDiskConnectionModal = ({
       contentStyle={{ width: "1000px"}} 
     >
      <div className="py-3">
-      <div className="section-table-outer">
+      <div className="section-table-outer ">
         <table>
           <thead>
             <tr>
@@ -186,7 +186,7 @@ const VmCreateDiskConnectionModal = ({
               )})
             ) : (
               <tr>
-                <td colSpan="10" style={{ textAlign: "center" }}>
+                <td colSpan="10" style={{ textAlign: "center", height: "150px" }}>
                   데이터가 없습니다.
                 </td>
               </tr>

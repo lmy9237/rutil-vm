@@ -27,7 +27,7 @@ const TableRowClick = ({
     e.stopPropagation();
 
     const paths = {
-      datacenter: `/computing/datacenters/${id}/clusters`,
+      datacenter: `/computing/datacenters/${id}`,
       cluster: `/computing/clusters/${id}`,
       host: `/computing/hosts/${id}`,
       vm: `/computing/vms/${id}`,
