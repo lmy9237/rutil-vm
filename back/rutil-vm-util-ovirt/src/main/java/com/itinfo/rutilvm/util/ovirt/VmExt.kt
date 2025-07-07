@@ -83,19 +83,15 @@ fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runC
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
 
+	log.debug("startOnceVm ... cdrom[0].id: {}", vm.cdroms().first()?.id())
+
 	this.srvVm(vm.id()).start()
 		.useSysprep(windowGuest)
 		.volatile_(true)
 		.vm(vm)
 		.send()
 
-	/*.vm(VmBuilder()
-		.cdroms(
-			CdromBuilder()
-				.file(FileBuilder().id("virtio-win.iso"))
-		)
-		.virtioScsi(VirtioScsiBuilder().build())
-	)*/
+	/**/
 	true
 }.onSuccess {
 	Term.VM.logSuccess("한번 시작", vm.id())
@@ -358,7 +354,6 @@ fun Connection.findVmCdromFromVm(vmId: String, cdromId: String): Result<Cdrom?> 
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "상세조회", it, vmId)
 	throw if (it is Error) it.toItCloudException() else it
-
 }
 
 fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = runCatching {
@@ -376,8 +371,11 @@ fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = ru
 fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: String): Result<Cdrom?> = runCatching {
 	val vm = checkVm(vmId)
 	// current는 실행중인 가상머신에서 바로 변경할때 가능
-	this.srvVmCdromFromVm(vmId, cdromId).update()
-		.cdrom(CdromBuilder().file(FileBuilder().id(newCdromId))).current(vm.status() == VmStatus.UP).send().cdrom()
+	this.srvVmCdromFromVm(vmId, cdromId).update().apply {
+		cdrom(CdromBuilder().file(FileBuilder().id(newCdromId)))
+		current(vm.status() == VmStatus.UP) // TODO: 이거 맞나?
+	}.send().cdrom()
+
 
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)

@@ -1732,7 +1732,6 @@ const ApiManager = {
       url: ENDPOINTS.FIND_ALL_MIGRATABLE_HOSTS_4_VMS(vmIds.join(",")),  // ID를 URL에 포함
     });
   },
-
   /**
    * @name ApiManager.migrateVM
    * @description 가상머신 마이그레이션
@@ -1747,6 +1746,22 @@ const ApiManager = {
       method: "POST",
       url: ENDPOINTS.MIGRATE_VM(vmId, vm, affinityClosure),  // ID를 URL에 포함
       data: vm
+      // defaultValues: DEFAULT_VALUES.MIGRATE_VM
+    });
+  },
+  /**
+   * @name ApiManager.updateCdromFromVm
+   * @description 가상머신 CDROM 변경
+   * 
+   * @param {String} vmId
+   * @param {String} cdromId
+   * 
+   * @returns {Promise<Object>} 
+   */
+  updateCdromFromVm: async (vmId, cdromId) => {
+    return makeAPICall({
+      method: "PUT",
+      url: ENDPOINTS.UPDATE_CDROM_FROM_VM(vmId, cdromId),
       // defaultValues: DEFAULT_VALUES.MIGRATE_VM
     });
   },
@@ -3369,9 +3384,9 @@ const ApiManager = {
    *
    * @returns 
    */
-  findVmFromVMWare: async ({ baseUrl, sessionId, vmId }) => makeAPICall({
+  findVmFromVMWare: async ({ baseUrl, sessionId, vmIds }) => makeAPICall({
     method: "POST",
-    url: ENDPOINTS.FIND_VMS_FROM_VMWARE(vmId),
+    url: ENDPOINTS.FIND_VM_FROM_VMWARE(vmIds),
     data: {
       baseUrl, sessionId,
     },

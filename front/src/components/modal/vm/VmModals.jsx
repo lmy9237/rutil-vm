@@ -1,19 +1,21 @@
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import VmDeleteModal from "./VmDeleteModal";
-import VmActionModal from "./VmActionModal";
-import VmSnapshotModal from "./VmSnapshotModal";
-import VmModal from "./VmModal";
-import TemplateModal from "../template/TemplateModal";
-import VmExportOVAModal from "./VmExportOVAModal";
-import VmMigrationModal from "./VmMigrationModal";
-import VmImportModal from "./VmImportModal";
-import Logger from "../../../utils/Logger";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import VmDeleteModal                    from "./VmDeleteModal";
+import VmActionModal                    from "./VmActionModal";
+import VmSnapshotModal                  from "./VmSnapshotModal";
+import VmModal                          from "./VmModal";
+import TemplateModal                    from "@/components/modal/template/TemplateModal";
+import DomainImportVmTemplateModal      from "@/components/modal/domain/DomainImportVmTemplateModal";
+import VmExportOVAModal                 from "./VmExportOVAModal";
+import VmMigrationModal                 from "./VmMigrationModal";
+import VmStartOnceModal                 from "./VmStartOnceModal";
+import VmChangeCdModal                  from "./VmChangeCdModal";
+import VmImportModal                    from "./VmImportModal";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./MVm.css";
-import DomainImportVmTemplateModal from "../domain/DomainImportVmTemplateModal";
-import VmStartOnceModal from "./VmStartOnceModal";
 
 /**
  * @name VmModals
@@ -74,6 +76,11 @@ const VmModals = ({
       <VmModal key={"vm:copy"} isOpen={activeModal().includes("vm:copy")} 
         onClose={() => closeModal("vm:copy")}
         copyMode 
+      />
+    ), changeCd: (
+      <VmChangeCdModal key={"vm:changeCd"} isOpen={activeModal().includes("vm:changeCd")} 
+        onClose={() => closeModal("vm:changeCd")}
+        vmId={vmsSelected[0]?.id}
       />
     ), migration: (
       <VmMigrationModal key={"vm:migration"} isOpen={activeModal().includes("vm:migration")} 

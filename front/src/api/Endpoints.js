@@ -173,6 +173,7 @@ const ENDPOINTS = {
     }
     return url;
   },
+  UPDATE_CDROM_FROM_VM: (vmId, cdromId) =>                                 `${ENDPOINT_API_V1}/computing/vms/${vmId}/cdroms/${cdromId}`,
   TAKE_VM_SCREENSHOT: (vmId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/screenshot`,
   //#endregion: Vm
 
@@ -331,7 +332,7 @@ const ENDPOINTS = {
   //#region: VMWare
   AUTHENTICATE_VMWARE : () =>                                              `${ENDPOINT_API_V1}/vw/auth`,
   FIND_VMS_FROM_VMWARE : () =>                                             `${ENDPOINT_API_V1}/vw/vms`,
-  FIND_VM_FROM_VMWARE : (vmId) =>                                          `${ENDPOINT_API_V1}/vw/vms/${vmId}`,
+  FIND_VM_FROM_VMWARE : (vmIds) =>                                          `${ENDPOINT_API_V1}/vw/vms/${vmIds}`,
   //#endregion: VMWare
   
   //#region: User

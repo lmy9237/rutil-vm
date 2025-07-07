@@ -48,20 +48,23 @@ class VWVMController: BaseController() {
 	)
 	@ApiImplicitParams(
 		ApiImplicitParam(name="vwPrompt", value="기본 VMWare 요청 (유효 세션 ID 포함)", dataTypeClass=VWPrompt::class, required=true, paramType="body"),
-		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="vmIds", value="가상머신 ID 목록 (구분자 ','", dataTypeClass=String::class, required=true, paramType="path"),
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@PostMapping("{vmId}")
+	@PostMapping("{vmIds}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun vm(
 		@RequestBody(required=true) vwPrompt: VWPrompt,
-		@PathVariable(required=true) vmId: String,
-	): ResponseEntity<VCenterVmDetail?> {
-		log.info("vw/vms/{} ... 가상머신 상세조회: sessionId: {}", vmId, vwPrompt.sessionId)
-		return ResponseEntity.ok(iVWVms.findOne(vwPrompt, vmId))
+		@PathVariable(required=true) vmIds: String,
+	): ResponseEntity<List<VCenterVmDetail>> {
+		log.info("vw/vms/{} ... 가상머신 상세조회: sessionId: {}", vmIds, vwPrompt.sessionId)
+		val res: List<VCenterVmDetail> = vmIds.split(",").mapNotNull {
+			iVWVms.findOne(vwPrompt, it)
+		}
+		return ResponseEntity.ok(res)
 	}
 
 	companion object {

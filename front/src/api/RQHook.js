@@ -2923,6 +2923,13 @@ export const useMigration = (
     },
   });
 };
+
+/**
+ * @name useVmScreenshot
+ * @description 가상머신 스크린샷 출력
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
 export const useVmScreenshot = (
   vmId
 ) => useQuery({
@@ -2936,6 +2943,40 @@ export const useVmScreenshot = (
   },
   enabled: !!vmId
 })
+/**
+ * @name useUpdateCdromFromVM
+ * @description 가상머신 CD 변경
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useUpdateCdromFromVM = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+  return useMutation({
+    mutationFn: async ({ vmId, cdromId }) => {
+      closeModal()
+      const res = await ApiManager.updateCdromFromVm(vmId, cdromId);
+      const _res = validate(res) ?? {};
+      Logger.debug(`RQHook > useUpdateCdromFromVM ... vmId: ${vmId}, cdromId: ${cdromId}`);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useUpdateCdromFromVM ... res: `, res);
+      
+      apiToast.ok(`${Localization.kr.VM} ${Localization.kr.UPDATE_CDROM} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries(['allVms']);
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 
 /*(
   postSuccess=()=>{},postError
@@ -6189,12 +6230,6 @@ export const useProvider = (
   },
   enabled: !!providerId,
 });
-//#endregion: provider
-
-
-//#region: VMWare
-
-
 /**
  * @name useAddProvider
  * @description 외부공급자 생성 useMutation 훅
@@ -6301,8 +6336,10 @@ export const useDeleteProvider = (
     },
   });
 };
+//#endregion: Provider
 
 
+//#region: VMWare
 /**
  * @name useAuthenticate4VMWare
  * @description VMware 사용자 ID/PW 인증 훅
@@ -6382,15 +6419,15 @@ export const useVmsFromVMWare = ({
  * @description VMware 인증된 세션으로 VM 상세조회 훅
  */
 export const useVmFromVMWare = ({
-  baseUrl="", sessionId="", vmId="",
+  baseUrl="", sessionId="", vmIds="",
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vmFromVMWare', vmId], 
+  queryKey: ['vmFromVMWare', vmIds], 
   queryFn: async () => {
-    const res = await ApiManager.findVmFromVMWare({ baseUrl, sessionId, vmId }); 
+    const res = await ApiManager.findVmFromVMWare({ baseUrl, sessionId, vmIds }); 
     const _res = validate(res) ?? {};
-    Logger.debug(`RQHook > useVmFromVMWare ... baseUrl: ${baseUrl}, sessionId: ${sessionId}, vmId: ${vmId}, res: `, _res);
+    Logger.debug(`RQHook > useVmFromVMWare ... baseUrl: ${baseUrl}, sessionId: ${sessionId}, vmIds: ${vmIds}, res: `, _res);
     return _res;
   },
   enabled: !!(sessionId && baseUrl),

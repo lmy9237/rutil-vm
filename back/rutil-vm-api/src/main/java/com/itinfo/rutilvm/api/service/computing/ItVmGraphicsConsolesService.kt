@@ -78,7 +78,16 @@ class VmGraphicsConsolesServiceImpl(
 	override fun generateRemoteViewerConnection(vmId: String): String? {
 		log.info("generateRemoteViewerConnection ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		if (vm.statusPresent() && vm.status() !== VmStatus.UP) {
+		if (vm.statusPresent() && !(
+			vm.status() == VmStatus.UP ||
+			vm.status() == VmStatus.POWERING_UP ||
+			vm.status() == VmStatus.REBOOT_IN_PROGRESS ||
+			vm.status() == VmStatus.POWERING_DOWN ||
+			vm.status() == VmStatus.PAUSED ||
+			vm.status() == VmStatus.MIGRATING ||
+			vm.status() == VmStatus.SAVING_STATE
+			// TODO: VmVo에서 qualified4ConsoleConnect와 같은 값임으로 나중에 치환
+		)) {
 			log.error("generateRemoteViewerConnection ... vmId: {}\nThis vm is NOT running!", vmId)
 			throw ErrorPattern.VM_STATUS_UP.toError()
 		}
@@ -93,7 +102,16 @@ class VmGraphicsConsolesServiceImpl(
 	override fun earnGCTicketFromVm(vmId: String): AggregateConsoleVo? {
 		log.info("earnGCTicketFromVm ... vmId: {}", vmId)
 		val res: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		if (res.statusPresent() && res.status() !== VmStatus.UP) {
+		if (res.statusPresent() && !(
+			res.status() == VmStatus.UP ||
+			res.status() == VmStatus.POWERING_UP ||
+			res.status() == VmStatus.REBOOT_IN_PROGRESS ||
+			res.status() == VmStatus.POWERING_DOWN ||
+			res.status() == VmStatus.PAUSED ||
+			res.status() == VmStatus.MIGRATING ||
+			res.status() == VmStatus.SAVING_STATE
+			// TODO: VmVo에서 qualified4ConsoleConnect와 같은 값임으로 나중에 치환
+		)) {
 			log.error("earnGCTicketFromVm ... vmId: {}\nThis vm is NOT running!", vmId)
 			throw ErrorPattern.VM_STATUS_UP.toError()
 		}

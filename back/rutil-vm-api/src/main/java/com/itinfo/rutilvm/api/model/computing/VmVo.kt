@@ -40,7 +40,6 @@ import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.toDisplayType
-import com.itinfo.rutilvm.api.ovirt.business.toOsType
 import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.api.ovirt.business.toVmAffinity
 import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
@@ -82,6 +81,7 @@ import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainLeaseBuilder
 import org.ovirt.engine.sdk4.builders.TemplateBuilder
 import org.ovirt.engine.sdk4.builders.TimeZoneBuilder
+import org.ovirt.engine.sdk4.builders.VirtioScsiBuilder
 import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.builders.VmPlacementPolicyBuilder
 import org.ovirt.engine.sdk4.types.Architecture
@@ -94,6 +94,7 @@ import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.DisplayType
+import org.ovirt.engine.sdk4.types.Floppy
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.InheritableBoolean
 import org.ovirt.engine.sdk4.types.IpVersion.V4
@@ -917,14 +918,16 @@ fun VmVo.toRegisterVm(): Vm {
 }
 
 fun VmVo.toStartOnceVm(): Vm {
-	val cdromList = mutableListOf<Cdrom>(
-		// 새로 적용할 window os
+	val cdroms = listOf<Cdrom>(
 		CdromBuilder()
 			.file(FileBuilder().id(this.cdRomVo.id))
 			.build(),
-		// 이미 지정된 부트옵션
-		CdromBuilder()
-			.file(FileBuilder().id(""))
+		/*CdromBuilder()
+			.file(FileBuilder().id("5de14742-afa1-49a7-a793-5721102c5754"))
+			.build(),*/
+	)
+	val floppies = listOf<Floppy>(
+		FloppyBuilder().file(FileBuilder().id("5de14742-afa1-49a7-a793-5721102c5754"))
 			.build()
 	)
 
@@ -936,12 +939,9 @@ fun VmVo.toStartOnceVm(): Vm {
 				BootMenuBuilder().enabled(biosBootMenu)
 			)
 		)
-		.cdroms(cdromList)
-		// .floppies(listOf(
-		// 	FloppyBuilder()
-		// 		.file(FileBuilder().build())
-		// 		.build()
-		// ))
+		.runOnce(true)
+		.cdroms(cdroms)
+		.virtioScsi(VirtioScsiBuilder().enabled(true).build())
 		.build()
 }
 

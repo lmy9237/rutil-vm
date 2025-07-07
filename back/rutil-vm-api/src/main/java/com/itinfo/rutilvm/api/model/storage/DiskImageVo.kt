@@ -563,7 +563,7 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
 	return DiskBuilder()
-		.contentType ( this@toUploadDisk.contentType.toDiskContentType())
+		.contentType( this@toUploadDisk.contentType.toDiskContentType())
 		.provisionedSize(fileSize)
 		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
 		.alias(this@toUploadDisk.alias)
