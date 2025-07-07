@@ -201,6 +201,7 @@ fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
 }
 fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =
 	this@toDataCenterVos.map { it.toDataCenterVo() }
+
 fun StoragePoolEntity.toIdentifiedVoFromStoragePoolEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromStoragePoolEntity.id.toString() }
 	name { this@toIdentifiedVoFromStoragePoolEntity.name }

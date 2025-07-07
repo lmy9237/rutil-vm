@@ -210,11 +210,9 @@ class DataCenterServiceImpl(
 
 	@Autowired private lateinit var itGraphService: ItGraphService
 	@Autowired private lateinit var rStoragePools: StoragePoolRepository
-	@Autowired private lateinit var rDiskVmElements: DiskVmElementRepository
 	@Autowired private lateinit var rVms: VmRepository
 	@Autowired private lateinit var rStorageDomains: StorageDomainRepository
 	@Autowired private lateinit var rAllDisks: AllDisksRepository
-	@Autowired private lateinit var rTemplates: VmTemplateRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {

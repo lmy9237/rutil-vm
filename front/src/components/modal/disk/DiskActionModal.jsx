@@ -56,6 +56,7 @@ const DiskActionModal = ({
       }
     })),
   });  
+  
   useEffect(() => {
     console.log("$diskList", diskList)
     console.log("$getDomains", getDomains)

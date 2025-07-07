@@ -123,12 +123,6 @@ const DomainImportVmModal = ({
     />,
   }));
 
-
-  useEffect(() => {
-    console.log("$ d", vmList)
-  }, [vmList]);
-
-
   const mapDiskAttachments = (diskAttachmentVos = []) =>
     diskAttachmentVos.map(diskAttach => {
       const disk = diskAttach?.diskImageVo || {};
