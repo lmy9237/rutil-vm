@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.google.gson.annotations.SerializedName
+import com.itinfo.rutilvm.common.fromJson
 import com.itinfo.rutilvm.common.gson // Assuming you have this
 import org.hibernate.annotations.Type
 import java.util.UUID
@@ -34,9 +35,11 @@ class VmDeviceEntity(
 
 	@Column(name = "type", nullable = false)
 	val type: String? = "",
-	var device: String? = "",
+	@Column(name = "device", nullable = false)
+	private var _device: String? = "",
 	val address: String? = "",
-	val specParams: String? = null,
+	@Column(name = "spec_params", nullable = false)
+	var _specParams: String? = null,
 	val isManaged: Boolean? = false,
 	val isPlugged: Boolean? = false,
 	val isReadonly: Boolean = false,
@@ -69,6 +72,21 @@ class VmDeviceEntity(
 	val snapshot: SnapshotEntity? = null,
 ) : Serializable {
 
+	var device: String?
+		get() = this@VmDeviceEntity._device
+		set(newVal) {
+			this@VmDeviceEntity._device = newVal
+			when(_device) {
+				"qxl" -> specParams = VmDeviceQxlSpecParams()
+				"vga" -> specParams = VmDeviceVgaSpecParams()
+				// else ->
+			}
+		}
+
+	var specParams: VmDeviceSpecParams 			get() = gson.fromJson<VmDeviceSpecParams>(_specParams ?: "{}")
+														set(newVal) {
+															_specParams = gson.toJson(newVal)
+														}
 	override fun toString(): String =
 		gson.toJson(this)
 
@@ -100,5 +118,16 @@ class VmDeviceEntity(
 }
 
 sealed class VmDeviceSpecParams(
-	@SerializedName("vram") val vram: String? = "",
+	@SerializedName("vram") open val vram: String? = "16384",
 ): Serializable {}
+
+class VmDeviceVgaSpecParams(
+): VmDeviceSpecParams() {
+}
+
+class VmDeviceQxlSpecParams(
+	@SerializedName("vgamem") val vgamem: String? = "16384",
+	@SerializedName("heads") val heads: String? = "1",
+	@SerializedName("ram") val ram: String? = "65536",
+): VmDeviceSpecParams("32768") {
+}

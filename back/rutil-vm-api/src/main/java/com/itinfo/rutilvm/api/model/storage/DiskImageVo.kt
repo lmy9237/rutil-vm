@@ -583,8 +583,8 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.shareable(this.sharable)
 		.wipeAfterDelete(this.wipeAfterDelete)
 		.backup(when(storageType) {
-			StorageType.FCP -> DiskBackup.INCREMENTAL
-			else -> DiskBackup.NONE
+			StorageType.FCP ->	DiskBackup.INCREMENTAL
+			else -> 			DiskBackup.NONE
 		}) // 증분백업 되지 않음
 		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()

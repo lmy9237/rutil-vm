@@ -19,6 +19,7 @@ LEFT JOIN FETCH v1.smallIcon
 LEFT JOIN FETCH v1.largeIcon
 LEFT JOIN FETCH v1.dwhOsInfo
 LEFT JOIN FETCH v1.diskVmElements
+LEFT JOIN FETCH v1.vmDevices
 LEFT JOIN FETCH v1.iconDefaults ide1
 LEFT JOIN FETCH ide1.smallIcon
 LEFT JOIN FETCH ide1.largeIcon
@@ -28,6 +29,7 @@ LEFT JOIN FETCH v2.smallIcon
 LEFT JOIN FETCH v2.largeIcon
 LEFT JOIN FETCH v2.dwhOsInfo
 LEFT JOIN FETCH v2.diskVmElements
+LEFT JOIN FETCH v2.vmDevices
 LEFT JOIN FETCH v2.iconDefaults ide2
 LEFT JOIN FETCH ide2.smallIcon
 LEFT JOIN FETCH ide2.largeIcon
@@ -46,6 +48,7 @@ LEFT JOIN FETCH v1.smallIcon
 LEFT JOIN FETCH v1.largeIcon
 LEFT JOIN FETCH v1.dwhOsInfo
 LEFT JOIN FETCH v1.diskVmElements
+LEFT JOIN FETCH v1.vmDevices
 LEFT JOIN FETCH v1.iconDefaults ide1
 LEFT JOIN FETCH ide1.smallIcon
 LEFT JOIN FETCH ide1.largeIcon
@@ -55,6 +58,7 @@ LEFT JOIN FETCH v2.smallIcon
 LEFT JOIN FETCH v2.largeIcon
 LEFT JOIN FETCH v2.dwhOsInfo
 LEFT JOIN FETCH v2.diskVmElements
+LEFT JOIN FETCH v2.vmDevices
 LEFT JOIN FETCH v2.iconDefaults ide2
 LEFT JOIN FETCH ide2.smallIcon
 LEFT JOIN FETCH ide2.largeIcon
