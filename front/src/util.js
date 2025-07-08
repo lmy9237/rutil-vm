@@ -1,6 +1,7 @@
-import Localization from "./utils/Localization";
-import Logger from "./utils/Logger";
+
 import { useEffect } from 'react';
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name readString

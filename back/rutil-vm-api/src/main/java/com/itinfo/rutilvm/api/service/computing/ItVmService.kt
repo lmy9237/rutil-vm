@@ -6,8 +6,12 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.VmDeviceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.VmStaticRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VmDeviceEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmStaticEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVoFromVmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.service.BaseService
@@ -123,6 +127,8 @@ interface ItVmService {
 class VmServiceImpl(
 ) : BaseService(), ItVmService {
 	@Autowired private lateinit var rVms: VmRepository
+	@Autowired private lateinit var rVmStatics: VmStaticRepository
+	@Autowired private lateinit var rVmDevices: VmDeviceRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<VmVo> {
@@ -149,14 +155,21 @@ class VmServiceImpl(
 		log.info("add ... vmVo: {}", vmVo)
 
 		// 부팅디스크는 한개 이상일때 오류
-		if(vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
+		if (vmVo.diskAttachmentVos.filter { it.bootable }.size > 1){
 			throw ErrorPattern.DISK_BOOT_OPTION.toException()
 		}
 
 		// 가상머신 생성
-		val res: Vm? = conn.addVm(
-			vmVo.toAddVm()
-		).getOrNull()
+		val res: Vm? = conn.addVm(vmVo.toAddVm()).getOrNull()
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+			// TODO: 변경실패 에러유형 필요
+
+		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(vmVo.id.toUUID())
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		val vmDeviceFound: VmDeviceEntity = rVmDevices.findByVmIdAndType(vmVo.id.toUUID(), "video")
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+			// TODO: 가상머신 기기 에러유형 필요
+			// ?: throw ErrorPattern.VM_DEVICE_NOT_FOUND.toException()
 
 		if (res != null) {
 			// nic 생성
@@ -180,8 +193,18 @@ class VmServiceImpl(
 			if(vmVo.cdRomVo.id.isNotEmpty()){
 				conn.addCdromFromVm(res.id(), vmVo.cdRomVo.id)
 			}
+			// 그래픽/비디오 유형
+			log.debug("add ... vmVo.displayType: {}", vmVo.displayType)
+			vmStaticFound.defaultDisplayType = vmVo.displayType
+			val vmStaticSaved = rVmStatics.save(vmStaticFound)
+			log.debug("add ... vmStaticSaved.defaultDisplayType: {}", vmStaticSaved.defaultDisplayType)
+			vmDeviceFound.device = vmVo.displayType?.name
+			val vmDeviceSaved = rVmDevices.save(vmDeviceFound)
+			log.debug("add ... vmStaticSaved.device: {}", vmDeviceSaved.device)
 		}
-		return res?.toVmVo(conn)
+		return res?.toVmVo(conn).apply {
+			this@apply?.displayType = vmStaticFound.defaultDisplayType
+		}
 	}
 
 	@Throws(Error::class)
@@ -194,19 +217,38 @@ class VmServiceImpl(
 		}
 
 		// VM 정보 업데이트 (메인 정보만)
-		val updatedVm: Vm = conn.updateVm(
-			vmVo.toEditVm()
-		).getOrNull() ?: return null
+		val updatedVm: Vm = conn.updateVm(vmVo.toEditVm()).getOrNull()
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+			// TODO: 변경실패 에러유형 필요
+
+		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(vmVo.id.toUUID())
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		val vmDeviceFound: VmDeviceEntity = rVmDevices.findByVmIdAndType(vmVo.id.toUUID(), "video")
+			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+			// TODO: 가상머신 기기 에러유형 필요
+			// ?: throw ErrorPattern.VM_DEVICE_NOT_FOUND.toException()
 
 		log.info("현재 VM 상태: ${updatedVm.status()}")
 
+		// nic 편집
 		updateNics(vmVo)
+		// 디스크 편집
 		updateDisks(vmVo)
+		// 그래픽/비디오 유형
+		log.debug("update ... vmVo.displayType: {}", vmVo.displayType)
+		vmStaticFound.defaultDisplayType = vmVo.displayType
+		val vmStaticSaved = rVmStatics.save(vmStaticFound)
+		log.debug("update ... vmStaticSaved.defaultDisplayType: {}", vmStaticSaved.defaultDisplayType)
+		vmDeviceFound.device = vmVo.displayType?.name
+		val vmDeviceSaved = rVmDevices.save(vmDeviceFound)
+		log.debug("update ... vmStaticSaved.device: {}", vmDeviceSaved.device)
 
 		// 상태가 UP 될 때까지 대기
 		Thread.sleep(2000)
 		updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
-		return updatedVm.toVmVo(conn)
+		return updatedVm.toVmVo(conn).apply {
+			this@apply.displayType = vmStaticFound.defaultDisplayType
+		}
 	}
 
 	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제

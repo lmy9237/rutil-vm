@@ -18,6 +18,7 @@ import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentVos
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
@@ -122,6 +123,8 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
 
 /**
  * [VmVo]
+ * 가삳머신
+ *
  * @property id [String]
  * @property name [String]
  * @property description [String]
@@ -240,7 +243,8 @@ class VmVo (
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: GraphicsTypeB? = GraphicsTypeB.vnc,
+	var displayType: DisplayTypeB? = DisplayTypeB.vga,
+	val videoType: GraphicsTypeB? = GraphicsTypeB.vnc,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -251,8 +255,8 @@ class VmVo (
 	val usb: Boolean = false,
 	val hostedEngineVm: Boolean = false,
 	val fqdn: String = "",
-	val nextRun: Boolean = false,
-	val runOnce: Boolean = false,
+	val nextRun: Boolean? = false,
+	val runOnce: Boolean? = false,
 	val autoStartUp: Boolean = false,
 	val statusDetail: VmPauseStatusB? = none,
 	val timeElapsed: Long? = 0,
@@ -297,21 +301,21 @@ class VmVo (
 
 	val cpuArcCode: String				get() = cpuArc?.code ?: ArchitectureType.undefined.code
 
-	val migrationModeCode: String		get() = migrationMode?.code ?: MigrationSupport.unknown.code
-	val migrationModeEn: String			get() = migrationMode?.en ?: "N/A"
-	val migrationModeKr: String			get() = migrationMode?.kr ?: "알 수 없음"
+	val migrationModeCode: String			get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String				get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String				get() = migrationMode?.kr ?: "알 수 없음"
 
-	val cpuPinningPolicyCode: String	get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
-	val cpuPinningPolicyEn: String		get() = cpuPinningPolicy?.en ?: "N/A"
-	val cpuPinningPolicyKr: String		get() = cpuPinningPolicy?.kr ?: "알 수 없음"
+	val cpuPinningPolicyCode: String		get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
+	val cpuPinningPolicyEn: String			get() = cpuPinningPolicy?.en ?: "N/A"
+	val cpuPinningPolicyKr: String			get() = cpuPinningPolicy?.kr ?: "알 수 없음"
 
-	val creationTime: String?			get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
-	val startTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_startTime)
-	val stopTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
-	val upTime: String?					get() = timeElapsed?.toTimeElapsedKr()
+	val creationTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	val upTime: String?						get() = timeElapsed?.toTimeElapsedKr()
 
-	val notRunning: Boolean				get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
-	val qualified2Migrate: Boolean		get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
+	val notRunning: Boolean					get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
+	val qualified2Migrate: Boolean			get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
 	val qualified4SnapshotMerge: Boolean /* 스냅샷 머지 가능한 상태 */
 		get() = status?.qualified4SnapshotMerge ?: false
 	val qualified4LiveSnapshotMerge: Boolean /* 라이브 스냅샷 머지 가능한 상태 */
@@ -388,7 +392,8 @@ class VmVo (
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: GraphicsTypeB? = GraphicsTypeB.vnc; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.vnc }
+		private var bDisplayType: DisplayTypeB? = DisplayTypeB.vga; fun displayType(block: () -> DisplayTypeB?) { bDisplayType = block() ?: DisplayTypeB.vga }
+		private var bVideoType: GraphicsTypeB? = GraphicsTypeB.vnc; fun videoType(block: () -> GraphicsTypeB?) { bVideoType = block() ?: GraphicsTypeB.vnc }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -399,8 +404,8 @@ class VmVo (
 		private var bUsb: Boolean = false; fun usb(block: () -> Boolean?) { bUsb = block() ?: false }
 		private var bHostedEngineVm: Boolean = false; fun hostedEngineVm(block: () -> Boolean?) { bHostedEngineVm = block() ?: false }
 		private var bFqdn: String = ""; fun fqdn(block: () -> String?) { bFqdn = block() ?: "" }
-		private var bNextRun: Boolean = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
-		private var bRunOnce: Boolean = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
+		private var bNextRun: Boolean? = false; fun nextRun(block: () -> Boolean?) { bNextRun = block() ?: false }
+		private var bRunOnce: Boolean? = false; fun runOnce(block: () -> Boolean?) { bRunOnce = block() ?: false }
 		private var bAutoStartUp: Boolean = false; fun autoStartUp(block: () -> Boolean?) { bAutoStartUp = block() ?: false }
 		private var bStatusDetail: VmPauseStatusB? = none; fun statusDetail(block: () -> VmPauseStatusB?) { bStatusDetail = block() ?: none }
 		private var bTimeElapsed: Long? = 0L; fun timeElapsed(block: () -> Long?) { bTimeElapsed = block() ?: 0L }
@@ -425,7 +430,7 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto, )
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto)
     }
 
     companion object {
@@ -539,7 +544,8 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		memoryMax { vm.memoryPolicy().max() }
 		deleteProtected { vm.deleteProtected() }
 		monitor { if (vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
-		displayType { vm.display().findGraphicsTypeB() }
+		// displayType {  }
+		videoType { vm.display().findGraphicsTypeB() }
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		ioThreadCnt  { if (vm.io().threadsPresent()) vm.io().threadsAsInteger() else 0 }
@@ -730,7 +736,8 @@ fun Vm.toUnregisteredVm(conn: Connection): VmVo {
 		cpuPinningPolicy { vm.cpuPinningPolicy().toCpuPinningPolicyB() }
 		creationTime { vm.creationTime().toLocalDateTime() }
 		monitor { if(vm.displayPresent()) vm.display().monitorsAsInteger() else 0 }
-		displayType { vm.display().findGraphicsTypeB() }
+		// displayType {  }
+		videoType { vm.display().findGraphicsTypeB() }
 		ha { vm.highAvailability().enabled() }
 		haPriority { vm.highAvailability().priorityAsInteger() }
 		memorySize { vm.memory() }
@@ -844,7 +851,7 @@ fun VmVo.toVmInfoBuilder(vmBuilder: VmBuilder): VmBuilder = vmBuilder.apply {
 	cluster(ClusterBuilder().id(clusterVo.id))
 	bios(BiosBuilder().type(biosType.toBiosType()).build())
 	type(optimizeOption.toVmType())
-	display(DisplayBuilder().type(displayType.toDisplayType()))
+	display(DisplayBuilder().type(videoType.toDisplayType()))
 	timeZone(
 		TimeZoneBuilder().name(
 			if (osType?.isWindows == true) "GMT Standard Time"

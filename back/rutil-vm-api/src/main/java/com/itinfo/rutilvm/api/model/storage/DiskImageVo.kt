@@ -550,29 +550,42 @@ fun DiskImageVo.toAddSnapshotDisk(): Disk {
 
 
 /**
+ * [DiskImageVo.toUploadDisk]
  * 디스크 업로드
  * ISO 이미지 업로드용
  * (화면표시) 파일 선택시 파일에 있는 포맷, 컨텐츠(파일 확장자로 칭하는건지), 크기 출력
  * 	파일 크기가 자동으로 디스크 옵션에 추가, 파일 명칭이 파일의 이름으로 지정됨 (+설명)
  * 	디스크 이미지 업로드
  *  required: provisioned_size, alias, description, wipe_after_delete, shareable, backup, disk_profile.
- *
  */
 fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 	val storageDomain: StorageDomain = conn.findStorageDomain(this.storageDomainVo.id)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
+	val storageType: org.ovirt.engine.sdk4.types.StorageType = storageDomain.storage().type()
 	return DiskBuilder()
 		.contentType( this@toUploadDisk.contentType.toDiskContentType())
-		.provisionedSize(fileSize)
-		.sparse(storageDomain.storage().type() == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
+		.storageType(
+			when(storageType) {
+				StorageType.FCP -> org.ovirt.engine.sdk4.types.DiskStorageType.LUN
+				else -> org.ovirt.engine.sdk4.types.DiskStorageType.IMAGE
+			}
+		)
+		.provisionedSize(when(storageType) {
+			StorageType.FCP -> this@toUploadDisk.virtualSize.toLong()
+			else -> fileSize
+		})
+		.sparse(storageType == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
 		.alias(this@toUploadDisk.alias)
 		.description(this@toUploadDisk.description)
 		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 		.shareable(this.sharable)
 		.wipeAfterDelete(this.wipeAfterDelete)
-		.backup(DiskBackup.NONE) // 증분백업 되지 않음
+		.backup(when(storageType) {
+			StorageType.FCP -> DiskBackup.INCREMENTAL
+			else -> DiskBackup.NONE
+		}) // 증분백업 되지 않음
 		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }

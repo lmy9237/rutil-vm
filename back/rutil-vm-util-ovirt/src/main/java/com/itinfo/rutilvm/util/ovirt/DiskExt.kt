@@ -70,8 +70,9 @@ fun Connection.addDisk(disk: Disk): Result<Disk?> = runCatching {
 	// 		.nameDuplicateDisk(disk.name())) {
 	// 	throw ErrorPattern.CLUSTER_DUPLICATE.toError()
 	// }
-
-	val diskAdded: Disk? =
+	val diskAdded: Disk? = if (disk.storageType() == DiskStorageType.LUN)
+		this.srvAllDisks().addLun().disk(disk).send().disk() // FCP 유형에 대한 디스크 처리
+	else
 		this.srvAllDisks().add().disk(disk).send().disk()
 
 	diskAdded ?: throw ErrorPattern.DISK_NOT_FOUND.toError()

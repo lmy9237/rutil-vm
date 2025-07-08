@@ -20,6 +20,15 @@ export function handleInputChange(setState, field, validationToastHook=null) {
 }
 
 
+/**
+ * @name handleInputCheck
+ * 체크 input 변경 핸들러
+ * 
+ * @param {*} setState 
+ * @param {string} field 필드 명
+ * @param {*} validationToastHook 토스트 훅
+ * @returns 
+ */
 export function handleInputCheck(setState, field, validationToastHook=null) {
   return (e) => {
     const value = e?.target?.checked ?? e?.id ?? e;
@@ -33,7 +42,10 @@ export function handleInputCheck(setState, field, validationToastHook=null) {
 }
 
 /**
+ * @name handleSelectIdChange
  * select 필드에서 id 기반 객체 선택 시 핸들러
+ * 
+ * @param {*} validationToastHook 토스트 훅
  */
 export function handleSelectIdChange(setVo, voList, validationToastHook=null) {
   return (selectedOption) => {

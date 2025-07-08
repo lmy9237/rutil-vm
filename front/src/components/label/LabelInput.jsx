@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Input } from "@/components/ui/input";
+import { FontAwesomeIcon }              from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash }            from "@fortawesome/free-solid-svg-icons";
+import { Input }                        from "@/components/ui/input";
 import "./LabelInput.css";
 
 /**

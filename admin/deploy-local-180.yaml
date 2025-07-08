@@ -2,8 +2,11 @@ version: "3"
 
 services:
   rutil-vm-api:
-    image: ititinfo.synology.me:50951/ititcloud/rutil-vm-api:latest
+    image: rutil-vm-api:latest
     container_name: rutil-vm-api
+    deploy:
+      mode: replicated
+      replicas: 2
     ports:
       - "6690:6690"
     environment:

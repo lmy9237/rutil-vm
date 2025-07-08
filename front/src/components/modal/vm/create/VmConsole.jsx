@@ -8,19 +8,27 @@ const VmConsole = ({
   formConsoleState, setFormConsoleState
 }) => {
   const { validationToast } = useValidationToast()
-  
+
+  /* useEffect(() => {
+    setFormConsoleState((prev) => {
+      return {
+        ...prev,
+        vide
+      }
+    })
+  }. [formConsoleState, setFormConsoleState]) */
 
   return (
     <>
       <LabelSelectOptions label="비디오 유형"
-        value={formConsoleState.videoType}
+        value={formConsoleState.displayType}
         options={videoTypes}
-        onChange={handleInputChange(setFormConsoleState, "videoType", validationToast)}
+        onChange={handleInputChange(setFormConsoleState, "displayType", validationToast)}
       />
       <LabelSelectOptions label="그래픽 프로토콜"
-        value={formConsoleState.displayType}
+        value={formConsoleState.videoType}
         options={graphicProtocols}
-        onChange={handleInputChange(setFormConsoleState, "displayType", validationToast)}
+        onChange={handleInputChange(setFormConsoleState, "videoType", validationToast)}
       />
     </>
   );

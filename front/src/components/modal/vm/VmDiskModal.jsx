@@ -269,15 +269,15 @@ const VmDiskModal = ({
             <LabelInputNum label="추가크기(GB)"
               value={formState.appendSize}
               onChange={handleInputChange(setFormState, "appendSize")}
-            />
+            /> 
           )}
           <LabelInput id="alias" label={Localization.kr.ALIAS}
             value={formState.alias} 
-            onChange={handleInputChange(setFormState, "alias")}
+            onChange={handleInputChange(setFormState, "alias", validationToast)}
           />
           <LabelInput id="description" label={Localization.kr.DESCRIPTION}
             value={formState.description} 
-            onChange={handleInputChange(setFormState, "description")}
+            onChange={handleInputChange(setFormState, "description", validationToast)}
           />
           <LabelSelectOptions label="인터페이스"
             value={formState.interface_}

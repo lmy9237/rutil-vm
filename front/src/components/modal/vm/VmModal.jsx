@@ -305,7 +305,8 @@ const VmModal = ({
         }
       });
       setFormConsoleState({
-        displayType: vm?.displayType
+        videoType: vm?.videoType,
+        displayType: vm?.displayType,
       });
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",

@@ -66,7 +66,7 @@ export const useApiToast = () => {
 }
 
 export const useProgressToast = () => {
-  const { toast } = useToast();
+  const { toast, dismiss } = useToast();
 
   const progressToast = {
     in: (title, progress=0) => {
@@ -76,10 +76,11 @@ export const useProgressToast = () => {
         title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
         description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%`,
         update: () => ({
-          duration: (progress === 100) ? 20 : Infinity
+          duration: (progress === 100) ? 1 : Infinity
         }),
         duration: Infinity,
-      })
+      });
+      if (progress == 100) dismiss()
     }
   }
 

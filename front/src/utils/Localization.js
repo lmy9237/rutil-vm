@@ -34,6 +34,7 @@ export const Localization = {
     HOST_DEVICE: "호스트 장치",
     ENGINE: "엔진",
     VM: "가상머신",
+    VM_VNC: "가상머신 VNC",
     TEMPLATE: "템플릿",
     SNAPSHOT: "스냅샷",
     NETWORK: "네트워크",
@@ -136,6 +137,7 @@ export const Localization = {
     ENROLL: "등록",
     MOVE: "이동",
     COPY: "복사",
+    PASTE: "붙여넣기",
     IMPORT: "가져오기",
     EXPORT: "내보내기",
     MIGRATION: "마이그레이션",
@@ -159,6 +161,8 @@ export const Localization = {
     PRODUCT: "제품",
     PRODUCT_FAMILY: "제품군",
     BACKING_FILE: "지원 파일",
+    SCREENSHOT: "스크린샷",
+    CLIPBOARD: "클립보드",
 
     PLACEHOLDER: "임력하세요.",
     PLACEHOLDER_SELECT: "선택하세요.",
@@ -277,7 +281,8 @@ export const Localization = {
       else if (_status === "UNATTACHED")  return "연결 해제";
       else if (_status === "DETACHING")  return "분리 중";
       else if (_status === "RESTORING_STATE" || _status === "RESTORINGSTATE")  return "복구 중";
-      else if (_status === "MIGRATING")  return "마이그레이션 중";
+      else if (_status === "MIGRATING") return "마이그레이션 중";
+      else if (_status === "MIGRATING_FROM") return "마이그레이션 대상";
       else if (_status === "LOCKED")  return "잠김";
       else if (_status === "IMAGE_LOCKED") return "이미지 잠김";
       // else if (_status === "NEXTRUN")  return "??";

@@ -216,6 +216,9 @@ export const GlobalProvider = ({ children }) => {
       _setCertsSelected([{...newV}]);
   }
 
+  const [currentVncRfb, setCurrentVncRfb] = useState(null);
+  const clearCurrentVncRfb = () => setCurrentVncRfb(null);
+
   const {
     data: top3VmsCpuUsed = [],
     status: vmCpuStatus,
@@ -286,6 +289,7 @@ export const GlobalProvider = ({ children }) => {
     setUsersSelected([])
     setUsersessionsSelected([])
     setCertsSelected([])
+    clearCurrentVncRfb([])
     setSourceContext(null)
   }
 
@@ -313,6 +317,7 @@ export const GlobalProvider = ({ children }) => {
       usersSelected, setUsersSelected,
       usersessionsSelected, setUsersessionsSelected,
       certsSelected, setCertsSelected,
+      currentVncRfb, setCurrentVncRfb, clearCurrentVncRfb,
       top3VmsCpuUsed, /*setTop3VmsCpuUsed,*/
       top3VmsMemUsed, /*setTop3VmsMemUsed,*/
       top3StoragesUsed, /*setTop3StoragesUsed,*/

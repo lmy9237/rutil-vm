@@ -30,45 +30,121 @@ const VmVnc = ({
 }) => {
   const { validationToast } = useValidationToast()
   const { setActiveModal, setVncScreenshotDataUrl } = useUIState()
-  const { vmsSelected, setVmsSelected } = useGlobal()
+  const { 
+    vmsSelected, setVmsSelected,
+    setCurrentVncRfb,
+  } = useGlobal()
   const { id: vmId, } = useParams();
   const { data: vm } = useVm(vmId);
 
   const screenRef = useRef(null);
-  const [dataUrl, setDataUrl] = useState()
+  const [dataUrl, setDataUrl] = useState("")
   const [copied, copy] = useCopyToClipboard(dataUrl)
+
+  const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.running ?? false);
+  const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.notRunning ?? false);
+  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => 
+    vm?.status?.toUpperCase() === "PAUSED" || vm?.status?.toUpperCase() === "SUSPENDED"
+  );
+  const allMaintenance = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.status?.toUpperCase() === "MAINTENANCE");
+  const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
+    const status = vm?.status?.toLowerCase();
+    return (
+      vm?.qualified4PowerDown ||
+      status === "DOWN" ||
+      status === "SUSPENDED" ||
+      status === "REBOOT_IN_PROGRESS"
+    );
+  });
+
+  const sectionHeaderButtons = [
+    { 
+      type: "start", 
+      onClick: () => {
+        // TODO: API 아직 덜됨
+        /*
+        const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
+        if (!hasBootableDisk || hasPreviewSnapshot) {
+          validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
+          return;
+        }
+        */
+        setActiveModal("vm:start");
+      }, 
+      label: Localization.kr.START, 
+      disabled: !(allDown || allPause || allMaintenance) 
+    },
+    { type: "pause",             onClick: () => setActiveModal("vm:pause"),                   label: Localization.kr.PAUSE,                                   disabled: !allUp },
+    { type: "reboot",            onClick: () => setActiveModal("vm:reboot"),                  label: Localization.kr.REBOOT,                                  disabled: !allUp },
+    { type: "reset",             onClick: () => setActiveModal("vm:reset"),                   label: Localization.kr.RESET,                                   disabled: !allUp },
+    { type: "shutdown",          onClick: () => setActiveModal("vm:shutdown"),                label: Localization.kr.END,                                     disabled: !allOkay2PowerDown },
+    { type: "powerOff",          onClick: () => setActiveModal("vm:powerOff"),                label: Localization.kr.POWER_OFF,                               disabled: !allOkay2PowerDown },
+    { type: "screenshot",        onClick: () => takeScreenshotFromRFB(screenRef.current.rfb), label: Localization.kr.SCREENSHOT,                              disabled: !allUp },
+    { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp },
+    { type: "ctrlaltdel",        onClick: () => doSendCtrlAltDel(screenRef.current.rfb),      label: "Ctrl+Alt+Del",                                          disabled: !allUp },
+    { type: "updateCdrom",       onClick: () => setActiveModal("vm:updateCdrom"),             label: Localization.kr.UPDATE_CDROM,                            disabled: vm?.notRunning ?? false },
+  ]
+
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for VM)`)
+    setVmsSelected(vm)
+    if (vm?.name)
+      document.title = `RutilVM (${vm.name})`
+  }, [vmId, vm])
+
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for vnc rfb)`)
+    if (!screenRef.current?.rfb) return;
+    setCurrentVncRfb(screenRef.current.rfb)
+  }, [screenRef.current])
+
+  /*
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for vnc clipboard paste)`)
+    const handlePaste = (e) => {
+      if (!screenRef.current?.rfb) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const text = e.clipboardData.getData('text/plain');
+      if (text) {
+        Logger.debug(`VmVnc > Intercepted paste event. Sending to VNC: "${text}"`);
+        screenRef.current.rfb.clipboardPasteFrom(text);
+        // Assuming you add this translation key to your Localization file
+        validationToast.success("클립보드 내용이 원격 데스크톱으로 전송되었습니다.");
+      }
+    };
+    Logger.debug("VmVnc > Adding direct paste event listener.");
+    document.addEventListener('paste', handlePaste);
+    return () => {
+      Logger.debug("VmVnc > Removing direct paste event listener.");
+      document.removeEventListener('paste', handlePaste);
+    };
+  }, []);
+  */
   
   const takeScreenshotFromRFB = (rfb) => {
     Logger.debug(`VmVnc > takeScreenshotFromRFB ...`)
-    if (rfb && rfb._display && rfb._display._target) {
+    if (rfb && rfb._display && typeof rfb.toDataURL === "function") {
       try {
-        const canvas = rfb._display._target;
-        setDataUrl(canvas.toDataURL('image/png'));
-        setVncScreenshotDataUrl(vmId, dataUrl);
-        Logger.debug(`VmVnc > takeScreenshotFromRFB ... dataUrl: ${dataUrl}`);
-        triggerDownload()
-        import.meta.env.DEV && validationToast.debug(`스크린샷 클립보드로 복사 완료`);
+        const _dataUrl = rfb.toDataURL('image/png');
+        Logger.debug(`VmVnc > takeScreenshotFromRFB ... dataUrl: ${_dataUrl}`);
+        
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace(/-/g, '');
+        const filename = `screenshot-${vmId}-${timestamp}.png`
+        
+        const link = document.createElement('a');
+        link.href = _dataUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        import.meta.env.DEV && validationToast.debug(`${Localization.kr.SCREENSHOT} 클립보드로 복사 완료`);
+        setDataUrl(_dataUrl);
+        setVncScreenshotDataUrl(vmId, _dataUrl);
       } catch(error) {
         Logger.error(`VmVnc > takeScreenshotFromRFB ... error: ${error.message}`);
       }
     }
-  }
-
-  const triggerDownload = () => {
-    Logger.debug(`VmVnc > triggerDownload ...`)
-    if (!dataUrl) {
-      Logger.warn('VmVnc > triggerDownload ... no screenshot data available');
-      return;
-    }
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').replace(/-/g, '');
-    const filename = `screenshot-${vmId}-${timestamp}.png`
-    
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   }
 
   const doSendCtrlAltDel = (rfb) => {
@@ -76,20 +152,6 @@ const VmVnc = ({
     rfb.sendCtrlAltDel()
     import.meta.env.DEV && validationToast.debug(`Ctrl+Alt+Del 입력 완료`);
   }
-
-  const sectionHeaderButtons = [
-    { type: "screenshot",  onClick: () => takeScreenshotFromRFB(screenRef.current.rfb), label: "스크린샷", },
-    { type: "ctrlaltdel",  onClick: () => doSendCtrlAltDel(screenRef.current.rfb), label: "Ctrl+Alt+Del",  },
-    { type: "updateCdrom", onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vm?.notRunning ?? false },
-  ]
-
-  useEffect(() => {
-    Logger.debug(`VmVnc > useEffect ... `)
-    setVmsSelected(vm)
-    if (vm?.name) {
-      document.title = `RutilVM (${vm.name})`
-    }
-  }, [vmId, vm])
 
   return (<>
     <div

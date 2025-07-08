@@ -15,13 +15,14 @@ import {
 import { emptyIdNameVo }                from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
+
 /**
- * @name VmUpdateCdModal
- * @description CD변경 모달
+ * @name VmUpdateCdromModal
+ * @description 가상머신 CD-ROM 변경 (증발용) 모달
  * 
- * @returns {JSX.Element} CD변경 모달
+ * @returns {JSX.Element} 가상머신 CD-ROM 변경 모달
  */
-const VmUpdateCdModal = ({
+const VmUpdateCdromModal = ({
   isOpen, 
   onClose,
 }) => {
@@ -51,14 +52,14 @@ const VmUpdateCdModal = ({
   } = useUpdateCdromFromVM(onClose, onClose);
 
   useEffect(() => {
-    Logger.debug(`VmUpdateCdModal > useEffect ...`)
+    Logger.debug(`VmUpdateCdromModal > useEffect ...`)
     if (vm && vm?.id) {
       setDataCenterVo(vm?.dataCenterVo)
     }
   }, [vm, vmsSelected])
 
   useEffect(() => {
-    Logger.debug(`VmUpdateCdModal > useEffect ... cdroms FOUND! cdRom.id: ${cdrom?.id}`)
+    Logger.debug(`VmUpdateCdromModal > useEffect ... cdroms FOUND! cdRom.id: ${cdrom?.id}`)
     setUpdateCdromVo({
       id: cdrom?.id,
       name: "",
@@ -66,12 +67,12 @@ const VmUpdateCdModal = ({
   }, [cdrom])
   
   const validateForm = () => {    
-    Logger.debug(`VmUpdateCdModal > validateForm ... updateCdromVo: `, updateCdromVo)
+    Logger.debug(`VmUpdateCdromModal > validateForm ... updateCdromVo: `, updateCdromVo)
     return null;
   }
 
   const handleFormSubmit = () => {
-    Logger.debug(`VmUpdateCdModal > handleFormSubmit ...`)
+    Logger.debug(`VmUpdateCdromModal > handleFormSubmit ...`)
     const error = validateForm();
     if (error) {
       validationToast.fail(error);
@@ -102,4 +103,4 @@ const VmUpdateCdModal = ({
   );
 };
 
-export default VmUpdateCdModal;
+export default VmUpdateCdromModal;

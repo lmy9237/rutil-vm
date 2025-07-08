@@ -52,33 +52,36 @@ const VmActionButtons = ({
   const isUp = selected1st?.running ?? false;
   const isDown = selected1st?.notRunning ?? false;
   const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
-  const isPause = selected1st?.status?.toUpperCase() === "paused" || selected1st?.status?.toUpperCase() === "suspended"; 
+  const isPause = selected1st?.status?.toUpperCase() === "PAUSED" || 
+    selected1st?.status?.toUpperCase() === "SUSPENDED"; 
   const isTemplate = selected1st?.upOrPaused;
   const isVmQualified2Migrate = selected1st?.qualified2Migrate || (
-    selected1st?.status?.toUpperCase() === "up" || 
-    selected1st?.status?.toUpperCase() === "powering_up" || 
-    selected1st?.status?.toUpperCase() === "reboot_in_progress"
+    selected1st?.status?.toUpperCase() === "UP" || 
+    selected1st?.status?.toUpperCase() === "POWERING_UP" || 
+    selected1st?.status?.toUpperCase() === "REBOOT_IN_PROGRESS"
   ) || false;
   const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.notRunning ?? false);
-  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => vm.status?.toUpperCase() === "suspended");
+  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => 
+    vm?.status?.toUpperCase() === "PAUSED" || vm?.status?.toUpperCase() === "SUSPENDED"
+  );
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
     const status = vm.status?.toLowerCase();
     return (
       vm?.qualified4PowerDown ||
-      status === "down" ||
-      status === "suspended" ||
-      status === "reboot_in_progress"
+      status === "DOWN" ||
+      status === "SUSPENDED" ||
+      status === "REBOOT_IN_PROGRESS"
     );
   });
   const ollOkay2Migrate = vmsSelected.every(vm => 
     vm?.qualified2Migrate || (
-      vm?.status?.toUpperCase() === "up" || 
-      vm?.status?.toUpperCase() === "powering_up" || 
-      vm?.status?.toUpperCase() === "reboot_in_progress"
+      vm?.status?.toUpperCase() === "UP" || 
+      vm?.status?.toUpperCase() === "POWERING_UP" || 
+      vm?.status?.toUpperCase() === "REBOOT_IN_PROGRESS"
     )
   )
   
@@ -120,17 +123,19 @@ const VmActionButtons = ({
       type: "start", 
       onClick: () => {
         // TODO: API 아직 덜됨
-        // const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
-        // if (!hasBootableDisk || hasPreviewSnapshot) {
-        //   validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
-        //   return;
-        // }
+        /*
+        const hasBootableDisk = selected1st?.diskAttachmentVos?.some(d => d.bootable);
+        if (!hasBootableDisk || hasPreviewSnapshot) {
+          validationToast.fail("부팅 가능한 디스크가 최소 1개는 있어야 합니다.");
+          return;
+        }
+        */
         setActiveModal("vm:start");
       }, 
       label: Localization.kr.START, 
       disabled: !(isDown || isPause || isMaintenance) 
     },
-    { type: "startOnce",  onClick: () => setActiveModal("vm:startOnce"),   label: `한번 ${Localization.kr.START}`,                          disabled: vmsSelected.length !== 1 || !(isDown || isPause || isMaintenance)  },
+    /* { type: "startOnce",  onClick: () => setActiveModal("vm:startOnce"),   label: `한번 ${Localization.kr.START}`,                          disabled: vmsSelected.length !== 1 || !(isDown || isPause || isMaintenance)  }, */
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
     { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
     { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },

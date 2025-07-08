@@ -332,7 +332,8 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 			vm?.creationTime().toLocalDateTime()
 		}
 		monitor { if (vm?.displayPresent() == true) vm.display().monitorsAsInteger() else 0 }
-		displayType {  vm?.display().findGraphicsTypeB() }
+		// displayType { }
+		videoType { vm?.display().findGraphicsTypeB() }
 		ha { vm?.highAvailability()?.enabled() }
 		haPriority { vm?.highAvailability()?.priorityAsInteger() }
 		memorySize { vm?.memory() }
@@ -367,7 +368,8 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 			template?.creationTime().toLocalDateTime()
 		}
 		monitor { if (template?.displayPresent() == true) template.display().monitorsAsInteger() else 0 }
-		displayType { template?.display().findGraphicsTypeB() }
+		// displayType {  }
+		videoType { template?.display().findGraphicsTypeB() }
 		ha { template?.highAvailability()?.enabled() }
 		haPriority { template?.highAvailability()?.priorityAsInteger() }
 		memorySize { template?.memory() }
@@ -549,6 +551,7 @@ fun VmEntity.toVmVo(): VmVo {
 		deleteProtected { entity.isDeleteProtected }
 		monitor { entity.numOfMonitors }
 		displayType { entity.defaultDisplayType }
+		videoType { entity.graphicType }
 		ha { entity.autoStartup }
 		haPriority { entity.priority }
 		ioThreadCnt { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
@@ -677,6 +680,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		deleteProtected { entity.isDeleteProtected }
 		monitor { entity.numOfMonitors }
 		displayType { entity.defaultDisplayType }
+		videoType { entity.graphicType }
 		ha { entity.autoStartup }
 		haPriority { entity.priority }
 		ioThreadCnt { entity.numOfIoThreads } // TODO: 이거 맞는지 모르겠음
@@ -768,6 +772,14 @@ fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
 fun Collection<VmEntity>.toIdentifiedVosFromVoEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromVoEntities.map { it.toIdentifiedVoFromVmEntity() }
 //endregion: VmEntity
+//region: VmStaticEntity
+fun VmStaticEntity.toVmVoFromVmStaticEntity(): VmVo = VmVo.builder {
+	id { this@toVmVoFromVmStaticEntity.vmGuid.toString() }
+	name { this@toVmVoFromVmStaticEntity.vmName }
+	displayType { this@toVmVoFromVmStaticEntity.defaultDisplayType }
+}
+//endregion: VmStaticEntity
+
 
 //region: VmIconEntity
 fun VmIconEntity.toVmIconVoFromVmEntity(): VmIconVo = VmIconVo.builder {
@@ -931,7 +943,7 @@ fun VmTemplateEntity.fromVmTemplateToTemplateVo(): TemplateVo = TemplateVo.build
 	cpuTopologyCore { entity.cpuPerSocket } // TODO: 이거 맞는지 모르겠음
 	cpuTopologySocket { entity.numOfSockets }
 	cpuTopologyThread { entity.threadsPerCpu } // TODO: 이거 맞는지 모르겠음
-	// displayType { entity.defaultDisplayType }
+	displayType { entity.defaultDisplayType }
 	// ha {  }
 	haPriority { entity.priority }
 	monitor { entity.numOfMonitors }

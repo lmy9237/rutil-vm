@@ -269,7 +269,7 @@ class DiskController: BaseController() {
 		log.info("Received diskImage: {}", diskImage)
 
 		return Mono.fromRunnable<ResponseEntity<Boolean>?> {
-			iDisk.upload(file, diskImage)
+			ResponseEntity.ok(iDisk.upload(file, diskImage))
 		}.then(Mono.just(ResponseEntity.ok(true))).onErrorResume {
 			Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false))
 		}

@@ -61,7 +61,7 @@ const DiskUploadModal = ({
 
   const { mutate: uploadDisk } = useUploadDisk((progress) => {
     /*if (progress < 1) onClose()*/
-    progressToast.in(`디스크 업로드 중 ... `, progress)
+    progressToast.in(`${Localization.kr.DISK} ${Localization.kr.UPLOAD} 준비중 ... `, progress)
   });
 
   // 전체 데이터센터 가져오기
@@ -440,6 +440,8 @@ const DiskInspector = ({
         setFormState((prev) => ({
           ...prev,
           contentType: info.content === "iso" ? "iso" : "data",
+          virtualSize: parseInt(info.virtualSize ?? BigInt(0)),
+          actualSize: parseInt(info.actualSize ?? BigInt(0)),
           format: isQcow ? "cow" : "raw",
         }));
       } catch (err) {

@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentsToTemplate
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmTemplateStatusB
@@ -89,7 +90,8 @@ class TemplateVo(
 	val secDevice: String = "",
 	val deviceList: List<String> = listOf(),
 	val monitor: Int = 0,
-	val displayType: GraphicsTypeB = GraphicsTypeB.vnc,
+	val displayType: DisplayTypeB? = DisplayTypeB.vga,
+	val videoType: GraphicsTypeB? = GraphicsTypeB.vnc,
 	val guestArc: String = "",
 	val guestOsType: String = "",
 	val guestDistribution: String = "",
@@ -200,7 +202,8 @@ class TemplateVo(
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
 		private var bDeviceList: List<String> = listOf(); fun deviceList(block: () -> List<String>?) { bDeviceList = block() ?: listOf() }
 		private var bMonitor: Int = 0; fun monitor(block: () -> Int?) { bMonitor = block() ?: 0 }
-		private var bDisplayType: GraphicsTypeB = GraphicsTypeB.vnc; fun displayType(block: () -> GraphicsTypeB?) { bDisplayType = block() ?: GraphicsTypeB.vnc }
+		private var bDisplayType: DisplayTypeB? = DisplayTypeB.vga; fun displayType(block: () -> DisplayTypeB?) { bDisplayType = block() ?: DisplayTypeB.vga }
+		private var bVideoType: GraphicsTypeB? = GraphicsTypeB.vnc; fun videoType(block: () -> GraphicsTypeB?) { bVideoType = block() ?: GraphicsTypeB.vnc }
 		private var bGuestArc: String = ""; fun guestArc(block: () -> String?) { bGuestArc = block() ?: "" }
 		private var bGuestOsType: String = ""; fun guestOsType(block: () -> String?) { bGuestOsType = block() ?: "" }
 		private var bGuestDistribution: String = ""; fun guestDistribution(block: () -> String?) { bGuestDistribution = block() ?: "" }
@@ -236,7 +239,7 @@ class TemplateVo(
 		private var bVersionName: String = ""; fun versionName(block: () -> String?) { bVersionName = block() ?: "" }
 		private var bVersionNumber: Int = 0; fun versionNumber(block: () -> Int?) { bVersionNumber = block() ?: 0 }
 
-		fun build(): TemplateVo = TemplateVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bPlacementPolicy, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bNicVos, bDiskAttachmentVos, bVmVo, bOriginTemplateVo, bVersionName, bVersionNumber)
+		fun build(): TemplateVo = TemplateVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosBootMenu, bBiosType, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bCloudInit, bScript, bPlacementPolicy, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bUpTime, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bNicVos, bDiskAttachmentVos, bVmVo, bOriginTemplateVo, bVersionName, bVersionNumber)
 	}
 
 	companion object {
@@ -300,7 +303,8 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 		cpuTopologySocket { template.cpu().topology().socketsAsInteger() }
 		cpuTopologyThread { template.cpu().topology().threadsAsInteger() }
 		cpuPinningPolicy { template.cpuPinningPolicy().toCpuPinningPolicyB() }
-		displayType { template.display().findGraphicsTypeB() }
+		// displayType { template.display().findGraphicsTypeB() }
+		videoType { template.display().findGraphicsTypeB() }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
@@ -343,7 +347,8 @@ fun Template.toUnregisterdTemplate(): TemplateVo {
 		osType { template.os().findVmOsType() }
 		optimizeOption { template.type().toVmTypeB() }
 		creationTime { template.creationTime().toLocalDateTime() }
-		displayType { template.display().findGraphicsTypeB() }
+		// displayType { template.display().findGraphicsTypeB() }
+		videoType { template.display().findGraphicsTypeB() }
 		ha { template.highAvailability().enabled() }
 		haPriority { template.highAvailability().priorityAsInteger() }
 		migrationMode { template.placementPolicy().findMigrationSupport() } //migrationMode

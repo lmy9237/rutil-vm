@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.OriginType
@@ -284,8 +285,7 @@ class VmTemplateEntity(
 	val cpuPinningPolicy: CpuPinningPolicyB?
 		get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
 
-	val defaultDisplayType: GraphicsTypeB?
-		get() = GraphicsTypeB.forValue(_defaultDisplayType)
+	val defaultDisplayType: DisplayTypeB?			get() = DisplayTypeB.forValue(_defaultDisplayType)
 
 	val migrationSupport: MigrationSupport?
 		get() = MigrationSupport.forValue(_migrationSupport)

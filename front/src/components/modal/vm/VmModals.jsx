@@ -1,20 +1,21 @@
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
-import useUIState                       from "@/hooks/useUIState";
-import useGlobal                        from "@/hooks/useGlobal";
-import VmDeleteModal                    from "./VmDeleteModal";
-import VmActionModal                    from "./VmActionModal";
-import VmSnapshotModal                  from "./VmSnapshotModal";
-import VmModal                          from "./VmModal";
-import TemplateModal                    from "@/components/modal/template/TemplateModal";
-import DomainImportVmTemplateModal      from "@/components/modal/domain/DomainImportVmTemplateModal";
-import VmExportOVAModal                 from "./VmExportOVAModal";
-import VmMigrationModal                 from "./VmMigrationModal";
-import VmStartOnceModal                 from "./VmStartOnceModal";
-import VmUpdateCdModal                  from "./VmUpdateCdModal";
-import VmImportModal                    from "./VmImportModal";
-import Localization                     from "@/utils/Localization";
-import Logger                           from "@/utils/Logger";
+import useUIState                          from "@/hooks/useUIState";
+import useGlobal                           from "@/hooks/useGlobal";
+import VmDeleteModal                       from "./VmDeleteModal";
+import VmActionModal                       from "./VmActionModal";
+import VmSnapshotModal                     from "./VmSnapshotModal";
+import VmModal                             from "./VmModal";
+import TemplateModal                       from "@/components/modal/template/TemplateModal";
+import DomainImportVmTemplateModal         from "@/components/modal/domain/DomainImportVmTemplateModal";
+import VmExportOVAModal                    from "./VmExportOVAModal";
+import VmMigrationModal                    from "./VmMigrationModal";
+import VmStartOnceModal                    from "./VmStartOnceModal";
+import VmUpdateCdromModal                  from "./VmUpdateCdromModal";
+import VmImportModal                       from "./VmImportModal";
+import VmVncClipboardPasteModal            from "./VmVncClipboardPasteModal";
+import Localization                        from "@/utils/Localization";
+import Logger                              from "@/utils/Logger";
 import "./MVm.css";
 
 /**
@@ -78,7 +79,7 @@ const VmModals = ({
         copyMode 
       />
     ), updateCdrom: (
-      <VmUpdateCdModal key={"vm:updateCdrom"} isOpen={activeModal().includes("vm:updateCdrom")} 
+      <VmUpdateCdromModal key={"vm:updateCdrom"} isOpen={activeModal().includes("vm:updateCdrom")} 
         onClose={() => closeModal("vm:updateCdrom")}
         vmId={vmsSelected[0]?.id}
       />
@@ -102,7 +103,11 @@ const VmModals = ({
         onClose={() => closeModal("vm:startOnce")}
         copyMode 
       />
-    ),
+    ), vncClipboardPaste: (
+      <VmVncClipboardPasteModal key={"vm:vncClipboardPaste"} isOpen={activeModal().includes("vm:vncClipboardPaste")} 
+        onClose={() => closeModal("vm:vncClipboardPaste")}
+      />
+    )
   };
 
   return (
