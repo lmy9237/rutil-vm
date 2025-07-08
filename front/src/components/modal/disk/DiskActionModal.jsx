@@ -109,23 +109,23 @@ const DiskActionModal = ({
   }, [getDomains, diskList, activeModal]);
 
   useEffect(() => {
-  // domainList가 갱신될 때마다 실행
-  if (!domainList || Object.keys(domainList).length === 0) return;
+    // domainList가 갱신될 때마다 실행
+    if (!domainList || Object.keys(domainList).length === 0) return;
 
-  setTargetDomains(prev => {
-    const next = { ...prev };
-    let changed = false;
+    setTargetDomains(prev => {
+      const next = { ...prev };
+      let changed = false;
 
-    Object.entries(domainList).forEach(([diskId, domains]) => {
-      if (domains && domains.length > 0 && !next[diskId]) {
-        next[diskId] = domains[0].id;
-        changed = true;
-      }
+      Object.entries(domainList).forEach(([diskId, domains]) => {
+        if (domains && domains.length > 0 && !next[diskId]) {
+          next[diskId] = domains[0].id;
+          changed = true;
+        }
+      });
+
+      return changed ? next : prev;
     });
-
-    return changed ? next : prev;
-  });
-}, [domainList]);
+  }, [domainList]);
 
 
   

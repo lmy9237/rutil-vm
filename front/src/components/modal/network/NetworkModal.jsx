@@ -23,7 +23,8 @@ import {
 } from "@/api/RQHook";
 import {
   checkName,
-  emptyIdNameVo, 
+  emptyIdNameVo,
+  useSelectItemOrDefaultEffect, 
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -112,22 +113,26 @@ const NetworkModal = ({
     }
   }, [isOpen, editMode, network]);  
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ 
-        id: selected?.id, 
-        name: selected?.name 
-      });
-    } else if (!editMode && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-    }
-  }, [datacenterId, datacenters, editMode]);
+  // 데이터센터 지정
+  useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default");
+
+  // useEffect(() => {
+  //   if (datacenterId) {
+  //     const selected = datacenters.find(dc => dc.id === datacenterId);
+  //     setDataCenterVo({ 
+  //       id: selected?.id, 
+  //       name: selected?.name 
+  //     });
+  //   } else if (!editMode && datacenters.length > 0) {
+  //     const defaultDc = datacenters.find(dc => dc.name === "Default");
+  //     const firstDc = defaultDc || datacenters[0];
+  //     setDataCenterVo({ 
+  //       id: firstDc.id, 
+  //       name: firstDc.name 
+  //     });
+  //   }
+  // }, [datacenterId, datacenters, editMode]);
+
 
   useEffect(() => {
     setClusterVoList([]);
@@ -198,7 +203,7 @@ const NetworkModal = ({
           disabled={editMode}
           loading={isDataCentersLoading}
           options={datacenters}
-          onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+          onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
         />
         <LabelInput id="name" label={Localization.kr.NAME}
           autoFocus

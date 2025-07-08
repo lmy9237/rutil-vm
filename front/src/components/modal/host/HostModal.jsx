@@ -16,7 +16,7 @@ import {
   useAllClusters,
   useAllHosts,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MHost.css";
@@ -92,23 +92,8 @@ const HostModal = ({
     }
   }, [isOpen, editMode, host]);
 
-  useEffect(() => {
-    if (clusterId) {
-      const selected = clusters.find(c => c.id === clusterId);
-      setClusterVo({
-        id: selected?.id, 
-        name: selected?.name
-      });
-    } else if (!editMode && clusters && clusters.length > 0) {
-      // 만약 "Default"라는 이름이 있다면 우선 선택
-      const defaultC = clusters.find(c => c.name === "Default");
-      const firstC = defaultC || clusters[0];
-      setClusterVo({ 
-        id: firstC.id, 
-        name: firstC.name 
-      });
-    }
-  }, [clusters, clusterId, editMode]);
+  // 클러스터 지정
+  useSelectItemOrDefaultEffect(clusterId, editMode, clusters, setClusterVo, "Default");
 
   const validateForm = () => {
     Logger.debug(`HostModal > validateForm ... `)

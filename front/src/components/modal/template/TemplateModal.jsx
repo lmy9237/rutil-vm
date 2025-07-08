@@ -12,7 +12,7 @@ import {
 import "../vm/MVm.css";
 import LabelInput from "../../label/LabelInput";
 import Localization from "../../../utils/Localization";
-import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo } from "../../../util";
+import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo, useSelectFirstItemEffect } from "../../../util";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
@@ -110,31 +110,35 @@ const TemplateModal = ({
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (clusters && clusters.length > 0) {
-      const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-      if (defaultC) {
-        setClusterVo({ 
-          id: defaultC.id, 
-          name: defaultC.name 
-        });
-      } else {
-        setClusterVo({ 
-          id: clusters[0].id, 
-          name: clusters[0].name 
-        });
-      }
-    }
-  }, [clusters]);
+  // 클러스터 지정
+  useSelectFirstItemEffect(clusters, setClusterVo);
+  useSelectFirstItemEffect(cpuProfiles, setCpuProfileVo);
 
-  useEffect(() => {
-    if (cpuProfiles && cpuProfiles.length > 0) {
-      setCpuProfileVo({ 
-        id: cpuProfiles[0].id, 
-        name: cpuProfiles[0].name 
-      });
-    }
-  }, [cpuProfiles]);
+  // useEffect(() => {
+  //   if (clusters && clusters.length > 0) {
+  //     const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
+  //     if (defaultC) {
+  //       setClusterVo({ 
+  //         id: defaultC.id, 
+  //         name: defaultC.name 
+  //       });
+  //     } else {
+  //       setClusterVo({ 
+  //         id: clusters[0].id, 
+  //         name: clusters[0].name 
+  //       });
+  //     }
+  //   }
+  // }, [clusters]);
+
+  // useEffect(() => {
+  //   if (cpuProfiles && cpuProfiles.length > 0) {
+  //     setCpuProfileVo({ 
+  //       id: cpuProfiles[0].id, 
+  //       name: cpuProfiles[0].name 
+  //     });
+  //   }
+  // }, [cpuProfiles]);
 
   useEffect(() => {
     if (disks && disks.length > 0) {
@@ -241,19 +245,19 @@ const TemplateModal = ({
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
         value={formState.comment}
-        onChange={handleInputChange(setFormState, "comment",validationToast)}
+        onChange={handleInputChange(setFormState, "comment", validationToast)}
       />
       <LabelSelectOptionsID id="cluster_select" label={`${Localization.kr.CLUSTER}`}
         loading={isClustersLoading}
         value={clusterVo.id}
         options={clusters}
-        onChange={handleSelectIdChange(setClusterVo, clusters)}
+        onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
       />
       <LabelSelectOptionsID id="cpu_profile_select" label="CPU 프로파일"
         loading={isCpuProfilesLoading}
         value={cpuProfileVo.id}
         options={cpuProfiles}
-        onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles)}
+        onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles, validationToast)}
       />
       <hr/><br/>
 

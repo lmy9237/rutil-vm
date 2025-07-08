@@ -20,7 +20,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
-import { checkName, convertBytesToGB, emptyIdNameVo }  from "../../../util";
+import { checkName, convertBytesToGB, emptyIdNameVo, useSelectFirstItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }  from "../../../util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -52,6 +52,7 @@ const DiskModal = ({
     disksSelected, domainsSelected, datacentersSelected,
    } = useGlobal();
   const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
+  const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
   const datacenterId = useMemo(() => [...datacentersSelected][0]?.id, [datacentersSelected])
 
   const [formState, setFormState] = useState(initialFormState);
@@ -77,7 +78,6 @@ const DiskModal = ({
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading 
   } = useAllDiskProfilesFromDomain(domainVo?.id || undefined, (e) => ({ ...e }));
-
 
   const [activeTab, setActiveTab] = useState("img");
   const handleTabClick = useCallback((tab) => { setActiveTab(tab) }, []);
@@ -134,23 +134,27 @@ const DiskModal = ({
         name: firstDc.name 
       });
       setDomainVo(emptyIdNameVo());
+      setDiskProfileVo(emptyIdNameVo());
     }
   }, [datacenterId, datacenters, editMode]);
 
-  useEffect(() => {
-    if (domainsSelected && domainsSelected.length > 0) {
-      setDomainVo({
-        id: domainsSelected[0]?.id, 
-        name: domainsSelected[0]?.name 
-      });
-    } else if (!editMode && domains && domains.length > 0) {
-      const firstDomain = domains[0];
-      setDomainVo({id: 
-        firstDomain.id, 
-        name: firstDomain.name
-      });
-    }
-  }, [domainsSelected, domains, editMode]);
+  // 도메인 지정
+  useSelectItemEffect(domainId, editMode, domains, setDomainVo);
+
+  // useEffect(() => {
+  //   if (domainsSelected && domainsSelected.length > 0) {
+  //     setDomainVo({
+  //       id: domainsSelected[0]?.id, 
+  //       name: domainsSelected[0]?.name 
+  //     });
+  //   } else if (!editMode && domains && domains.length > 0) {
+  //     const firstDomain = domains[0];
+  //     setDomainVo({id: 
+  //       firstDomain.id, 
+  //       name: firstDomain.name
+  //     });
+  //   }
+  // }, [domainsSelected, domains, editMode]);
 
   // domainVo가 변경될 때 diskProfile 초기화 및 재선택
   useEffect(() => {

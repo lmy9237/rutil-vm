@@ -21,7 +21,9 @@ import {
   checkDuplicateName,
   checkKoreanName,
   checkName,
-  emptyIdNameVo
+  emptyIdNameVo,
+  useSelectItemEffect,
+  useSelectItemOrDefaultEffect
 } from "@/util";
 import Localization            from "@/utils/Localization";
 import Logger                  from "@/utils/Logger";
@@ -109,54 +111,17 @@ const ClusterModal = ({
     }
   }, [isOpen, editMode, cluster]);
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ 
-        id: selected?.id, 
-        name: selected?.name 
-      });
-      setNetworkVo(emptyIdNameVo());
-    } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-    }
-  }, [datacenterId, datacenters, editMode]);
+  // 데이터센터 지정
+  useSelectItemEffect(datacenterId, editMode, datacenters, setDataCenterVo);
+  // 네트워크 지정
+  useSelectItemOrDefaultEffect(cluster?.networkVo?.id, editMode, networks, setNetworkVo, "ovirtmgmt");
 
   useEffect(() => {
-    if (!isOpen || !networks || networks.length === 0) return;
+    const isUndefinedCpuArc = cluster?.cpuArc === "undefined";
 
-    // 편집 모드인데 cluster의 networkVo가 있으면 그걸 씀
-    if (editMode && cluster?.networkVo?.id) {
-      setNetworkVo({
-        id: cluster.networkVo.id,
-        name: cluster.networkVo.name,
-      });
+    if (isOpen && editMode && isUndefinedCpuArc) {
+      setEditCpuArc(true);
     } else {
-      // 그 외엔 항상 네트워크 중 첫 번째를 기본으로 설정 (ovirtmgmt 우선)
-      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
-      const fallback = defaultNetwork || networks[0];
-      setNetworkVo({
-        id: fallback.id,
-        name: fallback.name,
-      });
-    }
-  }, [isOpen, editMode, networks, cluster]);
-
-  useEffect(() => {
-    if (isOpen && editMode) {
-      if (cluster?.cpuArc === "undefined") {
-        setEditCpuArc(true);
-      } else {
-        setEditCpuArc(false);
-      }
-    }
-    if (!isOpen) {
       setEditCpuArc(false);
     }
   }, [isOpen, editMode, cluster]);

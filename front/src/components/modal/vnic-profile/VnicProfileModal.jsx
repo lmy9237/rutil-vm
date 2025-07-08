@@ -19,7 +19,7 @@ import {
   useNetworksFromDataCenter,
   useVnicProfile,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo } from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemOrDefaultEffect } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MVnic.css";
@@ -106,41 +106,10 @@ const VnicProfileModal = ({
     }
   }, [isOpen, editMode, vnic]);
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ 
-        id: selected?.id, 
-        name: selected?.name 
-      });
-    } else if (!editMode && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-    }
-  }, [datacenterId, datacenters, editMode]);
-  
-  useEffect(() => {
-    Logger.debug(`VnicProfileModal > useEffect ... editMode: ${editMode}, networkId: ${networkId}`)
-    if (networkId) {
-      const selected = networks.find(n => n.id === networkId);
-      setNetworkVo({
-        id: selected?.id, 
-        name: selected?.name
-      });
-    } else if (!editMode && networks && networks.length > 0) {
-      const defaultNetwork = networks.find(n => n.name === "ovirtmgmt");
-      const firstN = defaultNetwork || networks[0];
-      setNetworkVo({ 
-        id: firstN.id, 
-        name: firstN.name 
-      });
-    }
-  }, [networkId, networks, editMode]);
-  
+  // 데이터센터 지정
+  useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default");
+  useSelectItemOrDefaultEffect(networkId, editMode, networks, setNetworkVo, "ovirtmgmt");
+
   useEffect(() => {
     if (nFilters && nFilters.length > 0) {
       const defaultNF = nFilters.find(nf => nf.name === "vdsm-no-mac-spoofing");
@@ -194,7 +163,7 @@ const VnicProfileModal = ({
         disabled={editMode}
         loading={isDataCentersLoading}
         options={datacenters}
-        onChange={handleSelectIdChange(setDataCenterVo, datacenters)}
+        onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />
       <LabelSelectOptionsID label={Localization.kr.NETWORK}
         value={networkVo.id}

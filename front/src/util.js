@@ -1,5 +1,6 @@
 import Localization from "./utils/Localization";
 import Logger from "./utils/Logger";
+import { useEffect } from 'react';
 
 /**
  * @name readString
@@ -38,6 +39,56 @@ export function toGiB(bytes) {
 export function emptyIdNameVo() {
   return { id: "", name: "" };
 }
+
+/**
+ * 
+ * @param {*} items 
+ * @param {*} setFn 
+ */
+export function useSelectFirstItemEffect(items, setVo) {
+  useEffect(() => {
+    if (items && items.length > 0) {
+      const first = items[0];
+      if (first && first.id !== undefined && first.name !== undefined) {
+        setVo({ id: first.id, name: first.name });
+      }
+    }
+  }, [items, setVo]);
+}
+
+export function useSelectItemEffect(id, editMode, items, setVo) {
+  useEffect(() => {
+    if (id) {
+      const selected = items?.find(i => i.id === id);
+      if (selected) {
+        setVo({ id: selected.id, name: selected.name });
+      }
+    } else if (!editMode && items?.length > 0) {
+      const first = items[0];
+      if (first?.id !== undefined && first?.name !== undefined) {
+        setVo({ id: first.id, name: first.name });
+      }
+    }
+  }, [id, editMode, items, setVo]);
+}
+
+export function useSelectItemOrDefaultEffect(id, editMode, items, setVo, defaultName) {
+  useEffect(() => {
+    if (id) {
+      const selected = items?.find(i => i.id === id);
+      if (selected) {
+        setVo({ id: selected.id, name: selected.name });
+      }
+    } else if (!editMode && items?.length > 0) {
+      const defaultN = items.find(i => i.name === defaultName);
+      const first = defaultN || items[0];
+      if (first?.id !== undefined && first?.name !== undefined) {
+        setVo({ id: first.id, name: first.name });
+      }
+    }
+  }, [id, editMode, items, setVo]);
+}
+
 
 export function checkEmpty(value) {
   Logger.debug(`util > checkKoreanName ... value: ${value}`);

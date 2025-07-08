@@ -22,7 +22,7 @@ import {
   useAllNfsStorageDomains,
   useAllStorageDomains,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo, useSelectFirstItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -142,34 +142,21 @@ const DomainModal = ({
       resetFormStates();
     }
   }, [isOpen, editMode, domain]);
+  
+  // 데이터센터 지정
+  useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default");
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ 
-        id: selected?.id, 
-        name: selected?.name 
-      });
-    } else if (!editMode && datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-    }
-  }, [datacenterId, datacenters, editMode]);
-
-  useEffect(() => {
-    if (!editMode && hosts && hosts.length > 0 && !hostVo.id) {
-      const firstH = hosts[0];
-      setHostVo({ 
-        id: firstH.id, 
-        name: firstH.name 
-      });
-    }
-  }, [hosts, editMode, hostVo.id]);
+  // 호스트 지정
+  useSelectFirstItemEffect(hosts, setHostVo);
+  // useEffect(() => {
+  //   if (!editMode && hosts && hosts.length > 0 && !hostVo.id) {
+  //     const firstH = hosts[0];
+  //     setHostVo({ 
+  //       id: firstH.id, 
+  //       name: firstH.name 
+  //     });
+  //   }
+  // }, [hosts, editMode, hostVo.id]);
 
   useEffect(() => {
     if (!editMode && dataCenterVo.id) {

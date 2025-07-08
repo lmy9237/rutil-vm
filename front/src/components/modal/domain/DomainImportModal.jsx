@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import DomainImportNfs                  from "./import/DomainImportNfs";
@@ -123,13 +122,13 @@ const DomainImportModal = ({
       // refetchFibres();
     }
   }, [dataCenterVo]);
-  
-  useEffect(() => {
-    if (hosts && hosts.length > 0) {
-      const firstH = hosts[0];
-      setHostVo({ id: firstH.id, name: firstH.name });
-    }
-  }, [hosts]);
+  useSelectFirstItemEffect(hosts, setHostVo);
+  // useEffect(() => {
+  //   if (hosts && hosts.length > 0) {
+  //     const firstH = hosts[0];
+  //     setHostVo({ id: firstH.id, name: firstH.name });
+  //   }
+  // }, [hosts]);
 
   useEffect(() => {
     const options = storageTypeOptions(formState.domainType);
