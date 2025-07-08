@@ -6,15 +6,23 @@
   margin-left: 24px;
 }
 /* 디스크(업로드) */
+.storage-upload-head{
+ border-bottom: 1px solid var(--color-table);
+}
 .storage-upload-first {
   height: auto;
   min-height: 62px;
-  border-bottom: 1px solid var(--color-table);
 }
 .storage-upload-first > div {
   width: 45%;
-  /* height: var(--h-32); */
 }
 .disk-option {
   padding-top: 16px;
+}
+.upload-grid div{
+  display: flex;
+}
+.upload-grid>div>div{
+  margin-right: 10px;
+  font-weight: 600;
 }

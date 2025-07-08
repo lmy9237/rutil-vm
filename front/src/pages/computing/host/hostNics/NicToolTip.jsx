@@ -1,7 +1,7 @@
 const NicToolTip = (nic) => { 
 
   return `
-    <div style="text-align: left;">
+    <div style="text-align: left; z-index: 999999;">
       <strong>MAC:</strong> ${nic.macAddress || "없음"}<br/>
       <strong>Rx 속도:</strong> ${nic.rxSpeed || "0"} Mbps<br/>
       <strong>총 Rx:</strong> ${nic.rxTotalSpeed || "0"} 바이트<br/>

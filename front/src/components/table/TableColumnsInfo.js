@@ -837,12 +837,12 @@ GET_IMPORT_VMS: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }},
+    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }, width: 150 },
     { header: '세부작업', accessor: 'numSteps',align: "center", width: DEFAULT_WIDTH_ICON_COLUMN },
-    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime', width:'140px'},
-    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime',  width:'140px'},
-    { header: Localization.kr.STATUS,          accessor: 'status', width:'5%' ,align: "center"  },
-    { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width:'100px' },
+    { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'},
+    { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime'},
+    { header: Localization.kr.STATUS,          accessor: 'status', width: DEFAULT_WIDTH_ICON_COLUMN ,align: "center"  },
+    { header: Localization.kr.TIMESTAMP,       accessor: 'timestamp' , width: DEFAULT_WIDTH_ICON_COLUMN  },
   ],
   PROVIDER: [
     { accessor: '_name',        header: Localization.kr.NAME,   clickable: false },

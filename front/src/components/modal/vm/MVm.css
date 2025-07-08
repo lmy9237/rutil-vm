@@ -4,7 +4,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0 24px;
-  background-color: white;
 }
 .form-checks > div {
   padding-top: 10px;
@@ -73,13 +72,12 @@
   width: 100%;
 }
 .vm-import-table-outer{
-  border: var(--border-default);
-  height: 100%;
+  height: 200px;
+  overflow-y: auto;
 }
 .vm-import-panel{
   width: 49%;
-  height: 200px;
-  overflow-y: auto;
+  margin-bottom: 20px;
 }
 .vm-import-detail-box {
   border: var(--border-default);

@@ -167,7 +167,7 @@ const VmDiskConnectionModal = ({
               )})
             ) : (
               <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
+                <td colSpan="11" style={{ textAlign: "center" }}>
                   데이터가 없습니다.
                 </td>
               </tr>

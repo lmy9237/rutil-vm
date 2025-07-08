@@ -173,8 +173,6 @@ export function getNetworkAttachmentModalState(
     na.hostNicVo?.name === networkAttachment.hostNicVo?.name &&
     na.networkVo?.id === networkAttachment.networkVo?.id
   );
-  console.log('$ targetNA:', targetNA);
-  console.log('$ recentlyUnassignedNAs:', recentlyUnassignedNAs);
 
   // 2. id 매칭
   if (!targetNA && networkAttachment.id) {

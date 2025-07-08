@@ -437,16 +437,12 @@ const HostNics = ({
       validationToast.fail("이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.");
       return;
     }
-
-    console.log('$draggedNetwork:', draggedNetwork);
     const networkId = draggedNetwork.networkVo?.id || draggedNetwork.id;
 
     const originalNetwork = networks.find(net => net.id === networkId) || {};
 
     // 최근 해제된 정보에서 논리 네트워크 id로 찾기
     const prevNA = recentlyUnassignedNAs[networkId];
-    console.log('$prevNA:', prevNA);
-
     const newAttachment = prevNA
       ? {
           ...prevNA,
@@ -474,9 +470,6 @@ const HostNics = ({
           ipAddressAssignments: [],
           dnsServers: [],
         };
-
-    console.log("드래그 복원할 newAttachment:", newAttachment);
-    console.log('캐시 key:', Object.keys(recentlyUnassignedNAs), '찾는 networkId:', draggedNetwork.id);
 
     setRecentlyUnassignedNAs(prev => {
       const newObj = { ...prev };
@@ -521,7 +514,6 @@ const HostNics = ({
    * @returns 
    */
   const handleDropBetweenNetworkToNic = (draggedNetwork, targetNic) => {
-    Logger.debug(`HostNics > handleDropBetweenNetworkToNic ... `)
     // 기존 NA 찾기
     const draggedNetworkId = draggedNetwork?.networkVo?.id || draggedNetwork?.id;
     const draggedNA = findNetworkVoFromNetworkAttachment(draggedNetworkId);
@@ -539,10 +531,10 @@ const HostNics = ({
       validationToast.fail("이미 VLAN이 없는 네트워크가 이 인터페이스에 연결되어 있습니다.");
       return;
     }
-    if(!draggedNA.inSync){
-      validationToast.fail(`${draggedNA.networkVo?.name}은 비동기 네트워크입니다`);
-      return;
-    }
+    // if(!draggedNA.inSync){
+    //   validationToast.fail(`${draggedNA.networkVo?.name}은 비동기 네트워크입니다`);
+    //   return;
+    // }
 
     // 네트워크 값에서 이동한 hostnic 값 수정
     const updatedNA = {
@@ -576,7 +568,7 @@ const HostNics = ({
     ]);
 
     setDragItemFlag(true);
-    toast({ description: "NIC간 네트워크 이동!" });
+    // toast({ description: "NIC간 네트워크 이동!" });
   };
 
 
@@ -709,7 +701,7 @@ const HostNics = ({
     });
 
     tossCreateBondingData(sourceNic, targetNic);
-    toast({ description: "handleDropNicForBonding" });
+    // toast({ description: "handleDropNicForBonding" });
   };
 
 
@@ -914,8 +906,6 @@ const HostNics = ({
           }
         }] : [];
 
-        // console.log("$removeBaseNic: ", removeBaseNic);
-
         const newNics = prev.nic.map(nic => nic.name === targetBond.name
           ? { 
             ...nic, 
@@ -962,10 +952,6 @@ const HostNics = ({
       setDragItemFlag(true);
       toast({ description: `선택한 NIC(${draggedNic.name})만 본딩에서 해제되었습니다.`}); 
     }
-
-    
-    // console.log("$ draggedNic ", draggedNic);
-    // console.log("$ targetBond ", targetBond);
   };
   
   /**
@@ -1033,7 +1019,6 @@ const HostNics = ({
 
     // 기존 NIC의 네트워크 목록을 본딩 NIC에 연결하기 위한 처리
     const transferredNetworks = nicData.flatMap(nic => {
-      // console.log("$ nic.networks ", nic.name, nic.networks);;
       return nic.networks?.map(network => {
         // network가 이미 networkAttachment 형식이면 그대로 복사
         let originalAttachment = ([...baseItems.networkAttachment, ...movedItems.networkAttachment].find(na =>
@@ -1054,17 +1039,12 @@ const HostNics = ({
       }) || []
     });
 
-    // console.log("$transferredNetworks:", transferredNetworks);
-    // console.log("$transferredNetworks(JSON):", JSON.stringify(transferredNetworks, null, 2));
-
     setBaseItems(prev => {
       const filtered = prev.nic.filter(nic => nic.name !== bondNic.name && !slaveNames.includes(nic.name));
       const updatedNetworkAttachments = prev.networkAttachment
         .filter(na => !slaveNames.includes(na.hostNicVo?.name))  // 기존 NIC에 연결된 네트워크 제외
         .concat(transferredNetworks);  // 새 본딩 NIC으로 네트워크 옮김
 
-        // console.log("$updatedNetworkAttachments(JSON):", JSON.stringify(updatedNetworkAttachments, null, 2));
-        
       return {
         ...prev,
         nic: [...filtered, bondNic],
@@ -1130,28 +1110,6 @@ const HostNics = ({
   return (
     <>
     <div className="w-full">
-      <div className="header-right-btns">
-        {/* 변경항목이 있다면 활성화 */}
-        {!cancelFlag && dragItemFlag && (
-          <>
-            <ActionButton actionType="default" 
-              label={Localization.kr.UPDATE} 
-              onClick={handleFormSubmit} // 버튼 클릭시 네트워크 업데이트
-            />
-            <ActionButton actionType="default"
-              label={Localization.kr.CANCEL}
-              onClick={() => resetState()}
-            />
-          </>
-        )}
-        {cancelFlag && (
-          <ActionButton actionType="default"
-            label={Localization.kr.CANCEL}
-            onClick={() => resetState()}
-          />
-        )}
-      </div>
-
       <SnapshotHostBackground className="split-outer f-btw w-full">
         {/* 작업 탭 */}
         <div className="split-item split-item-two-thirds"
@@ -1175,64 +1133,88 @@ const HostNics = ({
           </div>
           <br/>
 
-        {transNicData.map((nic) => {
-          const matchedNAs = [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
-            (na) => na.hostNicVo?.name === nic.name
-          );
-          return (
-            <div className="row group-span mb-4 items-center" key={nic.id} >
-              {/* 인터페이스 */}
-              <div className="col-40" onDragOver={(e) => e.preventDefault()}>
-                {nic.bondingVo?.slaveVos?.length > 0 
-                  ? <BondNic
-                      nic={nic}
-                      dragItem={dragItem}
-                      handleDragStart={handleDragStart}
-                      handleAddBaseNicToBond={handleAddBaseNicToBond}
-                      setSelectedNic={setSelectedNic}
-                      editBondingData={tossEditBondingData}
-                    />
-                  : <BaseNic
-                      nic={nic}
-                      handleDragStart={handleDragStart}
-                      handleDrop={handleDrop}
-                      handleDragOver={handleDragOver}
-                    />
-                }
-              </div>
-
-              {/* 화살표 */}
-              <div className="col-20 flex justify-center items-center">
-                {matchedNAs.length > 0 && ( <RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
-              </div>
-
-              {/* 할당된 논리 네트워크 */}
-              <div className="col-40 fs-18 network-stack">
-                {matchedNAs.length > 0 ? (
-                  matchedNAs.map((na) => (
-                    <React.Fragment key={`${nic.id}-${na.networkVo?.id}`}>
-                      <MatchNetwork
-                        networkAttach={na}
+          {transNicData.map((nic) => {
+            const matchedNAs = [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
+              (na) => na.hostNicVo?.name === nic.name
+            );
+            return (
+              <div className="row group-span mb-4 items-center" key={nic.id} >
+                {/* 인터페이스 */}
+                <div className="col-40" onDragOver={(e) => e.preventDefault()}>
+                  {nic.bondingVo?.slaveVos?.length > 0 
+                    ? <BondNic
                         nic={nic}
+                        dragItem={dragItem}
+                        handleDragStart={handleDragStart}
+                        handleAddBaseNicToBond={handleAddBaseNicToBond}
+                        setSelectedNic={setSelectedNic}
+                        editBondingData={tossEditBondingData}
+                      />
+                    : <BaseNic
+                        nic={nic}
+                        handleDragStart={handleDragStart}
                         handleDrop={handleDrop}
                         handleDragOver={handleDragOver}
-                        handleDragStart={handleDragStart}
-                        setSelectedNetwork={setSelectedNetwork}
-                        editNetworkAttachmentData={tossEditNetworkAttachmentData}
                       />
-                    </React.Fragment>
-                  ))
-                ) : (
-                  <NoneNetwork
-                    nic={nic}
-                    handleDragOver={handleDragOver}
-                    handleDrop={handleDrop}
-                  />
-                )}
+                  }
+                </div>
+
+                {/* 화살표 */}
+                <div className="col-20 flex justify-center items-center">
+                  {matchedNAs.length > 0 && ( <RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
+                </div>
+
+                {/* 할당된 논리 네트워크 */}
+                <div className="col-40 fs-18 network-stack">
+                  {matchedNAs.length > 0 ? (
+                    matchedNAs.map((na) => (
+                      <React.Fragment key={`${nic.id}-${na.networkVo?.id}`}>
+                        <MatchNetwork
+                          networkAttach={na}
+                          nic={nic}
+                          handleDrop={handleDrop}
+                          handleDragOver={handleDragOver}
+                          handleDragStart={handleDragStart}
+                          setSelectedNetwork={setSelectedNetwork}
+                          editNetworkAttachmentData={tossEditNetworkAttachmentData}
+                        />
+                      </React.Fragment>
+                    ))
+                  ) : (
+                    <NoneNetwork
+                      nic={nic}
+                      handleDragOver={handleDragOver}
+                      handleDrop={handleDrop}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+              
+            );
+          })}
+          <div className="header-right-btns">
+          {/* 변경항목이 있다면 활성화 */}
+          {!cancelFlag && dragItemFlag && (
+            <>
+              <ActionButton actionType="default"  
+                label={Localization.kr.OK} 
+                className="custom-ok-button mr-3"
+                onClick={handleFormSubmit} // 버튼 클릭시 네트워크 업데이트
+              />
+              <ActionButton actionType="default"
+                label={Localization.kr.CANCEL}
+                className="custom-ok-button"
+                onClick={() => resetState()}
+              />
+            </>
+          )}
+          {cancelFlag && (
+            <ActionButton actionType="default"
+              label={Localization.kr.CANCEL}
+              onClick={() => resetState()}
+            />
+          )}
+          </div>
         </div>
 
         {/* 할당되지않은 네트워크 */}

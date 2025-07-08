@@ -170,7 +170,7 @@ const DiskUploadModal = ({
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >
-      <div className="storage-upload-first f-btw fs-14">
+      {/* <div className="storage-upload-first f-btw fs-14">
         <p className="fs-16">파일 선택</p>
         <DiskInspector 
           setFormState={setFormState}
@@ -188,7 +188,26 @@ const DiskUploadModal = ({
             }));
           }}
         />
+      </div> */}
+
+      <div  >
+        <DiskInspector 
+          setFormState={setFormState}
+          onUpload={(e) => {
+            const uploadedFile = e.target.files[0];
+            if (!uploadedFile) return;
+
+            setFile(uploadedFile);
+            setFormState((prev) => ({
+              ...prev,
+              alias: onlyFileName(uploadedFile.name),
+              description: uploadedFile.name,
+              size: uploadedFile.size,
+            }));
+          }}
+        />
       </div>
+
 
       <div>
         <div className="disk-option fs-16">디스크 옵션</div>
@@ -281,6 +300,83 @@ const DiskUploadModal = ({
     </BaseModal>
   );
 };
+// const DiskInspector = ({ onUpload = () => {}, setFormState }) => {
+//   const [imageInfo, setImageInfo] = useState(null);
+//   const [error, setError] = useState(null);
+
+//   const handleFileChange = (event) => {
+//     const file = event.target.files[0];
+//     setImageInfo(null);
+//     setError(null);
+//     onUpload(event);
+//     if (!file) return;
+
+//     const reader = new FileReader();
+//     reader.onload = (e) => {
+//       try {
+//         const buffer = e.target.result;
+//         const isQcow = readString(buffer.slice(0, 4)) === 'QFI\xfb';
+
+//         const info = {
+//           format: isQcow ? "qcow2" : "raw",
+//           actualSize: file.size,
+//           virtualSize: BigInt(file.size),
+//           backingFile: false,
+//           qcowCompat: Localization.kr.NOT_ASSOCIATED,
+//           content: Localization.kr.DATA,
+//         };
+
+//         if (isQcow) {
+//           const version = readUint32(buffer.slice(4, 8));
+//           info.qcowCompat = version === 2 ? '0.10' : version === 3 ? '1.1' : Localization.kr.UNKNOWN;
+//           info.backingFile = readBigUint64(buffer.slice(8, 16)) !== BigInt(0);
+//           info.virtualSize = readBigUint64(buffer.slice(24, 32));
+//         }
+
+//         setImageInfo(info);
+//         setFormState((prev) => ({
+//           ...prev,
+//           contentType: info.content === "iso" ? "iso" : "data",
+//           format: isQcow ? "cow" : "raw",
+//         }));
+//       } catch (err) {
+//         setError(`파일 분석 실패: ${err.message}`);
+//       }
+//     };
+
+//     reader.onerror = () => setError("파일 읽기 실패");
+//     const blob = file.slice(0, 0x8001 + 5);
+//     reader.readAsArrayBuffer(blob);
+//   };
+
+//   return (
+//     <div className="storage-upload-first fs-14 f-btw" >
+//     <p className="fs-16" style={{ width: "900px" }}>파일 선택</p>
+//       <Input
+//         id="file"
+//         type="file"
+//         accept=".iso,.qcow2,.vhd,.img,.raw"
+//         onChange={handleFileChange}
+//         style={{ marginBottom: "0.5rem" }}
+//       />
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//       {imageInfo && (
+//         <div className="fs-default" style={{ border: '1px solid #ccc', padding: '10px' }}>
+//           <p className="row"><strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}</p>
+//           <p className="row"><strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB</p>
+//           {imageInfo.format === "qcow2" && (
+//             <>
+//               <p className="row"><strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB</p>
+//               <p className="row"><strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}</p>
+//               <p className="row"><strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}</p>
+//             </>
+//           )}
+//           <p className="row"><strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
 
 const DiskInspector = ({
   onUpload=()=>{},
@@ -362,44 +458,98 @@ const DiskInspector = ({
   };
 
   return (
-    <div className="f-center">
-      <Input id="file"
-        type="file"
-        className="f-center h-full"
-        accept=".iso,.qcow2,.vhd,.img,.raw"
-        onChange={handleFileChange} />
+    <>
+    <div className="storage-upload-head">
+      <div className="storage-upload-first fs-14 f-btw" >
+        <p className="fs-16" style={{ width: "900px" }}>파일 선택</p>
+        <Input id="file"
+          type="file"
+          className="f-center h-full"
+          accept=".iso,.qcow2,.vhd,.img,.raw"
+          onChange={handleFileChange} />
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </div>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="f-end mb-4">
+        {imageInfo && (
+          <div
+            className="upload-grid fs-default ml-auto w-[335px] grid grid-cols-2 gap-x-4 gap-y-3"
+            style={{
+              border: "1px solid #ccc",
+              padding: "12px",
+            }}
+          >
+            <div>
+              <div>{Localization.kr.FORMAT}:</div> {imageInfo.format}
+            </div>
+            <div>
+              <div>{Localization.kr.SIZE}:</div> {toGiB(imageInfo.actualSize)} GiB
+            </div>
 
-      {imageInfo && (
-        <div 
-          className="fs-8 ml-auto"
-          style={
-          { border: '1px solid #ccc', padding: '10px' }
-        }>
-          {/* <h3>Detected Image Details</h3> */}
-          <p className="row">
-            <strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}
-          </p>
-          <p className="row">
-            <strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB
-          </p>
-          {imageInfo.format === "qcow2" && 
-          <p className="row">
-            <strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB
-          </p>}
-          <p className="row">
-            <strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}
-          </p>
-          {imageInfo.format === "qcow2" && <p className="row">
-            <strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}
-          </p>}
-          {imageInfo.format === "qcow2" && <p className="row">
-            <strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}
-          </p>}
-        </div>
-      )}
+            {imageInfo.format === "qcow2" && (
+              <>
+                <div>
+                  <div>{Localization.kr.SIZE_VIRTUAL}:</div> {toGiB(imageInfo.virtualSize)} GiB
+                </div>
+                <div>
+                  <div>QCOW2 {Localization.kr.COMPAT}:</div> {imageInfo.qcowCompat}
+                </div>
+                <div>
+                  <div>{Localization.kr.BACKING_FILE}:</div> {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}
+                </div>
+                <div>
+                  <div>{Localization.kr.CONTENTS}:</div> {imageInfo.content}
+                </div>
+              </>
+            )}
+
+            {imageInfo.format !== "qcow2" && (
+              <>
+                <div>
+                  <div>{Localization.kr.CONTENTS}:</div> {imageInfo.content}
+                </div>
+                <div />
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+
+      {/* <div className="f-end mb-4">
+        {imageInfo && (
+          <div 
+            className="fs-8 ml-auto w-[335px]"
+            style={
+            { border: '1px solid #ccc', padding: '10px' }
+          }>
+            <p className="row">
+              <strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}
+            </p>
+            <p className="row">
+              <strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB
+            </p>
+            {imageInfo.format === "qcow2" && 
+            <p className="row">
+              <strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB
+            </p>}
+            <p className="row">
+              <strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}
+            </p>
+            {imageInfo.format === "qcow2" && <p className="row">
+              <strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}
+            </p>}
+            {imageInfo.format === "qcow2" && <p className="row">
+              <strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}
+            </p>}
+          </div>
+        )}
+      </div> */}
+
+      
+
     </div>
+    </>
   );
 };
 

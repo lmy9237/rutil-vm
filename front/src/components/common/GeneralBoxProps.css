@@ -18,7 +18,11 @@
   cursor: pointer;
   font-size: var(--fs-default);
   color: var(--color-accent);
+  font-weight: 600;
 }
 .more-button:hover{
   color: var(--color-blue-1);
+}
+.vm-bar-chart-outer .box-content {
+  height: 100% !important;
 }
