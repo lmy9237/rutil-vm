@@ -11,6 +11,7 @@ import java.io.Serializable
  * @author 이찬희 (@chanhi2000)
  */
 class VCenterVmDetail(
+	@SerializedName("id") var id: String? = "",
 	@SerializedName("name") val name: String? = "",
 	@SerializedName("instant_clone_frozen") val instantCloneFrozen: Boolean? = false,
 	@SerializedName("guest_OS") val guestOS: String? = "",
@@ -34,6 +35,7 @@ class VCenterVmDetail(
 		gson.toJson(this)
 
 	class Builder {
+		private var bId: String? = ""; fun id(block: () -> String?) { bId = block() ?: "" }
 		private var bName: String? = ""; fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bInstantCloneFrozen: Boolean? = false; fun instantCloneFrozen(block: () -> Boolean?) { bInstantCloneFrozen = block() ?: false }
 		private var bGuestOS: String? = ""; fun guestOS(block: () -> String?) { bGuestOS = block() ?: "" }
@@ -53,7 +55,7 @@ class VCenterVmDetail(
 		private var bScsiAdapters: Map<String, VCenterScsiAdapter>? = emptyMap(); fun scsiAdapters(block: () -> Map<String, VCenterScsiAdapter>?) { bScsiAdapters = block() ?: emptyMap() }
 		private var bSerialPorts: Map<String, VCenterSerialPort>? = emptyMap(); fun serialPorts(block: () -> Map<String, VCenterSerialPort>?) { bSerialPorts = block() ?: emptyMap() }
 
-		fun build(): VCenterVmDetail = VCenterVmDetail(bName, bInstantCloneFrozen, bGuestOS, bIdentity, bPowerState, bBoot, bBootDevices, bCdroms, bCpu, bDisks, bFloppies, bHardware, bMemory, bNics, bParallelPorts, bSataAdapters, bScsiAdapters, bSerialPorts)
+		fun build(): VCenterVmDetail = VCenterVmDetail(bId, bName, bInstantCloneFrozen, bGuestOS, bIdentity, bPowerState, bBoot, bBootDevices, bCdroms, bCpu, bDisks, bFloppies, bHardware, bMemory, bNics, bParallelPorts, bSataAdapters, bScsiAdapters, bSerialPorts)
 	}
 
 	companion object {

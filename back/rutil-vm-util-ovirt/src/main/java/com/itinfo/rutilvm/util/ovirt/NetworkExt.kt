@@ -31,12 +31,12 @@ fun Connection.findAllNetworks(searchQuery: String = "", follow: String = ""): R
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.srvNetwork(networkId: String): NetworkService =
+fun Connection.srvNetwork(networkId: String?=""): NetworkService =
 	this.srvNetworks().networkService(networkId)
 
-fun Connection.findNetwork(networkId: String, follow: String = ""): Result<Network?> = runCatching {
+fun Connection.findNetwork(networkId: String?="", follow: String?=""): Result<Network?> = runCatching {
 	this.srvNetwork(networkId).get().apply {
-		if (follow.isNotEmpty()) follow(follow)
+		if (follow?.isEmpty() == false) follow(follow)
 	}.send().network()
 
 }.onSuccess {

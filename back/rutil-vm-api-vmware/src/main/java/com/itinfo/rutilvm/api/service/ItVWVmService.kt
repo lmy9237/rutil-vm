@@ -52,7 +52,9 @@ open class VMWareVmServiceImpl (
 			.findOne(prompt.sessionId, vmId)
 		val response: Response<VCenterVmDetail?> = call.execute()
 		if (response.isSuccessful) {
-			return response.body() ?: throw RuntimeException("Response body is null")
+			return response.body().apply {
+				this@apply?.id = vmId
+			} ?: throw RuntimeException("Response body is null")
 		} else {
 			throw RuntimeException("Failed to retrieve vm: ${response.errorBody()?.string()}")
 		}

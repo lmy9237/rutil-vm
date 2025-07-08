@@ -18,12 +18,11 @@ import java.math.BigInteger
 fun Connection.srvVms(): VmsService =
 	this.systemService.vmsService()
 
-fun Connection.findAllVms(searchQuery: String = "", follow: String = ""): Result<List<Vm>> = runCatching {
+fun Connection.findAllVms(searchQuery: String?="", follow: String?=""): Result<List<Vm>> = runCatching {
 	this.srvVms().list().allContent(true).apply {
-		if (searchQuery.isNotEmpty()) search(searchQuery)
-		if (follow.isNotEmpty()) follow(follow)
+		if (searchQuery?.isEmpty() == false) search(searchQuery)
+		if (follow?.isEmpty() == false) follow(follow)
 	}.caseSensitive(false).send().vms()
-
 }.onSuccess {
 	Term.VM.logSuccess("목록조회")
 }.onFailure {
@@ -31,10 +30,10 @@ fun Connection.findAllVms(searchQuery: String = "", follow: String = ""): Result
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.srvVm(vmId: String): VmService =
+fun Connection.srvVm(vmId: String?=""): VmService =
 	this.srvVms().vmService(vmId)
 
-fun Connection.findVm(vmId: String, follow: String = ""): Result<Vm?> = runCatching {
+fun Connection.findVm(vmId: String?="", follow: String = ""): Result<Vm?> = runCatching {
 	this.srvVm(vmId).get().apply {
 		follow(if (follow.isNotEmpty()) "large_icon,small_icon,$follow" else follow)
 	}.send().vm()
@@ -328,13 +327,17 @@ fun Connection.cancelMigrationVm(vmId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvVmCdromsFromVm(vmId: String): VmCdromsService =
+private const val DEFAULT_ID_CDROM = "00000000-0000-0000-0000-000000000000" // CD-ROM은 어느환경에서 하나만 존재하는 것으로 확인
+
+private fun Connection.srvVmCdromsFromVm(vmId: String?): VmCdromsService =
 	this.srvVm(vmId).cdromsService()
 
-fun Connection.findAllVmCdromsFromVm(vmId: String): Result<List<Cdrom>> = runCatching {
+fun Connection.findAllCdromsFromVm(vmId: String?=""): Result<List<Cdrom>> = runCatching {
 	checkVmExists(vmId)
-
-	this.srvVmCdromsFromVm(vmId).list().send().cdroms()
+	this.srvVmCdromsFromVm(vmId)
+		.list()
+		.send()
+		.cdroms()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "목록조회", vmId)
 }.onFailure {
@@ -342,13 +345,16 @@ fun Connection.findAllVmCdromsFromVm(vmId: String): Result<List<Cdrom>> = runCat
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-private fun Connection.srvVmCdromFromVm(vmId: String, cdromId: String): VmCdromService =
-	this.srvVmCdromsFromVm(vmId).cdromService(cdromId)
+private fun Connection.srvVmCdromFromVm(vmId: String?=""): VmCdromService =
+	this.srvVmCdromsFromVm(vmId).cdromService(DEFAULT_ID_CDROM)
 
-fun Connection.findVmCdromFromVm(vmId: String, cdromId: String): Result<Cdrom?> = runCatching {
-	checkVmExists(vmId)
-
-	this.srvVmCdromFromVm(vmId, cdromId).get().send().cdrom()
+fun Connection.findCdromFromVm(vmId: String?="", current: Boolean?=false): Result<Cdrom?> = runCatching {
+	val vm = checkVm(vmId)
+	this.srvVmCdromFromVm(vmId)
+		.get()
+		.current(current)
+		.send()
+		.cdrom()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "상세조회", vmId)
 }.onFailure {
@@ -356,11 +362,11 @@ fun Connection.findVmCdromFromVm(vmId: String, cdromId: String): Result<Cdrom?> 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = runCatching {
+fun Connection.addCdromFromVm(vmId: String?="", cdromFileId: String?=""): Result<Cdrom?> = runCatching {
 	checkVmExists(vmId)
-	this.srvVmCdromsFromVm(vmId).add()
-		.cdrom(CdromBuilder().file(FileBuilder().id(cdromId))).send().cdrom()
-
+	this.srvVmCdromsFromVm(vmId).add().apply {
+		cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
+	}.send().cdrom()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "생성", vmId)
 }.onFailure {
@@ -368,15 +374,13 @@ fun Connection.addCdromFromVm(vmId: String, cdromId: String): Result<Cdrom> = ru
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: String): Result<Cdrom?> = runCatching {
+fun Connection.updateCdromFromVm(vmId: String?="", newCdromId: String?="", current:Boolean?=false): Result<Cdrom?> = runCatching {
 	val vm = checkVm(vmId)
 	// current는 실행중인 가상머신에서 바로 변경할때 가능
-	this.srvVmCdromFromVm(vmId, cdromId).update().apply {
+	this.srvVmCdromFromVm(vmId).update().apply {
 		cdrom(CdromBuilder().file(FileBuilder().id(newCdromId)))
-		current(vm.status() == VmStatus.UP) // TODO: 이거 맞나?
+		current(current) // 실행 중일 때 즉시 반영
 	}.send().cdrom()
-
-
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)
 }.onFailure {
@@ -384,12 +388,12 @@ fun Connection.updateCdromFromVm(vmId: String, cdromId: String, newCdromId: Stri
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.removeCdromFromVm(vmId: String, cdromId: String,): Result<Boolean?> = runCatching {
+fun Connection.removeCdromFromVm(vmId: String?="", current:Boolean?=false): Result<Boolean?> = runCatching {
 	val vm = checkVm(vmId)
-
-	this.srvVmCdromFromVm(vmId, cdromId).update()
-		.cdrom(CdromBuilder().file(FileBuilder().id("").build()).build())    // null로 할당
-		.send()
+	this.srvVmCdromFromVm(vmId).update().apply {
+		cdrom(CdromBuilder().file(FileBuilder().id("").build()).build())    // null로 할당
+		current(current)
+	}.send().cdrom()
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "삭제", vmId)

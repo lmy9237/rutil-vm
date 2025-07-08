@@ -147,10 +147,11 @@ class HostOperationServiceImpl(
 		val vdsDynamic2Update: VdsDynamicEntity = vdsDynamics.findByVdsId(hostId.toUUID())
 			?: throw ErrorPattern.HOST_NOT_FOUND.toError()
 		vdsDynamic2Update.vdsStatus = VdsStatus.reboot
-		val res: Result<Boolean>? =
+		val res: Boolean? =
 			if (vdcOption?.optionValue?.isEmpty() == false)
 				remoteConnMgmt?.rebootSystem(vdcOption.optionValue)
-			else	remoteConnMgmt?.rebootSystem()
+			else
+				remoteConnMgmt?.rebootSystem()
 		log.info("restart ... hostId: {}, vdcOption: {}, vdsDynamic: {}", hostId, vdcOption, vdsDynamic2Update)
 
 		vdsDynamics.save(vdsDynamic2Update)
@@ -170,7 +171,7 @@ class HostOperationServiceImpl(
 			autoCleared { true }
 		})
 		*/
-        return res?.isSuccess == true
+        return res == true
     }
 
     @Throws(Error::class)
@@ -188,8 +189,8 @@ class HostOperationServiceImpl(
 			throw ErrorPattern.HOST_INACTIVE.toError()
 		}
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2EnableGlobalHA?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
-		val res: Result<Boolean>? = remoteConnMgmt?.activateGlobalHA()
-		return res?.isSuccess == true
+		val res: Boolean? = remoteConnMgmt?.activateGlobalHA()
+		return res == true
     }
 
     @Throws(Error::class)
@@ -201,8 +202,8 @@ class HostOperationServiceImpl(
 			throw ErrorPattern.HOST_INACTIVE.toError()
 		}
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2EnableGlobalHA?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
-		val res: Result<Boolean>? = remoteConnMgmt?.deactivateGlobalHA()
-        return res?.isSuccess == true
+		val res: Boolean? = remoteConnMgmt?.deactivateGlobalHA()
+        return res == true
     }
 
 	@Throws(Error::class)

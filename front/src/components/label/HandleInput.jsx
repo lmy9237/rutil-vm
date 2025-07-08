@@ -38,7 +38,7 @@ export function handleInputCheck(setState, field, validationToastHook=null) {
 export function handleSelectIdChange(setVo, voList, validationToastHook=null) {
   return (selectedOption) => {
     const selected = voList?.find((item) => item.id === selectedOption?.id);
-    // import.meta.env.DEV && validationToast.info(`field: ${field}, value: ${value}`)
+    import.meta.env.DEV && validationToastHook.debug(`이 값으로 변경 ... \n\n ${JSON.stringify(selected, 2, 0)}`)
     setVo((prev) => ({ 
       ...prev, 
       id: selected?.id, 

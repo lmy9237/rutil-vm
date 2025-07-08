@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.error.ItemNotFoundException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.types.GraphicsConsole
@@ -52,7 +52,7 @@ class GraphicsConsoleVo(
 @Throws(ItemNotFoundException::class)
 fun GraphicsConsole.toGraphicsConsoleVo(): GraphicsConsoleVo {
 	val vmVoIdentified: IdentifiedVo? =
-		if (this@toGraphicsConsoleVo.vmPresent()) vm().fromVmToIdentifiedVo()
+		if (this@toGraphicsConsoleVo.vmPresent()) vm().toIdentifiedVoFromVm()
 		else null
 	return GraphicsConsoleVo.builder {
 		id { if (this@toGraphicsConsoleVo.idPresent()) id() else null }

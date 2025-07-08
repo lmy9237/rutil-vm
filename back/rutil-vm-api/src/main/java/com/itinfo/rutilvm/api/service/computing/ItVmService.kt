@@ -70,7 +70,29 @@ interface ItVmService {
 	 */
 	@Throws(Error::class)
 	fun remove(vmId: String, diskDelete: Boolean): Boolean
-
+	/**
+	 * [ItVmService.findCdromFromVm]
+	 * 가상머신 내 CD-ROM 조회
+	 *
+	 * @param vmId [String] 가상머신 ID
+	 * @param current [Boolean] 임시용 여부
+	 *
+	 * @return [IdentifiedVo] 조회 결과
+	 */
+	@Throws(Error::class)
+	fun findCdromFromVm(vmId: String?, current: Boolean?): IdentifiedVo
+	/**
+	 * [ItVmService.updateCdromFromVm]
+	 * 가상머신 삭제
+	 *
+	 * @param vmId [String] 가상머신 ID
+	 * @param cdromFileId [String] CD-ROM 파일 ID
+	 * @param current [Boolean] 임시용 여부
+	 *
+	 * @return [Boolean] 처리결과
+	 */
+	@Throws(Error::class)
+	fun updateCdromFromVm(vmId: String?, cdromFileId: String?, current: Boolean?): Boolean
 	/**
 	 * [ItVmService.findAllApplicationsFromVm]
 	 * 가상머신 어플리케이션
@@ -183,11 +205,9 @@ class VmServiceImpl(
 
 		// 상태가 UP 될 때까지 대기
 		Thread.sleep(2000)
-		updateCdrom(updatedVm .id(), vmVo)
-
+		updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
 		return updatedVm.toVmVo(conn)
 	}
-
 
 	// diskDelete(detachOnly)가 false 면 디스크는 삭제 안함, true면 삭제
 	@Throws(Error::class)
@@ -197,32 +217,61 @@ class VmServiceImpl(
 		return res.isSuccess
 	}
 
+	@Throws(Error::class)
+	override fun findCdromFromVm(
+		vmId: String?,
+		current: Boolean?
+	): IdentifiedVo {
+		log.info("findCdromFromVm ... vmId: {}, current: {}", vmId, current)
+		val res: Cdrom = conn.findCdromFromVm(vmId, current)
+			.getOrNull() ?: throw ErrorPattern.CD_ROM_NOT_FOUND.toException()
+		return res.toIdentifiedVoFromCdrom()
+	}
 
-	private fun updateCdrom(vmId: String, vmVo: VmVo) {
-		val cdrom = conn.findAllVmCdromsFromVm(vmId).getOrNull()?.firstOrNull()
-			?: throw IllegalStateException("CDROM 정보를 가져올 수 없습니다.")
+	override fun updateCdromFromVm(
+		vmId: String?,
+		cdromFileId: String?,
+		current: Boolean?,
+	): Boolean {
+		log.info("updateCdFromVm ... vmId: {}, cdromFileId: {}, current: {}", vmId, cdromFileId, current)
+		return updateCdrom(vmId, cdromFileId, current)
+	}
 
-		val isoId = vmVo.cdRomVo.id
+	private fun updateCdrom(
+		vmId: String?="",
+		cdromFileId: String?="",
+		current: Boolean?=false
+	): Boolean {
+		val cdrom: Cdrom = conn.findCdromFromVm(vmId, current)
+			.getOrNull() ?: throw ErrorPattern.CD_ROM_NOT_FOUND.toException()
 
-		try {
+		return try {
 			when {
-				(cdrom.filePresent().not()) && isoId.isNotEmpty() -> {
-					log.info("CDROM 추가 iso: $isoId")
-					conn.addCdromFromVm(vmId, isoId).getOrElse {
-						throw RuntimeException("CDROM 추가 실패: isoId=$isoId", it)
+				(cdrom.filePresent().not()) && cdromFileId?.isEmpty() == false -> {
+					log.info("updateCdrom ... CD-ROM 추가 cdromFileId: {}", cdromFileId)
+					val cdromAdded = conn.addCdromFromVm(vmId, cdromFileId).getOrElse {
+						throw RuntimeException("CDROM 추가 실패: isoId=$cdromFileId", it)
 					}
+					return cdromAdded?.idPresent() == true
 				}
-				cdrom.filePresent() && isoId.isNotEmpty() && cdrom.file().id() != isoId -> {
-					log.info("CDROM 변경 iso: $isoId")
-					conn.updateCdromFromVm(vmId, cdrom.file().id(), isoId).getOrElse {
-						throw RuntimeException("CDROM 변경 실패: isoId=$isoId", it)
+				cdrom.filePresent() && cdromFileId?.isEmpty() == false && cdrom.file().id() != cdromFileId -> {
+					log.info("updateCdrom ... CD-ROM 변경 {} -> {}", cdrom.file().id(), cdromFileId)
+					val cdromUpdated = conn.updateCdromFromVm(vmId, cdromFileId, current).getOrElse {
+						throw RuntimeException("CDROM 변경 실패: cdromFileId=$cdromFileId", it)
 					}
+					val cdromFileIdUpdated: String? = cdromUpdated?.file()?.id()
+					log.info("updateCdrom ... CD-ROM 변경 결과 cdromFileIdUpdated: $cdromFileIdUpdated")
+					return cdromFileIdUpdated?.isNotEmpty() == true
 				}
-				cdrom.filePresent() && isoId.isEmpty() -> {
-					log.info("CDROM 삭제 iso: $isoId")
-					conn.removeCdromFromVm(vmId, cdrom.id()).getOrElse {
-						throw RuntimeException("CDROM 삭제 실패: cdromId=${cdrom.id()}", it)
-					}
+				cdrom.filePresent() && cdromFileId?.isEmpty() == true -> {
+					log.info("updateCdrom ... CD-ROM 삭제 cdromFileId: $cdromFileId")
+					return conn.removeCdromFromVm(vmId, current).getOrElse {
+						throw RuntimeException("CDROM 삭제 실패: cdromFileId=${cdrom.id()}", it)
+					} == true
+				}
+				else -> {
+					log.info("updateCdrom ... CD-ROM 변경사항 없음")
+					true
 				}
 			}
 		} catch (e: Exception) {
@@ -301,7 +350,7 @@ class VmServiceImpl(
 		log.info("findAllApplicationsFromVm ... vmId: {}", vmId)
 		val res: List<Application> = conn.findAllApplicationsFromVm(vmId)
 			.getOrDefault(emptyList())
-		return res.fromApplicationsToIdentifiedVos()
+		return res.toIdentifiedVosFromApplications()
 	}
 
 	@Throws(Error::class)

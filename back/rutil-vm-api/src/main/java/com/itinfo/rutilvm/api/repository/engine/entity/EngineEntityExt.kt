@@ -30,6 +30,7 @@ import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
@@ -581,7 +582,12 @@ fun VmEntity.toVmVo(): VmVo {
 		fqdn { entity.vmFqdn }
 		cdRomVo {
 			IdentifiedVo.builder {
-				id { entity.isoPath }
+				id {
+					/*if (entity.status == VmStatusB.up)
+						entity.currentCd // 임시보관 되고 있는 CD-ROM 파일을 부를 때
+					else*/
+						entity.isoPath
+				}
 			}
 		}
 		templateVo {
@@ -704,7 +710,12 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		hostVos { hosts }
 		cdRomVo {
 			IdentifiedVo.builder {
-				id { entity.isoPath }
+				id {
+					/*if (entity.status == VmStatusB.up)
+						entity.currentCd // 임시보관 되고 있는 CD-ROM 파일을 부를 때
+					else*/
+						entity.isoPath
+				}
 			}
 		}
 		templateVo {

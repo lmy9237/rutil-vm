@@ -148,15 +148,69 @@ class VmController: BaseController() {
 		@PathVariable vmId: String? = null,
 		@RequestParam detachOnly: Boolean? = null // disk 삭제여부
 	): ResponseEntity<Boolean> {
-		log.info("vm 삭제 $vmId, $detachOnly")
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (detachOnly == null)
-			throw ErrorPattern.VM_ID_NOT_FOUND.toException() // TODO
-		log.info("/computing/vms/{} ... 가상머신 삭제", vmId)
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}?detachOnly={} ... 가상머신 삭제", vmId, detachOnly)
 		return ResponseEntity.ok(iVm.remove(vmId, detachOnly))
 	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="가상머신 CD-ROM 조회",
+		notes="가상머신 CD-ROM을 조회한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="current", value="임시용 여부", dataTypeClass= Boolean::class, required=true, paramType="query"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/{vmId}/cdroms")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun findCdromFromVm(
+		@PathVariable vmId: String? = null,
+		@RequestParam(required=false) current: Boolean? = false,
+	): ResponseEntity<IdentifiedVo> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		val _current = current ?: false
+		log.info("/computing/vms/{}/cdroms?current={} ... 가상머신 CD-ROM 조회", vmId, _current)
+		return ResponseEntity.ok(iVm.findCdromFromVm(vmId, _current))
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
+		value="가상머신 CD-ROM 편집",
+		notes="가상머신 CD-ROM을 편집한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="cdromFileId", value="CD-ROM ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="current", value="임시용 여부", dataTypeClass= Boolean::class, required=true, paramType="query"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{vmId}/cdroms/{cdromFileId}")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun updateCdromFromVm(
+		@PathVariable vmId: String? = null,
+		@PathVariable cdromFileId: String? = null,
+		@RequestParam(required=false) current: Boolean? = false,
+	): ResponseEntity<Boolean> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (cdromFileId.isNullOrEmpty())
+			throw ErrorPattern.CD_ROM_ID_NOT_FOUND.toException()
+		val _current = current ?: false
+		log.info("/computing/vms/{}/cdroms/{}?current={} ... 가상머신 CD-ROM 변경", vmId, cdromFileId, _current)
+		return ResponseEntity.ok(iVm.updateCdromFromVm(vmId, cdromFileId, _current))
+	}
 
 	@ApiOperation(
 		httpMethod="POST",

@@ -91,7 +91,7 @@ class CertServiceImpl(
 			port,
 			rootPassword,
 			certConfig.ovirtSSHPubkey
-		)?.getOrDefault(false)
+		)
 	}
 
 	override fun findEngineSshPublicKey(): String {

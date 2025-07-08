@@ -3,11 +3,10 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllVmGraphicsConsolesFromVm
 import com.itinfo.rutilvm.util.ovirt.findTicketFromVm
-import com.itinfo.rutilvm.util.ovirt.findTicketFromVmGraphicsConsole
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.*
@@ -63,7 +62,7 @@ fun Vm.toAggregateConsoleVo(conn: Connection): AggregateConsoleVo {
 			?: throw ErrorPattern.TICKET_NOT_FOUND.toException()
 
 	return AggregateConsoleVo.builder {
-		vm { this@toAggregateConsoleVo.fromVmToIdentifiedVo() }
+		vm { this@toAggregateConsoleVo.toIdentifiedVoFromVm() }
 		graphicConsole { graphicsConsole.toGraphicsConsoleVo() }
 		ticket { ticket.toTicketVo() }
 	}

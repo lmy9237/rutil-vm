@@ -1750,18 +1750,32 @@ const ApiManager = {
     });
   },
   /**
+   * @name ApiManager.migrateHostsFromVM
+   * @description 가상머신 CD-ROM 조회
+   * 
+   * @param {String} vmId 가상 머신 ID
+   * @param {Boolean} current 임시용 여부
+   */
+  findCdromFromVm: async (vmId, current=false) => {
+    return makeAPICall({
+      method: "GET",
+      url: ENDPOINTS.FIND_CDROM_FROM_VM(vmId, current),
+    });
+  },
+  /**
    * @name ApiManager.updateCdromFromVm
    * @description 가상머신 CDROM 변경
    * 
-   * @param {String} vmId
-   * @param {String} cdromId
+   * @param {String} vmId 가상머신 ID
+   * @param {String} cdromFileId CD-ROM 파일 ID
+   * @param {Boolean} current 임시용 여부
    * 
    * @returns {Promise<Object>} 
    */
-  updateCdromFromVm: async (vmId, cdromId) => {
+  updateCdromFromVm: async (vmId, cdromFileId, current=false) => {
     return makeAPICall({
       method: "PUT",
-      url: ENDPOINTS.UPDATE_CDROM_FROM_VM(vmId, cdromId),
+      url: ENDPOINTS.UPDATE_CDROM_FROM_VM(vmId, cdromFileId, current),
       // defaultValues: DEFAULT_VALUES.MIGRATE_VM
     });
   },

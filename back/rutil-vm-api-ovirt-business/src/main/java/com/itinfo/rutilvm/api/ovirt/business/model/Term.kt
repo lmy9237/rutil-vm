@@ -75,16 +75,16 @@ enum class Term(
 	;
 }
 
-fun Term.logSuccess(action: String, target: String = "") {
+fun Term.logSuccess(action: String?="", target: String?="") {
 	// log.info("완료: {} {}  ... {}", this@logSuccess.desc, action, target)
 }
 
-fun Term.logSuccessWithin(withinItem: Term, action: String, target: String = "") {
+fun Term.logSuccessWithin(withinItem: Term, action: String?="", target: String?="") {
 	// log.info("완료: {} 내 {} {} ... {}", this@logSuccessWithin.desc, withinItem.desc, action, target)
 
 }
 
-fun Term.logFail(action: String, t: Throwable? = null, target: String = "") {
+fun Term.logFail(action: String, t: Throwable? = null, target: String?="") {
 	if (t == null)
 		log.error("실패: {} {} ... {}", this@logFail.description, action, target)
 	else
@@ -92,7 +92,7 @@ fun Term.logFail(action: String, t: Throwable? = null, target: String = "") {
 
 }
 
-fun Term.logFailWithin(withinItem: Term, action: String, t: Throwable? = null, target: String = "") {
+fun Term.logFailWithin(withinItem: Term, action: String?="", t: Throwable? = null, target: String?="") {
 	if (t == null)
 		log.error("실패: {} 내 {} {} ... {} ", this@logFailWithin.description, withinItem.description, action, target)
 	else

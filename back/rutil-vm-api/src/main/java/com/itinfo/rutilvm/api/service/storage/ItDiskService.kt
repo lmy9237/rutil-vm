@@ -6,7 +6,7 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.computing.toDiskVms
 import com.itinfo.rutilvm.api.model.fromTemplateCdromsToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromVmCdromsToIdentifiedVos
+import com.itinfo.rutilvm.api.model.toIdentifiedVosFromVmCdroms
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
@@ -213,9 +213,12 @@ class DiskServiceImpl(
 	@Throws(Error::class)
 	override fun findAllCdRomsFromDisk(diskId: String): List<IdentifiedVo> {
 		log.info("findAllCdRomsFromDisk ... {}", diskId)
-		val vms: List<Vm> = conn.findAllVms(follow = "cdroms").getOrDefault(emptyList())
-		val temps: List<Template> = conn.findAllTemplates(follow = "cdroms").getOrDefault(emptyList())
-		val list: List<IdentifiedVo> = vms.fromVmCdromsToIdentifiedVos(diskId) + temps.fromTemplateCdromsToIdentifiedVos(diskId)
+		val vms: List<Vm> =
+			conn.findAllVms(follow = "cdroms").getOrDefault(emptyList())
+		val temps: List<Template> =
+			conn.findAllTemplates(follow = "cdroms").getOrDefault(emptyList())
+		val list: List<IdentifiedVo> =
+			vms.toIdentifiedVosFromVmCdroms(diskId) + temps.fromTemplateCdromsToIdentifiedVos(diskId)
 		return list
 	}
 

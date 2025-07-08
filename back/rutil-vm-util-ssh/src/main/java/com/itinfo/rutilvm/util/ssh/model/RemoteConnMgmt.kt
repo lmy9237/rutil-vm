@@ -68,45 +68,28 @@ open class RemoteConnMgmt(
  * SSH로 global HA 활성화
  *
  */
-fun RemoteConnMgmt.activateGlobalHA(): Result<Boolean> = runCatching {
+fun RemoteConnMgmt.activateGlobalHA(): Boolean? {
 	log.info("enableGlobalHA ... ")
 	val session: Session? = toInsecureSession()
-	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_ACTIVE)) ?: throw Error("UNKNOWN ERROR!")
-}.onSuccess {
-	log.info("SSH로 '글로벌 HA 활성화' 성공: {}", it)
-}.onFailure {
-	log.error("SSH로 '글로벌 HA 활성화' 실패: {}", it.localizedMessage)
-	// throw if (it is Error) it.toItCloudException() else it
-	throw it
+	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_ACTIVE))?.getOrThrow()
 }
-fun RemoteConnMgmt.deactivateGlobalHA(): Result<Boolean> = runCatching {
+
+fun RemoteConnMgmt.deactivateGlobalHA(): Boolean? {
 	log.info("deactivateGlobalHA ... ")
 	val session: Session? = toInsecureSession()
-	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_DEACTIVE)) ?: throw Error("UNKNOWN ERROR!")
-}.onSuccess {
-	log.info("SSH로 '글로벌 HA 비활성화' 성공: {}", it)
-}.onFailure {
-	log.error("SSH로 '글로벌 HA 비활성화' 실패: {}", it.localizedMessage)
-	// throw if (it is Error) it.toItCloudException() else it
-	throw it
+	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_DEACTIVE))?.getOrThrow()
 }
 
 /**
  * [RemoteConnMgmt.rebootHostViaSSH]
  * SSH로 재시작
  */
-fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART): Result<Boolean> = runCatching {
+fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART): Boolean? {
 	log.info("rebootSystem ... ")
 	val session: Session? = toInsecureSession()
 	if (command.isNullOrEmpty())
 		throw Error("명령어가 없음")
-	return session?.executeAll(listOf(command)) ?: throw Error("UNKNOWN ERROR!")
-}.onSuccess {
-	log.info("SSH로 재부팅 성공: {}", it)
-}.onFailure {
-	log.error("SSH로 재부팅 실패: {}", it.localizedMessage)
-	// throw if (it is Error) it.toItCloudException() else it
-	throw it
+	return session?.executeAll(listOf(command))?.getOrThrow()
 }
 
 fun RemoteConnMgmt.registerRutilVMPubkey2Host(
@@ -114,20 +97,14 @@ fun RemoteConnMgmt.registerRutilVMPubkey2Host(
 	targetHostSshPort: Int? = 22,
 	rootPassword4Host: String? = "",
 	pubkey2Add: String? = "",
-): Result<Boolean> = runCatching {
+): Boolean? {
 	log.info("registerRutilVMPubkey2Host ... targetHost: {}, targetHostSshPort: {}", targetHost, targetHostSshPort)
 	val session: Session? = toInsecureSession()
 	if (targetHost?.isEmpty() == true ||
 		rootPassword4Host?.isEmpty() == true)
 		throw Error("필수 값 없음")
 	val command: List<String> = SSHHelper.registerRutilVMPubkey2Host(targetHost, targetHostSshPort, rootPassword4Host, pubkey2Add)
-	return session?.executeAll(command) ?: throw Error("UNKNOWN ERROR!")
-}.onSuccess {
-	log.info("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 성공: {}", it)
-}.onFailure {
-	log.error("SSH를 이용하여 RutilVM 엔진의 공개키를 호스트rutilvm에 등록 실패: {}", it.localizedMessage)
-	// throw if (it is Error) it.toItCloudException() else it
-	throw it
+	return session?.executeAll(command)?.getOrThrow()
 }
 
 fun RemoteConnMgmt.toInsecureSession(isRoot: Boolean = false, connectionTimeout: Int = 60000): Session? {

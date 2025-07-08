@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.model.storage
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.fromVmToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -95,7 +95,7 @@ fun DiskAttachment.toDiskAttachmentVo(conn: Connection): DiskAttachmentVo {
 		interface_ { this@toDiskAttachmentVo.interface_() }
 		logicalName { this@toDiskAttachmentVo.logicalName() }
 		diskImageVo { disk?.toVmDisk(conn) }
-		vmVo { vm?.fromVmToIdentifiedVo() }
+		vmVo { vm?.toIdentifiedVoFromVm() }
 	}
 }
 fun List<DiskAttachment>.toDiskAttachmentVos(conn: Connection): List<DiskAttachmentVo> =

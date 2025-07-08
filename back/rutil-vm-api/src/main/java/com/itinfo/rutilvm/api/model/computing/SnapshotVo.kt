@@ -2,18 +2,11 @@ package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.fromApplicationsToIdentifiedVos
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.network.NicVo
-import com.itinfo.rutilvm.api.model.network.toNicVosFromSnapshot
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
-import com.itinfo.rutilvm.api.model.storage.toAddSnapshotDisks
 import com.itinfo.rutilvm.common.ovirtDf
-import com.itinfo.rutilvm.util.ovirt.*
-import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.util.ovirt.error.toError
 
-import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.SnapshotBuilder
 import org.ovirt.engine.sdk4.types.*
 import org.slf4j.LoggerFactory

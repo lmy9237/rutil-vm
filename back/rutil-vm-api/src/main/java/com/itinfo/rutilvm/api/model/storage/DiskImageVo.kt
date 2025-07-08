@@ -241,7 +241,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		contentType { DiskContentTypeB.forStorageValue(disk.contentType().toString()) }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		description { disk.description() }
-		connectVm { vmConn?.fromVmToIdentifiedVo() }
+		connectVm { vmConn?.toIdentifiedVoFromVm() }
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
@@ -303,7 +303,7 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 		sparse { disk.sparse() }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		description { disk.description() }
-		connectVm { vmConn?.fromVmToIdentifiedVo() }
+		connectVm { vmConn?.toIdentifiedVoFromVm() }
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
@@ -344,7 +344,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		sharable { disk.shareable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
-		connectVm { vmConn?.fromVmToIdentifiedVo() } // 연결된 가상머신
+		connectVm { vmConn?.toIdentifiedVoFromVm() } // 연결된 가상머신
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 	}
 }
@@ -478,7 +478,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		sharable { disk.shareable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
-		connectVm { vmConn?.fromVmToIdentifiedVo() } // 연결된 가상머신
+		connectVm { vmConn?.toIdentifiedVoFromVm() } // 연결된 가상머신
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
 		// createDate { disk.c }
 	}

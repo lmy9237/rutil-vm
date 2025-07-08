@@ -55,12 +55,12 @@ fun Host.fromHostToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<Host>.fromHostsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromHostsToIdentifiedVos.map { it.fromHostToIdentifiedVo() }
 
-fun Vm.fromVmToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun Vm.toIdentifiedVoFromVm(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
 fun List<Vm>.fromVmsToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromVmsToIdentifiedVos.map { it.fromVmToIdentifiedVo() }
+	this@fromVmsToIdentifiedVos.map { it.toIdentifiedVoFromVm() }
 
 fun Snapshot.fromSnapshotToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
@@ -172,16 +172,12 @@ fun Domain.fromDomainToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 }
 fun List<Domain>.fromDomainsToIdentifiedVo(): List<IdentifiedVo> =
 	this@fromDomainsToIdentifiedVo.map { it.fromDomainToIdentifiedVo() }
-
-
-
-
-fun AffinityGroup.fromAffinityGroupToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun AffinityGroup.toIdentifiedVoFromAffinityGroup(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
-fun List<AffinityGroup>.fromAffinityGroupsToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromAffinityGroupsToIdentifiedVos.map { it.fromAffinityGroupToIdentifiedVo() }
+fun List<AffinityGroup>.toIdentifiedVosFromAffinityGroups(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromAffinityGroups.map { it.toIdentifiedVoFromAffinityGroup() }
 
 fun AffinityLabel.fromAffinityLabelToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
@@ -190,26 +186,28 @@ fun AffinityLabel.fromAffinityLabelToIdentifiedVo(): IdentifiedVo = IdentifiedVo
 fun List<AffinityLabel>.fromAffinityLabelsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromAffinityLabelsToIdentifiedVos.map { it.fromAffinityLabelToIdentifiedVo() }
 
-fun Application.fromApplicationToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun Application.toIdentifiedVoFromApplication(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
-fun List<Application>.fromApplicationsToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromApplicationsToIdentifiedVos.map { it.fromApplicationToIdentifiedVo() }
+fun List<Application>.toIdentifiedVosFromApplications(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromApplications.map { it.toIdentifiedVoFromApplication() }
 
-fun Vm.fromVmCdromToIdentifiedVo(diskId: String): IdentifiedVo? {
-	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
-	return if (diskId == file) fromVmToIdentifiedVo() else null
+fun Cdrom?.toIdentifiedVoFromCdrom(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromCdrom?.file()?.id() }
+	name { "" }
 }
-
-fun List<Vm>.fromVmCdromsToIdentifiedVos(diskId: String): List<IdentifiedVo> =
-	this.mapNotNull { it.fromVmCdromToIdentifiedVo(diskId) }
+fun Vm.toIdentifiedVoFromVmCdrom(cdromFileId: String): IdentifiedVo? {
+	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
+	return if (cdromFileId == file) toIdentifiedVoFromVm() else null
+}
+fun List<Vm>.toIdentifiedVosFromVmCdroms(cdromFileId: String): List<IdentifiedVo> =
+	this.mapNotNull { it.toIdentifiedVoFromVmCdrom(cdromFileId) }
 
 fun Template.fromTemplateCdromToIdentifiedVo(diskId: String): IdentifiedVo? {
 	val file = cdroms().firstOrNull()?.takeIf { it.filePresent() }?.file()?.id()
 	return if (diskId == file) fromTemplateToIdentifiedVo() else null
 }
-
 fun List<Template>.fromTemplateCdromsToIdentifiedVos(diskId: String): List<IdentifiedVo> =
 	this.mapNotNull { it.fromTemplateCdromToIdentifiedVo(diskId) }
 

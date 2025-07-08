@@ -1,12 +1,13 @@
 import { useEffect } from "react";
-import LabelSelectOptions from "../../../label/LabelSelectOptions";
-import LabelSelectOptionsID from "../../../label/LabelSelectOptionsID";
-import LabelCheckbox from "../../../label/LabelCheckbox";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
   handleInputCheck,
   handleSelectIdChange
-} from "../../../label/HandleInput";
-import { emptyIdNameVo } from "@/util";
+} from "@/components/label/HandleInput";
+import { emptyIdNameVo }                from "@/util";
+
 
 const VmBoot = ({
   isos, 

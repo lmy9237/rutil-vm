@@ -86,7 +86,9 @@ export const Localization = {
     OPERATING_SYSTEM: "운영 체제",
     ARCH: "아키텍처",
     OPTIMIZATION_OPTION: "최적화 옵션",
-    UPDATE_CDROM: "CD 변경",
+    CDROM: "CD-ROM",
+    CDROM_2UPDATE: "변경 할 CD-ROM",
+    UPDATE_CDROM: "CD-ROM 변경",
 
     GENERAL: "일반",
     MANAGEMENT: "관리",

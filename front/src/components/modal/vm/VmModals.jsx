@@ -11,7 +11,7 @@ import DomainImportVmTemplateModal      from "@/components/modal/domain/DomainIm
 import VmExportOVAModal                 from "./VmExportOVAModal";
 import VmMigrationModal                 from "./VmMigrationModal";
 import VmStartOnceModal                 from "./VmStartOnceModal";
-import VmChangeCdModal                  from "./VmChangeCdModal";
+import VmUpdateCdModal                  from "./VmUpdateCdModal";
 import VmImportModal                    from "./VmImportModal";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -77,9 +77,9 @@ const VmModals = ({
         onClose={() => closeModal("vm:copy")}
         copyMode 
       />
-    ), changeCd: (
-      <VmChangeCdModal key={"vm:changeCd"} isOpen={activeModal().includes("vm:changeCd")} 
-        onClose={() => closeModal("vm:changeCd")}
+    ), updateCdrom: (
+      <VmUpdateCdModal key={"vm:updateCdrom"} isOpen={activeModal().includes("vm:updateCdrom")} 
+        onClose={() => closeModal("vm:updateCdrom")}
         vmId={vmsSelected[0]?.id}
       />
     ), migration: (

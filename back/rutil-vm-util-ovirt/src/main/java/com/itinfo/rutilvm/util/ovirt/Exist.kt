@@ -46,13 +46,13 @@ fun Connection.checkHost(hostId: String): Host {
 		.getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toError()
 }
 
-fun Connection.checkVmExists(vmId: String) {
+fun Connection.checkVmExists(vmId: String?="") {
 	if (this.findVm(vmId).isFailure) {
 		log.error("Vm 없음 {}", vmId)
 		throw ErrorPattern.VM_NOT_FOUND.toError()
 	}
 }
-fun Connection.checkVm(vmId: String): Vm {
+fun Connection.checkVm(vmId: String?=""): Vm {
 	return this.findVm(vmId)
 		.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
 }
@@ -74,7 +74,7 @@ fun Connection.checkNetworkExists(networkId: String) {
 		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
 	}
 }
-fun Connection.checkNetwork(networkId: String): Network {
+fun Connection.checkNetwork(networkId: String?=""): Network {
 	return this.findNetwork(networkId)
 		.getOrNull() ?: throw ErrorPattern.NETWORK_NOT_FOUND.toError()
 }

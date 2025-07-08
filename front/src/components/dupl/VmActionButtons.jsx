@@ -99,13 +99,13 @@ const VmActionButtons = ({
   }, [snapshots]);
 
   const manageActions = [
-    { type: "import",     onClick: () => setActiveModal("vm:copy"),     label: Localization.kr.IMPORT, },
-    { type: "copy",       onClick: () => setActiveModal("vm:copy"),     label: `${Localization.kr.VM} 복제`,        disabled: vmsSelected.length !== 1 || allPause },
-    { type: "changeCd",   onClick: () => setActiveModal("vm:changeCd"), label: Localization.kr.UPDATE_CDROM,          disabled: vmsSelected.length !== 1 || isDown },
-    //{ type: "remove",   onClick: () => setActiveModal("vm:remove"),   label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown },
-    { type: "remove",     onClick: () => setActiveModal("vm:remove"),   label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
-    { type: "templates",  onClick: () => {},                            label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
-    { type: "ova",        onClick: () => {},                            label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length !== 1 || !isDown },
+    { type: "import",     onClick: () => setActiveModal("vm:copy"),           label: Localization.kr.IMPORT, },
+    { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,        disabled: vmsSelected.length !== 1 || allPause },
+    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vmsSelected.length !== 1 || isDown },
+    //{ type: "remove",   onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown },
+    { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
+    { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
+    { type: "ova",        onClick: () => {},                                  label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length !== 1 || !isDown },
   ];
 
   const consoleActions = [

@@ -2926,7 +2926,7 @@ export const useMigration = (
 
 /**
  * @name useVmScreenshot
- * @description 가상머신 스크린샷 출력
+ * @description 가상머신 스크린샷 출력 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
@@ -2943,6 +2943,26 @@ export const useVmScreenshot = (
   },
   enabled: !!vmId
 })
+
+/**
+ * @name useCdromFromVm
+ * @description 가상머신 CD-ROM 조회 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useCdromFromVm = (
+  vmId, current=false,
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['cdromFromVm', vmId],
+  queryFn: async () => {
+    const res = await ApiManager.findCdromFromVm(vmId, current);
+    const _res = validate(res) ?? {};
+    Logger.debug(`RQHook > useCdromFromVm ... vmId: ${vmId}, current: ${current}, res: `, _res);
+    return _res
+  },
+  enabled: !!vmId
+})
 /**
  * @name useUpdateCdromFromVM
  * @description 가상머신 CD 변경
@@ -2956,11 +2976,11 @@ export const useUpdateCdromFromVM = (
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
   return useMutation({
-    mutationFn: async ({ vmId, cdromId }) => {
+    mutationFn: async ({ vmId, cdromFileId, current=true }) => {
       closeModal()
-      const res = await ApiManager.updateCdromFromVm(vmId, cdromId);
+      const res = await ApiManager.updateCdromFromVm(vmId, cdromFileId, current);
       const _res = validate(res) ?? {};
-      Logger.debug(`RQHook > useUpdateCdromFromVM ... vmId: ${vmId}, cdromId: ${cdromId}`);
+      Logger.debug(`RQHook > useUpdateCdromFromVM ... vmId: ${vmId}, cdromFileId: ${cdromFileId}, current: ${current}`);
       return _res
     },
     onSuccess: (res) => {

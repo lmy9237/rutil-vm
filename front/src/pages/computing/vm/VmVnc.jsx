@@ -1,20 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import CONSTANT from "@/Constants";
-import { useValidationToast } from "@/hooks/useSimpleToast";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useCopyToClipboard     from "@/hooks/useCopyToClipboard";
-import HeaderButton           from "@/components/button/HeaderButton";
-import Vnc                    from "@/components/Vnc";
+import CONSTANT                         from "@/Constants";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useCopyToClipboard               from "@/hooks/useCopyToClipboard";
+import RightClickMenu                   from "@/components/common/RightClickMenu";
+import HeaderButton                     from "@/components/button/HeaderButton";
+import Vnc                              from "@/components/Vnc";
 import {
   rvi24Desktop
 } from "@/components/icons/RutilVmIcons";
 import {
-  useVm
+  useVm,
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./VmVnc.css"
 
 /**
@@ -27,12 +28,11 @@ import "./VmVnc.css"
 const VmVnc = ({
   ...props
 }) => {
-  const { setVncScreenshotDataUrl } = useUIState()
-  const { id: vmId, } = useParams();
-  const {
-    data: vm,
-  } = useVm(vmId);
   const { validationToast } = useValidationToast()
+  const { setActiveModal, setVncScreenshotDataUrl } = useUIState()
+  const { vmsSelected, setVmsSelected } = useGlobal()
+  const { id: vmId, } = useParams();
+  const { data: vm } = useVm(vmId);
 
   const screenRef = useRef(null);
   const [dataUrl, setDataUrl] = useState()
@@ -78,18 +78,20 @@ const VmVnc = ({
   }
 
   const sectionHeaderButtons = [
-    { type: "screenshot", label: "스크린샷", onClick: () => takeScreenshotFromRFB(screenRef.current.rfb) },
-    { type: "ctrlaltdel", label: "Ctrl+Alt+Del", onClick: () => doSendCtrlAltDel(screenRef.current.rfb) }
+    { type: "screenshot",  onClick: () => takeScreenshotFromRFB(screenRef.current.rfb), label: "스크린샷", },
+    { type: "ctrlaltdel",  onClick: () => doSendCtrlAltDel(screenRef.current.rfb), label: "Ctrl+Alt+Del",  },
+    { type: "updateCdrom", onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vm?.notRunning ?? false },
   ]
 
-  // 텝 이름변경
   useEffect(() => {
     Logger.debug(`VmVnc > useEffect ... `)
-    if (vm && vm.name)
+    setVmsSelected(vm)
+    if (vm?.name) {
       document.title = `RutilVM (${vm.name})`
+    }
   }, [vmId, vm])
 
-  return (
+  return (<>
     <div
       className="section-vnc w-full h-full v-center"
     >
@@ -108,7 +110,8 @@ const VmVnc = ({
         />
       </div>
     </div>
-  );
+    <RightClickMenu />
+  </>);
 }
 
 export default VmVnc;
