@@ -327,7 +327,7 @@ const VmImportModal = ({
         ? (
           <>
             <button className="back-button" onClick={goPrev}>뒤로</button>
-            <button className="action" onClick={onSubmit}>ok</button>
+            <button className="action" onClick={onSubmit}>확인</button>
           </>
         ) : (
           <button className="action" 

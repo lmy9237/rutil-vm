@@ -6395,23 +6395,6 @@ export const useAuthenticate4VMWare = (
     },
   });
 };
-// export const useAuthenticate4VMWare = (
-//   baseUrl, username, password,
-//   mapPredicate,
-//   postSuccess=()=>{}, postError
-// ) => useQuery({
-//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-//   queryKey: ['authenticate4VMWare', baseUrl, username, password],
-//   queryFn: async () => {
-//     const res = await ApiManager.authenticate4VMWare({ baseUrl, username, password });
-//     const _res = mapPredicate
-//       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-//       : validate(res) ?? [];
-//     Logger.debug(`RQHook > useAuthenticate4VMWare ... baseUrl: ${baseUrl}, username: ${username}, res: `, _res);
-//     return _res; // 데이터 가공 후 반환
-//   },
-//   enabled: !!baseUrl || !!username || !!password
-// });
 
 /**
  * @name useVmsFromVMWare

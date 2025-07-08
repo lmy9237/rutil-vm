@@ -3366,6 +3366,9 @@ const ApiManager = {
     });
   },
 
+  //#endregion: provider
+
+  //#region: Vmware
 
  /**
    * @name ApiManager.authenticate4VMWare
@@ -3405,8 +3408,8 @@ const ApiManager = {
       baseUrl, sessionId,
     },
   }),
-  //#endregion: provider
 
+  //#endregion: Vmware
 
   //#region: User
   /**

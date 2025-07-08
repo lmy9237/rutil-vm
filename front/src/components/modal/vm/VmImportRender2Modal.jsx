@@ -6,11 +6,10 @@ import { InfoTable } from "@/components/table/InfoTable";
 import LabelSelectOptions from "@/components/label/LabelSelectOptions";
 import Localization from "@/utils/Localization";
 import { emptyIdNameVo } from "@/util";
-import { useAllOpearatingSystemsFromCluster } from "@/api/RQHook";
-import { useQueries } from "@tanstack/react-query";
-import ApiManager from "@/api/ApiManager";
+import { useAllOpearatingSystemsFromCluster, useVmFromVMWare } from "@/api/RQHook";
 import LabelInput from "@/components/label/LabelInput";
-import { handleInputChange } from "@/components/label/HandleInput";
+import { useValidationToast } from "@/hooks/useSimpleToast";
+import { handleSelectIdChange } from "@/components/label/HandleInput";
 
 const VmImportRender2Modal = ({ 
   baseUrl,
@@ -21,58 +20,53 @@ const VmImportRender2Modal = ({
   virtioChecked, 
   setVirtioChecked 
 }) => {
+  const { validationToast } = useValidationToast();
   const [activeFilter, setActiveFilter] = useState("general");
 
   const [selectedId, setSelectedId] = useState(null);
+  const [domainVo, setDomainVo] = useState(emptyIdNameVo());
   const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
+  const [cpuProfileVo, setCpuProfileVo] = useState(emptyIdNameVo());
+  const [sparsd, setSparsd] = useState();
+
+  const [name, setName] = useState("");
   const [detailedVMs, setDetailedVMs] = useState([]);
 
+  const { 
+    data: vmDetailsMap = {} 
+  } = useVmFromVMWare({
+    baseUrl,
+    sessionId,
+    vmIds: targetVMs.map(vm => vm.vm).join(","),
+  });
   const { 
     data: osList = [], 
     isLoading: isOsListLoading
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
-  const vwvmQueries = useQueries({
-    queries: targetVMs.map((vm) => ({
-      queryKey: ['vmFromVMWare', vm.vm],
-      queryFn: async () => {
-        try {
-          const vwvm = await ApiManager.findVmFromVMWare({
-            baseUrl,
-            sessionId,
-            vmId: vm.vm
-          });
-          return vwvm.body || {};
-        } catch (error) {
-          console.error(`Error fetching vmware ${vm.vm}`, error);
-          return {};
-        }
-      },
-      enabled: !!baseUrl && !!sessionId && !!vm.vm,
-    })),
-  });
+  
+  const selectedVm = vmDetailsMap?.[selectedId];
 
   useEffect(() => {
-    if (targetVMs.length > 0 && selectedId === null) {
-      setSelectedId(targetVMs[0].id);
-    }
-  }, [targetVMs, selectedId]);
-  
-  const detailedVmsMap = Object.fromEntries(
-    vwvmQueries.map((q, idx) => [targetVMs[idx]?.vm, q.data])
-  );
+    
+  }, []);
 
-  const selectedVm = targetVMs.find(vm => vm.id === selectedId);
-  const selectedDetail = detailedVmsMap[selectedVm?.vm];
+  useEffect(() => {
+    console.log("$ targetVMs", targetVMs);
+  }, [targetVMs]);
+
+  useEffect(() => {
+    console.log("$ vmDetailsMap", vmDetailsMap);
+  }, [vmDetailsMap]);
 
 
-  const generalInfoRows1 = (detail) => [
+  const generalInfoRows = (vwvm) => [
     { 
       label: Localization.kr.NAME, 
       value: 
         <LabelInput id="name"
           autoFocus
-          value={detail.name}
+          value={vwvm?.name}
           // onChange={handleInputChange(setFormState, "name", validationToast)}
         />
     },
@@ -80,16 +74,23 @@ const VmImportRender2Modal = ({
       label: Localization.kr.OPERATING_SYSTEM,
       value: 
         <LabelSelectOptionsID
-          value={detail.guestOS}
+          // value={vwvm?.guestOS}
           options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
+          // onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
         />
     },
-    { label: Localization.kr.DESCRIPTION, value: detail.description || "-" },
-    { label: `${Localization.kr.VM} ID`, value: detail.identity?.instanceUuid || "-" },
-    { label: "메모리 (MB)", value: detail.memory?.sizeMiB || "-" },
-    { label: "CPU 코어수", value: detail.cpu?.count || "-" },
-    { label: "디스크 수", value: Object.keys(detail.disks || {}).length },
-    { label: "NIC 수", value: Object.keys(detail.nics || {}).length },
+    // { label: Localization.kr.DESCRIPTION, value: vwvm?.description || "-" },
+    { label: `${Localization.kr.VM} ID`, value: vwvm?.identity?.biosUuid || "-" },
+    { label: "메모리 (MB)", value: `${vwvm?.memory?.sizeMiB}  MB` || "-" },
+    { label: "CPU 코어수", value: `${vwvm?.cpu?.count} (${vwvm?.cpu?.count}:${vwvm?.cpu?.coresPerSocket}:1)` || "-" },
+    { label: "디스크 수", value: Object.keys(vwvm?.disks || {}).length },
+    { label: "NIC 수", value: Object.keys(vwvm?.nics || {}).length },
+  ];
+
+  const diskInfoRows = (vwvm) => [
+    { label: "", value: vwvm.v || "-" },
+    { label: "", value: vwvm.v || "-" },
+    { label: "", value: vwvm.v || "-" },
   ];
 
 
@@ -98,8 +99,8 @@ const VmImportRender2Modal = ({
       <div className="vm-impor-outer">
         <LabelSelectOptionsID label={Localization.kr.DOMAIN}
           options={domains}
-          // value={}
-          // onChange={}
+          value={domainVo.id}
+          onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
         />
         <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
             // value={sparse}
@@ -108,8 +109,8 @@ const VmImportRender2Modal = ({
         />
         <LabelSelectOptionsID label={`대상 ${Localization.kr.CLUSTER}`}
           options={clusters}
-          // value={}
-          // onChange={}
+          value={clusterVo.id}
+          onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
         />
         <div className="f-start items-center gap-2">
           <LabelCheckbox id="virtio" label="VirtIO 드라이버 연결"
@@ -120,17 +121,16 @@ const VmImportRender2Modal = ({
         </div>
         <LabelSelectOptionsID label="CPU 프로파일" 
           // options={}
-          // value={}
-          // onChange={}
+          // value={cpuProfileVo.id}
+          // onChange={handleSelectIdChange(setCpuProfileVo, domains, validationToast)}
         />
-        
       </div>
 
       <div className="section-table-outer w-full mb-2">
         <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
           <thead style={{ background: "#f5f5f5" }}>
             <tr>
-              <th style={{ width: '40px' }}></th>
+              {/* <th style={{ width: '40px' }}></th> */}
               <th>{Localization.kr.NAME}</th>
               <th>소스</th>
               <th>{Localization.kr.MEMORY}</th>
@@ -140,32 +140,31 @@ const VmImportRender2Modal = ({
             </tr>
           </thead>
           <tbody>
-            {targetVMs.length > 0 ? (
-              targetVMs.map(vm => (
-                <tr key={vm.id} onClick={() => setSelectedId(vm.id)} style={{ backgroundColor: selectedId === vm.id ? "#e5f1ff" : "white", cursor: "pointer" }}>
-                  <td style={{ textAlign: "center" }}>
-                    <input type="checkbox" 
-                      checked={vm.clone || false} 
-                      readOnly 
-                    />
-                  </td>
-                  <td>{vm.name}</td>
-                  <td>VMware</td>
-                  <td>{vm.memory} MB</td>
-                  <td>{vm.cpu}</td>
-                  <td>{vm.arch || "x86_64"}</td>
-                  <td>{vm.disk || "-"}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" style={{ textAlign: "center" }}>
-                  가져올 {Localization.kr.VM}이 없습니다.
-                </td>
+            {Object.entries(vmDetailsMap).map(([vmId, vm]) => (
+              <tr key={vm?.name} 
+                onClick={() => setSelectedId(vmId)}
+                style={{ 
+                  backgroundColor: selectedId === vm?.name ? "#e5f1ff" : "white", 
+                  cursor: "pointer" 
+                }}
+              >
+                {/* <td style={{ textAlign: "center" }}>
+                  <input type="checkbox" 
+                    checked={ false} 
+                    readOnly 
+                  />
+                </td> */}
+                <td>{vm?.name}</td>
+                <td>VMware</td>
+                <td>{vm?.memory?.sizeMiB} MB</td>
+                <td>{vm?.cpu?.count}</td>
+                <td>{"x86_64"}</td>
+                <td>{Object.keys(vm?.disks || {}).length || "-"}</td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
+        <span>id: {selectedId} </span>
       </div>
 
       <div className="vm-import-detail-box mb-3">
@@ -183,23 +182,7 @@ const VmImportRender2Modal = ({
               {activeFilter === "general" && (
                 <div className="vm-import-render-tb flex justify-between">
                   <div className="mr-20">
-                    <InfoTable tableRows={generalInfoRows1(selectedVm)} />
-                  </div>
-                  <div>
-                    {/* <LabelInputNum id="mem" label="메모리 크기(MB)" 
-                    value={formSystemState.memorySize} onChange={handleInputChange("memorySize")} />
-                    <LabelInputNum id="mem-max" label="최대 메모리(MB)" 
-                    value={formSystemState.memoryMax} onChange={handleInputChange("memoryMax")} />
-                    <LabelInputNum id="mem-actual" label="할당할 실제 메모리(MB)" 
-                    value={formSystemState.memoryGuaranteed} onChange={handleInputChange("memoryGuaranteed")} />
-                    <LabelInputNum id="cpu-total" label="총 가상 CPU" 
-                    value={formSystemState.cpuTopologyCnt} onChange={handleCpuChange} />
-                    <LabelSelectOptions id="virtual_socket" label="가상 소켓" 
-                    value={formSystemState.cpuTopologySocket} options={generateOptions(formSystemState.cpuTopologyCnt)} onChange={handleSocketChange} />
-                    <LabelSelectOptions id="core_per_socket" label="가상 소켓 당 코어" 
-                    value={formSystemState.cpuTopologyCore} options={generateOptions(formSystemState.cpuTopologyCnt)} onChange={handleCorePerSocketChange} />
-                    <LabelSelectOptions id="thread_per_core" label="코어당 스레드" 
-                    value={formSystemState.cpuTopologyThread} options={generateOptions(formSystemState.cpuTopologyCnt)} onChange={handleThreadPerCoreChange} /> */}
+                    <InfoTable tableRows={generalInfoRows(selectedVm)} />
                   </div>
                 </div>
               )}
@@ -210,16 +193,18 @@ const VmImportRender2Modal = ({
                       <thead style={{ background: "#f5f5f5" }}>
                         <tr>
                           <th>경로</th>
-                          <th>가상 크기</th>
-                          <th>실제 크기</th>
+                          <th style={{ width: '600px' }}>{Localization.kr.SIZE_VIRTUAL}</th>
+                          <th style={{ width: '600px' }}>{Localization.kr.SIZE_ACTUAL}</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>[datastore1] CentOS 7.9/CentOS 7.9.vmdk</td>
-                          <td>200 GiB</td>
-                          <td>4 GiB</td>
-                        </tr>
+                        {Object.values(selectedVm?.disks || {}).map((disk, idx) => (
+                          <tr key={idx}>
+                            <td>{disk.backing?.vmdkFile || "-"}</td>
+                            <td>{(disk.capacity / 1024 / 1024 / 1024).toFixed(0)} GiB</td>
+                            <td>-</td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -231,19 +216,19 @@ const VmImportRender2Modal = ({
                     <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
                       <thead style={{ background: "#f5f5f5" }}>
                         <tr>
-                          <th>이름</th>
-                          <th>기존 네트워크 이름</th>
+                          <th>{Localization.kr.NAME}</th>
+                          <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
                           <th>유형</th>
                           <th>MAC</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {["nic1", "nic2", "nic3", "nic4"].map((nic, idx) => (
-                          <tr key={nic}>
-                            <td>{nic}</td>
-                            <td>oVirt Network</td>
-                            <td>VirtIO</td>
-                            <td>{`00:50:56:97:${(idx * 0x2f + 0xfa).toString(16).padStart(2, "0")}`}</td>
+                        {Object.values(selectedVm?.nics || {}).map((nic, idx) => (
+                          <tr key={idx}>
+                            <td>{nic.label}</td>
+                            <td>{nic.backing?.networkName || "-"}</td>
+                            <td>{nic.type}</td>
+                            <td>{nic.macAddress}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -262,7 +247,7 @@ const VmImportRender2Modal = ({
 export default VmImportRender2Modal;
 
 const sparseList = [
-  { value: "none", label: "자동감지" },
+  { value: "auto", label: "자동감지" },
   { value: "true", label: "씬 프로비저닝" },
   { value: "false", label: "사전 할당" },
 ];
