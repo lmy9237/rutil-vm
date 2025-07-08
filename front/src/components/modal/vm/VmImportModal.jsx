@@ -3,11 +3,9 @@ import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import LabelInput                       from "@/components/label/LabelInput";
 import {
-  useAllActiveDomainsFromDataCenter,
   useAllDataCenters, 
   useAllProviders,
   useAuthenticate4VMWare,
-  useClustersFromDataCenter,
   useHostsFromDataCenter,
   useVmsFromVMWare,
 } from "@/api/RQHook";
@@ -16,7 +14,7 @@ import "./MVm.css";
 import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 import { useValidationToast } from "@/hooks/useSimpleToast";
 import VmImportRender2Modal from "./VmImportRender2Modal";
-import { emptyIdNameVo } from "@/util";
+import { emptyIdNameVo, useSelectFirstItemEffect } from "@/util";
 import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
 import Logger from "@/utils/Logger";
 
@@ -28,7 +26,7 @@ const initialFormState = {
   dataCenter: "",
   cluster: "",
   username: "",
-  password: "",
+  password: "Vmware1!",
   authHostChecked: "",
 };
 
@@ -48,15 +46,20 @@ const VmImportModal = ({
   const [providerVo, setProviderVo] = useState(emptyIdNameVo());
   
   const [sessionId, setSessionId] = useState(null); // 로드버튼 클릭시 가상머신목록 불러오기
- 
+
   const [targetVMs, setTargetVMs] = useState([]);
+
+  //선택된 데이터가 없을 때 footer '다음'버튼 비활성화
+  const isNextDisabled = step === 1 && targetVMs.length === 0;
+  const goNext = () => setStep((prev) => prev + 1);
+  const goPrev = () => setStep((prev) => prev - 1);
 
   const { 
     mutate: authenticate4VmWare 
   } = useAuthenticate4VMWare((resValue) => {
       Logger.debug("$ [onSuccess] sessionId:", resValue);
-      setSessionId(resValue); // 상태 저장
-      refetchVms(); // 이 타이밍에 바로 VM 로드 가능
+      setSessionId(resValue);
+      refetchVms(); 
   },
     (error) => {
       validationToast?.fail("로그인 실패: ", error);
@@ -78,7 +81,6 @@ const VmImportModal = ({
     .filter((p) => p.providerType === "vmware")
     .sort((a, b) => a.name.localeCompare(b.name));
   
-
   // 호스트 목록
   const {
     data: hosts = [],
@@ -96,17 +98,6 @@ const VmImportModal = ({
   );
   const vwVms = [...vms].sort((a, b) => a.name.localeCompare(b.name));
 
-  // VmImportRender2Modal에서 사용될
-  const {
-    data: storageDomains = [],
-    isLoading: isStorageDomainsLoading,
-  } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-
-  const {
-    data: clusters = [],
-    isLoading: isClustersLoading,
-  } = useClustersFromDataCenter(dataCenterVo?.id, (e) => ({...e,}));
-  
   useEffect(() => {
     setFormState(initialFormState);
     setDataCenterVo(emptyIdNameVo);
@@ -114,16 +105,8 @@ const VmImportModal = ({
     setSessionId(null);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-    }
-  }, [datacenters]);
+  // 데이터센터 지정
+  useSelectFirstItemEffect(datacenters, setDataCenterVo);
 
   useEffect(() => {
     if (!providerVo?.id) {
@@ -150,9 +133,12 @@ const VmImportModal = ({
       dataCenter: props.dataCenter || "",
       cluster: props.cluster || "",
       username: selectedProvider.authUsername || "",
-      password: ""
+      password: "Vmware1!" // "" 가 맞는값
+
+      
     }));
   }, [providerVo, providers]);
+
 
   const toggleSelect = (vmVm) => {
     setTargetVMs(prev => {
@@ -166,12 +152,6 @@ const VmImportModal = ({
       }
     });
   };
-
-  //선택된 데이터가 없을 때 footer '다음'버튼 비활성화
-  const isNextDisabled = step === 1 && targetVMs.length === 0;
-
-  const goNext = () => setStep((prev) => prev + 1);
-  const goPrev = () => setStep((prev) => prev - 1);
 
   const handleLoadVMs = () => {
     const { vcenter, username, password } = formState;
@@ -203,15 +183,14 @@ const VmImportModal = ({
           />
         </div>
         <div className="vm-impor-outer">
-          <LabelSelectOptionsID label="외부 공급자"
-            options={vwProviders}
-            loading={isProvidersLoading}
+          <LabelSelectOptionsID label={"외부 공급자"}
             value={providerVo?.id}
+            loading={isProvidersLoading}
+            options={vwProviders}
             onChange={handleSelectIdChange(setProviderVo, providers, validationToast)}
           />
         </div>
         <hr/>
-        
         <div className="vm-impor-outer">
           <LabelInput label="vcenter" id="vcenter"
             value={formState.vcenter}
@@ -245,7 +224,6 @@ const VmImportModal = ({
 
           <LabelInput label="암호" id="password"
             type="password"
-            // value={"Vmware1!"}
             value={formState.password}
             onChange={handleInputChange(setFormState, "password", validationToast)}
           />
@@ -253,40 +231,39 @@ const VmImportModal = ({
       </div>
       <div className="vm-impor-outer">
         <LabelSelectOptionsID label="호스트 목록" 
-          options={hosts}
-          loading={isHostsLoading}
           value={hostVo?.id}
+          loading={isHostsLoading}
+          options={hosts}
           onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
         />
       </div>
 
-     <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>
-      로드
-     </button>
+      <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>
+        로드
+      </button>
 
       <div className="vm-import-list-outer f-btw mb-4">
         <div className="vm-import-panel vm-import-source">
-          <div className="vm-import-panel-title">소스 상의 가상 머신</div>
+          <div className="vm-import-panel-title">소스 상의 {Localization.kr.VM}</div>
           <div className="vm-import-table-outer">
             <div className="section-table-outer w-full ">
               <table className="vm-import-table">
                 <thead>
                   <tr>
                     <th style={{ width: "40px" }}>선택</th>
-                    <th>이름</th>
-                    <th style={{ width: "40px" }}>상태</th>                    
+                    <th>{Localization.kr.NAME}</th>
+                    <th style={{ width: "40px" }}>{Localization.kr.STATUS}</th>                    
                   </tr>
                 </thead>
                 <tbody>
                   {vwVms.map(vm => (
                     <tr key={vm.vm}>
                       <td>
-                        <input
-                            type="checkbox"
-                            checked={targetVMs.some(t => t.vm === vm.vm)}
-                            disabled={vm.powerState === "POWERED_ON"} // ← 추가된 조건
-                            onChange={() => toggleSelect(vm.vm)}
-                          />
+                        <input type="checkbox"
+                          checked={targetVMs.some(t => t.vm === vm.vm)}
+                          disabled={vm.powerState === "POWERED_ON"}
+                          onChange={() => toggleSelect(vm.vm)}
+                        />
                       </td>
                       <td>{vm.name}</td>
                       <td>{vm.powerState?.split("_").pop()}</td>
@@ -297,9 +274,6 @@ const VmImportModal = ({
             </div>
           </div>
         </div>
-        <div>
-          <span>asdf {targetVMs.length}</span>
-        </div>
       </div>
     </>
   );
@@ -308,11 +282,8 @@ const VmImportModal = ({
     <VmImportRender2Modal
       baseUrl={formState.vcenter}
       sessionId={sessionId}
+      dataCenterVo={dataCenterVo}
       targetVMs={targetVMs}
-      domains={storageDomains}
-      clusters={clusters}
-      virtioChecked={virtioChecked}
-      setVirtioChecked={setVirtioChecked}
     />
   );
 

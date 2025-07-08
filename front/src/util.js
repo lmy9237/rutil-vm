@@ -56,6 +56,18 @@ export function useSelectFirstItemEffect(items, setVo) {
   }, [items, setVo]);
 }
 
+export function useSelectFirstNameItemEffect(items, setVo, defaultName) {
+  useEffect(() => {
+    if (items && items.length > 0) {
+      const defaultN = items.find(i => i.name === defaultName);
+      const first = defaultN || items[0];
+      if (first && first.id !== undefined && first.name !== undefined) {
+        setVo({ id: first.id, name: first.name });
+      }
+    }
+  }, [items, setVo]);
+}
+
 export function useSelectItemEffect(id, editMode, items, setVo) {
   useEffect(() => {
     if (id) {

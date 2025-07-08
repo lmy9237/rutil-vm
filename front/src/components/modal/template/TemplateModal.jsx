@@ -12,7 +12,7 @@ import {
 import "../vm/MVm.css";
 import LabelInput from "../../label/LabelInput";
 import Localization from "../../../utils/Localization";
-import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo, useSelectFirstItemEffect } from "../../../util";
+import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect } from "../../../util";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
@@ -111,34 +111,9 @@ const TemplateModal = ({
   }, [isOpen]);
 
   // 클러스터 지정
-  useSelectFirstItemEffect(clusters, setClusterVo);
+  useSelectFirstNameItemEffect(clusters, setClusterVo, "Default");
+  // cpu 프로파일 지정
   useSelectFirstItemEffect(cpuProfiles, setCpuProfileVo);
-
-  // useEffect(() => {
-  //   if (clusters && clusters.length > 0) {
-  //     const defaultC = clusters.find(c => c.name === "Default"); // 만약 "Default"라는 이름이 있다면 우선 선택
-  //     if (defaultC) {
-  //       setClusterVo({ 
-  //         id: defaultC.id, 
-  //         name: defaultC.name 
-  //       });
-  //     } else {
-  //       setClusterVo({ 
-  //         id: clusters[0].id, 
-  //         name: clusters[0].name 
-  //       });
-  //     }
-  //   }
-  // }, [clusters]);
-
-  // useEffect(() => {
-  //   if (cpuProfiles && cpuProfiles.length > 0) {
-  //     setCpuProfileVo({ 
-  //       id: cpuProfiles[0].id, 
-  //       name: cpuProfiles[0].name 
-  //     });
-  //   }
-  // }, [cpuProfiles]);
 
   useEffect(() => {
     if (disks && disks.length > 0) {

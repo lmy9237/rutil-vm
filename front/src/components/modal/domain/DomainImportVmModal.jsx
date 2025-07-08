@@ -34,6 +34,7 @@ const DomainImportVmModal = ({
   const { 
     domainsSelected, 
     vmsSelected, setVmsSelected 
+    
   } = useGlobal();
 
   const { mutate: registerVm } = useRegisteredVmFromDomain(onClose, onClose);
