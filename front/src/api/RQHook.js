@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiToast }        from "@/hooks/useSimpleToast";
 import useAuth                from "@/hooks/useAuth";
 import useUIState             from "@/hooks/useUIState";
@@ -3426,6 +3426,8 @@ export const useFindDiskFromVM = (vmId,diskId) => useQuery({
    },
 });
 */
+
+
 //#endregion: VM
 
 //#region: Template (템플릿)
@@ -4117,7 +4119,22 @@ export const useAllTemplatesFromNetwork = (
   },
   enabled: !!networkId,
 })
-
+const qpAllVnicProfilesFromNetwork = (
+  networkId,
+  mapPredicate = (e) => ({ ...e }),
+) => ({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['vnicProfilesFromNetwork', networkId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
+    const _res = mapPredicate
+      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validate(res) ?? [];
+    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!networkId,
+})
 /**
  * @name useAllVnicProfilesFromNetwork
  * @description 네트워크 내 VNIC 프로필 목록조회 useQuery훅
@@ -4131,18 +4148,26 @@ export const useAllTemplatesFromNetwork = (
 export const useAllVnicProfilesFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vnicProfilesFromNetwork', networkId],
-  queryFn: async () => {
-    const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!networkId,
+) => useQuery({ 
+  ...qpAllVnicProfilesFromNetwork(networkId, mapPredicate)
+});
+/**
+ * @name useAllVnicProfilesFromNetwork4EachNetwork
+ * @description (각 내트워크 별) 네트워크 내 VNIC 프로필 목록조회 useQueries 훅
+ * 
+ * @param {[*]} networks 네트워크 목록
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQueries 훅
+ * 
+ * @see ApiManager.useAllVnicProfilesFromNetwork4EachNetwork
+ */
+export const useAllVnicProfilesFromNetwork4EachNetwork = (
+  networks=[],
+  mapPredicate = (e) => ({ ...e }),
+) => useQueries({
+  queries: [...networks].map((n) => ({
+    ...qpAllVnicProfilesFromNetwork(n?.id, mapPredicate)
+  }))
 });
 /**
  * @name useAddNetwork

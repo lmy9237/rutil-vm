@@ -6,6 +6,7 @@ import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
 import VmCreateDiskModal from "./VmCreateDiskModal";
 import VmCreateDiskConnectionModal from "./VmCreateDiskConnectionModal";
+import LabelCheckbox from "@/components/label/LabelCheckbox";
 
 const VmDisk = ({
   vm, vmName,
@@ -137,12 +138,14 @@ const VmDisk = ({
                         }}
                       />
                     </div> */}
-                    <div>완전 삭제</div>
-                    <RVI36 className="btn-icon"
+                    {/* <div>완전 삭제</div> */}
+
+                    <button className="instance-disk-btn ml-0 mb-3" onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제 취소</button>  
+                    {/* <RVI36 className="btn-icon"
                       iconDef={rvi24Close}
                       currentColor="transparent"
                       onClick={() => handleRemoveDisk(index, disk.isExisting)}
-                    />
+                    /> */}
                   </>
                 ) : (
                   <>

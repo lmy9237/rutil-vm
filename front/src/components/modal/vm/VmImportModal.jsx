@@ -26,7 +26,7 @@ const initialFormState = {
   dataCenter: "",
   cluster: "",
   username: "",
-  password: "Vmware1!",
+  password: "",
   authHostChecked: "",
 };
 
@@ -36,11 +36,10 @@ const VmImportModal = ({
   onSubmit
 }) => {
   const { validationToast } = useValidationToast();
-  const [virtioChecked, setVirtioChecked] = useState(false); // ← 체크 상태 저장
   
   const [step, setStep] = useState(1);
+
   const [formState, setFormState] = useState(initialFormState);
-  
   const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
   const [providerVo, setProviderVo] = useState(emptyIdNameVo());
@@ -57,11 +56,9 @@ const VmImportModal = ({
   const { 
     mutate: authenticate4VmWare 
   } = useAuthenticate4VMWare((resValue) => {
-      Logger.debug("$ [onSuccess] sessionId:", resValue);
       setSessionId(resValue);
       refetchVms(); 
-  },
-    (error) => {
+    }, (error) => {
       validationToast?.fail("로그인 실패: ", error);
     }
   );
@@ -92,10 +89,7 @@ const VmImportModal = ({
     data: vms = [],
     isLoading: isVmsLoading,
     refetch: refetchVms,
-  } = useVmsFromVMWare(
-    { baseUrl: formState.vcenter, sessionId },
-    (e) => ({ ...e })
-  );
+  } = useVmsFromVMWare({ baseUrl: formState.vcenter, sessionId }, (e) => ({ ...e }) );
   const vwVms = [...vms].sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
@@ -134,19 +128,17 @@ const VmImportModal = ({
       cluster: props.cluster || "",
       username: selectedProvider.authUsername || "",
       password: "Vmware1!" // "" 가 맞는값
-
-      
     }));
   }, [providerVo, providers]);
 
 
-  const toggleSelect = (vmVm) => {
+  const toggleSelect = (vwVm) => {
     setTargetVMs(prev => {
-      const exists = prev.some(vm => vm.vm === vmVm);
+      const exists = prev.some(vm => vm.vm === vwVm);
       if (exists) {
-        return prev.filter(vm => vm.vm !== vmVm);
+        return prev.filter(vm => vm.vm !== vwVm);
       } else {
-        const found = vwVms.find(vm => vm.vm === vmVm);
+        const found = vwVms.find(vm => vm.vm === vwVm);
         if (!found) return prev;
         return [...prev, found];
       }
@@ -164,6 +156,7 @@ const VmImportModal = ({
       { baseUrl: vcenter, username: username, password: password }
     );
   };
+
 
 
   const renderStep1 = () => (
@@ -230,7 +223,7 @@ const VmImportModal = ({
         </div>
       </div>
       <div className="vm-impor-outer">
-        <LabelSelectOptionsID label="호스트 목록" 
+        <LabelSelectOptionsID label={`${Localization.kr.HOST} 목록`}
           value={hostVo?.id}
           loading={isHostsLoading}
           options={hosts}
@@ -238,9 +231,7 @@ const VmImportModal = ({
         />
       </div>
 
-      <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>
-        로드
-      </button>
+      <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>로드</button>
 
       <div className="vm-import-list-outer f-btw mb-4">
         <div className="vm-import-panel vm-import-source">
@@ -316,5 +307,5 @@ const VmImportModal = ({
 export default VmImportModal;
 
 const sources = [
-  { value: "vmware", label: "VMware" },
+  { value: "vmware", label: `${Localization.kr.VW}` },
 ];

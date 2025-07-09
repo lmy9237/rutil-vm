@@ -46,6 +46,7 @@ export const Localization = {
     DOMAIN: "스토리지 도메인",
     DISK: "디스크",
     DISK_PROFILE: "디스크 프로파일",
+    VW: "VMware",
     NFS_SHARE_PATH: "NFS 공유 경로",
     EVENT: "이벤트",
     CONSOLE: "콘솔",

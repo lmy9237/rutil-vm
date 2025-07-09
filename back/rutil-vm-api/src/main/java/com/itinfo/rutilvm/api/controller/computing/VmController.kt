@@ -232,7 +232,7 @@ class VmController: BaseController() {
 	): ResponseEntity<ExternalVmVo?> {
 		if (externalVmVo == null)
 			throw ErrorPattern.EXTERNAL_HOST_PROVIDER_NOT_FOUND.toException()
-		log.info("/computing/vms/vmware ... vmware 계정등록 {}", externalVmVo)
+		log.info("/computing/vms/vmware ... vmware 추가 {}", externalVmVo)
 		return ResponseEntity.ok(iVmExport.importExternalVm(externalVmVo))
 	}
 

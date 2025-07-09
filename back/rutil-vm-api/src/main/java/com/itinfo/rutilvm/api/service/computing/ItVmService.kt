@@ -370,7 +370,7 @@ class VmServiceImpl(
 
 		disksToDelete.forEach {
 			log.info("diskDelete: {}", it.disk().name())
-			conn.removeDiskAttachmentToVm(vmVo.id, it.id(), false) // false가 완전삭제
+			conn.removeDiskAttachmentToVm(vmVo.id, it.id(), true) // false가 완전삭제
 		}
 		disksToAdd.forEach {
 			log.info("disksToAdd: {}", it.diskImageVo.alias)

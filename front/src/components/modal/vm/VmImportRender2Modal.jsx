@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useQueries } from "@tanstack/react-query";
 import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
 import FilterButtons from "@/components/button/FilterButtons";
@@ -6,10 +7,20 @@ import { InfoTable } from "@/components/table/InfoTable";
 import LabelSelectOptions from "@/components/label/LabelSelectOptions";
 import Localization from "@/utils/Localization";
 import { emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect } from "@/util";
-import { useAllActiveDomainsFromDataCenter, useAllDiskProfilesFromDomain, useAllOpearatingSystemsFromCluster, useAllVnicProfilesFromNetwork, useAllVnicsFromCluster, useClustersFromDataCenter, useCpuProfilesFromCluster, useNetworksFromDataCenter, useVmFromVMWare } from "@/api/RQHook";
+import { 
+    useAllActiveDomainsFromDataCenter,
+    useAllVnicProfilesFromNetwork,
+    useAllOpearatingSystemsFromCluster,
+    useClustersFromDataCenter,
+    useCpuProfilesFromCluster,
+    useNetworksFromDataCenter,
+    useVmFromVMWare,
+    useAllVnicProfilesFromNetwork4EachNetwork,
+} from "@/api/RQHook";
 import LabelInput from "@/components/label/LabelInput";
 import { useValidationToast } from "@/hooks/useSimpleToast";
-import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
+import { handleSelectIdChange } from "@/components/label/HandleInput";
+import ApiManager from "@/api/ApiManager";
 
 const VmImportRender2Modal = ({ 
   baseUrl,
@@ -20,39 +31,30 @@ const VmImportRender2Modal = ({
   const { validationToast } = useValidationToast();
   const [activeFilter, setActiveFilter] = useState("general");
 
-  const [selectedId, setSelectedId] = useState(null);
-
+  // 전체적용
   const [domainVo, setDomainVo] = useState(emptyIdNameVo());
   const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
   const [cpuProfileVo, setCpuProfileVo] = useState(emptyIdNameVo());
   const [virtioVo, setVirtioVo] = useState(emptyIdNameVo());
-  const [sparsd, setSparsd] = useState("");
   const [virtioChecked, setVirtioChecked] = useState("");
+  const [sparsd, setSparsd] = useState("");
 
+  const [selectedId, setSelectedId] = useState(null);
+
+  //각각 적용
   const [name, setName] = useState("");
   const [osSystem, setOsSystem] = useState("");
-  const [networkVo, setNetworkVo] = useState(emptyIdNameVo());
-  const [vnicVo, setVnicVo] = useState(emptyIdNameVo());
+
+  // const [diskList, setDiskList] = useState([]);
+
+  const [nicList, setNicList] = useState([]);
+  const [vnicProfileList, setVnicProfilesList] = useState([]);
 
   const [vmConfigs, setVmConfigs] = useState({});
-  const [nicVnicProfiles, setNicVnicProfiles] = useState({});
 
-  
   const { 
     data: vmDetailsMap = {} 
-  } = useVmFromVMWare({
-    baseUrl,
-    sessionId,
-    vmIds: targetVMs.map(vm => vm.vm).join(","),
-  });
-
-  const vmMapById = useMemo(() => {
-    return Array.isArray(vmDetailsMap)
-      ? Object.fromEntries(vmDetailsMap.map(vm => [vm.id, vm]))
-      : {};
-  }, [vmDetailsMap]);
-  const selectedVm = vmMapById[selectedId];
-  console.log("$ vmDetailsMap", vmDetailsMap)
+  } = useVmFromVMWare({ baseUrl, sessionId, vmIds: targetVMs.map(vm => vm.vm).join(",") });
 
   const {
     data: domains = [],
@@ -65,6 +67,11 @@ const VmImportRender2Modal = ({
   } = useClustersFromDataCenter(dataCenterVo?.id, (e) => ({...e,}));
 
   const { 
+    data: cpuProfiles = [], 
+    isLoading: isCpuProfilesLoading
+  } = useCpuProfilesFromCluster(clusterVo?.id, (e) => ({ ...e }));
+
+  const { 
     data: osList = [], 
     isLoading: isOsListLoading
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
@@ -74,22 +81,59 @@ const VmImportRender2Modal = ({
     isLoading: isNetworksLoading 
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
-  const { 
-    data: vnics = [], 
-    isLoading: isvNicsLoading 
-  } = useAllVnicProfilesFromNetwork(networkVo.id, (e) => ({ ...e }));
+  // const { 
+  //   data: vnics = [], 
+  //   isLoading: isvNicsLoading 
+  // } = useAllVnicProfilesFromNetwork(networkVo.id, (e) => ({ ...e }));
+  
+  const qr = useAllVnicProfilesFromNetwork4EachNetwork(networks, (e) => ({ ...e }));
+  /* const getVnicProfiles = useQueries({
+    queries: networks.map((network) => ({
+      queryKey: ['VnicProfilesFromNetwork', network.id],
+      queryFn: async () => {
+        try {
+          const vnicProfiles = await ApiManager.findAllVnicProfilesFromNetwork(network.id);
+          return vnicProfiles || [];
+        } catch (error) {
+          console.error(`Error fetching ${network}`, error);
+          return [];
+        }
+      }
+    })),
+  });*/
+  
+  const vmMapById = useMemo(() => {
+    return Array.isArray(vmDetailsMap)
+      ? Object.fromEntries(vmDetailsMap.map(vm => [vm.id, vm]))
+      : {};
+  }, [vmDetailsMap]);
+  const selectedVm = vmMapById[selectedId];
+  console.log("$ vmDetailsMap", vmDetailsMap)
 
-  const { 
-    data: cpuProfiles = [], 
-    isLoading: isCpuProfilesLoading
-  } = useCpuProfilesFromCluster(clusterVo?.id, (e) => ({ ...e }));
 
   // 첫번째 항목으로 지정
   useSelectFirstItemEffect(domains, setDomainVo);
   useSelectFirstNameItemEffect(clusters, setClusterVo, "Default");
   useSelectFirstItemEffect(cpuProfiles, setCpuProfileVo);
-  useSelectFirstNameItemEffect(networks, setNetworkVo, "ovirtmgmt");
-  useSelectFirstNameItemEffect(vnics, setVnicVo, "ovirtmgmt");
+
+  // useEffect로 getVnicProfiles 결과를 정리하여 vnicProfiles 업데이트
+  useEffect(() => {
+    const newVnicProfilesMap = {};
+  
+    qr.forEach((queryResult, idx) => {
+      const network = networks[idx];
+      console.log("$network", network)
+      if (network && queryResult?.data && !queryResult?.isLoading) {
+        newVnicProfilesMap[network.id] = queryResult?.data || [];
+      }
+    });
+    
+    // 기존 값과 다를 때만 업데이트
+    const isDifferent = JSON.stringify(vnicProfileList) !== JSON.stringify(newVnicProfilesMap);
+    if (isDifferent) {
+      setVnicProfilesList(newVnicProfilesMap);
+    }
+  }, [qr, networks]); 
 
 
   useEffect(() => {
@@ -104,77 +148,143 @@ const VmImportRender2Modal = ({
     }
     setVmConfigs(newConfigs);
   }, [vmDetailsMap, osList]);
-
-  const updateVmConfig = (vmId, field, value) => {
-  setVmConfigs(prev => ({
-    ...prev,
-    [vmId]: {
-      ...prev[vmId],
-      [field]: value
-    }
-  }));
-};
-
-const updateVmNicNetwork = (vmId, nicKey, value) => {
-  setVmConfigs(prev => ({
-    ...prev,
-    [vmId]: {
-      ...prev[vmId],
-      network: {
-        ...prev[vmId]?.network,
-        [nicKey]: value
-      }
-    }
-  }));
-};
-
-const updateVmNicVnic = (vmId, nicKey, value) => {
-  setVmConfigs(prev => ({
-    ...prev,
-    [vmId]: {
-      ...prev[vmId],
-      vnic: {
-        ...prev[vmId]?.vnic,
-        [nicKey]: value
-      }
-    }
-  }));
-};
-
-
-
+  
   useEffect(() => {
     if (osList.length > 0 && !osSystem) {
       setOsSystem(osList[0].name);
     }
   }, [osList]);
 
+  // 자동감지 설정
   useEffect(() => {
-    if (sparseList.length > 0 && !sparseList) {
+    if (!sparsd && sparseList.length > 0) {
       setSparsd(sparseList[0].value);
     }
-  }, [sparseList]);
+  }, [sparsd]);
 
+  
   useEffect(() => {
-    console.log("$ targetVMs", targetVMs);
-  }, [targetVMs]);
+    if (!selectedVm || networks.length === 0) return;
 
-  useEffect(() => {
-    console.log("$ vmDetailsMap", vmDetailsMap);
-  }, [vmDetailsMap]);
+    const selectedConfig = vmConfigs[selectedId] || {};
+    const nicNetwork = selectedConfig.network || {};
 
-  console.log("selectedId", selectedId);
-  console.log("selectedVm", selectedVm);
+    const updated = { ...nicNetwork };
+    let changed = false;
+    
+    // ovirtmgmt 우선 선택
+    const defaultNetwork = networks.find(n => n.name === "ovirtmgmt") || networks[0];
+
+    for (const nicKey of Object.keys(selectedVm.nics || {})) {
+      if (!nicNetwork[nicKey]) {
+        updated[nicKey] = defaultNetwork?.id || networks[0].id;
+        changed = true;
+      }
+    }
+
+    if (changed) {
+      setVmConfigs(prev => {
+        const updatedVmConfig = {
+          ...prev[selectedId],
+          network: updated,
+          vnic: { ...prev[selectedId]?.vnic }
+        };
+
+        // NIC별로 vNIC Profile 기본값 설정
+        for (const nicKey of Object.keys(updated)) {
+          const netId = updated[nicKey];
+          const vnicProfiles = vnicProfileList[netId];
+          if (vnicProfiles && vnicProfiles.length > 0) {
+            updatedVmConfig.vnic[nicKey] = vnicProfiles[0].id;
+          } else {
+            updatedVmConfig.vnic[nicKey] = "";
+          }
+        }
+
+        return {
+          ...prev,
+          [selectedId]: updatedVmConfig
+        };
+      });
+    }
+  }, [selectedId, networks, selectedVm]);
+
+  const updateVmConfig = (vmId, field, value) => {
+    setVmConfigs(prev => ({
+      ...prev,
+      [vmId]: {
+        ...prev[vmId],
+        [field]: value
+      }
+    }));
+  };
+
+  const updateVmNicNetwork = async (vmId, nicKey, networkId) => {
+    try {
+      const response = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
+      const profiles = response?.body || [];
+
+      const firstProfileId = profiles[0]?.id || "";
+      console.log("$ firstProfileId", firstProfileId)
+      setVmConfigs(prev => ({
+        ...prev,
+        [vmId]: {
+          ...prev[vmId],
+          network: {
+            ...prev[vmId]?.network,
+            [nicKey]: networkId
+          },
+          vnic: {
+            ...prev[vmId]?.vnic,
+            [nicKey]: firstProfileId
+          }
+        }
+      }));
+
+      setVnicProfilesList(prev => ({
+        ...prev,
+        [networkId]: profiles
+      }));
+    } catch (error) {
+      console.error("vNIC profile 로딩 실패:", error);
+
+      setVmConfigs(prev => ({
+        ...prev,
+        [vmId]: {
+          ...prev[vmId],
+          vnic: {
+            ...prev[vmId]?.vnic,
+            [nicKey]: ""
+          }
+        }
+      }));
+
+      setVnicProfilesList(prev => ({
+        ...prev,
+        [networkId]: []
+      }));
+    }
+  };
+
+  const updateVmNicVnic = (vmId, nicKey, value) => {
+    setVmConfigs(prev => ({
+      ...prev,
+      [vmId]: {
+        ...prev[vmId],
+        vnic: {
+          ...prev[vmId]?.vnic,
+          [nicKey]: value
+        }
+      }
+    }));
+  };
+
+  console.log("$selectedVm", selectedVm);
 
   const generalInfoRows = (vwvm) => [
     { 
       label: Localization.kr.NAME, 
       value: 
-        // <LabelInput id="name"
-        //   autoFocus
-        //   value={vwvm.name}
-        //   onChange={handleInputChange((e) => setName(e.target.value))}
-        // />
         <LabelInput
           value={vmConfigs[selectedId]?.name || ""}
           onChange={(e) => updateVmConfig(selectedId, "name", e.target.value)}
@@ -183,15 +293,10 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
     {
       label: Localization.kr.OPERATING_SYSTEM,
       value: 
-        // <LabelSelectOptionsID
-        //   value={osSystem}
-        //   options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
-        //   loading={isOsListLoading}
-        //   onChange={(option) => setOsSystem(option.id)}
-        // />
         <LabelSelectOptionsID
           value={vmConfigs[selectedId]?.osSystem || ""}
           options={osList.map((opt) => ({ id: opt.name, name: opt.description }))}
+          isLoading={isOsListLoading}
           onChange={(opt) => updateVmConfig(selectedId, "osSystem", opt.id)}
         />
     },
@@ -206,8 +311,9 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
     <>
       <div className="vm-impor-outer">
         <LabelSelectOptionsID label={Localization.kr.DOMAIN}
-          options={domains}
           value={domainVo.id}
+          options={domains}
+          isLoading={isStorageDomainsLoading}
           onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
         />
         <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
@@ -216,8 +322,9 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
           onChange={(e) => setSparsd(e.target.value)}
         />
         <LabelSelectOptionsID label={`대상 ${Localization.kr.CLUSTER}`}
-          options={clusters}
           value={clusterVo.id}
+          options={clusters}
+          isLoading={isClustersLoading}
           onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
         />
         <div className="f-start items-center gap-2">
@@ -225,13 +332,12 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
             checked={virtioChecked}
             onChange={(e) => setVirtioChecked(e.target.checked)}
           />
-          <LabelSelectOptionsID label="" 
-            disabled={!virtioChecked} 
-          />
+          <LabelSelectOptionsID label="" disabled={!virtioChecked} />
         </div>
         <LabelSelectOptionsID label="CPU 프로파일" 
-          options={cpuProfiles}
           value={cpuProfileVo.id}
+          options={cpuProfiles}
+          isLoading={isCpuProfilesLoading}
           onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles, validationToast)}
         />
       </div>
@@ -258,7 +364,7 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
                 }}
               >
                 <td>{vm?.name}</td>
-                <td>VMware</td>
+                <td>{Localization.kr.VW}</td>
                 <td>{vm?.memory?.sizeMiB} MB</td>
                 <td>{vm?.cpu?.count}</td>
                 <td>{"x86_64"}</td>
@@ -270,67 +376,67 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
         <span>id: {selectedId} </span>
       </div>
 
-      <div className="vm-import-detail-box mb-3">
-        {selectedVm && (
-          <>
-            <div className="mb-2">
-              <FilterButtons
-                options={filterOptions}
-                activeOption={activeFilter}
-                onClick={setActiveFilter}
-              />
-            </div>
+      {selectedVm && (
+        <div className="vm-import-detail-box mb-3">
+          <div className="mb-2">
+            <FilterButtons
+              options={filterOptions}
+              activeOption={activeFilter}
+              onClick={setActiveFilter}
+            />
+          </div>
 
-            <div className="vm-detail-content">
-              {activeFilter === "general" && (
-                <div className="vm-import-render-tb flex justify-between">
-                  <div className="mr-20">
-                    <InfoTable tableRows={generalInfoRows(selectedVm)} />
-                  </div>
+          <div className="vm-detail-content">
+            {activeFilter === "general" && (
+              <div className="vm-import-render-tb flex justify-between">
+                <div className="mr-20">
+                  <InfoTable tableRows={generalInfoRows(selectedVm)} />
                 </div>
-              )}
-              {activeFilter === "disk" && (
-                <div className="mt-2">
-                  <div className="section-table-outer w-full mb-2">
-                    <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-                      <thead style={{ background: "#f5f5f5" }}>
-                        <tr>
-                          <th>경로</th>
-                          <th style={{ width: '600px' }}>{Localization.kr.SIZE_VIRTUAL}</th>
-                          <th style={{ width: '600px' }}>{Localization.kr.SIZE_ACTUAL}</th>
+              </div>
+            )}
+            {activeFilter === "disk" && (
+              <div className="mt-2">
+                <div className="section-table-outer w-full mb-2">
+                  <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+                    <thead style={{ background: "#f5f5f5" }}>
+                      <tr>
+                        <th>경로</th>
+                        <th style={{ width: '600px' }}>{Localization.kr.SIZE_VIRTUAL}</th>
+                        <th style={{ width: '600px' }}>{Localization.kr.SIZE_ACTUAL}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.values(selectedVm?.disks || {}).map((disk, idx) => (
+                        <tr key={idx}>
+                          <td>{disk.backing?.vmdkFile || "-"}</td>
+                          <td>{(disk.capacity / 1024 / 1024 / 1024).toFixed(0)} GiB</td>
+                          <td>-</td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {Object.values(selectedVm?.disks || {}).map((disk, idx) => (
-                          <tr key={idx}>
-                            <td>{disk.backing?.vmdkFile || "-"}</td>
-                            <td>{(disk.capacity / 1024 / 1024 / 1024).toFixed(0)} GiB</td>
-                            <td>-</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              )}
-              {activeFilter === "network" && (
-                <div className="mt-2">
-                  <div className="section-table-outer w-full mb-2">
-                    <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-                      <thead style={{ background: "#f5f5f5" }}>
-                        <tr>
-                          <th>{Localization.kr.NAME}</th>
-                          <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
-                          <th>{Localization.kr.NETWORK} {Localization.kr.NAME}</th>
-                          <th>{Localization.kr.VNIC_PROFILE} {Localization.kr.NAME}</th>
-                          <th>유형</th>
-                          <th>MAC</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {Object.entries(selectedVm?.nics || {}).map(([nicKey, nic], idx) => (
+              </div>
+            )}
+            {activeFilter === "network" && (
+              <div className="mt-2">
+                <div className="section-table-outer w-full mb-2">
+                  <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+                    <thead style={{ background: "#f5f5f5" }}>
+                      <tr>
+                        <th>{Localization.kr.NAME}</th>
+                        <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                        <th>{Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                        <th>{Localization.kr.VNIC_PROFILE} {Localization.kr.NAME}</th>
+                        <th>유형</th>
+                        <th>MAC</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.entries(selectedVm?.nics || {}).map(([nicKey, nic], idx) => {
+                        return (
                           <tr key={nicKey}>
-                            <td> nic{idx+1} </td> {/* <td>{nic.label}</td> */}
+                            <td>nic{idx + 1}</td>
                             <td>{nic.backing?.networkName || "-"}</td>
                             <td>
                               <LabelSelectOptionsID
@@ -339,41 +445,31 @@ const updateVmNicVnic = (vmId, nicKey, value) => {
                                 options={networks}
                                 onChange={(opt) => updateVmNicNetwork(selectedId, nicKey, opt.id)}
                               />
-                              {/* <LabelSelectOptionsID
-                                value={networkVo.id}
-                                loading={isNetworksLoading}
-                                options={networks}
-                                onChange={handleSelectIdChange(setNetworkVo, networks, validationToast)}
-                              /> */}
-                              a {vmConfigs[selectedId]?.nics?.[nicKey]?.network?.id}
+                              <span>1 {vmConfigs[selectedId]?.network?.[nicKey]}</span>
                             </td>
                             <td>
-                              {/* <LabelSelectOptionsID
-                                value={vnicVo.id}
-                                loading={isvNicsLoading}
-                                options={vnics}
-                                onChange={handleSelectIdChange(setVnicVo, vnics, validationToast)}
-                              /> */}
                               <LabelSelectOptionsID
                                 value={vmConfigs[selectedId]?.vnic?.[nicKey] || ""}
-                                loading={isvNicsLoading}
-                                options={vnics}
+                                options={
+                                  vnicProfileList[vmConfigs[selectedId]?.network?.[nicKey]] || []
+                                }
                                 onChange={(opt) => updateVmNicVnic(selectedId, nicKey, opt.id)}
                               />
+                              <span>1 {vmConfigs[selectedId]?.vnic?.[nicKey]}</span>
                             </td>
                             <td>{nic.type === "VMXNET3" ? "VirtIO" : nic.type}</td>
                             <td>{nic.macAddress}</td>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              )}
-            </div>
-          </>
-        )}
+              </div>
+            )}
+          </div>
       </div>
+    )}
     </>
   );
 };
