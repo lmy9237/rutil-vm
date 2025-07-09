@@ -303,14 +303,14 @@ class VdsEntity(
 		updatable=false
 	)
 	val cluster: ClusterViewEntity? = null,
-	@OneToMany(fetch = FetchType.LAZY)
+	/*@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(
 		name="run_on_vds",
 		referencedColumnName="vds_id",
 		insertable=false,
 		updatable=false
 	)
-	val vms: Set<VmEntity>? = emptySet(),
+	val vms: Set<VmEntity>? = emptySet(),*/
 	@OneToMany(fetch = FetchType.LAZY)
 	@JoinColumn(
 		name="vds_id",

@@ -243,7 +243,7 @@ fun ClusterViewEntity.toClusterVoFromClusterViewEntity(): ClusterVo = ClusterVo.
 	// networkVo { this@toClusterVoFromClusterViewEntity }
 	// hostSize { this@toClusterVoFromClusterViewEntity.hosts.size ?: 0 }
 	// required { this@toClusterVoFromClusterViewEntity }
-	vmVos { this@toClusterVoFromClusterViewEntity.vms?.toVmVosFromVmEntities() }
+	// vmVos { this@toClusterVoFromClusterViewEntity.vms?.toVmVosFromVmEntities() }
 }
 fun Collection<ClusterViewEntity>.toClusterVosFromClusterViewEntities(): List<ClusterVo> =
 	this@toClusterVosFromClusterViewEntities.map { it.toClusterVoFromClusterViewEntity() }
@@ -498,11 +498,13 @@ fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
 	}
 	clusterVo { this@toHostVoFromVdsEntity.cluster?.toIdentifiedVoFromClusterViewEntity() }
 	dataCenterVo { this@toHostVoFromVdsEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	/*
 	vmVos {
 		this@toHostVoFromVdsEntity.cluster?.vms?.filter {
 			it.runOnVds == this@toHostVoFromVdsEntity.vdsId
 		}?.toVmVosFromVmEntities()
 	}
+	*/
 	hostNicVos {
 		this@toHostVoFromVdsEntity.nics?.toHostNicVosFromVdsInterfaceViewEntities()
 	}

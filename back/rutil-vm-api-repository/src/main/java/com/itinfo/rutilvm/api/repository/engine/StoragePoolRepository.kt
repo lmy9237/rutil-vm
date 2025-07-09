@@ -13,6 +13,25 @@ interface StoragePoolRepository: JpaRepository<StoragePoolEntity, UUID> {
 SELECT DISTINCT sp FROM StoragePoolEntity sp
 LEFT JOIN FETCH sp.clusters AS c
 LEFT JOIN FETCH c.hosts AS h
+LEFT JOIN FETCH h.nics AS n
+WHERE 1=1
+""")
+	fun findAllWithClusters(): List<StoragePoolEntity>
+
+	@Query("""
+SELECT DISTINCT sp FROM StoragePoolEntity sp
+LEFT JOIN FETCH sp.clusters AS c
+LEFT JOIN FETCH c.hosts AS h
+LEFT JOIN FETCH h.nics AS n
+WHERE 1=1
+AND sp.id = :storagePoolId
+""")
+	fun findByIdWithClusters(storagePoolId: UUID): StoragePoolEntity?
+}
+/*
+SELECT DISTINCT sp FROM StoragePoolEntity sp
+LEFT JOIN FETCH sp.clusters AS c
+LEFT JOIN FETCH c.hosts AS h
 LEFT JOIN FETCH c.vms AS v1
 LEFT JOIN FETCH v1.snapshots
 LEFT JOIN FETCH v1.smallIcon
@@ -35,10 +54,8 @@ LEFT JOIN FETCH ide2.smallIcon
 LEFT JOIN FETCH ide2.largeIcon
 LEFT JOIN FETCH h.nics AS n
 WHERE 1=1
-""")
-	fun findAllWithClusters(): List<StoragePoolEntity>
-
-	@Query("""
+*/
+/*
 SELECT DISTINCT sp FROM StoragePoolEntity sp
 LEFT JOIN FETCH sp.clusters AS c
 LEFT JOIN FETCH c.hosts AS h
@@ -65,6 +82,5 @@ LEFT JOIN FETCH ide2.largeIcon
 LEFT JOIN FETCH h.nics AS n
 WHERE 1=1
 AND sp.id = :storagePoolId
-""")
-	fun findByIdWithClusters(storagePoolId: UUID): StoragePoolEntity?
-}
+fun findByIdWithClusters(storagePoolId: UUID): StoragePoolEntity?
+*/
