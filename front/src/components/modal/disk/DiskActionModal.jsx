@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useQueries } from "@tanstack/react-query";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
@@ -10,6 +9,8 @@ import ApiManager                       from "@/api/ApiManager";
 import { 
   useCopyDisk, 
   useMoveDisk,
+  useAllDomainsFromDataCenter4EachDisk,
+  validateAPI,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -27,7 +28,7 @@ const DiskActionModal = ({
   const { disksSelected } = useGlobal()
   
   const [diskList, setDiskList] = useState([]);
-  const [domainList, setDomainList] = useState({});
+  const [allDomainsByDisk, setAllDomainsByDisk] = useState({});
 
   const [aliases, setAliases] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
@@ -36,87 +37,69 @@ const DiskActionModal = ({
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
   useEffect(() => {
-    if (isOpen && disksSelected.length > 0) {
+    if (isOpen && [...disksSelected].length > 0) {
       setDiskList(disksSelected);
     }
   }, [isOpen]);
 
-  const getDomains = useQueries({
-    queries: diskList?.map((disk) => ({
-      queryKey: ['allDomainsFromDataCenter', disk?.dataCenterVo?.id],
-      queryFn: async () => {
-        try {
-          const domains = await ApiManager.findAllDomainsFromDataCenter(disk?.dataCenterVo?.id);
-          if (!Array.isArray(domains)) return [];
-          return domains.filter(domain => domain?.storageDomainType !== "import_export");
-        } catch (error) {
-          console.error(`Error fetching ${disk}`, error);
-          return [];
-        }
-      }
-    })),
-  });  
-  
-  useEffect(() => {
-    console.log("$diskList", diskList)
-    console.log("$getDomains", getDomains)
-  }, [])
+  const qr = useAllDomainsFromDataCenter4EachDisk(diskList, (e) => ({
+    ...e
+  }))
 
   useEffect(() => {
     if (activeModal().includes("disk:copy")) {
       const initialAliases = {};
       for (let i=0; i<diskList.length; i++) {
         const disk = diskList[i];
-        initialAliases[disk.id] = `${disk.alias || ""}`;
+        initialAliases[disk.id] = `${disk.alias || disk.name || ""}`;
       }
       setAliases(initialAliases);
     }
-  }, [activeModal, diskList]);  
+  }, [activeModal, diskList]);
 
   useEffect(() => {
+    Logger.debug(`DiskActionModal > useEffect ... `)
     const newDomainList = {};
 
-    for (let i = 0; i < getDomains.length; i++) {
-      const queryResult = getDomains[i];
+    for (let i = 0; i < qr.length; i++) {
+      Logger.debug(`DiskActionModal > useEffect ... looping! i: ${i}`)
+      const allDomains = qr[i]?.data ?? []
       const disk = diskList[i];
       const currentDomainId = disk?.storageDomainVo?.id;
 
-      if (disk && queryResult.data && queryResult.isSuccess) {
-        const domains = queryResult.data?.body ?? [];
-        // disk:move"일 때만 필터링
-        const filteredDomains = domains
-          .filter(d => {
-            if (activeModal().includes("disk:move")) {
-              return d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId;
-            }
-            return d.status?.toUpperCase() === "ACTIVE";
-          })
-          .map(d => ({
-            id: d.id,
-            name: d.name,
-            availableSize: d.availableSize,
-            size: d.size,
-          }));
+      const filteredDomains = [...allDomains].filter((d) => {
+        if (activeModal().includes("disk:move")) {
+          return d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId;
+        }
+        return d.status?.toUpperCase() === "ACTIVE";
+      }).map((d) => ({
+        id: d.id,
+        name: d.name,
+        availableSize: d.availableSize,
+        size: d.size,
+      }));
 
-        newDomainList[disk.id] = filteredDomains;
-      }
+      /* setDomainList((prev) => {
+
+      }) */
+      newDomainList[disk?.id] = filteredDomains;
     }
 
-    const isDifferent = JSON.stringify(domainList) !== JSON.stringify(newDomainList);
+    const isDifferent = JSON.stringify(allDomainsByDisk) !== JSON.stringify(newDomainList);
     if (isDifferent) {
-      setDomainList(newDomainList);
+      setAllDomainsByDisk(newDomainList);
     }
-  }, [getDomains, diskList, activeModal]);
+  }, [qr, diskList, activeModal]);
 
   useEffect(() => {
     // domainList가 갱신될 때마다 실행
-    if (!domainList || Object.keys(domainList).length === 0) return;
+    if (!allDomainsByDisk || Object.keys(allDomainsByDisk).length === 0) return;
 
     setTargetDomains(prev => {
       const next = { ...prev };
       let changed = false;
 
-      Object.entries(domainList).forEach(([diskId, domains]) => {
+      Object.entries(allDomainsByDisk).forEach(([diskId, domains]) => {
         if (domains && domains.length > 0 && !next[diskId]) {
           next[diskId] = domains[0].id;
           changed = true;
@@ -125,7 +108,7 @@ const DiskActionModal = ({
 
       return changed ? next : prev;
     });
-  }, [domainList]);
+  }, [allDomainsByDisk]);
 
 
   
@@ -224,13 +207,13 @@ const DiskActionModal = ({
                     <LabelSelectOptionsID
                      className="w-full"
                       value={targetDomains[disk.id] || ""}
-                      options={domainList[disk.id] || []}
+                      options={allDomainsByDisk[disk.id] || []}
                       onChange={(selected) => {
                         setTargetDomains((prev) => ({ ...prev, [disk.id]: selected.id }));
                       }}
                     />
                     {targetDomains[disk.id] && (() => {
-                      const domainObj = (domainList[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
+                      const domainObj = (allDomainsByDisk[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
                       if (!domainObj) return null;
                       return (
                         <div className="text-xs text-gray-500 mt-1">

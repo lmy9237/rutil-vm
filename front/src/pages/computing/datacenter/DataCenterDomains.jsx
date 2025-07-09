@@ -2,7 +2,7 @@ import useGlobal from "../../../hooks/useGlobal";
 import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
 import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
 import DomainDupl from "../../../components/dupl/DomainDupl";
-import { useDomainsFromDataCenter } from "../../../api/RQHook";
+import { useAllDomainsFromDataCenter } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 
@@ -26,7 +26,7 @@ const DataCenterDomains = ({
     isSuccess: isStorageDomainsSuccess,
     refetch: refetchStorageDomains,
     isRefetching: isStorageDomainsRefetching,
-  } = useDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
+  } = useAllDomainsFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   return (
     <>

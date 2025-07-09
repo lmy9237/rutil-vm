@@ -2,10 +2,11 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.google.gson.annotations.SerializedName
 import com.itinfo.rutilvm.common.fromJson
-import com.itinfo.rutilvm.common.gson // Assuming you have this
+import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
-import java.util.UUID
 import java.io.Serializable
+import java.time.OffsetDateTime
+import java.util.*
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -13,7 +14,6 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
-import java.time.OffsetDateTime
 
 /**
  * [VmDeviceEntity]
@@ -78,7 +78,7 @@ class VmDeviceEntity(
 			this@VmDeviceEntity._device = newVal
 			when(_device) {
 				"qxl" -> specParams = VmDeviceQxlSpecParams()
-				"vga" -> specParams = VmDeviceVgaSpecParams()
+				"vga","boch" -> specParams = VmDeviceVgaSpecParams()
 				// else ->
 			}
 		}
@@ -117,8 +117,15 @@ class VmDeviceEntity(
 	}
 }
 
+private const val DEFAULT_NUM_OF_MONITOR: Int = 1 // 항상 모니터는 1대 기준, 기능이 안바뀌도록 염두 해두고 개발
+private const val BASE_RAM_SIZE_IN_KB: Int = 16384 // KB
+private const val DEFAULT_VRAM_SIZE_IN_KB: Int = 8192 // KB
+private const val RAM_MULTIPLIER: Int = 4
+
+private const val BASE_RAM: Int = 16384
+
 sealed class VmDeviceSpecParams(
-	@SerializedName("vram") open val vram: String? = "16384",
+	@SerializedName("vram") open val vram: String? = BASE_RAM_SIZE_IN_KB.toString(),
 ): Serializable {}
 
 class VmDeviceVgaSpecParams(
@@ -126,8 +133,67 @@ class VmDeviceVgaSpecParams(
 }
 
 class VmDeviceQxlSpecParams(
-	@SerializedName("vgamem") val vgamem: String? = "16384",
-	@SerializedName("heads") val heads: String? = "1",
-	@SerializedName("ram") val ram: String? = "65536",
-): VmDeviceSpecParams("32768") {
+	@SerializedName("vgamem") val vgamem: String? = (BASE_RAM_SIZE_IN_KB*DEFAULT_NUM_OF_MONITOR).toString(), // TODO: 왜 이 값으로 고정 돼있지???
+	@SerializedName("heads") val heads: String? = DEFAULT_NUM_OF_MONITOR.toString(),
+	@SerializedName("ram") val ram: String? = (BASE_RAM_SIZE_IN_KB*RAM_MULTIPLIER).toString(), // TODO: 왜 이 값으로 고정 돼있지???
+): VmDeviceSpecParams((BASE_RAM_SIZE_IN_KB*2).toString()) {
 }
+// TODO: 왜 이 값으로 고정 돼있지???
+//
+// int vram = vramMultiplier == 0 ? DEFAULT_VRAM_SIZE : vramMultiplier * baseRam;
+//
+// vramMultiplier=2, vramMultiplier*baseRam=2*16384 .... 왜 2지?
+
+// TODO: see `VgamemVideoSettings`
+/*
+@Singleton
+public class VgamemVideoSettings {
+
+    @Inject
+    private OsRepository osRepository;
+
+    // Displays up to 4 Mpix fit into this; higher resolutions are
+    // supported only on Windows 10, handled by vgamemMultiplier.
+    private static final int BASE_RAM_SIZE = 16384; // KB
+    private static final int DEFAULT_VRAM_SIZE = 8192; // KB
+    private static final int RAM_MULTIPLIER = 4;
+
+    /**
+     * Returns video device settings for QXL devices.
+     *
+     * @return a map of device settings
+     */
+    public Map<String, Integer> getQxlVideoDeviceSettings(VmBase vmBase, boolean isSingleQxlPci) {
+        // Things are likely to completely change in future, so let's keep this
+        // computation as simple as possible for now.
+        Map<String, Integer> settings = new HashMap<>();
+        int heads = isSingleQxlPci ? vmBase.getNumOfMonitors() : 1;
+        int baseRam = BASE_RAM_SIZE * heads;
+        int vramMultiplier = getVramMultiplier(vmBase);
+        int vram = vramMultiplier == 0 ? DEFAULT_VRAM_SIZE : vramMultiplier * baseRam;
+        int vgamem = getVgamemMultiplier(vmBase) * baseRam;
+        settings.put(VdsProperties.VIDEO_HEADS, heads);
+        settings.put(VdsProperties.VIDEO_VGAMEM, vgamem);
+        settings.put(VdsProperties.VIDEO_RAM, RAM_MULTIPLIER * baseRam);
+        settings.put(VdsProperties.VIDEO_VRAM, vram);
+        return settings;
+    }
+
+    /**
+     * Returns video device settings for VGA and Cirrus devices.
+     *
+     * @return a map of device settings
+     */
+    public Map<String, Integer> getVgaVideoDeviceSettings() {
+        return Collections.singletonMap(VdsProperties.VIDEO_VRAM, BASE_RAM_SIZE);
+    }
+
+    private int getVramMultiplier(VmBase vmBase) {
+        return osRepository.getVramMultiplier(vmBase.getOsId());
+    }
+
+    private int getVgamemMultiplier(VmBase vmBase) {
+        return osRepository.getVgamemMultiplier(vmBase.getOsId());
+    }
+}
+*/

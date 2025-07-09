@@ -258,6 +258,7 @@ const ApiManager = {
   }),
   //#endregion: Dashboard
 
+
   //#region: DataCenter
   /**
    * @name ApiManager.findAllDataCenters
@@ -310,7 +311,6 @@ const ApiManager = {
     url: ENDPOINTS.FIND_HOSTS_FROM_DATA_CENTER(dataCenterId), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_TEMPLATES_FROM_NETWORK
   }),
-
   /**
    * @name ApiManager.findAllVmsFromDataCenter
    * @description  데이터 센터 내 가상머신
@@ -2436,10 +2436,7 @@ const ApiManager = {
 
   // endregion: vnicprofile
 
-
-
-
-  
+ 
   //#region: Domain
   /**
    * @name ApiManager.findAllStorageDomains

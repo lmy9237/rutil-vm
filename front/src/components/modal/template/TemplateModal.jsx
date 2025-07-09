@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useQueries } from "@tanstack/react-query";
 import useGlobal from "../../../hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import {
@@ -7,8 +8,8 @@ import {
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
   useDisksFromVM,
-  useDomainsFromDataCenter,
-} from "../../../api/RQHook";
+  useAllDomainsFromDataCenter,
+} from "@/api/RQHook";
 import "../vm/MVm.css";
 import LabelInput from "../../label/LabelInput";
 import Localization from "../../../utils/Localization";
@@ -17,7 +18,6 @@ import ToggleSwitchButton from "../../button/ToggleSwitchButton";
 import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
 import Logger from "../../../utils/Logger";
 import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { useQueries } from "@tanstack/react-query";
 import ApiManager from "../../../api/ApiManager";
 import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
 import { useValidationToast } from "@/hooks/useSimpleToast";
@@ -31,7 +31,6 @@ const initialFormState = {
   Size: "",
   copyVmPermissions: false,
 };
-
 
 const TemplateModal = ({
   isOpen,
@@ -65,16 +64,16 @@ const TemplateModal = ({
     isLoading: isCpuProfilesLoading
   } = useCpuProfilesFromCluster(clusterVo.id, (e) => ({ ...e, }));
 
-  // 가상머신에 연결되어있는 디스크
-  const {
+  
+  const { /* 가상머신에 연결되어있는 디스크 목록 */
     data: disks = [],
   } = useDisksFromVM(vmSelected?.id, (e) => ({ ...e }));
 
-  // 데이터센터 ID 기반으로 스토리지목록 가져오기
-  const {
+  
+  const { /* 데이터센터 별 스토리지 도메인 목록 */
     data: domains = [],
     isLoading: isDomainsLoading
-  } = useDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  } = useAllDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   const getDiskProfiles = useQueries({
     queries: domains.map((domain) => ({

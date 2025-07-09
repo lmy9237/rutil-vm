@@ -52,12 +52,12 @@ const VmModals = ({
       <VmDeleteModal key={"vm:remove"} isOpen={activeModal().includes("vm:remove")} 
         onClose={() => closeModal("vm:remove")}
       />
-    ), templates: (
+    )/*, templates: (
       <TemplateModal key={"vm:templates"} isOpen={activeModal().includes("vm:templates")}
         onClose={() => closeModal("vm:templates")}
-      /> 
+      />
       // NOTE: 안쓰는 것 같음
-    ), snapshot: (
+    )*/, snapshot: (
       <VmSnapshotModal key={"vm:snapshot"} isOpen={activeModal().includes("vm:snapshot")} 
         onClose={() => closeModal("vm:snapshot")}
       />

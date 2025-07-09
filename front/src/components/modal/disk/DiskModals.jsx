@@ -1,12 +1,12 @@
 import React from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import DiskModal from "./DiskModal";
-import DeleteModal from "../../../utils/DeleteModal";
-import DiskUploadModal from "./DiskUploadModal";
-import DiskActionModal from "./DiskActionModal";
-import { useDeleteDisk } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
+import DiskModal              from "./DiskModal";
+import DiskUploadModal        from "./DiskUploadModal";
+import DiskActionModal        from "./DiskActionModal";
+import { useDeleteDisk }      from "@/api/RQHook";
+import DeleteModal            from "@/utils/DeleteModal";
+import Localization           from "@/utils/Localization";
 import "./MDisk.css";
 
 const DiskModals = ({ 

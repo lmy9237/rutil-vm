@@ -508,6 +508,9 @@ const VmModal = ({
     
     // VmInit
     ...formCloudState,
+    
+    // VmConsole
+    ...formConsoleState,
 
     // VmHost
     ...formHostState,

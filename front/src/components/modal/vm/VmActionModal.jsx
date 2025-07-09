@@ -14,12 +14,12 @@ import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
 const ACTIONS = {
-  "vm:start": { label: Localization.kr.START, hook: useStartVM },
-  "vm:pause": { label: Localization.kr.PAUSE, hook: usePauseVM },
-  "vm:reboot": { label: Localization.kr.REBOOT, hook: useRebootVM },
-  "vm:reset": { label: Localization.kr.RESET, hook: useResetVM },
-  "vm:shutdown": { label: Localization.kr.END, hook: useShutdownVM },
-  "vm:powerOff": { label: Localization.kr.POWER_OFF, hook: usePowerOffVM },
+  "vm:start":    { label: Localization.kr.START,       hook: useStartVM },
+  "vm:pause":    { label: Localization.kr.PAUSE,       hook: usePauseVM },
+  "vm:reboot":   { label: Localization.kr.REBOOT,      hook: useRebootVM },
+  "vm:reset":    { label: Localization.kr.RESET,       hook: useResetVM },
+  "vm:shutdown": { label: Localization.kr.END,         hook: useShutdownVM },
+  "vm:powerOff": { label: Localization.kr.POWER_OFF,   hook: usePowerOffVM },
 };
 
 const VmActionModal = ({

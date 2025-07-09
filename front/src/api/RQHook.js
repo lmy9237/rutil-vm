@@ -8,6 +8,8 @@ import { triggerDownload }    from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
+export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1 분
+export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; 5 // 5분
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 2 * 60 * 1000; // 2분
 
@@ -42,13 +44,13 @@ export const useAllTreeNavigations = (
   type = "none",
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
   queryFn: async () => {
     const res = await ApiManager.findAllTreeNaviations(type);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: `, _res);
     return _res;
   },
@@ -60,11 +62,11 @@ export const useAllTreeNavigations = (
 export const useDashboard = (
 
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD],
   queryFn: async () => {
     const res = await ApiManager.getDashboard()
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useDashboard ... res: `, _res);
     return _res
   },
@@ -73,11 +75,11 @@ export const useDashboard = (
 export const useDashboardCpuMemory = (
 
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_CPU_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getCpuMemory()
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useDashboardCpuMemory ... res: `, _res);
     return _res
   },
@@ -86,11 +88,11 @@ export const useDashboardCpuMemory = (
 export const useDashboardStorage = (
 
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_STORAGE],
   queryFn: async () => {
     const res = await ApiManager.getStorage()
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useDashboardStorage ... res: `, _res);
     return _res;
   },
@@ -99,11 +101,11 @@ export const useDashboardStorage = (
 export const useDashboardHosts = (
 
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_HOSTS],
   queryFn: async () => {
     const res = await ApiManager.getHosts()
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useDashboardHosts ... res: `, _res);
     return _res
   },
@@ -112,13 +114,13 @@ export const useDashboardHosts = (
 export const useDashboardDomain = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_DOMAIN],
   queryFn: async () => {
     const res = await ApiManager.getDomain()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardDomain ... res: `, _res);
     return _res
   },
@@ -128,45 +130,45 @@ export const useDashboardHost = (
   hostId,
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_HOST],
   queryFn: async () => {
     const res = await ApiManager.getHost(hostId)
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardHost ... hostId: ${hostId}, res: `, _res);
     return _res;
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
   },
 });
 
 export const useDashboardVmCpu = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_VM_CPU],
   queryFn: async () => {
     const res = await ApiManager.getVmCpu();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardVmCpu ... res: `, _res);
     return _res;
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
   },
 });
 
 export const useDashboardVmMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_VM_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardVmMemory ... res: `, _res);
     return _res;
   },
@@ -175,13 +177,14 @@ export const useDashboardVmMemory = (
 export const useDashboardStorageMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_STORAGE_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getStorageMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardStorageMemory ... res: `, _res);
     return _res
   },
@@ -195,8 +198,8 @@ export const useDashboardPerVmCpu = (
   queryFn: async () => {
     const res = await ApiManager.getPerVmCpu()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
     return _res
   },
@@ -210,11 +213,11 @@ export const useDashboardPerVmMemory = (
   queryFn: async () => {
     const res = await ApiManager.getPerVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
     return _res
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
   }
 });
 export const useDashboardPerVmNetwork = (
@@ -226,11 +229,11 @@ export const useDashboardPerVmNetwork = (
     Logger.debug(`dashboardPerVmNetwork ...`);
     const res = await ApiManager.getPerVmNetwork()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > dashboardPerVmNetwork ... res: `, _res);
     return _res
-    // return validate(res)?.map((e) => mapPredicate(e)) ?? []
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
   }
 });
 
@@ -243,8 +246,8 @@ export const useDashboardMetricVmCpu = (
     Logger.debug(`useDashboardMetricVmCpu ...`);
     const res = await ApiManager.getMetricVmCpu()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricVmCpu ... res: `, _res);
     return _res
   }
@@ -257,8 +260,8 @@ export const useDashboardMetricVmMemory = (
   queryFn: async () => {
     const res = await ApiManager.getMetricVmMemory()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricVmMemory ... res: `, _res);
     return _res
   }
@@ -271,8 +274,8 @@ export const useDashboardMetricStorage = (
   queryFn: async () => {
     const res = await ApiManager.getMetricStorage()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useDashboardMetricStorage ... res: `, _res);
     return _res
   }
@@ -297,8 +300,8 @@ export const useAllDataCenters = (
   queryFn: async () => {
     const res = await ApiManager.findAllDataCenters();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllDataCenters ... res: `, _res);
     return _res;
   }
@@ -317,7 +320,7 @@ export const useDataCenter = (
   queryKey: ['dataCenter', dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
   queryFn: async () => {
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
-    const _res = validate(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
+    const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
     Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -343,8 +346,8 @@ export const useClustersFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findAllClustersFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공 
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공 
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > clustersFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
@@ -371,8 +374,8 @@ export const useHostsFromDataCenter = (
     // if(dataCenterId === '') return [];
     const res = await ApiManager.findAllHostsFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useHostsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
@@ -397,8 +400,8 @@ export const useVMsFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? []; // 데이터 가공
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? []; // 데이터 가공
     Logger.debug(`RQHook > useVMsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -407,7 +410,34 @@ export const useVMsFromDataCenter = (
   cacheTime: 0,
 });
 /**
- * @name useDomainsFromDataCenter
+ * @name qpAllDomainsFromDataCenter
+ * @description useQuery용 데이터센터 내 스토리지 도메인 목록조회 쿼리 파라미터
+ * 
+ * @param {string} dataCenterId 데이터센터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery용 쿼리 파라미터
+ * 
+ * @see ApiManager.findAllDomainsFromDataCenter
+ */
+const qpAllDomainsFromDataCenter = (
+  dataCenterId,
+  mapPredicate = (e) => ({ ...e })
+) => ({
+  // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['domainsFromDataCenter', dataCenterId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId);
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > qpAllDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
+  suspense: true,
+})
+/**
+ * @name useAllDomainsFromDataCenter
  * @description 데이터센터 내 스토리지 도메인 목록조회 useQuery훅
  * 
  * @param {string} dataCenterId 데이터센터ID
@@ -416,21 +446,32 @@ export const useVMsFromDataCenter = (
  * 
  * @see ApiManager.findAllDomainsFromDataCenter
  */
-export const useDomainsFromDataCenter = (
+export const useAllDomainsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['domainsFromDataCenter', dataCenterId],
-  queryFn: async () => {
-    const res = await ApiManager.findAllDomainsFromDataCenter(dataCenterId);
-    const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
+  ...qpAllDomainsFromDataCenter(dataCenterId, mapPredicate)
+});
+/**
+ * @name useAllDomainsFromDataCenter4EachDisk
+ * @description (디스크가 소속 된) 데이터센터 내 스토리지 도메인 목록조회 useQueries훅
+ * 
+ * @param {*} disks 디스크 목록
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQueries훅
+ * 
+ * @see ApiManager.findAllDomainsFromDataCenter
+ */
+export const useAllDomainsFromDataCenter4EachDisk = (
+  disks=[],
+  mapPredicate = (e) => ({ ...e })
+) => useQueries({
+  queries: [...disks]?.map((d, i) => {
+    Logger.debug(`RQHook > useAllDomainsFromDataCenter4EachDisk ... d: `, d);
+    return {
+      ...qpAllDomainsFromDataCenter(d?.dataCenterVo?.id, mapPredicate),
+    }
+  })
 });
 /**
  * @name useNetworksFromDataCenter
@@ -451,8 +492,8 @@ export const useNetworksFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findAllNetworksFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -478,8 +519,8 @@ export const useFindTemplatesFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findTemplatesFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useFindTemplatesFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -504,8 +545,8 @@ export const useAllAttachedDisksFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findAllAttachedDisksFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllAttachedDisksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -531,8 +572,8 @@ export const useCDFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findAllISOFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
@@ -555,7 +596,7 @@ export const useAddDataCenter = (
     mutationFn: async (dataCenterData) => {
       closeModal()
       const res = await ApiManager.addDataCenter(dataCenterData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddDataCenter ... dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
       return _res;
     },
@@ -589,7 +630,7 @@ export const useEditDataCenter = (
     mutationFn: async ({ dataCenterId, dataCenterData }) => {
       closeModal();
       const res = await ApiManager.editDataCenter(dataCenterId, dataCenterData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditDataCenter ... dataCenterId: ${dataCenterId}, dataCenterData: ${JSON.stringify(dataCenterData, null, 2)}`)
       return _res;
     },
@@ -623,7 +664,7 @@ export const useDeleteDataCenter = (
     mutationFn: async (dataCenterId) => {
       closeModal();
       const res = await ApiManager.deleteDataCenter(dataCenterId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteDataCenter ... dataCenterId: ${dataCenterId}`)
       return _res;
     },
@@ -660,8 +701,8 @@ export const useAllClusters = (
   queryFn: async () => {
     const res = await ApiManager.findAllClusters()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllClusters ... res: `, _res);
     return _res;
   }
@@ -681,8 +722,8 @@ export const useAllUpClusters = (
   queryFn: async () => {
     const res = await ApiManager.findAllUpClusters()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUpClusters ... res: `, _res);
     return _res
   }
@@ -703,7 +744,7 @@ export const useCluster = (
   queryKey: ['cluster', clusterId],  // queryKey에 clusterId를 포함시켜 clusterId가 변경되면 다시 요청
   queryFn: async () => {
     const res = await ApiManager.findCluster(clusterId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
@@ -730,8 +771,8 @@ export const useNetworkFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findNetworksFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useNetworkFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
@@ -756,8 +797,8 @@ export const useHostsFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findHostsFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useHostsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
@@ -785,8 +826,8 @@ export const useVMsFromCluster = (
     Logger.debug(`useVMsFromCluster ... ${clusterId}`);
     const res = await ApiManager.findVMsFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useVMsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res;
   },
@@ -811,8 +852,8 @@ export const usePermissionsFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findPermissionsFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > usePermissionsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
@@ -838,8 +879,8 @@ export const useCpuProfilesFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findCpuProfilesFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useCpuProfilesFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
@@ -867,8 +908,8 @@ export const useAllOpearatingSystemsFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findAllOperatingSystemsFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllOpearatingSystemsFromCluster ... ${clusterId}, res: `, _res);
     return _res
   },
@@ -896,8 +937,8 @@ export const useAllVnicsFromCluster = (
   queryFn: async () => {
     const res = await ApiManager.findVNicFromCluster(clusterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVnicsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
@@ -923,7 +964,7 @@ export const useAddCluster = (
     mutationFn: async (clusterData) => {
       closeModal();
       const res = await ApiManager.addCluster(clusterData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddCluster ... clusterData: ${clusterData}`)
       return _res
     },
@@ -957,7 +998,7 @@ export const useEditCluster = (
     mutationFn: async ({ clusterId, clusterData }) => {
       closeModal();
       const res = await ApiManager.editCluster(clusterId, clusterData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}, clusterData: `, clusterData)
       return _res;
     },
@@ -992,7 +1033,7 @@ export const useDeleteCluster = (
     mutationFn: async (clusterId) => {
       closeModal();
       const res = await ApiManager.deleteCluster(clusterId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}`)
       return _res;
     },
@@ -1031,8 +1072,8 @@ export const useAllClusterLevels = (
   queryFn: async () => {
     const res = await ApiManager.findAllClusterLevels(category)
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllClusterLevels ... res: `, _res);
     return _res;
   }
@@ -1051,7 +1092,7 @@ export const useClusterLevel = (
   queryKey: ['allClusters'],
   queryFn: async () => {
     const res = await ApiManager.findClusterLevel(clusterLevelId)
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useClusterLevel ... useClusterLevel: ${clusterLevelId}`)
     return _res
   }
@@ -1074,8 +1115,8 @@ export const useAllHosts = (
   queryFn: async () => {
     const res = await ApiManager.findAllHosts()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllHosts ... res: `, _res);
     return _res
   }
@@ -1096,7 +1137,7 @@ export const useHost = (
   queryKey: ['HostById', hostId], // TODO: host로 변경
   queryFn: async () => {
     const res = await ApiManager.findHost(hostId)
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
@@ -1123,8 +1164,8 @@ export const useVmsFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findVmsFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useVmsFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
@@ -1149,8 +1190,8 @@ export const useNetworkInterfacesFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findHostNicsFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useNetworkInterfacesFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
@@ -1173,7 +1214,7 @@ export const useNetworkInterfaceFromHost = (
   queryKey: ['NetworkInterfaceFromHost', hostId, nicId],
   queryFn: async () => {
     const res = await ApiManager.findHostNicFromHost(hostId, nicId);
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useNetworkInterfaceFromHost ... hostId: ${hostId} nicId: ${nicId},  res: `, _res);
     return _res
   },
@@ -1198,8 +1239,8 @@ export const useNetworkAttachmentsFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findNetworkAttachmentsFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useNetworkAttachmentsFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
@@ -1222,7 +1263,7 @@ export const useNetworkAttachmentFromHost = (
   queryKey: ['NetworkAttachmentsFromHost', hostId, networkAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findNetworkAttachmentFromHost(hostId, networkAttachmentId);
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useNetworkAttachmentFromHost ... hostId: ${hostId} networkAttachmentId: ${networkAttachmentId},  res: `, _res);
     return _res
   },
@@ -1246,7 +1287,7 @@ export const useSetupNetworksFromHost = (
     mutationFn: async ({ hostId, hostNetworkVo }) => {
       closeModal();
       const res = await ApiManager.setupHostNicsFromHost(hostId, hostNetworkVo);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useSetupNetworksFromHost ... hostId: ${hostId}, hostNetworkVo: `, hostNetworkVo)
       return _res
     },
@@ -1282,7 +1323,7 @@ export const useEditHostNetworkFromHost = (
     mutationFn: async ({ hostId, networkAttachmentId, networkAttachmentData }) => {
       closeModal();
       const res = await ApiManager.editNetworkAttachmentFromHost(hostId, networkAttachmentId, networkAttachmentData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditHostNetworkFromHost ... hostId: ${hostId}, networkAttachmentId: ${networkAttachmentId}, networkAttachmentData: `, networkAttachmentData)
       return _res
     },
@@ -1319,7 +1360,7 @@ export const useAddBonding = (
     mutationFn: async ({ hostId, bonding }) => {
       closeModal();
       const res = await ApiManager.addBonding(hostId, bonding);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useAddBonding ... hostId: ${hostId}, bonding: `, bonding);
       return _res;
     },
@@ -1356,7 +1397,7 @@ export const useEditBonding = (
     mutationFn: async ({ hostId, hostNicData }) => {
       closeModal();
       const res = await ApiManager.editBonding(hostId, hostNicData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEditBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
       return _res;
     },
@@ -1392,7 +1433,7 @@ export const useDeleteBonding = (
     mutationFn: async (hostId, hostNicData) => {
       closeModal();
       const res = await ApiManager.deleteBonding(hostId, hostNicData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
       return _res;
     },
@@ -1429,8 +1470,8 @@ export const useHostDevicesFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useHostDevicesFromHost ... hostId: ${hostId},  res: `, _res);
     return _res
   },
@@ -1456,8 +1497,8 @@ export const useStoragesFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findAllStoragesFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useStoragesFromHost ... hostId: ${hostId}, res: `, _res);
     return _res; // 데이터 가공 후 반환
   },
@@ -1482,8 +1523,8 @@ export const useIscsiFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findAllIscsiFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useIscsiFromHost ... hostId: ${hostId}, res: `, _res);
     return _res; // 데이터 가공 후 반환
   },
@@ -1508,8 +1549,8 @@ export const useFibreFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findAllFibreFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useFibreFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
@@ -1536,7 +1577,7 @@ export const useSearchIscsiFromHost = (
     mutationFn: async ({ hostId, iscsiData }) => {
       closeModal();
       const res = await ApiManager.findSearchIscsiFromHost(hostId, iscsiData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useSearchIscsiFromHost ... hostId: ${hostId}, iscsiData: `, iscsiData);
       return _res;
     },
@@ -1573,8 +1614,8 @@ export const useSearchFcFromHost = (
   queryFn: async () => {
     const res = await ApiManager.findSearchFcFromHost(hostId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}, res: `, _res);
     return _res; // 데이터 가공 후 반환
   },
@@ -1589,7 +1630,7 @@ export const useSearchFcFromHost = (
     mutationFn: async ({ hostId }) => {
       closeModal();
       const res = await ApiManager.findSearchFcFromHost(hostId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1629,7 +1670,7 @@ export const useLoginIscsiFromHost = (
     mutationFn: async ({ hostId, iscsiData }) => {
       closeModal();
       const res = await ApiManager.findLoginIscsiFromHost(hostId, iscsiData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useLoginIscsiFromHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1664,7 +1705,7 @@ export const useAddHost = (
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       closeModal();
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
       return _res;
     },
@@ -1698,7 +1739,7 @@ export const useEditHost = (
     mutationFn: async ({ hostId, hostData }) => {
       closeModal();
       const res = await ApiManager.editHost(hostId, hostData)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEditHost ... hostId: ${hostId}, hostData: `, hostData);
       return _res;
     },
@@ -1732,7 +1773,7 @@ export const useDeleteHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deleteHost(hostId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteHost ... hostId: ${hostId}`)
       return _res;
     },
@@ -1767,7 +1808,7 @@ export const useDeactivateHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deactivateHost(hostId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeactivateHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1802,7 +1843,7 @@ export const useActivateHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.activateHost(hostId)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useActivateHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1837,7 +1878,7 @@ export const useRestartHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.restartHost(hostId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useRestartHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1872,7 +1913,7 @@ export const useEnrollHostCertificate = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.enrollHostCertificate(hostId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEnrollHostCertificate ... hostId: ${hostId}`);
       return _res;
     },
@@ -1908,7 +1949,7 @@ export const useRefreshHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.refreshHost(hostId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useRefreshHost ... hostId: ${hostId}`);
       return _res;
     },
@@ -1943,7 +1984,7 @@ export const useCommitNetConfigHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.commitNetConfigHost(hostId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > usecommitNetConfigHost ... hostId: ${hostId}`)
       return _res;
     },
@@ -1978,7 +2019,7 @@ export const useActivateGlobalHaHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.activateGlobalHaHost(hostId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > ussActivateGlobalHaHost ... hostId: ${hostId}`)
       return _res;
     },
@@ -2012,7 +2053,7 @@ export const useDeactivateGlobalHaHost = (
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deactivateGlobalHaHost(hostId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeactivateGlobalHaHost ... hostId: ${hostId}`)
       return _res;
     },
@@ -2049,8 +2090,8 @@ export const useAllVMs = (
   queryFn: async () => {
     const res = await ApiManager.findAllVMs()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVMs ... res: `, _res);
     return _res;
 
@@ -2071,7 +2112,7 @@ export const useVm = (
   queryKey: ['vm', vmId],
   queryFn: async () => {
     const res = await ApiManager.findVM(vmId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -2097,8 +2138,8 @@ export const useDisksFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findDisksFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -2124,8 +2165,8 @@ export const useSnapshotsFromVM = (
     Logger.debug(`useSnapshotFromVM ... ${vmId}`);
     const res = await ApiManager.findSnapshotsFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
@@ -2154,7 +2195,7 @@ export const useSnapshotDetailFromVM = (
       return {};
     }
     const res = await ApiManager.findSnapshotFromVm(vmId, snapshotId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -2178,7 +2219,7 @@ export const useAddSnapshotFromVM = (
     mutationFn: async ({ vmId, snapshotData }) => {
       closeModal();
       const res = await ApiManager.addSnapshotFromVM(vmId, snapshotData)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useAddSnapshotFromVM ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
       return _res
     },
@@ -2213,7 +2254,7 @@ export const useDeleteSnapshot = (
     mutationFn: async ({ vmId, snapshotId }) => {
       closeModal();
       const res = await ApiManager.deleteSnapshotFromVM(vmId, snapshotId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteSnapshot ... vmId: ${vmId}, snapshotId: ${snapshotId}`)
       return _res;
     },
@@ -2242,7 +2283,7 @@ export const usePreviewSnapshot = (
     mutationFn: async ({ vmId, snapshotId }) => {
       closeModal();
       const res = await ApiManager.previewSnapshotFromVM(vmId, snapshotId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > usePreviewSnapshot ... vmId: ${vmId}, snapshotId: ${snapshotId}`)
       return _res;
     },
@@ -2271,7 +2312,7 @@ export const useCommitSnapshot = (
     mutationFn: async ({ vmId }) => {
       closeModal();
       const res = await ApiManager.commitSnapshotFromVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useCommitSnapshot ... vmId: ${vmId}`);
       return _res;
     },
@@ -2300,7 +2341,7 @@ export const useUndoSnapshot = (
     mutationFn: async ({ vmId }) => {
       closeModal();
       const res = await ApiManager.undoSnapshotFromVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useUndoSnapshot ... vmId: ${vmId}`)
       return _res;
     },
@@ -2338,8 +2379,8 @@ export const useHostDevicesFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useHostDevicesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
@@ -2367,8 +2408,8 @@ export const useNetworkInterfacesFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findNicsFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useNetworkInterfacesFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
@@ -2395,7 +2436,7 @@ export const useNetworkInterfaceFromVM = (
   queryKey: ['networkInterfaceFromVM', vmId],
   queryFn: async () => {
     const res = await ApiManager.findNicFromVM(vmId, nicId);
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useNetworkInterfaceFromVM ... vmId: ${vmId}, nicId: ${nicId}, res: `, _res);
     return _res
   },
@@ -2423,8 +2464,8 @@ export const useApplicationsFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findApplicationsFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useApplicationsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res
   },
@@ -2445,9 +2486,9 @@ export const useVmConsoleAccessInfo = (
   queryKey: ['vmConsoleAccessInfo', vmId],
   queryFn: async () => {
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useVmConsoleAccessInfo ... vmId: ${vmId}, res: `, _res);
-    return validate(res);
+    return validateAPI(res);
   },
   enabled: !!vmId
 })
@@ -2469,7 +2510,7 @@ export const useRemoteViewerConnectionFileFromVm = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.generateVmRemoteViewerConnectionFile(vmId);
-      // const _res = validate(res) ?? {};
+      // const _res = validateAPI(res) ?? {};
       // 파일에 넣을 텍스트 파일을 전달
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... vmId: ${vmId}`);
       return res;
@@ -2506,7 +2547,7 @@ export const useAddVm = (
     mutationFn: async (vmData) => {
       closeModal();
       const res = await ApiManager.addVM(vmData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddVm ... vmData: `, vmData);
       return _res
     },
@@ -2540,7 +2581,7 @@ export const useEditVm = (
     mutationFn: async ({ vmId, vmData }) => {
       closeModal();
       const res = await ApiManager.editVM(vmId, vmData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditVm ... vmData: `, vmData);
       return _res;
     },
@@ -2576,7 +2617,7 @@ export const useDeleteVm = (
     mutationFn: async ({ vmId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteVM(vmId, detachOnly);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
       return _res;
     },
@@ -2614,7 +2655,7 @@ export const useStartVM = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.startVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useStartVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2647,7 +2688,7 @@ export const useStartOnceVM = (
     mutationFn: async ({vmId, vmData}) => {
       closeModal();
       const res = await ApiManager.startOnceVM(vmId, vmData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useStartOnceVM ... vmData: ${vmData}`);
       return _res;
     },
@@ -2680,7 +2721,7 @@ export const usePauseVM = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.pauseVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > usePauseVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2714,7 +2755,7 @@ export const useShutdownVM = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.shutdownVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useShutdownVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2748,7 +2789,7 @@ export const usePowerOffVM = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.powerOffVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > usePowerOffVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2783,7 +2824,7 @@ export const useRebootVM = (
     mutationFn: async (vmId) => {
       closeModal()
       const res = await ApiManager.rebootVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useRebootVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2816,7 +2857,7 @@ export const useResetVM = (
     mutationFn: async (vmId) => {
       closeModal()
       const res = await ApiManager.resetVM(vmId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useResetVM ... vmId: ${vmId}`);
       return _res;
     },
@@ -2854,8 +2895,8 @@ export const useAllMigratableHostsFromVM = (
   queryFn: async () => {
     const res = await ApiManager.findAllMigratableHostsFromVM(vmId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllMigratableHostsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -2881,8 +2922,8 @@ export const useAllMigratableHosts4Vms = (
   queryFn: async () => {
     const res = await ApiManager.findAllMigratableHosts4Vms(vmIds);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllMigratableHosts4Vms ... vmIds: ${vmIds}, res: `, _res);
     return _res;
   },
@@ -2905,7 +2946,7 @@ export const useMigration = (
     mutationFn: async ({ vmId, vm, affinityClosure }) => {
       closeModal()
       const res = await ApiManager.migrateVM(vmId, vm, affinityClosure);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useMigration ... vmId: ${vmId}, vm: ${vm}, affinityClosure: ${affinityClosure}`);
       return _res
     },
@@ -2937,7 +2978,7 @@ export const useVmScreenshot = (
   queryKey: ['vmScreenshot', vmId],
   queryFn: async () => {
     const res = await ApiManager.takeVmScreenshot(vmId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useVmScreenshot ... vmId: ${vmId}, res: `, _res);
     return _res[[vmId]];
   },
@@ -2957,7 +2998,7 @@ export const useCdromFromVm = (
   queryKey: ['cdromFromVm', vmId],
   queryFn: async () => {
     const res = await ApiManager.findCdromFromVm(vmId, current);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useCdromFromVm ... vmId: ${vmId}, current: ${current}, res: `, _res);
     return _res
   },
@@ -2979,7 +3020,7 @@ export const useUpdateCdromFromVM = (
     mutationFn: async ({ vmId, cdromFileId, current=true }) => {
       closeModal()
       const res = await ApiManager.updateCdromFromVm(vmId, cdromFileId, current);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useUpdateCdromFromVM ... vmId: ${vmId}, cdromFileId: ${cdromFileId}, current: ${current}`);
       return _res
     },
@@ -3013,7 +3054,7 @@ export const useExportVM = (
     mutationFn: async (vmId) => {
       closeModal();
       const res = await ApiManager.exportVM(vmId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useExportVM ... vmId: ${vmId}`);
       return _res
     },
@@ -3047,7 +3088,7 @@ export const useAddNicFromVM = (
     mutationFn: async ({ vmId, nicData }) => {
       closeModal();
       const res = await ApiManager.addNicFromVM(vmId, nicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddNicFromVM ... vmId: ${vmId}, nicData: ${nicData}`);
       return _res
     },
@@ -3082,7 +3123,7 @@ export const useEditNicFromVM = (
     mutationFn: async ({ vmId, nicId, nicData }) => {
       closeModal();
       const res = await ApiManager.editNicFromVM(vmId, nicId, nicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditNicFromVM ... vmId: ${vmId}, nicId: ${nicId}, nicData: ${nicData}`);
       return _res
     },
@@ -3119,7 +3160,7 @@ export const useDeleteNetworkInterface = (
       console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ[DeleteNIC] Called with vmId:", vmId, "nicId:", nicId);
       closeModal();
       const res = await ApiManager.deleteNicFromVM(vmId, nicId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteNetworkInterface ... vmId: ${vmId}, nicId: ${nicId}`);
       return _res
     },
@@ -3154,7 +3195,7 @@ export const useDiskAttachmentFromVm = (
   queryKey: ['diskAttachmentFromVm', vmId, diskAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useDiskAttachmentFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, res: `, _res);
     return _res;
   },
@@ -3176,7 +3217,7 @@ export const useAddDiskFromVM = (
     mutationFn: async ({ vmId, diskData }) => {
       closeModal();
       const res = await ApiManager.addDiskFromVM(vmId, diskData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddDiskFromVM ... vmId: ${vmId}, diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res
     },
@@ -3211,7 +3252,7 @@ export const useEditDiskFromVM = (
     mutationFn: async ({ vmId, diskAttachmentId, diskAttachment }) => {
       closeModal();
       const res = await ApiManager.editDiskFromVM(vmId, diskAttachmentId, diskAttachment);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
       return _res
     },
@@ -3246,7 +3287,7 @@ export const useDeleteDiskFromVM = (
     mutationFn: async ({ vmId, diskAttachmentId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteDiskFromVM(vmId, diskAttachmentId, detachOnly);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteDiskFromVM ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, detachOnly: ${detachOnly}`);
       return _res
     },
@@ -3282,7 +3323,7 @@ export const useConnDiskFromVM = (
     mutationFn: async ({ vmId, diskAttachment }) => {
       closeModal();
       const res = await ApiManager.attachDiskFromVM(vmId, diskAttachment);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useConnDiskFromVM ... vmId: ${vmId}, diskAttachment: ${JSON.stringify(diskAttachment, null, 2)}`);
       return _res
     },
@@ -3315,7 +3356,7 @@ export const useConnDiskListFromVM = (
     return useMutation({
     mutationFn: async ({ vmId, diskAttachmentList }) => {
       const res = await ApiManager.attachDisksFromVM(vmId, diskAttachmentList);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useConnDiskListFromVM ... vmId: ${vmId}, diskAttachmentList: ${JSON.stringify(diskAttachmentList, null, 2)}`);
       return _res
     },
@@ -3350,7 +3391,7 @@ export const useDeactivateDiskFromVm = (
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId }) => {
       const res = await ApiManager.deactivateDisksFromVM(vmId, diskAttachmentId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeactivateDiskFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}`);
       return _res
     },
@@ -3383,7 +3424,7 @@ export const useActivateDiskFromVm = (
   return useMutation({
     mutationFn: async ({ vmId, diskAttachmentId }) => {
       const res = await ApiManager.activateDisksFromVM(vmId, diskAttachmentId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useActivateDiskFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}`);
       return _res
     },
@@ -3422,7 +3463,7 @@ export const useFindDiskFromVM = (vmId,diskId) => useQuery({
      Logger.debug(`useFindDiskFromVM 디스크아이디 ... ${diskId}`);
      const res = await ApiManager.findDiskFromVM(vmId,diskId); 
      Logger.debug('API Response:', res); // 반환된 데이터 구조 확인
-     return validate(res) ?? {}; 
+     return validateAPI(res) ?? {}; 
    },
 });
 */
@@ -3445,8 +3486,8 @@ export const useAllTemplates = (
   queryFn: async () => {
     const res = await ApiManager.findAllTemplates()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllTemplates ... res: `, _res);
     return _res;
   }
@@ -3465,7 +3506,7 @@ export const useTemplate = (
   queryKey: ['template', templateId],
   queryFn: async () => {
     const res = await ApiManager.findTemplate(templateId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useTemplate ... templateId: ${templateId} res: `, _res);
     return _res;
   },
@@ -3493,8 +3534,8 @@ export const useAllVmsFromTemplate = (
   queryFn: async () => {
     const res = await ApiManager.findVMsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
@@ -3520,8 +3561,8 @@ export const useAllNicsFromTemplate = (
   queryFn: async () => {
     const res = await ApiManager.findAllNicsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllVmsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
@@ -3550,7 +3591,7 @@ export const useNicFromTemplate = (
     queryKey: ['nicFromTemplate', templateId, nicId],
     queryFn: async () => {
       const res = await ApiManager.findNicFromTemplate(templateId, nicId);
-      const validated = validate(res); 
+      const validated = validateAPI(res); 
       return mapPredicate ? mapPredicate(validated) : validated;
     },
     enabled: !!templateId && !!nicId,
@@ -3574,8 +3615,8 @@ export const useAllDisksFromTemplate = (
   queryFn: async () => {
     const res = await ApiManager.findDisksFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
@@ -3601,8 +3642,8 @@ export const useAllStoragesFromTemplate = (
   queryFn: async () => {
     const res = await ApiManager.findStorageDomainsFromTemplate(templateId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllDisksFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
@@ -3627,7 +3668,7 @@ export const useAddTemplate = (
     mutationFn: async ({ vmId, templateData }) => {
       closeModal();
       const res = await ApiManager.addTemplate(vmId, templateData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddTemplate ... vmId: ${vmId}, templateData: ${JSON.stringify(templateData, null, 2)}`)
       return _res
     },
@@ -3661,7 +3702,7 @@ export const useEditTemplate = (
     mutationFn: async ({ templateId, templateData }) => {
       closeModal();
       const res = await ApiManager.editTemplate(templateId, templateData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditTemplate ... templateId: ${templateId}, templateData: ${JSON.stringify(templateData, null, 2)}`)
       return _res;
     },
@@ -3696,7 +3737,7 @@ export const useDeleteTemplate = (
     mutationFn: async (templateId) => {
       closeModal();
       const res = await ApiManager.deleteTemplate(templateId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteTemplate ... templateId: ${templateId}`)
       return _res;
     },
@@ -3734,8 +3775,8 @@ export const useAllBiosTypes = (
   queryFn: async () => {
     const res = await ApiManager.findAllBiosTypes();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllBiosTypes ... res: `, _res);
     return _res;
   },
@@ -3756,8 +3797,8 @@ export const useAllDiskContentTypes = (
   queryFn: async () => {
     const res = await ApiManager.findAllDiskContentTypes();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllDiskContentTypes ... res: `, _res);
     return _res;
   },
@@ -3778,8 +3819,8 @@ export const useAllMigrationSupports = (
   queryFn: async () => {
     const res = await ApiManager.findAllMigrationSupports();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllMigrationSupports ... res: `, _res);
     return _res;
   },
@@ -3800,8 +3841,8 @@ export const useAllQuotaEnforcementTypes = (
   queryFn: async () => {
     const res = await ApiManager.findAllQuotaEnforcementTypes();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllQuotaEnforcementTypes ... res: `, _res);
     return _res;
   },
@@ -3822,8 +3863,8 @@ export const useAllVmTypes = (
   queryFn: async () => {
     const res = await ApiManager.findAllVmTypes();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllVmTypes ... res: `, _res);
     return _res;
   },
@@ -3847,7 +3888,7 @@ export const useAddNicFromTemplate = (
     mutationFn: async ({ templateId, nicData }) => {
       closeModal();
       const res = await ApiManager.addNicFromTemplate(templateId, nicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddNicFromTemplate ... templateId: ${templateId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
       return _res;
     },
@@ -3883,7 +3924,7 @@ export const useEditNicFromTemplate = (
         console.log("✅ ✅✅✅useEditNicFromTemplate 실행됨!");
       closeModal();
       const res = await ApiManager.editNicFromTemplate(templateId, nicId, nicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, nicData: ${JSON.stringify(nicData, null, 2)}`)
       return _res;
     },
@@ -3920,7 +3961,7 @@ export const useDeleteNetworkFromTemplate = (
     mutationFn: async ({ templateId, nicId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteNicFromTemplate(templateId, nicId, detachOnly);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditNicFromTemplate ... templateId: ${templateId}, nicId: ${nicId}, detachOnly: ${detachOnly}`)
       return _res;
     },
@@ -3957,8 +3998,8 @@ export const useAllNetworks = (
   queryFn: async () => {
     const res = await ApiManager.findAllNetworks();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useFibreFromHost ... res: `, _res);
     return _res
   }
@@ -3976,7 +4017,7 @@ export const useNetwork = (
   queryKey: ['network', networkId],
   queryFn: async () => {
     const res = await ApiManager.findNetwork(networkId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useFibreFromHost ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
@@ -4003,8 +4044,8 @@ export const useAllClustersFromNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findAllClustersFromNetwork(networkId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllClustersFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
@@ -4029,8 +4070,8 @@ export const useConnectedHostsFromNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findConnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useConnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
@@ -4059,8 +4100,8 @@ export const useDisconnectedHostsFromNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useDisconnectedHostsFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
@@ -4089,7 +4130,7 @@ export const useAllVmsFromNetwork = (
   queryFn: async () => {
     Logger.debug(`useAllVmsFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVmsFromNetwork(networkId);
-    return validate(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
+    return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []; // 데이터 가공
   },
   enabled: !!networkId,
 })
@@ -4112,13 +4153,23 @@ export const useAllTemplatesFromNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllTemplatesFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId,
 })
+/**
+ * @name qpAllVnicProfilesFromNetwork
+ * @description useQuery용 네트워크 내 VNIC 프로필 목록조회 쿼리 파라미터
+ * 
+ * @param {string} networkId 네트워크ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllVnicProfilesFromNetwork
+ */
 const qpAllVnicProfilesFromNetwork = (
   networkId,
   mapPredicate = (e) => ({ ...e }),
@@ -4128,12 +4179,13 @@ const qpAllVnicProfilesFromNetwork = (
   queryFn: async () => {
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
-    Logger.debug(`RQHook > useAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > qpAllVnicProfilesFromNetwork ... networkId: ${networkId}, res: `, _res);
     return _res;
   },
   enabled: !!networkId,
+  suspense: true,
 })
 /**
  * @name useAllVnicProfilesFromNetwork
@@ -4185,7 +4237,7 @@ export const useAddNetwork = (
     mutationFn: async (networkData) => {
       closeModal();
       const res = await ApiManager.addNetwork(networkData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddNetwork ... networkData: ${JSON.stringify(networkData, null, 2)}`)
       return _res;
     },
@@ -4219,7 +4271,7 @@ export const useEditNetwork = (
     mutationFn: async ({ networkId, networkData }) => {
       closeModal();
       const res = await ApiManager.editNetwork(networkId, networkData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEditNetwork ... networkId: ${networkId}, networkData: ${JSON.stringify(networkData, null, 2)}`)
       return _res;
     },
@@ -4254,7 +4306,7 @@ export const useDeleteNetwork = (
     mutationFn: async (networkId) => {
       closeModal();
       const res = await ApiManager.deleteNetwork(networkId)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteNetwork ... networkId: ${networkId}`)
       return _res;
     },
@@ -4287,8 +4339,8 @@ export const useAllNetworkProviders = (
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkProviders();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
     return _res;
   }
@@ -4312,8 +4364,8 @@ export const useAllVnicProfiles = (
   queryFn: async () => {
     const res = await ApiManager.findAllVnicProfiles();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVnicProfiles ... res: `, _res);
     return _res;
   }
@@ -4330,7 +4382,7 @@ export const useVnicProfile = (vnicId) => useQuery({
   queryKey: ['vnicId', vnicId],
   queryFn: async () => {
     const res = await ApiManager.findVnicProfile(vnicId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useVnicProfile ... vnicId: ${vnicId}, res: `, _res);
     return _res;
   },
@@ -4357,8 +4409,8 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromVnicProfiles(vnicProfileId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVmsFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: `, _res);
     return _res;
   },
@@ -4383,8 +4435,8 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... vnicProfileId: ${vnicProfileId}, res: `, _res);
     return _res;
   },
@@ -4410,7 +4462,7 @@ export const useAddVnicProfile = (
     mutationFn: async (vnicData) => {
       closeModal();
       const res = await ApiManager.addVnicProfiles(vnicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddVnicProfile ... vnicData: ${JSON.stringify(vnicData, null, 2)}`);
       return _res;
     },
@@ -4443,7 +4495,7 @@ export const useEditVnicProfile = (
     mutationFn: async ({ vnicId, vnicData }) => {
       closeModal()
       const res = await ApiManager.editVnicProfiles(vnicId, vnicData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditVnicProfile ... vnicId: ${vnicId}, vnicData: ${JSON.stringify(vnicData, null, 2)}`);
       return _res;
     },
@@ -4477,7 +4529,7 @@ export const useDeleteVnicProfile = (
     mutationFn: async (vnicProfileId) => {
       closeModal();
       const res = await ApiManager.deleteVnicProfiles(vnicProfileId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteVnicProfile ... vnicProfileId: ${vnicProfileId}`);
       return _res;
     },
@@ -4513,8 +4565,8 @@ export const useNetworkFilters = (
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkFilters();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... res: `, _res);
     return _res;
   }
@@ -4538,8 +4590,8 @@ export const useAllStorageDomains = (
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomains()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllStorageDomains ... res: `, _res);
     return _res;
   }
@@ -4559,8 +4611,8 @@ export const useAllNfsStorageDomains = (
   queryFn: async () => {
     const res = await ApiManager.findAllNfsStorageDomains()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllNfsStorageDomains ... res: `, _res);
     return _res;
   }
@@ -4576,7 +4628,7 @@ export const useStorageDomain = (storageDomainId) => useQuery({
   queryKey: ['DomainById', storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findDomain(storageDomainId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useStorageDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4603,8 +4655,8 @@ export const useAllActiveDomainsFromDataCenter = (
   queryFn: async () => {
     const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
@@ -4630,8 +4682,8 @@ export const useAllDataCentersFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDataCentersFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4655,8 +4707,8 @@ export const useAllHostsFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllHostsFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllHostsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4681,8 +4733,8 @@ export const useAllVMsFromDomain = (storageDomainId,
   queryFn: async () => {
     const res = await ApiManager.findAllVMsFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVMsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4709,8 +4761,8 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUnregisteredVMsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4736,7 +4788,7 @@ export const useRegisteredVmFromDomain = (
     mutationFn: async ({ storageDomainId, vmVo, partialAllow, relocation }) => {
       closeModal();
       const res = await ApiManager.registeredVmFromDomain(storageDomainId, vmVo, partialAllow, relocation);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRegisteredVmFromDomain ... storageDomainId: ${storageDomainId}, vmVo: ${vmVo}, partialAllow: ${partialAllow}, relocation: ${relocation}`);
       return _res;
     },
@@ -4773,8 +4825,8 @@ export const useAllDisksFromDomain = (storageDomainId,
   queryFn: async () => {
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDisksFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4798,8 +4850,8 @@ export const useAllUnregisteredDisksFromDomain = (storageDomainId,
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredDisksFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUnregisteredDisksFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4822,7 +4874,7 @@ export const useRegisteredDiskFromDomain = (
     mutationFn: async ({ storageDomainId, diskImageVo }) => {
       closeModal();
       const res = await ApiManager.registeredDiskFromDomain(storageDomainId, diskImageVo);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRegisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskImageVo: ${diskImageVo}`);
       return _res;
     },
@@ -4851,8 +4903,8 @@ export const useRegisteredDiskFromDomain = (
 //   queryFn: async () => {
 //     const res = await ApiManager.findSearchFcFromHost(hostId);
 //     const _res = mapPredicate
-//       ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-//       : validate(res) ?? [];
+//       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+//       : validateAPI(res) ?? [];
 //     Logger.debug(`RQHook > useSearchFcFromHost ... hostId: ${hostId}, res: `, _res);
 //     return _res; // 데이터 가공 후 반환
 //   },
@@ -4874,7 +4926,7 @@ export const useDeletRegisteredDiskFromDomain = (
     mutationFn: async ({ storageDomainId, diskId }) => {
       closeModal();
       const res = await ApiManager.deleteRegisteredDiskFromDomain(storageDomainId, diskId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... storageDomainId: ${storageDomainId}, diskId: ${diskId}`);
       return _res;
     },
@@ -4911,8 +4963,8 @@ export const useAllTemplatesFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4937,8 +4989,8 @@ export const useAllUnregisteredTemplatesFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisteredTemplatesFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUnregisteredTemplatesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4963,8 +5015,8 @@ export const useAllDiskProfilesFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllDiskProfilesFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDiskProfilesFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -4989,8 +5041,8 @@ export const useAllDiskSnapshotsFromDomain = (
   queryFn: async () => {
     const res = await ApiManager.findAllDiskSnapshotsFromDomain(storageDomainId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDiskSnapshotsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -5015,8 +5067,8 @@ export const useAllActiveDataCenters = (
   queryFn: async () => {
     const res = await ApiManager.findActiveDataCenters();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllActiveDataCenters ... res: `, _res);
     return _res;
   }
@@ -5038,7 +5090,7 @@ export const useAddDomain = (
     mutationFn: async (domainData) => {
       closeModal();
       const res = await ApiManager.addDomain(domainData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddDomain ... domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
@@ -5072,7 +5124,7 @@ export const useImportDomain = (
     mutationFn: async (domainData) => {
       closeModal();
       const res = await ApiManager.importDomain(domainData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useImportDomain ... domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
@@ -5106,7 +5158,7 @@ export const useEditDomain = (
     mutationFn: async ({ domainId, domainData }) => {
       closeModal();
       const res = await ApiManager.editDomain(domainId, domainData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditDomain ... domainId: ${domainId}, domainData: ${JSON.stringify(domainData, null, 2)}`);
       return _res;
     },
@@ -5140,7 +5192,7 @@ export const useDeleteDomain = (
     mutationFn: async ({ domainId, format, hostName }) => {
       closeModal();
       const res = await ApiManager.deleteDomain(domainId, format, hostName);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteDomain ... domainId: ${domainId}, format: ${format}, hostName: ${hostName}`);
       return _res;
     },
@@ -5175,7 +5227,7 @@ export const useDestroyDomain = (
     mutationFn: async (storageDomainId) => {
       closeModal();
       const res = await ApiManager.destroyDomain(storageDomainId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDestroyDomain ... storageDomainId: ${storageDomainId}`);
       return _res;
     },
@@ -5210,7 +5262,7 @@ export const useRefreshLunDomain = (
     mutationFn: async (domainId) => {
       closeModal();
       const res = await ApiManager.refreshLunDomain(domainId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRefreshLunDomain ... domainId: ${domainId}`);
       return _res;
     },
@@ -5245,7 +5297,7 @@ export const useOvfUpdateDomain = (
     mutationFn: async (domainId) => {
       closeModal();
       const res = await ApiManager.updateOvfDomain(domainId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useOvfUpdateDomain ... domainId: ${domainId}`);
       return _res;
     },
@@ -5280,7 +5332,7 @@ export const useActivateDomain = (
     mutationFn: async ({ domainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.activateDomain(domainId, dataCenterId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useActivateDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
       return _res;
     },
@@ -5315,7 +5367,7 @@ export const useAttachDomain = (
     mutationFn: async ({ storageDomainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.attachDomain(storageDomainId, dataCenterId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useActivateDomain ... storageDomainId: ${storageDomainId}, dataCenterId: ${dataCenterId}`);
       return _res;
     },
@@ -5349,7 +5401,7 @@ export const useDetachDomain = (
     mutationFn: async ({ domainId, dataCenterId }) => {
       closeModal();
       const res = await ApiManager.detachDomain(domainId, dataCenterId);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useActivateDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId}`);
       return _res;
     },
@@ -5383,7 +5435,7 @@ export const useMaintenanceDomain = (
     mutationFn: async ({ domainId, dataCenterId, ovf }) => {
       closeModal();
       const res = await ApiManager.maintenanceDomain(domainId, dataCenterId, ovf);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useMaintenanceDomain ... domainId: ${domainId}, dataCenterId: ${dataCenterId} ovf: ${ovf}`);
       return _res;
     },
@@ -5418,8 +5470,8 @@ export const useAllDisks = (
   queryFn: async () => {
     const res = await ApiManager.findAllDisks()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDisks ... res: `, _res);
     return _res;
   },
@@ -5433,7 +5485,7 @@ export const useCdromsDisks = (diskIds = []) =>
       );
       return res.map((r, idx) => ({
         diskId: diskIds[idx],
-        cdroms: validate(r) ?? [],
+        cdroms: validateAPI(r) ?? [],
       }));
     },
     queryKey: ['cdromsForDisks', diskIds],
@@ -5453,7 +5505,7 @@ export const useDisk = (
   queryKey: ['disk', diskId],
   queryFn: async () => {
     const res = await ApiManager.findDisk(diskId);
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useDisk ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
@@ -5480,8 +5532,8 @@ export const useAllVmsFromDisk = (
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDisk(diskId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllDisks ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
@@ -5507,8 +5559,8 @@ export const useAllStorageDomainsFromDisk = (
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId);
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllStorageDomainsFromDisk ... diskId: ${diskId}, res: `, _res);
     return _res;
   },
@@ -5531,7 +5583,7 @@ export const useAddDisk = (
     mutationFn: async (diskData) => {
       closeModal();
       const res = await ApiManager.addDisk(diskData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useAddDisk ... diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res;
     },
@@ -5564,7 +5616,7 @@ export const useEditDisk = (
     mutationFn: async ({ diskId, diskData }) => {
       closeModal();
       const res = await ApiManager.editDisk(diskId, diskData);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useEditDisk ... diskId: ${diskId}, diskData: ${JSON.stringify(diskData, null, 2)}`);
       return _res;
     },
@@ -5597,7 +5649,7 @@ export const useDeleteDisk = (
     mutationFn: async (diskId) => {
       closeModal();
       const res = await ApiManager.deleteDisk(diskId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteDisk ... diskId: ${diskId}`);
       return _res;
     },
@@ -5662,7 +5714,7 @@ export const useMoveDisk = (
     mutationFn: async ({ diskId, storageDomainId }) => {
       closeModal();
       const res = await ApiManager.moveDisk(diskId, storageDomainId)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       // Logger.debug(`RQHook > useMoveDisk ... diskData: ${JSON.stringify(diskId, storageDomainId, null, 2)}`);
       return _res;
     },
@@ -5695,7 +5747,7 @@ export const useCopyDisk = (
     mutationFn: async ({ diskId, diskImage }) => {
       closeModal();
       const res = await ApiManager.copyDisk(diskId, diskImage)
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useCopyDisk ... diskImage: ${JSON.stringify(diskImage, null, 2)}`);
       return _res;
     },
@@ -5735,8 +5787,8 @@ export const useAllEvents = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents(page, size, minSeverity, startDate)
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEvents ... res: `, _res);
     return _res;
   },
@@ -5764,8 +5816,8 @@ export const useAllEventsFromDataCenter = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, datacenterId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsFromDataCenter ... datacenterId: ${datacenterId}, res: `, _res);
     return _res;
   }
@@ -5792,8 +5844,8 @@ export const useAllEventsFromCluster = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, clusterId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsFromCluster ... clusterId: ${clusterId}, res: `, _res);
     return _res
   },
@@ -5821,8 +5873,8 @@ export const useAllEventsFromHost = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, hostId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsFromHost ... hostId: ${hostId}, res: `, _res);
     return _res
   },
@@ -5850,8 +5902,8 @@ export const useAllEventsFromVM = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, vmId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
@@ -5879,8 +5931,8 @@ export const useAllEventsFromDomain = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, storageDomainId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
@@ -5908,8 +5960,8 @@ export const useAllEventsFromTemplate = ({
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, templateId });
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? []
-      : validate(res) ?? []
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
     Logger.debug(`RQHook > useAllEventsFromTemplate ... templateId: ${templateId}, res: `, _res);
     return _res;
   },
@@ -5933,8 +5985,8 @@ export const useAllEventsNormal = (
       page: 0, size: 100
     })
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsNormal ... res: `, _res);
     return _res;
   }
@@ -5950,8 +6002,8 @@ export const useAllEventsAlert = (
       page: 0, size: 20, minSeverity: "alert", startDate: "recent",
     })
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllEventsAlert ... res: `, _res);
     return _res;
   }
@@ -5967,7 +6019,7 @@ export const useRemoveEvent = (
     mutationFn: async (eventId) => {
       closeModal();
       const res = await ApiManager.removeEvent(eventId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRemoveEvent ... eventId: ${eventId}`);
       return _res;
     },
@@ -5997,7 +6049,7 @@ export const useRemoveEvents = (
     mutationFn: async (eventIds = []) => {
       closeModal();
       const res = await ApiManager.removeEvents({ eventIds });
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRemoveEvents ... eventIds: ${eventIds}`);
       return _res;
     },
@@ -6028,8 +6080,8 @@ export const useAllJobs = (
     queryFn: async () => {
       const res = await ApiManager.findAllJobs()
       const _res = mapPredicate
-        ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-        : validate(res) ?? [];
+        ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+        : validateAPI(res) ?? [];
       Logger.debug(`RQHook > useAllJobs ... res: `, _res);
       return _res;
     }
@@ -6050,7 +6102,7 @@ export const useJob = (
   queryKey: ['job', jobId],
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useJob ... jobId: ${jobId}, res: `, _res);
     return _res;
   },
@@ -6073,7 +6125,7 @@ export const useAddJob = (
     mutationFn: async (job) => {
       closeModal();
       const res = await ApiManager.addJob(job)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddJob ... job: ${JSON.stringify(job, null, 2)}`);
       return _res;
     },
@@ -6110,7 +6162,7 @@ export const useEndJob = (
     mutationFn: async ({ jobId }) => {
       closeModal();
       const res = await ApiManager.endJob(jobId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEndJob ... jobId: ${jobId}`);
       return _res;
     },
@@ -6147,7 +6199,7 @@ export const useRemoveJob = (
     mutationFn: async (jobId) => {
       closeModal();
       const res = await ApiManager.removeJob(jobId)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRemoveJob ... jobId: ${jobId}`);
       return _res;
     },
@@ -6182,7 +6234,7 @@ export const useRemoveJobs = (
     mutationFn: async (jobIds) => {
       closeModal();
       const res = await ApiManager.removeJob(jobIds)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > removeJobs ... jobIds: ${jobIds}`);
       return _res;
     },
@@ -6220,8 +6272,8 @@ export const useAllProviders = (
   queryFn: async () => {
     const res = await ApiManager.findAllProviders();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllProviders ... res: `, _res);
     return _res;
   }
@@ -6240,7 +6292,7 @@ export const useProvider = (
   queryKey: ['provider', providerId], 
   queryFn: async () => {
     const res = await ApiManager.findProvider(providerId); 
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useProvider ... providerId: ${providerId}, res: `, _res);
     return _res;
   },
@@ -6263,7 +6315,7 @@ export const useAddProvider = (
     mutationFn: async (providerData) => {
       closeModal()
       const res = await ApiManager.addProvider(providerData)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddProvider ... providerData: ${JSON.stringify(providerData, null, 2)}`)
       return _res;
     },
@@ -6297,7 +6349,7 @@ export const useEditProvider = (
     mutationFn: async ({ providerId, providerData }) => {
       closeModal();
       const res = await ApiManager.editProvider(providerId, providerData);
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditProvider ... providerId: ${providerId}, providerData: ${JSON.stringify(providerData, null, 2)}`)
       return _res;
     },
@@ -6333,7 +6385,7 @@ export const useDeleteProvider = (
     mutationFn: async (providerId) => {
       closeModal();
       const res = await ApiManager.deleteProvider(providerId);
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useDeleteProvider ... providerId: ${providerId}`)
       return _res;
     },
@@ -6372,7 +6424,7 @@ export const useAuthenticate4VMWare = (
     mutationFn: async ({ baseUrl, username, password }) => {
       // closeModal();
       const res = await ApiManager.authenticate4VMWare({ baseUrl, username, password });
-      const _res = validate(res) ?? {};
+      const _res = validateAPI(res) ?? {};
       Logger.debug("RQHook > useAuthenticate4VMWare > token: ", _res);
       return _res;
     },
@@ -6405,8 +6457,8 @@ export const useVmsFromVMWare = ({
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromVMWare({ baseUrl, sessionId }); 
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useVmsFromVMWare ... baseUrl: ${baseUrl}, sessionId: ${sessionId}, res: `, _res);
     return _res;
   },
@@ -6425,7 +6477,7 @@ export const useVmFromVMWare = ({
   queryKey: ['vmFromVMWare', vmIds], 
   queryFn: async () => {
     const res = await ApiManager.findVmFromVMWare({ baseUrl, sessionId, vmIds }); 
-    const _res = validate(res) ?? {};
+    const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useVmFromVMWare ... baseUrl: ${baseUrl}, sessionId: ${sessionId}, vmIds: ${vmIds}, res: `, _res);
     return _res;
   },
@@ -6451,8 +6503,8 @@ export const useAllUsers = (
   queryFn: async () => {
     const res = await ApiManager.findAllUsers();
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUsers ... res: `, _res);
     return _res;
   }
@@ -6472,7 +6524,7 @@ export const useUser = (
   queryKey: ['user'],
   queryFn: async () => {
     const res = await ApiManager.findUser(username, exposeDetail)
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useUser ... username: ${username}, exposeDetail: ${exposeDetail}, res: `, _res);
     return _res;
   },
@@ -6496,7 +6548,7 @@ export const useAuthenticate = (
     mutationFn: async ({username, password}) => {
       closeModal();
       const res = await ApiManager.authenticate(username, password)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAuthenticate ... username: ${username}, password: ${password}`);
       return _res;
     },
@@ -6535,7 +6587,7 @@ export const useAddUser = (
     mutationFn: async () => {
       closeModal();
       const res = await ApiManager.addUser(user)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAddUser ... user: ${JSON.stringify(user, null, 2)}`);
       return _res;
     },
@@ -6570,7 +6622,7 @@ export const useEditUser = (
     mutationFn: async () => {
       closeModal();
       const res = await ApiManager.editUser(user)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditUser ... user: ${JSON.stringify(user, null, 2)}`);
       return _res;
     },
@@ -6601,7 +6653,7 @@ export const useUpdatePasswordUser = (
     mutationFn: async () => {
       closeModal();
       const res = await ApiManager.updatePassword(username, pwCurrent, pwNew, force)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useChangePasswordUser ... username: ${username}, force: ${force}`);
       return _res;
     },
@@ -6636,7 +6688,7 @@ export const useRemoveUser = (
     mutationFn: async (username) => {
       closeModal();
       const res = await ApiManager.removeUser(username)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useRemoveUser ... username: ${username}`);
       return _res;
     },
@@ -6673,8 +6725,8 @@ export const useAllUserSessions = (
   queryFn: async () => {
     const res = await ApiManager.findAllUserSessions(username)
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllUserSessions ... username: ${username} res: `, _res);
     return _res;
   }
@@ -6691,8 +6743,8 @@ export const useAllCerts = (
     Logger.debug(`useUser ...`);
     const res = await ApiManager.findAllCerts()
     const _res = mapPredicate
-      ? validate(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validate(res) ?? [];
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllCerts ... res: `, _res);
     return _res;
   }
@@ -6705,7 +6757,7 @@ export const useCert = (
   queryFn: async () => {
     Logger.debug(`useCert ... id: ${id}`);
     const res = await ApiManager.findCert(id)
-    const _res = validate(res) ?? {}
+    const _res = validateAPI(res) ?? {}
     Logger.debug(`RQHook > useCert ... id: ${id}, res: `, _res);
     return _res;
   }
@@ -6721,7 +6773,7 @@ export const useAttachCert = (
     mutationFn: async (certReq) => {
       closeModal();
       const res = await ApiManager.attachCert(certReq)
-      const _res = validate(res) ?? {}
+      const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useAttachCert ... certReq: `, certReq);
       return _res;
     },
@@ -6741,7 +6793,7 @@ export const useAttachCert = (
 };
 //#endregion: Certificate(s)
 
-const validate = (res) => {
+export const validateAPI = (res) => {
   if (res?.head?.code !== 200) {
     throw new Error(`[${res?.head?.code ?? 500}] ${res?.head?.message ?? '알 수 없는 오류'}`);
   }

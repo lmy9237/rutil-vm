@@ -1,12 +1,14 @@
 import React from "react";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
-import TemplateEditModal from "./TemplateEditModal";
-import VmModal from "../../modal/vm/VmModal";
-import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteTemplate } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import DomainGetVmTemplateModal from "../domain/DomainImportVmModal";
+import useUIState               from "@/hooks/useUIState";
+import useGlobal                from "@/hooks/useGlobal";
+import TemplateEditModal        from "./TemplateEditModal";
+import VmModal                  from "@/components/modal/vm/VmModal";
+import DomainGetVmTemplateModal from "@/components/modal/domain/DomainImportVmModal";
+import DeleteModal              from "@/utils/DeleteModal";
+import {
+  useDeleteTemplate 
+} from "@/api/RQHook";
+import Localization             from "@/utils/Localization";
 
 const TemplateModals = ({
   template,
