@@ -217,6 +217,15 @@ const VmModal = ({
     isLoading: isOsListLoading
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
+  // 불가능한 운영체제(보류)
+  const unsupportedOSList = [
+    "Red Hat Enterprise Linux 3",
+    "Red Hat Enterprise Linux 4",
+    "Windows XP",
+    "Windows 2000",
+    "Ubuntu 10.04",
+  ];
+
   // 칩셋 목록 가져오기
   const {
     data: biosTypes = [],
@@ -471,7 +480,15 @@ const VmModal = ({
     }
   }, [editMode, vnics]);
 
-  
+
+  useEffect(() => {
+    const selectedOS = formInfoState.osType;
+    const found = unsupportedOSList.includes(selectedOS);
+    if (isOpen && found) {
+      validationToast.fail(`${selectedOS} 운영체제는 사용할 수 없습니다.`);
+    }
+  }, [formInfoState.osType, isOpen]);
+    
   // 템플릿항목 숨기는 조건
   const isTemplateHidden = editMode && templateVo.id === CONSTANT.templateIdDefault;
   

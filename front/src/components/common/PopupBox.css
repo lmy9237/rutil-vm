@@ -7,7 +7,7 @@
     top: 27px;
     right: 0;
     min-width: 195px;
-    background: white;
+    background: var(--color-white);
     z-index: 3;
   }
     

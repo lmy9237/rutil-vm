@@ -11,7 +11,7 @@
   cursor: pointer;
 }
 .btn-tab-nav:hover {
-  background: var(--color-white);
+  background: var(--color-white-2);
 }
 .btn-tab-nav.active {
   color: var(--color-primary);

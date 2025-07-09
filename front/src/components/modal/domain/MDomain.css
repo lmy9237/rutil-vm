@@ -54,7 +54,7 @@
   padding: 12px 0;
 }
 .use-chap-arrow {
-  background-color: var(--color-white); 
+  background-color: var(--color-white-2); 
   height: 32px;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@
 
 /* 사용자 인증이 ON일 때 전체 div에 배경색, 테두리 */
 .target-search-right.with-background {
-  background-color: var(--color-white);
+  background-color: var(--color-white-2);
   border: 1px solid var(--color-table);
   border-radius: 2px;
 }

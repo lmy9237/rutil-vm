@@ -5,6 +5,8 @@ import {
   RVI16, rvi16ChevronDown, rvi16ChevronUp
 } from "@/components/icons/RutilVmIcons";
 import Logger                           from "@/utils/Logger";
+import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
+import Localization from "@/utils/Localization";
 
 const VmSystem = ({ 
   formSystemState,
@@ -157,6 +159,20 @@ const VmSystem = ({
   return (
     <>
       <div className="edit-second-content">
+        
+        {/* TODO 단위에따라 메모리값 변경필요 */}
+        <LabelSelectOptionsID
+          label="크기 단위"
+          value="MB"
+          disabled
+          options={[
+            { id: "MB", name: "MB" },
+            { id: "GB", name: "GB" },
+          ]}
+          onChange={(selected) => {
+            Logger.debug("VmSystem > 크기 단위 선택:", selected);
+          }}
+        />
         <LabelInputNum id="mem" label="메모리 크기(MB)"
           value={formSystemState.memorySize} 
           onChange={handleInputChange("memorySize")}

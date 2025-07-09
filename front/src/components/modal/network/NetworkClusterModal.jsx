@@ -51,7 +51,7 @@ const NetworkClusterModal = ({
     <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.MANAGEMENT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={() => {}}
-      contentStyle={{ width: "900px" }}
+      contentStyle={{ width: "1000px" }}
     >
       <div className="py-3">
         <TablesOuter target={"cluster"}

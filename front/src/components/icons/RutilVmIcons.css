@@ -26,20 +26,17 @@
   width:var(--h-icon-nav);height:var(--w-icon-nav);
   color:var(--color-black);
   text-decoration:none;
+  border-radius: 20px;
 }
 .rvi.rvi-nav:hover {
-  background: var(--color-white);
-  border-radius: 20px;
+  background: var(--color-white-2);
 }
-
 .rvi.rvi-nav.active {
   background: var(--color-primary);
-  border-radius: 20px;
 }
 .rvi.rvi-nav.active svg {
   color: var(--color-primary-white);
 }
 .rvi.rvi-nav.no-active {
-  background-color: transparent !important; /* 배경 제거 */
-  border-radius: 20px;
+  background-color: transparent !important; 
 }

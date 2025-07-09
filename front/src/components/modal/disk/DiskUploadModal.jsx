@@ -210,7 +210,7 @@ const DiskUploadModal = ({
 
 
       <div>
-        <div className="disk-option fs-16">디스크 옵션</div>
+        <div className="disk-option fs-16 fw-500">디스크 옵션</div>
           <div className="disk-new-img" style={{ paddingTop: "0.4rem" }}>
             <div>
               <LabelInput id="size" label={`${Localization.kr.SIZE_ACTUAL} (GiB)`}
@@ -300,84 +300,6 @@ const DiskUploadModal = ({
     </BaseModal>
   );
 };
-// const DiskInspector = ({ onUpload = () => {}, setFormState }) => {
-//   const [imageInfo, setImageInfo] = useState(null);
-//   const [error, setError] = useState(null);
-
-//   const handleFileChange = (event) => {
-//     const file = event.target.files[0];
-//     setImageInfo(null);
-//     setError(null);
-//     onUpload(event);
-//     if (!file) return;
-
-//     const reader = new FileReader();
-//     reader.onload = (e) => {
-//       try {
-//         const buffer = e.target.result;
-//         const isQcow = readString(buffer.slice(0, 4)) === 'QFI\xfb';
-
-//         const info = {
-//           format: isQcow ? "qcow2" : "raw",
-//           actualSize: file.size,
-//           virtualSize: BigInt(file.size),
-//           backingFile: false,
-//           qcowCompat: Localization.kr.NOT_ASSOCIATED,
-//           content: Localization.kr.DATA,
-//         };
-
-//         if (isQcow) {
-//           const version = readUint32(buffer.slice(4, 8));
-//           info.qcowCompat = version === 2 ? '0.10' : version === 3 ? '1.1' : Localization.kr.UNKNOWN;
-//           info.backingFile = readBigUint64(buffer.slice(8, 16)) !== BigInt(0);
-//           info.virtualSize = readBigUint64(buffer.slice(24, 32));
-//         }
-
-//         setImageInfo(info);
-//         setFormState((prev) => ({
-//           ...prev,
-//           contentType: info.content === "iso" ? "iso" : "data",
-//           format: isQcow ? "cow" : "raw",
-//         }));
-//       } catch (err) {
-//         setError(`파일 분석 실패: ${err.message}`);
-//       }
-//     };
-
-//     reader.onerror = () => setError("파일 읽기 실패");
-//     const blob = file.slice(0, 0x8001 + 5);
-//     reader.readAsArrayBuffer(blob);
-//   };
-
-//   return (
-//     <div className="storage-upload-first fs-14 f-btw" >
-//     <p className="fs-16" style={{ width: "900px" }}>파일 선택</p>
-//       <Input
-//         id="file"
-//         type="file"
-//         accept=".iso,.qcow2,.vhd,.img,.raw"
-//         onChange={handleFileChange}
-//         style={{ marginBottom: "0.5rem" }}
-//       />
-//       {error && <p style={{ color: 'red' }}>{error}</p>}
-//       {imageInfo && (
-//         <div className="fs-default" style={{ border: '1px solid #ccc', padding: '10px' }}>
-//           <p className="row"><strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}</p>
-//           <p className="row"><strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB</p>
-//           {imageInfo.format === "qcow2" && (
-//             <>
-//               <p className="row"><strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB</p>
-//               <p className="row"><strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}</p>
-//               <p className="row"><strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}</p>
-//             </>
-//           )}
-//           <p className="row"><strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}</p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
 const DiskInspector = ({
   onUpload=()=>{},
   setFormState,
@@ -463,7 +385,7 @@ const DiskInspector = ({
     <>
     <div className="storage-upload-head">
       <div className="storage-upload-first fs-14 f-btw" >
-        <p className="fs-16" style={{ width: "900px" }}>파일 선택</p>
+        <p className="fs-16 w-[900px] ">파일 선택</p>
         <Input id="file"
           type="file"
           className="f-center h-full"
@@ -475,10 +397,9 @@ const DiskInspector = ({
       <div className="f-end mb-4">
         {imageInfo && (
           <div
-            className="upload-grid fs-default ml-auto w-[335px] grid grid-cols-2 gap-x-4 gap-y-3"
+            className="upload-grid fs-default ml-auto w-[333px] grid grid-cols-2 gap-x-4 gap-y-3 p-4"
             style={{
               border: "1px solid #ccc",
-              padding: "12px",
             }}
           >
             <div>
@@ -554,5 +475,84 @@ const DiskInspector = ({
     </>
   );
 };
+// const DiskInspector = ({ onUpload = () => {}, setFormState }) => {
+//   const [imageInfo, setImageInfo] = useState(null);
+//   const [error, setError] = useState(null);
+
+//   const handleFileChange = (event) => {
+//     const file = event.target.files[0];
+//     setImageInfo(null);
+//     setError(null);
+//     onUpload(event);
+//     if (!file) return;
+
+//     const reader = new FileReader();
+//     reader.onload = (e) => {
+//       try {
+//         const buffer = e.target.result;
+//         const isQcow = readString(buffer.slice(0, 4)) === 'QFI\xfb';
+
+//         const info = {
+//           format: isQcow ? "qcow2" : "raw",
+//           actualSize: file.size,
+//           virtualSize: BigInt(file.size),
+//           backingFile: false,
+//           qcowCompat: Localization.kr.NOT_ASSOCIATED,
+//           content: Localization.kr.DATA,
+//         };
+
+//         if (isQcow) {
+//           const version = readUint32(buffer.slice(4, 8));
+//           info.qcowCompat = version === 2 ? '0.10' : version === 3 ? '1.1' : Localization.kr.UNKNOWN;
+//           info.backingFile = readBigUint64(buffer.slice(8, 16)) !== BigInt(0);
+//           info.virtualSize = readBigUint64(buffer.slice(24, 32));
+//         }
+
+//         setImageInfo(info);
+//         setFormState((prev) => ({
+//           ...prev,
+//           contentType: info.content === "iso" ? "iso" : "data",
+//           format: isQcow ? "cow" : "raw",
+//         }));
+//       } catch (err) {
+//         setError(`파일 분석 실패: ${err.message}`);
+//       }
+//     };
+
+//     reader.onerror = () => setError("파일 읽기 실패");
+//     const blob = file.slice(0, 0x8001 + 5);
+//     reader.readAsArrayBuffer(blob);
+//   };
+
+//   return (
+//     <div className="storage-upload-first fs-14 f-btw" >
+//     <p className="fs-16" style={{ width: "900px" }}>파일 선택</p>
+//       <Input
+//         id="file"
+//         type="file"
+//         accept=".iso,.qcow2,.vhd,.img,.raw"
+//         onChange={handleFileChange}
+//         style={{ marginBottom: "0.5rem" }}
+//       />
+//       {error && <p style={{ color: 'red' }}>{error}</p>}
+//       {imageInfo && (
+//         <div className="fs-default" style={{ border: '1px solid #ccc', padding: '10px' }}>
+//           <p className="row"><strong>{Localization.kr.FORMAT}</strong>: {imageInfo.format}</p>
+//           <p className="row"><strong>{Localization.kr.SIZE}</strong>: {toGiB(imageInfo.actualSize)} GiB</p>
+//           {imageInfo.format === "qcow2" && (
+//             <>
+//               <p className="row"><strong>{Localization.kr.SIZE_VIRTUAL}</strong>: {toGiB(imageInfo.virtualSize)} GiB</p>
+//               <p className="row"><strong>QCOW2 {Localization.kr.COMPAT}</strong>: {imageInfo.qcowCompat}</p>
+//               <p className="row"><strong>{Localization.kr.BACKING_FILE}</strong>: {imageInfo.backingFile ? Localization.kr.YES : Localization.kr.NO}</p>
+//             </>
+//           )}
+//           <p className="row"><strong>{Localization.kr.CONTENTS}</strong>: {imageInfo.content}</p>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
 
 export default DiskUploadModal;

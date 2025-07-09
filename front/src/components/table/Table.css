@@ -38,7 +38,7 @@
   border-collapse: collapse;
 }
 .section-table-outer table tbody tr:nth-child(even){
-  background-color:var(--color-white);
+  background-color:var(--color-white-2);
 }
 .selected-row {
   background-color: var(--color-hover) !important;

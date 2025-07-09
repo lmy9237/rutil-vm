@@ -22,10 +22,10 @@
   height: 13px;
 }
 .tmi:hover {
-  background: var(--color-white);
+  background: var(--color-white-2);
 }
 .tmi.context-selected {
-  background: var(--color-white);
+  background: var(--color-white-2);
 }
 
 .tmi.active {

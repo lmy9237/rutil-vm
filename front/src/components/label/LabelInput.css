@@ -36,7 +36,7 @@ textarea {
   color: var(--color-nav);
 }
 .custom-select-box {
-  background-color: var(--color-white);
+  background-color: var(--color-white-2);
 }
 .custom-select-box svg {
   flex-shrink: 0;margin-left:auto;

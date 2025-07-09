@@ -9,7 +9,7 @@
   color: #4679BC;
 }
 .box-content.snapshots > .snapshot-add:hover{
-  background: var(--color-white);
+  background: var(--color-white-2);
 }
 .snapshots .snapshot-entry{
   padding:3px 0;
@@ -61,7 +61,7 @@
 }
 .btn-vnc {
   background-color: #001e6e;
-  color: white;
+  color: var(--color-white);
   padding: 11px;
 }
 .vm-info-vnc {

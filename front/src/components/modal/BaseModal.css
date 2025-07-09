@@ -47,7 +47,7 @@
 }
 .edit-footer button.action {
   background-color: var(--color-primary-hover);
-  color: var(--color-white);
+  color: var(--color-white-2);
   border: var(--border-modal-btn);
 }
 .edit-footer button.action:hover {
@@ -57,5 +57,5 @@
   border: var(--border-btn);
 }
 .edit-footer button.cancel:hover{
-  background-color: var(--color-white);
+  background-color: var(--color-white-2);
 }

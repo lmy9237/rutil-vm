@@ -72,7 +72,7 @@ const DeleteModal = ({
     >
       {names.map((name, index) => (
         <div className="p-1.5 font-bold flex f-start fs-13" key={index}> 
-          <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
+          <div><RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/></div>
           {name}
         </div>
       ))}

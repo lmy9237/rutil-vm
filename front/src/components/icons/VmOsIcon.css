@@ -3,7 +3,7 @@
   width: 210px;aspect-ratio:210/130;
   padding: 10px 0;
   border: 1px solid #b6b6b6;
-  background: var(--color-white);
+  background: var(--color-white-2);
 }
 .icon-os {
   max-width: 150px;

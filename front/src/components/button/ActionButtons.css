@@ -24,7 +24,6 @@ button.btn-action {
 }
 
 button.btn-action[disabled]{
-  background-color: white;
   color: #888888;
 }
 
