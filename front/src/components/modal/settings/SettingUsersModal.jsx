@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
@@ -45,21 +45,20 @@ const SettingUsersModal = ({
   const { usersSelected, setUsersSelected } = useGlobal()
   const [formState, setFormState] = useState(initialFormState);
   const {
-    data: userFound
+    data: userFound,
+    isLoading: isUserFoundLoading,
+    isSuccess: isUserFoundisSuccess,
   } = useUser(usersSelected[0]?.username ?? user?.username, true)
   
   const {
-    isLoading: isAddUserLoading,
     mutate: addUser,
   } = useAddUser({ ...formState });
 
   const {
-    isLoading: isEditUserLoading, 
     mutate: editUser,
   } = useEditUser({ ...formState });
 
   const {
-    isLoading: isChangePasswordLoading,
     mutate: changePasswordUser,
   } = useUpdatePasswordUser(formState.username, formState.passwordCurrent, formState.password, true, onClose, onClose);
 
@@ -104,8 +103,16 @@ const SettingUsersModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.USER} submitTitle={editMode ? Localization.kr.UPDATE : changePassword ? "비밀번호 변경" : Localization.kr.CREATE}
-      isOpen={isOpen} onClose={onClose}
+    <BaseModal targetName={Localization.kr.USER} submitTitle={
+      editMode 
+        ? Localization.kr.UPDATE
+        : changePassword
+          ? "비밀번호 변경"
+          : Localization.kr.CREATE
+      }
+      isOpen={isOpen} onClose={onClose} isReady={
+        (editMode || changePassword) ? isUserFoundisSuccess : true
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "560px"}}
     >

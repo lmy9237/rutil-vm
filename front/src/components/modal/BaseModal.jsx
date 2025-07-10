@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Modal from "react-modal";
 import useUIState             from "@/hooks/useUIState";
 import useContextMenu         from "@/hooks/useContextMenu";
+import Loading                from "@/components/common/Loading";
 import { 
   RVI24, 
   rvi24Close, 
@@ -18,8 +19,7 @@ import "./BaseModal.css";
  * @returns
  */
 const BaseModal = ({
-  isOpen,
-  onClose,
+  isOpen=false, onClose, isReady=!import.meta.env.DEV, // TODO: 개발일 떄 만 false로하여 Loading 중에 대한 Modal에 대하여 알맞게 처리
   targetName,
   submitTitle,
   promptText = "",
@@ -52,6 +52,12 @@ const BaseModal = ({
           </h1>
           <RVI24 className="btn" iconDef={rvi24Close} onClick={onClose}/>
         </div>
+        {!isReady ? (
+        <>
+        <Loading text="모든 데이터"/>
+        </>
+        ) : (
+        <>
         <hr/>
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
@@ -60,11 +66,12 @@ const BaseModal = ({
               {promptText}
             </div>
           )}
-          {props.children}
+            {props.children}
         </div>
-
-        {/* 하단 버튼 */}
         <hr/>
+        </>
+        )}
+        {/* 하단 버튼 */}
         <div className="edit-footer f-end fs-14">
           {extraFooter ? (
             <>

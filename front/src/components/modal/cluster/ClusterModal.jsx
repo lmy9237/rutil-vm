@@ -7,7 +7,8 @@ import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
 import LabelInput             from "@/components/label/LabelInput";
 import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
 import {
-  handleInputChange, handleSelectIdChange
+  handleInputChange, 
+  handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
   useAddCluster,
@@ -67,15 +68,25 @@ const ClusterModal = ({
   const { mutate: addCluster } = useAddCluster(onClose, onClose);
   const { mutate: editCluster } = useEditCluster(onClose, onClose);
 
-  const { data: cluster } = useCluster(clusterId);
-  const { data: clusters } = useAllClusters();
-  const { 
+  const {
+    data: cluster,
+    isLoading: isClusterLoading,
+    isSuccess: isClusterSuccess,
+  } = useCluster(clusterId);
+  const {
+    data: clusters,
+    isLoading: isClustersLoading,
+    isSuccess: isClustersSuccess,
+  } = useAllClusters();
+  const {
     data: datacenters = [], 
-    isLoading: isDataCentersLoading 
+    isLoading: isDatacentersLoading,
+    isSuccess: isDatacentersSuccess,
   } = useAllDataCenters((e) => ({ ...e }));
   const { 
     data: networks = [], 
-    isLoading: isNetworksLoading 
+    isLoading: isNetworksLoading,
+    isSuccess: isNetworksSuccess,
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   const biosTypeFiltered = editMode
@@ -168,14 +179,19 @@ const ClusterModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.CLUSTER} submitTitle={cLabel}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} 
+      isReady={
+        editMode 
+          ? (isDatacentersSuccess && isClustersSuccess && isNetworksSuccess && isClusterSuccess)
+          : (isDatacentersSuccess && isClustersSuccess && isNetworksSuccess)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "600px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
         value={dataCenterVo.id}
         disabled={editMode && !!dataCenterVo.id}
-        loading={isDataCentersLoading}
+        loading={isDatacentersLoading}
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />

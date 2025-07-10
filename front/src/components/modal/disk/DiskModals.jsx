@@ -36,7 +36,7 @@ const DiskModals = ({
         label={Localization.kr.DISK}
         data={disksSelected}
         api={useDeleteDisk()}
-        shouldRedirect = {false}
+        shouldRedirect={false}
       />
     ), upload: (
       <DiskUploadModal key={activeModal()} isOpen={activeModal().includes("disk:upload")} 

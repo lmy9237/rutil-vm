@@ -5,7 +5,8 @@ import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
-  handleInputChange
+  handleInputChange,
+  handleInputCheck,
 } from "@/components/label/HandleInput";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import {
@@ -54,13 +55,26 @@ const DataCenterModal = ({
   const { mutate: addDataCenter } = useAddDataCenter(onClose, onClose);
   const { mutate: editDataCenter } = useEditDataCenter(onClose, onClose);
   
-  const { data: datacenters } = useAllDataCenters();
-  const { data: datacenter} = useDataCenter(datacenterId);
+  const {
+    data: datacenters,
+    isLoading: isDatacentersLoading,
+    isSuccess: isDatacentersSuccess,
+  } = useAllDataCenters();
+  const {
+    data: datacenter,
+    isLoading: isDatacenterLoading,
+    isSuccess: isDatacenterSuccess,
+  } = useDataCenter(datacenterId);
   // 지정된 데이터센터의 버전보다 높은것만 출력되도록
-  const { data: clusterLevels = [] } = useAllClusterLevels("id", (e) => e);
+  const {
+    data: clusterLevels = [],
+    isLoading: isClusterLevelsLoading,
+    isSuccess: isClusterLevelsSuccess,
+  } = useAllClusterLevels("id", (e) => e);
   const {
     data: quotaEnforcementTypes=[],
-    isLoading: isQuotaEnforcementTypesLoading
+    isLoading: isQuotaEnforcementTypesLoading,
+    isSuccess: isQuotaEnforcementTypesSuccess,
   } = useAllQuotaEnforcementTypes((e) => ({ 
      ...e,
      value: e?.id,
@@ -69,7 +83,9 @@ const DataCenterModal = ({
 
   // 호환 버전 설정
   const initialVersionRef = useRef(null);
-  const minVersion = editMode && initialVersionRef.current ? initialVersionRef.current : null;
+  const minVersion = editMode && initialVersionRef.current 
+    ? initialVersionRef.current
+    : null;
   const filteredClusterLevels = minVersion
     ? [...clusterLevels].filter(ver => versionCompare(ver, minVersion) >= 0)
     : [...clusterLevels];
@@ -134,7 +150,11 @@ const DataCenterModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} 
+      isReady={editMode 
+        ? (isClusterLevelsSuccess && isQuotaEnforcementTypesSuccess && isDatacentersSuccess && isDatacenterSuccess) 
+        : (isClusterLevelsSuccess && isQuotaEnforcementTypesSuccess)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "470px" }} 
     >
@@ -155,7 +175,7 @@ const DataCenterModal = ({
         required
         tType="로컬" fType="공유됨"
         checked={formState.storageType}
-        onChange={() => setFormState((prev) => ({ ...prev, storageType: !formState.storageType}))}
+        onChange={handleInputCheck(setFormState, "storageType", validationToast)}
       />
       <LabelSelectOptions id="quota-mode" label="쿼터 모드"
         value={formState.quotaMode}

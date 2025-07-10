@@ -1,17 +1,16 @@
 import React, { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import BaseModal              from "@/components/modal/BaseModal";
+import useUIState                       from "@/hooks/useUIState";
+import BaseModal                        from "@/components/modal/BaseModal";
 import {
   RVI16,
   rvi16ChevronRight,
 } from "@/components/icons/RutilVmIcons";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const DeleteModal = ({
-  isOpen=false, 
-  onClose,
+  isOpen=false, onClose,
   label="", 
   data, 
   api, 
@@ -41,6 +40,7 @@ const DeleteModal = ({
       return;
     }
   
+    Logger.debug(`HostModal > handleFormSubmit ... ids: `, ids);
     ids.forEach((id, index) => {
       deleteApi(id, {
         onSuccess: () => {
@@ -64,7 +64,7 @@ const DeleteModal = ({
   
   return (
     <BaseModal targetName={label} submitTitle={Localization.kr.REMOVE}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} isReady={true}
       shouldWarn={true}
       promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
       onSubmit={handleFormSubmit}

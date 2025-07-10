@@ -1,12 +1,17 @@
 import React from "react"
-import Spinner      from "@/components/common/Spinner";
-import Localization from "@/utils/Localization";
+import Spinner                from "@/components/common/Spinner";
+import Localization           from "@/utils/Localization";
 import "./Loading.css";
 
-const Loading = () => (
-  <div className="f-center">
+const Loading = ({
+  text="",
+  ...props
+}) => (
+  <div className="f-center"
+    {...props}
+  >
     <Spinner />
-    <span>{Localization.kr.LOADING}{Localization.kr.IN_PROGRESS}</span>
+    <span>{`${text} ${Localization.kr.LOADING}${Localization.kr.IN_PROGRESS}`}</span>
   </div>
 );
 

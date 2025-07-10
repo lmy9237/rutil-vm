@@ -23,8 +23,7 @@ import Logger                           from "@/utils/Logger";
  * @returns 
  */
 const HostActionModal = ({ 
-  isOpen, 
-  onClose,
+  isOpen, onClose,
   action
 }) => {  
   const { validationToast } = useValidationToast();
@@ -61,7 +60,7 @@ const HostActionModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={label}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} isReady={true}
       onSubmit={handleSubmit}
       promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
       contentStyle={{ width: "630px" }} 

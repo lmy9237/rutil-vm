@@ -1,7 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQueries } from "@tanstack/react-query";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "../BaseModal";
+import LabelInput                       from "@/components/label/LabelInput";
+import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import { 
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
+import ApiManager                       from "@/api/ApiManager";
 import {
   useAddTemplate,
   useAllTemplates,
@@ -10,17 +20,17 @@ import {
   useDisksFromVM,
   useAllDomainsFromDataCenter,
 } from "@/api/RQHook";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  checkZeroSizeToGiB, 
+  emptyIdNameVo,
+  useSelectFirstItemEffect,
+  useSelectFirstNameItemEffect
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "../vm/MVm.css";
-import LabelInput from "../../label/LabelInput";
-import Localization from "../../../utils/Localization";
-import { checkDuplicateName, checkName, checkZeroSizeToGiB, emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect } from "../../../util";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import LabelSelectOptionsID from "../../label/LabelSelectOptionsID";
-import Logger from "../../../utils/Logger";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import ApiManager from "../../../api/ApiManager";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
-import { useValidationToast } from "@/hooks/useSimpleToast";
 
 const initialFormState = {
   name: "",
@@ -33,8 +43,7 @@ const initialFormState = {
 };
 
 const TemplateModal = ({
-  isOpen,
-  onClose,
+  isOpen, onClose,
 }) => {
   const { validationToast } = useValidationToast();
   const { vmsSelected } = useGlobal()

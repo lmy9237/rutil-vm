@@ -5,16 +5,22 @@ import BaseModal                        from "../BaseModal";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import {
+  handleInputChange
+} from "@/components/label/HandleInput";
 import { 
   useAllTemplates,
   useAllVmTypes,
   useEditTemplate, 
   useTemplate
 } from "@/api/RQHook";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  emptyIdNameVo
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-import { checkDuplicateName, checkName, emptyIdNameVo } from "@/util";
-import { handleInputChange } from "@/components/label/HandleInput";
 
 const initialFormState = {
   id: "",
@@ -30,8 +36,7 @@ const initialFormState = {
 };
 
 const TemplateEditModal = ({
-  isOpen,
-  onClose,
+  isOpen, onClose,
 }) => {
   const { validationToast } = useValidationToast();
   const { templatesSelected } = useGlobal()
@@ -42,13 +47,22 @@ const TemplateEditModal = ({
 
   const { mutate: editTemplate } = useEditTemplate(onClose, onClose);
 
-  const { data: template } = useTemplate(templateId);
-  const { data: templates = [] } = useAllTemplates();
+  const {
+    data: template,
+    isLoading: isTemplateLoading,
+    isSuccess: isTemplateSuccess,
+  } = useTemplate(templateId);
+  const {
+    data: templates=[],
+    isLoading: isTemplatesLoading,
+    isSuccess: isTemplatesSuccess,
+  } = useAllTemplates();
 
   // 최적화 옵션 가져오기
   const {
     data: vmTypes = [],
-    isLoading: isVmTypesLoading
+    isLoading: isVmTypesLoading,
+    isSuccess: isVmTypesSuccess,
   } = useAllVmTypes((e) => ({ 
     ...e,
     value: e?.id?.toLowerCase(),
@@ -60,19 +74,19 @@ const TemplateEditModal = ({
     { id: "general", label: Localization.kr.GENERAL, onClick: () => setActiveTab("general") },
     { id: "console", label: Localization.kr.CONSOLE, onClick: () => setActiveTab("console") },
   ]), []);
+/*
+   useEffect(() => {
+     if (isOpen) {
+       setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
+     }
+   }, [isOpen]);
+   const [activeTab, setActiveTab] = useState("general");
 
-//   useEffect(() => {
-//     if (isOpen) {
-//       setActiveTab("general"); // 모달이 열릴 때 기본적으로 "general" 설정
-//     }
-//   }, [isOpen]);
-//   const [activeTab, setActiveTab] = useState("general");
-
-//   //해당데이터 상세정보 가져오기
-//   const { data: templateData } = useTemplate(templatesSelected[0]?.id);
-//   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
-//  // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
-
+   //해당데이터 상세정보 가져오기
+   const { data: templateData } = useTemplate(templatesSelected[0]?.id);
+   const [selectedOptimizeOption, setSelectedOptimizeOption] = useState("server"); // 칩셋 선택
+  // const [selectedChipset, setSelectedChipset] = useState("Q35_OVMF"); // 칩셋 선택
+*/
 
   // 초기값설정
   useEffect(() => {
@@ -123,7 +137,7 @@ const TemplateEditModal = ({
       return;
     }
     
-    Logger.debug(`$ dataToSubmit: `, dataToSubmit);
+    Logger.debug(`TemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
 
     editTemplate({
       templateId: formState.id,
@@ -133,7 +147,10 @@ const TemplateEditModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.TEMPLATE} submitTitle={Localization.kr.UPDATE}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} 
+      isReady={
+        isTemplateSuccess && isTemplatesSuccess && isVmTypesSuccess
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "750px", height: "400px" }} 
     >

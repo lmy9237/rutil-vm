@@ -7,7 +7,9 @@ import LabelSelectOptionsID             from "@/components/label/LabelSelectOpti
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelInputNum                    from "@/components/label/LabelInputNum";
 import { 
-  handleInputChange, handleSelectIdChange, handleInputCheck
+  handleInputChange, 
+  handleSelectIdChange, 
+  handleInputCheck,
 } from "@/components/label/HandleInput";
 import {
   useAddHost,
@@ -56,17 +58,25 @@ const HostModal = ({
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
 
-  const { data: host } = useHost(hostId);
-  const { data: hosts } = useAllHosts();
+  const { 
+    data: host,
+    isLoading: isHostLoading,
+    isSuccess: isHostSuccess,
+  } = useHost(hostId);
+
+  const { 
+    data: hosts,
+    isLoading: isHostsLoading,
+    isSuccess: isHostsSuccess,
+  } = useAllHosts();
+
   const { mutate: addHost } = useAddHost(onClose, onClose);
   const { mutate: editHost } = useEditHost(onClose, onClose);
-  // const {
-  //   data: dcClusters = [],
-  //   isLoading: isDcClustersLoading,
-  // } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
+  
   const { 
     data: clusters = [], 
-    isLoading: isClustersLoading 
+    isLoading: isClustersLoading,
+    isSuccess: isClustersSuccess 
   } = useAllClusters((e) => ({ ...e }));
 
   useEffect(() => {
@@ -132,6 +142,11 @@ const HostModal = ({
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        editMode 
+          ? (isHostSuccess && isHostsSuccess && isClustersSuccess)
+          : (isHostsSuccess && isClustersSuccess)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px" }} 
     >

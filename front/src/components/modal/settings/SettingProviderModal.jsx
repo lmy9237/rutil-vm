@@ -4,8 +4,10 @@ import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelInput                       from "@/components/label/LabelInput";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
-  handleInputChange, handleSelectIdChange
+  handleInputChange, 
+  handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
   useAllProviders,
@@ -15,10 +17,13 @@ import {
   useAddProvider,
   useEditProvider,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  emptyIdNameVo
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-import LabelSelectOptions from "@/components/label/LabelSelectOptions";
 
 const initialFormState = {
   id: "",
@@ -41,8 +46,7 @@ const initialFormState = {
  * @returns
  */
 const SettingProviderModal = ({ 
-  isOpen,
-  onClose,
+  isOpen, onClose,
   editMode=false
 }) => {
   const { validationToast } = useValidationToast();
@@ -58,15 +62,25 @@ const SettingProviderModal = ({
   const { mutate: addProvider } = useAddProvider(onClose, onClose);
   const { mutate: editProvider } = useEditProvider(onClose, onClose);
 
-  const { data: provider } = useProvider(providerId);
-  const { data: providers = [] } = useAllProviders((e) => ({ ...e  }));
+  const {
+    data: provider,
+    isLoading: isProviderLoading,
+    isSuccess: isProviderSuccess,
+  } = useProvider(providerId);
+  const {
+    data: providers=[],
+    isLoading: isProvidersLoading,
+    isSuccess: isProvidersSuccess,
+  } = useAllProviders((e) => ({ ...e  }));
   const { 
     data: datacenters = [], 
-    isLoading: isDataCentersLoading 
+    isLoading: isDataCentersLoading,
+    isSuccess: isDataCentersSuccess,
   } = useAllDataCenters();
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
+    isSuccess: isHostsSuccess,
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -110,6 +124,7 @@ const SettingProviderModal = ({
   }, [datacenters, editMode]);
 
   const validateForm = () => {
+    Logger.debug(`SettingProviderModal > validateForm ... `);
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
     const duplicateError = checkDuplicateName(providers, formState.name, formState.id);
@@ -147,7 +162,11 @@ const SettingProviderModal = ({
 
   return (
     <BaseModal targetName={Localization.kr.PROVIDER} submitTitle={pLabel}
-      isOpen={isOpen} onClose={onClose}
+      isOpen={isOpen} onClose={onClose} isReady={
+        editMode 
+          ? (isProvidersSuccess && isDataCentersSuccess /* && isProviderSuccess */)
+          : (isProvidersSuccess && isDataCentersSuccess)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "500px" }} 
     >

@@ -19,7 +19,6 @@ export function handleInputChange(setState, field, validationToastHook=null) {
   };
 }
 
-
 /**
  * @name handleInputCheck
  * 체크 input 변경 핸들러
