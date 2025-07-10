@@ -60,7 +60,7 @@ interface ItVmImportService {
 	 * </external_vm_import>
 	 */
 	@Throws(Error::class)
-	fun importExternalVm(externalVmVo: ExternalVmVo): ExternalVmVo?
+	fun importExternalVm(externalVmList: List<ExternalVmVo>): List<ExternalVmVo>?
 }
 
 @Service
@@ -77,12 +77,16 @@ class VmImportServiceImpl: BaseService(), ItVmImportService {
 
 	// 외부 가상머신 가져오기 (vmware)
 	@Throws(Error::class)
-	override fun importExternalVm(externalVmVo: ExternalVmVo): ExternalVmVo? {
-		log.info("importExternalVm ...  externalVmVo: {}", externalVmVo)
-		val res: ExternalVmImport? = conn.addExternalVmImport(
-			externalVmVo.toExternalVmImportBuilder()
-		).getOrNull()
-		return res?.toExternalVmImport()
+	override fun importExternalVm(externalVmList: List<ExternalVmVo>): List<ExternalVmVo>? {
+		log.info("importExternalVm ...  externalVmList: {}", externalVmList)
+
+		return externalVmList.mapNotNull { externalVmVo ->
+			val res: ExternalVmImport? = conn
+				.addExternalVmImport(externalVmVo.toExternalVmImportBuilder())
+				.getOrNull()
+
+			res?.toExternalVmImport()
+		}
 	}
 
 

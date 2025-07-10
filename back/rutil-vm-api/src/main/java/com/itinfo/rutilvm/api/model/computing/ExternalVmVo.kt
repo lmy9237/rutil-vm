@@ -1,7 +1,9 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.common.gson
+import org.ovirt.engine.sdk4.builders.BootBuilder
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.ExternalVmImportBuilder
 import org.ovirt.engine.sdk4.builders.OperatingSystemBuilder
@@ -9,6 +11,7 @@ import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
 import org.ovirt.engine.sdk4.builders.VmBuilder
 import org.ovirt.engine.sdk4.types.ExternalVmImport
 import org.ovirt.engine.sdk4.types.ExternalVmProviderType
+import org.ovirt.engine.sdk4.types.VmType.SERVER
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 
@@ -97,22 +100,47 @@ fun ExternalVmImport.toExternalVmImport(): ExternalVmVo {
 // ?no_verify=1 검증무시
 fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 	log.info("importExternalVm ...  externalVo: {}", this@toExternalVmImportBuilder)
-	return ExternalVmImportBuilder()
-		.name(this@toExternalVmImportBuilder.vmwareName)
-		.vm(
-			VmBuilder()
-				.name(this@toExternalVmImportBuilder.vmVo.name)
-				.os(OperatingSystemBuilder().type(osSystem).build())
-				// .cluster(ClusterBuilder().id(this@toExternalVmImportBuilder.clusterVo.id).build())
-				.build()
-		)
-		.cluster(ClusterBuilder().id(this@toExternalVmImportBuilder.clusterVo.id).build())
-		.storageDomain(StorageDomainBuilder().id(this@toExternalVmImportBuilder.storageDomainVo.id).build())
-		.sparse(this@toExternalVmImportBuilder.sparse)
-		.username(this@toExternalVmImportBuilder.userName)
-		.password(this@toExternalVmImportBuilder.password)
-		.provider(ExternalVmProviderType.VMWARE) // vmware 로 기본지정
-		.url("vpx://"+this@toExternalVmImportBuilder.vmwareCenter+"/"+this@toExternalVmImportBuilder.vmwareDataCenter+"/"+this@toExternalVmImportBuilder.vmwareCluster+"/"+this@toExternalVmImportBuilder.vmwareEsxi+"?no_verify=1")
-		// .driversIso(FileBuilder().id(eVm.iso.id).build())
-		.build()
+
+	val importBuilder = ExternalVmImportBuilder()
+		.name(this.vmwareName)
+			.vm(
+				VmBuilder()
+					.name(this.vmVo.name)
+					.type(SERVER)
+					.os(OperatingSystemBuilder().type(osSystem).build())
+					.cluster(ClusterBuilder().id(this.clusterVo.id).build())
+					.build()
+			)
+		.cluster(ClusterBuilder().id(this.clusterVo.id).build())
+		.storageDomain(StorageDomainBuilder().id(this.storageDomainVo.id).build())
+		.username(this.userName)
+		.password(this.password)
+		.provider(ExternalVmProviderType.VMWARE)
+		.url("vpx://$vmwareCenter/$vmwareDataCenter/$vmwareCluster/$vmwareEsxi?no_verify=1")
+
+	// sparse가 null이 아닌 경우에만 설정
+	sparse.let { importBuilder.sparse(it) }
+
+
+	// ExternalVmImportBuilder()
+	// 	.name(this.vmwareName)
+	// 	.vm(
+	// 		VmBuilder()
+	// 			.name(this.vmVo.name)
+	// 			// OperatingSystemBuilder().type(osType?.toOsTypeCode())
+	// 			.os(OperatingSystemBuilder().type(osSystem).build())
+	// 			// .cluster(ClusterBuilder().id(this.clusterVo.id).build())
+	// 			.build()
+	// 	)
+	// 	.cluster(ClusterBuilder().id(this.clusterVo.id).build())
+	// 	.storageDomain(StorageDomainBuilder().id(this.storageDomainVo.id).build())
+	// 	.sparse(this.sparse)
+	// 	.username(this.userName)
+	// 	.password(this.password)
+	// 	.provider(ExternalVmProviderType.VMWARE) // vmware 로 기본지정
+	// 	.url("vpx://"+this.vmwareCenter+"/"+this.vmwareDataCenter+"/"+this.vmwareCluster+"/"+this.vmwareEsxi+"?no_verify=1")
+	// 	// .driversIso(FileBuilder().id(eVm.iso.id).build())
+	// 	.build()
+
+	return importBuilder.build()
 }

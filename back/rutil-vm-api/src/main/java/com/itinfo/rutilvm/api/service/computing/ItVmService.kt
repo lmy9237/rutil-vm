@@ -160,7 +160,9 @@ class VmServiceImpl(
 		}
 
 		// 가상머신 생성
-		val res: Vm? = conn.addVm(vmVo.toAddVm()).getOrNull()
+		val res: Vm? = conn.addVm(
+			vmVo.toAddVm()
+		).getOrNull()
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 변경실패 에러유형 필요
 

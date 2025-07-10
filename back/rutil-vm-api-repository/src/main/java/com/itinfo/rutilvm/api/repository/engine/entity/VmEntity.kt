@@ -508,7 +508,7 @@ class VmEntity(
 														set(newVal) {
 															_defaultDisplayType = newVal?.value
 														}
-	val graphicType: GraphicsTypeB?				get() = GraphicsTypeB.forCode(vmDevices?.first { it.type == "graphics" }?.device)
+	val graphicType: GraphicsTypeB?				get() = GraphicsTypeB.forCode(vmDevices?.firstOrNull { it.type == "graphics" }?.device)
 
 	val migrationSupport: MigrationSupport?		get() = MigrationSupport.forValue(_migrationSupport)
 	val vmResumeBehavior: VmResumeBehavior?		get() = VmResumeBehavior.forCode(_resumeBehavior)

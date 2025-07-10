@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB.active
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
@@ -306,7 +307,7 @@ class DataCenterServiceImpl(
 		// return res.toActiveDomains()
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.filter { it.storageType != StorageTypeB.glance && it.storageDomainType != StorageDomainTypeB.import_export }
+			.filter { it.storageType != StorageTypeB.glance && it.storageDomainType != StorageDomainTypeB.import_export && it.status == active }
 			.toStorageDomainEntities()
 	}
 
