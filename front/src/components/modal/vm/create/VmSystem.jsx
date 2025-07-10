@@ -1,17 +1,31 @@
 import { useState } from "react";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
 import LabelInputNum                    from "@/components/label/LabelInputNum";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import { 
-  RVI16, rvi16ChevronDown, rvi16ChevronUp
+  RVI16, 
+  rvi16ChevronDown, 
+  rvi16ChevronUp,
 } from "@/components/icons/RutilVmIcons";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import {
+  handleSelectIdChange
+} from "@/components/label/HandleInput"
+import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
-import Localization from "@/utils/Localization";
+
+const sizeUnitOptions = [
+  { id: "mb", name: "MiB" },
+  { id: "gb", name: "GiB" },
+]
 
 const VmSystem = ({ 
   formSystemState,
   setFormSystemState
 }) => {
+  const { validationToast } = useValidationToast()
+  const [sizeUnitVo, setSizeUnitVo] = useState(sizeUnitOptions[0])
+
   const calculateFactors = (num) => {
     // 총 가산 CPU 계산
     Logger.debug(`VmSystem > calculateFactors ... num: ${num}`)
@@ -161,27 +175,21 @@ const VmSystem = ({
       <div className="edit-second-content">
         
         {/* TODO 단위에따라 메모리값 변경필요 */}
-        <LabelSelectOptionsID
-          label="크기 단위"
-          value="MB"
+        <LabelSelectOptionsID label="크기 단위"
+          value={sizeUnitVo.id}
           disabled
-          options={[
-            { id: "MB", name: "MB" },
-            { id: "GB", name: "GB" },
-          ]}
-          onChange={(selected) => {
-            Logger.debug("VmSystem > 크기 단위 선택:", selected);
-          }}
+          options={sizeUnitOptions}
+          onChange={handleSelectIdChange(sizeUnitVo, sizeUnitOptions, validationToast)}
         />
-        <LabelInputNum id="mem" label="메모리 크기(MB)"
+        <LabelInputNum id="mem" label={`메모리 크기(${sizeUnitVo.name})`}
           value={formSystemState.memorySize} 
           onChange={handleInputChange("memorySize")}
         />
-        <LabelInputNum id="mem-max"label="최대 메모리(MB)"
+        <LabelInputNum id="mem-max"label={`최대 메모리(${sizeUnitVo.name})`}
           value={formSystemState.memoryMax} 
           onChange={handleInputChange("memoryMax")}
         />
-        <LabelInputNum id="mem-actual" label="할당할 실제 메모리(MB)"
+        <LabelInputNum id="mem-actual" label={`할당할 실제 메모리(${sizeUnitVo.name})`}
           value={formSystemState.memoryGuaranteed} 
           onChange={handleInputChange("memoryGuaranteed") }
         />

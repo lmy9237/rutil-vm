@@ -56,8 +56,9 @@ const TemplateDisks = ({
           <StorageDomainWithTooltip domainId={disk.storageDomainVo.id} />
         ) : Localization.kr.NOT_ASSOCIATED,
         storageType: disk?.storageType || 'Unknown',
-        status: disk?.status || 'Unknown',
-        policy: disk?.sparse ? '씬 프로비저닝' : '사전 할당',
+        status: (disk?.imageTransferRunning) ? `잠김 (${disk?.imageTransferPercent.toFixed(2)}%)`: disk?.status.toUpperCase(),
+        // status: disk?.status || 'Unknown',
+        policy: disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
       };
   });
 

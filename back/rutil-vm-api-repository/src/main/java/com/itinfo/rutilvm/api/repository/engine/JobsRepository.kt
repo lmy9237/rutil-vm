@@ -10,13 +10,19 @@ import java.util.UUID
 
 @Repository
 interface JobsRepository : JpaRepository<JobEntity, UUID> {
-
+	@Query("""
+SELECT j FROM JobEntity j
+LEFT JOIN FETCH j.steps AS s
+WHERE 1=1
+AND j.actionType = :actionType
+""")
+	fun findAllByActionType(actionType: String): Collection<JobEntity>
 	@Modifying
 	@Query("""
 DELETE FROM JobEntity j WHERE 1=1
 AND j.jobId IN :jobIds
 	""")
-	fun deleteByIds(
+	fun removeByIds(
 		@Param("jobIds") jobIds: Collection<UUID>
 	): Int
 }

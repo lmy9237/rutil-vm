@@ -91,6 +91,8 @@ export const Localization = {
     CDROM: "CD-ROM",
     CDROM_2UPDATE: "변경 할 CD-ROM",
     UPDATE_CDROM: "CD-ROM 변경",
+    THIN_PROVISIONING: "씬 프로비저닝",
+    PREALLOCATED: "사전 할당",
 
     GENERAL: "일반",
     MANAGEMENT: "관리",

@@ -3,6 +3,12 @@ package com.itinfo.rutilvm.api.ovirt.business
 import java.io.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * [DiskStatus]
+ * 디스크 상태
+ *
+ * @author 이찬희
+ */
 enum class DiskStatus(
 	override val value: Int,
 	val statusValue: String,
@@ -28,11 +34,8 @@ enum class DiskStatus(
 			}
 		}
 
-		val allContentTypes: List<DiskStatus> = DiskStatus.values().filterNot {
-			it == unassigned
-		}
-
 		@JvmStatic fun forValue(value: Int?): DiskStatus = valueMapping[value ?: unassigned.value] ?: unassigned
 		@JvmStatic fun forCode(value: String?): DiskStatus = codeMapping[value ?: unassigned.code] ?: unassigned
+		val allContentTypes: List<DiskStatus> = DiskStatus.values().filterNot { it == unassigned }
 	}
 }

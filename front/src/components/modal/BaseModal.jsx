@@ -20,8 +20,8 @@ import "./BaseModal.css";
  */
 const BaseModal = ({
   isOpen=false, onClose, 
-  isReady=true,
-  // isReady=!import.meta.env.DEV, // TODO: 개발일 떄 만 false로하여 Loading 중에 대한 Modal에 대하여 알맞게 처리
+  // isReady=true,
+  isReady=!import.meta.env.DEV, // TODO: 개발일 떄 만 false로하여 Loading 중에 대한 Modal에 대하여 알맞게 처리
   targetName,
   submitTitle,
   promptText = "",

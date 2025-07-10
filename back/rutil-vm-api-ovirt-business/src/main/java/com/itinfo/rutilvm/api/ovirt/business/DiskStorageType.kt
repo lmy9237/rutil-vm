@@ -16,6 +16,11 @@ enum class DiskStorageType(
 	val code: String
 		get() = this@DiskStorageType.name.uppercase()
 
+	val localizationKey: String		get() = "${DiskStorageType::class.java.simpleName}.${this.name}"
+	private val loc: Localization	get() = Localization.getInstance()
+	val en: String					get() = loc.findLocalizedName4DiskStorageType(this, "en")
+	val kr: String					get() = loc.findLocalizedName4DiskStorageType(this, "kr")
+
 	val isInternal: Boolean
 		get() = this@DiskStorageType == image ||
 			this@DiskStorageType == cinder ||

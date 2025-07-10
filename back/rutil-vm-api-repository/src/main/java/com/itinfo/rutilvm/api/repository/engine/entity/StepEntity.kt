@@ -32,9 +32,6 @@ data class StepEntity(
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	var stepId: UUID? = null,
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "job_id", nullable = false)
-	var job: JobEntity? = null, // Will be set by Job's helper method or manually
 
 	@Column(name = "step_type", length = 32, nullable = false)
 	var stepType: String, // Consider an Enum
@@ -71,9 +68,11 @@ data class StepEntity(
 
 	// Self-referencing relationship for parent step
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "job_id", nullable = false)
+	var job: JobEntity? = null, // Will be set by Job's helper method or manually
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_step_id")
 	var parentStep: StepEntity? = null,
-
 	@OneToMany(
 		mappedBy="parentStep",
 		cascade=[CascadeType.ALL],

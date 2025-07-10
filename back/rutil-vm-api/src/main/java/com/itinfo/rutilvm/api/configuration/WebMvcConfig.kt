@@ -6,7 +6,10 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.FilterType
 import org.springframework.core.io.Resource
+import org.springframework.core.task.SimpleAsyncTaskExecutor
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver
+import org.springframework.scheduling.TaskScheduler
+import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Controller
 import org.springframework.stereotype.Repository
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import org.springframework.web.servlet.resource.PathResourceResolver
 import org.springframework.web.servlet.resource.ResourceResolverChain
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView
+import java.util.concurrent.Executor
 import javax.servlet.http.HttpServletRequest
 
 @Configuration
@@ -31,6 +35,7 @@ import javax.servlet.http.HttpServletRequest
 	]
 )
 class WebMvcConfig : WebMvcConfigurer {
+
 	override fun addArgumentResolvers(
 		resolvers: MutableList<HandlerMethodArgumentResolver?>
 	) {
@@ -152,6 +157,10 @@ class WebMvcConfig : WebMvcConfigurer {
 				}
 			})
 	}
+
+	@Bean fun taskScheduler(): TaskScheduler = ConcurrentTaskScheduler()
+	// Of course , you can define the Executor too
+	@Bean fun taskExecutor(): Executor? = SimpleAsyncTaskExecutor()
 
 	companion object {
 		private val log by LoggerDelegate()

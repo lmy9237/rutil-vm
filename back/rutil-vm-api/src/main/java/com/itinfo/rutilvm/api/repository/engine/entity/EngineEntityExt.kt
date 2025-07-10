@@ -86,6 +86,7 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 	return DiskImageVo.builder {
 		id { entity.diskId.toString() }
 		alias { entity.diskAlias }
+		description { entity.description }
 		sharable { entity.shareable }
 		virtualSize { entity.size }
 		actualSize { entity.actualSize }
@@ -93,7 +94,6 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 		contentType { entity.diskContentType }
 		storageType { entity.diskStorageType }
 		sparse { entity.volumeType == 2 }
-		description { entity.description }
 		dateCreated { entity.creationDate }
 		dataCenterVo {
 			IdentifiedVo.builder {
@@ -113,6 +113,10 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 			}
 		}
 		type { entity.entityType }
+		imageTransferPhase { entity.imageTransferPhase }
+		imageTransferType { entity.imageTransferType }
+		imageTransferBytesSent { entity.imageTransferBytesSent }
+		imageTransferBytesTotal { entity.imageTransferBytesTotal }
 		connectVm {
 			if(entity.entityType == "VM") {
 				IdentifiedVo.builder {

@@ -41,7 +41,7 @@ const DiskGeneral = ({
     { label: Localization.kr.DOMAIN, value: disk?.storageDomainVo?.name },
     { label: "가상 디스크 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },
     { label: "실제 가상 디스크 크기", value: checkZeroSizeToGiB(disk?.actualSize) },
-    { label: "할당 정책", value: disk?.sparse ? "씬 프로비저닝" : disk?.sparse === false ? "사전 할당" : "-" },
+    { label: "할당 정책", value: disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED },
   ];
 
 const usageItems = useMemo(() => {

@@ -60,7 +60,6 @@ const DiskUploadModal = ({
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
   const { mutate: uploadDisk } = useUploadDisk((progress) => {
-    /*if (progress < 1) onClose()*/
     progressToast.in(`${Localization.kr.DISK} ${Localization.kr.UPLOAD} 준비중 ... `, progress)
   });
 
@@ -68,6 +67,7 @@ const DiskUploadModal = ({
   const {
     data: datacenters = [],
     isLoading: isDatacentersLoading,
+    isSuccess: isDatacentersSuccess,
   } = useAllActiveDataCenters((e) => ({ ...e }));
 
   // const filteredDatacenters = datacenters.filter((d) => d.status?.toUpperCase() === "UP");
@@ -76,16 +76,20 @@ const DiskUploadModal = ({
   const {
     data: domains = [],
     isLoading: isDomainsLoading,
+    isSuccess: isDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const {
     data: diskProfiles = [],
     isLoading: isDiskProfilesLoading,
+    isSuccess: isDiskProfilesSuccess,
   } = useAllDiskProfilesFromDomain(domainVo.id || undefined, (e) => ({...e}));
+
   const {
     data: hosts = [],
     isLoading: isHostsLoading,
+    isSuccess: isHostsSuccess,
   } = useHostsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -128,6 +132,7 @@ const DiskUploadModal = ({
   }, [hosts]);
 
   const validateForm = () => {
+    Logger.debug(`DiskUploadModal > validateForm ... `);
     const nameError = checkName(formState.alias);
     if (nameError) return nameError;
 
@@ -139,6 +144,7 @@ const DiskUploadModal = ({
   };
 
   const handleFormSubmit = () => {
+    Logger.debug(`DiskUploadModal > handleFormSubmit ... `);
     const error = validateForm();
     if (error) {
       validationToast.fail(error);
@@ -167,7 +173,7 @@ const DiskUploadModal = ({
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.UPLOAD}
       isOpen={isOpen} onClose={onClose}
-      isReady={!isDatacentersLoading && !isDomainsLoading && !isDiskProfilesLoading && !isHostsLoading}
+      isReady={isDatacentersSuccess && isDomainsSuccess && isDiskProfilesSuccess && isHostsSuccess}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >

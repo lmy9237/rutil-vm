@@ -1,13 +1,17 @@
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
+import useGlobal                       from "@/hooks/useGlobal";
+import BaseModal                       from "@/components/modal/BaseModal";
+import { 
+  RVI16, 
+  rvi16ChevronRight
+} from "@/components/icons/RutilVmIcons";
 import {
   useAllDiskSnapshotsFromDomain,
   useAllTemplatesFromDomain,
   useAllVMsFromDomain,
   useDetachDomain,
-} from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
-import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainDetachModal
@@ -17,8 +21,7 @@ import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
  * @returns
  */
 const DomainDetachModal = ({ 
-  isOpen,
-  onClose,
+  isOpen, onClose,
 }) => {
   // const { closeModal } = useUIState()
   const {
@@ -29,17 +32,32 @@ const DomainDetachModal = ({
 
   const { mutate: detachDomain } = useDetachDomain(onClose, onClose);
 
-  const { data: vms = [] } = useAllVMsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e, }));
-  const { data: templates = [] } = useAllTemplatesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
-  const { data: diskSnapshots = [] } = useAllDiskSnapshotsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
+  const { 
+    data: vms=[],
+    isLoading: isVmsLoading,
+    isSuccess: isVmsSuccess,
+  } = useAllVMsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e, }));
+  const { 
+    data: templates=[],
+    isLoading: isTemplatesLoading,
+    isSuccess: isTemplatesSuccess,
+  } = useAllTemplatesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
+  const { 
+    data: diskSnapshots=[],
+    isLoading: isDisksSnapshotsLoading,
+    isSuccess: isDisksSnapshotsSuccess,
+  } = useAllDiskSnapshotsFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
 
-  const transformedVmData = vms.map((vm) => ({ name: vm?.name }));
-  const transformedTmpData = templates.map((vm) => ({ name: vm?.name }));
-  const transformedSnapshotData = diskSnapshots.map((vm) => ({ name: vm?.name }));
+  const transformedVmData = [...vms].map((vm) => ({ name: vm?.name }));
+  const transformedTmpData = [...templates].map((vm) => ({ name: vm?.name }));
+  const transformedSnapshotData = [...diskSnapshots].map((vm) => ({ name: vm?.name }));
     
   const handleFormSubmit = () => {
+    Logger.debug(`DomainDetachModal > handleFormSubmit ... `)
     onClose();
-    detachDomain({ dataCenterId: datacentersSelected[0].id, domainId: domainsSelected[0]?.id });
+    detachDomain({ 
+      dataCenterId: datacentersSelected[0].id,
+      domainId: domainsSelected[0]?.id});
   };
 
   return (
@@ -48,7 +66,7 @@ const DomainDetachModal = ({
       onSubmit={handleFormSubmit}
       promptText={`다음 ${label ? `${Localization.kr.DATA_CENTER}에서` : ""}  ${Localization.kr.DOMAIN}를 ${Localization.kr.DETACH} 하시겠습니까?`}
       contentStyle={{ width: "650px"}} 
-      isReady={Array.isArray(vms) && Array.isArray(templates) && Array.isArray(diskSnapshots)}
+      isReady={isVmsSuccess && isTemplatesSuccess && isDisksSnapshotsSuccess}
       shouldWarn={true}
     >
       <div className="p-1.5 font-bold flex f-start">

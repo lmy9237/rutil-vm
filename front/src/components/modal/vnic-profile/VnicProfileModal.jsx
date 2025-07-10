@@ -19,7 +19,12 @@ import {
   useNetworksFromDataCenter,
   useVnicProfile,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemOrDefaultEffect } from "@/util";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  emptyIdNameVo, 
+  useSelectItemOrDefaultEffect
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MVnic.css";

@@ -967,6 +967,19 @@ fun Vm?.cpuTopologyAll(): Int? {
 	return cores * sockets * threads
 }
 
+val Vm?.qualified4ConsoleConnect: Boolean
+	get() = this@qualified4ConsoleConnect?.status() == VmStatus.UP ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.POWERING_UP ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.REBOOT_IN_PROGRESS ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.POWERING_DOWN ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.PAUSED ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.MIGRATING ||
+		this@qualified4ConsoleConnect?.status() == VmStatus.SAVING_STATE
+
+val Vm?.isHostedEngineVm: Boolean
+	get() = this@isHostedEngineVm?.originPresent() == true &&
+		this@isHostedEngineVm.origin() == "managed_hosted_engine"
+
 fun List<Vm>.nameDuplicateVm(name: String, id: String? = null): Boolean =
 	this.filter { it.id() != id }.any { it.name() == name }
 

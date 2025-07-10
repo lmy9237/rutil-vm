@@ -3,6 +3,8 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
+import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
+import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -128,8 +130,10 @@ class AllDiskEntity(
 	val quotaId: String = "",
 	val quotaName: String = "",
 	val quotaEnforcementType: Int? = null,
-	val imageTransferPhase: Int? = null,
-	val imageTransferType: Int? = null,
+	@Column(name="image_transfer_phase", nullable=true)
+	private val _imageTransferPhase: Int? = null,
+	@Column(name="image_transfer_type", nullable=true)
+	private val _imageTransferType: Int? = null,
 	val imageTransferBytesSent: BigInteger? = BigInteger.ZERO,
 	val imageTransferBytesTotal: BigInteger? = BigInteger.ZERO,
 	val progress: BigInteger? = BigInteger.ZERO,
@@ -163,13 +167,11 @@ class AllDiskEntity(
 	val backupMode: String = "",
 
 ): Serializable {
-	val diskStorageType: DiskStorageType
-		get() = DiskStorageType.forValue(_diskStorageType)
-
-	val diskContentType: DiskContentTypeB
-		get() = DiskContentTypeB.forValue(_diskContentType)
-	val diskImageStatus: DiskStatus
-		get() = DiskStatus.forValue(_imagestatus)
+	val diskStorageType: DiskStorageType				get() = DiskStorageType.forValue(_diskStorageType)
+	val diskContentType: DiskContentTypeB				get() = DiskContentTypeB.forValue(_diskContentType)
+	val diskImageStatus: DiskStatus					get() = DiskStatus.forValue(_imagestatus)
+	val imageTransferPhase: ImageTransferPhaseB?		get() = if (_imageTransferPhase == null) null else ImageTransferPhaseB.forValue(_imageTransferPhase)
+	val imageTransferType: ImageTransferType?			get() = if (_imageTransferType == null) null else ImageTransferType.forValue(_imageTransferType)
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -211,10 +213,10 @@ class AllDiskEntity(
 		private var bQuotaId: String = ""; fun quotaId(block: () -> String?) { bQuotaId = block() ?: "" }
 		private var bQuotaName: String = ""; fun quotaName(block: () -> String?) { bQuotaName = block() ?: "" }
 		private var bQuotaEnforcementType: Int = -1; fun quotaEnforcementType(block: () -> Int?) { bQuotaEnforcementType = block() ?: -1 }
-		private var bImageTransferPhase: Int = -1; fun imageTransferPhase(block: () -> Int?) { bImageTransferPhase = block() ?: -1 }
-		private var bImageTransferType: Int = -1; fun imageTransferType(block: () -> Int?) { bImageTransferType = block() ?: -1 }
-		private var bImageTransferBytesSent: BigInteger = BigInteger.ZERO; fun imageTransferBytesSent(block: () -> BigInteger?) { bImageTransferBytesSent = block() ?: BigInteger.ZERO }
-		private var bImageTransferBytesTotal: BigInteger = BigInteger.ZERO; fun imageTransferBytesTotal(block: () -> BigInteger?) { bImageTransferBytesTotal = block() ?: BigInteger.ZERO }
+		private var bImageTransferPhase: Int? = null; fun imageTransferPhase(block: () -> Int?) { bImageTransferPhase = block() }
+		private var bImageTransferType: Int? = null; fun imageTransferType(block: () -> Int?) { bImageTransferType = block() }
+		private var bImageTransferBytesSent: BigInteger? = null; fun imageTransferBytesSent(block: () -> BigInteger?) { bImageTransferBytesSent = block() }
+		private var bImageTransferBytesTotal: BigInteger? = null; fun imageTransferBytesTotal(block: () -> BigInteger?) { bImageTransferBytesTotal = block() }
 		private var bProgress: BigInteger = BigInteger.ZERO; fun progress(block: () -> BigInteger?) { bProgress = block() ?: BigInteger.ZERO }
 		private var bDiskProfileId: String = ""; fun diskProfileId(block: () -> String?) { bDiskProfileId = block() ?: "" }
 		private var bDiskProfileName: String = ""; fun diskProfileName(block: () -> String?) { bDiskProfileName = block() ?: "" }

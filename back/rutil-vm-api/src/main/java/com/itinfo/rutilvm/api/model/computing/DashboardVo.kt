@@ -133,7 +133,7 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
     val eventsTotal = eventsAlert + eventsError + eventsWarning
 
     // 관리형 호스티드 엔진 VM의  최초생성 시간 가져오기
-	val vmHostedEngine: Vm? = allVms.firstOrNull { it.origin() == "managed_hosted_engine" }
+	val vmHostedEngine: Vm? = allVms.firstOrNull { it.isHostedEngineVm }
 	val timeElapsed: BigDecimal = vmHostedEngine?.statistics()?.firstOrNull {
 		it.name() == "elapsed.time"
 	}?.values()?.firstOrNull()?.datum() ?: BigDecimal.ZERO

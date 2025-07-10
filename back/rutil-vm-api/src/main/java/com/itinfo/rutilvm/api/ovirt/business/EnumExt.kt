@@ -16,6 +16,9 @@ import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.FipsMode
 import org.ovirt.engine.sdk4.types.FirewallType
 import org.ovirt.engine.sdk4.types.HostStatus
+import org.ovirt.engine.sdk4.types.ImageTransferDirection
+import org.ovirt.engine.sdk4.types.ImageTransferPhase
+import org.ovirt.engine.sdk4.types.ImageTransferTimeoutPolicy
 import org.ovirt.engine.sdk4.types.InheritableBoolean
 import org.ovirt.engine.sdk4.types.LogMaxMemoryUsedThresholdType
 import org.ovirt.engine.sdk4.types.LogSeverity
@@ -165,23 +168,17 @@ fun Display?.findGraphicsTypeB(): GraphicsTypeB? = this@findGraphicsTypeB?.type(
 fun DiskContentType?.toDiskContentTypeB(): DiskContentTypeB? = DiskContentTypeB.forCode(this@toDiskContentTypeB?.value())
 fun DiskContentTypeB?.toDiskContentType(): DiskContentType = DiskContentType.fromValue(this@toDiskContentType?.code)
 
-fun FipsMode.toFipsModeB(): FipsModeB =
-	FipsModeB.forCode(this@toFipsModeB.value())
+fun FipsMode.toFipsModeB(): FipsModeB = FipsModeB.forCode(this@toFipsModeB.value())
+fun FipsModeB.toFipsMode(): FipsMode = FipsMode.fromValue(this@toFipsMode.code)
 
-fun FipsModeB.toFipsMode(): FipsMode =
-	FipsMode.fromValue(this@toFipsMode.code)
+fun FirewallType.toFirewallTypeB(): FirewallTypeB = FirewallTypeB.forCode(this@toFirewallTypeB.value())
+fun FirewallTypeB.toFirewallType(): FirewallType = FirewallType.fromValue(this@toFirewallType.code)
 
-fun FirewallType.toFirewallTypeB(): FirewallTypeB =
-	FirewallTypeB.forCode(this@toFirewallTypeB.value())
+fun ImageTransferPhase.toImageTransferPhaseB(): ImageTransferPhaseB = ImageTransferPhaseB.forCode(this@toImageTransferPhaseB.value())
+fun ImageTransferPhaseB.toImageTransferPhaseB(): ImageTransferPhase = ImageTransferPhase.fromValue(this@toImageTransferPhaseB.code)
 
-fun FirewallTypeB.toFirewallType(): FirewallType =
-	FirewallType.fromValue(this@toFirewallType.code)
-
-fun LogMaxMemoryUsedThresholdType?.toLogMaxMemoryUsedThresholdTypeB(): LogMaxMemoryUsedThresholdTypeB =
-	LogMaxMemoryUsedThresholdTypeB.forCode(this@toLogMaxMemoryUsedThresholdTypeB?.value())
-
-fun LogMaxMemoryUsedThresholdTypeB?.toLogMaxMemoryUsedThresholdType(): LogMaxMemoryUsedThresholdType =
-	LogMaxMemoryUsedThresholdType.fromValue(this@toLogMaxMemoryUsedThresholdType?.code)
+fun LogMaxMemoryUsedThresholdType?.toLogMaxMemoryUsedThresholdTypeB(): LogMaxMemoryUsedThresholdTypeB = LogMaxMemoryUsedThresholdTypeB.forCode(this@toLogMaxMemoryUsedThresholdTypeB?.value())
+fun LogMaxMemoryUsedThresholdTypeB?.toLogMaxMemoryUsedThresholdType(): LogMaxMemoryUsedThresholdType = LogMaxMemoryUsedThresholdType.fromValue(this@toLogMaxMemoryUsedThresholdType?.code)
 
 fun VmAffinity?.toMigrationSupport(): MigrationSupport =
 	MigrationSupport.forCode(this@toMigrationSupport?.value())
@@ -228,17 +225,11 @@ fun SELinuxModeB?.toSeLinuxMode(): SeLinuxMode? = SeLinuxMode.fromValue(this@toS
 fun StorageDomainStatus?.toStorageDomainStatusB(): StorageDomainStatusB = StorageDomainStatusB.forCode(this@toStorageDomainStatusB?.value())
 fun StorageDomainStatusB?.toStorageDomainStatus(): StorageDomainStatus = StorageDomainStatus.fromValue(this@toStorageDomainStatus?.code)
 
-fun StorageDomainType.toStorageDomainTypeB(): StorageDomainTypeB =
-	StorageDomainTypeB.forCode(this@toStorageDomainTypeB.value())
+fun StorageDomainType.toStorageDomainTypeB(): StorageDomainTypeB = StorageDomainTypeB.forCode(this@toStorageDomainTypeB.value())
+fun StorageDomainTypeB.toStorageDomainType(): StorageDomainType = StorageDomainType.fromValue(this@toStorageDomainType.code)
 
-fun StorageDomainTypeB.toStorageDomainType(): StorageDomainType =
-	StorageDomainType.fromValue(this@toStorageDomainType.code)
-
-fun StorageType.toStorageTypeB(): StorageTypeB =
-	StorageTypeB.forCode(this@toStorageTypeB.value())
-
-fun StorageTypeB.toStorageType(): StorageType =
-	StorageType.fromValue(this@toStorageType.code)
+fun StorageType.toStorageTypeB(): StorageTypeB = StorageTypeB.forCode(this@toStorageTypeB.value())
+fun StorageTypeB.toStorageType(): StorageType = StorageType.fromValue(this@toStorageType.code)
 
 fun SwitchType.toSwitchTypeB(): SwitchTypeB =	SwitchTypeB.forCode(this@toSwitchTypeB.value())
 fun SwitchTypeB.toSwitchType(): SwitchType =	SwitchType.fromValue(this@toSwitchType.code)
@@ -248,6 +239,12 @@ fun QuotaModeType.toQuotaEnforcementType(): QuotaEnforcementType = QuotaEnforcem
 
 fun SpmStatus.toVdsSpmStatus(): VdsSpmStatus = VdsSpmStatus.forCode(this@toVdsSpmStatus.value())
 fun VdsSpmStatus.toSpmStatus(): SpmStatus = SpmStatus.fromValue(this@toSpmStatus.code)
+
+fun ImageTransferDirection.toImageTransferType(): ImageTransferType = ImageTransferType.forCode(this@toImageTransferType.value())
+fun ImageTransferType.toImageTransferDirection(): ImageTransferDirection = ImageTransferDirection.fromValue(this@toImageTransferDirection.code)
+
+fun ImageTransferTimeoutPolicy.toTimeoutPolicyType(): TimeoutPolicyType = TimeoutPolicyType.forCode(this@toTimeoutPolicyType.value())
+fun TimeoutPolicyType.toImageTransferTimeoutPolicy(): ImageTransferTimeoutPolicy = ImageTransferTimeoutPolicy.fromValue(this@toImageTransferTimeoutPolicy.code)
 
 fun HostStatus.toVdsStatus(): VdsStatus = VdsStatus.forCode(this@toVdsStatus.value())
 fun VdsStatus.toHostStatus(): HostStatus = HostStatus.fromValue(this@toHostStatus.code)

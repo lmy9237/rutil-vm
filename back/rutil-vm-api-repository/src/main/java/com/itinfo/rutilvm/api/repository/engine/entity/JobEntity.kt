@@ -7,18 +7,13 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
 import java.util.UUID
 import java.io.Serializable
-import java.math.BigInteger
-import javax.persistence.CascadeType
 // Or jakarta.persistence.* for newer Spring Boot
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.JoinTable
 import javax.persistence.Lob
-import javax.persistence.ManyToMany
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -66,22 +61,23 @@ class JobEntity(
 	val isExternal: Boolean? = false,
 	val isAutoCleared: Boolean? = true,
 	val engineSessionSeqId: Int? = null,
-
-	@OneToMany(
-		mappedBy="job",
-		cascade=[CascadeType.ALL], // Corresponds to ON DELETE CASCADE
-		orphanRemoval=true,
-		fetch=FetchType.LAZY
+	@OneToMany(fetch=FetchType.LAZY)
+	@JoinColumn(
+		name="job_id",
+		referencedColumnName="job_id",
+		insertable=false,
+		updatable=false
 	)
 	val steps: MutableSet<StepEntity> = mutableSetOf(),
-
+	/*
 	@OneToMany(
 		mappedBy="job",
 		cascade=[CascadeType.ALL], // Corresponds to ON DELETE CASCADE
 		orphanRemoval=true,
 		fetch= FetchType.LAZY
 	)
-	val subjectEntities: MutableSet<JobSubjectEntity> = mutableSetOf()
+	val jobSubjects: MutableSet<JobSubjectEntity> = mutableSetOf()
+	*/
 ): Serializable {
 	// Helper methods for bidirectional relationship management
 	fun addStep(step: StepEntity) {
@@ -94,15 +90,17 @@ class JobEntity(
 		step.job = null
 	}
 
+	/*
 	fun addSubjectEntity(subjectEntity: JobSubjectEntity) {
-		subjectEntities.add(subjectEntity)
+		jobSubjects.add(subjectEntity)
 		subjectEntity.job = this
 	}
 
 	fun removeSubjectEntity(subjectEntity: JobSubjectEntity) {
-		subjectEntities.remove(subjectEntity)
+		jobSubjects.remove(subjectEntity)
 		subjectEntity.job = null
 	}
+	*/
 
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
@@ -111,8 +109,7 @@ class JobEntity(
 		return jobId == other.jobId
 	}
 
-	override fun hashCode(): Int =
-		jobId.hashCode()
+	override fun hashCode(): Int = jobId.hashCode()
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -135,6 +132,7 @@ class JobEntity(
 	}
 
 	companion object {
+		const val ACTION_TYPE_EXCLUDE = "ScreenshotVm"
 		inline fun builder(block: Builder.() -> Unit): JobEntity = Builder().apply(block).build()
 	}
 }

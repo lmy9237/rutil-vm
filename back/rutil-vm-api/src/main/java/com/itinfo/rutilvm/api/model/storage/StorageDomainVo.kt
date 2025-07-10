@@ -351,8 +351,9 @@ fun StorageDomain.findHostFromStorageDomain(conn: Connection): Host? {
 
 // 호스트 가상머신이 있는지 찾기
 fun StorageDomain.findHostedVmFromStorageDomain(conn: Connection): Boolean {
-	return conn.findAllVmsFromStorageDomain(this@findHostedVmFromStorageDomain.id()).getOrDefault(listOf())
-		.any { it.origin() == "managed_hosted_engine" }
+	return conn.findAllVmsFromStorageDomain(this@findHostedVmFromStorageDomain.id())
+		.getOrDefault(listOf())
+		.any { it.isHostedEngineVm }
 }
 
 // 도메인 사이즈 계산

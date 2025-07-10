@@ -400,7 +400,7 @@ fun List<Host>.toHostVos(conn: Connection): List<HostVo> =
 fun Connection.isHostedEngineVm(hostId: String): Boolean {
     return this@isHostedEngineVm.findAllVmsFromHost(hostId)
         .getOrDefault(listOf())
-        .any { it.origin() == "managed_hosted_engine" }
+        .any { it.isHostedEngineVm }
 }
 
 

@@ -90,7 +90,11 @@ const DomainAttachModal = ({
     <BaseModal targetName={title} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      isReady={label ? !isDataCentersLoading : !isDomainsLoading}
+      isReady={
+        label 
+          ? isDataCentersSuccess
+          : isDomainsSuccess
+      }
       contentStyle={{ width: "650px"}} 
     >
       <div className="py-4">
@@ -98,7 +102,7 @@ const DomainAttachModal = ({
           isLoading={label ? isDataCentersLoading : isDomainsLoading}
           isError={label ? isDataCentersError : isDomainsError}
           isSuccess={label ? isDataCentersSuccess : isDomainsSuccess}
-          columns={ label
+          columns={label
             ? TableColumnsInfo.STORAGE_DOMAINS_ATTACH_FROM_DATACENTER
             : TableColumnsInfo.DATACENTERS_ATTACH_FROM_STORAGE_DOMAIN
           }

@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.repository.engine.entity.JobEntity
 import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.differenceInMillis
@@ -67,6 +68,8 @@ class JobVo(
 		fun build(): JobVo = JobVo(bId, bName, bDescription, bComment, bStatus, bAutoCleared, bExternal, bLastUpdated, bStartTime, bEndTime, bSteps)
 	}
 	companion object {
+		val REGEX_DESCRIPTION_EXCLUDE: Regex = JobEntity.ACTION_TYPE_EXCLUDE.toRegex() // 가상머신 스크린샷 제외 (쓸 때 없이 많이 발생)
+		// TODO: 이걸 이용해서 스케쥴러 돌린 후 해당 건 제거 필요
 		inline fun builder(block: JobVo.Builder.() -> Unit): JobVo = JobVo.Builder().apply(block).build()
 
 	}

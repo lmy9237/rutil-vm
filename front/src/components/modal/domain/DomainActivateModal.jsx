@@ -36,7 +36,7 @@ const DomainActivateModal = ({
   
   const validateForm = () => {
     Logger.debug(`DomainActivateModal > validateForm ... `)
-    if (!ids.length) return "실행할 도메인이 없습니다"
+    if (!ids.length) return `${Localization.kr.ACTIVATE}할 도메인이 없습니다.`
     return null
   }
   const handleFormSubmit = () => {
@@ -53,12 +53,15 @@ const DomainActivateModal = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"활성"}
+    <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.ACTIVATE}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      isReady={Array.isArray(domainsSelected) && domainsSelected.length > 0 && !!datacentersSelected?.[0]?.id}
-      promptText={`${names.join(", ")} 를(을) 활성화 하시겠습니까?`}
-      contentStyle={{ width: "630px"}} 
+      isReady={
+        [...domainsSelected].length > 0 &&
+        !!datacentersSelected?.[0]?.id
+      }
+      promptText={`${names.join(", ")} 를(을) ${Localization.kr.ACTIVATE} 하시겠습니까?`}
+      contentStyle={{ width: "630px"}}
       shouldWarn={true}
     />
   );

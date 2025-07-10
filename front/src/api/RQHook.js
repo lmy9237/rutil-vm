@@ -434,7 +434,7 @@ const qpAllDomainsFromDataCenter = (
     return _res;
   },
   enabled: !!dataCenterId, // dataCenterId가 있을 때만 쿼리 실행
-  suspense: true,
+  // suspense: true,
 })
 /**
  * @name useAllDomainsFromDataCenter

@@ -7,6 +7,8 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
+import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
+import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
 import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
 import com.itinfo.rutilvm.api.ovirt.business.toDiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.toDiskFormat
@@ -75,7 +77,7 @@ class DiskImageVo(
 	val sharable: Boolean = false,
 	val backup: Boolean = false,
 	val format: VolumeFormat = VolumeFormat.raw,
-	val imageId: String = String(),
+	val imageId: String = "",
 	val virtualSize: BigInteger = BigInteger.ZERO,
 	val actualSize: BigInteger = BigInteger.ZERO,
 	val status: DiskStatus? = DiskStatus.locked,
@@ -83,6 +85,10 @@ class DiskImageVo(
 	val storageType: DiskStorageType? = DiskStorageType.image,
 	private val _dateCreated: LocalDateTime? = null,
 	val type: String = "",
+	val imageTransferPhase: ImageTransferPhaseB? = null,	// 실제 전송 중인 상태일 때만 값이 표출
+	val imageTransferType: ImageTransferType? = null,		// 실제 전송 중인 상태일 때만 값이 표출
+	val imageTransferBytesSent: BigInteger? = null,			// 실제 전송 중인 상태일 때만 값이 표출
+	val imageTransferBytesTotal: BigInteger? = null,		// 실제 전송 중인 상태일 때만 값이 표출
 	val connectVm: IdentifiedVo = IdentifiedVo(),
 	val connectTemplate: IdentifiedVo = IdentifiedVo(),
 	val diskProfileVo: IdentifiedVo = IdentifiedVo(),
@@ -90,16 +96,34 @@ class DiskImageVo(
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
-	val dateCreated: String?		get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
-	val statusCode: String?			get() = status?.code
+	val dateCreated: String?			get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
+	val statusCode: String?				get() = status?.code
 	// val statusEn: String?			get() = status?.en ?: "N/A"
 	// val statusKr: String?			get() = status?.kr ?: "알 수 없음"
 
-	val contentTypeCode: String		get() = contentType?.code ?: DiskContentTypeB.data.code
-	val contentTypeEn: String 		get() = contentType?.en ?: "N/A"
-	val contentTypeKr: String		get() = contentType?.kr ?: "알 수 없음"
+	val contentTypeCode: String			get() = contentType?.code ?: DiskContentTypeB.data.code
+	val contentTypeEn: String 			get() = contentType?.en ?: "N/A"
+	val contentTypeKr: String			get() = contentType?.kr ?: "알 수 없음"
 
-	val storageTypeCode: String		get() = storageType?.code ?: DiskStorageType.image.code
+	val storageTypeCode: String			get() = storageType?.code ?: DiskStorageType.image.code
+	val storageTypeEn: String			get() = storageType?.en ?: "N/A"
+	val storageTypeKr: String			get() = storageType?.kr ?: "알 수 없음"
+
+	val imageTransferPhaseCode: String	get() = imageTransferPhase?.code ?: ""
+	val imageTransferPhaseEn: String	get() = imageTransferPhase?.en ?: ""
+	val imageTransferPhaseKr: String	get() = imageTransferPhase?.kr ?: ""
+
+	val imageTransferTypeCode: String	get() = imageTransferType?.code ?: ""
+	val imageTransferTypeEn: String		get() = imageTransferType?.en ?: ""
+	val imageTransferTypeKr: String		get() = imageTransferType?.kr ?: ""
+
+	val imageTransferRunning: Boolean	get() = imageTransferPhase != null &&
+		imageTransferType != null &&
+		imageTransferBytesSent != null &&
+		imageTransferBytesTotal != null
+	val imageTransferPercent: Double?
+		get() = (imageTransferBytesSent?.toDouble() ?: 0.0) / (imageTransferBytesTotal?.toDouble() ?: 0.0) * 100L
+
 	/*
 	val storageTypeEn: String
 		get() = storageType?.en ?: "N/A"
@@ -129,6 +153,10 @@ class DiskImageVo(
 		private var bStorageType: DiskStorageType? = DiskStorageType.image;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.image }
 		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
 		private var bType: String = "";fun type(block: () -> String?) { bType = block() ?: "" }
+		private var bImageTransferPhase: ImageTransferPhaseB? = null; fun imageTransferPhase(block: () -> ImageTransferPhaseB?) { bImageTransferPhase = block() }
+		private var bImageTransferType: ImageTransferType? = null; fun imageTransferType(block: () -> ImageTransferType?) { bImageTransferType = block() }
+		private var bImageTransferBytesSent: BigInteger? = null; fun imageTransferBytesSent(block: () -> BigInteger?) { bImageTransferBytesSent = block() }
+		private var bImageTransferBytesTotal: BigInteger? = null; fun imageTransferBytesTotal(block: () -> BigInteger?) { bImageTransferBytesTotal = block() }
 		private var bConnectVm: IdentifiedVo = IdentifiedVo();fun connectVm(block: () -> IdentifiedVo?) { bConnectVm = block() ?: IdentifiedVo() }
 		private var bConnectTemplate: IdentifiedVo = IdentifiedVo();fun connectTemplate(block: () -> IdentifiedVo?) { bConnectTemplate = block() ?: IdentifiedVo() }
 		private var bDiskProfileVo: IdentifiedVo = IdentifiedVo();fun diskProfileVo(block: () -> IdentifiedVo?) { bDiskProfileVo = block() ?: IdentifiedVo() }
@@ -136,7 +164,7 @@ class DiskImageVo(
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bType, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo, )
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bType, bImageTransferPhase, bImageTransferType, bImageTransferBytesSent, bImageTransferBytesTotal, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo)
 	}
 	companion  object {
 		private val log by LoggerDelegate()

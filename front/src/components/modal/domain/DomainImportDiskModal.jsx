@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import { 
   useAllDiskProfilesFromDomain,
   useRegisteredDiskFromDomain,
@@ -8,8 +10,6 @@ import {
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
-import useGlobal from "@/hooks/useGlobal";
 
 const DomainImportDiskModal = ({
   isOpen,
@@ -24,6 +24,7 @@ const DomainImportDiskModal = ({
   const { 
     data: diskProfiles = [],
     isLoading: isDiskProfilesLoading,
+    isSuccess: isDiskProfilesSuccess,
   } = useAllDiskProfilesFromDomain(domainsSelected[0]?.id, (e) => ({ ...e }));
 
   const { mutate: registerDisk } = useRegisteredDiskFromDomain(onClose, onClose);
@@ -93,7 +94,7 @@ const DomainImportDiskModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      isReady={!isDiskProfilesLoading}
+      isReady={isDiskProfilesSuccess}
       contentStyle={{ width: "780px" }} 
     >
       <div className="section-table-outer ">

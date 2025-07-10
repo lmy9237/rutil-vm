@@ -47,11 +47,11 @@ const DomainImportDisks = ({
   const transformedData = useMemo(() => [...disks].map((disk) => ({
     ...disk,
     alias: disk?.alias,
-    sparse: disk?.sparse ? "씬 프로비저닝" : "사전 할당",
+    sparse: disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
     virtualSize: checkZeroSizeToGiB(disk?.virtualSize),
     actualSize: checkZeroSizeToGiB(disk?.actualSize),
     // ✅ 검색을 위한 text 필드 추가
-    searchText: `${disk?.alias} ${disk?.sparse ? "씬 프로비저닝" : "사전 할당"} ${checkZeroSizeToGiB(disk?.virtualSize)} ${checkZeroSizeToGiB(disk?.actualSize)}`.toLowerCase(),
+    searchText: `${disk?.alias} ${disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED} ${checkZeroSizeToGiB(disk?.virtualSize)} ${checkZeroSizeToGiB(disk?.actualSize)}`.toLowerCase(),
   })), [disks]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

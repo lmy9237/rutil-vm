@@ -271,7 +271,7 @@
 // 		status { vm.status() }
 // 		description { vm.description() }
 // 		nextRun { vm.nextRunConfigurationExists() }
-// 		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
+// 		hostedEngineVm { vm.isHostedEngineVm } // 엔진여부
 // 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 // 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 // 		snapshotVos { snapshots }

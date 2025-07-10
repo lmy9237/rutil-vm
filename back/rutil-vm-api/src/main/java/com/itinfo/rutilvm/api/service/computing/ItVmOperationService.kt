@@ -5,13 +5,13 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.computing.toStartOnceVm
+import com.itinfo.rutilvm.api.model.computing.toVmVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.model.SystemPropertiesVo
-import com.itinfo.rutilvm.util.ovirt.addCdromFromVm
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import com.itinfo.rutilvm.util.ovirt.exportVm
@@ -20,8 +20,10 @@ import com.itinfo.rutilvm.util.ovirt.findAllHostsFromCluster
 import com.itinfo.rutilvm.util.ovirt.findAllNetworkAttachmentsFromHost
 import com.itinfo.rutilvm.util.ovirt.findAllVms
 import com.itinfo.rutilvm.util.ovirt.findVm
+import com.itinfo.rutilvm.util.ovirt.isHostedEngineVm
 import com.itinfo.rutilvm.util.ovirt.migrationVm
 import com.itinfo.rutilvm.util.ovirt.migrationVmToHost
+import com.itinfo.rutilvm.util.ovirt.qualified4ConsoleConnect
 import com.itinfo.rutilvm.util.ovirt.rebootVm
 import com.itinfo.rutilvm.util.ovirt.resetVm
 import com.itinfo.rutilvm.util.ovirt.shutdownVm
@@ -30,11 +32,11 @@ import com.itinfo.rutilvm.util.ovirt.startVm
 import com.itinfo.rutilvm.util.ovirt.stopVm
 import com.itinfo.rutilvm.util.ovirt.suspendVm
 import org.ovirt.engine.sdk4.Error
-import org.ovirt.engine.sdk4.types.Cdrom
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.Vm
+import org.ovirt.engine.sdk4.types.VmStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -322,9 +324,20 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	@Throws(Error::class, IllegalStateException::class, ItCloudException::class)
 	override fun takeScreenshotFromVm(vmId: String): String {
 		log.info("takeScreenshotFromVm ... vmId: {}", vmId)
+		val vm: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
+		if (vm.isHostedEngineVm) { /* hostedEngine에 대해서는 이미지를 API에서 제공안함 */
+			log.warn("takeScreenshotFromVm ... vmId: {}\n\nREASON: VM screenshot is NOT available for HostedEngine VM!\n", vmId)
+			return ""
+		}
+
+		if (vm.statusPresent() && !vm.qualified4ConsoleConnect) {
+			log.warn("takeScreenshotFromVm ... vmId: {}\n\nVM screenshot is NOT available at this status!\n", vmId)
+			return ""
+		}
+
 		val sysProp: SystemPropertiesVo = iSystemProperties.findOne()
 		val baseUrl: String = sysProp.ovirtEngineApiUrl
-		val screenshotUrl: String = "$baseUrl/vms/${vmId}/screenshot"
+		val screenshotApiUrl = "$baseUrl/vms/${vmId}/screenshot"
 		val requestBody = "<action/>"
 		val headers = HttpHeaders().apply {
 			// The most important part: Add the authentication cookie.
@@ -338,7 +351,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		// RestTemplate 객체 생성
 		val response: ResponseEntity<ByteArray> = try {
 			restTemplate.postForEntity(
-				screenshotUrl,
+				screenshotApiUrl,
 				httpEntity,
 				ByteArray::class.java
 			)

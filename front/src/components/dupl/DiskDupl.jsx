@@ -1,18 +1,8 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import DiskActionButtons      from "@/components/dupl/DiskActionButtons";
-import { status2Icon }        from "@/components/icons/RutilVmIcons";
-import { checkZeroSizeToGiB } from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
 import {
   Select,
   SelectTrigger,
@@ -20,7 +10,19 @@ import {
   SelectContent,
   SelectItem
 } from "@/components/ui/select";
-import { useAllDiskContentTypes } from "@/api/RQHook";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import DiskActionButtons                from "@/components/dupl/DiskActionButtons";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
+import { 
+  useAllDiskContentTypes
+} from "@/api/RQHook";
+import { checkZeroSizeToGiB }           from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const DiskDupl = ({
   disks = [], columns = [],
@@ -67,8 +69,9 @@ const DiskDupl = ({
       sharable: d?.sharable ? "O" : "",
       icon1: d?.bootable ? "🔑" : "",
       icon2: d?.readOnly ? "🔒" : "",
-      status: d?.status.toUpperCase(),
-      sparse: d?.sparse ? "씬 프로비저닝" : "사전 할당",
+      status: (d?.imageTransferRunning) ? (`${d?.imageTransferPhaseKr} (${d?.imageTransferPercent.toFixed(2)}%)`): d?.status.toUpperCase(),
+      sparse: d?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
+      storageType: d?.storageTypeKr ?? d?.storageType, 
       type: d?.type,
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
@@ -131,8 +134,7 @@ const DiskDupl = ({
           hasConnectTemplate={disksSelected.some(disk => !!disk?.connectTemplate?.name)}
         />
       </div>
-      <TablesOuter target={"disk"}
-        columns={columns}
+      <TablesOuter target={"disk"} columns={columns}
         data={contentTypeFilteredData}
         // data={contentTypeFilteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}

@@ -62,6 +62,7 @@ import com.itinfo.rutilvm.util.ovirt.findHost
 import com.itinfo.rutilvm.util.ovirt.findStorageDomain
 import com.itinfo.rutilvm.util.ovirt.findTemplate
 import com.itinfo.rutilvm.util.ovirt.findVm
+import com.itinfo.rutilvm.util.ovirt.isHostedEngineVm
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.BiosBuilder
 import org.ovirt.engine.sdk4.builders.BootBuilder
@@ -473,7 +474,7 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 		iconLarge { if (vm.smallIconPresent()) vm.smallIcon().toVmIconVo() else null }
 		creationTime { vm.creationTime().toLocalDateTime() }
 		nextRun { vm.nextRunConfigurationExists() }
-		hostedEngineVm { vm.origin() == "managed_hosted_engine" } // 엔진여부
+		hostedEngineVm { vm.isHostedEngineVm } // 엔진여부
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
 		snapshotVos { snapshots }
@@ -578,7 +579,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		storageErrorResumeBehaviour { vm.storageErrorResumeBehaviour().toVmResumeBehavior() }
 		usb { if(vm.usbPresent()) vm.usb().enabled() else false }
 		virtioScsiMultiQueueEnabled { vm.virtioScsiMultiQueuesEnabled() }
-		hostedEngineVm { vm.origin() == "managed_hosted_engine" }
+		hostedEngineVm { vm.isHostedEngineVm }
 		timeOffset { vm.timeZone().name() }
 		if (status == VmStatusB.up) {
 			val host: Host? = conn.findHost(vm.host().id()).getOrNull()

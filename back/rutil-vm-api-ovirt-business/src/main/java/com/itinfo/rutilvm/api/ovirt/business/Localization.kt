@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.util.PropertiesHelper
 import java.util.*
 
@@ -125,6 +126,27 @@ class Localization {
 		}
 		//endregion: DiskInterfaceL
 
+
+		//region: DiskStorageTypeL
+		object DiskStorageTypeL {
+			object KR {
+				val image                   = locKr?.get(DiskStorageType.image.localizationKey)?.toString() ?: ""
+				val cinder                  = locKr?.get(DiskStorageType.cinder.localizationKey)?.toString() ?: ""
+				val lun                     = locKr?.get(DiskStorageType.lun.localizationKey)?.toString() ?: ""
+				val managed_block_storage	= locKr?.get(DiskStorageType.managed_block_storage.localizationKey)?.toString() ?: ""
+				val unknown                 = locKr?.get(DiskStorageType.unknown.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val image                   = locEn?.get(DiskStorageType.image.localizationKey)?.toString() ?: ""
+				val cinder                  = locEn?.get(DiskStorageType.cinder.localizationKey)?.toString() ?: ""
+				val lun                     = locEn?.get(DiskStorageType.lun.localizationKey)?.toString() ?: ""
+				val managed_block_storage	= locEn?.get(DiskStorageType.managed_block_storage.localizationKey)?.toString() ?: ""
+				val unknown                 = locEn?.get(DiskStorageType.unknown.localizationKey)?.toString() ?: ""
+			}
+
+		}
+		//endregion: DiskStorageTypeL
+
 		//region: DisplayTypeL
 		object DisplayTypeL {
 			object KR {
@@ -159,6 +181,61 @@ class Localization {
 			}
 		}
 		//endregion: FipsModeL
+
+
+		//region: ImageTransferPhaseL
+		object ImageTransferPhaseL {
+			object KR {
+				val unknown				= locKr?.get(ImageTransferPhaseB.unknown.localizationKey)?.toString() ?: ""
+				val initializing		= locKr?.get(ImageTransferPhaseB.initializing.localizationKey)?.toString() ?: ""
+				val transferring		= locKr?.get(ImageTransferPhaseB.transferring.localizationKey)?.toString() ?: ""
+				val resuming			= locKr?.get(ImageTransferPhaseB.resuming.localizationKey)?.toString() ?: ""
+				val paused_system		= locKr?.get(ImageTransferPhaseB.paused_system.localizationKey)?.toString() ?: ""
+				val paused_user			= locKr?.get(ImageTransferPhaseB.paused_user.localizationKey)?.toString() ?: ""
+				val cancelled_system	= locKr?.get(ImageTransferPhaseB.cancelled_system.localizationKey)?.toString() ?: ""
+				val finalizing_success	= locKr?.get(ImageTransferPhaseB.finalizing_success.localizationKey)?.toString() ?: ""
+				val finalizing_failure	= locKr?.get(ImageTransferPhaseB.finalizing_failure.localizationKey)?.toString() ?: ""
+				val finished_success	= locKr?.get(ImageTransferPhaseB.finished_success.localizationKey)?.toString() ?: ""
+				val finished_failure	= locKr?.get(ImageTransferPhaseB.finished_failure.localizationKey)?.toString() ?: ""
+				val cancelled_user		= locKr?.get(ImageTransferPhaseB.cancelled_user.localizationKey)?.toString() ?: ""
+				val finalizing_cleanup	= locKr?.get(ImageTransferPhaseB.finalizing_cleanup.localizationKey)?.toString() ?: ""
+				val finished_cleanup	= locKr?.get(ImageTransferPhaseB.finished_cleanup.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val unknown				= locEn?.get(ImageTransferPhaseB.unknown.localizationKey)?.toString() ?: ""
+				val initializing		= locEn?.get(ImageTransferPhaseB.initializing.localizationKey)?.toString() ?: ""
+				val transferring		= locEn?.get(ImageTransferPhaseB.transferring.localizationKey)?.toString() ?: ""
+				val resuming			= locEn?.get(ImageTransferPhaseB.resuming.localizationKey)?.toString() ?: ""
+				val paused_system		= locEn?.get(ImageTransferPhaseB.paused_system.localizationKey)?.toString() ?: ""
+				val paused_user			= locEn?.get(ImageTransferPhaseB.paused_user.localizationKey)?.toString() ?: ""
+				val cancelled_system	= locEn?.get(ImageTransferPhaseB.cancelled_system.localizationKey)?.toString() ?: ""
+				val finalizing_success	= locEn?.get(ImageTransferPhaseB.finalizing_success.localizationKey)?.toString() ?: ""
+				val finalizing_failure	= locEn?.get(ImageTransferPhaseB.finalizing_failure.localizationKey)?.toString() ?: ""
+				val finished_success	= locEn?.get(ImageTransferPhaseB.finished_success.localizationKey)?.toString() ?: ""
+				val finished_failure	= locEn?.get(ImageTransferPhaseB.finished_failure.localizationKey)?.toString() ?: ""
+				val cancelled_user		= locEn?.get(ImageTransferPhaseB.cancelled_user.localizationKey)?.toString() ?: ""
+				val finalizing_cleanup	= locEn?.get(ImageTransferPhaseB.finalizing_cleanup.localizationKey)?.toString() ?: ""
+				val finished_cleanup	= locEn?.get(ImageTransferPhaseB.finished_cleanup.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: ImageTransferPhaseL
+
+
+		//region: ImageTransferTypeL
+		object ImageTransferTypeL {
+			object KR {
+				val unknown		= locKr?.get(ImageTransferType.unknown.localizationKey)?.toString() ?: ""
+				val download	= locKr?.get(ImageTransferType.download.localizationKey)?.toString() ?: ""
+				val upload		= locKr?.get(ImageTransferType.upload.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val unknown		= locEn?.get(ImageTransferType.unknown.localizationKey)?.toString() ?: ""
+				val download	= locEn?.get(ImageTransferType.download.localizationKey)?.toString() ?: ""
+				val upload		= locEn?.get(ImageTransferType.upload.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: ImageTransferTypeL
+
 
 		//region: MigrationBandwidthLimitTypeL
 		object MigrationBandwidthLimitTypeL {
@@ -528,14 +605,21 @@ class Localization {
 		DiskContentTypeB.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
 	}
 
-	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String =
-		when(type) {
-			DiskInterface.ide -> 			if (loc == "kr") DiskInterfaceL.KR.IDE else DiskInterfaceL.EN.IDE
-			DiskInterface.virtio_scsi -> 	if (loc == "kr") DiskInterfaceL.KR.VirtIO_SCSI else DiskInterfaceL.EN.VirtIO_SCSI
-			DiskInterface.virtio -> 		if (loc == "kr") DiskInterfaceL.KR.VirtIO else DiskInterfaceL.EN.VirtIO
-			DiskInterface.spapr_vscsi -> 	if (loc == "kr") DiskInterfaceL.KR.SPAPR_VSCSI else DiskInterfaceL.EN.SPAPR_VSCSI
-			DiskInterface.sata -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
-		}
+	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String = when(type) {
+		DiskInterface.ide -> 			if (loc == "kr") DiskInterfaceL.KR.IDE else DiskInterfaceL.EN.IDE
+		DiskInterface.virtio_scsi -> 	if (loc == "kr") DiskInterfaceL.KR.VirtIO_SCSI else DiskInterfaceL.EN.VirtIO_SCSI
+		DiskInterface.virtio -> 		if (loc == "kr") DiskInterfaceL.KR.VirtIO else DiskInterfaceL.EN.VirtIO
+		DiskInterface.spapr_vscsi -> 	if (loc == "kr") DiskInterfaceL.KR.SPAPR_VSCSI else DiskInterfaceL.EN.SPAPR_VSCSI
+		DiskInterface.sata -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
+	}
+
+	fun findLocalizedName4DiskStorageType(type: DiskStorageType, loc: String = "kr"): String = when(type) {
+		DiskStorageType.image ->                    if (loc == "kr") DiskStorageTypeL.KR.image else DiskStorageTypeL.EN.image
+		DiskStorageType.cinder ->                   if (loc == "kr") DiskStorageTypeL.KR.cinder else DiskStorageTypeL.EN.cinder
+		DiskStorageType.lun ->                      if (loc == "kr") DiskStorageTypeL.KR.lun else DiskStorageTypeL.EN.lun
+		DiskStorageType.managed_block_storage ->	if (loc == "kr") DiskStorageTypeL.KR.managed_block_storage else DiskStorageTypeL.EN.managed_block_storage
+		DiskStorageType.unknown ->	                if (loc == "kr") DiskStorageTypeL.KR.unknown else DiskStorageTypeL.EN.unknown
+	}
 
 	fun findLocalizedName4DisplayType(type: DisplayTypeB, loc: String = "kr"): String = when(type) {
 		DisplayTypeB.cirrus ->					if (loc == "kr") DisplayTypeL.KR.cirrus else DisplayTypeL.EN.cirrus
@@ -549,6 +633,29 @@ class Localization {
 		FipsModeB.undefined ->					if (loc == "kr") FipsModeL.KR.undefined else FipsModeL.EN.undefined
 		FipsModeB.enabled ->					if (loc == "kr") FipsModeL.KR.enabled else FipsModeL.EN.enabled
 		FipsModeB.disabled ->					if (loc == "kr") FipsModeL.KR.disabled else FipsModeL.EN.disabled
+	}
+
+	fun findLocalizedName4ImageTransferPhaseB(type: ImageTransferPhaseB, loc: String = "kr"): String = when(type) {
+		ImageTransferPhaseB.unknown -> 					if (loc == "kr") ImageTransferPhaseL.KR.unknown else ImageTransferPhaseL.EN.unknown
+		ImageTransferPhaseB.initializing -> 		    if (loc == "kr") ImageTransferPhaseL.KR.initializing else ImageTransferPhaseL.EN.initializing
+		ImageTransferPhaseB.transferring -> 		    if (loc == "kr") ImageTransferPhaseL.KR.transferring else ImageTransferPhaseL.EN.transferring
+		ImageTransferPhaseB.resuming -> 		        if (loc == "kr") ImageTransferPhaseL.KR.resuming else ImageTransferPhaseL.EN.resuming
+		ImageTransferPhaseB.paused_system -> 		    if (loc == "kr") ImageTransferPhaseL.KR.paused_system else ImageTransferPhaseL.EN.paused_system
+		ImageTransferPhaseB.paused_user -> 		        if (loc == "kr") ImageTransferPhaseL.KR.paused_user else ImageTransferPhaseL.EN.paused_user
+		ImageTransferPhaseB.cancelled_system -> 		if (loc == "kr") ImageTransferPhaseL.KR.cancelled_system else ImageTransferPhaseL.EN.cancelled_system
+		ImageTransferPhaseB.finalizing_success -> 		if (loc == "kr") ImageTransferPhaseL.KR.finalizing_success else ImageTransferPhaseL.EN.finalizing_success
+		ImageTransferPhaseB.finalizing_failure -> 		if (loc == "kr") ImageTransferPhaseL.KR.finalizing_failure else ImageTransferPhaseL.EN.finalizing_failure
+		ImageTransferPhaseB.finished_success -> 		if (loc == "kr") ImageTransferPhaseL.KR.finished_success else ImageTransferPhaseL.EN.finished_success
+		ImageTransferPhaseB.finished_failure -> 		if (loc == "kr") ImageTransferPhaseL.KR.finished_failure else ImageTransferPhaseL.EN.finished_failure
+		ImageTransferPhaseB.cancelled_user -> 		    if (loc == "kr") ImageTransferPhaseL.KR.cancelled_user else ImageTransferPhaseL.EN.cancelled_user
+		ImageTransferPhaseB.finalizing_cleanup -> 		if (loc == "kr") ImageTransferPhaseL.KR.finalizing_cleanup else ImageTransferPhaseL.EN.finalizing_cleanup
+		ImageTransferPhaseB.finished_cleanup -> 		if (loc == "kr") ImageTransferPhaseL.KR.finished_cleanup else ImageTransferPhaseL.EN.finished_cleanup
+	}
+
+	fun findLocalizedName4ImageTransferType(type: ImageTransferType, loc: String = "kr"): String = when(type) {
+		ImageTransferType.unknown ->		if (loc == "kr") ImageTransferTypeL.KR.unknown else ImageTransferTypeL.EN.unknown
+		ImageTransferType.download ->       if (loc == "kr") ImageTransferTypeL.KR.download else ImageTransferTypeL.EN.download
+		ImageTransferType.upload ->         if (loc == "kr") ImageTransferTypeL.KR.upload else ImageTransferTypeL.EN.upload
 	}
 
 	fun findLocalizedName4MigrationBandwidthLimitType(type: MigrationBandwidthLimitType, loc: String = "kr"): String = when(type) {

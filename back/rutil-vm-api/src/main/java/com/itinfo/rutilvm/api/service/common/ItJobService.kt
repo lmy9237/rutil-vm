@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.common.JobVo
+import com.itinfo.rutilvm.api.model.common.JobVo.Companion.REGEX_DESCRIPTION_EXCLUDE
 import com.itinfo.rutilvm.api.model.common.toJob
 import com.itinfo.rutilvm.api.model.common.toJobVo
 import com.itinfo.rutilvm.api.model.common.toJobVos
@@ -98,7 +99,9 @@ class JobServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<JobVo> {
 		log.info("findAll ...")
-		val res: List<Job> = conn.findAllJobs(follow = "steps").getOrDefault(listOf())
+		val res: List<Job> = conn.findAllJobs(follow = "steps")
+			.getOrDefault(listOf())
+			.filter { !REGEX_DESCRIPTION_EXCLUDE.matches(it.description()) }
 		return res.toJobVos()
 	}
 
@@ -141,7 +144,7 @@ class JobServiceImpl(
 	override fun removeMany(jobIds: Collection<String>): Boolean? {
 		log.info("removeMultiple ... jobIds: {}", jobIds)
 		val res: Boolean? = try {
-			rJobs.deleteByIds(jobIds.map { it.toUUID() })
+			rJobs.removeByIds(jobIds.map { it.toUUID() })
 			true
 		} catch (e: IllegalArgumentException) {
 			log.error("something went WRONG in removeMultiple ... reason: {}", e.localizedMessage)

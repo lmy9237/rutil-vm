@@ -178,7 +178,7 @@ const VmGeneral = ({
             const d = disk.diskImageVo;
             const sizeGiB = convertBytesToMB(d?.virtualSize ?? 0) / 1024;
             const storageName = d?.storageDomainVo?.name ?? "-";
-            const thin = d?.sparse ? "씬" : "씬 아님";
+            const thin = d?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED;
             const boot = disk.bootable ? "| 부팅" : "";
 
             return (
