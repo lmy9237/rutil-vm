@@ -93,6 +93,7 @@ const DomainImportDiskModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={!isDiskProfilesLoading}
       contentStyle={{ width: "780px" }} 
     >
       <div className="section-table-outer ">

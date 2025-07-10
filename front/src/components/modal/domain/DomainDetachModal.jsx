@@ -11,7 +11,7 @@ import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
 
 /**
  * @name DomainDetachModal
- * @description 
+ * @description 도메인 - 데이터센터 분리
  *
  * @prop {boolean} isOpen
  * @returns
@@ -48,6 +48,7 @@ const DomainDetachModal = ({
       onSubmit={handleFormSubmit}
       promptText={`다음 ${label ? `${Localization.kr.DATA_CENTER}에서` : ""}  ${Localization.kr.DOMAIN}를 ${Localization.kr.DETACH} 하시겠습니까?`}
       contentStyle={{ width: "650px"}} 
+      isReady={Array.isArray(vms) && Array.isArray(templates) && Array.isArray(diskSnapshots)}
       shouldWarn={true}
     >
       <div className="p-1.5 font-bold flex f-start">

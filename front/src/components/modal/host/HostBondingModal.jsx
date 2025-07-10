@@ -79,6 +79,11 @@ const HostBondingModal = ({
   return (
     <BaseModal targetName={`본딩 ${editMode ? bondModalState?.name : ""} ${bLabel}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        bondModalState &&
+        typeof bondModalState.name === "string" &&
+        typeof bondModalState.optionMode === "string"
+      }
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >

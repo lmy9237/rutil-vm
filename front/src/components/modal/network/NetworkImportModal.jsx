@@ -85,6 +85,7 @@ const NetworkImportModal = ({
     <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={onSubmit}
+        isReady={!isDatacentersLoading && networkProvider.length >= 0} 
       contentStyle={{ width: "880px" }} 
     >
       {/* 네트워크 공급자 목록 */}
@@ -133,7 +134,7 @@ const NetworkImportModal = ({
       </div>
 
       {/* 가져올 네트워크 테이블 */}
-      <div className="network-bring-table-outer">
+      <div className="network-bring-table-outer mb-4">
         <h1 className="font-bold ">가져올 네트워크</h1>
         <TablesOuter target={"network"}
           columns={importNetworkColumns}

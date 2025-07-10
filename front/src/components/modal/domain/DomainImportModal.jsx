@@ -211,6 +211,10 @@ const DomainImportModal = ({
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        !isDatacentersLoading && !isDomainsLoading && !isHostsLoading &&
+        (!isFibre || isFibresLoading === false)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >

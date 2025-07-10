@@ -163,6 +163,12 @@ const HostNetworkEditModal = ({
   return (
     <BaseModal targetName={`${Localization.kr.NETWORK} ${networkModalState?.networkVo?.name}`} submitTitle={Localization.kr.UPDATE}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        networkModalState &&
+        networkModalState.networkVo &&
+        networkModalState.hostNicVo &&
+        typeof networkModalState.inSync === "boolean"
+      }
       onSubmit={handleOkClick}
       contentStyle={{ width: "800px" , height: "430px" }} 
     >

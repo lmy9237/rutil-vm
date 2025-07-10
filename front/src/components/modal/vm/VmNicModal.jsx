@@ -163,6 +163,11 @@ const VmNicModal = ({
   return (
     <BaseModal targetName={Localization.kr.NICS} submitTitle={nLabel}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        Array.isArray(vnics) &&
+        vnics.length > 0 &&
+        typeof formInfoState.name === "string"
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "690px" }}
     >

@@ -42,6 +42,7 @@ const VmSnapshotDeleteModal = ({
   return (
     <BaseModal targetName={Localization.kr.SNAPSHOT} submitTitle={Localization.kr.REMOVE}
       isOpen={isOpen} onClose={onClose}
+      isReady={!!vmId && !!data}
       onSubmit={handleDelete}
       promptText={`${descriptions.join(", ")} 를(을) ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "600px" }}

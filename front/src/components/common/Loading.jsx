@@ -7,7 +7,7 @@ const Loading = ({
   text="",
   ...props
 }) => (
-  <div className="f-center"
+  <div className="f-center loading-outer"
     {...props}
   >
     <Spinner />

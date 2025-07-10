@@ -90,6 +90,7 @@ const DomainAttachModal = ({
     <BaseModal targetName={title} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={label ? !isDataCentersLoading : !isDomainsLoading}
       contentStyle={{ width: "650px"}} 
     >
       <div className="py-4">

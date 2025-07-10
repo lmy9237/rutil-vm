@@ -49,6 +49,7 @@ const VmSnapshotModal = ({
   return (
     <BaseModal targetName={`${selectedVm?.name} ${Localization.kr.SNAPSHOT}`} submitTitle={Localization.kr.CREATE}
       isOpen={isOpen} onClose={onClose}
+        isReady={!!selectedVm?.id}  
       onSubmit={handleFormSubmit}
       contentStyle={{ minWidth: "500px"}} 
     >

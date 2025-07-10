@@ -168,6 +168,13 @@ const DiskActionModal = ({
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={daLabel}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        diskList.length > 0 &&
+        diskList.every((disk) => {
+          const domainId = targetDomains[disk.id];
+          return domainId && domainId !== "none";
+        })
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "800px" }}
     >

@@ -41,6 +41,7 @@ const DomainMaintenanceModal = ({
       isOpen={isOpen} onClose={onClose}
       promptText={`다음의 ${Localization.kr.DOMAIN}을 ${Localization.kr.MAINTENANCE} 모드로 설정하시겠습니까?`}
       onSubmit={handleSubmit}
+      isReady={!!(datacentersSelected.length && domainsSelected.length)}
       contentStyle={{ width: "600px" }}
       shouldWarn={true}      
     >

@@ -4185,7 +4185,6 @@ const qpAllVnicProfilesFromNetwork = (
     return _res;
   },
   enabled: !!networkId,
-  suspense: true,
 })
 /**
  * @name useAllVnicProfilesFromNetwork

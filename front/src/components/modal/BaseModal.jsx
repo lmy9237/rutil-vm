@@ -68,10 +68,11 @@ const BaseModal = ({
           )}
             {props.children}
         </div>
-        <hr/>
+     
         </>
         )}
         {/* 하단 버튼 */}
+        <hr/>
         <div className="edit-footer f-end fs-14">
           {extraFooter ? (
             <>

@@ -11,7 +11,7 @@ import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainActivateModal
- * @description 
+ * @description 도메인 - 데이터센터 활성화
  *
  * @prop {boolean} isOpen
  * @returns
@@ -56,6 +56,7 @@ const DomainActivateModal = ({
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={"활성"}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={Array.isArray(domainsSelected) && domainsSelected.length > 0 && !!datacentersSelected?.[0]?.id}
       promptText={`${names.join(", ")} 를(을) 활성화 하시겠습니까?`}
       contentStyle={{ width: "630px"}} 
       shouldWarn={true}

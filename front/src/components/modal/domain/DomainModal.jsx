@@ -282,6 +282,10 @@ const DomainModal = ({
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={
+        !isDatacentersLoading && !isHostsLoading &&
+        (formState.storageType !== "fcp" || !isFibresLoading)
+      }
       contentStyle={{ width: "730px"}}
     >
       <div className="storage-domain-new-first">

@@ -156,6 +156,11 @@ const VnicProfileModal = ({
     <BaseModal targetName={Localization.kr.VNIC_PROFILE} submitTitle={vLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={
+        editMode
+          ? !isDataCentersLoading && !isNetworksLoading && !isNFiltersLoading
+          : !isDataCentersLoading && !isNetworksLoading
+      }
       contentStyle={{ width: "730px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}

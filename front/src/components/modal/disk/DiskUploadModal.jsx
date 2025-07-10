@@ -167,6 +167,7 @@ const DiskUploadModal = ({
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={Localization.kr.UPLOAD}
       isOpen={isOpen} onClose={onClose}
+      isReady={!isDatacentersLoading && !isDomainsLoading && !isDiskProfilesLoading && !isHostsLoading}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "790px" }} 
     >

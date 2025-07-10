@@ -1,0 +1,5 @@
+.loading-outer{
+    min-height: 200px;
+    height: var(--h-modal-content);
+    max-height: calc(var(--h-modal) - 10px);
+}

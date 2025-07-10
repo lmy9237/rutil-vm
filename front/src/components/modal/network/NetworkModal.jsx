@@ -194,6 +194,11 @@ const NetworkModal = ({
   return (
     <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`} submitTitle={nLabel}
       isOpen={isOpen} onClose={onClose}
+      isReady={
+        editMode
+          ? true
+          : (!isDataCentersLoading && !isClustersLoading)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
     >

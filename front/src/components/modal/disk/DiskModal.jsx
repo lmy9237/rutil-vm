@@ -225,6 +225,11 @@ const DiskModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
+      isReady={
+        !isDatacentersLoading &&
+        !isDomainsLoading &&
+        !isDiskProfilesLoading
+      }
       contentStyle={{ width: "640px" }}
     >
       <div className="disk-new-img">

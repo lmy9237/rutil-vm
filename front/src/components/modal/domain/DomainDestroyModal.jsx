@@ -35,6 +35,7 @@ const DomainDestroyModal = ({
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={Localization.kr.DESTROY}
       isOpen={isOpen} onClose={onClose}
+      isReady={!!domain?.id}
       onSubmit={handleSubmit}
       contentStyle={{ width: "600px" }}
     >

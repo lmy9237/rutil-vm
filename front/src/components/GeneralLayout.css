@@ -1,12 +1,11 @@
 .vm-detail-grid {
-     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 700px;
-    height: auto;
-    padding: 3px 10px;
-    width: 100%;
-    /* background: yellow; */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 700px;
+  height: auto;
+  padding: 3px 10px;
+  width: 100%;
 }
 .vm-section {
   display: grid;
@@ -14,18 +13,12 @@
   gap: 10px;
 }
 .section-top {
-  /* background-color: #fff3cd;  */
   width: 100%;
   height: auto;
-  
 }
 .section-bottom {
-  /* background-color: #f3e8ff; 
-  border: 1px solid red; */
   width: 100%;
   height: auto;
-  /* max-height: 340px;
-  height: 100%; */
 }
 @media (max-width: 1424px) {
   .vm-detail-grid{
