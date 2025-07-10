@@ -177,7 +177,7 @@ const ENDPOINTS = {
   UPDATE_CDROM_FROM_VM: (vmId, cdromFileId, current) =>                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/cdroms/${cdromFileId}?current=${current}`,
   TAKE_VM_SCREENSHOT: (vmId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/screenshot`,
   
-  IMPORT_VM: (vmId) =>                                                     `${ENDPOINT_API_V1}/computing/vms/vmware`,
+  IMPORT_VM: () =>                                                         `${ENDPOINT_API_V1}/computing/vms/vmware`,
   
   //#endregion: Vm
 

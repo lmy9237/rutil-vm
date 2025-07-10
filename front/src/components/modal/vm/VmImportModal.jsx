@@ -7,6 +7,7 @@ import {
   useAllProviders,
   useAuthenticate4VMWare,
   useHostsFromDataCenter,
+  useImportVm,
   useVmsFromVMWare,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
@@ -16,7 +17,6 @@ import { useValidationToast } from "@/hooks/useSimpleToast";
 import VmImportRender2Modal from "./VmImportRender2Modal";
 import { emptyIdNameVo, useSelectFirstItemEffect } from "@/util";
 import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
-import Logger from "@/utils/Logger";
 
 const initialFormState = {
   step: 1,
@@ -33,7 +33,6 @@ const initialFormState = {
 const VmImportModal = ({ 
   isOpen,
   onClose,
-  onSubmit
 }) => {
   const { validationToast } = useValidationToast();
   
@@ -48,10 +47,15 @@ const VmImportModal = ({
 
   const [targetVMs, setTargetVMs] = useState([]);
 
+  // vmimportRender2Modal 에서 넘어올 값
+  const [vmImportConfig, setVmImportConfig] = useState({});
+
   //선택된 데이터가 없을 때 footer '다음'버튼 비활성화
   const isNextDisabled = step === 1 && targetVMs.length === 0;
   const goNext = () => setStep((prev) => prev + 1);
   const goPrev = () => setStep((prev) => prev - 1);
+
+  const { mutate: importVm } = useImportVm(onClose,onClose);
 
   const { 
     mutate: authenticate4VmWare 
@@ -157,6 +161,43 @@ const VmImportModal = ({
     );
   };
 
+  const handleFormSubmit = () => {
+    console.log("$ === vmImportConfig 확인 ===", vmImportConfig);
+    const { vmConfigs, domainVo, clusterVo, cpuProfileVo, sparsd, virtioChecked } = vmImportConfig;
+
+    const dataToSubmit = Object.entries(vmConfigs).map(([vmId, config]) => {
+      const sourceVm = targetVMs.find(vm => vm.vm === vmId);
+      console.log("$sourceVm", sourceVm)
+      return {
+        vmwareName: sourceVm?.name,
+        vmVo: {
+          id: config.id,
+          name: config.name,
+          osType: config.osSystem,
+        },
+        clusterVo: {
+          id: clusterVo.id,
+        },
+        cpuProfileVo: {
+            id: cpuProfileVo?.id,
+          },
+        storageDomainVo: {
+          id: domainVo.id,
+        },
+        // sparse: sparsd === "auto" ? null : sparsd === "true", // auto는 서버에서 판단
+        userName: formState.username,
+        password: formState.password,
+        vmwareCenter: formState.vcenter,
+        vmwareDataCenter: formState.dataCenter,
+        vmwareCluster: formState.cluster,
+        vmwareEsxi: formState.esxi,
+      };
+    });
+
+    console.log("$ dataToSubmit", dataToSubmit);
+
+    importVm(dataToSubmit);
+  };
 
 
   const renderStep1 = () => (
@@ -215,7 +256,7 @@ const VmImportModal = ({
             disabled={!!providerVo.id}
           />
 
-          <LabelInput label="암호" id="password"
+          <LabelInput label={Localization.kr.PLACEHOLDER_PASSWORD} id="password"
             type="password"
             value={formState.password}
             onChange={handleInputChange(setFormState, "password", validationToast)}
@@ -275,30 +316,27 @@ const VmImportModal = ({
       sessionId={sessionId}
       dataCenterVo={dataCenterVo}
       targetVMs={targetVMs}
+      onConfigChange={setVmImportConfig}
     />
   );
 
   return (
-    <BaseModal 
-      targetName={`${Localization.kr.VM}`} 
-      submitTitle={Localization.kr.IMPORT}
+    <BaseModal targetName={`${Localization.kr.VM}`} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={step === 2 ? onSubmit : goNext}
+      onSubmit={step === 2 ? handleFormSubmit : goNext}
       contentStyle={{ width: "1000px" }}
       extraFooter={ step === 2 
         ? (
           <>
             <button className="back-button" onClick={goPrev}>뒤로</button>
-            <button className="action" onClick={onSubmit}>확인</button>
+            <button className="action" onClick={handleFormSubmit}>확인</button>
           </>
         ) : (
-          <button className="action" 
-            onClick={goNext} 
-            disabled={isNextDisabled}
-          >다음</button>
+          <button className="action" onClick={goNext} disabled={isNextDisabled}>다음</button>
         )
       }
     >
+      <span>step {step}</span>
       {step === 1 ? renderStep1() : renderStep2()}
     </BaseModal>
   );

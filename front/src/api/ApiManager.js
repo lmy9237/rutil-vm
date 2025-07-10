@@ -1821,6 +1821,22 @@ const ApiManager = {
       ressponseType: "blob",
     });
   },
+
+  /**
+   * @name ApiManager.importVM
+   * @description 가상머신 가져오기(Vmware)
+   * 
+   * @param {Object} vmData 
+   * @returns {Promise<Object>}
+   */
+  importVM: async (vmData) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.IMPORT_VM(),
+      data: vmData,
+    });
+  },
+  
   //#endregion: VM ----------------------------------------------
 
 

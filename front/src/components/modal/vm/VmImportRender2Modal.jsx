@@ -8,7 +8,6 @@ import Localization from "@/utils/Localization";
 import { emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect } from "@/util";
 import { 
     useAllActiveDomainsFromDataCenter,
-    useAllVnicProfilesFromNetwork,
     useAllOpearatingSystemsFromCluster,
     useClustersFromDataCenter,
     useCpuProfilesFromCluster,
@@ -26,6 +25,7 @@ const VmImportRender2Modal = ({
   sessionId,
   dataCenterVo,
   targetVMs=[],
+  onConfigChange
 }) => {
   const { validationToast } = useValidationToast();
   const [activeFilter, setActiveFilter] = useState("general");
@@ -51,9 +51,10 @@ const VmImportRender2Modal = ({
 
   const [vmConfigs, setVmConfigs] = useState({});
 
-  const { 
-    data: vmDetailsMap = {} 
-  } = useVmFromVMWare({ baseUrl, sessionId, vmIds: targetVMs.map(vm => vm.vm).join(",") });
+  const {
+    data: vmDetailsMap = {},
+    isLoading: isVmDetailsLoading
+  } = useVmFromVMWare({ baseUrl, sessionId, vmIds: targetVMs.map(vm => vm.vm).join(",") } );
 
   const {
     data: domains = [],
@@ -79,11 +80,6 @@ const VmImportRender2Modal = ({
     data: networks = [], 
     isLoading: isNetworksLoading 
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-
-  // const { 
-  //   data: vnics = [], 
-  //   isLoading: isvNicsLoading 
-  // } = useAllVnicProfilesFromNetwork(networkVo.id, (e) => ({ ...e }));
   
   const qr = useAllVnicProfilesFromNetwork4EachNetwork(networks, (e) => ({ ...e }));
   /* const getVnicProfiles = useQueries({
@@ -100,7 +96,7 @@ const VmImportRender2Modal = ({
       }
     })),
   });*/
-  
+
   const vmMapById = useMemo(() => {
     return Array.isArray(vmDetailsMap)
       ? Object.fromEntries(vmDetailsMap.map(vm => [vm.id, vm]))
@@ -117,28 +113,29 @@ const VmImportRender2Modal = ({
 
   // useEffect로 getVnicProfiles 결과를 정리하여 vnicProfiles 업데이트
   useEffect(() => {
+    if (!qr || !Array.isArray(qr) || qr.some(q => q.isLoading)) return;
+
     const newVnicProfilesMap = {};
-  
+
     qr.forEach((queryResult, idx) => {
       const network = networks[idx];
-      console.log("$network", network)
-      if (network && queryResult?.data && !queryResult?.isLoading) {
-        newVnicProfilesMap[network.id] = queryResult?.data || [];
+      if (network && queryResult?.data) {
+        newVnicProfilesMap[network.id] = queryResult.data;
       }
     });
-    
-    // 기존 값과 다를 때만 업데이트
+
     const isDifferent = JSON.stringify(vnicProfileList) !== JSON.stringify(newVnicProfilesMap);
     if (isDifferent) {
       setVnicProfilesList(newVnicProfilesMap);
     }
-  }, [qr, networks]); 
+  }, [qr, networks]);
 
 
   useEffect(() => {
     const newConfigs = {};
     for (const vm of Object.values(vmDetailsMap)) {
       newConfigs[vm.id] = {
+        id: vm?.identity?.biosUuid,
         name: vm.name,
         osSystem: osList[0]?.name || "",
         network: {},  // nicKey: network ID
@@ -207,6 +204,19 @@ const VmImportRender2Modal = ({
       });
     }
   }, [selectedId, networks, selectedVm]);
+
+  useEffect(() => {
+    const config = {
+      vmConfigs,
+      domainVo,
+      clusterVo,
+      cpuProfileVo,
+      sparsd,
+      virtioChecked,
+    };
+    onConfigChange?.(config);
+  }, [vmConfigs, domainVo, clusterVo, cpuProfileVo, sparsd, virtioChecked]);
+
 
   const updateVmConfig = (vmId, field, value) => {
     setVmConfigs(prev => ({
@@ -308,167 +318,173 @@ const VmImportRender2Modal = ({
 
   return (
     <>
-      <div className="vm-impor-outer">
-        <LabelSelectOptionsID label={Localization.kr.DOMAIN}
-          value={domainVo.id}
-          options={domains}
-          isLoading={isStorageDomainsLoading}
-          onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
-        />
-        <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
-          value={sparsd}
-          options={sparseList}
-          onChange={(e) => setSparsd(e.target.value)}
-        />
-        <LabelSelectOptionsID label={`대상 ${Localization.kr.CLUSTER}`}
-          value={clusterVo.id}
-          options={clusters}
-          isLoading={isClustersLoading}
-          onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
-        />
-        <div className="f-start items-center gap-2">
-          <LabelCheckbox id="virtio" label="VirtIO 드라이버 연결"
-            checked={virtioChecked}
-            onChange={(e) => setVirtioChecked(e.target.checked)}
-          />
-          <LabelSelectOptionsID label="" disabled={!virtioChecked} />
-        </div>
-        <LabelSelectOptionsID label="CPU 프로파일" 
-          value={cpuProfileVo.id}
-          options={cpuProfiles}
-          isLoading={isCpuProfilesLoading}
-          onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles, validationToast)}
-        />
-      </div>
-
-      <div className="section-table-outer w-full mb-2">
-        <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-          <thead style={{ background: "#f5f5f5" }}>
-            <tr>
-              <th>{Localization.kr.NAME}</th>
-              <th>소스</th>
-              <th>{Localization.kr.MEMORY}</th>
-              <th>CPU</th>
-              <th>아키텍처</th>
-              <th>{Localization.kr.DISK}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(vmDetailsMap).map(([index, vm]) => (
-              <tr key={vm?.id} 
-                onClick={() => setSelectedId(vm.id)}
-                style={{ 
-                  backgroundColor: selectedId === vm?.id ? "#e5f1ff" : "white", 
-                  cursor: "pointer" 
-                }}
-              >
-                <td>{vm?.name}</td>
-                <td>{Localization.kr.VW}</td>
-                <td>{vm?.memory?.sizeMiB} MB</td>
-                <td>{vm?.cpu?.count}</td>
-                <td>{"x86_64"}</td>
-                <td>{Object.keys(vm?.disks || {}).length || "-"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <span>id: {selectedId} </span>
-      </div>
-
-      {selectedVm && (
-        <div className="vm-import-detail-box mb-3">
-          <div className="mb-2">
-            <FilterButtons
-              options={filterOptions}
-              activeOption={activeFilter}
-              onClick={setActiveFilter}
+      {isVmDetailsLoading ? (
+        <div>VM 정보를 불러오는 중...</div>
+      ) : (
+        <>
+          <div className="vm-impor-outer">
+            <LabelSelectOptionsID label={Localization.kr.DOMAIN}
+              value={domainVo.id}
+              options={domains}
+              isLoading={isStorageDomainsLoading}
+              onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
+            />
+            <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
+              value={sparsd}
+              options={sparseList}
+              onChange={(e) => setSparsd(e.target.value)}
+            />
+            <LabelSelectOptionsID label={`대상 ${Localization.kr.CLUSTER}`}
+              value={clusterVo.id}
+              options={clusters}
+              isLoading={isClustersLoading}
+              onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
+            />
+            <div className="f-start items-center gap-2">
+              <LabelCheckbox id="virtio" label="VirtIO 드라이버 연결"
+                checked={virtioChecked}
+                onChange={(e) => setVirtioChecked(e.target.checked)}
+              />
+              <LabelSelectOptionsID label="" disabled={!virtioChecked} />
+            </div>
+            <LabelSelectOptionsID label="CPU 프로파일" 
+              value={cpuProfileVo.id}
+              options={cpuProfiles}
+              isLoading={isCpuProfilesLoading}
+              onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles, validationToast)}
             />
           </div>
 
-          <div className="vm-detail-content">
-            {activeFilter === "general" && (
-              <div className="vm-import-render-tb flex justify-between">
-                <div className="mr-20">
-                  <InfoTable tableRows={generalInfoRows(selectedVm)} />
-                </div>
-              </div>
-            )}
-            {activeFilter === "disk" && (
-              <div className="mt-2">
-                <div className="section-table-outer w-full mb-2">
-                  <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-                    <thead style={{ background: "#f5f5f5" }}>
-                      <tr>
-                        <th>경로</th>
-                        <th style={{ width: '600px' }}>{Localization.kr.SIZE_VIRTUAL}</th>
-                        <th style={{ width: '600px' }}>{Localization.kr.SIZE_ACTUAL}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.values(selectedVm?.disks || {}).map((disk, idx) => (
-                        <tr key={idx}>
-                          <td>{disk.backing?.vmdkFile || "-"}</td>
-                          <td>{(disk.capacity / 1024 / 1024 / 1024).toFixed(0)} GiB</td>
-                          <td>-</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-            {activeFilter === "network" && (
-              <div className="mt-2">
-                <div className="section-table-outer w-full mb-2">
-                  <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
-                    <thead style={{ background: "#f5f5f5" }}>
-                      <tr>
-                        <th>{Localization.kr.NAME}</th>
-                        <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
-                        <th>{Localization.kr.NETWORK} {Localization.kr.NAME}</th>
-                        <th>{Localization.kr.VNIC_PROFILE} {Localization.kr.NAME}</th>
-                        <th>유형</th>
-                        <th>MAC</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {Object.entries(selectedVm?.nics || {}).map(([nicKey, nic], idx) => {
-                        return (
-                          <tr key={nicKey}>
-                            <td>nic{idx + 1}</td>
-                            <td>{nic.backing?.networkName || "-"}</td>
-                            <td>
-                              <LabelSelectOptionsID
-                                value={vmConfigs[selectedId]?.network?.[nicKey] || ""}
-                                loading={isNetworksLoading}
-                                options={networks}
-                                onChange={(opt) => updateVmNicNetwork(selectedId, nicKey, opt.id)}
-                              />
-                              <span>1 {vmConfigs[selectedId]?.network?.[nicKey]}</span>
-                            </td>
-                            <td>
-                              <LabelSelectOptionsID
-                                value={vmConfigs[selectedId]?.vnic?.[nicKey] || ""}
-                                options={
-                                  vnicProfileList[vmConfigs[selectedId]?.network?.[nicKey]] || []
-                                }
-                                onChange={(opt) => updateVmNicVnic(selectedId, nicKey, opt.id)}
-                              />
-                              <span>1 {vmConfigs[selectedId]?.vnic?.[nicKey]}</span>
-                            </td>
-                            <td>{nic.type === "VMXNET3" ? "VirtIO" : nic.type}</td>
-                            <td>{nic.macAddress}</td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
+          <div className="section-table-outer w-full mb-2">
+            <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+              <thead style={{ background: "#f5f5f5" }}>
+                <tr>
+                  <th>{Localization.kr.NAME}</th>
+                  <th>소스</th>
+                  <th>{Localization.kr.MEMORY}</th>
+                  <th>CPU</th>
+                  <th>아키텍처</th>
+                  <th>{Localization.kr.DISK}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(vmDetailsMap || {}).map(([index, vm]) => (
+                  <tr key={vm?.id} 
+                    onClick={() => setSelectedId(vm.id)}
+                    style={{ 
+                      backgroundColor: selectedId === vm?.id ? "#e5f1ff" : "white", 
+                      cursor: "pointer" 
+                    }}
+                  >
+                    <td>{vm?.name}</td>
+                    <td>{Localization.kr.VW}</td>
+                    <td>{vm?.memory?.sizeMiB} MB</td>
+                    <td>{vm?.cpu?.count}</td>
+                    <td>{"x86_64"}</td>
+                    <td>{Object.keys(vm?.disks || {}).length || "-"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <span>id: {selectedId} </span>
           </div>
-      </div>
-    )}
+
+          {selectedVm && (
+            <div className="vm-import-detail-box mb-3">
+              <div className="mb-2">
+                <FilterButtons
+                  options={filterOptions}
+                  activeOption={activeFilter}
+                  onClick={setActiveFilter}
+                />
+              </div>
+
+              <div className="vm-detail-content">
+                {activeFilter === "general" && (
+                  <div className="vm-import-render-tb flex justify-between">
+                    <div className="mr-20">
+                      <InfoTable tableRows={generalInfoRows(selectedVm)} />
+                    </div>
+                  </div>
+                )}
+                {activeFilter === "disk" && (
+                  <div className="mt-2">
+                    <div className="section-table-outer w-full mb-2">
+                      <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+                        <thead style={{ background: "#f5f5f5" }}>
+                          <tr>
+                            <th>경로</th>
+                            <th style={{ width: '600px' }}>{Localization.kr.SIZE_VIRTUAL}</th>
+                            <th style={{ width: '600px' }}>{Localization.kr.SIZE_ACTUAL}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.values(selectedVm?.disks || {}).map((disk, idx) => (
+                            <tr key={idx}>
+                              <td>{disk.backing?.vmdkFile || "-"}</td>
+                              <td>{(disk.capacity / 1024 / 1024 / 1024).toFixed(0)} GiB</td>
+                              <td>-</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                {activeFilter === "network" && (
+                  <div className="mt-2">
+                    <div className="section-table-outer w-full mb-2">
+                      <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+                        <thead style={{ background: "#f5f5f5" }}>
+                          <tr>
+                            <th>{Localization.kr.NAME}</th>
+                            <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                            <th>{Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                            <th>{Localization.kr.VNIC_PROFILE} {Localization.kr.NAME}</th>
+                            <th>유형</th>
+                            <th>MAC</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(selectedVm?.nics || {}).map(([nicKey, nic], idx) => {
+                            return (
+                              <tr key={nicKey}>
+                                <td>nic{idx + 1}</td>
+                                <td>{nic.backing?.networkName || "-"}</td>
+                                <td>
+                                  <LabelSelectOptionsID
+                                    value={vmConfigs[selectedId]?.network?.[nicKey] || ""}
+                                    loading={isNetworksLoading}
+                                    options={networks}
+                                    onChange={(opt) => updateVmNicNetwork(selectedId, nicKey, opt.id)}
+                                  />
+                                  <span>1 {vmConfigs[selectedId]?.network?.[nicKey]}</span>
+                                </td>
+                                <td>
+                                  <LabelSelectOptionsID
+                                    value={vmConfigs[selectedId]?.vnic?.[nicKey] || ""}
+                                    options={
+                                      vnicProfileList[vmConfigs[selectedId]?.network?.[nicKey]] || []
+                                    }
+                                    onChange={(opt) => updateVmNicVnic(selectedId, nicKey, opt.id)}
+                                  />
+                                  <span>1 {vmConfigs[selectedId]?.vnic?.[nicKey]}</span>
+                                </td>
+                                <td>{nic.type === "VMXNET3" ? "VirtIO" : nic.type}</td>
+                                <td>{nic.macAddress}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 };

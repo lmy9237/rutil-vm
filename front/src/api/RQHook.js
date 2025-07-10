@@ -3442,6 +3442,41 @@ export const useActivateDiskFromVm = (
   });
 };
 
+/**
+ * @name useImportVm
+ * @description 가상머신 가져오기 
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useImportVm = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  // const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (vmData) => {
+      // closeModal();
+      const res = await ApiManager.importVM(vmData)
+      const _res = validateAPI(res) ?? {}
+      Logger.debug(`RQHook > useImportVm ... vmData: `, vmData);
+      return _res
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useImportVm ... res: `, res);
+      
+      apiToast.ok(`${Localization.kr.VM} ${Localization.kr.IMPORT} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allVMs');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
 // 보류
 /**
  * @name useFindDiskFromVM
@@ -4185,6 +4220,7 @@ const qpAllVnicProfilesFromNetwork = (
     return _res;
   },
   enabled: !!networkId,
+  // suspense: true,
 })
 /**
  * @name useAllVnicProfilesFromNetwork
