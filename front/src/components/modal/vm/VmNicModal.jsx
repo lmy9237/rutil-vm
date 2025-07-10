@@ -1,10 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
+import { useValidationToast }  from "@/hooks/useSimpleToast";
 import useUIState              from "@/hooks/useUIState";
 import useGlobal               from "@/hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import LabelInput from "../../label/LabelInput";
-import LabelSelectOptions from "../../label/LabelSelectOptions";
-import { handleInputChange, handleSelectIdChange } from "../../label/HandleInput";
+import BaseModal               from "@/components/modal/BaseModal";
+import ToggleSwitchButton      from "@/components/button/ToggleSwitchButton";
+import LabelInput              from "@/components/label/LabelInput";
+import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
+import { 
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
 import {
   useAddNicFromVM,
   useAllVnicsFromCluster,
@@ -12,12 +17,12 @@ import {
   useNetworkAttachmentsFromHost,
   useNetworkInterfaceFromVM,
   useVm,
-} from "../../../api/RQHook";
-import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import Logger from "../../../utils/Logger";
-import Localization from "../../../utils/Localization";
-import { emptyIdNameVo } from "@/util";
-import { useValidationToast } from "@/hooks/useSimpleToast";
+} from "@/api/RQHook";
+import {
+  emptyIdNameVo,
+} from "@/util";
+import Localization               from "@/utils/Localization";
+import Logger                     from "@/utils/Logger";
 
 const initialFormState = {
   id: "",
@@ -43,8 +48,6 @@ const VmNicModal = ({
   const nicId = useMemo(() => [...nicsSelected][0]?.id, [nicsSelected]);
   const hostId = useMemo(() => [...vmsSelected][0]?.hostVo?.id, [vmsSelected]?.hostVo);
 
-  // console.log("$ ", [...vmsSelected][0]?.hostVo, "+ ", hostId)
-
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState(emptyIdNameVo());
 
@@ -65,7 +68,7 @@ const VmNicModal = ({
   } = useAllVnicsFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
 
   useEffect(()=>{
-    console.log("$ a", networkAttachments)
+    Logger.debug(`NicModal > useEffect ... networkAttachments: `, networkAttachments)
   }, [networkAttachments])
 
   const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
@@ -130,24 +133,19 @@ const VmNicModal = ({
 
   
   const validateForm = () => {
+    Logger.debug(`VmNicModal > validateForm ... `)
     if (!formInfoState.name) return `${Localization.kr.NAME}을 입력해주세요.`;
     return null;
   };
 
   const handleFormSubmit = () => {
+    Logger.debug(`VmNicModal > handleFormSubmit ... `)
     const error = validateForm();
-    // if (error) {
-    //   toast({
-    //     variant: "destructive",
-    //     title: "문제가 발생하였습니다.",
-    //     description: error,
-    //   });
-    //   return;
-    // }
     if (error) {
       validationToast.fail(error);
       return;
     }
+
     const dataToSubmit = {
       ...formInfoState,
       vnicProfileVo: { id: vnicProfileVo.id },

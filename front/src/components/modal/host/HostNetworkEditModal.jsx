@@ -29,14 +29,16 @@ const HostNetworkEditModal = ({
   },[isOpen])
 
   useEffect(() =>{
-    console.log("$ networkModalState ", networkModalState)
+    Logger.debug(`HostNetworkEditModal > useEffect ... networkModalState: `, networkModalState)
   },[isOpen])
 
   const handleChangeInSync = (field, value) => {
+    Logger.debug(`HostNetworkEditModal > handleChangeInSync ... field: ${field}, value: ${value}`)
     setNetworkModalState((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleIpv4Change = (field, value) => {
+    Logger.debug(`HostNetworkEditModal > handleIpv4Change ... field: ${field}, value: ${value}`)
     setNetworkModalState(prev => {
       if (field === "protocol" && value !== "static") {
         return {
@@ -58,6 +60,7 @@ const HostNetworkEditModal = ({
   };
 
   const handleIpv6Change = (field, value) => {
+    Logger.debug(`HostNetworkEditModal > handleIpv6Change ... field: ${field}, value: ${value}`)
     setNetworkModalState(prev => {
       if (field === "protocol" && value !== "static") {
         return {
@@ -80,6 +83,7 @@ const HostNetworkEditModal = ({
 
   
   const validateForm = () => {
+    Logger.debug(`HostNetworkEditModal > validateForm ... `)
     if (networkModalState.ipv4Values.protocol === "static") {
       if(networkModalState.ipv4Values.address === "") {
         return "ipv4의 IP를 입력해주세요"
@@ -101,6 +105,7 @@ const HostNetworkEditModal = ({
 
 
   const handleOkClick = () => {
+    Logger.debug(`HostNetworkEditModal > handleOkClick ... `)
     const error = validateForm();
     if (error) {
       validationToast.fail(error);
@@ -108,8 +113,8 @@ const HostNetworkEditModal = ({
     }
 
     // IpAssignments 배열 만들기
+    Logger.debug(`HostNetworkEditModal > handleOkClick ... `)
     const ipAssignments = [];
-
     if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
       ipAssignments.push({
         assignmentMethod: networkModalState.ipv4Values.protocol,
@@ -153,7 +158,7 @@ const HostNetworkEditModal = ({
       dnsServers: networkModalState.dnsServers.filter(Boolean),
     };
 
-    Logger.debug("HostNetworkEditModal > networkEditData:", networkEditData);
+    Logger.debug("HostNetworkEditModal > handleOkClick ... networkEditData:", networkEditData);
     // 부모로 넘김
     onNetworkEdit(networkEditData);
     onClose();

@@ -66,11 +66,12 @@ const DomainImportTemplateModal = ({
   }, [templateList, clusters]);
 
   useEffect(()=>{
-    console.log("$ domainsSelected ", domainsSelected)
-    console.log("$ templatesSelected ", templatesSelected)
+    Logger.debug(`DomainImportTemplateModal > useEffect ... domainsSelected `, domainsSelected)
+    Logger.debug(`DomainImportTemplateModal > useEffect ... templatesSelected `, templatesSelected)
   }, []);
 
   const handleClusterChange = (tempId) => (selected) => {
+    Logger.debug(`DomainImportTemplateModal > handleClusterChange ... tempId: ${tempId} `, domainsSelected)
     setClusterList(prev => ({ ...prev, [tempId]: selected.id }));
   };
 
@@ -95,12 +96,14 @@ const DomainImportTemplateModal = ({
 
 
   const validateForm = () => {
+    Logger.debug(`DomainImportTemplateModal > validateForm ... `)
     // 템플릿은 이름 지정 없음
        
     return null;
   };
 
   const handleFormSubmit = () => {
+    Logger.debug(`DomainImportTemplateModal > handleFormSubmit ... `)
     const error = validateForm();
     if (error) {
       validationToast.fail(error);

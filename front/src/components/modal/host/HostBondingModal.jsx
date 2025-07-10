@@ -48,7 +48,7 @@ const HostBondingModal = ({
       return;
     }
   
-    Logger.debug(`HostBondingModal > handleOkClick ... `)
+    Logger.debug(`HostBondingModal > handleOkClick ... editMode: ${editMode}`)
     if (editMode) {
       // 수정 모드: 기존 bond + 옵션만 바꿔서 전달
       const updatedBond = {
@@ -62,7 +62,7 @@ const HostBondingModal = ({
     } else {  
       // 생성 모드: 이름, option, slave NICs 전달
       const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
-      console.log("nicArr", nicArr);
+      Logger.debug(`HostBondingModal > handleOkClick ... nicArr: `, nicArr)
 
       const newBond = {
         name: bondModalState.name,

@@ -1,24 +1,30 @@
 import React, { useState, useEffect, useMemo } from "react";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
-import LabelCheckbox from "@/components/label/LabelCheckbox";
-import FilterButtons from "@/components/button/FilterButtons";
-import { InfoTable } from "@/components/table/InfoTable";
-import LabelSelectOptions from "@/components/label/LabelSelectOptions";
-import Localization from "@/utils/Localization";
-import { emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect } from "@/util";
-import { 
-    useAllActiveDomainsFromDataCenter,
-    useAllOpearatingSystemsFromCluster,
-    useClustersFromDataCenter,
-    useCpuProfilesFromCluster,
-    useNetworksFromDataCenter,
-    useVmFromVMWare,
-    useAllVnicProfilesFromNetwork4EachNetwork,
-} from "@/api/RQHook";
-import LabelInput from "@/components/label/LabelInput";
 import { useValidationToast } from "@/hooks/useSimpleToast";
-import { handleSelectIdChange } from "@/components/label/HandleInput";
-import ApiManager from "@/api/ApiManager";
+import LabelSelectOptionsID   from "@/components/label/LabelSelectOptionsID";
+import LabelCheckbox          from "@/components/label/LabelCheckbox";
+import FilterButtons          from "@/components/button/FilterButtons";
+import { InfoTable }          from "@/components/table/InfoTable";
+import LabelInput             from "@/components/label/LabelInput";
+import LabelSelectOptions     from "@/components/label/LabelSelectOptions";
+import ApiManager             from "@/api/ApiManager";
+import { 
+  useAllActiveDomainsFromDataCenter,
+  useAllOpearatingSystemsFromCluster,
+  useClustersFromDataCenter,
+  useCpuProfilesFromCluster,
+  useNetworksFromDataCenter,
+  useVmFromVMWare,
+  useAllVnicProfilesFromNetwork4EachNetwork,
+} from "@/api/RQHook";
+import {
+  handleSelectIdChange
+} from "@/components/label/HandleInput";
+import { 
+  emptyIdNameVo,
+  useSelectFirstItemEffect,
+  useSelectFirstNameItemEffect
+} from "@/util";
+import Localization           from "@/utils/Localization";
 
 const VmImportRender2Modal = ({ 
   baseUrl,
@@ -59,26 +65,31 @@ const VmImportRender2Modal = ({
   const {
     data: domains = [],
     isLoading: isStorageDomainsLoading,
+    isSuccess: isStorageDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   const {
     data: clusters = [],
     isLoading: isClustersLoading,
+    isSuccess: isClustersSuccess,
   } = useClustersFromDataCenter(dataCenterVo?.id, (e) => ({...e,}));
 
   const { 
     data: cpuProfiles = [], 
-    isLoading: isCpuProfilesLoading
+    isLoading: isCpuProfilesLoading,
+    isSuccess: isCpuProfilesSuccess,
   } = useCpuProfilesFromCluster(clusterVo?.id, (e) => ({ ...e }));
 
   const { 
     data: osList = [], 
-    isLoading: isOsListLoading
+    isLoading: isOsListLoading,
+    isSuccess: isOsListSuccess,
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   const { 
     data: networks = [], 
-    isLoading: isNetworksLoading 
+    isLoading: isNetworksLoading,
+    isSuccess: isNetworksSuccess,
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
   
   const qr = useAllVnicProfilesFromNetwork4EachNetwork(networks, (e) => ({ ...e }));
@@ -102,9 +113,9 @@ const VmImportRender2Modal = ({
       ? Object.fromEntries(vmDetailsMap.map(vm => [vm.id, vm]))
       : {};
   }, [vmDetailsMap]);
+  
   const selectedVm = vmMapById[selectedId];
-  console.log("$ vmDetailsMap", vmDetailsMap)
-
+  console.log("$ vmDetailsMap", vmDetailsMap); // TODO: 필요없으면 제거
 
   // 첫번째 항목으로 지정
   useSelectFirstItemEffect(domains, setDomainVo);
@@ -114,13 +125,14 @@ const VmImportRender2Modal = ({
   // useEffect로 getVnicProfiles 결과를 정리하여 vnicProfiles 업데이트
   useEffect(() => {
     if (!qr || !Array.isArray(qr) || qr.some(q => q.isLoading)) return;
-
+    Logger.debug(`VmImportRender2Modal > useEffect ... `)
     const newVnicProfilesMap = {};
 
     qr.forEach((queryResult, idx) => {
       const network = networks[idx];
+      Logger.debug(`VmImportRender2Modal > useEffect ... network: `, network);
       if (network && queryResult?.data) {
-        newVnicProfilesMap[network.id] = queryResult.data;
+        newVnicProfilesMap[network.id] = queryResult?.data || [];
       }
     });
 
@@ -229,12 +241,13 @@ const VmImportRender2Modal = ({
   };
 
   const updateVmNicNetwork = async (vmId, nicKey, networkId) => {
+    Logger.debug(`DomainImportTemplateModal > updateVmNicNetwork ... vmId: ${vmId}, nicKey: ${nicKey}, networkId: ${networkId}`)
     try {
       const response = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
       const profiles = response?.body || [];
 
       const firstProfileId = profiles[0]?.id || "";
-      console.log("$ firstProfileId", firstProfileId)
+      Logger.debug(`DomainImportTemplateModal > updateVmNicNetwork ... firstProfileId: ${firstProfileId}`)
       setVmConfigs(prev => ({
         ...prev,
         [vmId]: {
@@ -255,8 +268,7 @@ const VmImportRender2Modal = ({
         [networkId]: profiles
       }));
     } catch (error) {
-      console.error("vNIC profile 로딩 실패:", error);
-
+      Logger.error(`DomainImportTemplateModal > updateVmNicNetwork ... vNIC profile 로딩 실패: `, error)
       setVmConfigs(prev => ({
         ...prev,
         [vmId]: {
@@ -288,8 +300,6 @@ const VmImportRender2Modal = ({
     }));
   };
 
-  console.log("$selectedVm", selectedVm);
-
   const generalInfoRows = (vwvm) => [
     { 
       label: Localization.kr.NAME, 
@@ -298,8 +308,7 @@ const VmImportRender2Modal = ({
           value={vmConfigs[selectedId]?.name || ""}
           onChange={(e) => updateVmConfig(selectedId, "name", e.target.value)}
         />
-    },
-    {
+    }, {
       label: Localization.kr.OPERATING_SYSTEM,
       value: 
         <LabelSelectOptionsID

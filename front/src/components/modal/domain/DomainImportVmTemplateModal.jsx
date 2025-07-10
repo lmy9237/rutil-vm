@@ -78,8 +78,8 @@ const DomainImportVmTemplateModal = ({
   }, [templateList, clusters]);
 
   useEffect(()=>{
-    console.log("$ domainsSelected ", domainsSelected)
-    console.log("$ templatesSelected ", templatesSelected)
+    Logger.debug(`DomainImportVmTemplateModal > useEffect ... domainsSelected: `, domainsSelected)
+    Logger.debug(`DomainImportVmTemplateModal > useEffect ... templatesSelected: `, templatesSelected)
   }, []);
 
 

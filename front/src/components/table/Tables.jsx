@@ -133,7 +133,6 @@ const Tables = ({
   
     setSortedData(sorted);
   };
-  //console.log("ddddddddddd전달되는 data 길이: ", data.length); // 확인용 이벤트개수는 애초에 1000개로 잘려서 들어옴
   
   useEffect(() => {
     let filteredData = data;
@@ -682,7 +681,6 @@ export default Tables;
   
 //     setSortedData(sorted);
 //   };
-//   //console.log("ddddddddddd전달되는 data 길이: ", data.length); // 확인용 이벤트개수는 애초에 1000개로 잘려서 들어옴
   
 //   useEffect(() => {
 //     let filteredData = data;

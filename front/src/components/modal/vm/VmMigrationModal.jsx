@@ -54,8 +54,8 @@ const VmMigrationModal = ({
   });  
 
   useEffect(() => {
-    console.log("$v", vmList)
-    console.log("$geth", getHosts)
+    Logger.debug(`DomainImportTemplateModal > useEffect ... vmList: `, vmList)
+    Logger.debug(`DomainImportTemplateModal > useEffect ... getHosts: `, getHosts)
   }, [])
 
   useEffect(()=>{

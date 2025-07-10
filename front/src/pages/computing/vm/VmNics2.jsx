@@ -55,7 +55,6 @@ const VmNics2 = ({
     isRefetching: isvmNicsRefetching
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
 
-  console.log("nics: ", nics);
   const transformedData = nics
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((nic) => ({

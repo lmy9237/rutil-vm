@@ -72,12 +72,12 @@ const DomainImportDiskModal = ({
       return;
     }
     
+    Logger.debug(`DomainImportDiskModal > handleFormSubmit ... 디스크 개수: ${diskList.length}`);
     diskList.forEach((disk) => {
       const profileId = diskProfileList[disk.id];
       if (!profileId) return;
 
-      console.log("$ 디스크 submit:", domainsSelected[0]?.id, "disk ", disk.id, "profile ", profileId);
-
+      Logger.debug(`DomainImportDiskModal > handleFormSubmit ... 디스크 submit: ${domainsSelected[0]?.id}, disk.id: ${disk.id}, profile.id ${profileId}`);
       registerDisk({
         storageDomainId: domainsSelected[0]?.id,
         diskImageVo: {

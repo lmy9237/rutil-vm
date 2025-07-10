@@ -90,7 +90,7 @@ const DomainFibre = ({
     }).filter(Boolean);
   }, [fibres, isFibresLoading, lunId, setLunId]);
   
-  console.log("$transDomainData", transDomainData[0])
+  console.log("$transDomainData", [0])
 
   return (
     <div className="storage-popup-iSCSI">

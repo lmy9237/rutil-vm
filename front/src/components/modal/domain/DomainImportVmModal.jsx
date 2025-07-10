@@ -29,12 +29,10 @@ const DomainImportVmModal = ({
   isOpen, onClose,
 }) => {
   const { validationToast } = useValidationToast();
-
   const [activeFilter, setActiveFilter] = useState("general");
   const { 
     domainsSelected, 
-    vmsSelected, setVmsSelected 
-    
+    vmsSelected, setVmsSelected,
   } = useGlobal();
 
   const { mutate: registerVm } = useRegisteredVmFromDomain(onClose, onClose);
@@ -178,6 +176,7 @@ const DomainImportVmModal = ({
 
 
   const validateForm = () => {
+    Logger.debug(`DomainImportVmModal > validateForm ... `)
     // const nameError = checkName(formState.name);
     // if (nameError) return nameError;
     
@@ -192,13 +191,13 @@ const DomainImportVmModal = ({
       return;
     }
   
+    Logger.debug(`DomainImportVmModal > handleFormSubmit ... `)
     vmList.forEach((vm) => {
       const clusterId = clusterList[vm.id];
       if (!clusterId) return;
 
-      console.log("$ 가상머신 submit:", vmsSelected[0]?.id, "vm ");
-      console.log("$ 가상머신 name:", editVmNames[vm.id]);
-
+      Logger.debug(`DomainImportVmModal > handleFormSubmit ... vm.id: ${vmsSelected[0]?.id}`)
+      Logger.debug(`DomainImportVmModal > handleFormSubmit ... vm.name: ${editVmNames[vm.id]}`)
 
       registerVm({
         storageDomainId: domainsSelected[0]?.id,

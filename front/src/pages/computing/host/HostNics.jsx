@@ -517,8 +517,7 @@ const HostNics = ({
     // 기존 NA 찾기
     const draggedNetworkId = draggedNetwork?.networkVo?.id || draggedNetwork?.id;
     const draggedNA = findNetworkVoFromNetworkAttachment(draggedNetworkId);
-
-    console.log('$ 드래그된 NA:', draggedNA);
+    Logger.debug("HostNics > handleDropBetweenNetworkToNic ... draggedNA", draggedNA);
 
     if (!draggedNA) return;
 
@@ -583,7 +582,7 @@ const HostNics = ({
       validationToast.fail("삭제할 네트워크 연결 정보를 찾을 수 없습니다.");
       return;
     }
-    console.log("$ a draggedNA", draggedNA);
+    Logger.debug("HostNics > handleDropAssignedNetworkToUnassigned ... draggedNA", draggedNA);
 
     const originalNetworkData = networks.find(net => net.id === draggedNA.networkVo.id) || {};
 
@@ -596,7 +595,7 @@ const HostNics = ({
       required: originalNetworkData?.required,
       usageVm: originalNetworkData?.usage?.vm || false,
     };
-    console.log("$ restoredNetwork", restoredNetwork);
+    Logger.debug("HostNics > handleDropAssignedNetworkToUnassigned ... restoredNetwork", restoredNetwork);
 
     setRecentlyUnassignedNAs(prev => ({
       ...prev,

@@ -53,8 +53,6 @@ const VmCreateDiskConnectionModal = ({
     });
   };
 
-  console.log("$ attDisks", attDisks)
-
   useEffect(() => {
     if (!isOpen) return;
 
@@ -74,8 +72,20 @@ const VmCreateDiskConnectionModal = ({
   }, [isOpen, attDisks, existingDisks]);
 
   
+  const validateForm = () => {
+    Logger.debug(`VmDiskConnectionModal > validateForm ... `)
+    if (diskList?.length === 0) return `${Localization.kr.DISK}를 ${Localization.kr.PLACEHOLDER_SELECT}!`
+    return null
+  }
+
   // 가상머신 생성 - 디스크 연결
   const handleOkClick = (e) => {
+    const error = validateForm();
+    if (error) {
+      validationToast.fail(error);
+      return;
+    }
+
     e.preventDefault();
 
     const selectedDiskLists = diskList.map(disk => ({
@@ -93,16 +103,11 @@ const VmCreateDiskConnectionModal = ({
       },
     }));
 
+    Logger.debug("VmDiskConnectionModal > handleDropBetweenNetworkToNic ... selectedDiskLists", selectedDiskLists);
     diskData(selectedDiskLists); // 선택된 디스크를 VmDisk에 전달
-    console.log("$ selectedDiskLists", selectedDiskLists)
     onClose()
   };
   
-  const validateForm = () => {
-    Logger.debug(`VmDiskConnectionModal > validateForm ... `)
-    if (diskList?.length === 0) return `${Localization.kr.DISK}를 ${Localization.kr.PLACEHOLDER_SELECT}!`
-    return null
-  }
 
   return (
     <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={Localization.kr.CONNECTION}

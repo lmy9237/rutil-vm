@@ -49,8 +49,8 @@ const VmDiskMoveModal = ({
   });
 
   useEffect(() => {
-    console.log("$diskList", diskList);
-    console.log("$getDomains", getDomains);
+    Logger.debug(`DomainImportTemplateModal > validateForm ... diskList: `, diskList)
+    Logger.debug(`DomainImportTemplateModal > validateForm ... getDomains: `, getDomains)
   }, [diskList, getDomains]);
 
   useEffect(() => {

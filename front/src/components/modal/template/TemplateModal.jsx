@@ -260,7 +260,7 @@ const TemplateModal = ({
                 </thead>
                 <tbody>
                   {diskVoList.map((disk, index) => {
-                    console.log("디버깅 - diskImageVo", disk.diskImageVo); // 💡 이 줄 추가
+                    console.log("디버깅 - diskImageVo", disk.diskImageVo); // TODO: 필요없으면 제거
                     const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
                     const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
 

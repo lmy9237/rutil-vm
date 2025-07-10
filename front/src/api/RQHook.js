@@ -3157,7 +3157,6 @@ export const useDeleteNetworkInterface = (
     // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
-      console.log("ㅇㅇㅇㅇㅇㅇㅇㅇㅇ[DeleteNIC] Called with vmId:", vmId, "nicId:", nicId);
       closeModal();
       const res = await ApiManager.deleteNicFromVM(vmId, nicId);
       const _res = validateAPI(res) ?? {}
@@ -3956,7 +3955,6 @@ export const useEditNicFromTemplate = (
   const { apiToast } = useApiToast();
     return useMutation({
     mutationFn: async ({ templateId, nicId, nicData }) => {
-        console.log("✅ ✅✅✅useEditNicFromTemplate 실행됨!");
       closeModal();
       const res = await ApiManager.editNicFromTemplate(templateId, nicId, nicData);
       const _res = validateAPI(res) ?? {}
