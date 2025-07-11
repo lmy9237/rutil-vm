@@ -29,6 +29,92 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 0.3.8 - 2025-07-11
+
+- [`api-v0.3.8`][api-v0.3.8]: 백엔드
+- [`web-v0.3.8`][web-v0.3.8]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`/`${front}`: 가상머신 > 실행 중인 CD-ROM 변경
+  - `${back}`/`${front}`: 가상머신 > 디스플레이 유형 생성/변경
+  - `${front}`: 모든 로딩이 완료 된 후 모달 UI를 보여주는 구조 마련
+    - 데이터센터 생성/편집
+    - 클러스터 생성/편집
+    - 호스트 생성/편집/액션
+    - 사용자 생성/편집/액션
+    - 디스크 업로드
+    - 모든 삭제
+  - `${back}`: 디스크 이미지 업로드 API: 이미지 전송관련 상태 조회
+  - `${font}`: 가상머신 > VNC: Fullscreen 기능추가
+- [@dhj27][dhj27]
+  - `${front}`:  리액트 훅 추가
+    - `useSelectFirstItemEffect`
+    - `useSelectItemEffect`
+    - `useSelectItemOrDefaultEffect`
+  - `${front}`: 아이콘 rvi16TriangleUpTEST, rvi16EngineTEST 추가
+  - `${back}`: VmController `detachVm` 추가
+  - `${back}`: VmVo IsInitialized (vmware 업로드 상태 수정 필요!)
+- [@lmy9237][lmy9237]
+  - `${front}`:base모달 로딩중 디자인 추가
+  - `${front}`: 모든 로딩이 완료 된 후 모달 UI를 보여주는 구조 마련
+    - vnic프로파일 생성/편집
+    - 도메인 생성/편집/가져오기/ 파괴
+    - 도메인 데이터센터 유지보수/ 연결/ 분리/  모달
+    - 디스크 생성/편집/이동/복사/업로드 모달
+    - 네트워크 생성/편집/가져오기 모달
+    - 호스트 본딩편집 / 네트워크편집/
+    - 네트워크 인터페이스 생성/편집 
+    - 가상머신 modals
+    - vmdisk 생성/편집 수정
+  - `${front}`:가상머신 nic: 마우스 hover헀을 때 Tx/Rx값처럼 상세값을 보여주는 툴팁 표출
+  - `${front}`:가상머신 생성/편집: 시스템 메모리 크기 설정 입력란 우측에 단위 표시
+  - `${front}`:디스크 - 데이터 유형별 나누기 (selectbox) → diskdupl참고
+  - `${front}`:템플릿 > 디스크: 스토리지 도메인 툴팁 뜨게
+    - 값 표출정보: `TemplateDisks.jsx` > `StorageDomainWithtoolTip`
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${back}`: 최근작업 API 변경
+    - 스크린샷 기록 조회에서 은닉
+    - 5분 단위로 스크린샷 기록 제거 스케쥴화
+  - `${back}`: VMWare 가상머신 상세 여러건 조회
+  - `${back}`: 가상머신 > 스크린샷: 조건 추가
+  - `${front}`: 가상머신 생성/편집: 메모리 선택 단위 변환 MB -> GB
+  - `${back}`: 가상머신 > VNC: 콘솔화면 출력 조건 개선
+  - `${front}`: 가상머신 > VNC: 기타 action버튼 추가
+  - `${front}`: 디스크 트리메뉴 우클릭 > 디스크 복사버튼 누르면 랜덤으로 정보 안담김
+- [@dhj27][dhj27]
+  - `${back}`: Vmware 가져오기(import) 기능 구현
+  - `${back}`:  vmentity 수정
+  - `${back}`:  vmware url encode 수정
+  - `${back}`:  host 현재 네트워크 사용량 수정
+  - `${front}`: StorageDomain import 오류 수정
+  - `${front}`: useQuery 수정
+  - `${front}`: vms engine 아이콘
+  - `${back}${front}`: VmModal 디스크 완전 삭제 -> 단순 연결 해제로 변경(임시)
+- [@lmy9237][lmy9237]
+  - `${front}`: 가상머신 생성 nic 인덱스 번호 수정
+  - `${front}`: 대시보드 bar그래프 찌부되는 것 수정
+  - `${front}`: 네트워크 → 데이터센터 클릭 시 경로 수정
+  - `${front}`: 가상머신 bar 개수에 따라 위치 조정
+  - `${front}`: 호스트 네트워크 버튼위치수정
+  - `${front}`: delete모달 아이콘 안나오는 것 수정
+  - `${front}`: 토스트 컴포넌트 글자 넘치는 것 수정
+  - `${front}`: 가져오기모달 디자인 수정
+  - `${front}`:  `nav f-start` 아이콘 배경색 변경될때 깜박이는 것 빼기(radius 값 변경)
+  - `${front}`: 다시 시작 중 (`reboot_in_progress`)일 때 종료, 전원끔 버튼 활성화 (`vm.isRunning`  으로 구분)
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+
+---
+
 ## 0.3.7 - 2025-07-04
 
 - [`api-v0.3.7`][api-v0.3.7]: 백엔드
@@ -1455,6 +1541,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.7...web-v0.3.8
+[web-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.7...api-v0.3.8
 [api-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.6...web-v0.3.7
 [web-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.6...api-v0.3.7
 [api-v0.3.6]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.5...web-v0.3.6
