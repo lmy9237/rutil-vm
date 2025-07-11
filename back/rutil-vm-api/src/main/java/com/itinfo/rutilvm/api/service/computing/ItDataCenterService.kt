@@ -268,12 +268,7 @@ class DataCenterServiceImpl(
 		log.debug("findAllHostsFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<Host> = conn.findAllHostsFromDataCenter(dataCenterId).getOrDefault(emptyList())
 
-		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList())
-				.firstOrNull()
-			val usageDto = calculateUsage(host, hostNic)
-			host.toHostMenu(conn, usageDto)
-		}
+		return res.map { it.toHostMenu(conn, calculateUsage(it)) }
 	}
 
 	@Throws(Error::class)
@@ -414,9 +409,9 @@ class DataCenterServiceImpl(
 	}
 
 	// 사용량 계산
-	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (host.status() == HostStatus.UP && hostNic != null) {
-			itGraphService.hostPercent(host.id(), hostNic.id())
+	private fun calculateUsage(host: Host): UsageDto? {
+		return if (host.status() == HostStatus.UP) {
+			itGraphService.hostPercent(host.id())
 		} else null
 	}
 

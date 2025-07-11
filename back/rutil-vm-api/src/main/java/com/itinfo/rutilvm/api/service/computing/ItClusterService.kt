@@ -224,9 +224,7 @@ class ClusterServiceImpl(
 		val res: List<Host> = conn.findAllHostsFromCluster(clusterId, follow = "cluster").getOrDefault(emptyList())
 
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList()).firstOrNull()
-			val usageDto: UsageDto? = calculateUsage(host, hostNic)
-			host.toHostMenu(conn, usageDto)
+			host.toHostMenu(conn, calculateUsage(host))
 		}
 	}
 
@@ -341,9 +339,9 @@ class ClusterServiceImpl(
 	}
 
 	// 사용량 계산
-	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (host.status() == HostStatus.UP && hostNic != null) {
-			itGraphService.hostPercent(host.id(), hostNic.id())
+	private fun calculateUsage(host: Host): UsageDto? {
+		return if (host.status() == HostStatus.UP) {
+			itGraphService.hostPercent(host.id())
 		} else null
 	}
 

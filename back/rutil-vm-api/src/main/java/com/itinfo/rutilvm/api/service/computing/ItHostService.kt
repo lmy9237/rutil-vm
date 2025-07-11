@@ -4,7 +4,9 @@ import com.itinfo.rutilvm.api.configuration.CertConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.repository.engine.VdsInterfaceStatisticsRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsInterfaceStatisticsEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.*
@@ -111,9 +113,7 @@ class HostServiceImpl(
 		log.info("findAll ... ")
 		val res: List<Host> = conn.findAllHosts(follow = "cluster").getOrDefault(emptyList())
 		return res.map { host ->
-			val hostNic: HostNic? = conn.findAllHostNicsFromHost(host.id()).getOrDefault(emptyList())
-				.firstOrNull()
-			val usageDto: UsageDto? = calculateUsage(host, hostNic)
+			val usageDto: UsageDto? = calculateUsage(host)
 			host.toHostMenu(conn, usageDto)
 		}
 	}
@@ -122,11 +122,7 @@ class HostServiceImpl(
 	override fun findOne(hostId: String): HostVo? {
 		log.info("findOne ... hostId: {}", hostId)
 		val res: Host? = conn.findHost(hostId).getOrNull()
-		val hostNic: HostNic? = res?.id()?.let {
-			conn.findAllHostNicsFromHost(it).getOrDefault(emptyList())
-				.firstOrNull()
-		}
-		val usageDto: UsageDto? = res?.let { calculateUsage(it, hostNic) }
+		val usageDto: UsageDto? = res?.let { calculateUsage(it) }
 		val sw: HostConfigurationEntity = hostConfigurationRepository.findFirstByHostIdOrderByUpdateDateDesc(UUID.fromString(hostId))
 		return res?.toHostInfo(conn, sw, usageDto)
 	}
@@ -195,12 +191,9 @@ class HostServiceImpl(
 		return res.toEventVos()
 	}
 
-	private fun calculateUsage(host: Host, hostNic: HostNic?): UsageDto? {
-		return if (
-			host.status() == HostStatus.UP &&
-			hostNic != null
-		) {
-			itGraphService.hostPercent(host.id(), hostNic.id())
+	private fun calculateUsage(host: Host): UsageDto? {
+		return if (host.status() == HostStatus.UP) {
+			itGraphService.hostPercent(host.id())
 		} else null
 	}
 

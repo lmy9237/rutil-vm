@@ -3,6 +3,8 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.repository.engine.VdsInterfaceStatisticsRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsInterfaceStatisticsEntity
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
 import com.itinfo.rutilvm.api.repository.history.entity.*
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.util.*
 
 interface ItGraphService {
@@ -130,7 +133,7 @@ interface ItGraphService {
 	fun hostCpuChart(): List<UsageDto>
 	fun hostMemoryChart(): List<UsageDto>
 	// 호스트 목록 - 그래프
-	fun hostPercent(hostId: String, hostNicId: String): UsageDto
+	fun hostPercent(hostId: String): UsageDto
 	// 가상머신 목록 - 그래프
 	fun vmPercent(vmId: String, vmNicId: String): UsageDto
 
@@ -142,7 +145,7 @@ class GraphServiceImpl(
 ): BaseService(), ItGraphService {
 	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
-	// @Autowired private lateinit var hostInterfaceConfigurationRepository: HostInterfaceConfigurationRepository
+	@Autowired private lateinit var vdsInterfaceStatisticsRepository: VdsInterfaceStatisticsRepository
 	@Autowired private lateinit var hostInterfaceSampleHistoryRepository: HostInterfaceSampleHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
 	@Autowired private lateinit var vmInterfaceSamplesHistoryRepository: VmInterfaceSamplesHistoryRepository
@@ -302,20 +305,15 @@ class GraphServiceImpl(
 		return hostSampleHistoryEntities.toHostMemCharts(conn)
 	}
 
-	override fun hostPercent(hostId: String, hostNicId: String): UsageDto {
+	override fun hostPercent(hostId: String): UsageDto {
 		val hostSampleHistoryEntity: HostSamplesHistoryEntity =
 			hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(hostId.toUUID())
 		val usageDto = hostSampleHistoryEntity.toUsageDto()
-		val hostInterfaceSamplesHistories: List<HostInterfaceSamplesHistoryEntity> =
-			hostInterfaceSampleHistoryRepository.findAllByHostInterfaceIdOrderByHistoryDatetimeDesc(hostNicId.toUUID())
-		/*val hostInterfaceConfiguration: HostInterfaceConfigurationEntity? =
-			hostInterfaceConfigurationRepository.findByHostInterfaceIdWithInterfaceSamplesHistories(
-				hostNicId.toUUID(),
-				hostInterfaceSamplesHistory?.hostInterfaceConfiguration?.hostConfigurationVersion
-			)*/
-		val latestHistory = hostInterfaceSamplesHistories.firstOrNull()
-		usageDto.networkPercent = latestHistory?.networkRate
-		log.info("hostPercent ... hostId: {}, hostNicId, {}", hostId, hostNicId)
+
+		val hostNetwork: VdsInterfaceStatisticsEntity? = vdsInterfaceStatisticsRepository.findByVdsId(hostId.toUUID())
+		usageDto.networkPercent = (hostNetwork?.rxRate?.add(hostNetwork.txRate))?.toInt()
+		log.info("hostPercent ... hostId: {}", hostId)
+
 		return usageDto
 	}
 
