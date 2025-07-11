@@ -175,6 +175,19 @@ fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.detachVm(vmId: String): Result<Boolean> = runCatching {
+	checkVmExists(vmId)
+	this.srvVm(vmId).detach().send()
+
+	true
+
+}.onSuccess {
+	Term.VM.logSuccess("분리", vmId)
+}.onFailure {
+	Term.VM.logFail("분리", it, vmId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 
 fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {

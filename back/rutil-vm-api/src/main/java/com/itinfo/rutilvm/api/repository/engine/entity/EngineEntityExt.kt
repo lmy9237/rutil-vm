@@ -580,6 +580,7 @@ fun VmEntity.toVmVo(): VmVo {
 		virtioScsiMultiQueueEnabled { entity.virtioScsiMultiQueuesEnabled }
 		hostedEngineVm { entity.isHostedEngineVm }
 		timeOffset { entity.timeZone }
+		// isInitialized { entity.isInitialized }
 		usageDto {
 			UsageDto.builder {
 				cpuPercent { usageCpuPercent }

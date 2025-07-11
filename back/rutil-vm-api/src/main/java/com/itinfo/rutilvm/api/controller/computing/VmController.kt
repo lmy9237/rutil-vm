@@ -501,6 +501,30 @@ class VmController: BaseController() {
 	}
 
 	@ApiOperation(
+		httpMethod="POST",
+		value="가상머신 분리",
+		notes="선택된 가상머신을 분리한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{vmId}/detach")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun detach(
+		@PathVariable vmId: String? = null,
+	): ResponseEntity<Boolean> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/detach ... 가상머신 분리", vmId)
+		return ResponseEntity.ok(iVmOp.detach(vmId))
+	}
+
+	@ApiOperation(
 		httpMethod="GET",
 		value="가상머신 마이그레이션 호스트 목록",
 		notes="선택된 가상머신의 마이그레이션 가능한 호스트 목록을 조회한다"

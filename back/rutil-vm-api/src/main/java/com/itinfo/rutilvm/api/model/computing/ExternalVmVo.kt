@@ -116,12 +116,8 @@ fun encode(input: String): String =
 // ?no_verify=1 검증무시
 fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 	log.info("importExternalVm ...  externalVo: {}", this@toExternalVmImportBuilder)
-	// val encodedUser = encode(this.userName)
-	// val encodedPass = encode(this.password)
-	// val encodedUrl = "vpx://$encodedUser:$encodedPass@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1"
-
-	// log.info("url {}", encodedUrl)
-
+	val encodedUser = encode(this.userName)
+	log.info("encodedUser {}", encodedUser)
 
 	val importBuilder = ExternalVmImportBuilder()
 		.provider(ExternalVmProviderType.VMWARE)
@@ -139,9 +135,9 @@ fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 		.username(this.userName)
 		.password(this.password)
 		.sparse(true)
-		.url("vpx://administrator%40vsphere.local@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
+		.url("vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 
-	log.info("url {}", "vpx://administrator%40vsphere.local@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
+	log.info("url {}", "vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 
 	return importBuilder.build()
 }

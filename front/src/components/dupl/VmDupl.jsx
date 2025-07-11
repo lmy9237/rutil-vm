@@ -40,6 +40,7 @@ const VmDupl = ({
     icon: (
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
+        {/* {vm?.isInitialized === true ? "" : "VW"} */}
         {vm?.nextRun === true && status2Icon("NEXT_RUN")}
         {vm?.runOnce === true && vm?.status==="up" ? "Run" : ""}
         {(vm?.statusDetail === "noerr" || vm?.statusDetail === "none") ? "" : vm?.statusDetail}
@@ -48,9 +49,12 @@ const VmDupl = ({
     iconSortKey: getStatusSortKey(vm?.status), 
     engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
+      <>
+      {hostedEngineStatus2Icon(vm?.hostedEngineVm)}
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
       </TableRowClick>
+      </>
     ),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>

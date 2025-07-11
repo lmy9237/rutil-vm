@@ -12,6 +12,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.util.model.SystemPropertiesVo
+import com.itinfo.rutilvm.util.ovirt.detachVm
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 import com.itinfo.rutilvm.util.ovirt.exportVm
@@ -111,6 +112,15 @@ interface ItVmOperationService {
 	 */
 	@Throws(Error::class, ItCloudException::class)
 	fun reset(vmId: String): Boolean
+	/**
+	 * [ItVmOperationService.detach]
+	 * 가상머신 - detach
+	 *
+	 * @param vmId [String] 가상머신 Id
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class, ItCloudException::class)
+	fun detach(vmId: String): Boolean
 
 	/**
 	 * [ItVmOperationService.findMigratableHosts]
@@ -233,6 +243,13 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	override fun reset(vmId: String): Boolean {
 		log.info("reset ... vmId: {}", vmId)
 		val res: Result<Boolean> = conn.resetVm(vmId)
+		return res.isSuccess
+	}
+
+	@Throws(Error::class, ItCloudException::class)
+	override fun detach(vmId: String): Boolean {
+		log.info("detach ... vmId: {}", vmId)
+		val res: Result<Boolean> = conn.detachVm(vmId)
 		return res.isSuccess
 	}
 
