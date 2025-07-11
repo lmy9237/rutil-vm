@@ -170,9 +170,9 @@ class VmServiceImpl(
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 변경실패 에러유형 필요
 
-		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(vmVo.id.toUUID())
+		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(res?.id()?.toUUID())
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
-		val vmDeviceFound: VmDeviceEntity = rVmDevices.findByVmIdAndType(vmVo.id.toUUID(), "video")
+		val vmDeviceFound: VmDeviceEntity = rVmDevices.findByVmIdAndType(res?.id()?.toUUID(), "video")
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 가상머신 기기 에러유형 필요
 			// ?: throw ErrorPattern.VM_DEVICE_NOT_FOUND.toException()

@@ -84,18 +84,18 @@ const hostForm = {
   // migrationPolicy: 'minimal_downtime',// 마이그레이션 정책
 };
 
-// 콘솔
-const cosoleForm = {
-  videoType: "",
-  displayType: "",
-  consoleDisconnet: ""
-};
-
 // 고가용성
 const haForm = {
   ha: false, // 고가용성(체크박스)
   haPriority: 1, // 초기값
   storageDomainVo: emptyIdNameVo(),
+};
+
+// 콘솔
+const consoleForm = {
+  displayType: "vga",
+  videoType: "vnc",
+  consoleDisconnet: "",
 };
 
 // 부트옵션
@@ -117,7 +117,7 @@ const VmModal = ({
   const vLabel = editMode 
     ? Localization.kr.UPDATE
     : copyMode 
-      ? "복제" 
+      ? Localization.kr.COPY 
       : Localization.kr.CREATE;
 
   const { 
@@ -140,7 +140,7 @@ const VmModal = ({
   const [formInfoState, setFormInfoState] = useState(infoform);
   const [formSystemState, setFormSystemState] = useState(systemForm);
   const [formCloudState, setFormCloudState] = useState(cloudForm);
-  const [formConsoleState, setFormConsoleState] = useState(cosoleForm);
+  const [formConsoleState, setFormConsoleState] = useState(consoleForm);
   const [formHostState, setFormHostState] = useState(hostForm);
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
@@ -273,6 +273,7 @@ const VmModal = ({
       setFormCloudState(cloudForm);
       setFormHostState(hostForm);
       setFormHaState(haForm);
+      setFormConsoleState(consoleForm);
       setFormBootState(bootForm);
       setDataCenterVo(emptyIdNameVo())
       setClusterVo(emptyIdNameVo())

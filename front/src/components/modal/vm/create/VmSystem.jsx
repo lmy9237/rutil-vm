@@ -15,9 +15,16 @@ import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
 const sizeUnitOptions = [
-  { id: "mb", name: "MiB" },
+  // { id: "mb", name: "MiB" },
   { id: "gb", name: "GiB" },
 ]
+
+const sizeInGibAvailable = [1,2,4,8,16,32,64,128].map((e) => ({
+  label: `${e} GiB`, value: 1024*e,
+}));
+const sizeMaxInGibAvailable = [1,2,4,8,16,32,64,128].map((e) => ({
+  label: `${e*4} GiB`, value: 1024*4*e,
+}));
 
 const VmSystem = ({ 
   formSystemState,
@@ -126,9 +133,9 @@ const VmSystem = ({
   }
 
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
-  const handleInputChange = (field) => (e) => {
+  const handleMemoryChange = (field) => (e) => {
     const value = e.target.value;
-    Logger.debug(`VmSystem > handleInputChange ... field: ${field}, value: ${value}`)
+    Logger.debug(`VmSystem > handleMemoryChange ... field: ${field}, value: ${value}`)
   
     setFormSystemState((prev) => {
       const updatedState = { ...prev, [field]: value };
@@ -142,8 +149,16 @@ const VmSystem = ({
           updatedState.memoryMax = "";
           updatedState.memoryGuaranteed = "";
         }
+        
+        const msg = Object.keys(updatedState).filter((e) => {
+          ["memoryMax","memoryGuaranteed","memorySize"].includes(e)
+        }).map((e) => (
+          `field: ${e}, value: ${updatedState[e]}`
+        )).join("\n")
+        
+        import.meta.env.DEV && validationToast?.debug(msg)
       }
-  
+      
       return updatedState;
     });
   }
@@ -173,25 +188,28 @@ const VmSystem = ({
   return (
     <>
       <div className="edit-second-content">
-        
-        {/* TODO 단위에따라 메모리값 변경필요 */}
-        <LabelSelectOptionsID label="크기 단위"
+        {/* <LabelSelectOptionsID label="크기 단위"
           value={sizeUnitVo.id}
           disabled
           options={sizeUnitOptions}
           onChange={handleSelectIdChange(sizeUnitVo, sizeUnitOptions, validationToast)}
-        />
-        <LabelInputNum id="mem" label={`메모리 크기(${sizeUnitVo.name})`}
+        /> */}
+        <LabelSelectOptions label={`메모리 크기 (${sizeUnitVo.name})`}
           value={formSystemState.memorySize} 
-          onChange={handleInputChange("memorySize")}
+          options={sizeInGibAvailable}
+          onChange={handleMemoryChange("memorySize")}
         />
-        <LabelInputNum id="mem-max"label={`최대 메모리(${sizeUnitVo.name})`}
+        <LabelSelectOptions id="mem-max"label={`최대 메모리 (${sizeUnitVo.name})`}
+          disabled
           value={formSystemState.memoryMax} 
-          onChange={handleInputChange("memoryMax")}
+          options={sizeMaxInGibAvailable}
+          onChange={handleMemoryChange("memoryMax")}
         />
-        <LabelInputNum id="mem-actual" label={`할당할 실제 메모리(${sizeUnitVo.name})`}
+        <LabelSelectOptions id="mem-actual" label={`할당할 실제 메모리 (${sizeUnitVo.name})`}
+          disabled
           value={formSystemState.memoryGuaranteed} 
-          onChange={handleInputChange("memoryGuaranteed") }
+          options={sizeInGibAvailable}
+          onChange={handleMemoryChange("memoryGuaranteed") }
         />
         <LabelInputNum id="cpu-total" label="총 가상 CPU"
           value={formSystemState.cpuTopologyCnt}

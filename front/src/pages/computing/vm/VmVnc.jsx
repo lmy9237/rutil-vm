@@ -39,6 +39,7 @@ const VmVnc = ({
 
   const screenRef = useRef(null);
   const [dataUrl, setDataUrl] = useState("")
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const [copied, copy] = useCopyToClipboard(dataUrl)
 
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.running ?? false);
@@ -80,9 +81,10 @@ const VmVnc = ({
     { type: "shutdown",          onClick: () => setActiveModal("vm:shutdown"),                label: Localization.kr.END,                                     disabled: !allOkay2PowerDown },
     { type: "powerOff",          onClick: () => setActiveModal("vm:powerOff"),                label: Localization.kr.POWER_OFF,                               disabled: !allOkay2PowerDown },
     { type: "screenshot",        onClick: () => takeScreenshotFromRFB(screenRef.current.rfb), label: Localization.kr.SCREENSHOT,                              disabled: !allUp },
-    { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp },
+    import.meta.env.DEV ? { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp } : null,
     { type: "ctrlaltdel",        onClick: () => doSendCtrlAltDel(screenRef.current.rfb),      label: "Ctrl+Alt+Del",                                          disabled: !allUp },
     { type: "updateCdrom",       onClick: () => setActiveModal("vm:updateCdrom"),             label: Localization.kr.UPDATE_CDROM,                            disabled: vm?.notRunning ?? false },
+    { type: "fullscreen",        onClick: () => toggleFullscreen(),                           label: Localization.kr.FULLSCREEN, },
   ]
 
   useEffect(() => {
@@ -97,6 +99,34 @@ const VmVnc = ({
     if (!screenRef.current?.rfb) return;
     setCurrentVncRfb(screenRef.current.rfb)
   }, [screenRef.current])
+
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for fullscreen)`)
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = document.fullscreenElement !== null;
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {document.removeEventListener('fullscreenchange', handleFullscreenChange);};
+  }, []);
+
+  // Function to toggle fullscreen mode
+  const vncContainerRef = useRef(null)
+  const toggleFullscreen = () => {
+    Logger.debug(`VmVnc > toggleFullscreen ...`)
+    if (!vncContainerRef.current) return;
+
+    if (!document.fullscreenElement) {
+      // Enter fullscreen
+      vncContainerRef.current.requestFullscreen().catch((err) => {
+        validationToast.fail(`${Localization.kr.FULLSCREEN} ${Localization.kr.ACTIVATE} 실패: ${err.message} (${err.name})`);
+      });
+    } else {
+      // Exit fullscreen
+      document.exitFullscreen();
+    }
+  };
 
   /*
   useEffect(() => {
@@ -154,7 +184,7 @@ const VmVnc = ({
   }
 
   return (<>
-    <div
+    <div ref={vncContainerRef}
       className="section-vnc w-full h-full v-center"
     >
       <HeaderButton titleIcon={rvi24Desktop(CONSTANT.color.white)}

@@ -168,9 +168,9 @@ const VmMigrationModal = ({
             label={`${Localization.kr.CLUSTER} ${vmsSelected[0]?.clusterVo?.name} 내 ${Localization.kr.HOST} 자동 선택`}
             checked={isCluster}
             onChange={() => setIsCluster(!isCluster)}
-            tType="t" fType="f"
+            // tType="t" fType="f"
           />
-          <span>{isCluster === true ? "T":"F"}</span>
+          {import.meta.env.DEV && <span>{isCluster === true ? "T" : "F"}</span>}
           <br/><br/>
 
           {isCluster ? (

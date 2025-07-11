@@ -166,6 +166,7 @@ export const Localization = {
     BACKING_FILE: "지원 파일",
     SCREENSHOT: "스크린샷",
     CLIPBOARD: "클립보드",
+    FULLSCREEN: "전체화면",
 
     PLACEHOLDER: "임력하세요.",
     PLACEHOLDER_SELECT: "선택하세요.",

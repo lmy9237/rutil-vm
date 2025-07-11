@@ -11,7 +11,7 @@ import Vnc                        from "@/components/Vnc"
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
 import TableRowClick              from "@/components/table/TableRowClick";
 import SemiCircleChart            from "@/components/Chart/SemiCircleChart";
-import VmOsIcon                   from "@/components/icons/VmOsIcon";
+import { VmOsIcon, VmOsScreenshot }               from "@/components/icons/VmOs";
 import {
   RVI16,
   rvi16Desktop,
@@ -338,10 +338,7 @@ const VmGeneral = ({
               <div className="vm-info-vnc v-center gap-8">
                 {
                   (vm?.running && !vm?.hostedEngineVm && vmScreenshot)
-                    ? <img src={vmScreenshot}
-                        alt={`screenshot-${vmId}`} 
-                        style={{cursor: 'pointer',width:'210px'}}
-                        loading="lazy"
+                    ? <VmOsScreenshot dataUrl={vmScreenshot}
                         onClick={handleStartConsole}
                       /> 
                     : <VmOsIcon dataUrl={vm?.urlLargeIcon}

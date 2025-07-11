@@ -1,14 +1,23 @@
 /* max supported dimensions in oVirt API */
-.icon-os-wrapper {
+.vm-os-wrapper {
   width: 210px;aspect-ratio:210/130;
   padding: 10px 0;
   border: 1px solid #b6b6b6;
   background: var(--color-white-2);
 }
-.icon-os {
+.vm-os-wrapper.screenshot {
+  padding: 0 !important;
+}
+.vm-icon {
   max-width: 150px;
   max-height: 120px;
   overflow: hidden;
-  display: block;
   height: 106px;
+  display: block;
+}
+.vm-screenshot {
+  cursor: pointer;
+  overflow: hidden;
+  width: 210px;
+  display: block;
 }

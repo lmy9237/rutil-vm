@@ -9,15 +9,6 @@ const VmConsole = ({
 }) => {
   const { validationToast } = useValidationToast()
 
-  /* useEffect(() => {
-    setFormConsoleState((prev) => {
-      return {
-        ...prev,
-        vide
-      }
-    })
-  }. [formConsoleState, setFormConsoleState]) */
-
   return (
     <>
       <LabelSelectOptions label="비디오 유형"

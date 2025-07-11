@@ -42,6 +42,7 @@ export function emptyIdNameVo() {
 }
 
 /**
+ * @name useSelectFirstItemEffect
  * 
  * @param {*} items 
  * @param {*} setFn 

@@ -33,7 +33,7 @@ fun Connection.findAllVms(searchQuery: String?="", follow: String?=""): Result<L
 fun Connection.srvVm(vmId: String?=""): VmService =
 	this.srvVms().vmService(vmId)
 
-fun Connection.findVm(vmId: String?="", follow: String = ""): Result<Vm?> = runCatching {
+fun Connection.findVm(vmId: String?="", follow: String?=""): Result<Vm?> = runCatching {
 	this.srvVm(vmId).get().apply {
 		follow(follow)
 	}.send().vm()
@@ -45,7 +45,7 @@ fun Connection.findVm(vmId: String?="", follow: String = ""): Result<Vm?> = runC
 }
 
 
-fun Connection.startVm(vmId: String, usingInitialization: Vm? = null): Result<Boolean> = runCatching {
+fun Connection.startVm(vmId: String?="", usingInitialization: Vm? = null): Result<Boolean> = runCatching {
 	val vm: Vm = checkVm(vmId)
 
 	val diskAttachments = this.findAllDiskAttachmentsFromVm(vmId).getOrDefault(listOf())
@@ -602,14 +602,14 @@ fun Connection.findReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: St
 }
 
 
-private fun Connection.srvAllDiskAttachmentsFromVm(vmId: String): DiskAttachmentsService =
+private fun Connection.srvAllDiskAttachmentsFromVm(vmId: String?=""): DiskAttachmentsService =
 	this.srvVm(vmId).diskAttachmentsService()
 
-fun Connection.findAllDiskAttachmentsFromVm(vmId: String, follow: String = ""): Result<List<DiskAttachment>> = runCatching {
+fun Connection.findAllDiskAttachmentsFromVm(vmId: String?="", follow: String?=""): Result<List<DiskAttachment>> = runCatching {
 	checkVmExists(vmId)
 
 	this.srvAllDiskAttachmentsFromVm(vmId).list().apply {
-		if(follow.isNotEmpty()) follow(follow)
+		if(follow?.isEmpty() != false) follow(follow)
 	}.send().attachments()
 
 }.onSuccess {
@@ -619,14 +619,14 @@ fun Connection.findAllDiskAttachmentsFromVm(vmId: String, follow: String = ""): 
 	throw if (it is Error) it.toItCloudException() else it
 }
 
-fun Connection.srvDiskAttachmentFromVm(vmId: String, diskAttachmentId: String): DiskAttachmentService =
+fun Connection.srvDiskAttachmentFromVm(vmId: String?="", diskAttachmentId: String?=""): DiskAttachmentService =
 	this.srvVm(vmId).diskAttachmentsService().attachmentService(diskAttachmentId)
 
-fun Connection.findDiskAttachmentFromVm(vmId: String, diskAttachmentId: String, follow: String = ""): Result<DiskAttachment?> = runCatching {
+fun Connection.findDiskAttachmentFromVm(vmId: String?="", diskAttachmentId: String?="", follow: String?=""): Result<DiskAttachment?> = runCatching {
 	checkVmExists(vmId)
 
 	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).get().apply {
-		if (follow.isNotEmpty()) follow(follow)
+		if (follow?.isEmpty() != false) follow(follow)
 	}.send().attachment()
 
 }.onSuccess {
@@ -726,7 +726,6 @@ fun Connection.removeDiskAttachmentToVm(
 	// }
 	// DiskAttachment 삭제 요청 및 결과 확인
 	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).remove().detachOnly(detachOnly).send()
-
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "삭제", vmId)
