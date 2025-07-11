@@ -21,7 +21,8 @@ const NetworkImportModal = ({
   } = useGlobal()
   const {
     data: networkProvider = [],
-    isLoading: isDatacentersLoading
+    isLoading: isDatacentersLoading,
+    isSuccess: isDatacentersSuccess
   } = useAllNetworkProviders();
   const providerNetworkColumns = [
     {
@@ -85,7 +86,7 @@ const NetworkImportModal = ({
     <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={onSubmit}
-        isReady={!isDatacentersLoading && networkProvider.length >= 0} 
+      isReady={import.meta.env.DEV ? true : (!isDatacentersLoading && isDatacentersSuccess)}
       contentStyle={{ width: "880px" }} 
     >
       {/* 네트워크 공급자 목록 */}

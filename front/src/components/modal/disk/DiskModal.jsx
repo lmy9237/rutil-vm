@@ -67,16 +67,19 @@ const DiskModal = ({
 
   const { 
     data: datacenters = [], 
-    isLoading: isDatacentersLoading 
+    isLoading: isDatacentersLoading,
+    isSuccess: isDatacentersSuccess,
   } = useAllActiveDataCenters((e) => ({ ...e }));
   const { 
     data: domains = [], 
-    isLoading: isDomainsLoading 
+    isLoading: isDomainsLoading,
+    isSuccess: isDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   const { 
     data: diskProfiles = [], 
-    isLoading: isDiskProfilesLoading 
+    isLoading: isDiskProfilesLoading,
+    isSuccess: isDiskProfilesSuccess,
   } = useAllDiskProfilesFromDomain(domainVo?.id || undefined, (e) => ({ ...e }));
 
   const [activeTab, setActiveTab] = useState("img");
@@ -226,9 +229,9 @@ const DiskModal = ({
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       isReady={
-        !isDatacentersLoading &&
-        !isDomainsLoading &&
-        !isDiskProfilesLoading
+        isDatacentersSuccess &&
+        isDomainsSuccess &&
+        isDiskProfilesSuccess
       }
       contentStyle={{ width: "640px" }}
     >

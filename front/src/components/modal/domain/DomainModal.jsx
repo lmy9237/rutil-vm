@@ -281,11 +281,16 @@ const DomainModal = ({
   return (
     <BaseModal targetName={Localization.kr.DOMAIN} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
       isReady={
-        !isDatacentersLoading && !isHostsLoading &&
-        (formState.storageType !== "fcp" || !isFibresLoading)
+        datacenters.length > 0 &&
+        hosts.length > 0 &&
+        (!isFibre || isFibresSuccess)
       }
+      // isReady={
+      //   !isDatacentersLoading && !isHostsLoading &&
+      //   (formState.storageType !== "fcp" || !isFibresLoading)
+      // }
+      onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >
       <div className="storage-domain-new-first">

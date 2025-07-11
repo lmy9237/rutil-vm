@@ -101,6 +101,7 @@ const VmDeleteModal = ({
   return (
     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.REMOVE}
       isOpen={isOpen} onClose={onClose}
+      isReady={diskQueries.every(q => q.status === "success" || q.status === "error")}
       onSubmit={handleFormSubmit}
       promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
       contentStyle={{ width: "690px"}} 

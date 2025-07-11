@@ -175,13 +175,15 @@ const VmModal = ({
   // 클러스터 목록 가져오기
   const { 
     data: clusters = [], 
-    isLoading: isClustersLoading 
+    isLoading: isClustersLoading,
+    isSuccess: isClustersSuccess
   } = useAllUpClusters((e) => ({ ...e }));
 
   // 템플릿 가져오기
   const { 
     data: templates = [], 
-    isLoading: isTemplatesLoading 
+    isLoading: isTemplatesLoading,
+    isSuccess: isTemplatesSuccess
   } = useFindTemplatesFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
 
   // 템플릿 id변경 시 NIC 초기화
@@ -214,7 +216,8 @@ const VmModal = ({
   // 클러스터가 가지고 있는 운영시스템 목록 가져오기
   const { 
     data: osList = [], 
-    isLoading: isOsListLoading
+    isLoading: isOsListLoading,
+    isSuccess: isOsListSuccess
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
   // 불가능한 운영체제(보류)
@@ -594,6 +597,10 @@ const VmModal = ({
   return (
     <BaseModal targetName={Localization.kr.VM} submitTitle={vLabel}  
       isOpen={isOpen} onClose={onClose} 
+      isReady={editMode
+        ? (isClustersSuccess && isTemplatesSuccess && isOsListSuccess && !!vm)
+        : (isClustersSuccess && isTemplatesSuccess && isOsListSuccess)
+      }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "850px", height: "730px" }}  
     >

@@ -79,19 +79,22 @@ const VmDiskModal = ({
   // 디스크 데이터 가져오기
   const {
     data: diskAttachment,
-    isLoading: isDiskAttachmentsLoading
+    isLoading: isDiskAttachmentsLoading,
+    isSuccess: isDiskAttachmentSuccess,
   } = useDiskAttachmentFromVm(vmId, diskId);
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
     data: domains = [], 
-    isLoading: isDomainsLoading 
+    isLoading: isDomainsLoading,
+    isSuccess: isDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const { 
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading, 
+    isSuccess: isDiskProfilesSuccess,
   } = useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
 
@@ -254,6 +257,11 @@ const VmDiskModal = ({
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
+  isReady={
+    editMode
+      ? (isDiskAttachmentSuccess && isDomainsSuccess && isDiskProfilesSuccess)
+      : (isDomainsSuccess && isDiskProfilesSuccess)
+  }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "700px"}} 
     >

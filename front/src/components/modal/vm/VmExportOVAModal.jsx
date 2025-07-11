@@ -34,6 +34,18 @@ const VmExportOVAModal = ({
     if (!name) return `${Localization.kr.NAME}을 입력하세요.`
     return null;
   };
+
+  // 모든 호스트 목록 가져오기
+  const {
+    data: hosts,
+    isLoading: isHostsLoading,
+  } = useAllHosts((toTableItemPredicateHosts));
+
+  function toTableItemPredicateHosts(host) {
+    return {
+      name: host?.name ?? "",
+    };
+  }
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const error = validateForm();
@@ -46,20 +58,10 @@ const VmExportOVAModal = ({
     onClose(); // 모달 닫기
   };
 
-  // 모든 호스트 목록 가져오기
-  const {
-    data: hosts
-  } = useAllHosts((toTableItemPredicateHosts));
-
-  function toTableItemPredicateHosts(host) {
-    return {
-      name: host?.name ?? "",
-    };
-  }
-
   return (
     <BaseModal  targetName={`가상 어플라이언스로 ${Localization.kr.VM}`} submitTitle={Localization.kr.EXPORT}
       isOpen={isOpen} onClose={onClose}
+      isReady={!isHostsLoading} 
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "600px" }} 
     >

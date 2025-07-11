@@ -153,6 +153,7 @@ const VmMigrationModal = ({
   return (
     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.MIGRATION}
       isOpen={isOpen} onClose={onClose}
+      isReady={getHosts.every(q => q.status === "success" || q.status === "error")}
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "600px" }}
     >

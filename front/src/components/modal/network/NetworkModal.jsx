@@ -71,7 +71,8 @@ const NetworkModal = ({
 
   const { 
     data: datacenters = [], 
-    isLoading: isDataCentersLoading 
+    isLoading: isDataCentersLoading,
+    isSuccess: isDataCentersSuccess
   } = useAllDataCenters((e) => ({ ...e }));
   
   const {
@@ -196,8 +197,8 @@ const NetworkModal = ({
       isOpen={isOpen} onClose={onClose}
       isReady={
         editMode
-          ? true
-          : (!isDataCentersLoading && !isClustersLoading)
+          ? isDataCentersSuccess && isClustersSuccess
+          : (!isDataCentersLoading && !isClustersLoading && isDataCentersSuccess && isClustersSuccess)
       }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}

@@ -64,18 +64,21 @@ const VnicProfileModal = ({
   const { data: vnics } = useAllVnicProfiles();
   const { 
     data: datacenters = [], 
-    isLoading: isDataCentersLoading 
+    isLoading: isDataCentersLoading,
+    isSuccess: isDataCentersSuccess,
   } = useAllDataCenters((e) => ({ ...e }));
   const { 
     data: networks = [], 
-    isLoading: isNetworksLoading 
+    isLoading: isNetworksLoading,
+    isSuccess: isNetworksSuccess,
   } = useNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
   const { 
     data: vms = [] 
   } = useAllVmsFromVnicProfiles(vnicProfileId);
   const { 
     data: nFilters = [], 
-    isLoading: isNFiltersLoading 
+    isLoading: isNFiltersLoading,
+    isSuccess: isNFiltersSuccess,
   } = useNetworkFilters((e) => ({ ...e }));
 
 
@@ -160,12 +163,13 @@ const VnicProfileModal = ({
   return (
     <BaseModal targetName={Localization.kr.VNIC_PROFILE} submitTitle={vLabel}
       isOpen={isOpen} onClose={onClose}
-      onSubmit={handleFormSubmit}
       isReady={
         editMode
-          ? !isDataCentersLoading && !isNetworksLoading && !isNFiltersLoading
-          : !isDataCentersLoading && !isNetworksLoading
+        ? isDataCentersSuccess && isNetworksSuccess && isNFiltersSuccess
+        : isDataCentersSuccess && isNetworksSuccess
       }
+      onSubmit={handleFormSubmit}
+  
       contentStyle={{ width: "730px" }} 
     >
       <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}

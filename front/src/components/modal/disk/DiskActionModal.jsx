@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useMemo  } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
@@ -45,7 +45,10 @@ const DiskActionModal = ({
   const qr = useAllDomainsFromDataCenter4EachDisk(diskList, (e) => ({
     ...e
   }))
-
+  const isQrSuccess = useMemo(() => {
+    return qr.every((q) => q?.isSuccess);
+  }, [qr]);
+  
   useEffect(() => {
     if (activeModal().includes("disk:copy")) {
       const initialAliases = {};
@@ -169,6 +172,7 @@ const DiskActionModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={daLabel}
       isOpen={isOpen} onClose={onClose}
       isReady={
+        isQrSuccess &&
         diskList.length > 0 &&
         diskList.every((disk) => {
           const domainId = targetDomains[disk.id];

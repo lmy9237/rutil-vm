@@ -288,11 +288,14 @@ const VmImportModal = ({
                   </tr>
                 </thead>
                 <tbody>
-                  {vwVms.map(vm => (
+                 {vwVms
+                  .filter(vm => !targetVMs.some(t => t.vm === vm.vm)) // 선택된 VM은 제외
+                  .map(vm => (
                     <tr key={vm.vm}>
                       <td>
-                        <input type="checkbox"
-                          checked={targetVMs.some(t => t.vm === vm.vm)}
+                        <input
+                          type="checkbox"
+                          checked={false}
                           disabled={vm.powerState === "POWERED_ON"}
                           onChange={() => toggleSelect(vm.vm)}
                         />
@@ -300,8 +303,40 @@ const VmImportModal = ({
                       <td>{vm.name}</td>
                       <td>{vm.powerState?.split("_").pop()}</td>
                     </tr>
-                  ))}
+                ))}
                 </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+         <div className="vm-import-panel vm-import-source">
+          <div className="vm-import-panel-title">가져오기할 {Localization.kr.VM}</div>
+          <div className="vm-import-table-outer">
+            <div className="section-table-outer w-full ">
+              <table className="vm-import-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "40px" }}>선택</th>
+                    <th>{Localization.kr.NAME}</th>
+                    <th style={{ width: "40px" }}>{Localization.kr.STATUS}</th>                    
+                  </tr>
+                </thead>
+                  <tbody>
+                    {targetVMs.map(vm => (
+                      <tr key={vm.vm}>
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked
+                            onChange={() => toggleSelect(vm.vm)}
+                          />
+                        </td>
+                        <td>{vm.name}</td>
+                        <td>{vm.powerState?.split("_").pop()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
               </table>
             </div>
           </div>
@@ -325,6 +360,7 @@ const VmImportModal = ({
       isOpen={isOpen} onClose={onClose}
       onSubmit={step === 2 ? handleFormSubmit : goNext}
       contentStyle={{ width: "1000px" }}
+      isReady={!isDataCentersLoading && !isProvidersLoading && !isHostsLoading && (step !== 1 || !isVmsLoading)}
       extraFooter={ step === 2 
         ? (
           <>

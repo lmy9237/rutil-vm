@@ -74,6 +74,7 @@
 .vm-import-table-outer{
   height: 200px;
   overflow-y: auto;
+  border: var(--border-default);
 }
 .vm-import-panel{
   width: 49%;

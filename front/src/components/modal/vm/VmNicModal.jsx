@@ -64,7 +64,8 @@ const VmNicModal = ({
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
   const { 
     data: vnics=[],
-    isLoading: isNicsLoading
+    isLoading: isNicsLoading,
+    isSuccess: isAllVnicsSuccess,
   } = useAllVnicsFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
 
   useEffect(()=>{
@@ -162,6 +163,7 @@ const VmNicModal = ({
     <BaseModal targetName={Localization.kr.NICS} submitTitle={nLabel}
       isOpen={isOpen} onClose={onClose}
       isReady={
+        isAllVnicsSuccess &&
         Array.isArray(vnics) &&
         vnics.length > 0 &&
         typeof formInfoState.name === "string"

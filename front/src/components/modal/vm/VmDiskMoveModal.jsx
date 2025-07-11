@@ -12,6 +12,7 @@ import {
 import Localization                     from "@/utils/Localization";
 import "../domain/MDomain.css";
 import { checkZeroSizeToGiB } from "@/util";
+import Logger from "@/utils/Logger";
 
 const VmDiskMoveModal = ({ 
   isOpen,
