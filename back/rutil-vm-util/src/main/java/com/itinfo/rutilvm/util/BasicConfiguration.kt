@@ -1,6 +1,12 @@
 package com.itinfo.rutilvm.util
 
+import com.itinfo.rutilvm.util.model.SystemPropertiesVo
+import org.slf4j.LoggerFactory
 import java.util.Properties
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
+
+private val log = LoggerFactory.getLogger(BasicConfiguration::class.java)
 
 /**
  * [BasicConfiguration]
@@ -49,6 +55,13 @@ class BasicConfiguration {
 			return bc
 		}
 	}
+	val sessionTokens: MutableList<String> = mutableListOf()
+	fun addSessionToken(newSessionToken: String) {
+		log.debug("addSessionToken ... newSessionToken: {}", newSessionToken)
+		sessionTokens.add(newSessionToken)
+	}
+	fun findSessionTokenAvailable(): String = sessionTokens.firstOrNull() ?: ""
+
 
 	val postgresDriverClassname: String
 		get() = databaseProp?.get(PNAME_POSTGRES_DRIVER_CLASS_NAME).toString()

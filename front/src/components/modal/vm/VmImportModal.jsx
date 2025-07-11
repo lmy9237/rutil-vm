@@ -162,8 +162,7 @@ const VmImportModal = ({
   };
 
   const handleFormSubmit = () => {
-    console.log("$ === vmImportConfig 확인 ===", vmImportConfig);
-
+    Logger.debug(`VmImportModal > handleFormSubmit ... vmImportConfig: `, vmImportConfig);
     const dataToSubmit = Object.entries(vmImportConfig.vmConfigs || {}).map(([vmId, config]) => {
       return {
         vmwareName: targetVMs.find(vm => vm.vm === vmId)?.name,
@@ -182,7 +181,7 @@ const VmImportModal = ({
         cpuProfileVo: config.cpuProfileVo,
         storageDomainVo: config.storageDomainVo,
         userName: formState.username,
-        password: formState.password,
+        password: (import.meta.env.DEV) ? formState.password : ""  || "",
         vmwareCenter: formState.vcenter,
         vmwareDataCenter: formState.dataCenter,
         vmwareCluster: formState.cluster,
@@ -190,8 +189,7 @@ const VmImportModal = ({
       };
     });
 
-    console.log("$ dataToSubmit", dataToSubmit);
-
+    Logger.debug(`VmImportModal > handleFormSubmit ... dataToSubmit`, dataToSubmit);
     importVm(dataToSubmit);
   };
 
@@ -246,7 +244,7 @@ const VmImportModal = ({
             disabled={!!providerVo.id}
           />
 
-          <LabelInput label="사용자 이름" id="username"
+          <LabelInput label={Localization.kr.PLACEHOLDER_USERNAME} id="username"
             value={formState.username}
             onChange={handleInputChange(setFormState, "username", validationToast)}
             disabled={!!providerVo.id}

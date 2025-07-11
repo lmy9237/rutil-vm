@@ -29,6 +29,17 @@ class Localization {
 			locKr = propH.loadProperties(PROP_LOC_KR_FULL_PATH)
 			return locH
 		}
+		//region: AuditLogTypeL
+		object AuditLogTypeL {
+			object KR {
+
+			}
+			object EB {
+
+			}
+		}
+		//endregion: AuditLogTypeL
+
 		//region: AuditLogSeverityL
 		object AuditLogSeverityL {
 			object KR {
@@ -284,6 +295,18 @@ class Localization {
 		}
 		//endregion: MigrateOnErrorBL
 
+		//region: NetworkStatusL
+		object NetworkStatusL {
+			object KR {
+				val NON_OPERATIONAL =	locKr?.get(NetworkStatusB.non_operational.localizationKey)?.toString() ?: ""
+				val OPERATIONAL =		locKr?.get(NetworkStatusB.operational.localizationKey)?.toString() ?: ""
+			}
+			object EN {
+				val NON_OPERATIONAL =	locEn?.get(NetworkStatusB.non_operational.localizationKey)?.toString() ?: ""
+				val OPERATIONAL =		locEn?.get(NetworkStatusB.operational.localizationKey)?.toString() ?: ""
+			}
+		}
+		//endregion: NetworkStatusL
 
 		//region ProviderTypeL
 		object ProviderTypeL {
@@ -562,6 +585,11 @@ class Localization {
 		else -> if (loc == "kr") "알 수 없음" else "Unknown"
 	}
 
+	fun findLocalizedName4AuditLogType(type: AuditLogType, loc: String="kr"): String = when(type) {
+
+		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+	}
+
 	fun findLocalizedName4CpuPinningPolicy(type: CpuPinningPolicyB, loc: String = "kr"): String = when(type) {
 		CpuPinningPolicyB.none ->					if (loc == "kr") CpuPinningPolicyL.KR.none else CpuPinningPolicyL.EN.none
 		CpuPinningPolicyB.manual -> 				if (loc == "kr") CpuPinningPolicyL.KR.manual else CpuPinningPolicyL.EN.manual
@@ -571,15 +599,20 @@ class Localization {
 	}
 
 	fun findLocalizedName4ProviderType(type: ProviderTypeB, loc: String = "kr"): String = when(type) {
-		ProviderTypeB.openstack_network ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
-		ProviderTypeB.foreman -> 			if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
-		ProviderTypeB.openstack_image -> 	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
-		ProviderTypeB.openstack_volume ->	if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
-		ProviderTypeB.external_network -> 	if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
+		ProviderTypeB.openstack_network ->		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_NETWORK	else ProviderTypeL.EN.OPENSTACK_NETWORK
+		ProviderTypeB.foreman -> 				if (loc == "kr") ProviderTypeL.KR.FOREMAN 			else ProviderTypeL.EN.FOREMAN
+		ProviderTypeB.openstack_image -> 		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_IMAGE	else ProviderTypeL.EN.OPENSTACK_IMAGE
+		ProviderTypeB.openstack_volume ->		if (loc == "kr") ProviderTypeL.KR.OPENSTACK_VOLUME	else ProviderTypeL.EN.OPENSTACK_VOLUME
+		ProviderTypeB.external_network -> 		if (loc == "kr") ProviderTypeL.KR.EXTERNAL_NETWORK	else ProviderTypeL.EN.EXTERNAL_NETWORK
 		ProviderTypeB.vmware -> 				if (loc == "kr") ProviderTypeL.KR.VMWARE			else ProviderTypeL.EN.VMWARE
 		ProviderTypeB.kvm ->					if (loc == "kr") ProviderTypeL.KR.KVM				else ProviderTypeL.EN.KVM
 		ProviderTypeB.xen ->					if (loc == "kr") ProviderTypeL.KR.XEN				else ProviderTypeL.EN.XEN
-		ProviderTypeB.kubevirt ->			if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+		ProviderTypeB.kubevirt ->				if (loc == "kr") ProviderTypeL.KR.KUBEVIRT			else ProviderTypeL.EN.KUBEVIRT
+	}
+
+	fun findLocalizedName4NetworkStatus(type: NetworkStatusB, loc: String = "kr"): String = when(type) {
+		NetworkStatusB.non_operational ->		if (loc == "kr") NetworkStatusL.KR.NON_OPERATIONAL else NetworkStatusL.EN.NON_OPERATIONAL
+		NetworkStatusB.operational ->			if (loc == "kr") NetworkStatusL.KR.OPERATIONAL else NetworkStatusL.EN.OPERATIONAL
 	}
 
 	fun findLocalizedName4BiosType(type: BiosTypeB, loc: String = "kr"): String = when(type) {

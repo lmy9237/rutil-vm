@@ -56,7 +56,7 @@ const ClusterInfo = () => {
     { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
     { id: "hosts",    label: Localization.kr.HOST,    onClick: () => handleTabClick("hosts") },
     { id: "vms",      label: Localization.kr.VM,      onClick: () => handleTabClick("vms") },
-    { id: "networks", label: "논리 네트워크", onClick: () => handleTabClick("networks") },
+    { id: "networks", label: "논리 네트워크",           onClick: () => handleTabClick("networks") },
     { id: "events",   label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
   ]), [clusterId]);
 

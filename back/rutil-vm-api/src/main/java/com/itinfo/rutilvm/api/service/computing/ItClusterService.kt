@@ -4,10 +4,11 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
-import com.itinfo.rutilvm.api.ovirt.business.VmOsType
-import com.itinfo.rutilvm.api.ovirt.business.toVmOsTypes
+import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
@@ -171,6 +172,7 @@ class ClusterServiceImpl(
 ) : BaseService(), ItClusterService {
 	@Autowired private lateinit var itGraphService: ItGraphService
 	@Autowired private lateinit var rVms: VmRepository
+	@Autowired private lateinit var rNetworks: NetworkRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<ClusterVo> {
@@ -242,9 +244,9 @@ class ClusterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllNetworksFromCluster(clusterId: String): List<NetworkVo> {
 		log.info("findAllNetworksFromCluster ... clusterId: {}", clusterId)
-		val res: List<Network> = conn.findAllNetworksFromCluster(clusterId)
-			.getOrDefault(emptyList())
-		return res.toClusterNetworkMenus()
+		// val res: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+		val networksFound: List<NetworkEntity> = rNetworks.findAllByClusterId(clusterId.toUUID())
+		return networksFound.toNetworkVosFromNetworkEntities()
 	}
 
 	@Throws(Error::class)

@@ -12,14 +12,9 @@ open class BaseService {
 	@Autowired protected lateinit var admin: AdminConnectionService
 	@Autowired private lateinit var sysProps: ItSystemPropertiesService
 
-	open val conn: Connection
-		get() = admin.getConnection()
-
-	open val system: SystemService
-		get() = conn.systemService()
-
-	open val systemPropertiesVo: SystemPropertiesVo
-		get() = sysProps.findOne()
+	open val conn: Connection							get() = admin.getConnection()
+	open val system: SystemService						get() = conn.systemService()
+	open val systemPropertiesVo: SystemPropertiesVo		get() = sysProps.findOne()
 
 	companion object {
 	}

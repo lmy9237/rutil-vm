@@ -55,9 +55,9 @@ class DnsResolverConfigurationEntity(
 	// OrphanRemoval = true means if a NameServerEntity is removed from this list,
 	// it will be deleted from the database.
 	@OneToMany(
-		mappedBy = "dnsResolverConfiguration",
-		cascade = [CascadeType.ALL],
-		orphanRemoval = true,
+		mappedBy="dnsResolverConfiguration",
+		cascade=[CascadeType.ALL, CascadeType.REMOVE],
+		orphanRemoval=true,
 		fetch = FetchType.LAZY // LAZY is generally good for collections
 	)
 	@OrderBy("position ASC") // Optional: if you have an order_number column in name_server

@@ -29,6 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 4.0.0 - 2025-07-14
+
+- [`api-v4.0.0`][api-v4.0.0]: 백엔드
+- [`web-v4.0.0`][web-v4.0.0]: 프론트앤드
+
+
 ## 0.3.8 - 2025-07-11
 
 - [`api-v0.3.8`][api-v0.3.8]: 백엔드

@@ -25,6 +25,9 @@ export const VmOsIcon = ({
 
   return (
     <span className="vm-os-wrapper icon f-center"
+      style={{
+        cursor: props.disabled ? "normal" : "pointer"
+      }}
       {...props}
     >
       {dataUrl 

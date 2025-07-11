@@ -26,6 +26,7 @@ import org.ovirt.engine.sdk4.types.MigrateOnError
 import org.ovirt.engine.sdk4.types.MigrationBandwidthAssignmentMethod
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
+import org.ovirt.engine.sdk4.types.NetworkStatus
 import org.ovirt.engine.sdk4.types.NicStatus
 import org.ovirt.engine.sdk4.types.OperatingSystem
 import org.ovirt.engine.sdk4.types.OperatingSystemInfo
@@ -180,44 +181,26 @@ fun ImageTransferPhaseB.toImageTransferPhaseB(): ImageTransferPhase = ImageTrans
 fun LogMaxMemoryUsedThresholdType?.toLogMaxMemoryUsedThresholdTypeB(): LogMaxMemoryUsedThresholdTypeB = LogMaxMemoryUsedThresholdTypeB.forCode(this@toLogMaxMemoryUsedThresholdTypeB?.value())
 fun LogMaxMemoryUsedThresholdTypeB?.toLogMaxMemoryUsedThresholdType(): LogMaxMemoryUsedThresholdType = LogMaxMemoryUsedThresholdType.fromValue(this@toLogMaxMemoryUsedThresholdType?.code)
 
-fun VmAffinity?.toMigrationSupport(): MigrationSupport =
-	MigrationSupport.forCode(this@toMigrationSupport?.value())
+fun VmAffinity?.toMigrationSupport(): MigrationSupport = MigrationSupport.forCode(this@toMigrationSupport?.value())
+fun VmPlacementPolicy.findMigrationSupport(): MigrationSupport = this@findMigrationSupport.affinity().toMigrationSupport()
 
-fun VmPlacementPolicy.findMigrationSupport(): MigrationSupport =
-	this@findMigrationSupport.affinity().toMigrationSupport()
+fun MigrationBandwidthAssignmentMethod?.toMigrationBandwidthLimitType(): MigrationBandwidthLimitType? = MigrationBandwidthLimitType.forCode(this@toMigrationBandwidthLimitType?.value())
+fun MigrationBandwidthLimitType?.toMigrationBandwidthAssignmentMethod(): MigrationBandwidthAssignmentMethod? = MigrationBandwidthAssignmentMethod.fromValue(this@toMigrationBandwidthAssignmentMethod?.code)
 
-fun MigrationBandwidthAssignmentMethod?.toMigrationBandwidthLimitType(): MigrationBandwidthLimitType? =
-	MigrationBandwidthLimitType.forCode(this@toMigrationBandwidthLimitType?.value())
+fun MigrationOptions.findMigrationBandwidthLimitType(): MigrationBandwidthLimitType? = this@findMigrationBandwidthLimitType.bandwidth().assignmentMethod().toMigrationBandwidthLimitType()
+fun MigrationOptions.findMigrationEncrypt(): Boolean? = this@findMigrationEncrypt.encrypted().toBoolean()
+fun MigrationOptions.findMigrationAutoConverge(): Boolean? = this@findMigrationAutoConverge.autoConverge().toBoolean()
+fun MigrationOptions.findMigrationCompression(): Boolean? = this@findMigrationCompression.compressed().toBoolean()
+fun MigrationSupport.toVmAffinity(): VmAffinity = VmAffinity.fromValue(this@toVmAffinity.code)
 
-fun MigrationBandwidthLimitType?.toMigrationBandwidthAssignmentMethod(): MigrationBandwidthAssignmentMethod? =
-	MigrationBandwidthAssignmentMethod.fromValue(this@toMigrationBandwidthAssignmentMethod?.code)
+fun MigrateOnError.toMigrateOnErrorB(): MigrateOnErrorB = MigrateOnErrorB.forCode(this@toMigrateOnErrorB.value())
+fun MigrateOnErrorB.toMigrateOnError(): MigrateOnError = MigrateOnError.fromValue(this@toMigrateOnError.code)
 
-fun MigrationOptions.findMigrationBandwidthLimitType(): MigrationBandwidthLimitType? =
-	this@findMigrationBandwidthLimitType.bandwidth().assignmentMethod().toMigrationBandwidthLimitType()
+fun NetworkStatus.toNetworkStatusB(): NetworkStatusB = NetworkStatusB.forCode(this@toNetworkStatusB.value())
+fun NetworkStatusB.toNetworkStatus(): NetworkStatus = NetworkStatus.fromValue(this@toNetworkStatus.code)
 
-fun MigrationOptions.findMigrationEncrypt(): Boolean? =
-	this@findMigrationEncrypt.encrypted().toBoolean()
-
-fun MigrationOptions.findMigrationAutoConverge(): Boolean? =
-	this@findMigrationAutoConverge.autoConverge().toBoolean()
-
-fun MigrationOptions.findMigrationCompression(): Boolean? =
-	this@findMigrationCompression.compressed().toBoolean()
-
-fun MigrationSupport.toVmAffinity(): VmAffinity =
-	VmAffinity.fromValue(this@toVmAffinity.code)
-
-fun MigrateOnError.toMigrateOnErrorB(): MigrateOnErrorB =
-	MigrateOnErrorB.forCode(this@toMigrateOnErrorB.value())
-
-fun MigrateOnErrorB.toMigrateOnError(): MigrateOnError =
-	MigrateOnError.fromValue(this@toMigrateOnError.code)
-
-fun OperatingSystemInfo.toVmOsType(): VmOsType =
-	VmOsType.forCode(this@toVmOsType.id())
-
-fun List<OperatingSystemInfo>.toVmOsTypes(): List<VmOsType> =
-	this@toVmOsTypes.map { it.toVmOsType() }
+fun OperatingSystemInfo.toVmOsType(): VmOsType = VmOsType.forCode(this@toVmOsType.id())
+fun List<OperatingSystemInfo>.toVmOsTypes(): List<VmOsType> = this@toVmOsTypes.map { it.toVmOsType() }
 
 fun SeLinuxMode?.toSELinuxModeB(): SELinuxModeB? = SELinuxModeB.forCode(this@toSELinuxModeB?.value())
 fun SELinuxModeB?.toSeLinuxMode(): SeLinuxMode? = SeLinuxMode.fromValue(this@toSeLinuxMode?.code)

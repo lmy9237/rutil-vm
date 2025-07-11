@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogType
 import com.itinfo.rutilvm.common.gson
 
 import org.hibernate.annotations.Type
@@ -75,7 +76,8 @@ class AuditLogEntity(
 	val vdsName: String = "",
 	val logTime: LocalDateTime? = null,
 	val logTypeName: String = "",
-	val logType: Int = 0,
+	@Column(name = "log_type", nullable=false)
+	private val logType: Int = 0,
 	@Column(name="severity", nullable=true)
 	private val severityValue: Int = 0,
 	val message: String = "",
@@ -109,8 +111,8 @@ class AuditLogEntity(
 	val brickPath: String = "",
 	val customId: String = "",
 ): Serializable {
-	val severity: AuditLogSeverity
-		get() = AuditLogSeverity.forValue(severityValue)
+	val severity: AuditLogSeverity?			get() = AuditLogSeverity.forValue(severityValue)
+	val auditLogType: AuditLogType?			get() = AuditLogType.forValue(logType)
 
 	override fun toString(): String =
 		gson.toJson(this)

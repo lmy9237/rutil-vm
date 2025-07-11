@@ -41,11 +41,10 @@ enum class MigrationSupport(
 				codeMapping[it.name] = it
 			}
 		}
-
+		@JvmStatic fun forValue(value: Int?): MigrationSupport = valueMapping[value ?: migratable.value] ?: migratable
+		@JvmStatic fun forCode(value: String?): MigrationSupport = codeMapping[value ?: migratable.code] ?: migratable
 		val allMigrationSupports: List<MigrationSupport> = MigrationSupport.values().filterNot {
 			it == unknown
 		}
-		@JvmStatic fun forValue(value: Int?): MigrationSupport = valueMapping[value ?: migratable.value] ?: migratable
-		@JvmStatic fun forCode(value: String?): MigrationSupport = codeMapping[value ?: migratable.code] ?: migratable
 	}
 }

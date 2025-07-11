@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogType
 import com.itinfo.rutilvm.api.repository.engine.entity.AuditLogEntity
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.toUUID
@@ -18,9 +19,16 @@ import java.util.UUID
 @Repository
 interface AuditLogRepository : JpaRepository<AuditLogEntity, Long>, JpaSpecificationExecutor<AuditLogEntity> {
 	// Custom query methods can be added here, e.g.:
+	@Query("""
+SELECT ale FROM AuditLogEntity ale WHERE 1=1
+AND ale.logType IN :logTypes
+""")
+	fun findAllByLogTypes(
+		@Param("logTypes") logTypes: List<Int>
+	): List<AuditLogEntity>
 	fun findByLogTimeBetween(startTime: LocalDateTime, endTime: LocalDateTime): List<AuditLogEntity>
 	fun findByVmId(vmId: UUID): List<AuditLogEntity>
-	fun findByLogTypeNameAndVmName(logTypeName: String, vmName: String): List<AuditLogEntity>
+	// fun findByLogTypeNameAndVmName(logTypeName: String, vmName: String): List<AuditLogEntity>
 	fun findTop10ByOrderByLogTimeDesc(): List<AuditLogEntity>
 
 	@Modifying
@@ -28,8 +36,17 @@ interface AuditLogRepository : JpaRepository<AuditLogEntity, Long>, JpaSpecifica
 DELETE FROM AuditLogEntity ale WHERE 1=1
 AND ale.auditLogId IN :auditLogIds
 """)
-	fun removeEventsByIds(
+	fun removeAllByIds(
 		@Param("auditLogIds") auditLogIds: List<Long>
+	): Int // Returns the number of deleted entities
+
+	@Modifying
+	@Query("""
+DELETE FROM AuditLogEntity ale WHERE 1=1
+AND ale.logType IN :logTypes
+""")
+	fun removeAllByLogType(
+		@Param("logTypes") logTypes: List<Int>
 	): Int // Returns the number of deleted entities
 }
 
@@ -43,8 +60,7 @@ data class AuditLogSpecificationParam(
 	val storageDomainId: String? = null,
 	val startDate: LocalDateTime? = null,
 ): Serializable {
-	val minSeverityCode: Int
-		get() = AuditLogSeverity.forCode(minSeverity).value
+	val minSeverityCode: Int			get() = AuditLogSeverity.forCode(minSeverity).value
 
 	override fun toString(): String =
 		gson.toJson(this)

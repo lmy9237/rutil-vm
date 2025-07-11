@@ -10,13 +10,16 @@ import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
+import com.itinfo.rutilvm.api.repository.engine.DnsResolverConfigurationRepository
+import com.itinfo.rutilvm.api.repository.engine.NameServerRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkClusterViewRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.ClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toClusterVoFromNetworkClusterViewEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVoFromNetworkEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -184,19 +187,23 @@ class NetworkServiceImpl(
 
 	@Autowired private lateinit var rNetwork: NetworkRepository
 	@Autowired private lateinit var rNetworkCluster: NetworkClusterViewRepository
+	@Autowired private lateinit var rDnsConfigs: DnsResolverConfigurationRepository
+	@Autowired private lateinit var rNameServers: NameServerRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
 		log.info("findAll ... ")
-		val networks: List<Network> = conn.findAllNetworks(follow = "datacenter").getOrDefault(emptyList())
-		return networks.toNetworkMenus()
+		// val networks: List<Network> = conn.findAllNetworks(follow = "datacenter").getOrDefault(emptyList())
+		val networksFound: List<NetworkEntity> = rNetwork.findAll()
+		return networksFound.toNetworkVosFromNetworkEntities()
 	}
 
 	@Throws(Error::class)
 	override fun findOne(networkId: String): NetworkVo? {
 		log.info("findOne ... networkId: {}", networkId)
-		val res: Network? = conn.findNetwork(networkId, "datacenter,vnicprofiles,networklabels").getOrNull()
-		return res?.toNetworkVo(conn)
+		// val res: Network? = conn.findNetwork(networkId, "datacenter,vnicprofiles,networklabels").getOrNull()
+		val networkFound: NetworkEntity = rNetwork.findByNetworkId(networkId.toUUID()) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		return networkFound.toNetworkVoFromNetworkEntity()
 	}
 
 	@Throws(Error::class)
@@ -227,17 +234,17 @@ class NetworkServiceImpl(
 
 	@Transactional("engineTransactionManager")
 	private fun applyDnsNameServers(
-		dnsNameServers: List<String>,
+		dnsNameServers: List<DnsVo>,
 		networkId: UUID
 	) {
 		log.info("updateDnsNameServers ... dnsNameServers: {} networkId: {}", dnsNameServers, networkId)
-		val network2UpdateDns: NetworkEntity = rNetwork.findByIdWithDnsConfiguration(networkId)
-			?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val network2UpdateDns: NetworkEntity = rNetwork.findByNetworkId(networkId) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 		var dnsConfig: DnsResolverConfigurationEntity? = network2UpdateDns.dnsConfiguration
 		if (dnsNameServers.isEmpty()) {
 			if (dnsConfig != null) {
-				network2UpdateDns.dnsConfiguration = null
-				log.info("네트워크 ${network2UpdateDns.name}에서 DNS 설정 제거 진행완료")
+				rDnsConfigs.delete(dnsConfig)
+				rNameServers.deleteAll(dnsConfig.nameServers)
+				log.debug("updateDnsNameServers ... 네트워크 ${network2UpdateDns.name}에서 DNS 설정 제거 진행완료 ... dnsConfig.id: {}", dnsConfig.id)
 			}
 		} else {
 			if (dnsConfig == null) {
@@ -245,10 +252,12 @@ class NetworkServiceImpl(
 					id { UUID.randomUUID() }
 				}
 				network2UpdateDns.dnsConfiguration = dnsConfig // Associate the new configuration with the network
+			} else {
+
 			}
 			dnsConfig.nameServers.clear()
-			dnsNameServers.forEachIndexed { index, ip ->
-				dnsConfig.addNameServer(ip, (index+1).toShort()) // Assuming addNameServer handles creating NameServerEntity
+			dnsNameServers.forEach { dns ->
+				dnsConfig.addNameServer(dns.address, dns.position) // Assuming addNameServer handles creating NameServerEntity
 			}
 			log.info("네트워크 ${network2UpdateDns.name} 에 추가 된 DNS servers: $dnsNameServers ")
 		}

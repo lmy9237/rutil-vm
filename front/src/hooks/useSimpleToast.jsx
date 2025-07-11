@@ -39,7 +39,7 @@ export const useApiToast = () => {
       description=""
     ) => {
       Logger.debug(`useApiToast > apiToast.ok ... description: ${description}`);
-      toast({
+      import.meta.env.DEV && toast({ // 개발 모드일 때만 이 Toast가 활성화
         variant: "success",
         title: Localization.kr.TITLE_API_SUCCESS,
         description: description || "..."
@@ -55,7 +55,7 @@ export const useApiToast = () => {
       message=""
     ) => {
       Logger.debug(`useApiToast > apiToast.error ... message: ${message}`);
-      toast({
+      import.meta.env.DEV && toast({ // 개발 모드일 때만 이 Toast가 활성화
         variant: "destructive",
         title: Localization.kr.TITLE_API_ERROR,
         description: message || "..."
@@ -69,7 +69,7 @@ export const useProgressToast = () => {
   const { toast, dismiss } = useToast();
 
   const progressToast = {
-    in: (title, progress=0) => {
+    in: (title, progress=0) => { 
       Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}`);
       toast({
         id: 1,

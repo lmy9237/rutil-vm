@@ -342,6 +342,7 @@ const VmGeneral = ({
                         onClick={handleStartConsole}
                       /> 
                     : <VmOsIcon dataUrl={vm?.urlLargeIcon}
+                      disabled={!vm?.qualified4ConsoleConnect}
                       onClick={handleStartConsole}
                     />
                 }

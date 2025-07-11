@@ -52,7 +52,7 @@ const RutilManagerActionButtons = ({
   ], [actionType]);
  
   const handleTabClick = (tab) => {
-    clearAllContextMenu()
+    // clearAllContextMenu()
     const path = tab === "info"
         ? `${rootPath}/rutil-manager`
         : `${rootPath}/rutil-manager/${tab}`;

@@ -27,14 +27,14 @@ class SystemPropertiesVo(
 	var deeplearningUri: String = basicConf.deeplearningUri,
 	var symphonyPowerControll: Boolean = basicConf.symphonyPowerControl,
 	var loginLimit: Int = 5,
+	var sessionToken: String = "",
 ): Serializable {
 	val ovirtEngineApiUrl: String
 		get() = "https://${ovirtIp}${if(ovirtPort == 443) "" else ":${ovirtPort}"}/ovirt-engine/api"
 	val ovirtUserId: String
 		get() = "${id}@internal"
 
-	override fun toString(): String
-			= gson.toJson(this)
+	override fun toString(): String = gson.toJson(this)
 
 	class Builder {
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }

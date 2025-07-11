@@ -61,16 +61,20 @@ class NameServerEntity(
 	*/
 	// First part of the composite primary key: links to DnsResolverConfigurationEntity
 	@Id
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "dns_resolver_configuration_id", referencedColumnName = "id", nullable = false)
+	@ManyToOne(
+		fetch=FetchType.LAZY,
+	)
+	@JoinColumn(
+		name="dns_resolver_configuration_id",
+		referencedColumnName="id",
+		nullable = false)
 	var dnsResolverConfiguration: DnsResolverConfigurationEntity? = null,
 	@Id
 	@Column(name = "address", nullable = false, length = 45)
 	var address: String = "",
 	var position: Short? = 0,
 ): Serializable {
-	override fun toString(): String =
-		gson.toJson(this)
+	override fun toString(): String = gson.toJson(this)
 
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true

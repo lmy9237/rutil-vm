@@ -49,7 +49,7 @@ const NetworkDupl = ({
         {network?.dataCenterVo?.name}
       </TableRowClick>
     ),
-    role: [
+    role: network?.roleInKr || [
       network?.usage?.management ? Localization.kr.MANAGEMENT : null,
       network?.usage?.display ? Localization.kr.PRINT : null,
       network?.usage?.migration ? Localization.kr.MIGRATION : null,

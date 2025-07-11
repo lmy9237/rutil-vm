@@ -9,22 +9,51 @@ import java.util.UUID
 
 @Repository
 interface NetworkRepository: JpaRepository<NetworkEntity, UUID> {
-	fun findByName(name: String): NetworkEntity?
-
-	// Custom query to fetch network with its DNS config eagerly if needed,
-	// though @OneToOne(fetch = FetchType.EAGER) on the entity can also achieve this.
-	// Use this if you want to control fetching more explicitly in specific scenarios.
 	@Query("""
-SELECT
-  n
-FROM
-  NetworkEntity n
-  LEFT JOIN FETCH n.dnsConfiguration dc
-  LEFT JOIN FETCH dc.nameServers
+SELECT n FROM NetworkEntity n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.provider p
+LEFT JOIN FETCH n.dnsConfiguration dc
+LEFT JOIN FETCH dc.nameServers ns
+LEFT JOIN FETCH ns.dnsResolverConfiguration drc
+LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH nc.cluster c
+LEFT JOIN FETCH nc.network nn
+WHERE 1=1
+""")
+	override fun findAll(): List<NetworkEntity>
+
+	@Query("""
+SELECT n FROM NetworkEntity n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.provider p
+LEFT JOIN FETCH n.dnsConfiguration dc
+LEFT JOIN FETCH dc.nameServers ns
+LEFT JOIN FETCH ns.dnsResolverConfiguration drc
+LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH nc.cluster c
+LEFT JOIN FETCH nc.network nn
 WHERE 1=1
 AND n.id = :id
 """)
-	fun findByIdWithDnsConfiguration(
+	fun findByNetworkId(
 		@Param("id") id: UUID
 	): NetworkEntity?
+
+	@Query("""
+SELECT DISTINCT n FROM NetworkEntity n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.provider p
+LEFT JOIN FETCH n.dnsConfiguration dc
+LEFT JOIN FETCH dc.nameServers ns
+LEFT JOIN FETCH ns.dnsResolverConfiguration drc
+LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH nc.cluster c
+LEFT JOIN FETCH nc.network nn
+WHERE 1=1
+AND c.clusterId = :clusterId
+""")
+	fun findAllByClusterId(
+		@Param("clusterId") clusterId: UUID
+	): List<NetworkEntity>
 }

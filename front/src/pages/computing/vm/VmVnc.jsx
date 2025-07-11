@@ -81,11 +81,14 @@ const VmVnc = ({
     { type: "shutdown",          onClick: () => setActiveModal("vm:shutdown"),                label: Localization.kr.END,                                     disabled: !allOkay2PowerDown },
     { type: "powerOff",          onClick: () => setActiveModal("vm:powerOff"),                label: Localization.kr.POWER_OFF,                               disabled: !allOkay2PowerDown },
     { type: "screenshot",        onClick: () => takeScreenshotFromRFB(screenRef.current.rfb), label: Localization.kr.SCREENSHOT,                              disabled: !allUp },
-    import.meta.env.DEV ? { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp } : null,
     { type: "ctrlaltdel",        onClick: () => doSendCtrlAltDel(screenRef.current.rfb),      label: "Ctrl+Alt+Del",                                          disabled: !allUp },
     { type: "updateCdrom",       onClick: () => setActiveModal("vm:updateCdrom"),             label: Localization.kr.UPDATE_CDROM,                            disabled: vm?.notRunning ?? false },
     { type: "fullscreen",        onClick: () => toggleFullscreen(),                           label: Localization.kr.FULLSCREEN, },
   ]
+
+  if (import.meta.env.DEV) sectionHeaderButtons.push(
+    { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp }
+  )
 
   useEffect(() => {
     Logger.debug(`VmVnc > useEffect ... (for VM)`)

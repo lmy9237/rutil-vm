@@ -32,7 +32,6 @@ class OpenStackNetworkVo (
         private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
         private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
-
         fun build(): OpenStackNetworkVo = OpenStackNetworkVo(bId, bName, bDataCenterVo)
     }
 
@@ -47,7 +46,6 @@ fun OpenStackNetwork.toOpenStackNetworkVoIdName(): OpenStackNetworkVo = OpenStac
 }
 fun List<OpenStackNetwork>.toOpenStackNetworkVosIdName(): List<OpenStackNetworkVo> =
     this@toOpenStackNetworkVosIdName.map { it.toOpenStackNetworkVoIdName() }
-
 
 fun OpenStackNetworkProvider.toOpenStackNetworkVo(): OpenStackNetworkVo {
     return OpenStackNetworkVo.builder {

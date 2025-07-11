@@ -15,10 +15,14 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
+import com.itinfo.rutilvm.api.model.fromVnicProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.BondingVo
+import com.itinfo.rutilvm.api.model.network.DnsVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
+import com.itinfo.rutilvm.api.model.network.OpenStackNetworkVo
+import com.itinfo.rutilvm.api.model.network.UsageVo
 import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
@@ -30,7 +34,6 @@ import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
 import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
-import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
@@ -62,7 +65,7 @@ fun AuditLogEntity.toEventVo(): EventVo = EventVo.builder {
 	severity { this@toEventVo.severity }
 	description { this@toEventVo.message }
 	time { this@toEventVo.logTime }
-	code { this@toEventVo.logType }
+	logType { this@toEventVo.auditLogType }
 	correlationId { this@toEventVo.correlationId }
 }
 fun List<AuditLogEntity>.toEventVos(): List<EventVo> =
@@ -258,12 +261,49 @@ fun ClusterViewEntity.toIdentifiedVoFromClusterViewEntity(): IdentifiedVo = Iden
 }
 fun Collection<ClusterViewEntity>.toIdentifiedVosFromClusterViewEntities(): List<IdentifiedVo> =
 	this@toIdentifiedVosFromClusterViewEntities.map { it.toIdentifiedVoFromClusterViewEntity() }
-
-
 //endregion: ClusterViewEntity
 
-//region: NetworkClusterViewEntity
+//region: NetworkEntity
+fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder {
+	id { this@toNetworkVoFromNetworkEntity.id.toString() }
+	name { this@toNetworkVoFromNetworkEntity.name }
+	description { this@toNetworkVoFromNetworkEntity.description }
+	comment { this@toNetworkVoFromNetworkEntity.freeTextComment }
+	mtu { this@toNetworkVoFromNetworkEntity.mtu }
+	portIsolation { this@toNetworkVoFromNetworkEntity.portIsolation }
+	stp { this@toNetworkVoFromNetworkEntity.stp }
+	usage { this@toNetworkVoFromNetworkEntity.networkCluster?.toUsageVo(this@toNetworkVoFromNetworkEntity.vmNetwork) }
+	vlan { this@toNetworkVoFromNetworkEntity.vlanId }
+	status { this@toNetworkVoFromNetworkEntity.status }
+	vdsmName { this@toNetworkVoFromNetworkEntity.vdsmName }
+	dataCenterVo { this@toNetworkVoFromNetworkEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	clusterVo { this@toNetworkVoFromNetworkEntity.networkCluster?.cluster?.toIdentifiedVoFromClusterViewEntity() }
+	openStackNetworkVo {
+		OpenStackNetworkVo.builder {
+			id { this@toNetworkVoFromNetworkEntity.providerNetworkExternalId }
 
+		}
+	}
+	required { this@toNetworkVoFromNetworkEntity.networkCluster?.required }
+	dnsNameServers { this@toNetworkVoFromNetworkEntity.dnsConfiguration?.nameServers?.toDnsVosFromNameServerEntities() }
+	// vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
+}
+fun List<NetworkEntity>.toNetworkVosFromNetworkEntities(): List<NetworkVo> =
+	this@toNetworkVosFromNetworkEntities.map { it.toNetworkVoFromNetworkEntity() }
+//endregion: NetworkEntity
+
+//region: NetworkClusterEntity
+fun NetworkClusterEntity.toUsageVo(vm: Boolean?=false): UsageVo = UsageVo.builder {
+	vm { vm }
+	display { this@toUsageVo.isDisplay }
+	migration { this@toUsageVo.migration }
+	management { this@toUsageVo.management }
+	defaultRoute { this@toUsageVo.defaultRoute }
+	gluster { this@toUsageVo.isGluster }
+}
+//endregion: NetworkClusterEntity
+
+//region: NetworkClusterViewEntity
 fun NetworkClusterViewEntity.toClusterVoFromNetworkClusterViewEntity(): NetworkVo = NetworkVo.builder {
 	id { networkId.toString() }
 	name { networkName }
@@ -273,18 +313,23 @@ fun NetworkClusterViewEntity.toClusterVoFromNetworkClusterViewEntity(): NetworkV
 			name { clusterName }
 		}
 	}
-	required { required }
+	required { this@toClusterVoFromNetworkClusterViewEntity.required }
 	// isConnected { isConnected }
-	status {
-		if(status == 0){ NON_OPERATIONAL }
-		else { OPERATIONAL }
-	}
+	status { this@toClusterVoFromNetworkClusterViewEntity.status }
 	display { isDisplay }
 }
 fun List<NetworkClusterViewEntity>.toClusterVoFromNetworkClusterViewEntities(): List<NetworkVo> =
 	this@toClusterVoFromNetworkClusterViewEntities.map { it.toClusterVoFromNetworkClusterViewEntity() }
-
 //endregion: NetworkClusterViewEntity
+
+//region: NameServerEntity
+fun NameServerEntity.toDnsVoFromNameServerEntity(): DnsVo = DnsVo.builder {
+	position { this@toDnsVoFromNameServerEntity.position }
+	address { this@toDnsVoFromNameServerEntity.address }
+}
+fun List<NameServerEntity>.toDnsVosFromNameServerEntities(): List<DnsVo> =
+	this@toDnsVosFromNameServerEntities.map { it.toDnsVoFromNameServerEntity() }
+//endregion: NameServerEntity
 
 //region: UnregisteredDiskEntity
 fun UnregisteredDiskEntity.toUnregisteredDiskImageVo(disk: Disk?=null): DiskImageVo =

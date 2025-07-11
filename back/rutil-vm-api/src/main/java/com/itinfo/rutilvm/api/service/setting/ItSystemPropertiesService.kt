@@ -13,6 +13,8 @@ interface ItSystemPropertiesService {
 	 * [ItSystemPropertiesService.findOne]
 	 * 시스템 설정 값 조회
 	 *
+	 * @param sessionToken [String] 세션토큰
+	 *
 	 * @return [SystemPropertiesVo] 시스템 설정 값
 	 */
 	fun findOne(): SystemPropertiesVo
@@ -50,6 +52,7 @@ class SystemPropertyServiceImpl: ItSystemPropertiesService {
 		}
 
 	override fun findOne(): SystemPropertiesVo {
+		log.info("findOne ... ")
 		return systemProperties
 	}
 

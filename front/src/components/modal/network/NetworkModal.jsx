@@ -298,7 +298,7 @@ const NetworkModal = ({
         </div>
 
         <div id="dns-settings-group" class="f-start">
-          <LabelCheckbox id="dns-settings" label="DNS 설정 (DNS 수정이 안됨)"
+          <LabelCheckbox id="dns-settings" label="DNS 설정"
             checked={dnsServers.length > 0}
             onChange={(e) => {
               const isChecked = e.target.checked;
@@ -312,18 +312,23 @@ const NetworkModal = ({
           <>
             <div className="font-bold mt-1"> DNS 서버 </div>
             <DynamicInputList
-              values={dnsServers.map((dns) => ({ value: dns }))}
+              values={dnsServers.map((dns) => ({ value: dns?.address || "" }))}
               inputType="text"
               showLabel={false}
               onChange={(index, value) => {
                 const updated = [...dnsServers];
-                updated[index] = value;
+                updated[index] = { position: index, address: value };
+                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(updated, 0, 2)}`)
                 setDnsServers(updated);
               }}
-              onAdd={() => setDnsServers((prev) => [...prev, ""])}
+              onAdd={() => {
+                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
+                setDnsServers((prev) => [...prev, ""])
+              }}
               onRemove={(index) => {
                 const updated = [...dnsServers];
                 updated.splice(index, 1);
+                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
                 setDnsServers(updated);
               }}
             />

@@ -1,7 +1,10 @@
 package com.itinfo.rutilvm.api
 
 import com.itinfo.rutilvm.api.RutilVmApplication.Companion.ctx
+import com.itinfo.rutilvm.api.ovirt.AdminConnectionService
+import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -14,6 +17,7 @@ import org.springframework.core.SpringVersion
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.servlet.ServletContext
 
 private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 
@@ -27,6 +31,7 @@ private val log = LoggerFactory.getLogger(RutilVmApplication::class.java)
 @ServletComponentScan
 @EnableScheduling
 class RutilVmApplication: SpringBootServletInitializer() {
+
 	override fun configure(builder: SpringApplicationBuilder?): SpringApplicationBuilder {
 		log.info("configure ...")
 		return builder!!.sources(RutilVmApplication::class.java)
@@ -60,6 +65,7 @@ class RutilVmApplication: SpringBootServletInitializer() {
 fun main(args: Array<String>) {
 	log.info("SPRING VERSION: ${SpringVersion.getVersion()}")
 	ctx = runApplication<RutilVmApplication>(*args)
+
 }
 
 const val GB = 1073741824.0 // gb 변환

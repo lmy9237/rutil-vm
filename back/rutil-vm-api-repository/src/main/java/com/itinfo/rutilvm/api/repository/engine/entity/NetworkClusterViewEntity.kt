@@ -1,18 +1,22 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.NetworkStatusB
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
 import java.util.UUID
 import java.io.Serializable
 import javax.persistence.Column
+import javax.persistence.Embeddable
+import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
 
+
 /**
- *
  * [NetworkClusterViewEntity]
  * 네트워크 클러스터 정보
+ *
  * @property clusterId [UUID]
  * @property clusterName [String]
  * @property networkId [UUID]
@@ -32,12 +36,15 @@ class NetworkClusterViewEntity(
 	val clusterName: String? = "",
 	val networkId: UUID? = null,
 	val networkName: String? = "",
-	val status: Int? = 0,
+	@Column(name = "status", nullable = false)
+	private val _status: Int = 0,
 	val required: Boolean? = false,
 	// val isConnected: Boolean? = false,
 	val isDisplay: Boolean? = false,
 	val migration: Boolean? = false,
 ): Serializable {
+	val status: NetworkStatusB			get() = NetworkStatusB.forValue(_status)
+
 	override fun toString(): String =
 		gson.toJson(this)
 

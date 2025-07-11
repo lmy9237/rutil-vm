@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.common.gson
+import com.itinfo.rutilvm.common.toURLEncoded
 import com.itinfo.rutilvm.util.ovirt.addCdromFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllClustersFromDataCenter
 import com.itinfo.rutilvm.util.ovirt.findCluster
@@ -68,6 +69,9 @@ class ExternalVmVo (
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
 
+	val usernameURLEncoded: String		get() = userName.toURLEncoded()
+	val fullAccessUrl: String			get() = "vpx://${this.usernameURLEncoded}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1"
+
     class Builder {
 		// private var bProvider: String = "VMWARE"; fun provider(block: () -> String?) { bProvider = block() ?: "VMWARE" }
 		private var bVMWareCenter: String = ""; fun vmwareCenter(block: () -> String?) { bVMWareCenter = block() ?: "" }
@@ -84,9 +88,7 @@ class ExternalVmVo (
 		private var bQuotaVo: IdentifiedVo = IdentifiedVo(); fun quotaVo(block: () -> IdentifiedVo?) { bQuotaVo = block() ?: IdentifiedVo() }
 		private var bSparse: Boolean = false; fun sparse(block: () -> Boolean?) { bSparse = block() ?: false }
 		private var bVmVo: VmVo = VmVo(); fun vmVo(block: () -> VmVo?) { bVmVo = block() ?: VmVo() }
-
 		// private var bIso: IdentifiedVo = IdentifiedVo(); fun iso(block: () -> IdentifiedVo?) { bIso = block() ?: IdentifiedVo() }
-
         fun build(): ExternalVmVo = ExternalVmVo(/*bProvider,*/ bVMWareCenter, bVMWareDataCenter, bVMWareCluster, bVMWareEsxi, bVMWareName, bUrl, bUserName, bPassword, bClusterVo, bCpuProfileVo, bStorageDomainVo, bQuotaVo, bSparse, bVmVo, )
     }
 
@@ -113,14 +115,9 @@ fun ExternalVmImport.toExternalVmImport(): ExternalVmVo {
 	}
 }
 
-fun encode(input: String): String =
-	URLEncoder.encode(input, StandardCharsets.UTF_8.toString())
-
 // ?no_verify=1 검증무시
 fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 	log.info("importExternalVm ...  externalVo: {}", this@toExternalVmImportBuilder)
-	val encodedUser = encode(this.userName)
-	log.info("encodedUser {}", encodedUser)
 
 	val importBuilder = ExternalVmImportBuilder()
 		.provider(ExternalVmProviderType.VMWARE)
@@ -138,14 +135,12 @@ fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 		.username(this.userName)
 		.password(this.password)
 		.sparse(true)
-		.url("vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
+		.url(this@toExternalVmImportBuilder.fullAccessUrl)
 
 	// virtio 드라이버
-	if(vmVo.cdRomVo.id.isNotEmpty()){
+	if (vmVo.cdRomVo.id.isNotEmpty()) {
 		importBuilder.driversIso(FileBuilder().id(vmVo.cdRomVo.id).build())
 	}
-
-	log.info("url {}", "vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 
 	return importBuilder.build()
 }

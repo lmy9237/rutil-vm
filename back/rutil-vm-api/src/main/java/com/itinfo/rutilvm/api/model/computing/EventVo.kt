@@ -1,8 +1,8 @@
 package com.itinfo.rutilvm.api.model.computing
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
+import com.itinfo.rutilvm.api.ovirt.business.AuditLogType
 import com.itinfo.rutilvm.api.ovirt.business.toAuditLogSeverity
-import com.itinfo.rutilvm.common.formatEnhanced
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.ovirtDf
@@ -24,7 +24,7 @@ private val log = LoggerFactory.getLogger(EventVo::class.java)
  * @property severity [AuditLogSeverity] 이벤트 심각도
  * @property description [String]
  * @property time [String]
- * @property code [Int] 이벤트 유형
+ * @property logType [AuditLogType] 이벤트 유형
  * @property correlationId [String]
  *
  **/
@@ -34,19 +34,15 @@ class EventVo(
     val severity: AuditLogSeverity? = AuditLogSeverity.unknown,
     val description: String = "",
 	private val _time: LocalDateTime? = null,
-    val code: Int? = 0,
+	val logType: AuditLogType? = AuditLogType.unassigned,
 	val correlationId: String = ""
 ): Serializable {
 
-	val severityCode: String
-		get() = severity?.code ?: AuditLogSeverity.unknown.code
-	val severityEn: String
-		get() = severity?.en ?: "N/A"
-	val severityKr: String
-		get() = severity?.kr ?: "알 수 없음"
-
-	val time: String
-		get() = ovirtDf.formatEnhancedFromLDT(_time)
+	val severityCode: String		get() = severity?.code ?: AuditLogSeverity.unknown.code
+	val severityEn: String			get() = severity?.en ?: "N/A"
+	val severityKr: String			get() = severity?.kr ?: "알 수 없음"
+	val code: Int?					get() = logType?.value
+	val time: String				get() = ovirtDf.formatEnhancedFromLDT(_time)
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -57,9 +53,9 @@ class EventVo(
 		private var bSeverity: AuditLogSeverity? = AuditLogSeverity.unknown;fun severity(block: () -> AuditLogSeverity?) { bSeverity = block() ?: AuditLogSeverity.unknown }
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bTime: LocalDateTime? = null;fun time(block: () -> LocalDateTime?) { bTime = block() }
-		private var bCode: Int? = 0;fun code(block: () -> Int?) { bCode = block() ?: 0 }
+		private var bLogType: AuditLogType? = AuditLogType.unassigned;fun logType(block: () -> AuditLogType?) { bLogType = block() ?: AuditLogType.unassigned }
 		private var bCorrelationId: String = "";fun correlationId(block: () -> String?) { bCorrelationId = block() ?: "" }
-		fun build(): EventVo = EventVo(bId, bName, bSeverity, bDescription, bTime, bCode, bCorrelationId)
+		fun build(): EventVo = EventVo(bId, bName, bSeverity, bDescription, bTime, bLogType, bCorrelationId)
 	}
 
 	companion object {
@@ -73,7 +69,7 @@ fun Event.toEventVo(): EventVo {
 		severity { this@toEventVo.severity().toAuditLogSeverity() }
 		description { this@toEventVo.description() }
 		time { this@toEventVo.time().toLocalDateTime()}
-		code { this@toEventVo.codeAsInteger() }
+		logType { AuditLogType.forValue(this@toEventVo.codeAsInteger()) }
 		correlationId { this@toEventVo.correlationId()?: "" }
 	}
 }

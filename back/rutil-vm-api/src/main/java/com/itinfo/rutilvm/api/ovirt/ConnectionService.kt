@@ -19,20 +19,27 @@ class ConnectionService {
 		get() = Random().nextInt(1000).toString()
 
 	fun getConnection(): Connection {
-		val systemPropertiesVO: SystemPropertiesVo =
-			itSystemPropertyService.findOne()
+		val systemPropertiesVO: SystemPropertiesVo = itSystemPropertyService.findOne()
 		log.info(systemPropertiesVO.ovirtIp)
-		return systemPropertiesVO.toConnection()
+		val conn: Connection = systemPropertiesVO.toConnection()
+		return conn.also {
+			log.debug("getConnection ... token: {}", it.authenticate())
+			it.authenticate()
+		}
 	}
 	companion object {
 		private val log by LoggerDelegate()
 	}
 }
 
-fun SystemPropertiesVo.toConnection(): Connection = ConnectionBuilder.connection()
+fun SystemPropertiesVo.toConnection(
+	token: String = ""
+): Connection = ConnectionBuilder.connection()
 	.url(ovirtEngineApiUrl)
 	.user(ovirtUserId)
 	.password(password)
 	.insecure(true)
-	.timeout(20000)
+	.timeout(20000).apply {
+		if (token.isNotEmpty()) token(token)
+	}
 	.build()

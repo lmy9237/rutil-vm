@@ -88,11 +88,25 @@ const RightClickMenu = () => {
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
-    if (contextMenu() !== null) {
-      //setTimeout(() => clearAllContextMenu(), 250)
+    if (contextMenu() !== null && e.type !== "contextmenu") {
       setTimeout(() => clearAllContextMenu(), 0)
     }
   })
+  const contextMenuStyleByPosition = () => (
+    (contextMenu().mouseY+menuRef.current?.offsetHeight > window.innerHeight) ? {
+      position: "fixed",
+      background: "white",
+      zIndex: "9999",
+      bottom: contextMenu().mouseY - menuRef.current?.offsetHeight,
+      left: contextMenu().mouseX,
+    } : {
+      position: "fixed",
+      background: "white",
+      zIndex: "9999",
+      top: contextMenu().mouseY,
+      left: contextMenu().mouseX,
+    })
+
   return (
     <>
       <DataCenterModals dataCenter={datacentersSelected[0] ?? null} />
@@ -123,13 +137,7 @@ const RightClickMenu = () => {
         <div id="right-click-menu-box"
           className="right-click-menu-box context-menu-item"
           ref={menuRef}
-          style={{
-            position: "fixed",
-            top: contextMenu().mouseY,
-            left: contextMenu().mouseX,
-            background: "white",
-            zIndex: "9999",
-          }}
+          style={contextMenuStyleByPosition()}
           onClick={(e) => e.stopPropagation()}
         >
           {(contextMenuType() === "rutil-manager") ? (

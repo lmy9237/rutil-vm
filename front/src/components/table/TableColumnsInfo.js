@@ -45,11 +45,11 @@ const TableColumnsInfo = {
     { accessor: 'comment',       clickable: false,  header: Localization.kr.COMMENT, },
   ],
   NETWORK_FROM_CLUSTER: [
-    { accessor: "icon",          clickable: false , header: Localization.kr.STATUS,width: '5%'  },
-    { accessor: '_name',         clickable: true,  header: Localization.kr.NAME, width: '18%' },
-    { accessor: 'status',        clickable: false, header: Localization.kr.STATUS, width: '15%' },
-    { accessor: 'role',          clickable: false, header: Localization.kr.ROLE,  },
-    { accessor: 'description',   clickable: false, header: Localization.kr.DESCRIPTION,  },
+    { accessor: "icon",          clickable: false , header: Localization.kr.STATUS,  width: '5%'  },
+    { accessor: '_name',         clickable: true,  header: Localization.kr.NAME,     width: '18%' },
+    { accessor: 'status',        clickable: false, header: Localization.kr.STATUS,   width: '15%' },
+    { accessor: 'role',          clickable: false, header: Localization.kr.ROLE,                  },
+    { accessor: 'description',   clickable: false, header: Localization.kr.DESCRIPTION,           },
   ],
   HOSTS: [
     { accessor: "icon",          header: Localization.kr.STATUS,                               clickable: false, width: 30 },
