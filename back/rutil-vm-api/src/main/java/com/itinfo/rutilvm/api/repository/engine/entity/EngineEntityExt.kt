@@ -86,7 +86,7 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 	return DiskImageVo.builder {
 		id { entity.diskId.toString() }
 		alias { entity.diskAlias }
-		description { entity.description }
+		description { entity.diskDescription }
 		sharable { entity.shareable }
 		virtualSize { entity.size }
 		actualSize { entity.actualSize }

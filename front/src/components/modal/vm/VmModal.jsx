@@ -314,8 +314,8 @@ const VmModal = ({
         }
       });
       setFormConsoleState({
-        videoType: vm?.videoType,
-        displayType: vm?.displayType,
+        videoType: vm?.videoType || "vga",
+        displayType: vm?.displayType || "vnc",
       });
       setFormBootState({
         firstDevice: vm?.firstDevice || "hd",
