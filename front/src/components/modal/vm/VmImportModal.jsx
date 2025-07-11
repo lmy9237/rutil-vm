@@ -336,7 +336,6 @@ const VmImportModal = ({
         )
       }
     >
-      <span>step {step}</span>
       {step === 1 ? renderStep1() : renderStep2()}
     </BaseModal>
   );

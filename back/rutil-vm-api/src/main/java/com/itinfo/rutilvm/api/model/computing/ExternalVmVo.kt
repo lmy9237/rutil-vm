@@ -131,7 +131,6 @@ fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 		.storageDomain(StorageDomainBuilder().id(this.storageDomainVo.id).build())
 		.vm(
 			VmBuilder()
-				// .id(this.vmVo.id)
 				.name(this.vmVo.name)
 				.type(SERVER)
 				.os(OperatingSystemBuilder().type(this.vmVo.osType?.toOsTypeCode()).build())
@@ -140,10 +139,9 @@ fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 		.username(this.userName)
 		.password(this.password)
 		.sparse(true)
-		.url("vpx://${this.userName}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
+		.url("vpx://administrator%40vsphere.local@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 
-	// log.info("url {}", "vpx://${this.userName}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
-	// .url("vpx://"+this.vmwareCenter+"/"+this.vmwareDataCenter+"/"+this.vmwareCluster+"/"+this.vmwareEsxi+"?no_verify=1")
+	log.info("url {}", "vpx://administrator%40vsphere.local@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 
 	return importBuilder.build()
 }

@@ -93,20 +93,6 @@ const VmImportRender2Modal = ({
   } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
   
   const qr = useAllVnicProfilesFromNetwork4EachNetwork(networks, (e) => ({ ...e }));
-  /* const getVnicProfiles = useQueries({
-    queries: networks.map((network) => ({
-      queryKey: ['VnicProfilesFromNetwork', network.id],
-      queryFn: async () => {
-        try {
-          const vnicProfiles = await ApiManager.findAllVnicProfilesFromNetwork(network.id);
-          return vnicProfiles || [];
-        } catch (error) {
-          console.error(`Error fetching ${network}`, error);
-          return [];
-        }
-      }
-    })),
-  });*/
 
   const vmMapById = useMemo(() => {
     return Array.isArray(vmDetailsMap)
@@ -125,12 +111,10 @@ const VmImportRender2Modal = ({
   // useEffect로 getVnicProfiles 결과를 정리하여 vnicProfiles 업데이트
   useEffect(() => {
     if (!qr || !Array.isArray(qr) || qr.some(q => q.isLoading)) return;
-    Logger.debug(`VmImportRender2Modal > useEffect ... `)
     const newVnicProfilesMap = {};
 
     qr.forEach((queryResult, idx) => {
       const network = networks[idx];
-      Logger.debug(`VmImportRender2Modal > useEffect ... network: `, network);
       if (network && queryResult?.data) {
         newVnicProfilesMap[network.id] = queryResult?.data || [];
       }
@@ -395,7 +379,6 @@ const VmImportRender2Modal = ({
                 ))}
               </tbody>
             </table>
-            <span>id: {selectedId} </span>
           </div>
 
           {selectedVm && (
