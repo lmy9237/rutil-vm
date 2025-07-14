@@ -416,7 +416,7 @@ svg.btn { cursor: pointer; }
   margin-bottom: 10px;
 }
 .box-content  .info-table-wrapper{
-  min-width: 448px !important;
+  min-width:200px !important;
   padding: 4px 3px !important;
   margin-top: 1px;
 }
@@ -424,6 +424,10 @@ svg.btn { cursor: pointer; }
 .box-content .info-table td
 {
   padding: 8px 0 !important;
+  max-width: 80px !important;            
+  white-space: normal;        
+  word-break: break-word;       
+
 }
 .vm-detail-grid .info-table-wrapper th{
   min-width: 180px;

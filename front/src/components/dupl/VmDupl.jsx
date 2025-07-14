@@ -47,7 +47,7 @@ const VmDupl = ({
       </div>
     ),
     iconSortKey: getStatusSortKey(vm?.status), 
-    engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
+    // engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
       <>
       {hostedEngineStatus2Icon(vm?.hostedEngineVm)}
@@ -56,6 +56,13 @@ const VmDupl = ({
       </TableRowClick>
       </>
     ),
+    // _name: ( // 아이콘대신 배경색바꾸기
+    //   <TableRowClick type="vm" id={vm?.id}>
+    //     <span style={{ backgroundColor: vm?.hostedEngineVm ? '#eef119' : 'transparent' }}>
+    //       {vm?.name}
+    //     </span>
+    //   </TableRowClick>
+    // ),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}

@@ -38,7 +38,8 @@ const EventActionButtons = ({
     copy()
     toast({ 
       title: `작업완료`,
-      description:`메시지복사 완료 \n${descriptions}` 
+      description:`메시지복사 완료 \n${descriptions}` ,
+      variant: 'default'
     })
   }, [eventsSelected])
   

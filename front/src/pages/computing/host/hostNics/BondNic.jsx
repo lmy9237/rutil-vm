@@ -12,7 +12,7 @@ const BondNic = ({
   const onlyBasicNic = dragItem && dragItem.type === "nic" && dragItem.list === "nic"; // base NIC만 드롭 허용
   
   return (
-    <div className="interface-outer container flex-col p-2"
+    <div className="interface-outer relative overflow-visible container flex-col p-2"
       data-tooltip-id={`nic-tooltip-${nic.id}`}
       data-tooltip-html={NicToolTip(nic)}
       onDragOver={e => {
@@ -51,7 +51,14 @@ const BondNic = ({
           </div>
         ))}
       </div>
-      <Tooltip id={`nic-tooltip-${nic.id}`} place="top" effect="solid" />
+      <Tooltip
+        anchorSelect={`[data-tooltip-id="nic-tooltip-${nic.id}"]`}
+        html={NicToolTip(nic)}
+        place="top"
+        effect="solid"
+        offset={10}
+        style={{ zIndex: 9999, maxWidth: "250px", whiteSpace: "normal", wordBreak: "break-word" }}
+      />
     </div>     
   );
 };

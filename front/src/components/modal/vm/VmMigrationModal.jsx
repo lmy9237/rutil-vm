@@ -155,7 +155,7 @@ const VmMigrationModal = ({
       isOpen={isOpen} onClose={onClose}
       isReady={getHosts.every(q => q.status === "success" || q.status === "error")}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "600px" }}
+      contentStyle={{ width: "650px" }}
     >
       <form id="modal-vm-migration">
         <div className="migration-article">
@@ -185,9 +185,10 @@ const VmMigrationModal = ({
           ):(
             <>
               {vmList.map((vm) => (
-                <div key={vm.id} className="flex fw-bold">
-                  <div className="mr-1.5">-</div>
-                  <div>{vm.name}</div>
+                <div key={vm.id} className="flex fw-bold f-btw">
+                  <div>
+                  <span>- </span>{vm.name}
+                  </div>
                   <div>
                     <LabelSelectOptionsID id={`host-${vm.id}`}
                       label={``}

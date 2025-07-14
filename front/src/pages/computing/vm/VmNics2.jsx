@@ -96,10 +96,10 @@ const VmNics2 = ({
         <Tippy
           content={
             <div className="v-start w-full tooltip-content">
-              <div>Rx 속도: {checkZeroSizeToMbps(nic?.rxSpeed)} Mbps</div>
-              <div>Tx 속도: {checkZeroSizeToMbps(nic?.txSpeed)} Mbps</div>
-              <div>Rx 총량: {nic?.rxTotalSpeed?.toLocaleString() ?? "0"} bytes</div>
-              <div>Tx 총량: {nic?.txTotalSpeed?.toLocaleString() ?? "0"} bytes</div>
+              <div>{Localization.kr.SPEED_RX}: {checkZeroSizeToMbps(nic?.rxSpeed)}</div>
+              <div>{Localization.kr.SPEED_TX}: {checkZeroSizeToMbps(nic?.txSpeed)}</div>
+              <div>{Localization.kr.TOTAL_BYTE_RX}: {nic?.rxTotalSpeed?.toLocaleString() ?? "0"}</div>
+              <div>{Localization.kr.TOTAL_BYTE_TX}: {nic?.txTotalSpeed?.toLocaleString() ?? "0"}</div>
               <div>Rx 오류: {nic?.rxTotalError ?? "0"}</div>
               <div>Tx 오류: {nic?.txTotalError ?? "0"}</div>
             </div>

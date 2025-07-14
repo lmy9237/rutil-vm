@@ -1,5 +1,13 @@
-.header {
+/* .header {
   position:relative;width:100%;height:var(--h-rutil-header);
   background-color:var(--color-primary);
+} */
+.header {
+  position:relative;width:100%;height:var(--h-rutil-header);
+  background-image: url("./img/headerbackground.png");
+  background-size: cover;    
+  background-repeat: no-repeat; 
+  background-position: center;  
+  z-index: 10;
 }
 .header-left,.header-right { height:100%; }

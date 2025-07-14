@@ -393,6 +393,57 @@ const VmImportRender2Modal = ({
                     </div>
                   </div>
                 )}
+
+                {activeFilter === "network" && (
+                  <div className="mt-2">
+                    <div className="section-table-outer w-full mb-2">
+                      <table className="custom-table w-full" border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+                        <thead style={{ background: "#f5f5f5" }}>
+                          <tr>
+                            <th>{Localization.kr.NAME}</th>
+                            <th>기존 {Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                            <th style={{ width: '700px' }}>{Localization.kr.NETWORK} {Localization.kr.NAME}</th>
+                            <th style={{ width: '700px' }}>{Localization.kr.VNIC_PROFILE} {Localization.kr.NAME}</th>
+                            <th>유형</th>
+                            <th>MAC</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {Object.entries(selectedVm?.nics || {}).map(([nicKey, nic], idx) => {
+                            return (
+                              <tr key={nicKey}>
+                                <td>nic{idx + 1}</td>
+                                <td>{nic.backing?.networkName || "-"}</td>
+                                <td>
+                                  <LabelSelectOptionsID
+                                    value={vmConfigs[selectedId]?.network?.[nicKey] || ""}
+                                    loading={isNetworksLoading}
+                                    options={networks}
+                                    onChange={(opt) => updateVmNicNetwork(selectedId, nicKey, opt.id)}
+                                  />
+                                  <span>1 {vmConfigs[selectedId]?.network?.[nicKey]}</span>
+                                </td>
+                                <td>
+                                  <LabelSelectOptionsID
+                                    value={vmConfigs[selectedId]?.vnic?.[nicKey] || ""}
+                                    options={
+                                      vnicProfileList[vmConfigs[selectedId]?.network?.[nicKey]] || []
+                                    }
+                                    onChange={(opt) => updateVmNicVnic(selectedId, nicKey, opt.id)}
+                                  />
+                                  <span>1 {vmConfigs[selectedId]?.vnic?.[nicKey]}</span>
+                                </td>
+                                <td>{nic.type === "VMXNET3" ? "VirtIO" : nic.type}</td>
+                                <td>{nic.macAddress}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
               </div>
             </div>
           )}

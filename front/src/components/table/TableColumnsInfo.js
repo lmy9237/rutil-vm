@@ -140,7 +140,7 @@ const TableColumnsInfo = {
   VMS: [
     // { header: Localization.kr.RESET, accessor: "nextRun",   clickable: false /* width: DEFAULT_WIDTH_ICON_COLUMN */, },
     { accessor: "icon",          header: Localization.kr.STATUS,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
-    { accessor: "engine",        header: Localization.kr.ENGINE,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
+    // { accessor: "engine",        header: Localization.kr.ENGINE,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: "_name",         header: Localization.kr.NAME,        clickable: true , width: 150 },
     { accessor: 'comment',       header: Localization.kr.COMMENT,     clickable: false, width: 150  },
     { accessor: 'host',          header: Localization.kr.HOST,        clickable: true, width: 130 },
@@ -525,7 +525,7 @@ const TableColumnsInfo = {
   DISKS_FROM_STORAGE_DOMAIN: [
     { accessor: '_alias',       header: Localization.kr.ALIAS,         clickable: false },
     { accessor: 'icon1',        header: Localization.kr.IS_BOOTABLE,   clickable: false },
-    { accessor: 'sharable',     header: Localization.kr.IS_SHARABLE,   clickable: false },
+    { accessor: 'sharable',     header: Localization.kr.IS_SHARABLE,   clickable: false , align: "center"},
     { accessor: 'virtualSize',  header: Localization.kr.SIZE_VIRTUAL,  clickable: false },
     { accessor: 'actualSize',   header: Localization.kr.SIZE_ACTUAL,   clickable: false },
     { accessor: 'sparse',       header: Localization.kr.SPARSE,        clickable: false },
