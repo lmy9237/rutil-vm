@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.model.computing.toExternalVmImport
 import com.itinfo.rutilvm.api.model.computing.toExternalVmImportBuilder
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
+import com.itinfo.rutilvm.api.model.network.toAddVmNic
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.computing.ItHostNicServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
@@ -81,10 +82,21 @@ class VmImportServiceImpl: BaseService(), ItVmImportService {
 		log.info("importExternalVm ...  externalVmList: {}", externalVmList)
 
 		return externalVmList.mapNotNull { externalVmVo ->
-			val res: ExternalVmImport? = conn
-				.addExternalVmImport(externalVmVo.toExternalVmImportBuilder())
-				.getOrNull()
+			val res: ExternalVmImport? = conn.addExternalVmImport(
+				externalVmVo.toExternalVmImportBuilder()
+			).getOrNull()
 
+			// nic 추가
+			val vmId = res?.vm()?.id()
+			log.info("NIC 추가 vmId: {}, nic 수: {}", vmId, externalVmVo.vmVo.nicVos.size)
+
+			if (vmId != null && externalVmVo.vmVo.nicVos.isNotEmpty()) {
+				externalVmVo.vmVo.nicVos.forEach {
+					conn.addNicFromVm(vmId, it.toAddVmNic())
+				}
+			}
+
+			log.info("fin")
 			res?.toExternalVmImport()
 		}
 	}

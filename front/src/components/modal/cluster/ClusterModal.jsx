@@ -15,8 +15,8 @@ import {
   useEditCluster,
   useCluster,
   useAllDataCenters,
-  useNetworksFromDataCenter,
   useAllClusters,
+  qpAllNetworksFromDataCenter,
 } from "@/api/RQHook";
 import {
   checkDuplicateName,
@@ -87,7 +87,7 @@ const ClusterModal = ({
     data: networks = [], 
     isLoading: isNetworksLoading,
     isSuccess: isNetworksSuccess,
-  } = useNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  } = qpAllNetworksFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   const biosTypeFiltered = editMode
     ? biosTypeOptions.filter(opt => opt.value !== "cluster_default")

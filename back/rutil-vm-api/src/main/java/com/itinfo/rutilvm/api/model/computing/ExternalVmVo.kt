@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.model.computing
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.ovirt.business.toOsTypeCode
 import com.itinfo.rutilvm.common.gson
+import com.itinfo.rutilvm.util.ovirt.addCdromFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllClustersFromDataCenter
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
@@ -13,6 +14,8 @@ import org.ovirt.engine.sdk4.builders.ClusterBuilder
 import org.ovirt.engine.sdk4.builders.CpuProfileBuilder
 import org.ovirt.engine.sdk4.builders.CustomPropertyBuilder
 import org.ovirt.engine.sdk4.builders.ExternalVmImportBuilder
+import org.ovirt.engine.sdk4.builders.FileBuilder
+import org.ovirt.engine.sdk4.builders.HostBuilder
 import org.ovirt.engine.sdk4.builders.OperatingSystemBuilder
 import org.ovirt.engine.sdk4.builders.QuotaBuilder
 import org.ovirt.engine.sdk4.builders.StorageDomainBuilder
@@ -136,6 +139,11 @@ fun ExternalVmVo.toExternalVmImportBuilder(): ExternalVmImport {
 		.password(this.password)
 		.sparse(true)
 		.url("vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
+
+	// virtio 드라이버
+	if(vmVo.cdRomVo.id.isNotEmpty()){
+		importBuilder.driversIso(FileBuilder().id(vmVo.cdRomVo.id).build())
+	}
 
 	log.info("url {}", "vpx://${encodedUser}@${this.vmwareCenter}/${this.vmwareDataCenter}/${this.vmwareCluster}/${this.vmwareEsxi}?no_verify=1")
 

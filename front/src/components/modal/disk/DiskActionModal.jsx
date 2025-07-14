@@ -5,12 +5,10 @@ import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelInput                       from "@/components/label/LabelInput";
-import ApiManager                       from "@/api/ApiManager";
 import { 
   useCopyDisk, 
   useMoveDisk,
-  useAllDomainsFromDataCenter4EachDisk,
-  validateAPI,
+  useAllValidDomains4EachDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -42,9 +40,8 @@ const DiskActionModal = ({
     }
   }, [isOpen]);
 
-  const qr = useAllDomainsFromDataCenter4EachDisk(diskList, (e) => ({
-    ...e
-  }))
+  const qr = useAllValidDomains4EachDisk(diskList, (e) => ({ ...e }));
+  
   const isQrSuccess = useMemo(() => {
     return qr.every((q) => q?.isSuccess);
   }, [qr]);

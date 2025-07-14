@@ -218,7 +218,7 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<DataCenterVo> {
 		log.info("findAll ... ")
-		val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
+		// val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
 		val storagePools: List<StoragePoolEntity> = rStoragePools.findAllWithClusters()
 		return storagePools.toDataCenterVos()
 	}
@@ -288,8 +288,8 @@ class DataCenterServiceImpl(
 		// return res.toDcDomainMenus(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.filter { it.storageType != StorageTypeB.glance }
 			.toStorageDomainEntities()
+			.filter { it.isNotGlanceStorageType }
 
 	}
 
@@ -302,8 +302,8 @@ class DataCenterServiceImpl(
 		// return res.toActiveDomains()
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.filter { it.storageType != StorageTypeB.glance && it.storageDomainType != StorageDomainTypeB.import_export && it.status == active }
 			.toStorageDomainEntities()
+			.filter { it.isValidActiveStorageDomain }
 	}
 
 	@Throws(Error::class)

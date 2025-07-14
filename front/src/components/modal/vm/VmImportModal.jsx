@@ -163,28 +163,24 @@ const VmImportModal = ({
 
   const handleFormSubmit = () => {
     console.log("$ === vmImportConfig 확인 ===", vmImportConfig);
-    const { vmConfigs, domainVo, clusterVo, cpuProfileVo, sparsd, virtioChecked } = vmImportConfig;
 
-    const dataToSubmit = Object.entries(vmConfigs).map(([vmId, config]) => {
-      const sourceVm = targetVMs.find(vm => vm.vm === vmId);
-      console.log("$sourceVm", sourceVm)
+    const dataToSubmit = Object.entries(vmImportConfig.vmConfigs || {}).map(([vmId, config]) => {
       return {
-        vmwareName: sourceVm?.name,
+        vmwareName: targetVMs.find(vm => vm.vm === vmId)?.name,
         vmVo: {
           id: config.id,
           name: config.name,
           osType: config.osSystem,
+          cdRomVo: config.cdRomVo,
+          nicVos: (config.nicList || []).map(nic => ({
+            id: nic?.id || "",
+            name: nic?.name || "",
+            vnicProfileVo: { id: nic.vnicProfileVo.id }
+          })),
         },
-        clusterVo: {
-          id: clusterVo.id,
-        },
-        cpuProfileVo: {
-            id: cpuProfileVo?.id,
-          },
-        storageDomainVo: {
-          id: domainVo.id,
-        },
-        // sparse: sparsd === "auto" ? null : sparsd === "true", // auto는 서버에서 판단
+        clusterVo: config.clusterVo,
+        cpuProfileVo: config.cpuProfileVo,
+        storageDomainVo: config.storageDomainVo,
         userName: formState.username,
         password: formState.password,
         vmwareCenter: formState.vcenter,
@@ -263,14 +259,14 @@ const VmImportModal = ({
           />
         </div>
       </div>
-      <div className="vm-impor-outer">
+      {/* <div className="vm-impor-outer">
         <LabelSelectOptionsID label={`${Localization.kr.HOST} 목록`}
           value={hostVo?.id}
           loading={isHostsLoading}
           options={hosts}
           onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
         />
-      </div>
+      </div> */}
 
       <button className="instance-disk-btn ml-0 mb-3" onClick={handleLoadVMs}>로드</button>
 

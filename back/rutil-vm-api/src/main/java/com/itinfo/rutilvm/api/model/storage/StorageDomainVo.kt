@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB
+import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB.active
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
@@ -83,6 +84,15 @@ class StorageDomainVo(
 	val diskImageVos: List<IdentifiedVo> = listOf(),
 	val diskProfileVos: List<IdentifiedVo> = listOf(),
 ): Serializable {
+
+	val isNotGlanceStorageType: Boolean
+		get() = this@StorageDomainVo.storageType != StorageTypeB.glance
+
+	val isValidActiveStorageDomain: Boolean
+		get() = isNotGlanceStorageType &&
+				this@StorageDomainVo.storageDomainType != StorageDomainTypeB.import_export &&
+				this@StorageDomainVo.status == active
+
 
 	override fun toString(): String =
 		gson.toJson(this)

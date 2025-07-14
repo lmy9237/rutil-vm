@@ -80,6 +80,7 @@ class VmGraphicsConsolesServiceImpl(
 		log.info("generateRemoteViewerConnection ... vmId: {}", vmId)
 		val vm: Vm = conn.findVm(vmId).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
 		if (vm.statusPresent() && !(vm.qualified4ConsoleConnect)) {
+			vm.status() !== VmStatus.UP
 			log.error("generateRemoteViewerConnection ... vmId: {}\nThis vm is NOT running!", vmId)
 			throw ErrorPattern.VM_STATUS_UP.toError()
 		}

@@ -52,6 +52,22 @@ class StorageController: BaseController() {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="스토리지 도메인 목록 조회(glance 와 활성화된 도메인만 출력)",
+		notes="전체 스토리지 도메인 목록을 보여준다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/valid")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun validStorageDomain(): ResponseEntity<List<StorageDomainVo>> {
+		log.info("/storages/validDomains ... 스토리지 도메인 목록")
+		return ResponseEntity.ok(iDomain.findAllValidStorageDomain())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="스토리지 도메인 목록 (NFS) 조회",
 		notes="전체 스토리지 도메인 목록을 보여준다"
 	)

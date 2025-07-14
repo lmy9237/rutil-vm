@@ -241,6 +241,7 @@ const ENDPOINTS = {
 
   //#region: StorageDomain
   FIND_ALL_STORAGE_DOMAINS: () =>                                          `${ENDPOINT_API_V1}/storages/domains`,
+  FIND_ALL_VALID_STORAGE_DOMAINS: () =>                                    `${ENDPOINT_API_V1}/storages/domains/valid`,
   FIND_ALL_NFS_STORAGE_DOMAINS: () =>                                      `${ENDPOINT_API_V1}/storages/domains/nfs`,
   FIND_STORAGE_DOMAIN: (storageDomainId) =>                                `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}`,
   

@@ -473,8 +473,76 @@ export const useAllDomainsFromDataCenter4EachDisk = (
     }
   })
 });
+
+
 /**
- * @name useNetworksFromDataCenter
+ * @name useAllActiveDomainsFromDataCenter
+ * @description active 도메인 목록조회 useQuery훅
+ * 
+ * @param {string} dataCenterId 도메인ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findActiveDomainFromDataCenter
+ */
+export const qpAllActiveDomainsFromDataCenter = (
+  dataCenterId,
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId],
+  queryFn: async () => {
+    const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > qpAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!dataCenterId,
+});
+
+/**
+ * @name useAllActiveDomainsFromDataCenter
+ * @description 데이터센터 내 스토리지 도메인 목록조회 useQuery훅
+ * 
+ * @param {string} dataCenterId 데이터센터ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllDomainsFromDataCenter
+ */
+export const useAllActiveDomainsFromDataCenter = (
+  dataCenterId,
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  ...qpAllActiveDomainsFromDataCenter(dataCenterId, mapPredicate)
+});
+/**
+ * @name useAllActiveDomainsFromDataCenter4EachDisk
+ * @description (디스크가 소속 된) 데이터센터 내 스토리지 도메인 목록조회 useQueries훅
+ * 
+ * @param {*} disks 디스크 목록
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQueries훅
+ * 
+ * @see ApiManager.findAllDomainsFromDataCenter
+ */
+export const useAllActiveDomainsFromDataCenter4EachDisk = (
+  disks=[],
+  mapPredicate = (e) => ({ ...e })
+) => useQueries({
+  queries: [...disks]?.map((d, i) => {
+    Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter4EachDisk ... d: `, d);
+    return {
+      ...qpAllActiveDomainsFromDataCenter(d?.dataCenterVo?.id, mapPredicate),
+    }
+  })
+});
+
+
+/**
+ * @name qpAllNetworksFromDataCenter
  * @description 데이터센터 내 네트워크 목록조회 useQuery훅
  * 
  * @param {string} dataCenterId 데이터센터ID
@@ -483,7 +551,7 @@ export const useAllDomainsFromDataCenter4EachDisk = (
  * 
  * @see ApiManager.findAllNetworksFromDataCenter
  */
-export const useNetworksFromDataCenter = (
+export const qpAllNetworksFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
@@ -494,11 +562,28 @@ export const useNetworksFromDataCenter = (
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    Logger.debug(`RQHook > qpAllNetworksFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res;
   },
   enabled: !!dataCenterId
 });
+
+export const useAllNetworksFromDataCenter = (
+  datacenterId,
+  mapPredicate = (e) => ({ ...e })
+) => useQuery=({
+  ...qpAllNetworksFromDataCenter(datacenterId, mapPredicate)
+});
+
+export const useAllNetworksFromDataCenter4EachDataCenter = (
+  datacenters=[], 
+  mapPredicate = (e) => ({ ...e })
+) => useQueries({
+  queries: [...datacenters].map((d) => ({
+    ...qpAllNetworksFromDataCenter(d?.id, mapPredicate)
+  }))
+});
+
 
 /**
  * @name useFindTemplatesFromDataCenter
@@ -4254,6 +4339,7 @@ export const useAllVnicProfilesFromNetwork4EachNetwork = (
     ...qpAllVnicProfilesFromNetwork(n?.id, mapPredicate)
   }))
 });
+
 /**
  * @name useAddNetwork
  * @description 네트워크 생성 useMutation 훅
@@ -4629,6 +4715,75 @@ export const useAllStorageDomains = (
     return _res;
   }
 })
+
+/**
+ * @name qpAllValidDomains
+ * @description Valid 도메인 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllValidStorageDomains
+ */
+export const qpAllValidDomains = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['AllValidDomains'],
+  queryFn: async () => {
+    const res = await ApiManager.findAllValidStorageDomains();
+    Logger.debug('findAllValidStorageDomains raw result:', res);
+    const _res = mapPredicate
+    ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+    : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > qpAllValidDomains ...`, _res);
+    return _res;
+  },
+});
+
+/**
+ * @name useAllValidDomains
+ * @description Valid 스토리지 도메인 목록조회 useQuery훅
+ * 
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllValidStorageDomains
+ */
+export const useAllValidDomains = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  ...qpAllValidDomains(mapPredicate)
+});
+/**
+ * @name useAllValidDomains4EachDisk
+ * @description 스토리지 도메인 목록조회 useQueries훅
+ * 
+ * @param {*} disks 디스크 목록
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQueries훅
+ * 
+ * @see ApiManager.findAllValidStorageDomains
+ */
+export const useAllValidDomains4EachDisk = (
+  disks = [],
+  mapPredicate = (e) => ({ ...e })
+) => useQueries({
+  queries: disks.map((disk) => ({
+    queryKey: ['AllValidDomains', disk.id], // 고유 key로 설정
+    queryFn: async () => {
+      const res = await ApiManager.findAllValidStorageDomains();
+      Logger.debug(`findAllValidStorageDomains raw result for disk ${disk.id}:`, res);
+      const _res = mapPredicate
+        ? validateAPI(res)?.map(mapPredicate) ?? []
+        : validateAPI(res) ?? [];
+      Logger.debug(`RQHook > useAllValidDomains4EachDisk disk ${disk.id} result:`, _res);
+      return _res;
+    },
+  }))
+});
+
+
 /**
  * @name useAllNfsStorageDomains
  * @description 모든 NFS 스토리지 도메인 목록조회 useQuery훅
@@ -4669,33 +4824,6 @@ export const useStorageDomain = (storageDomainId) => useQuery({
   staleTime: 0,
   cacheTime: 0,
 });
-/**
- * @name useAllActiveDomainsFromDataCenter
- * @description active 도메인 목록조회 useQuery훅
- * 
- * @param {string} dataCenterId 도메인ID
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findActiveDomainFromDataCenter
- */
-export const useAllActiveDomainsFromDataCenter = (
-  dataCenterId,
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId],
-  queryFn: async () => {
-    const res = await ApiManager.findActiveDomainFromDataCenter(dataCenterId);
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!dataCenterId,
-})
-
 /**
  * @name useAllDataCentersFromDomain
  * @description 도메인 내 데이터센터 목록조회 useQuery훅

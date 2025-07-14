@@ -64,6 +64,7 @@ import React from "react";
 import DynamicButton from "@/components/label/DynamicButton";
 import LabelSelectOptions from "@/components/label/LabelSelectOptions";
 import "./DynamicInputList.css";
+import Localization from "@/utils/Localization";
 
 /**
  * @name DynamicInputList
@@ -99,7 +100,7 @@ const DynamicInputList = ({
                   onChange={(e) => onChange(index, e.target.value)}
                   options={options.map(opt => ({
                     value: opt.id,
-                    label: `${opt.name} [네트워크: ${opt.networkVo?.name || ""}]`
+                    label: `${opt.name} [${Localization.kr.NETWORK}}: ${opt.networkVo?.name || ""}]`
                   }))}
                 />
               ) : (

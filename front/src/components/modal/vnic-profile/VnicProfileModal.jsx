@@ -10,13 +10,13 @@ import {
   handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
+  qpAllNetworksFromDataCenter,
   useAddVnicProfile,
   useAllDataCenters,
   useAllVmsFromVnicProfiles,
   useAllVnicProfiles,
   useEditVnicProfile,
   useNetworkFilters,
-  useNetworksFromDataCenter,
   useVnicProfile,
 } from "@/api/RQHook";
 import { 
@@ -71,7 +71,7 @@ const VnicProfileModal = ({
     data: networks = [], 
     isLoading: isNetworksLoading,
     isSuccess: isNetworksSuccess,
-  } = useNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = qpAllNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
   const { 
     data: vms = [] 
   } = useAllVmsFromVnicProfiles(vnicProfileId);

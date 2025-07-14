@@ -143,7 +143,6 @@ class StorageDomainEntity(
 		private var bSupportsDiscard: Boolean? = null; fun supportsDiscard(block: () -> Boolean?) { bSupportsDiscard = block() }
 		private var bIsHostedEngineStorage: Boolean = false; fun isHostedEngineStorage(block: () -> Boolean?) { bIsHostedEngineStorage = block() ?: false }
 
-
 		fun build(): StorageDomainEntity = StorageDomainEntity(bId, bStorage, bStorageName, bStorageDescription, bStorageComment, bAvailableDiskSize, bConfirmedAvailableDiskSize, bVdoSavings, bUsedDiskSize, bCommitedDiskSize, bActualImagesSize, bStatus, bStoragePoolId, bStoragePoolName, bStorageType, bStorageDomainType, bStorageDomainFormatType, bWipeAfterDelete, bDiscardAfterDelete, bFirstMetadataDevice, bVgMetadataDevice, bBackup, bBlockSize, bStorageDomainSharedStatus, bRecoverable, bContainsUnregisteredEntities, bWarningLowSpaceIndicator, bCriticalSpaceActionBlocker, bWarningLowConfirmedSpaceIndicator, bExternalStatus, bSupportsDiscard, bIsHostedEngineStorage, )
 	}
 

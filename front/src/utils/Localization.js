@@ -42,6 +42,7 @@ export const Localization = {
     NICS: `네트워크 인터페이스`,
     VNIC: "vNIC",
     VNIC_PROFILE: "vNIC 프로파일",
+    CPU_PROFILE: "CPU 프로파일",
     STORAGE: "스토리지",
     DOMAIN: "스토리지 도메인",
     DISK: "디스크",

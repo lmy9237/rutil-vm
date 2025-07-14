@@ -36,6 +36,14 @@ interface ItStorageService {
 	@Throws(Error::class)
 	fun findAll(): List<StorageDomainVo>
 	/**
+	 * [ItStorageService.findAllValidStorageDomain]
+	 * 전체 스토리지 도메인 목록(glance 와 활성화된 도메인만 출력)
+	 *
+	 * @return List<[StorageDomainVo]> 스토리지 도메인 목록
+	 */
+	@Throws(Error::class)
+	fun findAllValidStorageDomain(): List<StorageDomainVo>
+	/**
 	 * [ItStorageService.findAllNfs]
 	 * 스토리지 도메인(NFS) 목록
 	 *
@@ -220,8 +228,17 @@ class StorageServiceImpl(
 		// return res.toStorageDomainsMenu(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
 		return res
-			.filter { it.storageType != StorageTypeB.glance }
 			.toStorageDomainEntities()
+			.filter { it.isNotGlanceStorageType }
+	}
+
+	@Throws(Error::class)
+	override fun findAllValidStorageDomain(): List<StorageDomainVo> {
+		log.info("findAllValidStorageDomain ...")
+		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
+		return res
+			.toStorageDomainEntities()
+			.filter { it.isValidActiveStorageDomain }
 	}
 
 	@Throws(Error::class)

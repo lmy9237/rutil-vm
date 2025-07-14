@@ -335,6 +335,19 @@ const ApiManager = {
     url: ENDPOINTS.FIND_STORAGE_DOMAINS_FROM_DATA_CENTER(dataCenterId), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_STORAGE_DOMAINS
   }),
+     /**
+   * @name ApiManager.findActiveDomainFromDataCenter
+   * @description 도메인 
+   *
+   * @param {string} storageDomainId
+   * @returns 
+   * 
+   * @see
+   */
+   findActiveDomainFromDataCenter: async (dataCenterId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER(dataCenterId),
+  }),
   /**
    * @name ApiManager.findAllNetworksFromDataCenter
    * @description  데이터 센터 내 네트워크
@@ -2467,6 +2480,18 @@ const ApiManager = {
     url: ENDPOINTS.FIND_ALL_STORAGE_DOMAINS(),
   }),
   /**
+   * @name ApiManager.findAllValidStorageDomains
+   * @description storagedomain 목록
+   *
+   * @returns 
+   * 
+   * @see
+   */
+  findAllValidStorageDomains: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_VALID_STORAGE_DOMAINS(),
+  }),
+  /**
    * @name ApiManager.findAllNfsStorageDomains
    * @description storagedomain Nfs 목록
    *
@@ -2492,19 +2517,7 @@ const ApiManager = {
     url: ENDPOINTS.FIND_STORAGE_DOMAIN(storageDomainId),
     // defaultValues: DEFAULT_VALUES.FIND_DOMAIN_BY_ID
   }),
-   /**
-   * @name ApiManager.findActiveDomainFromDataCenter
-   * @description 도메인 
-   *
-   * @param {string} storageDomainId
-   * @returns 
-   * 
-   * @see
-   */
-   findActiveDomainFromDataCenter: async (dataCenterId) => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER(dataCenterId),
-  }),
+
   /**
    * @name ApiManager.findAllDataCentersFromDomain
    * @description 데이터센터 목록
