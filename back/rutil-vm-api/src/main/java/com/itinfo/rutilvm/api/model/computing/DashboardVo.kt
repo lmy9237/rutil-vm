@@ -18,21 +18,27 @@ private val log = LoggerFactory.getLogger(DashboardVo::class.java)
  * [DashboardVo]
  * 대시보드 그래프
  *
- * @property datacenters
- * @property datacentersUp
- * @property datacentersDown
- * @property clusters
- * @property hosts
- * @property hostsUp
- * @property hostsDown
- * @property vms
- * @property vmsUp
- * @property vmsDown
- * @property events
- * @property eventsAlert
- * @property eventsError
- * @property eventsWarning
- * @property dateCreated 최초생성시간
+ * @property datacenters [Int]
+ * @property datacentersUp [Int]
+ * @property datacentersDown [Int]
+ * @property clusters [Int]
+ * @property hosts [Int]
+ * @property hostsUp [Int]
+ * @property hostsDown [Int]
+ * @property vms [Int]
+ * @property vmsUp [Int]
+ * @property vmsDown [Int]
+ * @property storageDomains [Int]
+ * @property storageDomainsUp [Int]
+ * @property storageDomainsDown [Int]
+ * @property events [Int]
+ * @property eventsAlert [Int]
+ * @property eventsError [Int]
+ * @property eventsWarning [Int]
+ * @property _dateCreated [Date]
+ * @property _timeElapsed [BigDecimal]
+ * @property version [String]
+ * @property releaseDate [String]
  */
 class DashboardVo (
     val datacenters: Int = 0,
@@ -46,6 +52,8 @@ class DashboardVo (
     val vmsUp: Int = 0,
     val vmsDown: Int = 0,
     val storageDomains: Int = 0,
+    val storageDomainsUp: Int = 0,
+    val storageDomainsDown: Int = 0,
     val events: Int = 0,
     val eventsAlert: Int = 0,
     val eventsError: Int = 0,
@@ -82,6 +90,8 @@ class DashboardVo (
         private var bVmsUp: Int = 0; fun vmsUp(block: () -> Int?) { bVmsUp = block() ?: 0}
         private var bVmsDown: Int = 0; fun vmsDown(block: () -> Int?) { bVmsDown = block() ?: 0}
         private var bStorageDomains: Int = 0; fun storageDomains(block: () -> Int?) { bStorageDomains = block() ?: 0}
+        private var bStorageDomainsUp: Int = 0; fun storageDomainsUp(block: () -> Int?) { bStorageDomainsUp = block() ?: 0}
+        private var bStorageDomainsDown: Int = 0; fun storageDomainsDown(block: () -> Int?) { bStorageDomainsDown = block() ?: 0}
         private var bEvents: Int = 0; fun events(block: () -> Int?) { bEvents = block() ?: 0}
         private var bEventAlert: Int = 0; fun eventsAlert(block: () -> Int?) { bEventAlert = block() ?: 0}
         private var bEventError: Int = 0; fun eventsError(block: () -> Int?) { bEventError = block() ?: 0}
@@ -91,40 +101,31 @@ class DashboardVo (
         private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
-        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
+        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bStorageDomainsUp, bStorageDomainsDown, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
     }
 
     companion object {
-        inline fun builder(block: DashboardVo.Builder.() -> Unit): DashboardVo = DashboardVo.Builder().apply(block).build()
+        inline fun builder(block: Builder.() -> Unit): DashboardVo = DashboardVo.Builder().apply(block).build()
     }
 }
 
 fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
-    val allDataCenters = this@toDashboardVo.findAllDataCenters().getOrDefault(listOf())
-    val allHosts = this@toDashboardVo.findAllHosts().getOrDefault(listOf())
-    val allVms = this@toDashboardVo.findAllVms(follow="statistics").getOrDefault(listOf())
-    val allClusters = this@toDashboardVo.findAllClusters().getOrDefault(listOf())
-    val allStorageDomains = this@toDashboardVo.findAllStorageDomains().getOrDefault(listOf())
-//	val allEvents = this@toDashboardVo.findAllEvents("time > Today  sortby time desc").getOrDefault(listOf())
-	val allEvents = this@toDashboardVo.findAllEvents("severity > normal and time > Today sortby time desc")
+    val allDataCenters = this.findAllDataCenters().getOrDefault(listOf())
+    val allHosts = this.findAllHosts().getOrDefault(listOf())
+    val allVms = this.findAllVms(follow="statistics").getOrDefault(listOf())
+    val allClusters = this.findAllClusters().getOrDefault(listOf())
+    val allStorageDomains = this.findAllStorageDomains().getOrDefault(listOf())
+	val allEvents = this.findAllEvents("severity > normal and time > Today sortby time desc")
 		.getOrDefault(listOf())
+
     // 각 상태별 카운트를 필터링하여 계산
-    val dataCenters = allDataCenters.size
-    val dataCentersUp = allDataCenters.count { it.status() == DataCenterStatus.UP }
-    val dataCentersDown = dataCenters - dataCentersUp
-
-    val hosts = allHosts.size
-    val hostsUp = allHosts.count { it.status() == HostStatus.UP }
-    val hostsDown = hosts - hostsUp
-
-    val vms = allVms.size
-    val vmsUp = allVms.count { it.status() == VmStatus.UP }
-    val vmsDown = vms - vmsUp
-
-    val clusters = allClusters.size
+	val (dataCenterUpList, dataCenterDownList) = allDataCenters.partition { it.status() == DataCenterStatus.UP }
+	val (hostUpList, hostDownList) = allHosts.partition { it.status() == HostStatus.UP }
+	val (vmUpList, vmDownList) = allVms.partition { it.status() == VmStatus.UP }
 
     // 스토리지 도메인 필터링 (GLANCE 제외)
-    val storageDomains = allStorageDomains.count { it.storage().type() != StorageType.GLANCE }
+	val std = allStorageDomains.filter { it.storage().type() != StorageType.GLANCE  }
+	val (storageDomainUpList, storageDomainDownList) = std.partition { it.status() != StorageDomainStatus.UNATTACHED}
 
     // 이벤트 필터링
     val eventsAlert = allEvents.count { it.severity() == LogSeverity.ALERT }
@@ -139,17 +140,19 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
 	}?.values()?.firstOrNull()?.datum() ?: BigDecimal.ZERO
 
     return DashboardVo.builder {
-        datacenters { dataCenters }
-        datacentersUp { dataCentersUp }
-        datacentersDown { dataCentersDown }
-        clusters { clusters }
-        hosts { hosts }
-        hostsUp { hostsUp }
-        hostsDown { hostsDown }
-        vms { vms }
-        vmsUp { vmsUp }
-        vmsDown { vmsDown }
-        storageDomains { storageDomains }
+        datacenters { allDataCenters.size }
+        datacentersUp { dataCenterUpList.size }
+        datacentersDown { dataCenterDownList.size }
+        clusters { allClusters.size }
+        hosts { allHosts.size }
+        hostsUp { hostUpList.size }
+        hostsDown { hostDownList.size }
+        vms { allVms.size }
+        vmsUp { vmUpList.size }
+        vmsDown { vmDownList.size }
+        storageDomains { std.size }
+		storageDomainsUp { storageDomainUpList.size }
+		storageDomainsDown { storageDomainDownList.size }
         events { eventsTotal }
         eventsAlert { eventsAlert }
         eventsError { eventsError }

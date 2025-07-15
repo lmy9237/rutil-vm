@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.UUID
 
@@ -83,8 +84,55 @@ LIMIT 10
         LIMIT 14
     """, nativeQuery = true
 	)
-	fun findHostUsageById(@org.springframework.data.repository.query.Param("hostId") hostId: UUID): List<Array<Any>>
+	fun findHostUsageById(@Param("hostId") hostId: UUID): List<Array<Any>>
 
 
+	@Query(
+		nativeQuery = true,
+		value = """
+    WITH net_usage AS (
+        SELECT
+            sh.history_datetime,
+            AVG(COALESCE(sh.receive_rate_percent, 0) + COALESCE(sh.transmit_rate_percent, 0)) AS total_network_usage_percent
+        FROM
+            host_interface_samples_history sh
+        JOIN
+            host_interface_configuration cfg
+            ON sh.host_interface_id = cfg.host_interface_id
+        WHERE
+            cfg.host_id = :hostId
+			AND CAST(EXTRACT(MINUTE FROM sh.history_datetime) AS INTEGER) % 60 = 0
+        GROUP BY
+            sh.history_datetime
+    ),
+    host_usage AS (
+        SELECT
+            history_datetime,
+            cpu_usage_percent,
+            memory_usage_percent
+        FROM
+            host_samples_history
+        WHERE
+            host_status = 1
+            AND host_id = :hostId
+			AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 60 = 0
+    )
+    SELECT
+        h.history_datetime,
+        h.cpu_usage_percent,
+        h.memory_usage_percent,
+        n.total_network_usage_percent
+    FROM
+        host_usage h
+    LEFT JOIN
+        net_usage n
+    ON
+        h.history_datetime = n.history_datetime
+    ORDER BY
+        h.history_datetime DESC
+    LIMIT 14
+    """
+	)
+	fun findHostUsageWithNetwork(@Param("hostId") hostId: UUID): List<Array<Any>>
 
 }

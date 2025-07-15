@@ -1,30 +1,60 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
-const HostGeneralChart = () => {
+const HostGeneralChart = ({ per }) => {
   const [series, setSeries] = useState([
     { name: "CPU", data: [] },
     { name: "메모리", data: [] },
     { name: "네트워크", data: [] },
   ]);
+  const [datetimes, setDatetimes] = useState([]);
+  
+  // 날짜 변환 함수 (HH:mm 형식)
+  const formatDate = useCallback((isoDate) => {
+    const date = new Date(isoDate);
+    return `${date.getHours().toString().padStart(2, "0")}:${date
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+  }, []);
 
   useEffect(() => {
-    const cpu = [];
-    const mem = [];
-    const net = [];
+    if (Array.isArray(per) && per.length > 0) {
+      const sortedData = [...per].sort(
+        (a, b) => new Date(b.time) - new Date(a.time) // 최신순 정렬
+      ).reverse(); // 차트에선 오래된 → 최신 순서로
 
-    for (let i = 0; i < 10; i++) {
-      cpu.push(Math.floor(Math.random() * 40 + 50));   // 50~90%
-      mem.push(Math.floor(Math.random() * 40 + 30));   // 30~70%
-      net.push(Math.floor(Math.random() * 30 + 10));   // 10~40%
+      setSeries([
+        {
+          name: "CPU",
+          data: sortedData.map((item) => ({
+            x: formatDate(item.time),
+            y: Math.floor(item.cpuPercent),
+          })),
+        },
+        {
+          name: "메모리",
+          data: sortedData.map((item) => ({
+            x: formatDate(item.time),
+            y: Math.floor(item.memoryPercent),
+          })),
+        },
+        {
+          name: "네트워크",
+          data: sortedData.map((item) => ({
+            x: formatDate(item.time),
+            y: Math.floor(item.networkPercent),
+          })),
+        },
+      ]);
+
+      const uniqueTimes = [...new Set(sortedData.map((item) => formatDate(item.time)))];
+      setDatetimes(uniqueTimes);
+    } else {
+      setSeries([]);
+      setDatetimes([]);
     }
-
-    setSeries([
-      { name: "CPU", data: cpu },
-      { name: "메모리", data: mem },
-      { name: "네트워크", data: net },
-    ]);
-  }, []);
+  }, [per]);
 
   const chartOptions = {
     chart: {
@@ -46,10 +76,7 @@ const HostGeneralChart = () => {
       },
     },
     xaxis: {
-      categories: [
-        "10:40", "10:45", "10:50", "10:55", "11:00",
-        "11:05", "11:10", "11:15", "11:20", "11:25",
-      ],
+      categories: datetimes,
     },
     yaxis: {
       min: 0,

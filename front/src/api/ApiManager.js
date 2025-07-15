@@ -783,6 +783,20 @@ const ApiManager = {
     url: ENDPOINTS.SETUP_HOST_NICS_FROM_HOST(hostId), 
     data: hostNetwork
   }),
+  /**
+   * @name ApiManager.syncallNetworksHost
+   * @description 호스트 네트워크 동기화
+   * 
+   * @param {String} hostId - 호스트 ID
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  syncallNetworksHost: async (hostId) => {
+    return makeAPICall({
+      method: "POST",
+      url: ENDPOINTS.SYNCALL_NETWORKS_FROM_HOST(hostId),  // ID를 URL에 포함
+      data: hostId
+    });
+  },
 
   /**
    * @name ApiManager.editNetworkAttachmentFromHost

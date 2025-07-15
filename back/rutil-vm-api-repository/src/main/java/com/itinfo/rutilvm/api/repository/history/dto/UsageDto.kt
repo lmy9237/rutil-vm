@@ -43,3 +43,4 @@ class UsageDto(
         inline fun builder(block: UsageDto.Builder.() -> Unit): UsageDto = UsageDto.Builder().apply(block).build()
     }
 }
+

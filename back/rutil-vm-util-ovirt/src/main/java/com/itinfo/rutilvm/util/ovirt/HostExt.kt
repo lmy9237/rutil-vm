@@ -211,6 +211,18 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.syncallNetworksHost(hostId: String): Result<Boolean> = runCatching {
+	checkHostExists(hostId)
+	this.srvHost(hostId).syncAllNetworks().send()
+
+	true
+}.onSuccess {
+	Term.HOST.logSuccess("네트워크 동기화", hostId)
+}.onFailure {
+	Term.HOST.logFail("네트워크 동기화", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
+
 fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).commitNetConfig().send()

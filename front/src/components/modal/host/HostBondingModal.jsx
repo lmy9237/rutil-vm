@@ -28,6 +28,10 @@ const HostBondingModal = ({
     return existingBondNames.includes(name);
   };
 
+  const isCustomMode = editMode && (
+    bondModalState.editTarget?.bondingVo?.optionVos?.some(opt => opt.name !== "mode")
+  );
+
   const validateForm = () => {
     Logger.debug(`HostBondingModal > validateForm ... `)
     const nameError = checkName(bondModalState.name);
@@ -76,6 +80,7 @@ const HostBondingModal = ({
     onClose();
   };
 
+
   return (
     <BaseModal targetName={`본딩 ${editMode ? bondModalState?.name : ""} ${bLabel}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
@@ -87,16 +92,6 @@ const HostBondingModal = ({
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
-      {/* <span>
-        nicdata{" "}
-        {editMode
-          ? bondModalState?.name
-          : Array.isArray(bondModalState?.editTarget)
-            ? bondModalState.editTarget.map((e) => `${e.name} /`).join("")
-            : (bondModalState?.editTarget?.name || "")}
-      </span> <br/>
-      <span>name: {bondModalState?.name}</span><br/> */}
-     
       <LabelInput id="bonding_name" label={Localization.kr.NAME}        
         value={bondModalState.name}
         onChange={handleInputChange(setBondModalState, "name", validationToast)}
@@ -107,9 +102,12 @@ const HostBondingModal = ({
         options={optionList}
         onChange={handleInputChange(setBondModalState, "optionMode", validationToast)}
       />
+      <span>{bondModalState.optionMode}</span>
       <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={bondModalState.userMode}
-        disabled={true}
+        onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
+        disabled={editMode && bondModalState.optionMode !== bondModalState.editTarget?.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value}
+
       />
     </BaseModal>
   );

@@ -6,22 +6,23 @@ const ENDPOINTS = {
 
   //#region: Dashboard
   GET_DASHBOARD: () =>                                                     `${ENDPOINT_API_V1}/dashboard`,
-  GET_CPU_MEMORY: () =>                                                    `${ENDPOINT_API_V1}/dashboard/cpumemory`,
-  GET_STORAGE: () =>                                                       `${ENDPOINT_API_V1}/dashboard/storage`,
-  GET_VM_CPU: () =>                                                        `${ENDPOINT_API_V1}/dashboard/vmCpu`,
-  GET_VM_MEMORY: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vmMemory`,
-  GET_STORAGE_MEMORY: () =>                                                `${ENDPOINT_API_V1}/dashboard/storageMemory`,
+  GET_CPU_MEMORY: () =>                                                    `${ENDPOINT_API_V1}/dashboard/hosts/usage`,
+  GET_STORAGE: () =>                                                       `${ENDPOINT_API_V1}/dashboard/storages/usage`,
+  GET_VM_CPU: () =>                                                        `${ENDPOINT_API_V1}/dashboard/vms/usage/cpu`,
+  GET_VM_MEMORY: () =>                                                     `${ENDPOINT_API_V1}/dashboard/vms/usage/memory`,
+  GET_STORAGE_MEMORY: () =>                                                `${ENDPOINT_API_V1}/dashboard/storages/usage/memory`,
 
-  GET_PER_HOSTS: () =>                                                     `${ENDPOINT_API_V1}/dashboard/hostsPerList`,
-  GET_PER_DOMAIN: () =>                                                    `${ENDPOINT_API_V1}/dashboard/storagesDomainPerList`,
-  GET_PER_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/dashboard/hostPerList/${hostId}`,
-  GET_PER_VM_CPU: () =>                                                    `${ENDPOINT_API_V1}/dashboard/vmCpuPerList`,
-  GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
-  GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,
+  GET_PER_HOSTS: () =>                                                     `${ENDPOINT_API_V1}/dashboard/hosts/usage/avg`,
+  GET_PER_DOMAIN: () =>                                                    `${ENDPOINT_API_V1}/dashboard/storages/usage/avg`,
+  // GET_PER_VM_CPU: () =>                                                    `${ENDPOINT_API_V1}/dashboard/vmCpuPerList`,
+  // GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
+  // GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,
          
-  GET_METRIC_VM_CPU: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmCpuMetricChart`,
-  GET_METRIC_VM_MEMORY: () =>                                              `${ENDPOINT_API_V1}/dashboard/vmMemoryMetricChart`,
-  GET_METRIC_STORAGE: () =>                                                `${ENDPOINT_API_V1}/dashboard/storageMetricList`,
+  GET_METRIC_VM_CPU: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vms/metric/cpu`,
+  GET_METRIC_VM_MEMORY: () =>                                              `${ENDPOINT_API_V1}/dashboard/vms/metric/memory`,
+  GET_METRIC_STORAGE: () =>                                                `${ENDPOINT_API_V1}/dashboard/storages/metric`,
+  
+  GET_PER_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/dashboard/hosts/${hostId}/usage`,
   //#endregion: Dashboard
   
   //#region: DataCenter
@@ -86,6 +87,7 @@ const ENDPOINTS = {
   DELETE_BONDING_HOST_NICS_FROM_HOST: (hostId) =>                          `${ENDPOINT_API_V1}/computing/hosts/${hostId}/nics/bonding`, 
 
   SETUP_HOST_NICS_FROM_HOST: (hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/nics/setup`, 
+  SYNCALL_NETWORKS_FROM_HOST: (hostId) =>                                  `${ENDPOINT_API_V1}/computing/hosts/${hostId}/syncallNetworks`, 
 
   FIND_HOSTDEVICES_FROM_HOST:(hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/devices`, 
   FIND_EVENTS_FROM_HOST:(hostId) =>                                        `${ENDPOINT_API_V1}/computing/hosts/${hostId}/events`, 

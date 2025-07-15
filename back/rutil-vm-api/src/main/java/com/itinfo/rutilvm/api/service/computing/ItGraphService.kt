@@ -4,24 +4,24 @@ import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.repository.engine.VdsInterfaceStatisticsRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.VdsInterfaceStatisticsEntity
+import com.itinfo.rutilvm.api.repository.engine.VdsStatisticsRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
 import com.itinfo.rutilvm.api.repository.history.entity.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
+import org.jboss.jandex.TypeTarget.Usage
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
 import java.util.*
 
 interface ItGraphService {
-	fun getDataCenters(): SizeVo
 	/**
 	 * [ItGraphService.getDashboard]
 	 *
@@ -31,7 +31,7 @@ interface ItGraphService {
 	 */
 	fun getDashboard(): DashboardVo
 	/**
-	 * [ItGraphService.totalCpuMemory]
+	 * [ItGraphService.totalHostUsage]
 	 *
 	 * 전체 사용량 - Host (CPU, Memory  % )
 	 * 원 그래프
@@ -39,104 +39,86 @@ interface ItGraphService {
 	 *
 	 * @return [HostUsageDto] 호스트 cpu, memory 사용량
 	 */
-	fun totalCpuMemory(): HostUsageDto
+	fun totalHostUsage(): HostUsageDto
 	/**
+	 * [ItGraphService.totalStorageUsage]
 	 * 전체 사용량 - Storage %
 	 * 원 그래프
 	 * 5분마다 한번씩 불려지게 해야함
 	 *
 	 * @return [StorageUsageDto] 스토리지 사용량
 	 */
-	fun totalStorage(): StorageUsageDto
+	fun totalStorageUsage(): StorageUsageDto
 
 	/**
+	 * [ItGraphService.vmCpuUsageBarData]
 	 * 가상머신 cpu 사용량 3
 	 * 막대그래프
 	 * @return List<[UsageDto]>
 	 */
-	fun vmCpuChart(): List<UsageDto>
+	fun vmCpuUsageBarData(): List<UsageDto>
 	/**
+	 * [ItGraphService.vmMemoryUsageBarData]
 	 * 가상머신 memory 사용량 3
 	 * 막대그래프
 	 * @return List<[UsageDto]>
 	 */
-	fun vmMemoryChart(): List<UsageDto>
+	fun vmMemoryUsageBarData(): List<UsageDto>
 	/**
-	 * 스토리지 도메인 memory 사용량 3
+	 * [ItGraphService.storageUsageBarData]
+	 * 스토리지 도메인 사용량 3
 	 * 막대그래프
 	 * @return List<[UsageDto]>
 	 */
-	fun storageChart(): List<UsageDto>
+	fun storageUsageBarData(): List<UsageDto>
 
 	/**
+	 * [ItGraphService.hostCpuMemAvgLineData]
 	 * 호스트 cpu, memory 사용량 (전체 호스트 평균값)
 	 * 선그래프
-	 * @return List<[LineDto]>
+	 * @return List<[HostUsageDto]>
 	 */
-	fun hostsPerChart(): List<HostUsageDto>
+	fun hostCpuMemAvgLineData(): List<HostUsageDto>
 	/**
-	 * 호스트 memory 사용량 (전체 호스트 평균값)
+	 * [ItGraphService.storageAvgLineData]
+	 * 스토리지 사용량
 	 * 선그래프
-	 * @return List<[LineDto]>
+	 * @return List<[StorageUsageDto]>
 	 */
-	fun domainPerChart(): List<StorageUsageDto>
+	fun storageAvgLineData(): List<StorageUsageDto>
+
 	/**
-	 * 호스트 cpu, memory 사용량 (전체 호스트 평균값)
+	 * [ItGraphService.hostHourlyUsageLineData]
+	 * 호스트 한개의 cpu, memory, network 사용량
+	 * 1시간 별로 출력
 	 * 선그래프
-	 * @return List<[LineDto]>
+	 * @return List<[HostUsageDto]>
 	 */
-	fun hostPerChart(hostId: String): List<HostUsageDto>
+	fun hostHourlyUsageLineData(hostId: String): List<UsageDto>
+
 	/**
-	 * 가상머신 cpu 사용량 top3
-	 * 선그래프
-	 * @return List<[LineDto]>
-	 */
-	fun vmCpuPerChart(): List<LineDto>
-	/**
-	 * 가상머신 memory 사용량 top3
-	 * 선그래프
-	 * @return List<[LineDto]>
-	 */
-	fun vmMemoryPerChart(): List<LineDto>
-	/**
-	 * 가상머신 memory 사용량 top3
-	 * 선그래프
-	 * @return List<[LineDto]>
-	 */
-	fun vmNetworkPerChart(): List<LineDto>
-	/**
+	 * [ItGraphService.vmCpuMetricData]
 	 * 전체 가상머신 cpu 사용량
 	 * 매트릭
 	 * @return List<[UsageDto]>
 	 */
-	fun vmCpuMetricChart(): List<UsageDto>
+	fun vmCpuMetricData(): List<UsageDto>
 	/**
+	 * [ItGraphService.vmMemoryMetricData]
 	 * 전체 가상머신 memory 사용량
 	 * 매트릭
 	 * @return List<[UsageDto]>
 	 */
-	fun vmMemoryMetricChart(): List<UsageDto>
+	fun vmMemoryMetricData(): List<UsageDto>
 	/**
+	 * [ItGraphService.storageMetricData]
 	 * 스토리지 도메인 사용량
 	 * 매트릭
 	 * @return List<[UsageDto]>
 	 */
-	fun storageMetricChart(): List<UsageDto>
-	/**
-	 * 전체 사용량(CPU, Memory %) 선 그래프
-	 * @param hostId 호스트 id
-	 * @return 10분마다 그래프에 찍히게?
-	 */
-	fun totalHostCpuMemoryList(hostId: String, limit: Int): List<HostUsageDto>
-
-	// 호스트 사용량 top3
-	fun hostCpuChart(): List<UsageDto>
-	fun hostMemoryChart(): List<UsageDto>
+	fun storageMetricData(): List<UsageDto>
 	// 호스트 목록 - 그래프
 	fun hostPercent(hostId: String): UsageDto
-	// 가상머신 목록 - 그래프
-	fun vmPercent(vmId: String, vmNicId: String): UsageDto
-
 }
 
 @Service
@@ -145,26 +127,21 @@ class GraphServiceImpl(
 ): BaseService(), ItGraphService {
 	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
-	@Autowired private lateinit var vdsInterfaceStatisticsRepository: VdsInterfaceStatisticsRepository
-	@Autowired private lateinit var hostInterfaceSampleHistoryRepository: HostInterfaceSampleHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
 	@Autowired private lateinit var vmInterfaceSamplesHistoryRepository: VmInterfaceSamplesHistoryRepository
 	@Autowired private lateinit var storageDomainSamplesHistoryRepository: StorageDomainSamplesHistoryRepository
+	@Autowired private lateinit var vdsStatisticsRepository: VdsStatisticsRepository
 
-	override fun getDataCenters(): SizeVo {
-		log.info("getDataCenters ... ")
-		return conn.findDataCenterCnt()
-	}
 
 	override fun getDashboard(): DashboardVo {
 		log.info("getDashboard ... ")
 		return conn.toDashboardVo(propConfig)
 	}
 
-	override fun totalCpuMemory(): HostUsageDto {
-		log.info("totalCpuMemory ... ")
-		val hosts: List<Host> = conn.findAllHosts(searchQuery = "status=up")
-			.getOrDefault(listOf())
+	override fun totalHostUsage(): HostUsageDto {
+		log.info("totalHostUsage ... ")
+		val hosts: List<Host> = conn.findAllHosts(searchQuery = "status=up").getOrDefault(listOf())
+
 		val hostSamplesHistoryEntities: List<HostSamplesHistoryEntity> =
 			hosts.map {
 				hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(it.id().toUUID())
@@ -172,38 +149,39 @@ class GraphServiceImpl(
 		return hosts.toHostUsageDto(conn, hostSamplesHistoryEntities)
 	}
 
-	override fun totalStorage(): StorageUsageDto {
-		log.info("totalStorage ... ")
-		val storageDomains: List<StorageDomain> = conn.findAllStorageDomains()
-			.getOrDefault(listOf())
+	override fun totalStorageUsage(): StorageUsageDto {
+		log.info("totalStorageUsage ... ")
+		val storageDomains: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(listOf())
 			.filter { it.type() != EXPORT }
 		return storageDomains.toStorageUsageDto()
 	}
 
-	override fun vmCpuChart(): List<UsageDto> {
-		log.info("vmCpuChart ... ")
+	override fun vmCpuUsageBarData(): List<UsageDto> {
+		log.info("vmCpuUsageBarData ... ")
 		val page: Pageable = PageRequest.of(0, 3)
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmCpuChart(page)
 		return vmSampleHistoryEntities.toVmCpuUsageDtos(conn)
 	}
 
-	override fun vmMemoryChart(): List<UsageDto> {
-		log.info("vmMemoryChart ... ")
+	override fun vmMemoryUsageBarData(): List<UsageDto> {
+		log.info("vmMemoryUsageBarData ... ")
 		val page: Pageable = PageRequest.of(0, 3)
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmMemoryChart(page)
 		return vmSampleHistoryEntities.toVmMemUsageDtos(conn)
 	}
 
-	override fun storageChart(): List<UsageDto> {
-		log.info("storageChart ... ")
-		val page: Pageable = PageRequest.of(0, 3)
-		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart(page)
+	override fun storageUsageBarData(): List<UsageDto> {
+		log.info("storageUsageBarData ... ")
+		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart()
 			// .filter { it.() != EXPORT }
-		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
+		return storageDomainSampleHistoryEntities
+			.toStorageCharts(conn)
+			.sortedByDescending { it.memoryPercent }
+			.take(3)
 	}
 
-	override fun hostsPerChart(): List<HostUsageDto> {
-		log.info("hostsPerChart ... ")
+	override fun hostCpuMemAvgLineData(): List<HostUsageDto> {
+		log.info("hostCpuMemAvgLineData ... ")
 		val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageListChart()
 
 		return rawData.map {
@@ -215,8 +193,8 @@ class GraphServiceImpl(
 		}
 	}
 
-	override fun domainPerChart(): List<StorageUsageDto> {
-		log.info("domainPerChart ... ")
+	override fun storageAvgLineData(): List<StorageUsageDto> {
+		log.info("storageAvgLineData ... ")
 		val rawData: List<Array<Any>> = storageDomainSamplesHistoryRepository.findDomainUsageListChart()
 
 		return rawData.map {
@@ -227,20 +205,28 @@ class GraphServiceImpl(
 		}
 	}
 
-	override fun hostPerChart(hostId: String): List<HostUsageDto> {
-		log.info("hostPerChart ... ")
-		val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageById(UUID.fromString(hostId))
-
-		return rawData.map {
-			HostUsageDto(
-				historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
-				avgCpuUsage = (it[1] as Number).toDouble(),
-				avgMemoryUsage = (it[2] as Number).toDouble()
-			)
-		}
+	override fun hostHourlyUsageLineData(hostId: String): List<UsageDto> {
+		log.info("hostHourlyUsageLineData ... hostId: {}", hostId)
+		val rawResult: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageWithNetwork(hostId.toUUID())
+		return rawResult.toUsageDtoList()
 	}
 
-	override fun vmCpuPerChart(): List<LineDto> {
+	//
+	// override fun hostHourlyUsageLineData(hostId: String): List<HostUsageDto> {
+	// 	log.info("hostHourlyUsageLineData ... hostId: {}", hostId)
+	//
+	// 	val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageById(UUID.fromString(hostId))
+	//
+	// 	return rawData.map {
+	// 		HostUsageDto(
+	// 			historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
+	// 			avgCpuUsage = (it[1] as Number).toDouble(),
+	// 			avgMemoryUsage = (it[2] as Number).toDouble()
+	// 		)
+	// 	}
+	// }
+
+	/*override fun vmCpuPerChart(): List<LineDto> {
 		log.info("vmCpuPerChart ... ")
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmUsageListChart()
 		return vmSampleHistoryEntities.toVmCpuLineDtos(conn)
@@ -256,28 +242,28 @@ class GraphServiceImpl(
 		log.info("vmNetworkPerChart ... ")
 		val vmInterfaceSampleHistoryEntities: List<VmInterfaceSamplesHistoryEntity> = vmInterfaceSamplesHistoryRepository.findVmNetworkMetricListChart()
 		return vmInterfaceSampleHistoryEntities.toVmNetworkLineDtos(conn)
-	}
+	}*/
 
-	override fun vmCpuMetricChart(): List<UsageDto> {
+	override fun vmCpuMetricData(): List<UsageDto> {
 		log.info("vmCpuMetricChart ... ")
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmCpuMetricListChart()
 		return vmSampleHistoryEntities.toVmUsageDtos(conn)
 	}
 
-	override fun vmMemoryMetricChart(): List<UsageDto> {
+	override fun vmMemoryMetricData(): List<UsageDto> {
 		log.info("vmMemoryMetricChart ... ")
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmMemoryMetricListChart()
 		return vmSampleHistoryEntities.toVmUsageDtos(conn)
 	}
 
-	override fun storageMetricChart(): List<UsageDto> {
+	override fun storageMetricData(): List<UsageDto> {
 		log.info("storageMetricChart ... ")
-		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart(null)
-		return storageDomainSampleHistoryEntities.toStorageCharts(conn)
+		val storageDomainSampleHistoryEntities: List<StorageDomainSamplesHistoryEntity> = storageDomainSamplesHistoryRepository.findStorageChart()
+		return storageDomainSampleHistoryEntities.toStorageCharts(conn).sortedByDescending { it.memoryPercent }
 	}
 
 	// 일단 쓰는 곳 없음
-	override fun totalHostCpuMemoryList(hostId: String, limit: Int): List<HostUsageDto> {
+	/*override fun totalHostCpuMemoryList(hostId: String, limit: Int): List<HostUsageDto> {
 		log.info("totalHostCpuMemoryList ... ")
 		val page: Pageable = PageRequest.of(0, limit)
 		val hostSamplesHistoryEntities: List<HostSamplesHistoryEntity> =
@@ -289,9 +275,9 @@ class GraphServiceImpl(
 				return listOf()
 			}
 		return hostSamplesHistoryEntities.toTotalCpuMemoryUsages(host)
-	}
+	}*/
 
-	override fun hostCpuChart(): List<UsageDto> {
+	/*override fun hostCpuChart(): List<UsageDto> {
 		log.info("hostCpuChart ... ")
 		val page: Pageable = PageRequest.of(0, 3)
 		val hostSampleHistoryEntities: List<HostSamplesHistoryEntity> = hostSamplesHistoryRepository.findHostCpuChart(page)
@@ -303,21 +289,23 @@ class GraphServiceImpl(
 		val page: Pageable = PageRequest.of(0, 3)
 		val hostSampleHistoryEntities: List<HostSamplesHistoryEntity> = hostSamplesHistoryRepository.findHostMemoryChart(page)
 		return hostSampleHistoryEntities.toHostMemCharts(conn)
-	}
+	}*/
 
 	override fun hostPercent(hostId: String): UsageDto {
-		val hostSampleHistoryEntity: HostSamplesHistoryEntity =
-			hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(hostId.toUUID())
-		val usageDto = hostSampleHistoryEntity.toUsageDto()
+		val vdsStatisticsEntity: VdsStatisticsEntity = vdsStatisticsRepository.findByVdsId(hostId.toUUID())
+		log.info("hostPercent ... hostId: {}", vdsStatisticsEntity.toHostUsage())
 
-		val hostNetwork: VdsInterfaceStatisticsEntity? = vdsInterfaceStatisticsRepository.findByVdsId(hostId.toUUID())
-		usageDto.networkPercent = (hostNetwork?.rxRate?.add(hostNetwork.txRate))?.toInt()
-		log.info("hostPercent ... hostId: {}", hostId)
-
-		return usageDto
+		return vdsStatisticsEntity.toHostUsage()
+		// val hostSampleHistoryEntity: HostSamplesHistoryEntity =
+		// 	hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(hostId.toUUID())
+		// val usageDto = hostSampleHistoryEntity.toUsageDto()
+		//
+		// val hostNetwork: VdsInterfaceStatisticsEntity? = vdsInterfaceStatisticsRepository.findByVdsId(hostId.toUUID())
+		// usageDto.networkPercent = (hostNetwork?.rxRate?.add(hostNetwork.txRate))?.toInt()
+		// return usageDto
 	}
 
-	override fun vmPercent(vmId: String, vmNicId: String): UsageDto {
+	/*override fun vmPercent(vmId: String, vmNicId: String): UsageDto {
 		log.info("vmPercent ... ")
 		val vmSamplesHistoryEntity =
 			vmSamplesHistoryRepository.findFirstByVmIdOrderByHistoryDatetimeDesc(UUID.fromString(vmId))
@@ -328,7 +316,7 @@ class GraphServiceImpl(
 		usageDto.networkPercent = networkRate
 		return usageDto
 	}
-
+*/
 
 	companion object {
 		private val log by LoggerDelegate()

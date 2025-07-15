@@ -14,6 +14,7 @@ import {
   useNetworkFromCluster,
   useNetworkInterfacesFromHost,
   useSetupNetworksFromHost,
+  useSyncallNetworksHost,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -46,6 +47,7 @@ const HostNics = ({
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttachments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
+  const { mutate: syncallNetworks } = useSyncallNetworksHost();
   const { mutate: setupNetwork } = useSetupNetworksFromHost();
 
   // 변경 정보
@@ -1213,6 +1215,16 @@ const HostNics = ({
               onClick={() => resetState()}
             />
           )}
+
+          <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>          
+          {/* {networkAttachmentModalState.inSync && (
+            <ActionButton actionType="default"
+              disabled={!networkAttachmentModalState.inSync}
+              label={`모든 ${Localization.kr.NETWORK} 동기화`} 
+              className="custom-ok-button mr-3"
+              onClick={() => syncallNetworks(hostId) } // 버튼 클릭시 네트워크 업데이트
+            />
+          )} */}
           </div>
         </div>
 
@@ -1230,17 +1242,6 @@ const HostNics = ({
             onClick={setNetworkFilter}
           />
           <br/>
-          {/* {[...baseItems.network, ...movedItems.network]
-            .filter(network => 
-              networkFilter === 'required' ? network.required : !network.required
-            )
-            .map(network => (
-              <ClusterNetworkList
-                key={network.id}
-                network={network}
-                handleDragStart={handleDragStart}
-              />
-          ))} */}
           {[...baseItems.network, ...movedItems.network]
             .filter(network => {
               if (networkFilter === 'required') return network.required;

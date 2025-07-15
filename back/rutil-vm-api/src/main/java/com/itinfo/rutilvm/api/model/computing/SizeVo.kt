@@ -13,7 +13,6 @@ class SizeVo (
     val downCnt: Int = 0
 ): Serializable {
     override fun toString(): String = gson.toJson(this)
-
     class Builder {
         private var bAllCnt: Int = 0; fun allCnt(block: () -> Int) { bAllCnt = block() ?: 0 }
         private var bUpCnt: Int = 0; fun upCnt(block: () -> Int) { bUpCnt = block() ?: 0 }
@@ -25,54 +24,6 @@ class SizeVo (
         inline fun builder(block: Builder.() -> Unit): SizeVo = Builder().apply(block).build()
     }
 }
-
-fun Connection.findDataCenterCnt(): SizeVo {
-    val allDataCenters = this@findDataCenterCnt.findAllDataCenters().getOrDefault(listOf())
-    val allCnt = allDataCenters.size
-    val upCnt = allDataCenters.count { it.status() == DataCenterStatus.UP }
-    val downCnt = allCnt - upCnt
-
-    return SizeVo.builder {
-        allCnt { allCnt }
-        upCnt { upCnt }
-        downCnt { downCnt }
-    }
-}
-
-fun Connection.findClusterCnt(): SizeVo {
-    val allClusters = this@findClusterCnt.findAllClusters().getOrDefault(listOf())
-
-    return SizeVo.builder {
-        allCnt { allClusters.size }
-    }
-}
-
-fun Connection.findHostCnt(): SizeVo {
-    val allHosts = this@findHostCnt.findAllHosts().getOrDefault(listOf())
-    val allCnt = allHosts.size
-    val upCnt = allHosts.count { it.status() == HostStatus.UP }
-    val downCnt = allCnt - upCnt
-
-    return SizeVo.builder {
-        allCnt { allCnt }
-        upCnt { upCnt }
-        downCnt { downCnt }
-    }
-}
-
-fun Connection.findVmCnt(): SizeVo {
-    val allVms = this@findVmCnt.findAllVms().getOrDefault(listOf())
-    val allCnt = allVms.size
-    val upCnt = allVms.count { it.status() == VmStatus.UP }
-    val downCnt = allCnt - upCnt
-
-    return SizeVo.builder {
-        allCnt { allCnt }
-        upCnt { upCnt }
-        downCnt { downCnt }
-    }
-}
-
 
 
 fun Cluster.findHostCntFromCluster(conn: Connection): SizeVo {

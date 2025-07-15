@@ -23,6 +23,13 @@ const HostNetworkEditModal = ({
     { id: "ipv6",  label: "IPv6",    onClick: () => setSelectedModalTab("ipv6") },
     { id: "dns",   label: "DNS 설정", onClick: () => setSelectedModalTab("dns") },
   ], []);
+  const [initialInSync, setInitialInSync] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setInitialInSync(networkModalState.inSync);
+    }
+  }, [isOpen]);
 
   useEffect(() =>{
     setSelectedModalTab("ipv4");
@@ -153,9 +160,12 @@ const HostNetworkEditModal = ({
       id: networkModalState.id,
       networkVo: networkModalState.networkVo,
       hostNicVo: networkModalState.hostNicVo,
-      inSync: networkModalState.inSync,
       ipAddressAssignments: ipAssignments,
-      dnsServers: networkModalState.dnsServers.filter(Boolean),
+      dnsServers: networkModalState.dnsServers.filter(Boolean), 
+      ...(initialInSync === false && networkModalState.inSync === true
+        ? { inSync: true }  // 변경된 경우에만 포함
+        : {} // 변경 안 되었으면 생략
+      )
     };
 
     Logger.debug("HostNetworkEditModal > handleOkClick ... networkEditData:", networkEditData);
@@ -185,38 +195,42 @@ const HostNetworkEditModal = ({
 
         <div className="w-full px-4">
           <div className ="w-[57.5%]">
-            <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화 (임시)`}
-              checked={networkModalState.inSync}
-              // disabled={true} 
-              // TODO: 비동기에 대한 엔지니어 의견 
-              onChange={() => handleChangeInSync("inSync", !networkModalState.inSync)}
+            <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화`}
+              disabled={networkModalState.inSync} // true면 비활성화
+              onChange={() => {
+                if (!networkModalState.inSync) {
+                  handleChangeInSync("inSync", !networkModalState.inSync); // false일 경우에만 반전 허용
+                }
+              }}
               tType={"동기화"} fType={"비동기화"}
             />
+            {/* TODO: insync 문제 */}
+            <span>{networkModalState.inSync === true ? "T" : "F"}</span>
           </div>
-          {/* <span>nicname {networkModalState?.hostNicVo?.id} {networkModalState?.hostNicVo?.name}</span><br/> */}
-          {/* <span>network {networkModalState?.networkVo?.id} {networkModalState?.networkVo?.name}</span><br/> */}
           <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
               <LabelSelectOptions id="ipv4_mtu" label="부트 프로토콜"                  
                 value={networkModalState.ipv4Values.protocol}
                 options={ipv4Options}
+                disabled={!networkModalState.inSync}
                 onChange={e => handleIpv4Change('protocol', e.target.value)}
               />
+              <span>{networkModalState.ipv4Values.protocol}</span>
               <LabelInput id="ip_address" label="IP"
                 value={networkModalState.ipv4Values.address}
                 onChange={e => handleIpv4Change('address', e.target.value)}
-                disabled={networkModalState.ipv4Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
               />
               <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
                 value={networkModalState.ipv4Values.netmask}
                 onChange={e => handleIpv4Change('netmask', e.target.value)}
-                disabled={networkModalState.ipv4Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
               />
               <LabelInput id="gateway" label="게이트웨이"
                 value={networkModalState.ipv4Values.gateway}
                 onChange={e => handleIpv4Change('gateway', e.target.value)}
-                disabled={networkModalState.ipv4Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
               />
             </div>
           )}
@@ -225,24 +239,24 @@ const HostNetworkEditModal = ({
             <div className="select-box-outer">
               <LabelSelectOptions id="ipv6_protocol" label="부트 프로토콜"
                 value={networkModalState.ipv6Values.protocol}
-                disabled={false}
                 options={ipv6Options}
+                disabled={!networkModalState.inSync}
                 onChange={e => handleIpv6Change('protocol', e.target.value)}
               />
               <LabelInput id="ip_address" label="IP"
                 value={networkModalState.ipv6Values.address}
                 onChange={e => handleIpv6Change('address', e.target.value)}
-                disabled={networkModalState.ipv6Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
               />
               <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
                 value={networkModalState.ipv6Values.netmask}
                 onChange={e => handleIpv6Change('netmask', e.target.value)}
-                disabled={networkModalState.ipv6Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
               />
               <LabelInput id="gateway" label="게이트웨이"
                 value={networkModalState.ipv6Values.gateway}
                 onChange={e => handleIpv6Change('gateway', e.target.value)}
-                disabled={networkModalState.ipv6Values.protocol !== "static"}
+                disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
               />
             </div>
           )}

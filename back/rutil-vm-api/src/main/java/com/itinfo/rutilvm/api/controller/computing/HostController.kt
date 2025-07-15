@@ -364,6 +364,31 @@ class HostController {
 		return ResponseEntity.ok(iHostNic.setUpNetworksFromHost(hostId, hostNetworkVo))
 	}
 
+	@ApiOperation(
+		httpMethod="POST",
+		value="호스트 네트워크 동기화",
+		notes="호스트 네트워크 동기화를 한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{hostId}/syncallNetworks")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun syncallNetworks(
+		@PathVariable hostId: String?
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/syncallNetworks ... 호스트 네트워크 동기화", hostId)
+		return ResponseEntity.ok(iHostNic.syncallNetworksHost(hostId))
+	}
+
+
 	// endregion
 
 	// region: operation

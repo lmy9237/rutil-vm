@@ -194,16 +194,12 @@ const HostGeneral = ({
       bottom={
         <>
           <div className=" grid-col-span-2">
-            <HostGeneralChart />
+            <HostGeneralChart per={hostPer}/>
           </div>
           <GeneralBoxProps title="소프트웨어"><InfoTable tableRows={softwareTableRows} /></GeneralBoxProps>
         </>
       }
     />
-      {/* <OVirtWebAdminHyperlink
-        name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}>${hostsSelected[0]?.name}`}
-        path={`hosts-general;name=${hostsSelected[0]?.name}`} 
-      /> */}
     </>
   );
 };

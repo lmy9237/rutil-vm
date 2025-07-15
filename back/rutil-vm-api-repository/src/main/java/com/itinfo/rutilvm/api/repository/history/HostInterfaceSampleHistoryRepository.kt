@@ -20,4 +20,7 @@ ORDER BY hic.historyDatetime DESC
 	fun findAllByHostInterfaceIdOrderByHistoryDatetimeDesc(
 		hostInterfaceId: UUID?
 	): List<HostInterfaceSamplesHistoryEntity>
+
+
+
 }

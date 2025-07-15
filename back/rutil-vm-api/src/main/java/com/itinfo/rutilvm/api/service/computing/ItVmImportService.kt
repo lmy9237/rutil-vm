@@ -91,7 +91,9 @@ class VmImportServiceImpl: BaseService(), ItVmImportService {
 			log.info("NIC 추가 vmId: {}, nic 수: {}", vmId, externalVmVo.vmVo.nicVos.size)
 
 			if (vmId != null && externalVmVo.vmVo.nicVos.isNotEmpty()) {
+
 				externalVmVo.vmVo.nicVos.forEach {
+					log.info("NIC 추가 nic 수: {}", it.toAddVmNic())
 					conn.addNicFromVm(vmId, it.toAddVmNic())
 				}
 			}

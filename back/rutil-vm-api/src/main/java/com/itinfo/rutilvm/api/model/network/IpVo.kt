@@ -39,10 +39,13 @@ fun Ip.toIpVo(): IpVo {
     }
 }
 
-fun IpVo.toIp(): Ip = IpBuilder()
-   	.version(this.version)
-	.address(this.address)
-   	.gateway(this.gateway)
-	.netmask(this.netmask)
-	.build()
+fun IpVo.toIp(): Ip {
+	val builder = IpBuilder().version(this.version)
+
+	if (this.address.isNotBlank()) builder.address(this.address)
+	if (this.gateway.isNotBlank()) builder.gateway(this.gateway)
+	if (this.netmask.isNotBlank()) builder.netmask(this.netmask)
+
+	return builder.build()
+}
 

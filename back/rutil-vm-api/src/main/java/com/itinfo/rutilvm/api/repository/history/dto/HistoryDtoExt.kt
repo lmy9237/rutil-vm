@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromHost
@@ -20,6 +21,7 @@ import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.VmStatus
 import org.ovirt.engine.sdk4.types.Statistic
+import java.sql.Timestamp
 
 import java.time.LocalDateTime
 
@@ -51,27 +53,11 @@ fun List<Host>.toHostUsageDto(conn: Connection, hostSamplesHistoryEntities: List
         .filter { it.name() == "memory.used" }
         .sumOf { it.values().firstOrNull()?.datum()?.toDouble() ?: 0.0 } / GB
 
-    val totalCpuCore: Int =
-        hostAll.sumOf {
-            if(it.cpu().topology().coresPresent())
-            it.cpu().topology().coresAsInteger() *
-                    it.cpu().topology().socketsAsInteger() *
-                    it.cpu().topology().threadsAsInteger()
-            else 0
-        }
-
-    val commitCpuCore: Int =
-        vmAll.sumOf {
-            if(it.cpuPresent()) {it.cpu().topology().coresAsInteger() * it.cpu().topology().socketsAsInteger() * it.cpu().topology().threadsAsInteger()}
-            else 0
-        }
-
-    val usedCpuCore: Int =
-        vmAll.filter { it.status() == VmStatus.UP }
-            .sumOf {
-                if(it.cpuPresent()) { it.cpu().topology().coresAsInteger() * it.cpu().topology().socketsAsInteger() * it.cpu().topology().threadsAsInteger() }
-                else 0
-            }
+	val totalCpuCore: Int = hostAll.sumOf { it.hostCpuCoreCount() }
+	val commitCpuCore: Int = vmAll.sumOf { it.vmCpuCoreCount() }
+	val usedCpuCore: Int = vmAll
+		.filter { it.status() == VmStatus.UP }
+		.sumOf { it.vmCpuCoreCount() }
 
     val freeMemoryGB = totalMemoryGB - usedMemoryGB
 
@@ -93,6 +79,23 @@ fun List<Host>.toHostUsageDto(conn: Connection, hostSamplesHistoryEntities: List
         usedCpuCore { usedCpuCore }
     }
 }
+
+fun Vm.vmCpuCoreCount(): Int {
+	return if (this.cpuPresent()) {
+		this.cpu().topology().coresAsInteger() *
+			this.cpu().topology().socketsAsInteger() *
+			this.cpu().topology().threadsAsInteger()
+	} else 0
+}
+
+fun Host.hostCpuCoreCount(): Int {
+	return if (this.cpuPresent()) {
+		this.cpu().topology().coresAsInteger() *
+			this.cpu().topology().socketsAsInteger() *
+			this.cpu().topology().threadsAsInteger()
+	} else 0
+}
+
 
 fun List<HostSamplesHistoryEntity>.toTotalCpuMemoryUsages(host: Host): List<HostUsageDto>  {
     val hostName = host.name()
@@ -224,6 +227,27 @@ fun List<VmSamplesHistoryEntity>.toVmCpuUsageDtos(conn: Connection): List<UsageD
     this@toVmCpuUsageDtos.map { it.toVmCpuUsageDto(conn) }
 
 
+fun List<Array<Any>>.toUsageDtoList(): List<UsageDto> {
+	return this.map { row ->
+		val time = when (val ts = row[0]) {
+			is Timestamp -> ts.toLocalDateTime()
+			is LocalDateTime -> ts
+			else -> throw IllegalArgumentException("Unsupported time type: ${ts::class}")
+		}
+
+		val cpuPercent = (row[1] as? Number)?.toInt()
+		val memoryPercent = (row[2] as? Number)?.toInt()
+		val networkPercent = (row[3] as? Number)?.toInt()
+
+		UsageDto.builder {
+			this.time { time }
+			this.cpuPercent { cpuPercent }
+			this.memoryPercent { memoryPercent }
+			this.networkPercent { networkPercent }
+		}
+	}
+}
+
 fun VmSamplesHistoryEntity.toVmMemUsageDto(conn: Connection): UsageDto {
     val vm: Vm = conn.findVm(this@toVmMemUsageDto.vmId.toString())
         .getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
@@ -289,6 +313,14 @@ fun HostSamplesHistoryEntity.toHostMemChart(conn: Connection): UsageDto {
 fun List<HostSamplesHistoryEntity>.toHostMemCharts(conn: Connection): List<UsageDto> =
     this@toHostMemCharts.map { it.toHostMemChart(conn) }
 
+
+fun VdsStatisticsEntity.toHostUsage(): UsageDto{
+	return UsageDto.builder {
+		cpuPercent { this@toHostUsage.usageCpuPercent }
+		memoryPercent { this@toHostUsage.usageMemPercent }
+		networkPercent { this@toHostUsage.usageNetworkPercent }
+	}
+}
 
 /**
  * vm 사용량

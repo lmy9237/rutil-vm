@@ -25,7 +25,7 @@ AND s.history_datetime = (
 ORDER BY s.used_disk_size_gb DESC
 	""", nativeQuery = true
 	)
-	fun findStorageChart(page: Pageable?): List<StorageDomainSamplesHistoryEntity>
+	fun findStorageChart(): List<StorageDomainSamplesHistoryEntity>
 
 
 	@Query(	value = """

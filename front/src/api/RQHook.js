@@ -190,52 +190,52 @@ export const useDashboardStorageMemory = (
   },
 });
 
-export const useDashboardPerVmCpu = (
-  mapPredicate = (e) => ({ ...e }),
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.DASHBOARD_PER_VM_CPU],
-  queryFn: async () => {
-    const res = await ApiManager.getPerVmCpu()
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? []
-      : validateAPI(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
-    return _res
-  },
-});
+// export const useDashboardPerVmCpu = (
+//   mapPredicate = (e) => ({ ...e }),
+// ) => useQuery({
+//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+//   queryKey: [QK.DASHBOARD_PER_VM_CPU],
+//   queryFn: async () => {
+//     const res = await ApiManager.getPerVmCpu()
+//     const _res = mapPredicate
+//       ? validateAPI(res)?.map(mapPredicate) ?? []
+//       : validateAPI(res) ?? []
+//     Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
+//     return _res
+//   },
+// });
 
-export const useDashboardPerVmMemory = (
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardPerVmMemory'],
-  queryFn: async () => {
-    const res = await ApiManager.getPerVmMemory()
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? []
-      : validateAPI(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
-    return _res
-    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
-  }
-});
-export const useDashboardPerVmNetwork = (
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardPerVmNetwork'],
-  queryFn: async () => {
-    Logger.debug(`dashboardPerVmNetwork ...`);
-    const res = await ApiManager.getPerVmNetwork()
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? []
-      : validateAPI(res) ?? []
-    Logger.debug(`RQHook > dashboardPerVmNetwork ... res: `, _res);
-    return _res
-    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
-  }
-});
+// export const useDashboardPerVmMemory = (
+//   mapPredicate = (e) => ({ ...e })
+// ) => useQuery({
+//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+//   queryKey: ['dashboardPerVmMemory'],
+//   queryFn: async () => {
+//     const res = await ApiManager.getPerVmMemory()
+//     const _res = mapPredicate
+//       ? validateAPI(res)?.map(mapPredicate) ?? []
+//       : validateAPI(res) ?? []
+//     Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
+//     return _res
+//     // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
+//   }
+// });
+// export const useDashboardPerVmNetwork = (
+//   mapPredicate = (e) => ({ ...e })
+// ) => useQuery({
+//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+//   queryKey: ['dashboardPerVmNetwork'],
+//   queryFn: async () => {
+//     Logger.debug(`dashboardPerVmNetwork ...`);
+//     const res = await ApiManager.getPerVmNetwork()
+//     const _res = mapPredicate
+//       ? validateAPI(res)?.map(mapPredicate) ?? []
+//       : validateAPI(res) ?? []
+//     Logger.debug(`RQHook > dashboardPerVmNetwork ... res: `, _res);
+//     return _res
+//     // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
+//   }
+// });
 
 export const useDashboardMetricVmCpu = (
   mapPredicate = (e) => ({ ...e })
@@ -1389,6 +1389,42 @@ export const useSetupNetworksFromHost = (
     },
   });
 };
+
+/**
+ * @name useSyncallNetworksHost
+ * @description 호스트 네트워크 동기화 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.syncallNetworksHost
+ */
+export const useSyncallNetworksHost = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (hostId) => {
+      closeModal();
+      const res = await ApiManager.syncallNetworksHost(hostId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > useSyncallNetworksHost ... hostId: ${hostId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useSyncallNetworksHost ... res: `, res);
+      apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.NETWORK} 동기화 ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries('allHosts');
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
+
 
 /**
  * @name useEditHostNetworkFromHost

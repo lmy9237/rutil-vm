@@ -1,15 +1,13 @@
 import { Tooltip } from "react-tooltip";
 import { 
   RVI16, 
-  rvi16Close, 
-  rvi16Refresh,
+  rvi16RefreshTry,
   rvi16TriangleDown, 
   rvi16TriangleUp, 
   RVI36, 
   rvi36Edit
 } from "../../../../components/icons/RutilVmIcons";
 import NetworkToolTip from "./NetworkToolTip";
-import CONSTANT from "@/Constants";
 
 const MatchNetwork = ({ 
   networkAttach, 
@@ -37,12 +35,8 @@ const MatchNetwork = ({
           <RVI16 className="mr-1.5"
             iconDef={networkAttach.networkVo?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
-          {/* TODO: X 와 refresh 가 겹쳐진 아이콘 필요 */}
-          {networkAttach.inSync === false 
-            ? <>
-              <RVI16 className="mr-1.5" iconDef={rvi16Refresh(CONSTANT.color.alert)} />
-              <RVI16 className="mr-1.5" iconDef={rvi16Close(CONSTANT.color.alert)} />
-            </>
+          {networkAttach.inSync === false
+            ? <RVI16 className="mr-1.5" iconDef={rvi16RefreshTry()} />
             : ""
           } 
           {networkAttach.networkVo?.name}

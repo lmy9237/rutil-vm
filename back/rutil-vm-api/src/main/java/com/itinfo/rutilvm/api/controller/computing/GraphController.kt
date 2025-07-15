@@ -12,7 +12,10 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiResponse
+import io.swagger.annotations.ApiResponses
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
@@ -28,23 +31,31 @@ class GraphController {
 		value="대시보드 정보",
 		notes="대시보드 정보를 조회한다"
 	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
 	@GetMapping
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun dashboard(): ResponseEntity<DashboardVo> {
-		log.info("----- 대시보드")
+		log.info("/dashboard ... 대시보드 정보")
 		return ResponseEntity.ok(graph.getDashboard())
 	}
 
 	@ApiOperation(
 		httpMethod="GET",
 		value="호스트 총 사용량 정보",
-		notes="호스트 cpu, memory 사용정보를 조회한다"
+		notes="호스트 사용 중인 cpu, memory 사용정보를 조회한다"
 	)
-	@GetMapping("/cpumemory")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/hosts/usage")
 	@ResponseBody
-	fun totalCpuMemory(): ResponseEntity<HostUsageDto> {
-		log.info("----- cpu, memory")
-		return ResponseEntity.ok(graph.totalCpuMemory())
+	@ResponseStatus(HttpStatus.OK)
+	fun totalHostUsage(): ResponseEntity<HostUsageDto> {
+		log.info("/dashboard/host/usage ... 호스트 총 사용량 정보 ")
+		return ResponseEntity.ok(graph.totalHostUsage())
 	}
 
 	@ApiOperation(
@@ -52,35 +63,31 @@ class GraphController {
 		value="스토리지 총 사용량 정보",
 		notes="스토리지 총 사용량 정보를 조회한다"
 	)
-	@GetMapping("/storage")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/storages/usage")
 	@ResponseBody
-	fun totalStorage(): ResponseEntity<StorageUsageDto> {
-		log.info("----- storage")
-		return ResponseEntity.ok(graph.totalStorage())
+	@ResponseStatus(HttpStatus.OK)
+	fun totalStorageUsage(): ResponseEntity<StorageUsageDto> {
+		log.info("/dashboard/storage/usage ... 스토리지 총 사용량 정보 ")
+		return ResponseEntity.ok(graph.totalStorageUsage())
 	}
-
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="호스트 cpu, memory 물결그래프 정보",
-//		notes="스토리지 총 사용량 정보를 조회한다"
-//	)
-//	@GetMapping("/totalCpuMemory")
-//	@ResponseBody
-//	fun totalCpuMemoryList(): ResponseEntity<List<HostUsageDto>> {
-//		log.info("----- totalCpuMemoryList")
-//		return ResponseEntity.ok(graph.totalCpuMemoryList())
-//	}
 
 	@ApiOperation(
 		httpMethod="GET",
 		value="VM의 CPU 총 사용량 정보",
 		notes="VM의 CPU 총 사용량 정보를 조회한다"
 	)
-	@GetMapping("/vmCpu")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vms/usage/cpu")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmCpuChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- vmCpuChart")
-		return ResponseEntity.ok(graph.vmCpuChart())
+		log.info("/dashboard/vms/usage/cpu ... ")
+		return ResponseEntity.ok(graph.vmCpuUsageBarData())
 	}
 
 	@ApiOperation(
@@ -88,11 +95,15 @@ class GraphController {
 		value="VM의 메모리 총 사용량 정보",
 		notes="VM의 메모리 총 사용량 정보를 조회한다"
 	)
-	@GetMapping("/vmMemory")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vms/usage/memory")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmMemoryChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- vmMemoryChart")
-		return ResponseEntity.ok(graph.vmMemoryChart())
+		log.info("/dashboard/vms/usage/memory ... ")
+		return ResponseEntity.ok(graph.vmMemoryUsageBarData())
 	}
 
 	@ApiOperation(
@@ -100,23 +111,31 @@ class GraphController {
 		value="스토리지도메인 메모리 총 사용량 정보",
 		notes="스토리지도메인의 메모리 총 사용량 정보를 조회한다"
 	)
-	@GetMapping("/storageMemory")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/storages/usage/memory")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun storageChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- storageChart")
-		return ResponseEntity.ok(graph.storageChart())
+		log.info("/dashboard/storages/usage/memory ... ")
+		return ResponseEntity.ok(graph.storageUsageBarData())
 	}
 
 	@ApiOperation(
 		httpMethod="GET",
 		value="Hosts Per 그래프",
-		notes="Hosts의 Per 그래프"
+		notes="Hosts 의 Per 그래프"
 	)
-	@GetMapping("/hostsPerList")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/hosts/usage/avg")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun hostsPerChart(): ResponseEntity<List<HostUsageDto>> {
-		log.info("----- hostsPerChart")
-		return ResponseEntity.ok(graph.hostsPerChart())
+		log.info("/dashboard/hosts/usage/avg ... ")
+		return ResponseEntity.ok(graph.hostCpuMemAvgLineData())
 	}
 
 	@ApiOperation(
@@ -124,75 +143,83 @@ class GraphController {
 		value="StorageDomain Per 그래프",
 		notes="StorageDomain Per 그래프"
 	)
-	@GetMapping("/storagesDomainPerList")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/storages/usage/avg")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun storageDomainPerList(): ResponseEntity<List<StorageUsageDto>> {
-		log.info("----- storageDomainPerList")
-		return ResponseEntity.ok(graph.domainPerChart())
+		log.info("/dashboard/storages/usage/avg ... ")
+		return ResponseEntity.ok(graph.storageAvgLineData())
 	}
 
 	@ApiOperation(
 		httpMethod="GET",
 		value="Host Per 그래프",
-		notes="Host의 Per 그래프"
+		notes="Host 의 Per 그래프"
 	)
-	@GetMapping("/hostPerList/{hostId}")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/hosts/{hostId}/usage")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun hostPerChart(
 		@PathVariable hostId: String? = null
-	): ResponseEntity<List<HostUsageDto>> {
-		log.info("----- hostPerChart")
+	): ResponseEntity<List<UsageDto>> {
+		log.info("/dashboard/hosts/{}/usage ... ", hostId)
 		if (hostId.isNullOrEmpty())
 			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
-		return ResponseEntity.ok(graph.hostPerChart(hostId))
+		return ResponseEntity.ok(graph.hostHourlyUsageLineData(hostId))
 	}
 
-	@ApiOperation(
+	/*@ApiOperation(
 		httpMethod="GET",
 		value="VM cpu Per 그래프",
 		notes="VM의 cpu Per 그래프"
 	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
 	@GetMapping("/vmCpuPerList")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmCpuPerChart(): ResponseEntity<List<LineDto>> {
 		log.info("----- vmCpuPerChart")
 		return ResponseEntity.ok(graph.vmCpuPerChart())
-	}
+	}*/
 
-	@ApiOperation(
+	/*@ApiOperation(
 		httpMethod="GET",
 		value="VM memory Per 그래프",
 		notes="VM의 memory Per 그래프"
 	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
 	@GetMapping("/vmMemoryPerList")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmMemoryPerChart(): ResponseEntity<List<LineDto>> {
 		log.info("----- vmMemoryPerChart")
 		return ResponseEntity.ok(graph.vmMemoryPerChart())
-	}
-
-//	@ApiOperation(
-//		httpMethod="GET",
-//		value="VM network Per 그래프",
-//		notes="VM의 network Per 그래프"
-//	)
-//	@GetMapping("/vmNetworkPerList")
-//	@ResponseBody
-//	fun vmNetworkPerChart(): ResponseEntity<List<LineDto>> {
-//		log.info("----- vmNetworkPerChart")
-//		return ResponseEntity.ok(graph.vmNetworkPerChart())
-//	}
+	}*/
 
 	@ApiOperation(
 		httpMethod="GET",
 		value="VM의 CPU Metric 그래프",
 		notes="VM의 CPU Metric 그래프"
 	)
-	@GetMapping("/vmCpuMetricChart")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vms/metric/cpu")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmCpuMetricChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- vmCpuMetricChart")
-		return ResponseEntity.ok(graph.vmCpuMetricChart())
+		log.info("/dashboard/vms/metric/cpu ... ")
+		return ResponseEntity.ok(graph.vmCpuMetricData())
 	}
 
 	@ApiOperation(
@@ -200,23 +227,31 @@ class GraphController {
 		value="VM의 Memory Metric 그래프",
 		notes="VM의 Memory Metric 그래프"
 	)
-	@GetMapping("/vmMemoryMetricChart")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vms/metric/memory")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun vmMemoryMetricChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- vmMemoryMetricChart")
-		return ResponseEntity.ok(graph.vmMemoryMetricChart())
+		log.info("/dashboard/vms/metric/memory ... ")
+		return ResponseEntity.ok(graph.vmMemoryMetricData())
 	}
 
 	@ApiOperation(
 		httpMethod="GET",
-		value="storage의 Metric 그래프",
-		notes="storage의 Metric 그래프"
+		value="storage 의 Metric 그래프",
+		notes="storage  Metric 그래프"
 	)
-	@GetMapping("/storageMetricList")
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/storages/metric")
 	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	fun storageMetricChart(): ResponseEntity<List<UsageDto>> {
-		log.info("----- storageMetricChart")
-		return ResponseEntity.ok(graph.storageMetricChart())
+		log.info("/dashboard/storages/metric ... ")
+		return ResponseEntity.ok(graph.storageMetricData())
 	}
 
 	companion object {

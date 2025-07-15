@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl.Companion
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
@@ -78,6 +79,15 @@ interface ItHostNicService {
 		hostNetworkVo: HostNetworkVo
 	): Boolean
 
+	/**
+	 * [ItHostNicService.syncallNetworksHost]
+	 * 호스트 네트워크 동기화
+	 *
+	 * @param hostId [String] 호스트 Id
+	 * @return
+	 */
+	@Throws(Error::class)
+	fun syncallNetworksHost(hostId: String): Boolean
 }
 
 @Service
@@ -116,6 +126,7 @@ class ItHostNicServiceImpl(
 	@Throws(Error::class)
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
 		log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
+		val modifiedAttachments = hostNetworkVo.networkAttachments
 
 		val res: Result<Boolean> = conn.setupNetworksFromHost(
 			hostId,
@@ -124,6 +135,18 @@ class ItHostNicServiceImpl(
 			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
 			hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
 		)
+
+		if(res.isSuccess && modifiedAttachments.any { it.inSync }){
+			syncallNetworksHost(hostId)
+		}
+
+		return res.isSuccess
+	}
+
+	@Throws(Error::class)
+	override fun syncallNetworksHost(hostId: String): Boolean {
+		log.info("syncallNetworksHost ... hostId: {}", hostId)
+		val res: Result<Boolean> = conn.syncallNetworksHost(hostId)
 		return res.isSuccess
 	}
 
