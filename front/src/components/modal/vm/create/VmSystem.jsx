@@ -132,6 +132,12 @@ const VmSystem = ({
     }));
   }
 
+  /**
+   * @name handleMemoryChange
+   * 
+   * @param {string} field 필든
+   * @returns 
+   */
   // 최대메모리: 메모리크기 x 4 , 할당할 실제 메모리: 메모리크기와 같음
   const handleMemoryChange = (field) => (e) => {
     const value = e.target.value;
@@ -150,9 +156,9 @@ const VmSystem = ({
           updatedState.memoryGuaranteed = "";
         }
         
-        const msg = Object.keys(updatedState).filter((e) => {
+        const msg = Object.keys(updatedState).filter((e) => (
           ["memoryMax","memoryGuaranteed","memorySize"].includes(e)
-        }).map((e) => (
+        )).map((e) => (
           `field: ${e}, value: ${updatedState[e]}`
         )).join("\n")
         
@@ -194,21 +200,24 @@ const VmSystem = ({
           options={sizeUnitOptions}
           onChange={handleSelectIdChange(sizeUnitVo, sizeUnitOptions, validationToast)}
         /> */}
-        <LabelSelectOptions label={`메모리 크기 (${sizeUnitVo.name})`}
+        <LabelInputNum label={`메모리 크기 (${sizeUnitVo.name})`}
           value={formSystemState.memorySize} 
-          options={sizeInGibAvailable}
+          /*options={sizeInGibAvailable}*/
+          placeholder={`메모리 크기 (${sizeUnitVo.name})`}
           onChange={handleMemoryChange("memorySize")}
         />
-        <LabelSelectOptions id="mem-max"label={`최대 메모리 (${sizeUnitVo.name})`}
+        <LabelInputNum id="mem-max"label={`최대 메모리 (${sizeUnitVo.name})`}
           disabled
           value={formSystemState.memoryMax} 
           options={sizeMaxInGibAvailable}
+          placeholder={`최대 메모리 (${sizeUnitVo.name})`}
           onChange={handleMemoryChange("memoryMax")}
         />
-        <LabelSelectOptions id="mem-actual" label={`할당할 실제 메모리 (${sizeUnitVo.name})`}
+        <LabelInputNum id="mem-actual" label={`할당할 실제 메모리 (${sizeUnitVo.name})`}
           disabled
           value={formSystemState.memoryGuaranteed} 
           options={sizeInGibAvailable}
+          placeholder={`할당할 실제 메모리 (${sizeUnitVo.name})`}
           onChange={handleMemoryChange("memoryGuaranteed") }
         />
         <LabelInputNum id="cpu-total" label="총 가상 CPU"

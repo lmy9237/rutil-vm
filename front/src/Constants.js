@@ -1,3 +1,5 @@
+import Localization from "@/utils/Localization";
+
 const baseUrl = () => {
   let _value = 'localhost'; // 기본값
   try {
@@ -27,6 +29,26 @@ const isLoggingEnabled = () => {
     '__RUTIL_VM_LOGGING_ENABLED__' === 'true';
   console.debug(`Constants > isLoggingEnabled ... value: ${_value}`)
   return _value
+}
+
+const isLicenseVerified = () => {
+  const _value = import.meta.env.VITE_RUTIL_VM_IS_LICENCE_VERIFIED === "true" || 
+    '__RUTIL_VM_IS_LICENCE_VERIFIED__' === 'true';
+  console.debug(`Constants > isLicenseVerified ... value: ${_value}`)
+  return _value
+  // TODO: Boolean 대신 값을 검증하는 기능 필요
+}
+
+const watermarkText = () => {
+  let _value = "테스트용 입니다."; // 기본값
+  try {
+    _value = import.meta.env.VITE_RUTIL_VM_WATERMARK_TEXT;
+    if (import.meta.env.PROD) _value = '__RUTIL_VM_WATERMARK_TEXT__';
+  } catch(e) {
+     console.error(`Constants > baseUrl ... ${e.message}`)
+  }
+  return _value
+  // TODO: Boolean 대신 값을 검증하는 기능 필요
 }
 
 // 칩셋 옵션 (a.k.a. biosType)
@@ -66,6 +88,8 @@ const CONSTANT = {
   baseUrl: baseUrl(),
   itemsPerPage: itemsPerPage(),
   isLoggingEnabled: isLoggingEnabled(),
+  isLicenseVerified: isLicenseVerified(),
+  watermarkText: watermarkText(),
   templateIdDefault: "00000000-0000-0000-0000-000000000000",
   chipsetOptions: chipsetOptions(),
   cpuArcs: cpuArcs(),
@@ -73,6 +97,7 @@ const CONSTANT = {
   regex: {
     uuid: /\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
   },
+  GIB_IN_BYTE: 1024 * 1024 * 1024,
   queryMaxSize: 5000,
   color: {
     ok: "#E7F2FF",

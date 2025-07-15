@@ -13,11 +13,15 @@ import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.repository.engine.DnsResolverConfigurationRepository
 import com.itinfo.rutilvm.api.repository.engine.NameServerRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkClusterViewRepository
+import com.itinfo.rutilvm.api.repository.engine.NetworkFilterRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkFilterEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toClusterVoFromNetworkClusterViewEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkFilterVosFromNetworkFilterEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVoFromNetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
 import com.itinfo.rutilvm.api.service.BaseService
@@ -167,10 +171,10 @@ interface ItNetworkService {
 	 * [ItNetworkService.findAllNetworkFilters]
 	 * vNIC Profile 생성 시 필요한 네트워크 필터 목록
 	 *
-	 * @return List<[IdentifiedVo]>
+	 * @return List<[NetworkFilterVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllNetworkFilters(): List<IdentifiedVo>
+	fun findAllNetworkFilters(): List<NetworkFilterVo>
 	/**
 	 * [ItNetworkService.findAllBondModes]
 	 * 호스트 네트워크 본딩 옵션 목록 조회
@@ -186,9 +190,11 @@ class NetworkServiceImpl(
 ): BaseService(), ItNetworkService {
 
 	@Autowired private lateinit var rNetwork: NetworkRepository
-	@Autowired private lateinit var rNetworkCluster: NetworkClusterViewRepository
+	@Autowired private lateinit var rNetworkClusters: NetworkClusterViewRepository
 	@Autowired private lateinit var rDnsConfigs: DnsResolverConfigurationRepository
 	@Autowired private lateinit var rNameServers: NameServerRepository
+	@Autowired private lateinit var rNetworkFilters: NetworkFilterRepository
+	@Autowired private lateinit var rVms: VmRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
@@ -238,7 +244,8 @@ class NetworkServiceImpl(
 		networkId: UUID
 	) {
 		log.info("updateDnsNameServers ... dnsNameServers: {} networkId: {}", dnsNameServers, networkId)
-		val network2UpdateDns: NetworkEntity = rNetwork.findByNetworkId(networkId) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val network2UpdateDns: NetworkEntity = rNetwork.findByNetworkId(networkId)
+			?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 		var dnsConfig: DnsResolverConfigurationEntity? = network2UpdateDns.dnsConfiguration
 		if (dnsNameServers.isEmpty()) {
 			if (dnsConfig != null) {
@@ -320,7 +327,7 @@ class NetworkServiceImpl(
 		// val dcId = network.dataCenter().id()
 		// val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
 		// return res.toNetworkClusterVos(conn, networkId)
-		val res: List<NetworkClusterViewEntity>? = rNetworkCluster.findByNetworkId(networkId.toUUID())
+		val res: List<NetworkClusterViewEntity>? = rNetworkClusters.findByNetworkId(networkId.toUUID())
 		return res?.toClusterVoFromNetworkClusterViewEntities()
 	}
 
@@ -355,7 +362,9 @@ class NetworkServiceImpl(
 	override fun findAllVmsNicFromNetwork(networkId: String): List<NicVo> {
 		log.info("findAllVmsFromNetwork ... networkId: {}", networkId)
 		val res: List<Vm> = conn.findAllVms(follow = "nics.vnicprofile,nics.statistics").getOrDefault(emptyList())
-			.filter { vm -> vm.nics().any { nic -> nic.vnicProfile().network().id() == networkId } }
+				.filter {
+					it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
+				}
 
 		return res.flatMap { vm ->
 			vm.nics().map { nic -> nic.toNetworkVmMenu(conn) } // NicVo로 변환
@@ -364,7 +373,6 @@ class NetworkServiceImpl(
 
 	@Throws(Error::class)
 	override fun findAllTemplatesFromNetwork(networkId: String): List<NetworkTemplateVo> {
-		// TODO
 		log.info("findAllTemplatesFromNetwork ... networkId: {}", networkId)
 		val res: List<Template> = conn.findAllTemplates(follow = "nics.vnicprofile").getOrDefault(emptyList())
 			.filter { it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
@@ -375,10 +383,11 @@ class NetworkServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllNetworkFilters(): List<IdentifiedVo> {
+	override fun findAllNetworkFilters(): List<NetworkFilterVo> {
 		log.info("findAllNetworkFilters ... ")
-		val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(emptyList())
-		return res.fromNetworkFiltersToIdentifiedVos()
+		// val res: List<NetworkFilter> = conn.findAllNetworkFilters().getOrDefault(emptyList())
+		val networkFiltersFound: List<NetworkFilterEntity> = rNetworkFilters.findAll()
+		return networkFiltersFound.toNetworkFilterVosFromNetworkFilterEntities()
 	}
 
 	@Throws(Error::class)

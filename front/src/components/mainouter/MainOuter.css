@@ -8,8 +8,8 @@
 }
 
 .main-outer {
-  width: 100%;
-  height: calc(var(--h-rutil-content) - 8px);
+  width: 100%;height: calc(var(--h-rutil-content) - 8px);
+  /* z-index: 1000; */
   overflow-y: hidden;
 }
 .main-outer.open {

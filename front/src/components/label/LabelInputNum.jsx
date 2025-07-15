@@ -22,6 +22,7 @@ const LabelInputNum = ({
   autoFocus = false,
   onChange,
   disabled = false,
+  placeholder="",
   ...props
 }) => {
   return (
@@ -34,6 +35,7 @@ const LabelInputNum = ({
         onChange={onChange}
         autoFocus={autoFocus}
         disabled={disabled}
+        placeholder={placeholder}
         min={0}
         {...props}
       />

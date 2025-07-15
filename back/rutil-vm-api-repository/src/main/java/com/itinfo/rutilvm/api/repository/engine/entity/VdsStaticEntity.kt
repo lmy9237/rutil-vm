@@ -95,7 +95,7 @@ class VdsStaticEntity(
 	@OneToOne(
 		fetch=FetchType.LAZY,
 		cascade=[CascadeType.ALL]
-	) // Cascade if VdsDynamic lifecycle depends on VdsStatic
+	)
 	@JoinColumn(
 		name="vds_id",
 		referencedColumnName="vds_id",

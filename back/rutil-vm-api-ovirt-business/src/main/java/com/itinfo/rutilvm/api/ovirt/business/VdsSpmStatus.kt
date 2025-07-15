@@ -20,14 +20,10 @@ enum class VdsSpmStatus(
 	val code: String
 		get() = this@VdsSpmStatus.name.uppercase()
 
-	val localizationKey: String
-		get() = "${VdsSpmStatus::class.java.simpleName}.${this.name}"
-	private val loc: Localization
-		get() = Localization.getInstance()
-	val en: String
-		get() = loc.findLocalizedName4VdsSpmStatus(this, "en")
-	val kr: String
-		get() = loc.findLocalizedName4VdsSpmStatus(this, "kr")
+	val localizationKey: String			get() = "${VdsSpmStatus::class.java.simpleName}.${this.name}"
+	private val loc: Localization		get() = Localization.getInstance()
+	val en: String						get() = loc.findLocalizedName4VdsSpmStatus(this, "en")
+	val kr: String						get() = loc.findLocalizedName4VdsSpmStatus(this, "kr")
 
 	companion object {
 		private val valueMapping: MutableMap<Int, VdsSpmStatus> = ConcurrentHashMap<Int, VdsSpmStatus>()

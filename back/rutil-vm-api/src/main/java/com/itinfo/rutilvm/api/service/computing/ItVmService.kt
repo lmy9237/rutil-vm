@@ -337,7 +337,7 @@ class VmServiceImpl(
 		val changeNicsMap = changeNics.associateBy { it.id }
 
 		val nicsToDelete = existNics.filter { !changeNicsMap.containsKey(it.id()) }
-		val nicsToAdd = changeNics.filter { it.id.isEmpty() }
+		val nicsToAdd = changeNics.filter { it.id?.isEmpty() == true }
 
 		nicsToDelete.forEach {
 			conn.removeNicFromVm(vmVo.id, it.id()).getOrElse {

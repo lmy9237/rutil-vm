@@ -232,7 +232,7 @@ const HostNics = ({
       networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ id: na.id }))
     };
 
-    Logger.debug(`hostSetup handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
+    Logger.debug(`HostNics > handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
     setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
 
     resetState(); // 초기화
@@ -240,6 +240,7 @@ const HostNics = ({
 
   // 변경 감지를 위한 유틸리티 함수들
   const compareAndExtractChanges = useCallback(() => {
+    Logger.debug(`HostNics > compareAndExtractChanges ... `);
     // 초기 데이터
     const initialNics = hostNics; // transNicData 대신 원본 hostNics 사용
     const initialNAs = transNAData;

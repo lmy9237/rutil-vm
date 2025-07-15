@@ -246,14 +246,12 @@ fun NetworkVo.toNetworkBuilder(): NetworkBuilder {
 }
 
 // 필요 name, datacenter_id
-fun NetworkVo.toAddNetwork(): Network =
-	toNetworkBuilder().build()
+fun NetworkVo.toAddNetwork(): Network = toNetworkBuilder()
+	.build()
 
-fun NetworkVo.toEditNetwork(): Network {
-	return toNetworkBuilder()
-		.id(id)
-		.build()
-}
+fun NetworkVo.toEditNetwork(): Network = toNetworkBuilder()
+	.id(id)
+	.build()
 
 fun NetworkVo.toAddClusterAttach(conn: Connection, networkId: String) {
 	val network = conn.findNetwork(networkId)
@@ -304,6 +302,4 @@ fun NetworkVo.toAddNetworkLabel(conn: Connection, networkId: String) {
 		)
 	}
 }
-
-
 // endregion

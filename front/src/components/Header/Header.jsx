@@ -1,10 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import useSearch              from "@/hooks/useSearch";
-import useAsideState          from "@/hooks/useAsideState";
-import useBoxState            from "@/hooks/useBoxState";
-import useFooterState         from "@/hooks/useFooterState";
-import useTmi                 from "@/hooks/useTmi";
+import CONSTANT                      from "@/Constants";
+import useSearch                     from "@/hooks/useSearch";
+import useAsideState                 from "@/hooks/useAsideState";
+import useBoxState                   from "@/hooks/useBoxState";
+import useFooterState                from "@/hooks/useFooterState";
+import useTmi                        from "@/hooks/useTmi";
 import {
   LogoIcon,
   TopMenuIcon,
@@ -15,10 +16,12 @@ import {
   rvi24PersonCircle,
   rvi24BellNew,
 } from "@/components/icons/RutilVmIcons";
-import Logger                 from "@/utils/Logger";
+
+import BoxEvent                      from "./BoxEvent";
+import BoxUser                       from "./BoxUser";
+import Localization                  from "@/utils/Localization";
+import Logger                        from "@/utils/Logger";
 import "./Header.css";
-import BoxEvent               from "./BoxEvent";
-import BoxUser                from "./BoxUser";
 
 /**
  * @name Header
@@ -40,21 +43,22 @@ const Header = () => {
     setTmiLastSelected
   } = useTmi();
 
-  Logger.debug(`Header ...`)
   return (
     <div className="header f-btw">
-      <div id="header-left" className="f-start">
+      <div id="header-left" className="f-start h-full">
         <TopMenuIcon 
           iconDef={rvi24Hamburger("white")} 
           onClick={(e) => {
             e.stopPropagation()
             toggleAsideVisible()
-          }} />
+          }}
+        />
         <LogoIcon disableHover={true} 
-          onClick={() => navigate("/")} />
+          onClick={() => navigate("/")} 
+        />
       </div>
 
-      <div id="header-right" className="f-end">
+      <div id="header-right" className="f-end h-full">
         <TopMenuIcon iconDef={rvi24Refresh("white")}
           onClick={() => {
             setFooterHeightInPx(40)

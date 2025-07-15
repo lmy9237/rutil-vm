@@ -2474,7 +2474,7 @@ const ApiManager = {
    */
     findAllNetworkFilters : async () => makeAPICall({
       method: "GET", 
-      url: ENDPOINTS.FIND_ALL_NETWORKFILTERS(),
+      url: ENDPOINTS.FIND_ALL_NETWORK_FILTERS(),
     }),
 
   // endregion: vnicprofile

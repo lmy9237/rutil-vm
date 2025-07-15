@@ -27,6 +27,7 @@ import org.ovirt.engine.sdk4.types.MigrationBandwidthAssignmentMethod
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.MigrationOptions
 import org.ovirt.engine.sdk4.types.NetworkStatus
+import org.ovirt.engine.sdk4.types.NicInterface
 import org.ovirt.engine.sdk4.types.NicStatus
 import org.ovirt.engine.sdk4.types.OperatingSystem
 import org.ovirt.engine.sdk4.types.OperatingSystemInfo
@@ -55,23 +56,19 @@ fun StoragePoolStatus?.toDataCenterStatus(): DataCenterStatus =
 fun LogSeverity?.toAuditLogSeverity(): AuditLogSeverity =
 	AuditLogSeverity.forCode(this@toAuditLogSeverity?.value())
 
-fun VmStatus?.toVmStatusB(): VmStatusB =
-	VmStatusB.forCode(this@toVmStatusB?.value())
+fun VmStatus?.toVmStatusB(): VmStatusB = VmStatusB.forCode(this@toVmStatusB?.value())
+fun VmStatusB?.toVmStatus(): VmStatus = VmStatus.fromValue(this@toVmStatus?.code)
+fun Vm.findStatus(): VmStatusB = this@findStatus.status().toVmStatusB()
 
-fun Vm.findStatus(): VmStatusB =
-	this@findStatus.status().toVmStatusB()
+fun VmTemplateStatusB.toTemplateStatus(): TemplateStatus = TemplateStatus.fromValue(this@toTemplateStatus.code)
+fun TemplateStatus?.toVmTemplateStatusB(): VmTemplateStatusB = VmTemplateStatusB.forCode(this@toVmTemplateStatusB?.value())
+fun Template.findTemplateStatus(): VmTemplateStatusB = this@findTemplateStatus.status().toVmTemplateStatusB()
 
-fun VmTemplateStatusB.toTemplateStatus(): TemplateStatus =
-	TemplateStatus.fromValue(this@toTemplateStatus.code)
+fun VmType?.toVmTypeB(): VmTypeB? = VmTypeB.forCode(this@toVmTypeB?.value())
+fun VmTypeB?.toVmType(): VmType? = VmType.fromValue(this@toVmType?.code)
 
-fun TemplateStatus?.toVmTemplateStatusB(): VmTemplateStatusB =
-	VmTemplateStatusB.forCode(this@toVmTemplateStatusB?.value())
-
-fun Template.findTemplateStatus(): VmTemplateStatusB =
-	this@findTemplateStatus.status().toVmTemplateStatusB()
-
-fun VmType?.toVmTypeB(): VmTypeB? =
-	VmTypeB.forCode(this@toVmTypeB?.value())
+fun NicInterface?.toVmInterfaceType(): VmInterfaceType = VmInterfaceType.forCode(this@toVmInterfaceType?.value())
+fun VmInterfaceType?.toNicInterface(): NicInterface = NicInterface.fromValue(this@toNicInterface?.code)
 
 fun BootSequence.toBootDevices(): List<BootDevice> = when(this@toBootDevices) {
 	BootSequence.C -> listOf(BootDevice.HD)
@@ -109,8 +106,6 @@ fun List<BootDevice>.toBootSequence(): BootSequence = when {
 	this@toBootSequence.deepEquals(listOf(BootDevice.HD)) -> BootSequence.C
 	else -> BootSequence.C
 }
-
-fun VmTypeB?.toVmType(): VmType? = VmType.fromValue(this@toVmType?.name)
 
 fun BiosType?.toBiosTypeB(): BiosTypeB = BiosTypeB.forCode(this@toBiosTypeB?.value())
 fun BiosTypeB?.toBiosType(): BiosType? = BiosType.fromValue(this@toBiosType?.name?.lowercase())

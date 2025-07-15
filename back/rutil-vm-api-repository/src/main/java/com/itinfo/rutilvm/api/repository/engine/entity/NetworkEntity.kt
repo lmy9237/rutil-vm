@@ -98,10 +98,22 @@ class NetworkEntity(
 	@OneToOne(
 		fetch=FetchType.LAZY,
 		cascade=[CascadeType.ALL],
-		mappedBy="network", // NetworkClusterEntity.id.network
-		orphanRemoval= true
+		mappedBy="network",
+		orphanRemoval=true
 	)
 	var networkCluster: NetworkClusterEntity? = null,
+	@OneToMany(
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.ALL],
+		orphanRemoval=true,
+		mappedBy="network"
+	)
+	/*@JoinColumn(
+		name="id",
+		referencedColumnName="network_id",
+		nullable=true
+	)*/
+	var vnicProfiles: MutableSet<VnicProfileEntity>? = mutableSetOf(),
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -135,7 +147,8 @@ class NetworkEntity(
 		private var bProvider: ProvidersEntity? = null;fun provider(block: () -> ProvidersEntity?) { bProvider = block() }
 		private var bDnsConfiguration: DnsResolverConfigurationEntity? = null;fun dnsConfiguration(block: () -> DnsResolverConfigurationEntity?) { bDnsConfiguration = block() }
 		private var bNetworkCluster: NetworkClusterEntity? = null;fun networkCluster(block: () -> NetworkClusterEntity?) { bNetworkCluster = block() }
-		fun build(): NetworkEntity = NetworkEntity(bId, bName, bDescription, bType, bAddr, bSubnet, bGateway, bStp, bVlanId, bMtu, bVmNetwork, bProviderNetworkExternalId, bFreeTextComment, bLabel, bVdsmName, bProviderPhysicalNetworkId, bPortIsolation, bStoragePool, bProvider, bDnsConfiguration, bNetworkCluster)
+		private var bVnicProfiles: MutableSet<VnicProfileEntity>? = mutableSetOf();fun vnicProfiles(block: () -> MutableSet<VnicProfileEntity>?) { bVnicProfiles = block() ?: mutableSetOf() }
+		fun build(): NetworkEntity = NetworkEntity(bId, bName, bDescription, bType, bAddr, bSubnet, bGateway, bStp, bVlanId, bMtu, bVmNetwork, bProviderNetworkExternalId, bFreeTextComment, bLabel, bVdsmName, bProviderPhysicalNetworkId, bPortIsolation, bStoragePool, bProvider, bDnsConfiguration, bNetworkCluster, bVnicProfiles)
 	}
 
 	companion object {

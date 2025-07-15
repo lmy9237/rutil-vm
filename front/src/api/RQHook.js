@@ -4704,7 +4704,7 @@ export const useDeleteVnicProfile = (
 };
 
 /**
- * @name useNetworkFilters
+ * @name useAllNetworkFilters
  * @description 네트워크 필터 목록조회 useQuery훅
  * 
  * @param {function} mapPredicate 목록객체 변형 처리
@@ -4712,7 +4712,7 @@ export const useDeleteVnicProfile = (
  * 
  * @see ApiManager.findAllNetworkFilters
  */
-export const useNetworkFilters = (
+export const useAllNetworkFilters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
@@ -4722,7 +4722,7 @@ export const useNetworkFilters = (
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useAllTemplatesFromVnicProfiles ... res: `, _res);
+    Logger.debug(`RQHook > useAllNetworkFilters ... res: `, _res);
     return _res;
   }
 })

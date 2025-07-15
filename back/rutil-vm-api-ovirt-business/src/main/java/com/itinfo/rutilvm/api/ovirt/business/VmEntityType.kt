@@ -24,15 +24,10 @@ enum class VmEntityType(
 			this == INSTANCE_TYPE ||
 			this == IMAGE_TYPE
 
-	val localizationKey: String
-		get() = "${VmEntityType::class.java.simpleName}.${this.name}"
-	private val loc: Localization
-		get() = Localization.getInstance()
-
-	val en: String
-		get() = loc.findLocalizedName4VmEntityType(this, "en")
-	val kr: String
-		get() = loc.findLocalizedName4VmEntityType(this, "kr")
+	val localizationKey: String			get() = "${VmEntityType::class.java.simpleName}.${this.name}"
+	private val loc: Localization		get() = Localization.getInstance()
+	val en: String						get() = loc.findLocalizedName4VmEntityType(this, "en")
+	val kr: String						get() = loc.findLocalizedName4VmEntityType(this, "kr")
 
 	companion object {
 		private val codeMapping: MutableMap<String, VmEntityType> = ConcurrentHashMap<String, VmEntityType>()
@@ -43,11 +38,7 @@ enum class VmEntityType(
 				codeMapping[it.name] = it
 			}
 		}
-
-		val allVmEntityTypes: List<VmEntityType> = VmEntityType.values().filterNot {
-			it == UNKNOWN
-		}
-
+		val allVmEntityTypes: List<VmEntityType> = VmEntityType.values().filterNot { it == UNKNOWN }
 		@JvmStatic fun forCode(code: String?): VmEntityType = codeMapping[code?.uppercase() ?: UNKNOWN.code] ?: UNKNOWN
 	}
 }

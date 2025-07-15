@@ -10,7 +10,7 @@ import java.util.UUID
 @Repository
 interface NetworkRepository: JpaRepository<NetworkEntity, UUID> {
 	@Query("""
-SELECT n FROM NetworkEntity n
+SELECT DISTINCT n FROM NetworkEntity n
 LEFT JOIN FETCH n.storagePool sp
 LEFT JOIN FETCH n.provider p
 LEFT JOIN FETCH n.dnsConfiguration dc
@@ -19,12 +19,14 @@ LEFT JOIN FETCH ns.dnsResolverConfiguration drc
 LEFT JOIN FETCH n.networkCluster nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 """)
 	override fun findAll(): List<NetworkEntity>
 
 	@Query("""
-SELECT n FROM NetworkEntity n
+SELECT DISTINCT n FROM NetworkEntity n
 LEFT JOIN FETCH n.storagePool sp
 LEFT JOIN FETCH n.provider p
 LEFT JOIN FETCH n.dnsConfiguration dc
@@ -33,6 +35,8 @@ LEFT JOIN FETCH ns.dnsResolverConfiguration drc
 LEFT JOIN FETCH n.networkCluster nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 AND n.id = :id
 """)
@@ -50,6 +54,8 @@ LEFT JOIN FETCH ns.dnsResolverConfiguration drc
 LEFT JOIN FETCH n.networkCluster nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 AND c.clusterId = :clusterId
 """)

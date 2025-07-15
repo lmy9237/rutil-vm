@@ -40,7 +40,9 @@ const LabelSelectOptionsID = forwardRef(({
     const selected = _options.find((opt) => opt.id === value);
     return (selected === undefined || selected?.id === placeholderValue)
       ? placeholderLabel
-      : `${selected.name}: ${selected.id} ${etcLabel}`
+      : import.meta.env.DEV
+        ? `${selected?.name}: ${selected?.id} ${etcLabel}`
+        : `${selected?.name}  ${etcLabel}` || ""
   }, [loading, options, value, etcLabel]);
 
   const handleValueChange = (selectedId) => {

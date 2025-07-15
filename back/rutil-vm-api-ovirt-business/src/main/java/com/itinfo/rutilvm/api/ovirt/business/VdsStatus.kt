@@ -56,14 +56,10 @@ enum class VdsStatus(
 				this != down &&
 				this != kdumping
 
-	val localizationKey: String
-		get() = "${VdsStatus::class.java.simpleName}.${this.name}"
-	private val loc: Localization
-		get() = Localization.getInstance()
-	val en: String
-		get() = loc.findLocalizedName4VdsStatus(this, "en")
-	val kr: String
-		get() = loc.findLocalizedName4VdsStatus(this, "kr")
+	val localizationKey: String				get() = "${VdsStatus::class.java.simpleName}.${this.name}"
+	private val loc: Localization			get() = Localization.getInstance()
+	val en: String							get() = loc.findLocalizedName4VdsStatus(this, "en")
+	val kr: String							get() = loc.findLocalizedName4VdsStatus(this, "kr")
 
 	companion object {
 		private val valueMapping: MutableMap<Int, VdsStatus> = ConcurrentHashMap<Int, VdsStatus>()
@@ -78,6 +74,7 @@ enum class VdsStatus(
 		}
 		@JvmStatic fun forValue(value: Int?): VdsStatus = valueMapping[value ?: unknown.value] ?: unknown
 		@JvmStatic fun forCode(code: String?): VdsStatus = codeMapping[code ?: unknown.code] ?: unknown
+		val allVdsStatuses: List<VdsStatus> = VdsStatus.values().toList()
 	}
 }
 

@@ -16,7 +16,7 @@ import {
   useAllVmsFromVnicProfiles,
   useAllVnicProfiles,
   useEditVnicProfile,
-  useNetworkFilters,
+  useAllNetworkFilters,
   useVnicProfile,
 } from "@/api/RQHook";
 import { 
@@ -79,7 +79,7 @@ const VnicProfileModal = ({
     data: nFilters = [], 
     isLoading: isNFiltersLoading,
     isSuccess: isNFiltersSuccess,
-  } = useNetworkFilters((e) => ({ ...e }));
+  } = useAllNetworkFilters((e) => ({ ...e }));
 
 
   useEffect(() => {

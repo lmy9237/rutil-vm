@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.DiskProfileVo
@@ -327,7 +328,7 @@ class StorageController: BaseController() {
 	@ResponseBody
 	fun hostsFromStorageDomain(
 		@PathVariable("storageDomainId") storageDomainId: String? = null // id=dcId
-	): ResponseEntity<List<HostVo>> {
+	): ResponseEntity<List<IdentifiedVo>> {
 		if (storageDomainId == null)
 			throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()
 		log.info("/storages/{}/hosts ... 스토리지 도메인 밑에 붙어있는 데이터센터가 가진 호스트 목록", storageDomainId)

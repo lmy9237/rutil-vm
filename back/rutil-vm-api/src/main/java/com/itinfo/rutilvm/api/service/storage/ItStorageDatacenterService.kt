@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.service.storage
 
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
@@ -35,10 +36,10 @@ interface ItStorageDatacenterService {
 	 * 스토리지도메인 - 호스트 목록
 	 *
 	 * @param storageDomainId [String] 스토리지 도메인 Id
-	 * @return List<[HostVo]> 호스트 목록
+	 * @return List<[IdentifiedVo]> 호스트 목록
 	 */
 	@Throws(Error::class)
-	fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo>
+	fun findAllHostsFromStorageDomain(storageDomainId: String): List<IdentifiedVo>
 
 	/**
 	 * [ItStorageDatacenterService.attachFromDataCenter]
@@ -108,7 +109,7 @@ class StorageDatacenterServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findAllHostsFromStorageDomain(storageDomainId: String): List<HostVo> {
+	override fun findAllHostsFromStorageDomain(storageDomainId: String): List<IdentifiedVo> {
 		log.info("findAllHostsFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val storageDomain: StorageDomain = conn.findStorageDomain(storageDomainId)
 			.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_ID_NOT_FOUND.toException()

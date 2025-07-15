@@ -14,14 +14,10 @@ enum class SwitchTypeB(
 	legacy,
 	ovs;
 
-	val localizationKey: String
-		get() = "${SwitchTypeB::class.java.simpleName}.${this.name}"
-	private val loc: Localization
-		get() = Localization.getInstance()
-	val en: String
-		get() = loc.findLocalizedName4SwitchType(this, "en")
-	val kr: String
-		get() = loc.findLocalizedName4SwitchType(this, "kr")
+	val localizationKey: String				get() = "${SwitchTypeB::class.java.simpleName}.${this.name}"
+	private val loc: Localization			get() = Localization.getInstance()
+	val en: String							get() = loc.findLocalizedName4SwitchType(this, "en")
+	val kr: String							get() = loc.findLocalizedName4SwitchType(this, "kr")
 
 	override fun toString(): String = code
 	val code: String

@@ -154,47 +154,47 @@ class HostVo (
 		gson.toJson(this)
 
     class Builder {
-        private var bId: String = ""; fun id(block: () -> String?) { bId = block() ?: ""}
-        private var bName: String = ""; fun name(block: () -> String?) { bName = block() ?: ""}
-        private var bComment: String = ""; fun comment(block: () -> String?) { bComment = block() ?: ""}
-        private var bAddress: String = ""; fun address(block: () -> String?) { bAddress = block() ?: ""}
-        private var bDevicePassThrough: Boolean = false; fun devicePassThrough(block: () -> Boolean?) { bDevicePassThrough = block() ?: false}
-        // private var bHostedActive: Boolean = false; fun hostedActive(block: () -> Boolean?) { bHostedActive = block() ?: false }
-		// private var bHostedScore: Int = 0; fun hostedScore(block: () -> Int?) { bHostedScore = block() ?: 0 }
-        private var bIscsi: String = ""; fun iscsi (block: () -> String?) { bIscsi = block() ?: ""}
-        private var bKdump: KdumpStatus = KdumpStatus.UNKNOWN; fun kdump (block: () -> KdumpStatus?) { bKdump = block() ?: KdumpStatus.UNKNOWN}
-        private var bKsm: Boolean = false; fun ksm(block: () -> Boolean?) { bKsm = block() ?: false }
-        private var bSeLinux: SELinuxModeB? = SELinuxModeB.disabled; fun seLinux(block: () -> SELinuxModeB?) { bSeLinux = block() ?: SELinuxModeB.disabled }
-        private var bHostedEngine: HostedEngineVo? = null; fun hostedEngine(block: () -> HostedEngineVo?) { bHostedEngine = block() }
-        private var bHostedEngineVM: Boolean = false; fun hostedEngineVM(block: () -> Boolean?) { bHostedEngineVM = block() ?: false }
-        private var bSpmPriority: Int = 0; fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
-        private var bSpmStatus: VdsSpmStatus? = VdsSpmStatus.none; fun spmStatus(block: () -> VdsSpmStatus?) { bSpmStatus = block() ?: VdsSpmStatus.none }
-        private var bSsh: SshVo? = null; fun ssh(block: () -> SshVo?) { bSsh = block() }
-        private var bStatus: VdsStatus? = VdsStatus.non_responsive; fun status(block: () -> VdsStatus?) { bStatus = block() ?: VdsStatus.non_responsive }
-        private var bTransparentPage: Boolean = false; fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
-        private var bVmMigratingCnt: Int = 0; fun vmMigratingCnt(block: () -> Int?) { bVmMigratingCnt = block() ?: 0 }
-        private var bVgpu: String = ""; fun vgpu(block: () -> String?) { bVgpu = block() ?: "" }
-        private var bMemoryTotal: BigInteger = BigInteger.ZERO; fun memoryTotal (block: () -> BigInteger?) { bMemoryTotal = block() ?: BigInteger.ZERO}
-        private var bMemoryUsed: BigInteger = BigInteger.ZERO; fun memoryUsed (block: () -> BigInteger?) { bMemoryUsed = block() ?: BigInteger.ZERO}
-        private var bMemoryFree: BigInteger = BigInteger.ZERO; fun memoryFree (block: () -> BigInteger?) { bMemoryFree = block() ?: BigInteger.ZERO}
-        private var bMemoryMax: BigInteger = BigInteger.ZERO; fun memoryMax (block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO}
-        private var bMemoryShared: BigInteger = BigInteger.ZERO; fun memoryShared (block: () -> BigInteger?) { bMemoryShared = block() ?: BigInteger.ZERO}
-        private var bSwapTotal: BigInteger = BigInteger.ZERO; fun swapTotal (block: () -> BigInteger?) { bSwapTotal = block() ?: BigInteger.ZERO}
-        private var bSwapUsed: BigInteger = BigInteger.ZERO; fun swapUsed (block: () -> BigInteger?) { bSwapUsed = block() ?: BigInteger.ZERO}
-        private var bSwapFree: BigInteger = BigInteger.ZERO; fun swapFree (block: () -> BigInteger?) { bSwapFree = block() ?: BigInteger.ZERO}
-        private var bHugePage2048Free: Int = 0; fun hugePage2048Free(block: () -> Int?) { bHugePage2048Free = block() ?: 0}
-        private var bHugePage2048Total: Int = 0; fun hugePage2048Total(block: () -> Int?) { bHugePage2048Total = block() ?: 0}
-        private var bHugePage1048576Free: Int = 0; fun hugePage1048576Free(block: () -> Int?) { bHugePage1048576Free = block() ?: 0}
-        private var bHugePage1048576Total: Int = 0; fun hugePage1048576Total(block: () -> Int?) { bHugePage1048576Total = block() ?: 0}
-        private var bBootingTime: Date? = null; fun bootingTime (block: () -> Date?) { bBootingTime = block()}
-        private var bHostHwVo: HostHwVo = HostHwVo(); fun hostHwVo(block: () -> HostHwVo?) { bHostHwVo = block() ?: HostHwVo() }
-        private var bHostSwVo: HostSwVo = HostSwVo(); fun hostSwVo(block: () -> HostSwVo?) { bHostSwVo = block() ?: HostSwVo()}
-        private var bClusterVo: IdentifiedVo = IdentifiedVo(); fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
-        private var bDataCenterVo: IdentifiedVo = IdentifiedVo(); fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
-        private var bVmSizeVo: SizeVo = SizeVo(); fun vmSizeVo(block: () -> SizeVo?) { bVmSizeVo = block() ?: SizeVo() }
-        private var bVmVos: List<VmVo> = listOf(); fun vmVos(block: () -> List<VmVo>?) { bVmVos = block() ?: listOf() }
-        private var bHostNicVos: List<HostNicVo> = listOf(); fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
-        private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
+        private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: ""}
+        private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: ""}
+        private var bComment: String = "";fun comment(block: () -> String?) { bComment = block() ?: ""}
+        private var bAddress: String = "";fun address(block: () -> String?) { bAddress = block() ?: ""}
+        private var bDevicePassThrough: Boolean = false;fun devicePassThrough(block: () -> Boolean?) { bDevicePassThrough = block() ?: false}
+        // private var bHostedActive: Boolean = false;fun hostedActive(block: () -> Boolean?) { bHostedActive = block() ?: false }
+		// private var bHostedScore: Int = 0;fun hostedScore(block: () -> Int?) { bHostedScore = block() ?: 0 }
+        private var bIscsi: String = "";fun iscsi(block: () -> String?) { bIscsi = block() ?: ""}
+        private var bKdump: KdumpStatus = KdumpStatus.UNKNOWN;fun kdump(block: () -> KdumpStatus?) { bKdump = block() ?: KdumpStatus.UNKNOWN}
+        private var bKsm: Boolean = false;fun ksm(block: () -> Boolean?) { bKsm = block() ?: false }
+        private var bSeLinux: SELinuxModeB? = SELinuxModeB.disabled;fun seLinux(block: () -> SELinuxModeB?) { bSeLinux = block() ?: SELinuxModeB.disabled }
+        private var bHostedEngine: HostedEngineVo? = null;fun hostedEngine(block: () -> HostedEngineVo?) { bHostedEngine = block() }
+        private var bHostedEngineVM: Boolean = false;fun hostedEngineVM(block: () -> Boolean?) { bHostedEngineVM = block() ?: false }
+        private var bSpmPriority: Int = 0;fun spmPriority(block: () -> Int?) { bSpmPriority = block() ?: 0 }
+        private var bSpmStatus: VdsSpmStatus? = VdsSpmStatus.none;fun spmStatus(block: () -> VdsSpmStatus?) { bSpmStatus = block() ?: VdsSpmStatus.none }
+        private var bSsh: SshVo? = null;fun ssh(block: () -> SshVo?) { bSsh = block() }
+        private var bStatus: VdsStatus? = VdsStatus.non_responsive;fun status(block: () -> VdsStatus?) { bStatus = block() ?: VdsStatus.non_responsive }
+        private var bTransparentPage: Boolean = false;fun transparentPage(block: () -> Boolean?) { bTransparentPage = block() ?: false }
+        private var bVmMigratingCnt: Int = 0;fun vmMigratingCnt(block: () -> Int?) { bVmMigratingCnt = block() ?: 0 }
+        private var bVgpu: String = "";fun vgpu(block: () -> String?) { bVgpu = block() ?: "" }
+        private var bMemoryTotal: BigInteger = BigInteger.ZERO;fun memoryTotal(block: () -> BigInteger?) { bMemoryTotal = block() ?: BigInteger.ZERO}
+        private var bMemoryUsed: BigInteger = BigInteger.ZERO;fun memoryUsed(block: () -> BigInteger?) { bMemoryUsed = block() ?: BigInteger.ZERO}
+        private var bMemoryFree: BigInteger = BigInteger.ZERO;fun memoryFree(block: () -> BigInteger?) { bMemoryFree = block() ?: BigInteger.ZERO}
+        private var bMemoryMax: BigInteger = BigInteger.ZERO;fun memoryMax(block: () -> BigInteger?) { bMemoryMax = block() ?: BigInteger.ZERO}
+        private var bMemoryShared: BigInteger = BigInteger.ZERO;fun memoryShared(block: () -> BigInteger?) { bMemoryShared = block() ?: BigInteger.ZERO}
+        private var bSwapTotal: BigInteger = BigInteger.ZERO;fun swapTotal(block: () -> BigInteger?) { bSwapTotal = block() ?: BigInteger.ZERO}
+        private var bSwapUsed: BigInteger = BigInteger.ZERO;fun swapUsed(block: () -> BigInteger?) { bSwapUsed = block() ?: BigInteger.ZERO}
+        private var bSwapFree: BigInteger = BigInteger.ZERO;fun swapFree(block: () -> BigInteger?) { bSwapFree = block() ?: BigInteger.ZERO}
+        private var bHugePage2048Free: Int = 0;fun hugePage2048Free(block: () -> Int?) { bHugePage2048Free = block() ?: 0}
+        private var bHugePage2048Total: Int = 0;fun hugePage2048Total(block: () -> Int?) { bHugePage2048Total = block() ?: 0}
+        private var bHugePage1048576Free: Int = 0;fun hugePage1048576Free(block: () -> Int?) { bHugePage1048576Free = block() ?: 0}
+        private var bHugePage1048576Total: Int = 0;fun hugePage1048576Total(block: () -> Int?) { bHugePage1048576Total = block() ?: 0}
+        private var bBootingTime: Date? = null;fun bootingTime(block: () -> Date?) { bBootingTime = block()}
+        private var bHostHwVo: HostHwVo = HostHwVo();fun hostHwVo(block: () -> HostHwVo?) { bHostHwVo = block() ?: HostHwVo() }
+        private var bHostSwVo: HostSwVo = HostSwVo();fun hostSwVo(block: () -> HostSwVo?) { bHostSwVo = block() ?: HostSwVo()}
+        private var bClusterVo: IdentifiedVo = IdentifiedVo();fun clusterVo(block: () -> IdentifiedVo?) { bClusterVo = block() ?: IdentifiedVo() }
+        private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
+        private var bVmSizeVo: SizeVo = SizeVo();fun vmSizeVo(block: () -> SizeVo?) { bVmSizeVo = block() ?: SizeVo() }
+        private var bVmVos: List<VmVo> = listOf();fun vmVos(block: () -> List<VmVo>?) { bVmVos = block() ?: listOf() }
+        private var bHostNicVos: List<HostNicVo> = listOf();fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
+        private var bUsageDto: UsageDto = UsageDto();fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
 
         fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSsh, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
     }
@@ -204,13 +204,14 @@ class HostVo (
 }
 
 /**
+ * [Host.toIdentifiedVoFromHost]
  * 호스트 id & name
  */
-fun Host.toIdentifiedVoFromHost(): HostVo = HostVo.builder {
+fun Host.toIdentifiedVoFromHost(): IdentifiedVo = IdentifiedVo.builder {
     id { this@toIdentifiedVoFromHost.id() }
     name { this@toIdentifiedVoFromHost.name() }
 }
-fun List<Host>.toIdentifiedVosFromHosts(): List<HostVo> =
+fun Collection<Host>.toIdentifiedVosFromHosts(): List<IdentifiedVo> =
     this@toIdentifiedVosFromHosts.map { it.toIdentifiedVoFromHost() }
 
 /**
@@ -349,51 +350,53 @@ fun Host.toHostVo(conn: Connection): HostVo {
     val statistics: List<Statistic> = conn.findAllStatisticsFromHost(host.id()).getOrDefault(listOf())
 
     return HostVo.builder {
-        id { host.id() }
-        name { host.name() }
-        comment { host.comment() }
-        address { host.address() }
-        devicePassThrough { host.devicePassthrough().enabled() }
+		id { host.id() }
+		name { host.name() }
+		comment { host.comment() }
+		address { host.address() }
+		devicePassThrough { host.devicePassthrough().enabled() }
 		hostedEngine { if (host.hostedEnginePresent()) host.hostedEngine().toHostedEngineVo() else null }
-        iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
-        kdump { host.kdumpStatus() }
-        ksm { host.ksm().enabled() }
-        seLinux { host.seLinux().mode().toSELinuxModeB() }
-        spmPriority { host.spm().priorityAsInteger() }
-        spmStatus { host.spm().status().toVdsSpmStatus() }
+		iscsi { if(host.iscsiPresent()) host.iscsi().initiator() else "" }
+		kdump { host.kdumpStatus() }
+		ksm { host.ksm().enabled() }
+		seLinux { host.seLinux().mode().toSELinuxModeB() }
+		spmPriority { host.spm().priorityAsInteger() }
+		spmStatus { host.spm().status().toVdsSpmStatus() }
 		ssh { host.ssh().toSshVo() }
-        status { host.status().toVdsStatus() }
-        transparentPage { host.transparentHugePages().enabled() }
-        vmSizeVo { host.findVmCntFromHost() }
-        vmMigratingCnt { host.summary().migratingAsInteger() }
-        memoryTotal { statistics.findMemory("memory.total") }
-        memoryUsed { statistics.findMemory("memory.used") }
-        memoryFree { statistics.findMemory("memory.free") }
-        memoryMax { host.maxSchedulingMemory() }
-        memoryShared { statistics.findSpeed("memory.shared") } // 문제잇음
-        swapTotal { statistics.findSpeed("swap.total") }
-        swapFree { statistics.findSpeed("swap.free") }
-        swapUsed { statistics.findSpeed("swap.used") }
-        hugePage2048Total { statistics.findPage("hugepages.2048.total") }
-        hugePage2048Free { statistics.findPage("hugepages.2048.free") }
-        hugePage1048576Total { statistics.findPage("hugepages.1048576.total") }
-        hugePage1048576Free { statistics.findPage("hugepages.1048576.free") }
-        bootingTime { Date(statistics.findBootTime()) }
+		status { host.status().toVdsStatus() }
+		transparentPage { host.transparentHugePages().enabled() }
+		vmSizeVo { host.findVmCntFromHost() }
+		vmMigratingCnt { host.summary().migratingAsInteger() }
+		memoryTotal { statistics.findMemory("memory.total") }
+		memoryUsed { statistics.findMemory("memory.used") }
+		memoryFree { statistics.findMemory("memory.free") }
+		memoryMax { host.maxSchedulingMemory() }
+		memoryShared { statistics.findSpeed("memory.shared") } // 문제잇음
+		swapTotal { statistics.findSpeed("swap.total") }
+		swapFree { statistics.findSpeed("swap.free") }
+		swapUsed { statistics.findSpeed("swap.used") }
+		hugePage2048Total { statistics.findPage("hugepages.2048.total") }
+		hugePage2048Free { statistics.findPage("hugepages.2048.free") }
+		hugePage1048576Total { statistics.findPage("hugepages.1048576.total") }
+		hugePage1048576Free { statistics.findPage("hugepages.1048576.free") }
+		bootingTime { Date(statistics.findBootTime()) }
         hostHwVo { host.toHostHwVo() }
-//        hostSwVo { host.toHostSwVo() }
-        clusterVo { cluster?.fromClusterToIdentifiedVo() }
-        dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-//        hostNicVos { hostNics.fromHostNicsToIdentifiedVos() }
-        hostNicVos { hostNics.toHostNicVos(conn) }
-        vmVos { vms.toVmVos(conn) }
+//      hostSwVo { host.toHostSwVo() }
+		clusterVo { cluster?.fromClusterToIdentifiedVo() }
+		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
+//		hostNicVos { hostNics.fromHostNicsToIdentifiedVos() }
+		hostNicVos { hostNics.toHostNicVos(conn) }
+		vmVos { vms.toVmVos(conn) }
     }
 }
 fun List<Host>.toHostVos(conn: Connection): List<HostVo> =
-    this@toHostVos.map { it.toHostVo(conn) }
+	this@toHostVos.map { it.toHostVo(conn) }
 
 
 /**
+ * [Connection.isHostedEngineVm]
  * 해당 호스트가 hosted_engine 가상머신을 가졌는 지 여부
+ *
  * @param hostId [String]
  * @return [Boolean]
  */
@@ -402,11 +405,12 @@ fun Connection.isHostedEngineVm(hostId: String): Boolean {
         .getOrDefault(listOf())
         .any { it.isHostedEngineVm }
 }
-
-
 // region: builder
 /**
+ * [HostVo.toHostBuilder]
  * 호스트 빌더
+ *
+ * @return [HostBuilder]
  */
 fun HostVo.toHostBuilder(): HostBuilder = HostBuilder()
 	.name(name)

@@ -8,6 +8,7 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
+import com.itinfo.rutilvm.api.model.network.NetworkFilterVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.NetworkTemplateVo
@@ -380,7 +381,7 @@ class NetworkController: BaseController() {
 	@GetMapping("/networkFilters")
 	@ResponseBody
 	fun networkFilters(
-	): ResponseEntity<List<IdentifiedVo>> {
+	): ResponseEntity<List<NetworkFilterVo>> {
 		log.info("/networkFilters ... 네트워크 필터 목록")
 		return ResponseEntity.ok(iNetwork.findAllNetworkFilters())
 	}

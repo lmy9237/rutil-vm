@@ -89,6 +89,7 @@ const SettingProviderModal = ({
       setDataCenterVo(emptyIdNameVo());
       setHostVo(emptyIdNameVo());
     }
+    
     if (editMode && provider) {
       const property = provider.providerPropertyVo
       setFormState((prev) => ({

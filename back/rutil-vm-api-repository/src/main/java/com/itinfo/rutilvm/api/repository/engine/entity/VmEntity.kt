@@ -487,22 +487,18 @@ class VmEntity(
 	)
 	val vmDevices: Set<VmDeviceEntity>? = emptySet(),
 ): Serializable {
-	val status: VmStatusB?					get() = VmStatusB.forValue(_status)
-	val biosType: BiosTypeB					get() = BiosTypeB.forValue(_biosType)
-	val vmType: VmTypeB?						get() = VmTypeB.forValue(_vmType) /* a.k.a. 최적화 옵션 (optmizationOption) */
+	val status: VmStatusB?						get() = VmStatusB.forValue(_status)
+	val biosType: BiosTypeB						get() = BiosTypeB.forValue(_biosType)
+	val vmType: VmTypeB?							get() = VmTypeB.forValue(_vmType) /* a.k.a. 최적화 옵션 (optmizationOption) */
 
-	val osType: VmOsType?						get() = dwhOsInfo?.toVmOsType()
-	val architecture: ArchitectureType? 		get() = ArchitectureType.forValue(_architecture)
-	val pauseStatus: VmPauseStatusB? 			get() = VmPauseStatusB.forValue(_pauseStatus)
+	val osType: VmOsType?							get() = dwhOsInfo?.toVmOsType()
+	val architecture: ArchitectureType? 			get() = ArchitectureType.forValue(_architecture)
+	val pauseStatus: VmPauseStatusB? 				get() = VmPauseStatusB.forValue(_pauseStatus)
 
-	val memSize: BigInteger?
-		get() = memSizeMb?.times(MEGABYTE_2_BYTE)
+	val memSize: BigInteger?						get() = memSizeMb?.times(MEGABYTE_2_BYTE)
+	val maxMemorySize: BigInteger?				get() = maxMemorySizeMb?.times(MEGABYTE_2_BYTE)
 
-	val maxMemorySize: BigInteger?
-		get() = maxMemorySizeMb?.times(MEGABYTE_2_BYTE)
-
-	val cpuPinningPolicy: CpuPinningPolicyB?
-		get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
+	val cpuPinningPolicy: CpuPinningPolicyB?		get() = CpuPinningPolicyB.forValue(_cpuPinningPolicy)
 
 	var defaultDisplayType: DisplayTypeB?			get() = DisplayTypeB.forValue(_defaultDisplayType)
 														set(newVal) {
@@ -726,7 +722,7 @@ class VmEntity(
 	}
 
 	companion object {
-		val MEGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(2.0.pow(20.0).toLong()) // 2^20승
+		val MEGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(2.0.pow(20.0).toLong()) // 2^10 * 2^20
 		inline fun builder(block: Builder.() -> Unit): VmEntity = Builder().apply(block).build()
 	}
 }

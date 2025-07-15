@@ -327,7 +327,7 @@ class OvfVirtualHardwareSectionDeserializer: StdDeserializer<OvfVirtualHardwareS
 	}
 }
 
-class RasdItemDeserializer : StdDeserializer<RasdItem>(RasdItem::class.java) {
+class RasdItemDeserializer: StdDeserializer<RasdItem>(RasdItem::class.java) {
 	private val qCaption = QName(NS_RASD, "Caption")
 
 	override fun deserialize(

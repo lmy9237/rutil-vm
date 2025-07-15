@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.api.model.fromSnapshotsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromStorageDomainToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.network.toVmNics
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.toDiskAttachmentIdNames
@@ -280,28 +281,29 @@ class VmVo (
 	val hostDeviceVos: List<IdentifiedVo> = listOf(),
 	val originTemplateVo: IdentifiedVo = IdentifiedVo(),
 	val templateVo: IdentifiedVo = IdentifiedVo(),
+	val vnicProfileVo: VnicProfileVo? = null,
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 	val usageDto: UsageDto = UsageDto(),
 ): Serializable, TreeNavigatable<VmStatusB> {
 	override val type: TreeNavigatableType	get() = TreeNavigatableType.VM
-	val statusCode: String 				get() = status?.code ?: VmStatusB.unknown.code
-	val statusKr: String				get() = status?.kr ?: "알 수 없음"
-	val statusEn: String 				get() = status?.en ?: "N/A"
+	val statusCode: String 					get() = status?.code ?: VmStatusB.unknown.code
+	val statusKr: String					get() = status?.kr ?: "알 수 없음"
+	val statusEn: String 					get() = status?.en ?: "N/A"
 
-	val urlSmallIcon: String			get() = iconSmall?.dataUrl ?: ""
-	val urlLargeIcon: String			get() = iconLarge?.dataUrl ?: ""
+	val urlSmallIcon: String				get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String				get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOptionCode: String		get() = optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionCode: String			get() = optimizeOption?.code ?: VmTypeB.unknown.code
 
-	val biosTypeCode: String			get() = biosType?.code ?: BiosTypeB.cluster_default.code
-	val biosTypeEn: String				get() = biosType?.en ?: "N/A"
-	val biosTypeKr: String				get() = biosType?.kr ?: "알 수 없음"
+	val biosTypeCode: String				get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String					get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String					get() = biosType?.kr ?: "알 수 없음"
 
-	val osTypeCode: String				get() = osType?.code ?: VmOsType.other.code
-	val osTypeName: String				get() = osType?.description ?: VmOsType.other.description
+	val osTypeCode: String					get() = osType?.code ?: VmOsType.other.code
+	val osTypeName: String					get() = osType?.description ?: VmOsType.other.description
 
-	val cpuArcCode: String				get() = cpuArc?.code ?: ArchitectureType.undefined.code
+	val cpuArcCode: String					get() = cpuArc?.code ?: ArchitectureType.undefined.code
 
 	val migrationModeCode: String			get() = migrationMode?.code ?: MigrationSupport.unknown.code
 	val migrationModeEn: String				get() = migrationMode?.en ?: "N/A"
@@ -316,30 +318,19 @@ class VmVo (
 	val stopTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
 	val upTime: String?						get() = timeElapsed?.toTimeElapsedKr()
 
-	val notRunning: Boolean					get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
-	val qualified2Migrate: Boolean			get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
-	val qualified4SnapshotMerge: Boolean /* 스냅샷 머지 가능한 상태 */
-		get() = status?.qualified4SnapshotMerge ?: false
-	val qualified4LiveSnapshotMerge: Boolean /* 라이브 스냅샷 머지 가능한 상태 */
-		get() = status?.qualified4LiveSnapshotMerge ?: false
-	val qualified4VmBackup: Boolean /* 가상머신 백업 가능한 상태 */
-		get() = status?.qualified4VmBackup ?: false
-	val qualified4ConsoleConnect: Boolean /* 콘솔로 가상머신 접근 가능한 상태 */
-		get() = status?.qualified4ConsoleConnect ?: false
-	val qualified4PowerDown: Boolean /* 가상머신 종료 가능한 상태*/
-		get() = status?.qualified4PowerDown ?: false
-	val runningOrPaused: Boolean /* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*/
-		get() = status?.runningOrPaused ?: false
-	val running: Boolean /* '실행 중' 인 상태 */
-		get() = status?.running ?: false
-	val upOrPaused: Boolean
-		get() = status?.upOrPaused ?: false
-	val starting: Boolean
-		get() = status?.starting ?: false
-	val startingOrUp: Boolean
-		get() = status?.startingOrUp ?: false
-	val hibernating: Boolean /* '수면 중' 인 상태 */
-		get() = status?.hibernating ?: false
+	val notRunning: Boolean						get() = status?.notRunning ?: false /* '실행 중'이 아닌 상태 */
+	val qualified2Migrate: Boolean				get() = status?.qualified2Migrate ?: false /* 마이그레이션이 가능한 상태 */
+	val qualified4SnapshotMerge: Boolean		get() = status?.qualified4SnapshotMerge ?: false /* 스냅샷 머지 가능한 상태 */
+	val qualified4LiveSnapshotMerge: Boolean	get() = status?.qualified4LiveSnapshotMerge ?: false /* 라이브 스냅샷 머지 가능한 상태 */
+	val qualified4VmBackup: Boolean				get() = status?.qualified4VmBackup ?: false /* 가상머신 백업 가능한 상태 */
+	val qualified4ConsoleConnect: Boolean		get() = status?.qualified4ConsoleConnect ?: false /* 콘솔로 가상머신 접근 가능한 상태 */
+	val qualified4PowerDown: Boolean			get() = status?.qualified4PowerDown ?: false /* 가상머신 종료 가능한 상태*/
+	val runningOrPaused: Boolean				get() = status?.runningOrPaused ?: false /* 가상머신이 '실행 중'이거나 '일시정지' 인 상태*/
+	val running: Boolean						get() = status?.running ?: false /* '실행 중' 인 상태 */
+	val upOrPaused: Boolean						get() = status?.upOrPaused ?: false
+	val starting: Boolean						get() = status?.starting ?: false
+	val startingOrUp: Boolean					get() = status?.startingOrUp ?: false
+	val hibernating: Boolean					get() = status?.hibernating ?: false /* '수면 중' 인 상태 */
 	val downOrSuspended: Boolean
 		get() = status?.downOrSuspended ?: false
 	val qualified4QosChange: Boolean
@@ -430,10 +421,11 @@ class VmVo (
 		private var bHostDeviceVos: List<IdentifiedVo> = listOf(); fun hostDeviceVos(block: () -> List<IdentifiedVo>?) { bHostDeviceVos = block() ?: listOf() }
 		private var bOriginTemplateVo: IdentifiedVo = IdentifiedVo(); fun originTemplateVo(block: () -> IdentifiedVo?) { bOriginTemplateVo = block() ?: IdentifiedVo() }
 		private var bTemplateVo: IdentifiedVo = IdentifiedVo(); fun templateVo(block: () -> IdentifiedVo?) { bTemplateVo = block() ?: IdentifiedVo() }
+		private var bVnicProfile: VnicProfileVo? = null; fun vnicProfile(block: () -> VnicProfileVo?) { bVnicProfile = block() }
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bIsInitialized, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bNicVos, bDiskAttachmentVos, bUsageDto)
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bIsInitialized, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bVnicProfile, bNicVos, bDiskAttachmentVos, bUsageDto)
     }
 
     companion object {

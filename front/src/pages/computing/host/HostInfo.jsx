@@ -113,13 +113,13 @@ const HostInfo = () => {
   ]), [host])
 
   const popupItems = [
-    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: "유지보수", disabled: isInstalling || isNonOperational || !isUp, },
-    { type: "activate", onClick: () => setActiveModal("host:activate"), label: Localization.kr.ACTIVATE, disabled: !isMaintenance || isUp || isInstalling, },
-    { type: "restart", onClick: () => setActiveModal("host:restart"), label: Localization.kr.RESTART, disabled: !isUp || isInstalling, },
-    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"), label: "다시 설치", disabled: isUp || isInstalling, },
+    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: Localization.kr.MAINTENANCE,  disabled: isInstalling || isNonOperational || !isUp, },
+    { type: "activate", onClick: () => setActiveModal("host:activate"),     label: Localization.kr.ACTIVATE,     disabled: !isMaintenance || isUp || isInstalling, },
+    { type: "restart", onClick: () => setActiveModal("host:restart"),       label: Localization.kr.RESTART,      disabled: !isUp || isInstalling, },
+    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"),   label: Localization.kr.REINSTALL,    disabled: isUp || isInstalling, },
     { type: "enrollCert", onClick: () => setActiveModal("host:enrollCert"), label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, disabled: isUp || isInstalling, },
-    { type: "haOn", onClick: () => setActiveModal("host:haOn"), label: "글로벌 HA 유지 관리를 활성화", disabled: !isUp || isInstalling, }, 
-    { type: "haOff", onClick: () => setActiveModal("host:haOff"), label: "글로벌 HA 유지 관리를 비활성화", disabled: !isUp || isInstalling, },
+    { type: "haOn", onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",    disabled: !isUp || isInstalling, }, 
+    { type: "haOff", onClick: () => setActiveModal("host:haOff"),           label: "글로벌 HA 유지 관리를 비활성화",  disabled: !isUp || isInstalling, },
   ];
 
   return (

@@ -39,8 +39,8 @@ const HostDupl = ({
       host?.hostedEngine,
       host?.hostedEngine?.score === 0 /* HA점수가 0일 때 사용 불가능 */
     ),
-    status: host?.status,
-    spmStatus: host?.spmStatus === "NONE" ? "보통" : host?.spmStatus,
+    status: host?.statusKr || "알 수 없음",
+    spmStatus: host?.spmStatusKr || (host?.spmStatus === "NONE" ? "보통" : host?.spmStatus),
     vmCnt: host?.vmSizeVo?.allCnt ?? "0",
     memoryUsage: host?.usageDto?.memoryPercent !== null ? `${host?.usageDto?.memoryPercent}%` : "",
     cpuUsage: host?.usageDto?.cpuPercent !== null ? `${host?.usageDto?.cpuPercent}%` : "",

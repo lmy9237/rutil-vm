@@ -21,8 +21,11 @@ import com.itinfo.rutilvm.api.model.network.BondingVo
 import com.itinfo.rutilvm.api.model.network.DnsVo
 import com.itinfo.rutilvm.api.model.network.HostNicVo
 import com.itinfo.rutilvm.api.model.network.IpVo
+import com.itinfo.rutilvm.api.model.network.NetworkFilterVo
+import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.network.OpenStackNetworkVo
 import com.itinfo.rutilvm.api.model.network.UsageVo
+import com.itinfo.rutilvm.api.model.network.VnicProfileVo
 import com.itinfo.rutilvm.api.model.setting.ExternalHostProviderVo
 import com.itinfo.rutilvm.api.model.setting.ProviderVo
 import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
@@ -56,6 +59,7 @@ import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.types.Property
+import org.ovirt.engine.sdk4.types.VnicPassThroughMode
 import org.springframework.data.domain.Page
 import java.util.Date
 
@@ -286,10 +290,14 @@ fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder 
 	}
 	required { this@toNetworkVoFromNetworkEntity.networkCluster?.required }
 	dnsNameServers { this@toNetworkVoFromNetworkEntity.dnsConfiguration?.nameServers?.toDnsVosFromNameServerEntities() }
-	// vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
+	vnicProfileVos { this@toNetworkVoFromNetworkEntity.vnicProfiles.toIdentifiedVosFromVnicProfileEntities() }
 }
 fun List<NetworkEntity>.toNetworkVosFromNetworkEntities(): List<NetworkVo> =
 	this@toNetworkVosFromNetworkEntities.map { it.toNetworkVoFromNetworkEntity() }
+fun NetworkEntity.toIdentifiedVoFromNetworkEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromNetworkEntity.id.toString() }
+	name { this@toIdentifiedVoFromNetworkEntity.name }
+}
 //endregion: NetworkEntity
 
 //region: NetworkClusterEntity
@@ -330,6 +338,16 @@ fun NameServerEntity.toDnsVoFromNameServerEntity(): DnsVo = DnsVo.builder {
 fun List<NameServerEntity>.toDnsVosFromNameServerEntities(): List<DnsVo> =
 	this@toDnsVosFromNameServerEntities.map { it.toDnsVoFromNameServerEntity() }
 //endregion: NameServerEntity
+
+//region: NetworkFilterEntity
+fun NetworkFilterEntity.toNetworkFilterVoFromNetworkFilterEntity(): NetworkFilterVo = NetworkFilterVo.builder {
+	id { this@toNetworkFilterVoFromNetworkFilterEntity.filterId.toString() }
+	name { this@toNetworkFilterVoFromNetworkFilterEntity.filterName }
+	value { this@toNetworkFilterVoFromNetworkFilterEntity.version }
+}
+fun Collection<NetworkFilterEntity>.toNetworkFilterVosFromNetworkFilterEntities(): List<NetworkFilterVo> =
+	this@toNetworkFilterVosFromNetworkFilterEntities.map { it.toNetworkFilterVoFromNetworkFilterEntity() }
+//region: NetworkFilterEntity
 
 //region: UnregisteredDiskEntity
 fun UnregisteredDiskEntity.toUnregisteredDiskImageVo(disk: Disk?=null): DiskImageVo =
@@ -469,7 +487,7 @@ fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
 	name { this@toHostVoFromVdsEntity.vdsName }
 	comment { this@toHostVoFromVdsEntity.freeTextComment }
 	address { this@toHostVoFromVdsEntity.hostName }
-	// devicePassThrough { this@toHostVoFromVdsEntity. }
+	// devicePassThrough { this@toHostVoFromVdsEntity.isHostdevEnabled }
 	iscsi { this@toHostVoFromVdsEntity.iscsiInitiatorName }
 	// kdump {  }
 	ksm { this@toHostVoFromVdsEntity.ksmState }
@@ -1012,13 +1030,58 @@ fun VmTemplateEntity.fromVmTemplateToTemplateVo(): TemplateVo = TemplateVo.build
 		}
 	}
 }
-
-
 //endregion: VmTemplateEntity
+
+//region: VnicProfileEntity
+fun VnicProfileEntity.toVnicProfileVoFromVnicProfileEntity(): VnicProfileVo = VnicProfileVo.builder {
+	id { this@toVnicProfileVoFromVnicProfileEntity.id.toString() }
+	name { this@toVnicProfileVoFromVnicProfileEntity.name }
+	description { this@toVnicProfileVoFromVnicProfileEntity.description }
+	passThrough {
+		if (this@toVnicProfileVoFromVnicProfileEntity.passthrough == true)
+			VnicPassThroughMode.ENABLED
+		else
+			VnicPassThroughMode.DISABLED
+	}
+	migration { this@toVnicProfileVoFromVnicProfileEntity.migratable }
+	portMirroring { this@toVnicProfileVoFromVnicProfileEntity.portMirroring }
+	failOVer { this@toVnicProfileVoFromVnicProfileEntity.failoverVnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
+	// dataCenterVo { this@toVnicProfileVoFromVnicProfileEntity.network?.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	networkVo { this@toVnicProfileVoFromVnicProfileEntity.network?.toIdentifiedVoFromNetworkEntity() }
+}
+fun VnicProfileEntity.toIdentifiedVoFromVnicProfileEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromVnicProfileEntity.id.toString() }
+	name { this@toIdentifiedVoFromVnicProfileEntity.name }
+}
+fun Collection<VnicProfileEntity>?.toVnicProfileVosFromVnicProfileEntities(): List<VnicProfileVo> =
+	this@toVnicProfileVosFromVnicProfileEntities?.map { it.toVnicProfileVoFromVnicProfileEntity() } ?: emptyList()
+fun Collection<VnicProfileEntity>?.toIdentifiedVosFromVnicProfileEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromVnicProfileEntities?.map { it.toIdentifiedVoFromVnicProfileEntity() } ?: emptyList()
+//endregion: VnicProfileEntity
+
+//region: VmInterfaceEntity
+fun VmInterfaceEntity.toNicVoFromVmInterfaceEntity(): NicVo = NicVo.builder {
+	id { this@toNicVoFromVmInterfaceEntity.id.toString() }
+	name { this@toNicVoFromVmInterfaceEntity.name }
+	interface_ { this@toNicVoFromVmInterfaceEntity.interfaceType }
+	macAddress { this@toNicVoFromVmInterfaceEntity.macAddr }
+	linked { this@toNicVoFromVmInterfaceEntity.linked }
+	// plugged {  } // TODO: 값 확인 필요
+	synced { this@toNicVoFromVmInterfaceEntity.synced }
+	// ipv4 { this@toNicVoFromVmInterfaceEntity }
+	// ipv6 { this@toNicVoFromVmInterfaceEntity }
+	// guestInterfaceName { this@toNicVoFromVmInterfaceEntity. }
+	// networkVo { this@toNicVoFromVmInterfaceEntity }
+	vnicProfileVo { this@toNicVoFromVmInterfaceEntity.vnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
+	networkFilterVo { this@toNicVoFromVmInterfaceEntity.vnicProfile?.networkFilter?.toNetworkFilterVoFromNetworkFilterEntity() }
+}
+fun VmInterfaceEntity.toIdentifiedVoFromVmInterfaceEntity(): IdentifiedVo = IdentifiedVo.builder {
+
+}
+//endregion: VmInterfaceEntity
 
 
 //region: ProviderEntity
-
 fun ProvidersEntity.toProviderVo(): ProviderVo = ProviderVo.builder {
 	id { id.toString() }
 	name { name }

@@ -35,11 +35,15 @@ import VmHost from './create/VmHost';
 import VmConsole from "./create/VmConsole";
 import VmHa from './create/VmHa';
 import VmBoot from './create/VmBoot';
-import { checkDuplicateName, checkName, emptyIdNameVo }                    from "@/util";
+import {
+  checkDuplicateName, 
+  checkName,
+  emptyIdNameVo
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import './MVm.css';
-  
+
 
 const defaultNic = {
   id: "", name: "nic1",
@@ -60,9 +64,9 @@ const infoform = {
 
 //시스템
 const systemForm = {
-  memorySize: 1024, // 메모리 크기
-  memoryMax: (1024 * 4), // 최대 메모리
-  memoryGuaranteed: 1024, // 할당할 실제메모리
+  memorySize: 1, // 메모리 크기 in GB
+  memoryMax: (1 * 4), // 최대 메모리 in GB
+  memoryGuaranteed: 1, // 할당할 실제메모리 in GB
   cpuTopologyCnt: 1, // 총cpu
   cpuTopologyCore: 1, // 가상 소켓 당 코어
   cpuTopologySocket: 1, // 가상소켓
@@ -292,9 +296,9 @@ const VmModal = ({
         optimizeOption: vm?.optimizeOption?.toLowerCase() || "server",
       });
       setFormSystemState({
-        memorySize: vm?.memorySize / (1024 * 1024), // 입력된 값는 mb, 보낼 단위는 byte
-        memoryMax: vm?.memoryMax / (1024 * 1024),
-        memoryGuaranteed: vm?.memoryGuaranteed / (1024 * 1024),
+        memorySize: vm?.memorySize / (CONSTANT.GIB_IN_BYTE), // 입력된 값는 GiB, 보낼 단위는 byte
+        memoryMax: vm?.memoryMax / (CONSTANT.GIB_IN_BYTE),
+        memoryGuaranteed: vm?.memoryGuaranteed / (CONSTANT.GIB_IN_BYTE),
         cpuTopologyCnt: vm?.cpuTopologyCnt ?? 1,
         cpuTopologyCore: vm?.cpuTopologyCore ?? 1,
         cpuTopologySocket: vm?.cpuTopologySocket ?? 1,
@@ -506,9 +510,9 @@ const VmModal = ({
     templateVo,
 
     ...formSystemState,
-    memorySize: formSystemState.memorySize * 1024 * 1024, 
-    memoryMax: formSystemState.memoryMax * 1024 * 1024,
-    memoryGuaranteed: formSystemState.memoryGuaranteed * 1024 * 1024,
+    memorySize: formSystemState.memorySize * 1024 * 1024 * 1024, 
+    memoryMax: formSystemState.memoryMax * 1024 * 1024 * 1024,
+    memoryGuaranteed: formSystemState.memoryGuaranteed * 1024 * 1024 * 1024,
     
     // VmInit
     ...formCloudState,

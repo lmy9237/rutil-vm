@@ -130,6 +130,7 @@ export const Localization = {
     RESTART: "재시작",
     REFRESH: "새로고침",
     REFRESH_CAPABILITIES: "기능을 새로고침",
+    REINSTALL: "다시 설치",
     END: "종료",
     POWER_OFF: "전원끔",
     PAUSE: "일시중지",
@@ -192,6 +193,8 @@ export const Localization = {
       "oVirt는 기존 CA 인증서와 서버 인증서의 만료일을 모두 확인합니다. 두 인증서 중 하나라도 만료까지 30일 이하로 남아 있으면 갱신이 필요합니다.",
       "인증서를 갱신하지 않으면 웹 인터페이스에 접근할 수 없거나 일부 서비스가 중단될 수 있으므로, 사전에 반드시 갱신하는 것이 중요합니다.",
     ],
+    DEMO: "Demo버전입니다",
+    
     renderTime(milliseconds) {
       Logger.debug(`Localization > renderTime ... milliseconds: ${milliseconds}`)
       // Handle invalid or zero input

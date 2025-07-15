@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.service.computing
 
+import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.network.toNicVoFromVm
@@ -45,7 +46,7 @@ interface ItVmNicService {
 	 * @return [NicVo]?
 	 */
 	@Throws(Error::class)
-	fun addFromVm(vmId: String, nicVo: NicVo): NicVo?
+	fun addFromVm(vmId: String, nicVo: NicVo): IdentifiedVo?
 	/**
 	 * [ItVmNicService.updateFromVm]
 	 * 네트워크 인터페이스 편집
@@ -55,7 +56,7 @@ interface ItVmNicService {
 	 * @return [NicVo]?
 	 */
 	@Throws(Error::class)
-	fun updateFromVm(vmId: String, nicVo: NicVo): NicVo?
+	fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo?
 	/**
 	 * [ItVmNicService.removeFromVm]
 	 * 네트워크 인터페이스 삭제
@@ -91,23 +92,23 @@ class VmNicServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun addFromVm(vmId: String, nicVo: NicVo): NicVo? {
+	override fun addFromVm(vmId: String, nicVo: NicVo): IdentifiedVo? {
 		log.info("addFromVm ... vmId: {}, nicVo: {}", vmId, nicVo)
 		val res: Nic? = conn.addNicFromVm(
 			vmId,
 			nicVo.toAddNic()
 		).getOrNull()
-		return res?.toNicIdName()
+		return res?.toIdentifiedVoFromNic()
 	}
 
 	@Throws(Error::class)
-	override fun updateFromVm(vmId: String, nicVo: NicVo): NicVo? {
+	override fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo? {
 		log.info("updateFromVm ... vmId: {}, nicVo: {}", vmId, nicVo)
 		val res: Nic? = conn.updateNicFromVm(
 			vmId,
 			nicVo.toEditNic()
 		).getOrNull()
-		return res?.toNicIdName()
+		return res?.toIdentifiedVoFromNic()
 	}
 
 	@Throws(Error::class)

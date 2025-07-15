@@ -4,7 +4,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * [InterfaceStatus]
- * (호스트) 인터페이스 상태
+ * (호스트/NIC) 인터페이스 상태
+ *
+ * @author 이찬희 (@chanhi2000)
  */
 enum class InterfaceStatus(
 	override val value: Int

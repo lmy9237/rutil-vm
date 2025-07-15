@@ -718,7 +718,7 @@ class VmController: BaseController() {
 	fun addNic(
 		@PathVariable vmId: String? = null,
 		@RequestBody nic: NicVo? = null,
-	): ResponseEntity<NicVo?> {
+	): ResponseEntity<IdentifiedVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (nic == null)
@@ -747,7 +747,7 @@ class VmController: BaseController() {
 		@PathVariable vmId: String? = null,
 		@PathVariable nicId: String? = null,
 		@RequestBody nic: NicVo? = null,
-	): ResponseEntity<NicVo?> {
+	): ResponseEntity<IdentifiedVo?> {
 		if (vmId.isNullOrEmpty())
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (nicId.isNullOrEmpty())

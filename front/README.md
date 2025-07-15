@@ -99,7 +99,11 @@ Rutil VM 프론트앤드
 > -e LC_ALL=ko_KR.UTF-8 \
 > -e LANG=ko_KR.utf8 \
 > -e NODE_ENV=production \                                    
-> -e __RUTIL_VM_OVIRT_IP_ADDRESS__=192.168.0.70 \             # 백엔드 주소
+> -e __RUTIL_VM_OVIRT_IP_ADDRESS__=192.168.0.70 \
+> -e __RUTIL_VM_LOGGING_ENABLED__=false \
+> -e __RUTIL_VM_ITEMS_PER_PAGE__=25 \
+> -e __RUTIL_VM_IS_LICENCE_VERIFIED__=false \
+> -e __RUTIL_VM_WATERMARK_TEXT__=무단배포금지입니다 \
 > -v ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro # SSL 인증서 마운트
 > -v /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro # SSL관련 인증서 마운트
 > -p 443:443 \                                                # Port Mapping

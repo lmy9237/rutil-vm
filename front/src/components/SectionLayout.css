@@ -3,7 +3,6 @@
   overflow-x: hidden;
   /* overflow-y: hidden; */
   overflow-y: auto;
-  background-color: var(--color-primary-white);
 }
 .content-outer {
   display: flex;
@@ -12,6 +11,5 @@
   height: calc(100% - var(--h-section-header));
 }
 .section-dashboard {
-  background-color: #EFF1F5;
   padding: 4px;
 }

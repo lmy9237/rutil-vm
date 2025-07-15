@@ -4,9 +4,9 @@ services:
   rutil-vm-api:
     image: rutil-vm-api:latest
     container_name: rutil-vm-api
-    deploy:
-      mode: replicated
-      replicas: 2
+#    deploy:
+#      mode: replicated
+#      replicas: 2
     ports:
       - "6690:6690"
     environment:
@@ -93,6 +93,8 @@ services:
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.180
       __RUTIL_VM_LOGGING_ENABLED__: true
       __RUTIL_VM_ITEMS_PER_PAGE__: 25
+      __RUTIL_VM_IS_LICENCE_VERIFIED__: false
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지입니다
     volumes:
       - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro

@@ -86,7 +86,7 @@ const BoxEvent = ({
   const { mutate: removeEvents } = useRemoveEvents(() => {}, () => {});
 
   return (
-    <div  ref={bellBoxRef}
+    <div ref={bellBoxRef}
       className={`bell-box fs-16 ${eventBoxExpanded() ? "expanded" : ""}`}
       onClick={stopPropagation}
       style={{

@@ -13,15 +13,16 @@ private val log = LoggerFactory.getLogger(NetworkFilterVo::class.java)
 
 /**
  * [NetworkFilterVo]
- * 
- * id [String]
- * name [String]
- * value [String] // 값
+ * 네트워크 필터
+ *
+ * @property id [String]
+ * @property name [String]
+ * @property value [String] // 값
  */
 class NetworkFilterVo(
 	val id: String = "",
 	val name: String = "",
-	val value: String = "", // 값
+	val value: String = "",
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -33,13 +34,11 @@ class NetworkFilterVo(
 		fun build(): NetworkFilterVo = NetworkFilterVo(bId, bName, bValue)
 	}
 
-	fun toNetworkFilterParameter(nic: Nic): NetworkFilterParameter {
-		return NetworkFilterParameterBuilder()
-			.name(name)
-			.value(value)
-			.nic(nic)
-			.build()
-	}
+	fun toNetworkFilterParameter(nic: Nic): NetworkFilterParameter = NetworkFilterParameterBuilder()
+		.name(name)
+		.value(value)
+		.nic(nic)
+		.build()
 
 	companion object {
 		inline fun builder(block: NetworkFilterVo.Builder.() -> Unit): NetworkFilterVo =
@@ -47,18 +46,14 @@ class NetworkFilterVo(
 	}
 }
 
-fun NetworkFilter.toNetworkFilterVo(): NetworkFilterVo {
-	log.debug("NetworkFilter.toNetworkFilterVo ... ")
-	return NetworkFilterVo.builder {
-		id { this@toNetworkFilterVo.id() }
-		name { this@toNetworkFilterVo.name() }
-//		value { this@toNetworkFilterParameterVo.value() }
-	}
+fun NetworkFilter.toNetworkFilterVo(): NetworkFilterVo = NetworkFilterVo.builder {
+	id { this@toNetworkFilterVo.id() }
+	name { this@toNetworkFilterVo.name() }
+//	value { this@toNetworkFilterParameterVo.value() }
 }
 
 fun List<NetworkFilter>.toNetworkFilterVos(): List<NetworkFilterVo> =
 	this@toNetworkFilterVos.map { it.toNetworkFilterVo() }
-
 
 fun List<NetworkFilterVo>.toNetworkFilterParameters(nic: Nic): List<NetworkFilterParameter> =
 	this@toNetworkFilterParameters.map { it.toNetworkFilterParameter(nic) }
