@@ -168,7 +168,7 @@ const SettingProviderModal = ({
           : (isProvidersSuccess && isDataCentersSuccess)
       }
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "500px" }} 
+      contentStyle={{ width: "600px" }} 
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus

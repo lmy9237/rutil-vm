@@ -2,7 +2,7 @@
   position: absolute;top:var(--h-rutil-header);right: 0;
   width: var(--w-bell-box);
   background-color: var(--color-primary-white);
-  z-index: 200;
+  z-index: 9999999;
   border: 1px solid rgb(204, 204, 204);
   border-radius: 2px;
   box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.2); 

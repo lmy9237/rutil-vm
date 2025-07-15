@@ -257,11 +257,20 @@ const VmDiskModal = ({
   return (
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
-  isReady={
-    editMode
-      ? (isDiskAttachmentSuccess && isDomainsSuccess && isDiskProfilesSuccess)
-      : (isDomainsSuccess && isDiskProfilesSuccess)
-  }
+      //정보안뜸
+      // isReady={  
+      //   editMode
+      //     ? (
+      //         !!diskAttachment &&
+      //         isDiskAttachmentSuccess &&
+      //         isDomainsSuccess &&
+      //         isDiskProfilesSuccess
+      //       )
+      //     : (
+      //         isDomainsSuccess &&
+      //         isDiskProfilesSuccess
+      //       )
+      // }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "700px"}} 
     >

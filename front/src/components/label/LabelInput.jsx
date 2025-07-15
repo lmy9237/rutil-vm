@@ -3,6 +3,7 @@ import { FontAwesomeIcon }              from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash }            from "@fortawesome/free-solid-svg-icons";
 import { Input }                        from "@/components/ui/input";
 import "./LabelInput.css";
+import { RVI16, rvi16EyeIcon } from "../icons/RutilVmIcons";
 
 /**
  * @name LabelInput
@@ -62,6 +63,7 @@ const LabelInput = ({
           onClick={togglePassword}
           className="password-toggle-icon fs-14 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
         />
+        // <RVI16 iconDef={rvi16EyeIcon()} /> 눈모양아이콘
       )}
     </div>
   );

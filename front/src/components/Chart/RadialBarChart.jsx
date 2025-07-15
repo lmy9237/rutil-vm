@@ -59,11 +59,11 @@ const RadialBarChart = ({
           textAnchor: "start",
           distributed: false,
           name: {
-            offsetY: -10, 
+            offsetY: 23, 
             color: CONSTANT.color.black,
           },
           value: {
-            offsetY: 10, 
+            offsetY: -10, 
             color: CONSTANT.color.black,
             fontSize: '24px',
             formatter: (val) => `${parseInt(val)}%`,

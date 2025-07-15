@@ -50,12 +50,13 @@ const GeneralBoxProps = ({
         <div className="box-inner-content">
           {children}
         </div>
+      
+      </div>
         {enableOverflowCheck && isOverflow && moreLink && (
-          <div className="more-button" onClick={handleMoreClick}>
+          <div className="more-button mt-3" onClick={handleMoreClick}>
             + more
           </div>
         )}
-      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
 import "./Table.css";
+import TableHeaderRow from "./TableHeaderRow";
 
 /**
  * @name Tables
@@ -455,7 +456,14 @@ const Tables = ({
         <table className="custom-table w-full" 
           ref={tableRef}
         >
-        <thead>
+        <TableHeaderRow
+          columns={columns}
+          sortConfig={sortConfig}
+          onSort={handleSort}
+          columnWidths={columnWidths}
+          onResizeStart={handleMouseDown}
+        />
+        {/* <thead>
           <tr>
             {columns.map((column, index) => (
               <th
@@ -472,7 +480,7 @@ const Tables = ({
                   ...column.style,
                 }}
               >
-                {/* 헤더명 + 정렬 아이콘 */}
+                헤더명 + 정렬 아이콘 
                 <div className="f-center">
                   {column.header}
                   {!column.isIcon && sortConfig.key === column.accessor && (
@@ -482,7 +490,7 @@ const Tables = ({
                   )}
                 </div>
 
-                {/* 드래그 핸들 */}
+                드래그 핸들 
                 <div
                   className="table-resizer"
                   onMouseDown={(e) => handleMouseDown(e, column.accessor)}
@@ -499,12 +507,9 @@ const Tables = ({
               </th>
             ))}
           </tr>
-        </thead>
-
+        </thead> */}
           <tbody>{renderTableBody()}</tbody>
-        </table>
-
-        
+        </table> 
       </div>
       {/*페이지버튼 */}
       {sortedData.length > itemsPerPage && (   

@@ -135,7 +135,7 @@ const VmHost = ({
                   }}
                 >
                   {formHostState.hostVos && formHostState.hostVos.length > 0
-                    ? formHostState.hostVos.map((h) => h?.name).join(", ") // id는 host.id로 출력
+                    ? formHostState.hostVos.map((h) => `${h?.name} (${h?.id})`).join(", ")
                     : "선택된 호스트가 없습니다."}
                 </span>
               </div>

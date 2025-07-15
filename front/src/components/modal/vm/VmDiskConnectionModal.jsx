@@ -101,7 +101,7 @@ const VmDiskConnectionModal = ({
     <BaseModal targetName={`가상 ${Localization.kr.DISK}`} submitTitle={Localization.kr.CONNECTION}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "1000px"}} 
+      contentStyle={{ width: "1100px"}} 
     >
      <div className="py-3">
       <div className="section-table-outer">

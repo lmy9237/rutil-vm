@@ -151,9 +151,24 @@ const DataCenterModal = ({
   return (
     <BaseModal targetName={Localization.kr.DATA_CENTER} submitTitle={dcLabel}
       isOpen={isOpen} onClose={onClose} 
-      isReady={editMode 
-        ? (isClusterLevelsSuccess && isQuotaEnforcementTypesSuccess && isDatacentersSuccess && isDatacenterSuccess) 
-        : (isClusterLevelsSuccess && isQuotaEnforcementTypesSuccess)
+      isReady={
+        editMode
+          ? (
+              datacenter &&
+              datacenters &&
+              clusterLevels.length > 0 &&
+              quotaEnforcementTypes.length > 0 &&
+              isClusterLevelsSuccess &&
+              isQuotaEnforcementTypesSuccess &&
+              isDatacentersSuccess &&
+              isDatacenterSuccess
+            )
+          : (
+              clusterLevels.length > 0 &&
+              quotaEnforcementTypes.length > 0 &&
+              isClusterLevelsSuccess &&
+              isQuotaEnforcementTypesSuccess
+            )
       }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "470px" }} 

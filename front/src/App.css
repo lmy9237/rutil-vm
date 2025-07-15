@@ -397,6 +397,7 @@ svg.btn { cursor: pointer; }
 
 .box-content.overflowing {
   max-height: 221px; 
+  min-height: 221px; 
   overflow: hidden;
   position: relative;
 }
