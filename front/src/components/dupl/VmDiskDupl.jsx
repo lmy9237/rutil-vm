@@ -13,7 +13,6 @@ import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
 import VmDiskActionButtons    from "@/components/dupl/VmDiskActionButtons";
 import { checkZeroSizeToGiB } from "@/util";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 
 /**
  * @name VmDiskDupl

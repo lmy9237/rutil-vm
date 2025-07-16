@@ -39,9 +39,12 @@ DomainDupl = ({
   const transformedData = [...domains].map((domain) => ({
     ...domain,
     _name: (
+      <>
+      {hostedEngineStatus2Icon(domain?.hostedEngine)}
       <TableRowClick type="domain" id={domain?.id}>
         {domain?.name}
       </TableRowClick>
+      </>
     ),
     icon: status2Icon(domain.status === "unknown" && domain.storagePoolStatus === "uninitialized" ? "UNATTACHED" : domain.status),
     // icon: status2Icon(domain?.storagePoolStatus),    

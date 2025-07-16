@@ -31,7 +31,7 @@ const HostDupl = ({
         {host?.name}
       </TableRowClick>
     ),
-    ha: host?.globalMaintenance === true ? "Y" : "N",
+    ha: host?.hostedActive === true ? "Y" : "N", //TODO: 값이 확실한지 모르겠음
     icon: status2Icon(host?.status),
     iconSortKey: getStatusSortKey(host?.status),
     _hostedEngine: hostedEngineStatus2Icon(

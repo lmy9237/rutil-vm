@@ -43,7 +43,7 @@ const DomainGeneral = ({
     { label: Localization.kr.SIZE_TOTAL, value: checkZeroSizeToGiB(domain?.size) },
     { label: Localization.kr.SIZE_AVAILABLE, value: checkZeroSizeToGiB(domain?.availableSize) },
     { label: Localization.kr.SIZE_USED, value: checkZeroSizeToGiB(domain?.usedSize) },
-    { label: Localization.kr.SIZE_VIRTUAL, value: checkZeroSizeToGiB(domain?.commitedSize) },
+    { label: "할당된 크기", value: checkZeroSizeToGiB(domain?.commitedSize) },
     
     ...(domain?.storageDomainType !== "import_export" ? [
       {
@@ -64,10 +64,12 @@ const DomainGeneral = ({
           label: Localization.kr.NFS_SHARE_PATH,
           value: `${domain?.storageVo?.address}:${domain?.storageVo?.path}`
         }]
-      : [{
-          label: `경로`,
-          value: `${domain?.storageVo?.address}:${domain?.storageVo?.path}`
-        }]
+      : domain?.storageVo?.type === "fcp"
+        ? []
+        : [{
+            label: `경로`,
+            value: `${domain?.storageVo?.address}:${domain?.storageVo?.path}`
+          }]
     ),
     {
       label: `${Localization.kr.DISK} 공간 부족 경고 표시`,

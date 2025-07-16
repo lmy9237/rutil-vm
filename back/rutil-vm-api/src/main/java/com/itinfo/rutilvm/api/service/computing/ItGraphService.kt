@@ -128,7 +128,6 @@ class GraphServiceImpl(
 	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
-	@Autowired private lateinit var vmInterfaceSamplesHistoryRepository: VmInterfaceSamplesHistoryRepository
 	@Autowired private lateinit var storageDomainSamplesHistoryRepository: StorageDomainSamplesHistoryRepository
 	@Autowired private lateinit var vdsStatisticsRepository: VdsStatisticsRepository
 

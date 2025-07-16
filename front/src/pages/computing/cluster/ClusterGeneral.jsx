@@ -81,9 +81,9 @@ const ClusterGeneral = ({
               <hr className="w-full" />
               <InfoTable tableRows={tableRows} />
             </div>
-            <GeneralBoxProps title="용량 및 사용량">
+            {/* <GeneralBoxProps title="용량 및 사용량">
               <VmGeneralBarChart items={usageItems} />
-            </GeneralBoxProps>
+            </GeneralBoxProps> */}
           </>
         }
         bottom={<></>}

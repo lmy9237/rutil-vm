@@ -288,6 +288,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		// 최종 결과 담을 리스트
 		val migratableHosts = mutableListOf<IdentifiedVo>()
 
+
 		// 각 host별로 비교
 		hosts.forEach { host ->
 			val hostNetworks = findAllNetworksFromHost(host.id())

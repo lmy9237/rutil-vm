@@ -10,9 +10,9 @@ import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import {
   useAllTemplatesFromDomain
 } from "@/api/RQHook";
-import { checkZeroSizeToGiB } from "@/util";
 import Localization           from "@/utils/Localization";
 import { useNavigate } from "react-router-dom";
+import { checkZeroSizeToGiB } from "@/util";
 
 /**
  * @name DomainTemplates
@@ -55,8 +55,8 @@ const DomainTemplates = ({
       > {t?.diskAttachmentVos?.length} 
       </span>
     ),
-    // virtualSize: checkZeroSizeToGiB(t?.memoryGuaranteed), 
-    // actualSize: checkZeroSizeToGiB(t?.memoryActual),
+    virtualSize: checkZeroSizeToGiB(t?.memoryGuaranteed), 
+    actualSize: checkZeroSizeToGiB(t?.memorySize),
     creationTime: t?.creationTime || "-", 
   })), [templates]);
 

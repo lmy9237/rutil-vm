@@ -85,6 +85,11 @@ const VmActionButtons = ({
     )
   )
   
+  const allSameHost = vmsSelected.length > 0 && vmsSelected.every(vm => 
+    vm?.hostVo?.id && vm?.hostVo?.id === vmsSelected[0]?.hostVo?.id
+  );
+  const isMigrateEnabled = vmsSelected.length > 0 && allUp && allSameHost;
+
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
     Logger.debug(`VmActionButtons > downloadRemoteViewerConnectionFile ... `)
@@ -142,7 +147,12 @@ const VmActionButtons = ({
     { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
     { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
     { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
-    { type: "migration",  onClick: () => setActiveModal("vm:migration"),   label: Localization.kr.MIGRATION,                               disabled: vmsSelected.length === 0 || !ollOkay2Migrate },
+    { 
+      type: "migration",  
+      onClick: () => setActiveModal("vm:migration"),   
+      label: Localization.kr.MIGRATION,                               
+      disabled: !isMigrateEnabled
+    },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));

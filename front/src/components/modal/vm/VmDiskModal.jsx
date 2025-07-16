@@ -13,12 +13,13 @@ import {
   handleSelectIdChange
 } from "@/components/label/HandleInput";
 import {
-  useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
   useAddDiskFromVM,
   useEditDiskFromVM,
   useDiskAttachmentFromVm,
   useVm,
+  useAllActiveDomainsFromDataCenter,
+  qpAllActiveDomainsFromDataCenter,
 } from "@/api/RQHook";
 import { 
   checkKoreanName, convertBytesToGB, convertGBToBytes,
@@ -89,6 +90,7 @@ const VmDiskModal = ({
     isLoading: isDomainsLoading,
     isSuccess: isDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(vm?.dataCenterVo?.id, (e) => ({ ...e }));
+  // } = qpAllActiveDomainsFromDataCenter(vm?.dataCenterVo?.id, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const { 

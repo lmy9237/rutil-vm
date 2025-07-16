@@ -488,7 +488,7 @@ export const useAllDomainsFromDataCenter4EachDisk = (
 export const qpAllActiveDomainsFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
-) => useQuery({
+) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['AllActiveDomainsFromDataCenter', dataCenterId],
   queryFn: async () => {

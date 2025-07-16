@@ -432,7 +432,7 @@ const TableColumnsInfo = {
 
   STORAGE_DOMAINS: [
     { accessor: "icon",           header: Localization.kr.STATUS,         width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: 'hostedEngine',   header: Localization.kr.ENGINE,          width: DEFAULT_WIDTH_ICON_COLUMN },
+    // { accessor: 'hostedEngine',   header: Localization.kr.ENGINE,          width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: '_name',          header: '도메인 이름',                     width: 150  },
     { accessor: 'storageDomainType',     header: '도메인 유형' },
     { accessor: 'storageType',    header: `${Localization.kr.STORAGE} ${Localization.kr.TYPE}`,                    width: 150  },

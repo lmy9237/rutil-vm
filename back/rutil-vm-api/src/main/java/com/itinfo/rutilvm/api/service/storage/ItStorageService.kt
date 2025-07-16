@@ -329,7 +329,7 @@ class StorageServiceImpl(
 	override fun findAllTemplatesFromStorageDomain(storageDomainId: String): List<TemplateVo> {
 		log.info("findAllTemplatesFromStorageDomain ... storageDomainId: {}", storageDomainId)
 		val res: List<Template> = conn.findAllTemplatesFromStorageDomain(storageDomainId).getOrDefault(emptyList())
-		return res.toStorageTemplates(conn)
+		return res.toStorageTemplates(conn, storageDomainId)
 	}
 
 	@Throws(Error::class)

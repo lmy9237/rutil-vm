@@ -35,6 +35,8 @@ import com.itinfo.rutilvm.common.toLocalDateTime
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
+import com.itinfo.rutilvm.util.ovirt.findTemplate
+import com.itinfo.rutilvm.util.ovirt.findVm
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.*
@@ -311,21 +313,32 @@ fun Template.toTemplateInfo(conn: Connection): TemplateVo {
 	}
 }
 
-fun Template.toStorageTemplate(conn: Connection): TemplateVo {
-	val template = this@toStorageTemplate
-	val disks: List<DiskAttachment> = conn.findAllDiskAttachmentsFromTemplate(template.id()).getOrDefault(emptyList());
+fun Template.toStorageTemplate(conn: Connection, storageDomainId: String): TemplateVo {
+	val template: Template? = conn.findTemplate(this@toStorageTemplate.id(), follow = "diskattachments.disk").getOrNull()
+
+	val diskAttachments: List<DiskAttachment> = template?.diskAttachments()?.filter { diskAttachment ->
+		diskAttachment.disk().storageDomains()?.any { it.id() == storageDomainId } == true
+	} ?: emptyList()
+	log.info("diskAttachments:{}", diskAttachments.size)
+
+	val virtualSize = diskAttachments.sumOf { it.disk().provisionedSize() }
+	val actualSize = diskAttachments.sumOf { it.disk().totalSize() }
+	log.info("actualSize:{}, virtualSize:{}", actualSize, virtualSize)
+
 	return TemplateVo.builder {
-		id { template.id() }
-		name { template.name() }
-		comment { template.comment() }
-		description { template.description() }
-		creationTime { template.creationTime().toLocalDateTime() }
-		status { template.findTemplateStatus() }
-		diskAttachmentVos { disks.toDiskAttachmentsToTemplate(conn) }
+		id { template?.id() }
+		name { template?.name() }
+		comment { template?.comment() }
+		description { template?.description() }
+		creationTime { template?.creationTime().toLocalDateTime() }
+		memoryGuaranteed { virtualSize }  // 원래 디스크의 가상크기 합친값
+		memorySize { actualSize }		// 디스크 실제 값 합친값
+		status { template?.findTemplateStatus() }
+		diskAttachmentVos { diskAttachments.toDiskAttachmentsToTemplate(conn) }
 	}
 }
-fun List<Template>.toStorageTemplates(conn: Connection): List<TemplateVo> =
-	this@toStorageTemplates.map { it.toStorageTemplate(conn) }
+fun List<Template>.toStorageTemplates(conn: Connection, storageDomainId: String): List<TemplateVo> =
+	this@toStorageTemplates.map { it.toStorageTemplate(conn, storageDomainId) }
 
 
 fun Template.toUnregisterdTemplate(): TemplateVo {

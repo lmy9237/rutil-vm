@@ -110,8 +110,8 @@ class ClusterVo(
     val networkProvider: Boolean = false,
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
     val networkVo: NetworkVo = NetworkVo(), // 관리네트워크
-	/*val hostSize: SizeVo = SizeVo(),
-	val vmSize: SizeVo = SizeVo(),*/
+	val hostSize: SizeVo = SizeVo(),
+	val vmSize: SizeVo = SizeVo(),
 	val vmVos: List<VmVo>? = listOf(),
     val hostVos: List<HostVo>? = listOf(),
     val networkVos: List<IdentifiedVo>? = listOf(), // 관리 네트워크가 핵심, 다른 네트워크 존재가능
@@ -137,28 +137,28 @@ class ClusterVo(
 	val switchTypeCode: String		get() = switchType?.code ?: ""
 	val switchTypeEn: String		get() = switchType?.en ?: "N/A"
 	val switchTypeKr: String		get() = switchType?.kr ?: "알 수 없음"
-	val vmSize: SizeVo
-		get() {
-			val all = vmVos?.size ?: 0
-			val up = vmVos?.filter { it.running }?.size ?: 0
-			val down = all - up
-			return SizeVo.builder {
-				allCnt { all }
-				upCnt { up }
-				downCnt { down }
-			}
-		}
-	val hostSize: SizeVo
-		get() {
-			val all = hostVos?.size ?: 0
-			val up = hostVos?.filter { it.status == VdsStatus.up }?.size ?: 0
-			val down = all - up
-			return SizeVo.builder {
-				allCnt { all }
-				upCnt { up }
-				downCnt { down }
-			}
-		}
+	// val vmSize: SizeVo
+	// 	get() {
+	// 		val all = vmVos?.size ?: 0
+	// 		val up = vmVos?.filter { it.running }?.size ?: 0
+	// 		val down = all - up
+	// 		return SizeVo.builder {
+	// 			allCnt { all }
+	// 			upCnt { up }
+	// 			downCnt { down }
+	// 		}
+	// 	}
+	// val hostSize: SizeVo
+	// 	get() {
+	// 		val all = hostVos?.size ?: 0
+	// 		val up = hostVos?.filter { it.status == VdsStatus.up }?.size ?: 0
+	// 		val down = all - up
+	// 		return SizeVo.builder {
+	// 			allCnt { all }
+	// 			upCnt { up }
+	// 			downCnt { down }
+	// 		}
+	// 	}
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -199,7 +199,8 @@ class ClusterVo(
 		private var bTemplateVos: List<IdentifiedVo> = listOf();fun templateVos(block: () -> List<IdentifiedVo>?) { bTemplateVos = block() ?: listOf() }
 		private var bRequired: Boolean = false; fun required(block: () -> Boolean?) { bRequired = block() ?: false }
 
-		fun build(): ClusterVo = ClusterVo(bId, bName, null, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, /*bHostSize, bVmSize,*/ bVmVos, bHostVos, bNetworkVos, bTemplateVos, /*bNetworkProperty, bAttached, */bRequired)
+		fun build(): ClusterVo = ClusterVo(bId, bName, null, bDescription, bComment, bIsConnected, bBallooningEnabled, bBiosType, bCpuArc, bCpuType, bErrorHandling, bFipsMode, bFirewallType, bGlusterService, bHaReservation, bLogMaxMemory, bLogMaxMemoryType, bMemoryOverCommit, bMigrationPolicy, bBandwidth, bEncrypted, bSwitchType, bThreadsAsCores, bVersion, bVirtService, bNetworkProvider, bDataCenterVo, bNetworkVo, bHostSize, bVmSize, bVmVos, bHostVos, bNetworkVos, bTemplateVos, bRequired,
+		)
 	}
 
 	companion object {
@@ -221,6 +222,7 @@ fun Cluster.toClusterMenu(conn: Connection): ClusterVo {
 	val dataCenter =
 		if (cluster.dataCenterPresent()) { conn.findDataCenter(cluster.dataCenter().id()).getOrNull() }
 		else { null }
+	log.info("hostSize:{}", cluster.findHostCntFromCluster(conn))
 	return ClusterVo.builder {
 		id { cluster.id() }
 		name { cluster.name() }
