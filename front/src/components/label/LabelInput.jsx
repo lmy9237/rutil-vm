@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon }              from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash }            from "@fortawesome/free-solid-svg-icons";
-import { RVI16, rvi16EyeIcon, rvi16EyeOffIcon } from "../icons/RutilVmIcons";
+import { RVI16, rvi16Eye, rvi16EyeSlash } from "../icons/RutilVmIcons";
 import { Input }                        from "@/components/ui/input";
 import "./LabelInput.css";
 
@@ -62,7 +62,7 @@ const LabelInput = ({
           onClick={togglePassword}
           className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-muted-foreground"
         >
-          <RVI16 iconDef={showPassword ? rvi16EyeOffIcon() : rvi16EyeIcon()} />
+          <RVI16 iconDef={showPassword ? rvi16EyeSlash() : rvi16Eye()} />
         </div>
       )}
     </div>

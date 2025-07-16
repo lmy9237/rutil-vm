@@ -15,6 +15,7 @@ object Dependencies {
         "org.springframework:spring-expression:${Versions.spring}",
         "org.springframework:spring-jdbc:${Versions.spring}",
         "org.springframework:spring-messaging:${Versions.spring}",
+		"org.springframework:spring-oxm:${Versions.spring}",
         "org.springframework:spring-tx:${Versions.spring}",
         "org.springframework:spring-web:${Versions.spring}",
         "org.springframework:spring-webmvc:${Versions.spring}",
@@ -170,6 +171,9 @@ object Dependencies {
     val cglib = listOf(
         "cglib:cglib-nodep:${Versions.cglib}",
     )
+	val xml = listOf(
+		"com.thoughtworks.xstream:xstream:${Versions.xstream}",
+	)
     val lombok = "org.projectlombok:lombok:${Versions.lombok}"
     val kotlinStdlib = listOf(
         "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}",

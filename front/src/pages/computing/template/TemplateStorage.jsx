@@ -53,7 +53,7 @@
 //       id: storage.id ?? "",
 //       name: storage.name || "Unnamed Storage",
 //       status: storage.active ? "활성화" : "비활성화",
-//       domainType: storage.domainType || "Unknown",
+//       domainType: storage.storageDomainType || "Unknown",
 //       usedSize: Math.floor(storage.usedSize / 1024 ** 3),
 //       availableSize: Math.floor(storage.availableSize / 1024 ** 3),
 //       totalSize: Math.floor(
@@ -104,7 +104,7 @@
 //                   >
 //                     {storage.name}
 //                   </td>
-//                   <td>{storage.domainType}</td>
+//                   <td>{storage.storageDomainType}</td>
 //                   <td>{storage.status}</td>
 //                   <td>{storage.availableSize} GiB</td>
 //                   <td>{storage.usedSize} GiB</td>

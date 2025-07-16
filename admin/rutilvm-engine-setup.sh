@@ -1,6 +1,6 @@
 #!/bin/bash
 # 
-# Last Edit : 20250529-01 (공개키 추가)
+# Last Edit : 20250716-01
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Change engine repositories]"
 
@@ -98,7 +98,7 @@ fi
 sed -i "s/SSO_ALTERNATE_ENGINE_FQDNS=\"\"/SSO_ALTERNATE_ENGINE_FQDNS=\"${ip_address}\"/" /etc/ovirt-engine/engine.conf.d/11-setup-sso.conf
 
 # SSO 설정 중 콜백 경로 접두어 검사를 비활성화하는 설정
-echo 'SSO_CALLBACK_PREFIX_CHECK=false' | tee /etc/ovirt-engine/engine.conf.d/99-sso.conf
+echo 'SSO_CALLBACK_PREFIX_CHECK=false' | tee /etc/ovirt-engine/engine.conf.d/99-sso.conf >/dev/null 2>&1
 
 # Apache와 ovirt engine 서비스 재시작
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Restart the httpd daemon]"
@@ -106,6 +106,7 @@ systemctl restart httpd >/dev/null 2>&1
 echo "[ INFO  ] changed: [localhost]"
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Restart the engine daemon]"
 systemctl restart ovirt-engine >/dev/null 2>&1
+sleep 10
 echo "[ INFO  ] changed: [localhost]"
 
 # 시스템에 "rutilvm" 사용자가 존재하지 않으면 생성
@@ -119,7 +120,7 @@ fi
 # rutilvm 사용자의 .ssh 디렉토리 생성 및 권한 설정
 mkdir -p /home/rutilvm/.ssh
 chown rutilvm:rutilvm /home/rutilvm/.ssh
-chmod 600 /home/rutilvm/.ssh
+chmod 700 /home/rutilvm/.ssh
 
 # 현재 호스트네임과 /etc/hosts에 기록된 IP 추출
 current_hostname=$(hostname)
@@ -131,19 +132,26 @@ RUTILVM_HOME="/home/rutilvm"
 RUTILVM_SSH_DIR="$RUTILVM_HOME/.ssh"
 RUTILVM_KEY="$RUTILVM_SSH_DIR/id_rsa"
 RUTILVM_USER="rutilvm"
+RUTILVM_GROUPNAME="rutilvm"
 
 # rutilvm 사용자의 SSH 키가 없으면 생성
 if [ ! -f "$RUTILVM_KEY" ]; then
-    sudo -u "$RUTILVM_USER" mkdir -p "$RUTILVM_SSH_DIR"
-    sudo -u "$RUTILVM_USER" chmod 700 "$RUTILVM_SSH_DIR"
     # 비밀번호 없이 RSA 키 생성
-    sudo -u "$RUTILVM_USER" ssh-keygen -t rsa -b 4096 -m PKCS8 -N "" -f "$RUTILVM_KEY"
+    sudo -u "$RUTILVM_USER" ssh-keygen -t rsa -b 4096 -m PKCS8 -N "" -f "$RUTILVM_KEY" > /dev/null 2>&1
 fi
 
-curl -k -X GET "https://$(hostname -i):8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY" >> $RUTILVM_SSH_DIR/authorized_keys
+# rutilvm의 SSH 공개키를 대상 호스트로 복사하여 비밀번호 없이 로그인 가능하게 설정
+sshpass -p "$RUTILVM_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -i "$RUTILVM_KEY.pub" "$RUTILVM_USER@$HOST01_IP" > /dev/null 2>&1
 
-# sshpass를 이용하여 SSH 공개키를 대상 호스트(자신의 호스트)로 복사하여 비밀번호 없이 로그인 가능하게 설정
-sshpass -p "$RUTILVM_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -i "$RUTILVM_KEY.pub" "$RUTILVM_USER@$HOST01_IP"
+# engine이 만든 고유한 공개키를 authorized_keys 에 등록 (스스로 접근)
+ENGINE_IP=$(hostname -i)
+curl_url="https://${ENGINE_IP}:8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY"
+if ! curl -k -s -S -X GET "$curl_url" >> "$RUTILVM_SSH_DIR/authorized_keys" > /dev/null 2>&1; then
+    echo "[ ERROR ] Failed to retrieve oVirt engine public key from $curl_url"
+#    exit 1
+fi
+chown $RUTILVM_USER:$RUTILVM_GROUPNAME $RUTILVM_SSH_DIR/authorized_keys
+chmod 600 $RUTILVM_SSH_DIR/authorized_keys
 
 # rutilvm 관련 디렉토리 구조 생성
 mkdir -p /opt/rutilvm
@@ -222,7 +230,12 @@ OVIRT_ENGINE_PRIVATE_KEY
       - /etc/localtime:/etc/localtime:ro
     networks:
       - ovirt_network
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:6690/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    restart: on-failure
 
   rutil-vm:
     image: rutil-vm:latest
@@ -238,12 +251,19 @@ OVIRT_ENGINE_PRIVATE_KEY
       __RUTIL_VM_OVIRT_IP_ADDRESS__: ENGINE_IP
       __RUTIL_VM_LOGGING_ENABLED__: true
       __RUTIL_VM_ITEMS_PER_PAGE__: 20
+      __RUTIL_VM_IS_LICENCE_VERIFIED__: false
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지입니다
     volumes:
       - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
     networks:
       - ovirt_network
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:433 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    restart: always
     
   rutil-vm-wsproxy:
     image: rutil-vm-wsproxy:latest
@@ -257,10 +277,10 @@ OVIRT_ENGINE_PRIVATE_KEY
       LANG: ko_KR.utf8
       PORT: 9999
     volumes:
-      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
+      - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
-    restart: unless-stopped
+    restart: always # undefined으로 인자가 갈 때 죽음
 
 networks:
   ovirt_network:
@@ -301,12 +321,16 @@ mv "$TMP_FILE" "$COMPOSE_FILE"
 
 # 로컬 저장소의 rpm 패키지들을 설치
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Start configuring the engine image]"
-sudo -u "$RUTILVM_USER" yum -y localinstall /var/share/pkg/repositories/*.rpm >/dev/null 2>&1
-echo "[ INFO  ] ok: [localhost]"
+if yum -y localinstall /var/share/pkg/repositories/*.rpm >/dev/null 2>&1; then
+    echo "[ INFO  ] ok: [localhost]"
+else
+    echo "[ ERROR ] Failed to install RPMs from /var/share/pkg/repositories/"
+#    exit 1
+fi
 
 # docker 서비스를 활성화하고 시작
-sudo -u "$RUTILVM_USER" systemctl enable docker >/dev/null 2>&1
-sudo -u "$RUTILVM_USER" systemctl start docker >/dev/null 2>&1
+systemctl enable docker >/dev/null 2>&1
+systemctl start docker >/dev/null 2>&1
 
 # Docker 시작 후 안정성을 위해 5초 대기
 sleep 5s
@@ -322,12 +346,16 @@ fi
 
 # Docker 이미지를 로드 (각 이미지 로드 후 상태 메시지 출력)
 docker load -i /var/share/pkg/rutilvm/engine/containers/api.tar >/dev/null 2>&1
+#docker tag rutil-vm-api:0.3.5 rutil-vm-api:latest;
+
 echo "[ INFO  ] ok: [localhost -> rutil-vm-api]"
 
 docker load -i /var/share/pkg/rutilvm/engine/containers/web.tar >/dev/null 2>&1
+#docker tag rutil-vm:0.3.5 rutil-vm:latest;
 echo "[ INFO  ] ok: [localhost -> rutil-vm]"
 
 docker load -i /var/share/pkg/rutilvm/engine/containers/wsproxy.tar >/dev/null 2>&1
+#docker tag rutil-vm-wsproxy:0.3.2 rutil-vm-wsproxy:latest;
 echo "[ INFO  ] ok: [localhost -> rutil-vm-wsproxy]"
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Start image creation]"
@@ -355,7 +383,6 @@ fi
 
 # 컨테이너 생성
 docker compose --file=/var/share/pkg/rutilvm/engine/containers/docker-compose.yml up -d > /dev/null 2>&1
-
 echo "[ INFO  ] ok: [localhost]"
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Configure client authentication]"
@@ -471,6 +498,9 @@ chown postgres:postgres /var/lib/pgsql/data/pg_hba.conf
 systemctl restart postgresql
 echo "[ INFO  ] ok: [localhost]"
 
+systemctl restart httpd >/dev/null 2>&1
+systemctl restart ovirt-engine >/dev/null 2>&1
+
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Cockpit UI settings]"
 # 브랜딩 파일들이 위치한 경로와 복사 대상 경로 변수 선언
 brand_path="/var/share/pkg/rutilvm/engine/branding"
@@ -520,12 +550,10 @@ echo "[ INFO  ] ok: [localhost]"
 #echo "</VirtualHost>" >> $ssl_conf
 #systemctl restart httpd >/dev/null 2>&1
 
+# 엔진 백업 실행
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Start engine configuration backup]"
-# LANG 환경변수를 C로 설정하여 날짜 형식 등 locale 문제 방지
 export LANG=C
-# 현재 날짜와 시간을 포맷하여 백업 파일 이름에 사용
 DATE="$(/bin/date +'%Y%m%d%H%M')"
-# 엔진 백업 실행: 전체 백업 범위, 백업 모드, 백업 파일과 로그파일의 저장 경로 지정
 engine-backup --scope=all --mode=backup --file=/etc/ovirt-engine/engine-backup_$DATE.tar --log=/var/log/engine-backup_$DATE.log >/dev/null 2>&1
 
 # 셸 히스토리 출력 포맷, 히스토리 크기, 파일 크기 및 히스토리 파일의 변경을 방지하는 설정을 추가

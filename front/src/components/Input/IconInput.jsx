@@ -1,11 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { RVI16, rvi16EyeIcon, rvi16EyeOffIcon }              from "@/components/icons/RutilVmIcons";
 import {
   RVI16,
-  rvi16EyeIcon, 
-  rvi16EyeOffIcon
+  rvi16Eye, 
+  rvi16EyeSlash
 } from "@/components/icons/RutilVmIcons";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -40,7 +39,7 @@ const IconInput = ({
         {...register(target, options)}
       />
       {isPassword && (
-        <RVI16 iconDef={showPassword ? rvi16EyeOffIcon() : rvi16EyeIcon()}
+        <RVI16 iconDef={showPassword ? rvi16EyeSlash() : rvi16Eye()}
           onClick={handleTogglePassword}
           className="password-toggle-icon fs-14"
         />

@@ -14,11 +14,13 @@ plugins {
 dependencies {
     compileOnly(project(":rutil-vm-common"))
     compileOnly(project(":rutil-vm-api-ovirt-business"))
-    compileOnly(Dependencies.springBootJpa)
+	compileOnly(Dependencies.springBootJpa)
     compileOnly(Dependencies.springBootWeb)
+	compileOnly(Dependencies.spring)
     compileOnly(Dependencies.kotlinStdlib)
     compileOnly(Dependencies.log4j)
 	compileOnly(Dependencies.jackson)
+	compileOnly(Dependencies.xml)
     compileOnly(Dependencies.gson)
     runtimeOnly(Dependencies.jdbc)
 
@@ -27,10 +29,12 @@ dependencies {
 	testImplementation(Dependencies.springTest)
 	testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.springBootJpa)
+	testImplementation(Dependencies.spring)
 	testImplementation(Dependencies.kotlinStdlib)
     // testImplementation(Dependencies.springBootWeb)
     testImplementation(Dependencies.log4j)
 	testImplementation(Dependencies.jackson)
+	testImplementation(Dependencies.xml)
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.hamcrest)
 	testRuntimeOnly(Dependencies.jdbc)
@@ -45,11 +49,19 @@ configurations {
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+	annotation("javax.persistence.MappedSuperclass")
+	annotation("com.thoughtworks.xstream.annotations.XStreamAlias")
+	annotation("com.thoughtworks.xstream.annotations.XStreamAsAttribute")
+	annotation("com.thoughtworks.xstream.annotations.XStreamConverter")
+	annotation("com.thoughtworks.xstream.annotations.XStreamImplicit")
 }
 
 noArg {
     annotation("javax.persistence.Entity") // @Entity가 붙은 클래스에 한해서만 no arg 플러그인을 적용
     annotation("javax.persistence.Embeddable")
     annotation("javax.persistence.MappedSuperclass")
+	annotation("com.thoughtworks.xstream.annotations.XStreamAlias")
+	annotation("com.thoughtworks.xstream.annotations.XStreamAsAttribute")
+	annotation("com.thoughtworks.xstream.annotations.XStreamConverter")
+	annotation("com.thoughtworks.xstream.annotations.XStreamImplicit")
 }

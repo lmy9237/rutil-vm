@@ -54,6 +54,7 @@ object Versions {
     const val aspectj = "1.8.0"
 
     const val cglib = "3.1"
+	const val xstream = "1.4.21"
     const val lombok = "1.18.26" // compatible with jdk11
 
     const val junit = "5.8.2"

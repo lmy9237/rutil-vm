@@ -13,6 +13,10 @@ import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.itinfo.rutilvm.api.xml.OvfDisk
+import com.itinfo.rutilvm.api.xml.OvfEnvelope
+import com.itinfo.rutilvm.api.xml.OvfVirtualHardwareSection
+import com.itinfo.rutilvm.api.xml.OvfVirtualHardwareSectionDeserializer
 import com.itinfo.rutilvm.common.LoggerDelegate
 import org.hibernate.annotations.Type
 import java.util.UUID

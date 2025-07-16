@@ -63,12 +63,17 @@ const DomainAttachModal = ({
       ...domain,
       name: domain?.name,
       status: domain?.status,
-      domainType:
-        domain?.domainType === "data"
-          ? "데이터"
-          : domain?.domainType === "iso"
-            ? "ISO" 
-            : "EXPORT",
+      storageDomainType: domain?.storageDomainTypeKr || (
+        domain?.storageDomainType === "master"
+          ? `데이터 (마스터)`
+          : domain?.storageDomainType === "data"
+            ? "데이터"
+            : domain?.storageDomainType === "import_export"
+              ? `내보내기`
+              : domain?.storageDomainType === "iso"
+                ? "ISO" 
+                : "EXPORT"
+      ),
       storageType:
         domain?.storageType === "nfs"
           ? "NFS"

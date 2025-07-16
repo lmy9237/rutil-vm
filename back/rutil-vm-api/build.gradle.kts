@@ -227,6 +227,7 @@ dependencies {
     implementation(Dependencies.jsonSimple)
     implementation(Dependencies.aspectj)
     implementation(Dependencies.cglib)
+	implementation(Dependencies.xml)
     compileOnly(Dependencies.lombok)
     annotationProcessor(Dependencies.lombok)
     testImplementation(Dependencies.springTest)

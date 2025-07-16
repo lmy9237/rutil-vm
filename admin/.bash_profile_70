@@ -71,7 +71,7 @@ function certsCheck() {
 
 export DOCKER_COMPOSE_FILENAME=deploy-local-70.yaml
 PATH=$PATH:$HOME/bin
-export RUTIL_VM_HOME=$HOME/rutil-vm
+export RUTIL_VM_HOME=/opt/rutilvm
 export PATH
 
 # User specific environment and startup programs

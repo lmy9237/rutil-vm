@@ -25,7 +25,6 @@ import javax.persistence.Table
 private val log = LoggerFactory.getLogger(NetworkEntity::class.java)
 
 /**
- *
  * [NetworkEntity]
  * 네트워크 정보
  *

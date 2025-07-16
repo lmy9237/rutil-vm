@@ -160,8 +160,8 @@ const DomainModal = ({
 
   useEffect(() => {
     if (!editMode && dataCenterVo.id) {
-      setFormState((prev) => ({ ...initialFormState, domainType: prev.domainType }));
-      setStorageTypes(storageTypeOptions(initialFormState.domainType));
+      setFormState((prev) => ({ ...initialFormState, storageDomainType: prev.storageDomainType }));
+      setStorageTypes(storageTypeOptions(initialFormState.storageDomainType));
       setNfsAddress("");
       setLunId("");
       if (hostVo?.id) {
@@ -178,12 +178,12 @@ const DomainModal = ({
   
 
   useEffect(() => {
-    const options = storageTypeOptions(formState.domainType);
+    const options = storageTypeOptions(formState.storageDomainType);
     setStorageTypes(options);
     if (!editMode && options.length > 0) {
       setFormState((prev) => ({ ...prev, storageType: options[0].value}));
     }
-  }, [formState.domainType, editMode]);
+  }, [formState.storageDomainType, editMode]);
 
   useEffect(() => {
     if(!editMode){
@@ -265,7 +265,7 @@ const DomainModal = ({
   
     const dataToSubmit = {
       ...formState,
-      storageDomainType: formState.domainType,
+      storageDomainType: formState.storageDomainType,
       dataCenterVo,
       hostVo,
       storageVo
@@ -303,7 +303,7 @@ const DomainModal = ({
             onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
           />
           <LabelSelectOptions id="domain-type" label={`도메인 기능`}
-            value={formState.domainType}
+            value={formState.storageDomainType}
             disabled={editMode}
             options={getAvailableDomainTypes}
             onChange={handleInputChange(setFormState, "domainType", validationToast)}

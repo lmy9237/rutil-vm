@@ -449,7 +449,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 	}
 }
 
-fun OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.builder {
+fun com.itinfo.rutilvm.api.xml.OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.builder {
 	id { this@toDiskAttachmentIdentifiedVo.diskId }
 	diskImageVo {
 		DiskImageVo.builder {
@@ -463,7 +463,7 @@ fun OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.
 	}
 }
 
-fun Collection<OvfDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
+fun Collection<com.itinfo.rutilvm.api.xml.OvfDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
 	this@toDiskAttachmentIdentifiedVos.map { it.toDiskAttachmentIdentifiedVo() }
 
 fun Collection<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm>): List<VmVo> {

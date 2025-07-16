@@ -26,7 +26,7 @@ import Logger                           from "@/utils/Logger";
 // 일반 정보
 const initialFormState = {
   id: "",
-  domainType: "data", // 기본값 설정
+  storageDomainType: "data", // 기본값 설정
   storageType: "nfs", // 기본값 설정
   name: "",
   comment: "",
@@ -115,28 +115,33 @@ const DomainImportModal = ({
 
   useEffect(() => {
     if (dataCenterVo.id) {
-      setFormState((prev) => ({ ...initialFormState, domainType: prev.domainType }));
-      setStorageTypes(storageTypeOptions(initialFormState.domainType));
+      setFormState((prev) => ({ 
+        ...initialFormState,
+        storageDomainType: prev.storageDomainType
+      }));
+      setStorageTypes(storageTypeOptions(initialFormState.storageDomainType));
       setNfsAddress("");
       setId("");
       // refetchFibres();
     }
   }, [dataCenterVo]);
   useSelectFirstItemEffect(hosts, setHostVo);
-  // useEffect(() => {
-  //   if (hosts && hosts.length > 0) {
-  //     const firstH = hosts[0];
-  //     setHostVo({ id: firstH.id, name: firstH.name });
-  //   }
-  // }, [hosts]);
+  /*
+  useEffect(() => {
+    if (hosts && hosts.length > 0) {
+      const firstH = hosts[0];
+      setHostVo({ id: firstH.id, name: firstH.name });
+    }
+  }, [hosts]);
+  */
 
   useEffect(() => {
-    const options = storageTypeOptions(formState.domainType);
+    const options = storageTypeOptions(formState.storageDomainType);
     setStorageTypes(options);
     if (options.length > 0) {
       setFormState((prev) => ({ ...prev, storageType: options[0].value}));
     }
-  }, [formState.domainType]);
+  }, [formState.storageDomainType]);
 
   useEffect(() => {
     setNfsAddress("");
@@ -198,7 +203,7 @@ const DomainImportModal = ({
     const dataToSubmit = {
       ...formState,
       id: isFibre ? id : "",
-      type: formState.domainType,
+      storageDomainType: formState.storageDomainType,
       dataCenterVo,
       hostVo,
       storageVo
@@ -229,9 +234,9 @@ const DomainImportModal = ({
             onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
           />
           <LabelSelectOptions id="domain-type" label={`도메인 기능`}
-            value={formState.domainType}
+            value={formState.storageDomainType}
             options={getAvailableDomainTypes}
-            onChange={handleInputChange(setFormState, "domainType", validationToast)}
+            onChange={handleInputChange(setFormState, "storageDomainType", validationToast)}
           />
           <LabelSelectOptions id="storage-type" label={`${Localization.kr.STORAGE} ${Localization.kr.TYPE}`}
             value={formState.storageType}

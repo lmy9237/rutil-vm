@@ -52,14 +52,15 @@ DomainDupl = ({
     _status: Localization.kr.renderStatus(domain?.status),
     hostedEngine: hostedEngineStatus2Icon(domain?.hostedEngine),
     format: `V${domain?.storageFormat === "0" ? 1 : domain?.storageFormat }`,
-    storageDomainType: 
+    storageDomainType: domain?.storageDomainTypeKr || (
       domain?.storageDomainType === "master"
         ? `데이터 (마스터)`
         : domain?.storageDomainType === "data"
           ? `데이터`
           : domain?.storageDomainType === "import_export"
-            ?  `내보내기`
-            :`${domain?.storageDomainType}`,
+            ? `내보내기`
+            :`${domain?.storageDomainType}`
+    ),
     storageType: domain?.storageType === "nfs"
         ? "NFS"
         : domain?.storageType === "iscsi"
@@ -68,7 +69,7 @@ DomainDupl = ({
     size: domain?.size + " GiB",
     availableSize: domain?.availableSize + " GiB",
     usedSize: domain?.usedSize + " GiB",
-    searchText: `${domain?.name} ${domain?.domainType} ${domain?.storageType} ${domain?.size}GB`
+    searchText: `${domain?.name} ${domain?.storageDomainType} ${domain?.storageType} ${domain?.size}GB`
   }));
 
   // ✅ 검색 기능 적용
