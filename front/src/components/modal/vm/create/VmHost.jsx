@@ -127,7 +127,7 @@ const VmHost = ({
                   })}
                 </div>
               </select>
-              <div style={{ marginTop: "10px" }}>
+              {/* <div style={{ marginTop: "10px" }}>
                 <label>선택된 호스트:</label>
                 <span style={{ 
                   marginLeft: "10px",
@@ -138,7 +138,7 @@ const VmHost = ({
                     ? formHostState.hostVos.map((h) => `${h?.name} (${h?.id})`).join(", ")
                     : "선택된 호스트가 없습니다."}
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
 

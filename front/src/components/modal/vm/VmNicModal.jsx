@@ -205,14 +205,14 @@ const VmNicModal = ({
         value={formInfoState.macAddress}
         onChange={handleInputChange(setFormInfoState, "macAddress")}
       /> */}
-      <div className="nic-toggle">
+      <div className="nic-toggle w-[61%]">
         <ToggleSwitchButton id="linked-toggle" label="링크 상태"
           checked={formInfoState.linked}
           onChange={() => handleRadioChange("linked", !formInfoState.linked)}
           tType="Up" fType="Down"
         />
       </div>
-      <div className="nic-toggle">
+      <div className="nic-toggle w-[61%]">
         <ToggleSwitchButton id="plugged-toggle" label="카드 상태"
           checked={formInfoState.plugged}
           onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}

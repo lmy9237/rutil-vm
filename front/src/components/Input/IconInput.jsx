@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { RVI16 }              from "@/components/icons/RutilVmIcons";
+import { RVI16, rvi16EyeIcon, rvi16EyeOffIcon }              from "@/components/icons/RutilVmIcons";
 import "./../label/LabelInput.css"; // Import the CSS file
 import Localization           from "@/utils/Localization";
 import "./IconInput.css"; // Import the CSS file
@@ -34,7 +34,7 @@ const IconInput = ({
         {...register(target, options)}
       />
       {isPassword && (
-        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye}
+        <RVI16 iconDef={showPassword ? rvi16EyeOffIcon() : rvi16EyeIcon()}
           onClick={handleTogglePassword}
           className="password-toggle-icon fs-14"
         />        

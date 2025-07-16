@@ -4,12 +4,14 @@ import Logger from "../../../../utils/Logger";
 import "../../../label/DynamicInputList.jsx";
 import DynamicInputList from "../../../label/DynamicInputList.jsx";
 import { emptyIdNameVo } from "@/util";
+import { useValidationToast } from "@/hooks/useSimpleToast";
 
 const VmNic = ({
   nics,
   nicsState,
   setNicsState,
 }) => {
+  const { validationToast } = useValidationToast()
   const nicValues = nicsState.map((nic) => ({
     ...nic,
     vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name }
@@ -29,6 +31,7 @@ const VmNic = ({
           }
         : nic
     );
+    import.meta.env.DEV && validationToast.debug(`field: nicsState, value: ${JSON.stringify(nicsState, 2, 0)}`, )
     setNicsState(updated);
   };
 

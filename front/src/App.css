@@ -140,18 +140,18 @@ html {
   --color-down: #999999; 
   --color-nav: #555;
   --color-white:#ffffff;
-  --color-white-2:#f0f0f0; /*0*/   
-  --color-white-1:#FAFAFA; /*0*/  
-  --color-gray:#717171; /*0*/      
-  --color-gray-4: #C6C6C6; /*0버튼색*/
-  --color-gray-disabled: #6d6d6d; /* 비활성화 색 */
-  --color-input-disabled:#EDEDED; /* 0 */
+  --color-white-1:#FAFAFA;  
+  --color-white-2:#f0f0f0; 
+  --color-gray:#717171;      
+  --color-gray-4: #C6C6C6; 
+  --color-gray-disabled: #6d6d6d; 
+  --color-input-disabled:#EDEDED; 
   --color-logo:#8CC453;
-  --color-logo-text:#4679BC; /*0*/
+  --color-logo-text:#4679BC; 
   --color-blue:#1D56BC; 
-  --color-blue-1:#0A7CFF;/*0*/
-  --color-table:#E2E5EB;/*0*/
-  --color-active:#449bff; /*0*/
+  --color-blue-1:#0A7CFF;
+  --color-table:#E2E5EB;
+  --color-active:#449bff; 
   --color-border-default:#cfcfcf;
   --color-general-box:#E8E8E8;
   --color-alert: #E71825;
@@ -326,6 +326,7 @@ svg.btn { cursor: pointer; }
 .container-fluid {
   margin-left:auto;margin-right:auto;
 }
+
 .section-content {
   height: calc(100% - var(--h-section-header));
   flex: 1;               

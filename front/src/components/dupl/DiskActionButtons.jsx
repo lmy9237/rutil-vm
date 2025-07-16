@@ -1,8 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useUIState from "@/hooks/useUIState";
 import useGlobal from "@/hooks/useGlobal";
 import { ActionButtons } from "@/components/button/ActionButtons";
 import Localization from "@/utils/Localization";
+import { useStorageDomain } from "@/api/RQHook";
 
 /**
  * @name DiskActionButtons
@@ -18,11 +19,10 @@ const DiskActionButtons = ({
 }) => {
   const { setActiveModal } = useUIState()
   const { disksSelected } = useGlobal()
-  const isContextMenu = useMemo(() => actionType === "context", [actionType])
+  const isContextMenu = useMemo(() => actionType === "context", [actionType]);
 
   const selected1st = [...disksSelected][0] ?? null
 
-  // 공유가능일때 이동,복사 버튼 비활성화(sharable)
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0 },
     { type: "upload",  onClick: () => setActiveModal("disk:upload"), label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0 },
@@ -31,7 +31,7 @@ const DiskActionButtons = ({
     { type: "remove",  onClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, 
       disabled: disksSelected.length === 0 || hasConnectTemplate },
     { type: "move",    onClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE,   
-      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate },
+      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate},
     { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   
       disabled: disksSelected.length === 0 || selected1st?.sharable  },
   ];

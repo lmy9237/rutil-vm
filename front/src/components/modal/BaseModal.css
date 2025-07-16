@@ -11,7 +11,7 @@
   transform: translate(-50%, -50%);
   box-shadow: 7px 7px 5px rgba(0, 0, 0, 0.2);
   border:var(--border-default);border-radius: 8px;
-  background: white;
+  background: var(--color-white);
 }
 .popup-header {
   width: 100%;height: var(--h-modal-header);

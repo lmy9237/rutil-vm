@@ -47,7 +47,7 @@ const GeneralBoxProps = ({
         className={`box-content ${enableOverflowCheck ? "overflowing" : ""}`}
         ref={contentRef}
       >
-        <div className="box-inner-content">
+        <div className="box-inner-content h-full">
           {children}
         </div>
       

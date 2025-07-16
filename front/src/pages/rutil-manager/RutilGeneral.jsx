@@ -6,7 +6,6 @@ import {
   useDashboardCpuMemory
 } from "@/api/RQHook";
 import Localization               from "@/utils/Localization";
-import "./RutilGeneral.css"
 import VmGeneralBarChart from "../computing/vm/VmGeneralBarChart";
 import RutilGeneralBoxProps from "./RutilGeneralBoxProps";
 import { RVI16, rvi16Cluster, rvi16DataCenter, rvi16Desktop, rvi16Host, rvi16Network, rvi16Storage } from "@/components/icons/RutilVmIcons";

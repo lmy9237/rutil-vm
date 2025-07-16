@@ -87,7 +87,7 @@ const HostGeneralChart = ({ per }) => {
       },
     },
     tooltip: {
-      enabled: false,
+      enabled: true,
     },
     legend: {
       position: "top",

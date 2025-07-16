@@ -451,6 +451,10 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 	// 기존 nic와 이름 중복 검사
 	val existingNics = this.findAllNicsFromVm(vmId).getOrDefault(listOf())
 	if (existingNics.nameDuplicateVmNic(nic.name())) {
+		/* TODO:
+		 * 탬플릿으로 새 가상머신 생성 했을 때, 기존 NIC가 있었을 떄, 변경없이 진행하면, 가상머신 생성 때 이미 nic가 추가된 상태로
+		 * 진행하여, 새로 추가되는 개념으로 가지 않음. 왜 그러는지 확인 필요
+		 **/
 		throw ErrorPattern.NIC_DUPLICATE.toError()
 		// return FailureType.DUPLICATE.toResult(Term.NIC.desc)
 	}
