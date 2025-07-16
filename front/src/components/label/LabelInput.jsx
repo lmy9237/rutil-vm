@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FontAwesomeIcon }              from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash }            from "@fortawesome/free-solid-svg-icons";
+import { RVI16, rvi16EyeIcon, rvi16EyeOffIcon } from "../icons/RutilVmIcons";
 import { Input }                        from "@/components/ui/input";
 import "./LabelInput.css";
-import { RVI16, rvi16EyeIcon, rvi16EyeOffIcon } from "../icons/RutilVmIcons";
 
 /**
  * @name LabelInput
@@ -39,7 +39,7 @@ const LabelInput = ({
   const [showPassword, setShowPassword] = useState(false);
   const isPasswordType = type === "password";
   const inputType = isPasswordType && showPassword ? "text" : type;
-
+ 
   const togglePassword = () => setShowPassword((prev) => !prev);
 
   return (
