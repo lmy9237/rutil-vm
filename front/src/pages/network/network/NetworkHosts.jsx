@@ -69,6 +69,7 @@ const NetworkHosts = ({
       const baseData = {
         ...host,
         icon: status2Icon(host?.status),
+        async: "",
         host: ( 
           <TableRowClick type="host" id={host?.id}>
             {host?.name}
@@ -130,7 +131,6 @@ const NetworkHosts = ({
           />
         </div>
       </div>
-
       <TablesOuter target={"host"}
         columns={
           activeFilter === "connected"

@@ -48,8 +48,8 @@ const NetworkVms = ({
 
   // 필터링된 VM 데이터 계산
   const filteredVms = activeFilter === "running"
-    ? [...vms].filter((nic) => nic?.vmVo?.status?.toUpperCase() === "UP")
-    : [...vms].filter((nic) => nic?.vmVo?.status !== "UP");
+    ? [...vms].filter((nic) => nic?.vmVo?.status === "up")
+    : [...vms].filter((nic) => nic?.vmVo?.status !== "up");
 
   const transformedFilteredData = [...filteredVms].map((nic) => {
     const vm = nic?.vmVo;
@@ -69,7 +69,7 @@ const NetworkVms = ({
       vnicTx: checkZeroSizeToMbps(nic?.txSpeed),
       totalRx: nic?.rxTotalSpeed.toLocaleString(),
       totalTx: nic?.txTotalSpeed.toLocaleString(),
-      Description: nic?.discription,
+      description: vm?.description,
     };
   });
 

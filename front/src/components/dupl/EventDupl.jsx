@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -8,6 +7,8 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import EventActionButtons     from "@/components/dupl/EventActionButtons";
 import {
+  rvi16SeverityAlertLined,
+  RVI36,
   severity2Icon
 } from "@/components/icons/RutilVmIcons";
 import Localization           from "@/utils/Localization";
@@ -40,6 +41,12 @@ const EventDupl = ({
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <EventActionButtons />
       </div>
+      <RVI36 className="icon cursor-pointer"
+        iconDef={rvi16SeverityAlertLined()}
+        onClick={() => {
+          
+        }}
+      />
       <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}

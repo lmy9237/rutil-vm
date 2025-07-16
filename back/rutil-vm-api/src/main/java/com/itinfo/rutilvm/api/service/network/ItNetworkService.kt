@@ -334,11 +334,14 @@ class NetworkServiceImpl(
 	@Throws(Error::class)
 	override fun findConnectedHostsFromNetwork(networkId: String): List<HostVo> {
 		log.info("findConnectedHostsFromNetwork ... networkId: {}", networkId)
-		val network = checkNetwork(networkId)
+
 		val res: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
 				val clusterNetworks = conn.findAllNetworksFromCluster(host.cluster().id()).getOrDefault(emptyList())
 					.any { it.id() == networkId }
+				// [ItHostNicService.findAllNetworkAttachmentsFromHost] 참조
+				// val nat: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(host.id(), follow = "host,host_nic,network").getOrDefault(emptyList())
+				// res.toNetworkAttachmentVos()
 				host.networkAttachments().any { it.network().id() == networkId } && clusterNetworks
 			}
 
