@@ -29,11 +29,87 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
-## 4.0.0 - 2025-07-14
+## 4.0.0 - 2025-07-18
 
 - [`api-v4.0.0`][api-v4.0.0]: 백엔드
 - [`web-v4.0.0`][web-v4.0.0]: 프론트앤드
 
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${back}` 스케쥴러: 가상머신 스크린샷에 대한 불필요한 이벤트 로그를 주기적으로 제거
+  - `${back}` API호출에 대한 연결상태 관리 > session 무한 생성 방지
+  - `${back}` 스크린샷에 대한 불필요한 이벤트 로그를 주기적으로 제거
+  - `${back}` 네트워크 정보 DB 처리 (조회, DNS수정, 등등)
+  - `${front}` 테스트용: '무단배포금지입니다.' 워터마크 표시 처리
+  - `${back}` OVF 데이터 가공 (스토리지 도메인에서 가상머신 가져오기)
+- [@dhj27][dhj27]
+  - `${back}`:  hostNic syncallNetworksHost 추가
+  - `${front}`: Host 그래프 값 추가
+  - `${front}`: rvi16RefreshTry, rvil16Migration 아이콘 추가
+    ![Group 9.svg](attachment:28c4ec1a-469b-40bb-9bae-0baa58f857f9:Group_9.svg)
+- [@lmy9237][lmy9237]
+  - `${front}` : 토스트 검은색 테두리 추가하기
+  - `${front}` : 테이블 컴포넌트 분리
+  - `${front}` : vm편집모달 선택호스트 id안보이는 것 추가
+  - `${front}` :  눈모양 아이콘 추가
+  - `${front}` :  호스트차트 툴팁추가
+  - `${front}` :  context-menu shadc추가
+  - `${front}` :  가상머신 신규/편집: `LabelSelectOptionsID` 에 대한 기능 추가
+  - `${front}` : 현재 이동/복사 대상인 디스크의 스토리지 도메인의 상태가 active가 아니라면 이동/복사/삭제 불가능 기능 추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}` 개발환경일 때 selectbox에 ID 표출
+  - `${front}` 트리메뉴 > Computing  우클릭 반응 정상화
+  - `${front}` 가상머신 생성/편집: 메모리 값 입력 방식 변경 (select -> 직접입력), GiB 단위변환포함
+  - `${front}` 호스트 목록 컬럼 상태: SPM 상태와 상태 정정
+  - `${back}`/`${front}` 네트워크 생성/편집: DNS값 변경 기능 복구
+  - `${front}` 스토리지 도메인 > 가상머신 가지오기: 모달 및 목록에 필요항목 OVF 값과 연결
+- [@dhj27][dhj27]
+ - `${back}${front}` : 스토리지 도메인 목록 정리 (디스크 이동 스토리지 도메인 목록 오류)
+ - `${back}${front}` : vm import 
+ - `${back}`: host per(cpu,memory,network)
+ - `${back}`: dashboard 정리
+            - storage up/down 추가(상태x)
+            - storage 정렬
+            - host 1시간 값 출력(불완전)
+ - `${back}`: 클러스터가 가진 호스트/가상머신 수 수정
+ - `${back}`: diskattachment interface 수정
+ - `${front}`: graph endpoint 변경
+ - `${front}`: hostNic network insync 변경
+ - `${front}`: migration modal, button 처리
+ - `${front}`: rutilManager info 용량 데이터수정
+ - `${front}`: host ha 값 변경(globalMaintenance -> hostedActive)
+ - `${front}`: storagedomain template 크기 추가(불완전)
+ - `${front}`: storageDomain 타입에 따른 경로 표시 수정
+ - `${front}`: 테이블 width 수정 및 테이블 값 수정
+ - `${front}`: host 비동기 아이콘 수정 [rvi16TryRefresh]
+ - `${front}`: VmDiskModal, VmDiskConnectionModal 수정(기능완료)
+ - `${front}`: TemplateModal 수정(기능 완료)
+- [@lmy9237][lmy9237]
+  - `${front}` : 대시보드 원그래프 ‘사용률’ 대신 ‘AVG’로 바꾸기
+  - `${front}` : 호스트 일반페이지 글자 잘리는 것 수정
+  - `${front}` : 가상머신 가져오기 render2 네트워크 테이블 수정
+  - `${front}` : hostedengine 아이콘대신 배경색 or 글자색 변경(현재 주석처리)
+  - `${front}` : 마이그레이션 모달 UI 수정
+  - `${front}` : vnic프로파일 select선택안바뀜 수정
+  - `${front}` : vm 일반페이지 +more버튼 가려지는 것 수정
+  - `${front}` : 테이블안에 체크박스는 가운데정렬
+  - `${front}` : 대시보드 bar그래프 색상 grid와 동일하게 맞추기
+  - `${front}` : 호스트 네트워크 툴팁가려지는 것 수정     
+  - `${front}` : 대시보드 원그래프 숫자와 사용률 위치 바꾸기
+  - `${front}` : 워터마크 크기로 스크롤 생기는 것 방지 + css정리
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+  -`${front}`:  VmCreateDiskConnectionModal, VmCreateDiskModal
+- [@lmy9237][lmy9237]
+
+---
 
 ## 0.3.8 - 2025-07-11
 
@@ -1547,6 +1623,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
+[api-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.8...web-v4.0.0
+[web-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.8...api-v4.0.0
 [api-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.7...web-v0.3.8
 [web-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.7...api-v0.3.8
 [api-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.6...web-v0.3.7

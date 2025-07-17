@@ -78,7 +78,7 @@ export PATH
 export DOCKER_REGISTRY_HOME=ititinfo.synology.me:50951/ititcloud
 # export DOCKER_IMG_RUTIL_VM_API=$DOCKER_REGISTRY_HOME/ititcloud/rutil-vm-api
 export DOCKER_IMG_RUTIL_VM_API=rutil-vm-api
-export DOCKER_IMG_RUTIL_VM_API_VERSION=0.3.8
+export DOCKER_IMG_RUTIL_VM_API_VERSION=4.0.0
 export DOCKER_IMG_RUTIL_VM_API_CURRENT=$DOCKER_IMG_RUTIL_VM_API:$DOCKER_IMG_RUTIL_VM_API_VERSION
 export DOCKER_IMG_RUTIL_VM_API_LATEST=$DOCKER_IMG_RUTIL_VM_API:latest
 
@@ -123,7 +123,7 @@ function startDk() {
 }
 
 function stopDk() {
-  docker compose -f "$HOME/rutil-vm/$DOCKER_COMPOSE_FILENAME" down
+  docker compose -f "$RUTIL_VM_HOME/$DOCKER_COMPOSE_FILENAME" down
 }
 
 function loadDkb() {
