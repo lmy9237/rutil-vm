@@ -327,6 +327,6 @@ const interfaceList = [
 ];
 
 const sparseList = [
-  { value: "true", label: "씬 프로비저닝" },
-  { value: "false", label: "사전 할당" },
+  { value: "true", label: Localization.kr.THIN_PROVISIONING },
+  { value: "false", label: Localization.kr.PREALLOCATED },
 ];

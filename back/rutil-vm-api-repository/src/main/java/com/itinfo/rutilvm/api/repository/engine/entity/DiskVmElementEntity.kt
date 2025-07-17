@@ -1,6 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
+import com.itinfo.rutilvm.api.ovirt.business.DiskInterfaceB
 import com.itinfo.rutilvm.common.gson
 //import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
@@ -47,8 +47,8 @@ class DiskVmElementEntity(
 	override fun toString(): String =
 		gson.toJson(this)
 
-	val diskInterface: DiskInterface?
-		get() = DiskInterface.forCode(_diskInterface)
+	val diskInterface: DiskInterfaceB?
+		get() = DiskInterfaceB.forCode(_diskInterface)
 
 	class Builder {
 		private var bDiskId: UUID? = null; fun diskId(block: () -> UUID?) { bDiskId = block() }

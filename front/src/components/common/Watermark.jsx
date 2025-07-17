@@ -12,7 +12,7 @@ const styles = {
     position: 'absolute',
     pointerEvents: 'none', // Allows clicking through the watermark to elements below
     opacity: 0.25, // A typical watermark opacity
-    fontSize: '40px',
+    fontSize: '54px',
     color: '#a2a2a2',
     transform: 'rotate(-30deg)',
     whiteSpace: 'nowrap', // Prevent text from wrapping
@@ -31,8 +31,8 @@ export const Watermark = ({
 }) => {
   const containerRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const HORIZONTAL_SPACING = 440; // Horizontal distance between start of each watermark
-  const VERTICAL_SPACING = 220;   // Vertical distance
+  const HORIZONTAL_SPACING = 560; // Horizontal distance between start of each watermark
+  const VERTICAL_SPACING = 320;   // Vertical distance
   
   useEffect(() => {
     Logger.debug(`Watermark > useEffect ... `)
@@ -65,14 +65,14 @@ export const Watermark = ({
     Logger.debug(`Watermark > renderWatermarks ... dimensions.width: ${dimensions.width || 0}, dimensions.height: ${dimensions.height || 0}`)
     // We loop with a small buffer (-1 to +1) to ensure the container is
     // always fully covered, even at the edges after rotation. This is the "safe" part.
-    for (let i=0; i < numRows-1; i++) {
+    for (let i=0; i < numRows; i++) {
       for (let j=0; j < numCols-1; j++) {
         watermarkElements.push(
           <span key={`${i}-${j}`} className="watermark-text"
             style={{
               ...styles.watermarkText,
               top: `${i * VERTICAL_SPACING}px`,
-              left: `${j * HORIZONTAL_SPACING}px`,
+              left: `${100+(j * HORIZONTAL_SPACING)}px`,
             }}
           >
             {text}

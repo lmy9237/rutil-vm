@@ -16,6 +16,7 @@ import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.VmTemplateStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
+import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
@@ -26,12 +27,16 @@ import com.itinfo.rutilvm.api.ovirt.business.findMigrationEncrypt
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationSupport
 import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
 import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toBiosType
 import com.itinfo.rutilvm.api.ovirt.business.toCpuPinningPolicyB
+import com.itinfo.rutilvm.api.ovirt.business.toVmType
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.common.toLocalDateTime
+import com.itinfo.rutilvm.common.toTimeElapsedKr
 import com.itinfo.rutilvm.util.ovirt.findAllDiskAttachmentsFromTemplate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import com.itinfo.rutilvm.util.ovirt.findDataCenter
@@ -52,17 +57,17 @@ private val log = LoggerFactory.getLogger(TemplateVo::class.java)
  * [TemplateVo]
  */
 class TemplateVo(
-	val id: String = "",
-	val name: String = "",
+	override val id: String = "",
+	override val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	private val _status: VmTemplateStatusB? = VmTemplateStatusB.ok,
+	override val status: VmTemplateStatusB? = VmTemplateStatusB.ok,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	private val _optimizeOption: VmTypeB? = VmTypeB.unknown,
+	val optimizeOption: VmTypeB? = VmTypeB.unknown,
 	val biosBootMenu: Boolean = false,
 	val biosType: BiosTypeB? = BiosTypeB.cluster_default, // chipsetFirmwareType
-	private val _osType: VmOsType? = VmOsType.other,
+	val osType: VmOsType? = VmOsType.other,
 	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
@@ -86,7 +91,7 @@ class TemplateVo(
 	val migrationEncrypt: Boolean? = null,
 	val migrationParallelPolicy: Boolean? = null,
 	val parallelMigration: String = "",
-	val storageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME,
+	val storageErrorResumeBehaviour: VmResumeBehavior = VmResumeBehavior.auto_resume,
 	val virtioScsiMultiQueueEnabled: Boolean = false,
 	val firstDevice: String = "",
 	val secDevice: String = "",
@@ -128,36 +133,44 @@ class TemplateVo(
 	val originTemplateVo: IdentifiedVo = IdentifiedVo(),
 	val versionName: String = "",           // <version><version_name>
 	val versionNumber: Int = 0,             // <version><version_number>
-): Serializable {
-	val status: String
-		get() = _status?.code ?: VmTemplateStatusB.unknown.code
+): Serializable, TreeNavigatable<VmTemplateStatusB> {
+	override val type: TreeNavigatableType	get() = TreeNavigatableType.TEMPLATE
+	val statusCode: String 					get() = status?.code ?: VmTemplateStatusB.unknown.code
+	val statusKr: String					get() = status?.kr ?: "알 수 없음"
+	val statusEn: String 					get() = status?.en ?: "N/A"
 
-	val urlSmallIcon: String			get() = iconSmall?.dataUrl ?: ""
-	val urlLargeIcon: String			get() = iconLarge?.dataUrl ?: ""
+	val urlSmallIcon: String				get() = iconSmall?.dataUrl ?: ""
+	val urlLargeIcon: String				get() = iconLarge?.dataUrl ?: ""
 
-	val optimizeOption: String			get() = _optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionCode: String			get() = optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionEn: String			get() = optimizeOption?.en ?: "N/A"
+	val optimizeOptionKr: String			get() = optimizeOption?.kr ?: "알 수 없음"
 
-	val biosTypeCode: String			get() = biosType?.code ?: BiosTypeB.cluster_default.code
-	val biosTypeEn: String				get() = biosType?.en ?: "N/A"
-	val biosTypeKr: String				get() = biosType?.kr ?: "알 수 없음"
+	val biosTypeCode: String				get() = biosType?.code ?: BiosTypeB.cluster_default.code
+	val biosTypeEn: String					get() = biosType?.en ?: "N/A"
+	val biosTypeKr: String					get() = biosType?.kr ?: "알 수 없음"
 
-	val cpuPinningPolicyCode: String	get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
-	val cpuPinningPolicyEn: String		get() = cpuPinningPolicy?.en ?: "N/A"
-	val cpuPinningPolicyKr: String		get() = cpuPinningPolicy?.kr ?: "알 수 없음"
+	val osTypeCode: String					get() = osType?.code ?: VmOsType.other.code
+	val osTypeName: String					get() = osType?.description ?: VmOsType.other.description
 
-	val migrationModeCode: String		get() = migrationMode?.code ?: MigrationSupport.unknown.code
-	val migrationModeEn: String			get() = migrationMode?.en ?: "N/A"
-	val migrationModeKr: String			get() = migrationMode?.kr ?: "알 수 없음"
+	val cpuArcCode: String					get() = cpuArc?.code ?: ArchitectureType.undefined.code
 
-	val osType: String
-		get() = _osType?.code?.lowercase() ?: VmOsType.other.name.lowercase()
+	val migrationModeCode: String			get() = migrationMode?.code ?: MigrationSupport.unknown.code
+	val migrationModeEn: String				get() = migrationMode?.en ?: "N/A"
+	val migrationModeKr: String				get() = migrationMode?.kr ?: "알 수 없음"
 
-	val creationTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
-	val startTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_startTime)
-	val stopTime: String?
-		get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	val cpuPinningPolicyCode: String		get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
+	val cpuPinningPolicyEn: String			get() = cpuPinningPolicy?.en ?: "N/A"
+	val cpuPinningPolicyKr: String			get() = cpuPinningPolicy?.kr ?: "알 수 없음"
+
+	val displayTypeCode: String				get() = displayType?.code ?: DisplayTypeB.none.code
+	val displayTypeEn: String				get() = displayType?.en ?: "N/A"
+	val displayTypeKr: String				get() = displayType?.kr ?: "알 수 없음"
+
+	val creationTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
+	val startTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_startTime)
+	val stopTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_stopTime)
+	// val upTime: String?						get() = timeElapsed?.toTimeElapsedKr()
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -198,7 +211,7 @@ class TemplateVo(
 		private var bMigrationEncrypt: Boolean? = null; fun migrationEncrypt(block: () -> Boolean?) { bMigrationEncrypt = block() }
 		private var bMigrationParallelPolicy: Boolean? = null; fun migrationParallelPolicy(block: () -> Boolean?) { bMigrationParallelPolicy = block() }
 		private var bParallelMigration: String = ""; fun parallelMigration(block: () -> String?) { bParallelMigration = block() ?: "" }
-		private var bStorageErrorResumeBehaviour: VmStorageErrorResumeBehaviour = VmStorageErrorResumeBehaviour.AUTO_RESUME; fun storageErrorResumeBehaviour(block: () -> VmStorageErrorResumeBehaviour?) { bStorageErrorResumeBehaviour = block() ?: VmStorageErrorResumeBehaviour.AUTO_RESUME }
+		private var bStorageErrorResumeBehaviour: VmResumeBehavior = VmResumeBehavior.auto_resume; fun storageErrorResumeBehaviour(block: () -> VmResumeBehavior?) { bStorageErrorResumeBehaviour = block() ?: VmResumeBehavior.auto_resume }
 		private var bVirtioScsiMultiQueueEnabled: Boolean = false; fun virtioScsiMultiQueueEnabled(block: () -> Boolean?) { bVirtioScsiMultiQueueEnabled = block() ?: false }
 		private var bFirstDevice: String = ""; fun firstDevice(block: () -> String?) { bFirstDevice = block() ?: "" }
 		private var bSecDevice: String = ""; fun secDevice(block: () -> String?) { bSecDevice = block() ?: "" }
@@ -401,9 +414,9 @@ fun TemplateVo.toAddTemplate(): Template {
 fun TemplateVo.toEditTemplate(): Template {
 	return toTemplateBuilder()
 		.id(id)
-		.os(OperatingSystemBuilder().type(osType))
+		.os(OperatingSystemBuilder().type(osTypeCode))
 		.bios(BiosBuilder().type(biosType.toBiosType()))
-		.type(VmType.fromValue(optimizeOption))
+		.type(optimizeOption.toVmType())
 		// .stateless(stateless)
 		// .startPaused(startPaused)
 		// .deleteProtected(deleteProtected)

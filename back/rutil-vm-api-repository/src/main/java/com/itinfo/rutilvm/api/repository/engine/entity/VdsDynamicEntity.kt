@@ -122,7 +122,7 @@ class VdsDynamicEntity(
 	val cpuCores: Int? = null,
 	val cpuModel: String? = null,
 	val cpuSpeedMh: BigDecimal? = BigDecimal.ZERO,
-	var ifTotalSpeed: String = "",
+	var ifTotalSpeed: String? = "",
 	var kvmEnabled: Boolean? = false,
 	var physicalMemMb: Int? = 0,
 	var memCommited: Int? = 0,
@@ -131,9 +131,9 @@ class VdsDynamicEntity(
 	var vmMigrating: Int? = 0,
 	var reservedMem: Int? = 0,
 	var guestOverhead: Int? = 0,
-	val softwareVersion: String = "",
-	val versionName: String = "",
-	val buildName: String = "",
+	val softwareVersion: String? = "",
+	val versionName: String? = "",
+	val buildName: String? = "",
 	var previousStatus: Int? = null,
 	var cpuFlags: String? = "",
 	var vmsCoresCount: Int? = 0,
@@ -242,7 +242,7 @@ class VdsDynamicEntity(
 		private var bCpuCores: Int? = 0;fun cpuCores(block: () -> Int?) { bCpuCores = block() ?: 0 }
 		private var bCpuModel: String? = "";fun cpuModel(block: () -> String?) { bCpuModel = block() ?: "" }
 		private var bCpuSpeedMh: BigDecimal? = BigDecimal.ZERO;fun cpuSpeedMh(block: () -> BigDecimal?) { bCpuSpeedMh = block() ?: BigDecimal.ZERO }
-		private var bIfTotalSpeed: String = "";fun ifTotalSpeed(block: () -> String ) { bIfTotalSpeed = block() ?: "" }
+		private var bIfTotalSpeed: String? = "";fun ifTotalSpeed(block: () -> String?) { bIfTotalSpeed = block() ?: "" }
 		private var bKvmEnabled: Boolean? = false;fun kvmEnabled(block: () -> Boolean?) { bKvmEnabled = block() ?: false }
 		private var bPhysicalMemMb: Int? = 0;fun physicalMemMb(block: () -> Int?) { bPhysicalMemMb = block() ?: 0 }
 		private var bMemCommited: Int? = 0;fun memCommited(block: () -> Int?) { bMemCommited = block() ?: 0 }
@@ -251,9 +251,9 @@ class VdsDynamicEntity(
 		private var bVmMigrating: Int? = 0;fun vmMigrating(block: () -> Int?) { bVmMigrating = block() ?: 0}
 		private var bReservedMem: Int? = 0;fun reservedMem(block: () -> Int?) { bReservedMem = block() ?: 0}
 		private var bGuestOverhead: Int? = 0;fun guestOverhead(block: () -> Int?) { bGuestOverhead = block() ?: 0}
-		private var bSoftwareVersion: String = "";fun softwareVersion(block: () -> String ) { bSoftwareVersion = block() ?: "" }
-		private var bVersionName: String = "";fun versionName(block: () -> String ) { bVersionName = block() ?: "" }
-		private var bBuildName: String = "";fun buildName(block: () -> String ) { bBuildName = block() ?: "" }
+		private var bSoftwareVersion: String = "";fun softwareVersion(block: () -> String?) { bSoftwareVersion = block() ?: "" }
+		private var bVersionName: String = "";fun versionName(block: () -> String?) { bVersionName = block() ?: "" }
+		private var bBuildName: String = "";fun buildName(block: () -> String?) { bBuildName = block() ?: "" }
 		private var bPreviousStatus: Int? = null;fun previousStatus(block: () -> Int?) { bPreviousStatus = block() ?: 0 }
 		private var bCpuFlags: String? = "";fun cpuFlags(block: () -> String?) { bCpuFlags = block() ?: "" }
 		private var bVmsCoresCount: Int? = 0;fun vmsCoresCount(block: () -> Int?) { bVmsCoresCount = block() ?: 0 }

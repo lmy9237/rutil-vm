@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ovf:Envelope xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1/"
+              xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+              xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ovf:version="4.4.0.0">
+  <References></References>
+  <NetworkSection>
+    <Info>List of networks</Info>
+  </NetworkSection>
+  <Section xsi:type="ovf:DiskSection_Type">
+    <Info>List of Virtual Disks</Info>
+  </Section>
+  <Content ovf:id="out" xsi:type="ovf:VirtualSystem_Type">
+    <Name>vmware-Import-M</Name>
+    <Description></Description>
+    <Comment></Comment>
+    <CreationDate>2025/03/28 01:48:28</CreationDate>
+    <ExportDate>2025/03/28 02:06:40</ExportDate>
+    <DeleteProtected>false</DeleteProtected>
+    <SsoMethod>guest_agent</SsoMethod>
+    <IsSmartcardEnabled>false</IsSmartcardEnabled>
+    <NumOfIoThreads>1</NumOfIoThreads>
+    <TimeZone>Etc/GMT</TimeZone>
+    <default_boot_sequence>0</default_boot_sequence>
+    <Generation>4</Generation>
+    <ClusterCompatibilityVersion>4.7</ClusterCompatibilityVersion>
+    <VmType>1</VmType>
+    <ResumeBehavior>AUTO_RESUME</ResumeBehavior>
+    <MinAllocatedMem>4096</MinAllocatedMem>
+    <IsStateless>false</IsStateless>
+    <IsRunAndPause>false</IsRunAndPause>
+    <AutoStartup>false</AutoStartup>
+    <Priority>0</Priority>
+    <MigrationSupport>0</MigrationSupport>
+    <IsBootMenuEnabled>false</IsBootMenuEnabled>
+    <IsSpiceFileTransferEnabled>true</IsSpiceFileTransferEnabled>
+    <IsSpiceCopyPasteEnabled>true</IsSpiceCopyPasteEnabled>
+    <AllowConsoleReconnect>false</AllowConsoleReconnect>
+    <ConsoleDisconnectAction>LOCK_SCREEN</ConsoleDisconnectAction>
+    <ConsoleDisconnectActionDelay>0</ConsoleDisconnectActionDelay>
+    <CustomEmulatedMachine></CustomEmulatedMachine>
+    <BiosType>1</BiosType>
+    <CustomCpuName></CustomCpuName>
+    <PredefinedProperties></PredefinedProperties>
+    <UserDefinedProperties></UserDefinedProperties>
+    <MaxMemorySizeMb>16384</MaxMemorySizeMb>
+    <MultiQueuesEnabled>true</MultiQueuesEnabled>
+    <VirtioScsiMultiQueuesEnabled>false</VirtioScsiMultiQueuesEnabled>
+    <UseHostCpu>false</UseHostCpu>
+    <BalloonEnabled>true</BalloonEnabled>
+    <CpuPinningPolicy>0</CpuPinningPolicy>
+    <ClusterName>Default</ClusterName>
+    <TemplateId>00000000-0000-0000-0000-000000000000</TemplateId>
+    <TemplateName>Blank</TemplateName>
+    <IsInitilized>false</IsInitilized>
+    <Origin>1</Origin>
+    <DefaultDisplayType>2</DefaultDisplayType>
+    <TrustedService>false</TrustedService>
+    <UseLatestVersion>false</UseLatestVersion>
+    <StopTime>2025/03/28 01:48:29</StopTime>
+    <Section ovf:id="04af28a7-3759-4825-b8a2-ff3a36feb6a3" ovf:required="false"
+             xsi:type="ovf:OperatingSystemSection_Type">
+      <Info>Guest Operating System</Info>
+      <Description>other</Description>
+    </Section>
+    <Section xsi:type="ovf:VirtualHardwareSection_Type">
+      <Info>2 CPU, 4096 Memory</Info>
+      <System>
+        <vssd:VirtualSystemType>ENGINE 4.4.0.0</vssd:VirtualSystemType>
+      </System>
+      <Item>
+        <rasd:Caption>2 virtual cpu</rasd:Caption>
+        <rasd:Description>Number of virtual CPU</rasd:Description>
+        <rasd:InstanceId>1</rasd:InstanceId>
+        <rasd:ResourceType>3</rasd:ResourceType>
+        <rasd:num_of_sockets>2</rasd:num_of_sockets>
+        <rasd:cpu_per_socket>1</rasd:cpu_per_socket>
+        <rasd:threads_per_cpu>1</rasd:threads_per_cpu>
+        <rasd:max_num_of_vcpus>16</rasd:max_num_of_vcpus>
+        <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>4096 MB of memory</rasd:Caption>
+        <rasd:Description>Memory Size</rasd:Description>
+        <rasd:InstanceId>2</rasd:InstanceId>
+        <rasd:ResourceType>4</rasd:ResourceType>
+        <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
+        <rasd:VirtualQuantity>4096</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>USB Controller</rasd:Caption>
+        <rasd:InstanceId>3</rasd:InstanceId>
+        <rasd:ResourceType>23</rasd:ResourceType>
+        <rasd:UsbPolicy>DISABLED</rasd:UsbPolicy>
+      </Item>
+      <Item>
+        <rasd:Caption>Graphical Framebuffer</rasd:Caption>
+        <rasd:InstanceId>80576dbd-92d2-4981-bb53-59389aa66dd5</rasd:InstanceId>
+        <rasd:ResourceType>26</rasd:ResourceType>
+        <Type>graphics</Type>
+        <Device>vnc</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>CDROM</rasd:Caption>
+        <rasd:InstanceId>c03c4d48-b6a2-4db8-8a8f-b078d7f675b1</rasd:InstanceId>
+        <rasd:ResourceType>15</rasd:ResourceType>
+        <Type>disk</Type>
+        <Device>cdrom</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>true</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <path></path>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>ee84e31d-0a73-4e85-b36d-4499ddab46f4</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>usb</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <index>0</index>
+          <model>qemu-xhci</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>05473622-6332-4c6c-8292-84d0f3953f97</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>virtio-serial</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+    </Section>
+    <Section xsi:type="ovf:SnapshotsSection_Type">
+      <Snapshot ovf:id="d9bc3012-9087-4b8d-a327-c89d096cea14">
+        <Type>ACTIVE</Type>
+        <Description>Active VM</Description>
+        <CreationDate>2025/03/28 01:48:28</CreationDate>
+      </Snapshot>
+    </Section>
+  </Content>
+</ovf:Envelope>

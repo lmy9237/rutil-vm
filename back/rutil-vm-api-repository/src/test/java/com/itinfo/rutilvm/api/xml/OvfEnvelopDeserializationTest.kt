@@ -18,7 +18,6 @@ class OvfEnvelopDeserializationTest {
 	@BeforeEach
 	fun setup() {
 		log.info("setup ...")
-		xmlMapper = UnregisteredOvfOfEntities.Companion.xmlMapper
 
 		val inputStream: InputStream = Thread.currentThread().contextClassLoader.getResourceAsStream(OVFDATA_TEST_FILENAME) ?: throw FileNotFoundException(
 			"Cannot find OVF sample file: $OVFDATA_TEST_FILENAME in resources. " +
@@ -34,9 +33,9 @@ class OvfEnvelopDeserializationTest {
 		log.info("OVF XML from file parsed successfully")
 
 		Assertions.assertNotNull(envelope, "Envelope should not be null")
-		Assertions.assertNotNull(envelope.virtualSystem, "VirtualSystem (Content) should not be null")
+		Assertions.assertNotNull(envelope.virtualSystemSection, "VirtualSystem (Content) should not be null")
 
-		val content = envelope.virtualSystem!!
+		val content = envelope.virtualSystemSection!!
 		Assertions.assertEquals("test-20250414", content.name, "VM Name mismatch")
 
 		// Check References
@@ -54,8 +53,8 @@ class OvfEnvelopDeserializationTest {
 
 
 		// Check Content Sections (polymorphic)
-		Assertions.assertNotNull(content.sections, "Content sections list should not be null")
-		Assertions.assertFalse(content.sections.isNullOrEmpty(), "Content sections list should not be empty")
+		Assertions.assertNotNull(content.snapshotsSection, "Content sections list should not be null")
+		// Assertions.assertFalse(content.snapshotsSection.isNullOrEmpty(), "Content sections list should not be empty")
 		// assertEquals(3, content.sections?.size, "Should be 3 sections in Content (OS, HW, Snapshots)")
 
 		val osSection = content.operatingSystemSection
@@ -95,48 +94,26 @@ class OvfEnvelopDeserializationTest {
 	@Test
 	fun `should parse OVF Envelop correctly from file using document`() = assertDoesNotThrow("Parsing OVF from file should not throw an exception") {
 		log.info("should parse OVF Envelop correctly from file using document ... data : $OVFDATA_TEST_FILENAME")
-		val reader = ovfXmlContent.toXmlElement()
-		val tReferences = reader.findAllNodesBy("References")
-		val files: List<OvfFile> = tReferences.firstOrNull()?.toOvfFiles() ?: emptyList()
-		val tNetworkSection = reader.findAllNodesBy("NetworkSection")
-		val networks: List<OvfNetwork> = tNetworkSection.firstOrNull()?.toOvfNetworks() ?: emptyList()
-		val tDiskSection = reader.findAllNodesBy("Section", "xsi:type", "ovf:DiskSection_Type")
-		val disks: List<OvfDisk> = tDiskSection.firstOrNull()?.toOvfDisks() ?: emptyList()
-		val tVmSection = reader.findAllNodesBy("Content", "xsi:type", "ovf:VirtualSystem_Type")
-		val tOperatingSystemSection = reader.findAllNodesBy("Section", "xsi:type", "ovf:OperatingSystemSection_Type")
-		val operatingSystemSection: OvfOperatingSystemSection? = tOperatingSystemSection.firstOrNull()?.toOvfOperatingSystemSection()
-		val tVirtualHardwareSection = reader.findAllNodesBy("Section", "xsi:type", "ovf:VirtualHardwareSection_Type")
-		val virtualHardwareSection: OvfVirtualHardwareSection? = tVirtualHardwareSection.firstOrNull()?.toOvfVirtualHardwareSection()
-		val vmSection: OvfContent = tVmSection.first().toOvfContent(operatingSystemSection, virtualHardwareSection)
-		val envelope = OvfEnvelope.builder {
-			references {
-				OvfReferences.builder {
-					files { files }
-				}
-			}
-			networkSection {
-				OvfNetworkSection.builder {
-					networks { networks }
-				}
-			}
-			diskSection {
-				OvfDiskSection.builder {
-					disks { disks }
-				}
-			}
-			/*virtualSystem {
-				vmSection
-			}*/
-		}
-		log.info("OVF XML from file parsed successfully")
-		Assertions.assertNotNull(envelope, "Envelope should not be null")
-		Assertions.assertNotNull(files, "VirtualSystem (Content) should not be null")
-		log.info("envelope: {}", envelope)
-		log.info("networks({}): {}", networks.size, networks)
-		log.info("files({}): {}", files.size, files)
-		log.info("disks({}): {}", disks.size, disks)
-		log.info("vmSection: {}", vmSection)
-		log.info("vmSection.operatingSystemSection: {}", vmSection.operatingSystemSection?.description)
+		val ovfEnvelope = ovfXmlContent.toOvfEnvelope()
+		Assertions.assertNotNull(ovfEnvelope, "Envelope should not be null")
+		log.info("files({}): {}", ovfEnvelope.references?.files?.size, ovfEnvelope.references?.files)
+		Assertions.assertNotNull(ovfEnvelope.references, "References should not be null")
+		Assertions.assertNotNull(ovfEnvelope.references?.files, "Files should not be null")
+		// Assertions.assertNotNull(ovfEnvelope.references?.files?.size, "Files should not be null")
+		Assertions.assertNotNull(ovfEnvelope.references?.files, "Files should not be null")
+		log.info("networks({}): {}", ovfEnvelope.networkSection?.networks?.size, ovfEnvelope.networkSection?.networks)
+		Assertions.assertNotNull(ovfEnvelope.networkSection, "NetworkSection should not be null")
+		log.info("disks({}): {}", ovfEnvelope.diskSection?.disks?.size, ovfEnvelope.diskSection?.disks)
+		Assertions.assertNotNull(ovfEnvelope.diskSection, "DiskSection should not be null")
+		log.info("vmSection: {}", ovfEnvelope.virtualSystemSection)
+		Assertions.assertNotNull(ovfEnvelope.virtualSystemSection, "VirtualSystemSection should not be null")
+		log.info("vmSection.operatingSystemSection: {}", ovfEnvelope.virtualSystemSection?.operatingSystemSection)
+		Assertions.assertNotNull(ovfEnvelope.virtualSystemSection?.operatingSystemSection, "OperatingSystemSection should not be null")
+		log.info("vmSection.virtualHardwareSection: {}", ovfEnvelope.virtualSystemSection?.virtualHardwareSection)
+		Assertions.assertNotNull(ovfEnvelope.virtualSystemSection?.virtualHardwareSection, "VirtualHardwareSection should not be null")
+		log.info("vmSection.virtualHardwareSection.items({}): {}", ovfEnvelope.virtualSystemSection?.virtualHardwareSection?.items?.size ?: 0, ovfEnvelope.virtualSystemSection?.virtualHardwareSection?.items?.mapNotNull { it.instanceId })
+		Assertions.assertNotNull(ovfEnvelope.virtualSystemSection?.snapshotsSection, "SnapshotSection should not be null")
+		log.info("vmSection.snapshotSection.snapshots({}): {}", ovfEnvelope.virtualSystemSection?.snapshotsSection?.snapshots?.size ?: 0, ovfEnvelope.virtualSystemSection?.snapshotsSection?.snapshots?.mapNotNull { it.description })
 	}
 
 	companion object {

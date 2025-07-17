@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ovf:Envelope xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1/"
+              xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+              xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ovf:version="4.4.0.0">
+  <References>
+    <File ovf:href="6862fef1-379f-45cd-af08-4be3d33a3ee6/588666ec-d5e7-4490-8fdf-ca42bcca3298"
+          ovf:id="588666ec-d5e7-4490-8fdf-ca42bcca3298" ovf:size="200704" ovf:description="Active VM"
+          ovf:disk_storage_type="IMAGE" ovf:cinder_volume_type=""></File>
+    <File ovf:href="6862fef1-379f-45cd-af08-4be3d33a3ee6/52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f"
+          ovf:id="52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f" ovf:size="200704" ovf:description="36"
+          ovf:disk_storage_type="IMAGE" ovf:cinder_volume_type=""></File>
+  </References>
+  <NetworkSection>
+    <Info>List of networks</Info>
+    <Network ovf:name="ovirtmgmt"></Network>
+  </NetworkSection>
+  <Section xsi:type="ovf:DiskSection_Type">
+    <Info>List of Virtual Disks</Info>
+    <Disk ovf:diskId="588666ec-d5e7-4490-8fdf-ca42bcca3298" ovf:size="100" ovf:actual_size="1"
+          ovf:vm_snapshot_id="bfc28238-7b2d-4c72-a28c-4668239dd013"
+          ovf:parentRef="6862fef1-379f-45cd-af08-4be3d33a3ee6/588666ec-d5e7-4490-8fdf-ca42bcca3298"
+          ovf:fileRef="6862fef1-379f-45cd-af08-4be3d33a3ee6/588666ec-d5e7-4490-8fdf-ca42bcca3298"
+          ovf:format="http://www.gnome.org/~markmc/qcow-image-format.html" ovf:volume-format="COW"
+          ovf:volume-type="Sparse" ovf:disk-interface="VirtIO_SCSI" ovf:read-only="false"
+          ovf:shareable="false" ovf:boot="true" ovf:pass-discard="false" ovf:incremental-backup="true"
+          ovf:disk-alias="apm-test1_Disk1" ovf:disk-description="" ovf:wipe-after-delete="false"></Disk>
+    <Disk ovf:diskId="52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f" ovf:size="100" ovf:actual_size="1"
+          ovf:vm_snapshot_id="3e97eeae-99a0-4c52-afb5-3add439c287d" ovf:parentRef=""
+          ovf:fileRef="6862fef1-379f-45cd-af08-4be3d33a3ee6/52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f"
+          ovf:format="http://www.gnome.org/~markmc/qcow-image-format.html" ovf:volume-format="COW"
+          ovf:volume-type="Sparse" ovf:disk-interface="VirtIO_SCSI" ovf:read-only="false"
+          ovf:shareable="false" ovf:boot="true" ovf:pass-discard="false" ovf:incremental-backup="true"
+          ovf:disk-alias="apm-test1_Disk1" ovf:disk-description="" ovf:wipe-after-delete="false"></Disk>
+  </Section>
+  <Content ovf:id="out" xsi:type="ovf:VirtualSystem_Type">
+    <Name>apm-test1</Name>
+    <Description></Description>
+    <Comment></Comment>
+    <CreationDate>2024/10/16 02:08:06</CreationDate>
+    <ExportDate>2024/11/19 00:57:52</ExportDate>
+    <DeleteProtected>false</DeleteProtected>
+    <SsoMethod>guest_agent</SsoMethod>
+    <IsSmartcardEnabled>false</IsSmartcardEnabled>
+    <NumOfIoThreads>1</NumOfIoThreads>
+    <TimeZone>Etc/GMT</TimeZone>
+    <default_boot_sequence>0</default_boot_sequence>
+    <Generation>25</Generation>
+    <ClusterCompatibilityVersion>4.7</ClusterCompatibilityVersion>
+    <VmType>1</VmType>
+    <ResumeBehavior>AUTO_RESUME</ResumeBehavior>
+    <MinAllocatedMem>4096</MinAllocatedMem>
+    <IsStateless>false</IsStateless>
+    <IsRunAndPause>false</IsRunAndPause>
+    <AutoStartup>false</AutoStartup>
+    <Priority>1</Priority>
+    <CreatedByUserId>c4e672c4-879f-11ef-ab34-00163e2555f4</CreatedByUserId>
+    <MigrationSupport>0</MigrationSupport>
+    <IsBootMenuEnabled>true</IsBootMenuEnabled>
+    <IsSpiceFileTransferEnabled>true</IsSpiceFileTransferEnabled>
+    <IsSpiceCopyPasteEnabled>true</IsSpiceCopyPasteEnabled>
+    <AllowConsoleReconnect>false</AllowConsoleReconnect>
+    <ConsoleDisconnectAction>LOCK_SCREEN</ConsoleDisconnectAction>
+    <ConsoleDisconnectActionDelay>0</ConsoleDisconnectActionDelay>
+    <CustomEmulatedMachine></CustomEmulatedMachine>
+    <BiosType>2</BiosType>
+    <CustomCpuName></CustomCpuName>
+    <PredefinedProperties></PredefinedProperties>
+    <UserDefinedProperties></UserDefinedProperties>
+    <MaxMemorySizeMb>16384</MaxMemorySizeMb>
+    <MultiQueuesEnabled>true</MultiQueuesEnabled>
+    <VirtioScsiMultiQueuesEnabled>false</VirtioScsiMultiQueuesEnabled>
+    <UseHostCpu>false</UseHostCpu>
+    <BalloonEnabled>true</BalloonEnabled>
+    <CpuPinningPolicy>0</CpuPinningPolicy>
+    <ClusterName>Development</ClusterName>
+    <TemplateId>00000000-0000-0000-0000-000000000000</TemplateId>
+    <TemplateName>Blank</TemplateName>
+    <IsInitilized>true</IsInitilized>
+    <Origin>3</Origin>
+    <DefaultDisplayType>2</DefaultDisplayType>
+    <TrustedService>false</TrustedService>
+    <OriginalTemplateId>00000000-0000-0000-0000-000000000000</OriginalTemplateId>
+    <OriginalTemplateName>Blank</OriginalTemplateName>
+    <UseLatestVersion>false</UseLatestVersion>
+    <StopTime>2024/11/19 00:57:41</StopTime>
+    <Section ovf:id="918773c9-1ad5-4a23-9b23-269bb60083a2" ovf:required="false"
+             xsi:type="ovf:OperatingSystemSection_Type">
+      <Info>Guest Operating System</Info>
+      <Description>other_linux</Description>
+    </Section>
+    <Section xsi:type="ovf:VirtualHardwareSection_Type">
+      <Info>2 CPU, 4096 Memory</Info>
+      <System>
+        <vssd:VirtualSystemType>ENGINE 4.4.0.0</vssd:VirtualSystemType>
+      </System>
+      <Item>
+        <rasd:Caption>2 virtual cpu</rasd:Caption>
+        <rasd:Description>Number of virtual CPU</rasd:Description>
+        <rasd:InstanceId>1</rasd:InstanceId>
+        <rasd:ResourceType>3</rasd:ResourceType>
+        <rasd:num_of_sockets>2</rasd:num_of_sockets>
+        <rasd:cpu_per_socket>1</rasd:cpu_per_socket>
+        <rasd:threads_per_cpu>1</rasd:threads_per_cpu>
+        <rasd:max_num_of_vcpus>16</rasd:max_num_of_vcpus>
+        <rasd:VirtualQuantity>2</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>4096 MB of memory</rasd:Caption>
+        <rasd:Description>Memory Size</rasd:Description>
+        <rasd:InstanceId>2</rasd:InstanceId>
+        <rasd:ResourceType>4</rasd:ResourceType>
+        <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
+        <rasd:VirtualQuantity>4096</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>apm-test1_Disk1</rasd:Caption>
+        <rasd:InstanceId>588666ec-d5e7-4490-8fdf-ca42bcca3298</rasd:InstanceId>
+        <rasd:ResourceType>17</rasd:ResourceType>
+        <rasd:HostResource>6862fef1-379f-45cd-af08-4be3d33a3ee6/588666ec-d5e7-4490-8fdf-ca42bcca3298</rasd:HostResource>
+        <rasd:Parent>52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f</rasd:Parent>
+        <rasd:Template>00000000-0000-0000-0000-000000000000</rasd:Template>
+        <rasd:ApplicationList></rasd:ApplicationList>
+        <rasd:StorageId>c8f506d4-392b-46a6-8ea6-18c7021e93a1</rasd:StorageId>
+        <rasd:StoragePoolId>134a4d83-0ddb-4267-b024-c0024f6c3b55</rasd:StoragePoolId>
+        <rasd:CreationDate>2024/11/13 07:13:35</rasd:CreationDate>
+        <rasd:LastModified>2024/11/13 07:13:44</rasd:LastModified>
+        <rasd:last_modified_date>2024/11/19 00:57:51</rasd:last_modified_date>
+        <Type>disk</Type>
+        <Device>disk</Device>
+        <rasd:Address>{type=drive, bus=0, controller=0, target=0, unit=0}</rasd:Address>
+        <BootOrder>1</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-6862fef1-379f-45cd-af08-4be3d33a3ee6</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>apm-test1_Disk1</rasd:Caption>
+        <rasd:InstanceId>52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f</rasd:InstanceId>
+        <rasd:ResourceType>17</rasd:ResourceType>
+        <rasd:HostResource>6862fef1-379f-45cd-af08-4be3d33a3ee6/52df5fa5-ed5a-4f9b-921d-bdee0fb7a32f</rasd:HostResource>
+        <rasd:Parent>00000000-0000-0000-0000-000000000000</rasd:Parent>
+        <rasd:Template>00000000-0000-0000-0000-000000000000</rasd:Template>
+        <rasd:ApplicationList></rasd:ApplicationList>
+        <rasd:StorageId>c8f506d4-392b-46a6-8ea6-18c7021e93a1</rasd:StorageId>
+        <rasd:StoragePoolId>134a4d83-0ddb-4267-b024-c0024f6c3b55</rasd:StoragePoolId>
+        <rasd:CreationDate>2024/10/12 12:55:54</rasd:CreationDate>
+        <rasd:LastModified>2024/11/13 07:13:34</rasd:LastModified>
+        <rasd:last_modified_date>2024/11/19 00:57:51</rasd:last_modified_date>
+        <Type>disk</Type>
+        <Device>disk</Device>
+        <rasd:Address>{type=drive, bus=0, controller=0, target=0, unit=0}</rasd:Address>
+        <BootOrder>1</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-6862fef1-379f-45cd-af08-4be3d33a3ee6</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>34a0a498-6909-4425-9a61-cc1c84a1a106</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic1</rasd:Name>
+        <rasd:ElementName>nic1</rasd:ElementName>
+        <rasd:MACAddress>56:6f:3f:b3:00:08</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x01, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-34a0a498-6909-4425-9a61-cc1c84a1a106</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>fade0df7-f54b-4b27-b1ab-6bc4824b5267</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic2</rasd:Name>
+        <rasd:ElementName>nic2</rasd:ElementName>
+        <rasd:MACAddress>56:6f:ca:0b:00:03</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x07, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-fade0df7-f54b-4b27-b1ab-6bc4824b5267</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>31d165fc-3589-4b0d-aa7d-219b5933c9bf</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic3</rasd:Name>
+        <rasd:ElementName>nic3</rasd:ElementName>
+        <rasd:MACAddress>56:6f:ca:0b:00:04</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x08, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-31d165fc-3589-4b0d-aa7d-219b5933c9bf</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>e7995f4c-4861-44dc-895a-8ff427039079</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic4</rasd:Name>
+        <rasd:ElementName>nic4</rasd:ElementName>
+        <rasd:MACAddress>56:6f:ca:0b:00:05</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x09, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-e7995f4c-4861-44dc-895a-8ff427039079</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>2a3a3083-8269-4dee-8e62-0c1b383531e2</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic5</rasd:Name>
+        <rasd:ElementName>nic5</rasd:ElementName>
+        <rasd:MACAddress>56:6f:ca:0b:00:06</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x0a, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-2a3a3083-8269-4dee-8e62-0c1b383531e2</Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>USB Controller</rasd:Caption>
+        <rasd:InstanceId>3</rasd:InstanceId>
+        <rasd:ResourceType>23</rasd:ResourceType>
+        <rasd:UsbPolicy>DISABLED</rasd:UsbPolicy>
+      </Item>
+      <Item>
+        <rasd:Caption>Graphical Controller</rasd:Caption>
+        <rasd:InstanceId>22249442-350f-442c-8af9-3d96aa1577e5</rasd:InstanceId>
+        <rasd:ResourceType>20</rasd:ResourceType>
+        <rasd:VirtualQuantity>1</rasd:VirtualQuantity>
+        <rasd:SinglePciQxl>false</rasd:SinglePciQxl>
+        <Type>video</Type>
+        <Device>vga</Device>
+        <rasd:Address>{type=pci, slot=0x01, bus=0x00, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-22249442-350f-442c-8af9-3d96aa1577e5</Alias>
+        <SpecParams>
+          <vram>16384</vram>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:Caption>Graphical Framebuffer</rasd:Caption>
+        <rasd:InstanceId>9a327d78-19fe-4bbd-b30d-62b3d57318e1</rasd:InstanceId>
+        <rasd:ResourceType>26</rasd:ResourceType>
+        <Type>graphics</Type>
+        <Device>vnc</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>CDROM</rasd:Caption>
+        <rasd:InstanceId>9ef98876-8815-470d-ac4a-32ccad647271</rasd:InstanceId>
+        <rasd:ResourceType>15</rasd:ResourceType>
+        <Type>disk</Type>
+        <Device>cdrom</Device>
+        <rasd:Address>{type=drive, bus=0, controller=0, target=0, unit=2}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>true</IsReadOnly>
+        <Alias>ua-9ef98876-8815-470d-ac4a-32ccad647271</Alias>
+        <SpecParams>
+          <path>89c4bffb-13ff-46ff-a452-51f12c61be6f</path>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>462cac6f-c3b0-47c2-9974-de2d8147302c</rasd:InstanceId>
+        <Type>channel</Type>
+        <Device>unix</Device>
+        <rasd:Address>{type=virtio-serial, bus=0, controller=0, port=1}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>channel0</Alias>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>e8c0c5e7-ca3a-4056-8ad8-02fbb29c6250</rasd:InstanceId>
+        <Type>channel</Type>
+        <Device>unix</Device>
+        <rasd:Address>{type=virtio-serial, bus=0, controller=0, port=2}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>channel1</Alias>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>989deae8-de88-4d69-84cb-ae586844cb1d</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x0, multifunction=on}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.1</Alias>
+        <SpecParams>
+          <index>1</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>5cc63b23-33e8-4b10-840a-8aa2829531aa</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x1}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.2</Alias>
+        <SpecParams>
+          <index>2</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>30bde83a-546e-44f2-a704-de68fc5fe3b1</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x2}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.3</Alias>
+        <SpecParams>
+          <index>3</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>e003dffc-9f13-4273-8ec6-138981711ca0</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x3}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.4</Alias>
+        <SpecParams>
+          <index>4</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>5d412b84-2569-4de5-bab0-d47bb329e563</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x4}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.5</Alias>
+        <SpecParams>
+          <index>5</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>48bfde45-ad18-4c35-884b-fcb854bcf211</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x5}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.6</Alias>
+        <SpecParams>
+          <index>6</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>8ff9e707-810e-44dd-b250-c10d935c7c42</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x6}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.7</Alias>
+        <SpecParams>
+          <index>7</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>713ec753-8259-4ed8-9ccc-a7e80256a5f7</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x02, bus=0x00, domain=0x0000, function=0x7}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.8</Alias>
+        <SpecParams>
+          <index>8</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>a8fb5dda-7b57-46cd-b320-8e8ab8213a8e</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x0, multifunction=on}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.9</Alias>
+        <SpecParams>
+          <index>9</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>23b39d42-fe8e-4c2c-90d1-cc9e781a1060</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x1}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.10</Alias>
+        <SpecParams>
+          <index>10</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>947ed630-566e-472d-bd3c-5503fc30aa48</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x2}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.11</Alias>
+        <SpecParams>
+          <index>11</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>3c8e59c3-2534-418e-8d07-52d9add468a0</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x3}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.12</Alias>
+        <SpecParams>
+          <index>12</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>c99f77c1-e32b-4401-ab82-75302f9f3b65</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x4}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.13</Alias>
+        <SpecParams>
+          <index>13</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>1f4bc882-3688-40c3-8319-5d356fae1b25</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x5}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.14</Alias>
+        <SpecParams>
+          <index>14</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>d34a892d-efdb-4360-8c4b-9233c6a43e71</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x6}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.15</Alias>
+        <SpecParams>
+          <index>15</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>d725e978-e2b0-44a2-8ae7-0b00f3e75764</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>pci</Device>
+        <rasd:Address>{type=pci, slot=0x03, bus=0x00, domain=0x0000, function=0x7}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>pci.16</Alias>
+        <SpecParams>
+          <index>16</index>
+          <model>pcie-root-port</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>621ecf05-6136-4019-8ae0-2e78ef46594a</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>sata</Device>
+        <rasd:Address>{type=pci, slot=0x1f, bus=0x00, domain=0x0000, function=0x2}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ide</Alias>
+        <SpecParams>
+          <index>0</index>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>ca753793-aa93-4e9f-b4ae-903895c872d6</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>usb</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x04, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-ca753793-aa93-4e9f-b4ae-903895c872d6</Alias>
+        <SpecParams>
+          <index>0</index>
+          <model>qemu-xhci</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>6769c196-9685-4cad-8d18-80f340e91d90</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>virtio-serial</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x02, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-6769c196-9685-4cad-8d18-80f340e91d90</Alias>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>ae78023e-1f6d-467e-8d93-cb2c825bd2b6</rasd:InstanceId>
+        <Type>balloon</Type>
+        <Device>memballoon</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x05, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>true</IsReadOnly>
+        <Alias>ua-ae78023e-1f6d-467e-8d93-cb2c825bd2b6</Alias>
+        <SpecParams>
+          <model>virtio</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>8bdb381a-18c1-4a29-ad0c-fde527f6f024</rasd:InstanceId>
+        <Type>rng</Type>
+        <Device>virtio</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x06, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-8bdb381a-18c1-4a29-ad0c-fde527f6f024</Alias>
+        <SpecParams>
+          <source>urandom</source>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>97948ece-cba0-4ec5-9658-1063fb4a1eba</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>virtio-scsi</Device>
+        <rasd:Address>{type=pci, slot=0x00, bus=0x03, domain=0x0000, function=0x0}</rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias>ua-97948ece-cba0-4ec5-9658-1063fb4a1eba</Alias>
+      </Item>
+    </Section>
+    <Section xsi:type="ovf:SnapshotsSection_Type">
+      <Snapshot ovf:id="bfc28238-7b2d-4c72-a28c-4668239dd013">
+        <Type>ACTIVE</Type>
+        <Description>Active VM</Description>
+        <CreationDate>2024/10/16 02:08:06</CreationDate>
+        <ApplicationList></ApplicationList>
+      </Snapshot>
+      <Snapshot ovf:id="3e97eeae-99a0-4c52-afb5-3add439c287d">
+        <Type>REGULAR</Type>
+        <Description>36</Description>
+        <CreationDate>2024/11/13 07:13:34</CreationDate>
+        <ApplicationList></ApplicationList>
+        <VmConfiguration>
+          PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48b3ZmOkVudmVsb3BlIHhtbG5zOm92Zj0iaHR0cDovL3NjaGVtYXMuZG10Zi5vcmcvb3ZmL2VudmVsb3BlLzEvIiB4bWxuczpyYXNkPSJodHRwOi8vc2NoZW1hcy5kbXRmLm9yZy93YmVtL3dzY2ltLzEvY2ltLXNjaGVtYS8yL0NJTV9SZXNvdXJjZUFsbG9jYXRpb25TZXR0aW5nRGF0YSIgeG1sbnM6dnNzZD0iaHR0cDovL3NjaGVtYXMuZG10Zi5vcmcvd2JlbS93c2NpbS8xL2NpbS1zY2hlbWEvMi9DSU1fVmlydHVhbFN5c3RlbVNldHRpbmdEYXRhIiB4bWxuczp4c2k9Imh0dHA6Ly93d3cudzMub3JnLzIwMDEvWE1MU2NoZW1hLWluc3RhbmNlIiBvdmY6dmVyc2lvbj0iNC40LjAuMCI+PFJlZmVyZW5jZXM+PEZpbGUgb3ZmOmhyZWY9IjY4NjJmZWYxLTM3OWYtNDVjZC1hZjA4LTRiZTNkMzNhM2VlNi81MmRmNWZhNS1lZDVhLTRmOWItOTIxZC1iZGVlMGZiN2EzMmYiIG92ZjppZD0iNTJkZjVmYTUtZWQ1YS00ZjliLTkyMWQtYmRlZTBmYjdhMzJmIiBvdmY6c2l6ZT0iMjAwNzA0IiBvdmY6ZGVzY3JpcHRpb249IkFjdGl2ZSBWTSIgb3ZmOmRpc2tfc3RvcmFnZV90eXBlPSJJTUFHRSIgb3ZmOmNpbmRlcl92b2x1bWVfdHlwZT0iIj48L0ZpbGU+PC9SZWZlcmVuY2VzPjxOZXR3b3JrU2VjdGlvbj48SW5mbz5MaXN0IG9mIG5ldHdvcmtzPC9JbmZvPjxOZXR3b3JrIG92ZjpuYW1lPSJvdmlydG1nbXQiPjwvTmV0d29yaz48L05ldHdvcmtTZWN0aW9uPjxTZWN0aW9uIHhzaTp0eXBlPSJvdmY6RGlza1NlY3Rpb25fVHlwZSI+PEluZm8+TGlzdCBvZiBWaXJ0dWFsIERpc2tzPC9JbmZvPjxEaXNrIG92ZjpkaXNrSWQ9IjUyZGY1ZmE1LWVkNWEtNGY5Yi05MjFkLWJkZWUwZmI3YTMyZiIgb3ZmOnNpemU9IjEwMCIgb3ZmOmFjdHVhbF9zaXplPSIxIiBvdmY6dm1fc25hcHNob3RfaWQ9IjNlOTdlZWFlLTk5YTAtNGM1Mi1hZmI1LTNhZGQ0MzljMjg3ZCIgb3ZmOnBhcmVudFJlZj0iIiBvdmY6ZmlsZVJlZj0iNjg2MmZlZjEtMzc5Zi00NWNkLWFmMDgtNGJlM2QzM2EzZWU2LzUyZGY1ZmE1LWVkNWEtNGY5Yi05MjFkLWJkZWUwZmI3YTMyZiIgb3ZmOmZvcm1hdD0iaHR0cDovL3d3dy5nbm9tZS5vcmcvfm1hcmttYy9xY293LWltYWdlLWZvcm1hdC5odG1sIiBvdmY6dm9sdW1lLWZvcm1hdD0iQ09XIiBvdmY6dm9sdW1lLXR5cGU9IlNwYXJzZSIgb3ZmOmRpc2staW50ZXJmYWNlPSJWaXJ0SU9fU0NTSSIgb3ZmOnJlYWQtb25seT0iZmFsc2UiIG92ZjpzaGFyZWFibGU9ImZhbHNlIiBvdmY6Ym9vdD0idHJ1ZSIgb3ZmOnBhc3MtZGlzY2FyZD0iZmFsc2UiIG92ZjppbmNyZW1lbnRhbC1iYWNrdXA9InRydWUiIG92ZjpkaXNrLWFsaWFzPSJhcG0tdGVzdDFfRGlzazEiIG92ZjpkaXNrLWRlc2NyaXB0aW9uPSIiIG92Zjp3aXBlLWFmdGVyLWRlbGV0ZT0iZmFsc2UiPjwvRGlzaz48L1NlY3Rpb24+PENvbnRlbnQgb3ZmOmlkPSJvdXQiIHhzaTp0eXBlPSJvdmY6VmlydHVhbFN5c3RlbV9UeXBlIj48TmFtZT5hcG0tdGVzdDE8L05hbWU+PERlc2NyaXB0aW9uPjwvRGVzY3JpcHRpb24+PENvbW1lbnQ+PC9Db21tZW50PjxDcmVhdGlvbkRhdGU+MjAyNC8xMC8xNiAwMjowODowNjwvQ3JlYXRpb25EYXRlPjxFeHBvcnREYXRlPjIwMjQvMTEvMTMgMDc6MTM6MzQ8L0V4cG9ydERhdGU+PERlbGV0ZVByb3RlY3RlZD5mYWxzZTwvRGVsZXRlUHJvdGVjdGVkPjxTc29NZXRob2Q+Z3Vlc3RfYWdlbnQ8L1Nzb01ldGhvZD48SXNTbWFydGNhcmRFbmFibGVkPmZhbHNlPC9Jc1NtYXJ0Y2FyZEVuYWJsZWQ+PE51bU9mSW9UaHJlYWRzPjE8L051bU9mSW9UaHJlYWRzPjxUaW1lWm9uZT5FdGMvR01UPC9UaW1lWm9uZT48ZGVmYXVsdF9ib290X3NlcXVlbmNlPjA8L2RlZmF1bHRfYm9vdF9zZXF1ZW5jZT48R2VuZXJhdGlvbj4xNDwvR2VuZXJhdGlvbj48Q2x1c3RlckNvbXBhdGliaWxpdHlWZXJzaW9uPjQuNzwvQ2x1c3RlckNvbXBhdGliaWxpdHlWZXJzaW9uPjxWbVR5cGU+MTwvVm1UeXBlPjxSZXN1bWVCZWhhdmlvcj5BVVRPX1JFU1VNRTwvUmVzdW1lQmVoYXZpb3I+PE1pbkFsbG9jYXRlZE1lbT40MDk2PC9NaW5BbGxvY2F0ZWRNZW0+PElzU3RhdGVsZXNzPmZhbHNlPC9Jc1N0YXRlbGVzcz48SXNSdW5BbmRQYXVzZT5mYWxzZTwvSXNSdW5BbmRQYXVzZT48QXV0b1N0YXJ0dXA+ZmFsc2U8L0F1dG9TdGFydHVwPjxQcmlvcml0eT4xPC9Qcmlvcml0eT48Q3JlYXRlZEJ5VXNlcklkPmM0ZTY3MmM0LTg3OWYtMTFlZi1hYjM0LTAwMTYzZTI1NTVmNDwvQ3JlYXRlZEJ5VXNlcklkPjxNaWdyYXRpb25TdXBwb3J0PjA8L01pZ3JhdGlvblN1cHBvcnQ+PElzQm9vdE1lbnVFbmFibGVkPnRydWU8L0lzQm9vdE1lbnVFbmFibGVkPjxJc1NwaWNlRmlsZVRyYW5zZmVyRW5hYmxlZD50cnVlPC9Jc1NwaWNlRmlsZVRyYW5zZmVyRW5hYmxlZD48SXNTcGljZUNvcHlQYXN0ZUVuYWJsZWQ+dHJ1ZTwvSXNTcGljZUNvcHlQYXN0ZUVuYWJsZWQ+PEFsbG93Q29uc29sZVJlY29ubmVjdD5mYWxzZTwvQWxsb3dDb25zb2xlUmVjb25uZWN0PjxDb25zb2xlRGlzY29ubmVjdEFjdGlvbj5MT0NLX1NDUkVFTjwvQ29uc29sZURpc2Nvbm5lY3RBY3Rpb24+PENvbnNvbGVEaXNjb25uZWN0QWN0aW9uRGVsYXk+MDwvQ29uc29sZURpc2Nvbm5lY3RBY3Rpb25EZWxheT48Q3VzdG9tRW11bGF0ZWRNYWNoaW5lPjwvQ3VzdG9tRW11bGF0ZWRNYWNoaW5lPjxCaW9zVHlwZT4yPC9CaW9zVHlwZT48Q3VzdG9tQ3B1TmFtZT48L0N1c3RvbUNwdU5hbWU+PFByZWRlZmluZWRQcm9wZXJ0aWVzPjwvUHJlZGVmaW5lZFByb3BlcnRpZXM+PFVzZXJEZWZpbmVkUHJvcGVydGllcz48L1VzZXJEZWZpbmVkUHJvcGVydGllcz48TWF4TWVtb3J5U2l6ZU1iPjE2Mzg0PC9NYXhNZW1vcnlTaXplTWI+PE11bHRpUXVldWVzRW5hYmxlZD50cnVlPC9NdWx0aVF1ZXVlc0VuYWJsZWQ+PFZpcnRpb1Njc2lNdWx0aVF1ZXVlc0VuYWJsZWQ+ZmFsc2U8L1ZpcnRpb1Njc2lNdWx0aVF1ZXVlc0VuYWJsZWQ+PFVzZUhvc3RDcHU+ZmFsc2U8L1VzZUhvc3RDcHU+PEJhbGxvb25FbmFibGVkPnRydWU8L0JhbGxvb25FbmFibGVkPjxDcHVQaW5uaW5nUG9saWN5PjA8L0NwdVBpbm5pbmdQb2xpY3k+PENsdXN0ZXJOYW1lPkRldmVsb3BtZW50PC9DbHVzdGVyTmFtZT48VGVtcGxhdGVJZD4wMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDA8L1RlbXBsYXRlSWQ+PFRlbXBsYXRlTmFtZT5CbGFuazwvVGVtcGxhdGVOYW1lPjxJc0luaXRpbGl6ZWQ+dHJ1ZTwvSXNJbml0aWxpemVkPjxPcmlnaW4+MzwvT3JpZ2luPjxEZWZhdWx0RGlzcGxheVR5cGU+MjwvRGVmYXVsdERpc3BsYXlUeXBlPjxUcnVzdGVkU2VydmljZT5mYWxzZTwvVHJ1c3RlZFNlcnZpY2U+PE9yaWdpbmFsVGVtcGxhdGVJZD4wMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDA8L09yaWdpbmFsVGVtcGxhdGVJZD48T3JpZ2luYWxUZW1wbGF0ZU5hbWU+Qmxhbms8L09yaWdpbmFsVGVtcGxhdGVOYW1lPjxVc2VMYXRlc3RWZXJzaW9uPmZhbHNlPC9Vc2VMYXRlc3RWZXJzaW9uPjxTdG9wVGltZT4yMDI0LzExLzExIDAxOjQ3OjA0PC9TdG9wVGltZT48Qm9vdFRpbWU+MjAyNC8xMC8xNiAwNTozMjoxNjwvQm9vdFRpbWU+PERvd250aW1lPjExOTQwPC9Eb3dudGltZT48U2VjdGlvbiBvdmY6aWQ9IjkxODc3M2M5LTFhZDUtNGEyMy05YjIzLTI2OWJiNjAwODNhMiIgb3ZmOnJlcXVpcmVkPSJmYWxzZSIgeHNpOnR5cGU9Im92ZjpPcGVyYXRpbmdTeXN0ZW1TZWN0aW9uX1R5cGUiPjxJbmZvPkd1ZXN0IE9wZXJhdGluZyBTeXN0ZW08L0luZm8+PERlc2NyaXB0aW9uPm90aGVyX2xpbnV4PC9EZXNjcmlwdGlvbj48L1NlY3Rpb24+PFNlY3Rpb24geHNpOnR5cGU9Im92ZjpWaXJ0dWFsSGFyZHdhcmVTZWN0aW9uX1R5cGUiPjxJbmZvPjIgQ1BVLCA0MDk2IE1lbW9yeTwvSW5mbz48U3lzdGVtPjx2c3NkOlZpcnR1YWxTeXN0ZW1UeXBlPkVOR0lORSA0LjQuMC4wPC92c3NkOlZpcnR1YWxTeXN0ZW1UeXBlPjwvU3lzdGVtPjxJdGVtPjxyYXNkOkNhcHRpb24+MiB2aXJ0dWFsIGNwdTwvcmFzZDpDYXB0aW9uPjxyYXNkOkRlc2NyaXB0aW9uPk51bWJlciBvZiB2aXJ0dWFsIENQVTwvcmFzZDpEZXNjcmlwdGlvbj48cmFzZDpJbnN0YW5jZUlkPjE8L3Jhc2Q6SW5zdGFuY2VJZD48cmFzZDpSZXNvdXJjZVR5cGU+MzwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6bnVtX29mX3NvY2tldHM+MjwvcmFzZDpudW1fb2Zfc29ja2V0cz48cmFzZDpjcHVfcGVyX3NvY2tldD4xPC9yYXNkOmNwdV9wZXJfc29ja2V0PjxyYXNkOnRocmVhZHNfcGVyX2NwdT4xPC9yYXNkOnRocmVhZHNfcGVyX2NwdT48cmFzZDptYXhfbnVtX29mX3ZjcHVzPjE2PC9yYXNkOm1heF9udW1fb2ZfdmNwdXM+PHJhc2Q6VmlydHVhbFF1YW50aXR5PjI8L3Jhc2Q6VmlydHVhbFF1YW50aXR5PjwvSXRlbT48SXRlbT48cmFzZDpDYXB0aW9uPjQwOTYgTUIgb2YgbWVtb3J5PC9yYXNkOkNhcHRpb24+PHJhc2Q6RGVzY3JpcHRpb24+TWVtb3J5IFNpemU8L3Jhc2Q6RGVzY3JpcHRpb24+PHJhc2Q6SW5zdGFuY2VJZD4yPC9yYXNkOkluc3RhbmNlSWQ+PHJhc2Q6UmVzb3VyY2VUeXBlPjQ8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkFsbG9jYXRpb25Vbml0cz5NZWdhQnl0ZXM8L3Jhc2Q6QWxsb2NhdGlvblVuaXRzPjxyYXNkOlZpcnR1YWxRdWFudGl0eT40MDk2PC9yYXNkOlZpcnR1YWxRdWFudGl0eT48L0l0ZW0+PEl0ZW0+PHJhc2Q6Q2FwdGlvbj5hcG0tdGVzdDFfRGlzazE8L3Jhc2Q6Q2FwdGlvbj48cmFzZDpJbnN0YW5jZUlkPjUyZGY1ZmE1LWVkNWEtNGY5Yi05MjFkLWJkZWUwZmI3YTMyZjwvcmFzZDpJbnN0YW5jZUlkPjxyYXNkOlJlc291cmNlVHlwZT4xNzwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SG9zdFJlc291cmNlPjY4NjJmZWYxLTM3OWYtNDVjZC1hZjA4LTRiZTNkMzNhM2VlNi81MmRmNWZhNS1lZDVhLTRmOWItOTIxZC1iZGVlMGZiN2EzMmY8L3Jhc2Q6SG9zdFJlc291cmNlPjxyYXNkOlBhcmVudD4wMDAwMDAwMC0wMDAwLTAwMDAtMDAwMC0wMDAwMDAwMDAwMDA8L3Jhc2Q6UGFyZW50PjxyYXNkOlRlbXBsYXRlPjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMDwvcmFzZDpUZW1wbGF0ZT48cmFzZDpBcHBsaWNhdGlvbkxpc3Q+PC9yYXNkOkFwcGxpY2F0aW9uTGlzdD48cmFzZDpTdG9yYWdlUG9vbElkPjEzNGE0ZDgzLTBkZGItNDI2Ny1iMDI0LWMwMDI0ZjZjM2I1NTwvcmFzZDpTdG9yYWdlUG9vbElkPjxyYXNkOkNyZWF0aW9uRGF0ZT4yMDI0LzEwLzEyIDEyOjU1OjU0PC9yYXNkOkNyZWF0aW9uRGF0ZT48cmFzZDpMYXN0TW9kaWZpZWQ+MjAyNC8xMC8xMiAxMjo1NTo1MjwvcmFzZDpMYXN0TW9kaWZpZWQ+PHJhc2Q6bGFzdF9tb2RpZmllZF9kYXRlPjIwMjQvMTEvMTMgMDc6MTM6MzM8L3Jhc2Q6bGFzdF9tb2RpZmllZF9kYXRlPjxUeXBlPmRpc2s8L1R5cGU+PERldmljZT5kaXNrPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1kcml2ZSwgYnVzPTAsIGNvbnRyb2xsZXI9MCwgdGFyZ2V0PTAsIHVuaXQ9MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjE8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+dWEtNjg2MmZlZjEtMzc5Zi00NWNkLWFmMDgtNGJlM2QzM2EzZWU2PC9BbGlhcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6Q2FwdGlvbj5FdGhlcm5ldCBhZGFwdGVyIG9uIG92aXJ0bWdtdDwvcmFzZDpDYXB0aW9uPjxyYXNkOkluc3RhbmNlSWQ+MzRhMGE0OTgtNjkwOS00NDI1LTlhNjEtY2MxYzg0YTFhMTA2PC9yYXNkOkluc3RhbmNlSWQ+PHJhc2Q6UmVzb3VyY2VUeXBlPjEwPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpPdGhlclJlc291cmNlVHlwZT5vdmlydG1nbXQ8L3Jhc2Q6T3RoZXJSZXNvdXJjZVR5cGU+PHJhc2Q6UmVzb3VyY2VTdWJUeXBlPjM8L3Jhc2Q6UmVzb3VyY2VTdWJUeXBlPjxyYXNkOkNvbm5lY3Rpb24+b3ZpcnRtZ210PC9yYXNkOkNvbm5lY3Rpb24+PHJhc2Q6TGlua2VkPnRydWU8L3Jhc2Q6TGlua2VkPjxyYXNkOk5hbWU+bmljMTwvcmFzZDpOYW1lPjxyYXNkOkVsZW1lbnROYW1lPm5pYzE8L3Jhc2Q6RWxlbWVudE5hbWU+PHJhc2Q6TUFDQWRkcmVzcz41Njo2ZjozZjpiMzowMDowODwvcmFzZDpNQUNBZGRyZXNzPjxyYXNkOnNwZWVkPjEwMDAwPC9yYXNkOnNwZWVkPjxUeXBlPmludGVyZmFjZTwvVHlwZT48RGV2aWNlPmJyaWRnZTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDAsIGJ1cz0weDAxLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDB9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnVhLTM0YTBhNDk4LTY5MDktNDQyNS05YTYxLWNjMWM4NGExYTEwNjwvQWxpYXM+PC9JdGVtPjxJdGVtPjxyYXNkOkNhcHRpb24+RXRoZXJuZXQgYWRhcHRlciBvbiBvdmlydG1nbXQ8L3Jhc2Q6Q2FwdGlvbj48cmFzZDpJbnN0YW5jZUlkPmZhZGUwZGY3LWY1NGItNGIyNy1iMWFiLTZiYzQ4MjRiNTI2NzwvcmFzZDpJbnN0YW5jZUlkPjxyYXNkOlJlc291cmNlVHlwZT4xMDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6T3RoZXJSZXNvdXJjZVR5cGU+b3ZpcnRtZ210PC9yYXNkOk90aGVyUmVzb3VyY2VUeXBlPjxyYXNkOlJlc291cmNlU3ViVHlwZT4zPC9yYXNkOlJlc291cmNlU3ViVHlwZT48cmFzZDpDb25uZWN0aW9uPm92aXJ0bWdtdDwvcmFzZDpDb25uZWN0aW9uPjxyYXNkOkxpbmtlZD50cnVlPC9yYXNkOkxpbmtlZD48cmFzZDpOYW1lPm5pYzI8L3Jhc2Q6TmFtZT48cmFzZDpFbGVtZW50TmFtZT5uaWMyPC9yYXNkOkVsZW1lbnROYW1lPjxyYXNkOk1BQ0FkZHJlc3M+NTY6NmY6Y2E6MGI6MDA6MDM8L3Jhc2Q6TUFDQWRkcmVzcz48cmFzZDpzcGVlZD4xMDAwMDwvcmFzZDpzcGVlZD48VHlwZT5pbnRlcmZhY2U8L1R5cGU+PERldmljZT5icmlkZ2U8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAwLCBidXM9MHgwNywgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHgwfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz51YS1mYWRlMGRmNy1mNTRiLTRiMjctYjFhYi02YmM0ODI0YjUyNjc8L0FsaWFzPjwvSXRlbT48SXRlbT48cmFzZDpDYXB0aW9uPkV0aGVybmV0IGFkYXB0ZXIgb24gb3ZpcnRtZ210PC9yYXNkOkNhcHRpb24+PHJhc2Q6SW5zdGFuY2VJZD4zMWQxNjVmYy0zNTg5LTRiMGQtYWE3ZC0yMTliNTkzM2M5YmY8L3Jhc2Q6SW5zdGFuY2VJZD48cmFzZDpSZXNvdXJjZVR5cGU+MTA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOk90aGVyUmVzb3VyY2VUeXBlPm92aXJ0bWdtdDwvcmFzZDpPdGhlclJlc291cmNlVHlwZT48cmFzZDpSZXNvdXJjZVN1YlR5cGU+MzwvcmFzZDpSZXNvdXJjZVN1YlR5cGU+PHJhc2Q6Q29ubmVjdGlvbj5vdmlydG1nbXQ8L3Jhc2Q6Q29ubmVjdGlvbj48cmFzZDpMaW5rZWQ+dHJ1ZTwvcmFzZDpMaW5rZWQ+PHJhc2Q6TmFtZT5uaWMzPC9yYXNkOk5hbWU+PHJhc2Q6RWxlbWVudE5hbWU+bmljMzwvcmFzZDpFbGVtZW50TmFtZT48cmFzZDpNQUNBZGRyZXNzPjU2OjZmOmNhOjBiOjAwOjA0PC9yYXNkOk1BQ0FkZHJlc3M+PHJhc2Q6c3BlZWQ+MTAwMDA8L3Jhc2Q6c3BlZWQ+PFR5cGU+aW50ZXJmYWNlPC9UeXBlPjxEZXZpY2U+YnJpZGdlPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMCwgYnVzPTB4MDgsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+dWEtMzFkMTY1ZmMtMzU4OS00YjBkLWFhN2QtMjE5YjU5MzNjOWJmPC9BbGlhcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6Q2FwdGlvbj5FdGhlcm5ldCBhZGFwdGVyIG9uIG92aXJ0bWdtdDwvcmFzZDpDYXB0aW9uPjxyYXNkOkluc3RhbmNlSWQ+ZTc5OTVmNGMtNDg2MS00NGRjLTg5NWEtOGZmNDI3MDM5MDc5PC9yYXNkOkluc3RhbmNlSWQ+PHJhc2Q6UmVzb3VyY2VUeXBlPjEwPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpPdGhlclJlc291cmNlVHlwZT5vdmlydG1nbXQ8L3Jhc2Q6T3RoZXJSZXNvdXJjZVR5cGU+PHJhc2Q6UmVzb3VyY2VTdWJUeXBlPjM8L3Jhc2Q6UmVzb3VyY2VTdWJUeXBlPjxyYXNkOkNvbm5lY3Rpb24+b3ZpcnRtZ210PC9yYXNkOkNvbm5lY3Rpb24+PHJhc2Q6TGlua2VkPnRydWU8L3Jhc2Q6TGlua2VkPjxyYXNkOk5hbWU+bmljNDwvcmFzZDpOYW1lPjxyYXNkOkVsZW1lbnROYW1lPm5pYzQ8L3Jhc2Q6RWxlbWVudE5hbWU+PHJhc2Q6TUFDQWRkcmVzcz41Njo2ZjpjYTowYjowMDowNTwvcmFzZDpNQUNBZGRyZXNzPjxyYXNkOnNwZWVkPjEwMDAwPC9yYXNkOnNwZWVkPjxUeXBlPmludGVyZmFjZTwvVHlwZT48RGV2aWNlPmJyaWRnZTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDAsIGJ1cz0weDA5LCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDB9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnVhLWU3OTk1ZjRjLTQ4NjEtNDRkYy04OTVhLThmZjQyNzAzOTA3OTwvQWxpYXM+PC9JdGVtPjxJdGVtPjxyYXNkOkNhcHRpb24+RXRoZXJuZXQgYWRhcHRlciBvbiBvdmlydG1nbXQ8L3Jhc2Q6Q2FwdGlvbj48cmFzZDpJbnN0YW5jZUlkPjJhM2EzMDgzLTgyNjktNGRlZS04ZTYyLTBjMWIzODM1MzFlMjwvcmFzZDpJbnN0YW5jZUlkPjxyYXNkOlJlc291cmNlVHlwZT4xMDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6T3RoZXJSZXNvdXJjZVR5cGU+b3ZpcnRtZ210PC9yYXNkOk90aGVyUmVzb3VyY2VUeXBlPjxyYXNkOlJlc291cmNlU3ViVHlwZT4zPC9yYXNkOlJlc291cmNlU3ViVHlwZT48cmFzZDpDb25uZWN0aW9uPm92aXJ0bWdtdDwvcmFzZDpDb25uZWN0aW9uPjxyYXNkOkxpbmtlZD50cnVlPC9yYXNkOkxpbmtlZD48cmFzZDpOYW1lPm5pYzU8L3Jhc2Q6TmFtZT48cmFzZDpFbGVtZW50TmFtZT5uaWM1PC9yYXNkOkVsZW1lbnROYW1lPjxyYXNkOk1BQ0FkZHJlc3M+NTY6NmY6Y2E6MGI6MDA6MDY8L3Jhc2Q6TUFDQWRkcmVzcz48cmFzZDpzcGVlZD4xMDAwMDwvcmFzZDpzcGVlZD48VHlwZT5pbnRlcmZhY2U8L1R5cGU+PERldmljZT5icmlkZ2U8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAwLCBidXM9MHgwYSwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHgwfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz51YS0yYTNhMzA4My04MjY5LTRkZWUtOGU2Mi0wYzFiMzgzNTMxZTI8L0FsaWFzPjwvSXRlbT48SXRlbT48cmFzZDpDYXB0aW9uPlVTQiBDb250cm9sbGVyPC9yYXNkOkNhcHRpb24+PHJhc2Q6SW5zdGFuY2VJZD4zPC9yYXNkOkluc3RhbmNlSWQ+PHJhc2Q6UmVzb3VyY2VUeXBlPjIzPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpVc2JQb2xpY3k+RElTQUJMRUQ8L3Jhc2Q6VXNiUG9saWN5PjwvSXRlbT48SXRlbT48cmFzZDpDYXB0aW9uPkdyYXBoaWNhbCBDb250cm9sbGVyPC9yYXNkOkNhcHRpb24+PHJhc2Q6SW5zdGFuY2VJZD4yMjI0OTQ0Mi0zNTBmLTQ0MmMtOGFmOS0zZDk2YWExNTc3ZTU8L3Jhc2Q6SW5zdGFuY2VJZD48cmFzZDpSZXNvdXJjZVR5cGU+MjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOlZpcnR1YWxRdWFudGl0eT4xPC9yYXNkOlZpcnR1YWxRdWFudGl0eT48cmFzZDpTaW5nbGVQY2lReGw+ZmFsc2U8L3Jhc2Q6U2luZ2xlUGNpUXhsPjxUeXBlPnZpZGVvPC9UeXBlPjxEZXZpY2U+dmdhPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMSwgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+dWEtMjIyNDk0NDItMzUwZi00NDJjLThhZjktM2Q5NmFhMTU3N2U1PC9BbGlhcz48U3BlY1BhcmFtcz48dnJhbT4xNjM4NDwvdnJhbT48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOkNhcHRpb24+R3JhcGhpY2FsIEZyYW1lYnVmZmVyPC9yYXNkOkNhcHRpb24+PHJhc2Q6SW5zdGFuY2VJZD45YTMyN2Q3OC0xOWZlLTRiYmQtYjMwZC02MmIzZDU3MzE4ZTE8L3Jhc2Q6SW5zdGFuY2VJZD48cmFzZDpSZXNvdXJjZVR5cGU+MjY8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxUeXBlPmdyYXBoaWNzPC9UeXBlPjxEZXZpY2U+dm5jPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz48L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+PC9BbGlhcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6Q2FwdGlvbj5DRFJPTTwvcmFzZDpDYXB0aW9uPjxyYXNkOkluc3RhbmNlSWQ+OWVmOTg4NzYtODgxNS00NzBkLWFjNGEtMzJjY2FkNjQ3MjcxPC9yYXNkOkluc3RhbmNlSWQ+PHJhc2Q6UmVzb3VyY2VUeXBlPjE1PC9yYXNkOlJlc291cmNlVHlwZT48VHlwZT5kaXNrPC9UeXBlPjxEZXZpY2U+Y2Ryb208L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPWRyaXZlLCBidXM9MCwgY29udHJvbGxlcj0wLCB0YXJnZXQ9MCwgdW5pdD0yfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PnRydWU8L0lzUmVhZE9ubHk+PEFsaWFzPnVhLTllZjk4ODc2LTg4MTUtNDcwZC1hYzRhLTMyY2NhZDY0NzI3MTwvQWxpYXM+PFNwZWNQYXJhbXM+PHBhdGg+ODljNGJmZmItMTNmZi00NmZmLWE0NTItNTFmMTJjNjFiZTZmPC9wYXRoPjwvU3BlY1BhcmFtcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6UmVzb3VyY2VUeXBlPjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkluc3RhbmNlSWQ+ZjczMDkwZTEtMzc5Yy00NmRkLThmMDMtOTg2Mzg3NWIyNjY3PC9yYXNkOkluc3RhbmNlSWQ+PFR5cGU+Y29udHJvbGxlcjwvVHlwZT48RGV2aWNlPnBjaTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDIsIGJ1cz0weDAwLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDR9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnBjaS41PC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+NTwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjAxMmYwMWM4LWQyODYtNDdiNC1hNDhlLTU3MjhkNTg2ODFmMjwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAyLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHg1fTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuNjwvQWxpYXM+PFNwZWNQYXJhbXM+PGluZGV4PjY8L2luZGV4Pjxtb2RlbD5wY2llLXJvb3QtcG9ydDwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD5hYmVjZWI3YS03NzQzLTQ3NDctYTYyYy1iYTAxOTJjYWEyNmU8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+cGNpPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMiwgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4Nn08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+cGNpLjc8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD43PC9pbmRleD48bW9kZWw+cGNpZS1yb290LXBvcnQ8L21vZGVsPjwvU3BlY1BhcmFtcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6UmVzb3VyY2VUeXBlPjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkluc3RhbmNlSWQ+ZjA2YzQ4OWItOGNhOC00NWQxLTlmNWYtYjMxZWJkZmIzMTA3PC9yYXNkOkluc3RhbmNlSWQ+PFR5cGU+Y29udHJvbGxlcjwvVHlwZT48RGV2aWNlPnBjaTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDIsIGJ1cz0weDAwLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDd9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnBjaS44PC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+ODwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPmVjYjNlZjQ1LTdjMzMtNDgzZi05ZDNlLWQzOGFmZjVkMTNlZTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHgwLCBtdWx0aWZ1bmN0aW9uPW9ufTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuOTwvQWxpYXM+PFNwZWNQYXJhbXM+PGluZGV4Pjk8L2luZGV4Pjxtb2RlbD5wY2llLXJvb3QtcG9ydDwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD44ODg1MDhmMS0yYWFhLTQxM2EtOThkYy00NDYxNjJjZDk5ZDg8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+cGNpPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMywgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MX08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+cGNpLjEwPC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+MTA8L2luZGV4Pjxtb2RlbD5wY2llLXJvb3QtcG9ydDwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD5mMWQzMDY3Ny03ZTZlLTQ5ZmEtYWRkYS03NDI1MjA2YWMyNTg8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+cGNpPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMywgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4Mn08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+cGNpLjExPC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+MTE8L2luZGV4Pjxtb2RlbD5wY2llLXJvb3QtcG9ydDwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD45NTMwMDk2Yy0wMGZjLTQ2MzUtYjIwNC0zZmUzYTQzOTIxYzE8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jaGFubmVsPC9UeXBlPjxEZXZpY2U+dW5peDwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9dmlydGlvLXNlcmlhbCwgYnVzPTAsIGNvbnRyb2xsZXI9MCwgcG9ydD0xfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5jaGFubmVsMDwvQWxpYXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjRhY2VhOTg5LWRlYzYtNDI3Yi04MzhmLTI2MWY1YWQwYmU3ZTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNoYW5uZWw8L1R5cGU+PERldmljZT51bml4PC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT12aXJ0aW8tc2VyaWFsLCBidXM9MCwgY29udHJvbGxlcj0wLCBwb3J0PTJ9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPmNoYW5uZWwxPC9BbGlhcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6UmVzb3VyY2VUeXBlPjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkluc3RhbmNlSWQ+NGQ5NDJhYWMtZTRjMi00NjdkLThjMzItYWQxODE3ZThkNWFhPC9yYXNkOkluc3RhbmNlSWQ+PFR5cGU+Y29udHJvbGxlcjwvVHlwZT48RGV2aWNlPnBjaTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDIsIGJ1cz0weDAwLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDAsIG11bHRpZnVuY3Rpb249b259PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnBjaS4xPC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+MTwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPmU4ZTE5NDk2LTBiZGQtNGU2YS1iZjM5LWM5ZWQ1MDFiNDc1MzwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAyLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHgxfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMjwvQWxpYXM+PFNwZWNQYXJhbXM+PGluZGV4PjI8L2luZGV4Pjxtb2RlbD5wY2llLXJvb3QtcG9ydDwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD41NGFhNDU5ZC01NGQwLTQ5Y2EtYjE0Zi0xZmU1NzM3N2Y4Zjk8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+cGNpPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMiwgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4Mn08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+cGNpLjM8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4zPC9pbmRleD48bW9kZWw+cGNpZS1yb290LXBvcnQ8L21vZGVsPjwvU3BlY1BhcmFtcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6UmVzb3VyY2VUeXBlPjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkluc3RhbmNlSWQ+ZmM4ZTBjZjYtOWNiMS00NmUyLWJmZmItNjFiZTkxZTQ2OTA4PC9yYXNkOkluc3RhbmNlSWQ+PFR5cGU+Y29udHJvbGxlcjwvVHlwZT48RGV2aWNlPnBjaTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDIsIGJ1cz0weDAwLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDN9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnBjaS40PC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+NDwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjJkNzhmZDA2LWMyODgtNDUzYi1hMzYyLTZmZDEyZDcxNTJlZTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHgzfTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMTI8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4xMjwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPmFhNzNmYTE5LWEzMWUtNDExNS04NDE2LWI4NzJhM2NhMzJmNjwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHg0fTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMTM8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4xMzwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjA2NWYzMzE1LTliMmEtNDY2Yi04NzI1LTRjMDBlMjg1NDQyYTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHg1fTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMTQ8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4xNDwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjM5OWQyZjVjLTJjODUtNDIwZS1iMDJkLTNiZDE0MGRkYWE5MTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHg2fTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMTU8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4xNTwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjQ0MmExMDNkLTU4NDgtNDNjOS1hZGExLTE1YzE3ZWVlOWU0ZjwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5wY2k8L0RldmljZT48cmFzZDpBZGRyZXNzPnt0eXBlPXBjaSwgc2xvdD0weDAzLCBidXM9MHgwMCwgZG9tYWluPTB4MDAwMCwgZnVuY3Rpb249MHg3fTwvcmFzZDpBZGRyZXNzPjxCb290T3JkZXI+MDwvQm9vdE9yZGVyPjxJc1BsdWdnZWQ+dHJ1ZTwvSXNQbHVnZ2VkPjxJc1JlYWRPbmx5PmZhbHNlPC9Jc1JlYWRPbmx5PjxBbGlhcz5wY2kuMTY8L0FsaWFzPjxTcGVjUGFyYW1zPjxpbmRleD4xNjwvaW5kZXg+PG1vZGVsPnBjaWUtcm9vdC1wb3J0PC9tb2RlbD48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjdmZjk2ZWE3LWE5NDMtNGZhYS1hNGNlLTJlMDIzZDEwYjk2OTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT5zYXRhPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgxZiwgYnVzPTB4MDAsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4Mn08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+aWRlPC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+MDwvaW5kZXg+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD5jYTc1Mzc5My1hYTkzLTRlOWYtYjRhZS05MDM4OTVjODcyZDY8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+dXNiPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMCwgYnVzPTB4MDQsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+dWEtY2E3NTM3OTMtYWE5My00ZTlmLWI0YWUtOTAzODk1Yzg3MmQ2PC9BbGlhcz48U3BlY1BhcmFtcz48aW5kZXg+MDwvaW5kZXg+PG1vZGVsPnFlbXUteGhjaTwvbW9kZWw+PC9TcGVjUGFyYW1zPjwvSXRlbT48SXRlbT48cmFzZDpSZXNvdXJjZVR5cGU+MDwvcmFzZDpSZXNvdXJjZVR5cGU+PHJhc2Q6SW5zdGFuY2VJZD42NzY5YzE5Ni05Njg1LTRjYWQtOGQxOC04MGYzNDBlOTFkOTA8L3Jhc2Q6SW5zdGFuY2VJZD48VHlwZT5jb250cm9sbGVyPC9UeXBlPjxEZXZpY2U+dmlydGlvLXNlcmlhbDwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDAsIGJ1cz0weDAyLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDB9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnVhLTY3NjljMTk2LTk2ODUtNGNhZC04ZDE4LTgwZjM0MGU5MWQ5MDwvQWxpYXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPmFlNzgwMjNlLTFmNmQtNDY3ZS04ZDkzLWNiMmM4MjViZDJiNjwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmJhbGxvb248L1R5cGU+PERldmljZT5tZW1iYWxsb29uPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMCwgYnVzPTB4MDUsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT50cnVlPC9Jc1JlYWRPbmx5PjxBbGlhcz51YS1hZTc4MDIzZS0xZjZkLTQ2N2UtOGQ5My1jYjJjODI1YmQyYjY8L0FsaWFzPjxTcGVjUGFyYW1zPjxtb2RlbD52aXJ0aW88L21vZGVsPjwvU3BlY1BhcmFtcz48L0l0ZW0+PEl0ZW0+PHJhc2Q6UmVzb3VyY2VUeXBlPjA8L3Jhc2Q6UmVzb3VyY2VUeXBlPjxyYXNkOkluc3RhbmNlSWQ+OGJkYjM4MWEtMThjMS00YTI5LWFkMGMtZmRlNTI3ZjZmMDI0PC9yYXNkOkluc3RhbmNlSWQ+PFR5cGU+cm5nPC9UeXBlPjxEZXZpY2U+dmlydGlvPC9EZXZpY2U+PHJhc2Q6QWRkcmVzcz57dHlwZT1wY2ksIHNsb3Q9MHgwMCwgYnVzPTB4MDYsIGRvbWFpbj0weDAwMDAsIGZ1bmN0aW9uPTB4MH08L3Jhc2Q6QWRkcmVzcz48Qm9vdE9yZGVyPjA8L0Jvb3RPcmRlcj48SXNQbHVnZ2VkPnRydWU8L0lzUGx1Z2dlZD48SXNSZWFkT25seT5mYWxzZTwvSXNSZWFkT25seT48QWxpYXM+dWEtOGJkYjM4MWEtMThjMS00YTI5LWFkMGMtZmRlNTI3ZjZmMDI0PC9BbGlhcz48U3BlY1BhcmFtcz48c291cmNlPnVyYW5kb208L3NvdXJjZT48L1NwZWNQYXJhbXM+PC9JdGVtPjxJdGVtPjxyYXNkOlJlc291cmNlVHlwZT4wPC9yYXNkOlJlc291cmNlVHlwZT48cmFzZDpJbnN0YW5jZUlkPjk3OTQ4ZWNlLWNiYTAtNGVjNS05NjU4LTEwNjNmYjRhMWViYTwvcmFzZDpJbnN0YW5jZUlkPjxUeXBlPmNvbnRyb2xsZXI8L1R5cGU+PERldmljZT52aXJ0aW8tc2NzaTwvRGV2aWNlPjxyYXNkOkFkZHJlc3M+e3R5cGU9cGNpLCBzbG90PTB4MDAsIGJ1cz0weDAzLCBkb21haW49MHgwMDAwLCBmdW5jdGlvbj0weDB9PC9yYXNkOkFkZHJlc3M+PEJvb3RPcmRlcj4wPC9Cb290T3JkZXI+PElzUGx1Z2dlZD50cnVlPC9Jc1BsdWdnZWQ+PElzUmVhZE9ubHk+ZmFsc2U8L0lzUmVhZE9ubHk+PEFsaWFzPnVhLTk3OTQ4ZWNlLWNiYTAtNGVjNS05NjU4LTEwNjNmYjRhMWViYTwvQWxpYXM+PC9JdGVtPjwvU2VjdGlvbj48L0NvbnRlbnQ+PC9vdmY6RW52ZWxvcGU+</VmConfiguration>
+      </Snapshot>
+    </Section>
+  </Content>
+</ovf:Envelope>

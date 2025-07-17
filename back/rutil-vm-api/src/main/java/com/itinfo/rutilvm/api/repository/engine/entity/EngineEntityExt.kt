@@ -15,7 +15,6 @@ import com.itinfo.rutilvm.api.model.computing.TemplateVo
 import com.itinfo.rutilvm.api.model.computing.VmIconVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.fromClusterToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromVnicProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.BondingVo
 import com.itinfo.rutilvm.api.model.network.DnsVo
@@ -34,27 +33,19 @@ import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
-import com.itinfo.rutilvm.api.ovirt.business.CpuPinningPolicyB
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
+import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
+import com.itinfo.rutilvm.api.ovirt.business.VolumeType
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
-import com.itinfo.rutilvm.api.ovirt.business.findBiosTypeB
-import com.itinfo.rutilvm.api.ovirt.business.findGraphicsTypeB
-import com.itinfo.rutilvm.api.ovirt.business.findStatus
-import com.itinfo.rutilvm.api.ovirt.business.findTemplateStatus
-import com.itinfo.rutilvm.api.ovirt.business.findVmOsType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
-import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
+import com.itinfo.rutilvm.api.xml.OvfCompositeDisk
+import com.itinfo.rutilvm.api.xml.OvfDisk
 import com.itinfo.rutilvm.common.toDate
-import com.itinfo.rutilvm.common.toLocalDateTime
-import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll
-import com.itinfo.rutilvm.util.ovirt.cpuTopologyAll4Template
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
-import org.ovirt.engine.sdk4.types.NetworkStatus.NON_OPERATIONAL
-import org.ovirt.engine.sdk4.types.NetworkStatus.OPERATIONAL
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
@@ -372,104 +363,149 @@ fun List<UnregisteredDiskEntity>.toUnregisteredDiskImageVos(disks: List<Disk>): 
 
 //region: UnregisteredOvfOfEntities
 fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
-	// val tmp = conn.findTemplate(vm.template().id()).getOrNull()
+	val ovf = this@toUnregisteredVm.ovf // NOTE: 파싱해야 하기 때문에 한번은 호출 해줘야 함
 	return VmVo.builder {
 		id { this@toUnregisteredVm.id?.entityGuid.toString() }
-		name { this@toUnregisteredVm.ovf?.virtualSystem?.name }
-		description { this@toUnregisteredVm.ovf?.virtualSystem?.description }
-		comment { this@toUnregisteredVm.ovf?.virtualSystem?.comment }
-		status { vm?.findStatus() }
-		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
-		optimizeOption { vm?.type()?.toVmTypeB() }
-		nextRun { vm?.nextRunConfigurationExists() }
-		biosType { vm?.bios()?.findBiosTypeB() }
-		biosBootMenu { vm?.bios()?.bootMenu()?.enabled() }
-		osType { vm?.os()?.findVmOsType() }
-		cpuArc { vm?.cpu()?.findArchitectureType() }
-		cpuTopologyCnt { vm.cpuTopologyAll() }
-		cpuTopologyCore { vm?.cpu()?.topology()?.coresAsInteger() }
-		cpuTopologySocket { vm?.cpu()?.topology()?.socketsAsInteger() }
-		cpuTopologyThread { vm?.cpu()?.topology()?.threadsAsInteger() }
-		cpuPinningPolicy {
-			this@toUnregisteredVm.ovf?.virtualSystem?.cpuPinningPolicy
+		name { this@toUnregisteredVm.entityName }
+		description { ovf?.virtualSystemSection?.description }
+		comment { ovf?.virtualSystemSection?.comment }
+		status { VmStatusB.unassigned }
+		templateVo { // TODO: original이 필요한지 확인
+			IdentifiedVo.builder {
+				id { ovf?.virtualSystemSection?.templateId }
+				name { ovf?.virtualSystemSection?.templateName }
+			}
 		}
-		creationTime {
+		optimizeOption { ovf?.vmType }
+		nextRun { vm?.nextRunConfigurationExists() } // TODO: 값 찾기
+		biosType { ovf?.biosType }
+		biosBootMenu { ovf?.virtualSystemSection?.isBootMenuEnabled }
+		storageErrorResumeBehaviour { ovf?.vmResumeBehavior }
+		osType { ovf?.vmOsType }
+		cpuArc { vm?.cpu()?.findArchitectureType() } // TODO: 값 찾기
+		cpuTopologyCnt { ovf?.cpuTotal }
+		cpuTopologyCore { ovf?.cpuPerSocket }
+		cpuTopologySocket { ovf?.numOfSockets }
+		cpuTopologyThread { ovf?.threadsPerCpu }
+		cpuPinningPolicy { ovf?.cpuPinningPolicy }
+		creationTime { ovf?.virtualSystemSection?.creationDate
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
-			// ovf?.virtualSystem?.creationDate?.toDate()
-			vm?.creationTime().toLocalDateTime()
 		}
-		monitor { if (vm?.displayPresent() == true) vm.display().monitorsAsInteger() else 0 }
-		// displayType { }
-		videoType { vm?.display().findGraphicsTypeB() }
+		monitor { ovf?.monitor }
+		displayType { ovf?.displayType }
+		videoType { ovf?.graphicType }
 		ha { vm?.highAvailability()?.enabled() }
-		haPriority { vm?.highAvailability()?.priorityAsInteger() }
-		memorySize { vm?.memory() }
-		memoryGuaranteed { vm?.memoryPolicy()?.guaranteed() }
-		memoryMax { vm?.memoryPolicy()?.max() }
-		usb { if(vm?.usbPresent() == true) vm.usb()?.enabled() else false }
-		diskAttachmentVos { disksFromOvf.toDiskAttachmentIdentifiedVos() }
+		haPriority { ovf?.priority }
+		memorySize { ovf?.memoryInByte }
+		memoryGuaranteed { ovf?.memoryGuaranteedInByte }
+		memoryMax { ovf?.memoryMaxInByte }
+		usb { ovf?.usbEnabled }
+		// diskAttachmentVos { ovfDisks.toDiskAttachmentIdentifiedVos() }
+		diskAttachmentVos { ovf?.allCompositeDisks?.toDiskAttachmentIdentifiedVos() }
 	}
 }
 fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): TemplateVo {
 	// val tmp = conn.findTemplate(vm.template().id()).getOrNull()
+	val ovf = this@toUnregisteredTemplate.ovf // NOTE: 파싱해야 하기 때문에 한번은 호출 해줘야 함
 	return TemplateVo.builder {
 		id { this@toUnregisteredTemplate.id?.entityGuid.toString() }
-		name { this@toUnregisteredTemplate.ovf?.virtualSystem?.name }
-		description { this@toUnregisteredTemplate.ovf?.virtualSystem?.description }
-		comment { this@toUnregisteredTemplate.ovf?.virtualSystem?.comment }
-		status { template?.findTemplateStatus() }
+		name { this@toUnregisteredTemplate.entityName }
+		description { ovf?.virtualSystemSection?.description }
+		comment { ovf?.virtualSystemSection?.comment }
+		// status { template?.findTemplateStatus() }
 		// templateVo { tmp?.fromTemplateToIdentifiedVo() }
-		biosType { template?.bios()?.findBiosTypeB() }
+		optimizeOption { ovf?.vmType }
+		// nextRun { template?.nextRunConfigurationExists() }
+		biosType { ovf?.biosType }
+		biosBootMenu { ovf?.virtualSystemSection?.isBootMenuEnabled }
+		storageErrorResumeBehaviour { ovf?.vmResumeBehavior }
+		osType { ovf?.vmOsType }
 		cpuArc { template?.cpu()?.findArchitectureType() }
-		cpuTopologyCnt { template.cpuTopologyAll4Template() }
-		cpuTopologyCore { template?.cpu()?.topology()?.coresAsInteger() }
-		cpuTopologySocket { template?.cpu()?.topology()?.socketsAsInteger() }
-		cpuTopologyThread { template?.cpu()?.topology()?.threadsAsInteger() }
-		cpuPinningPolicy {
-			CpuPinningPolicyB.forCode("${this@toUnregisteredTemplate.ovf?.virtualSystem?.cpuPinningPolicy}")
-			// template?.cpuPinningPolicy()?.value()
-		}
-		creationTime {
+		cpuTopologyCnt { ovf?.cpuTotal }
+		cpuTopologyCore { ovf?.cpuPerSocket }
+		cpuTopologySocket { ovf?.numOfSockets }
+		cpuTopologyThread { ovf?.threadsPerCpu }
+		cpuPinningPolicy { ovf?.cpuPinningPolicy }
+		creationTime { ovf?.virtualSystemSection?.creationDate
 			// NOTE: 환산에 문제가 있는것으로 판단. 값이 좀 이상함 Locale 때문에 차이가 생김
-			// ovf?.virtualSystem?.creationDate?.toDate()
-			template?.creationTime().toLocalDateTime()
 		}
-		monitor { if (template?.displayPresent() == true) template.display().monitorsAsInteger() else 0 }
-		// displayType {  }
-		videoType { template?.display().findGraphicsTypeB() }
+		monitor { ovf?.monitor }
+		displayType { ovf?.displayType }
+		videoType { ovf?.graphicType }
 		ha { template?.highAvailability()?.enabled() }
-		haPriority { template?.highAvailability()?.priorityAsInteger() }
-		memorySize { template?.memory() }
-		memoryGuaranteed { template?.memoryPolicy()?.guaranteed() }
-		memoryMax { template?.memoryPolicy()?.max() }
-		osType { template?.os()?.findVmOsType() }
-		optimizeOption { template?.type()?.toVmTypeB() }
-		usb { if (template?.usbPresent() == true) template.usb()?.enabled() else false }
-		diskAttachmentVos { disksFromOvf.toDiskAttachmentIdentifiedVos() }
+		haPriority { ovf?.priority }
+		memorySize { ovf?.memoryInByte }
+		memoryGuaranteed { ovf?.memoryGuaranteedInByte }
+		memoryMax { ovf?.memoryMaxInByte }
+		usb { ovf?.usbEnabled }
+		// diskAttachmentVos { ovfDisks.toDiskAttachmentIdentifiedVos() }
+		diskAttachmentVos { ovf?.allCompositeDisks?.toDiskAttachmentIdentifiedVos() }
 	}
 }
 
-fun com.itinfo.rutilvm.api.xml.OvfDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.builder {
+fun OvfCompositeDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.builder {
 	id { this@toDiskAttachmentIdentifiedVo.diskId }
+	bootable { this@toDiskAttachmentIdentifiedVo.boot }
+	readOnly { this@toDiskAttachmentIdentifiedVo.readOnly }
+	passDiscard { this@toDiskAttachmentIdentifiedVo.passDiscard }
+	interface_ { this@toDiskAttachmentIdentifiedVo.diskInterface }
+	// logicalName { this@toDiskAttachmentIdentifiedVo }
+	// detachOnly { this@toDiskAttachmentIdentifiedVo. }
 	diskImageVo {
 		DiskImageVo.builder {
 			id { this@toDiskAttachmentIdentifiedVo.diskId }
 			alias { this@toDiskAttachmentIdentifiedVo.diskAlias }
 			description{ this@toDiskAttachmentIdentifiedVo.diskDescription }
-			sparse{ this@toDiskAttachmentIdentifiedVo.volumeType == "Sparse" }
+			sparse{ this@toDiskAttachmentIdentifiedVo.volumeType == VolumeType.sparse }
+			wipeAfterDelete { this@toDiskAttachmentIdentifiedVo.wipeAfterDelete }
+			sharable { this@toDiskAttachmentIdentifiedVo.shareable }
+			backup { this@toDiskAttachmentIdentifiedVo.incrementalBackup }
+			format { this@toDiskAttachmentIdentifiedVo.volumeFormat }
+			// virtualSize { this@toDiskAttachmentIdentifiedVo }
 			actualSize { this@toDiskAttachmentIdentifiedVo.actualSize?.toBigInteger() }
 			size { this@toDiskAttachmentIdentifiedVo.size?.toBigInteger() }
+			// status { this@toDiskAttachmentIdentifiedVo }
+			// contentType { this@toDiskAttachmentIdentifiedVo }
+			// storageType { this@toDiskAttachmentIdentifiedVo }
+			dateCreated { this@toDiskAttachmentIdentifiedVo.creationDate }
+			connectVm {
+				IdentifiedVo.builder {
+					// id { this@toDiskAttachmentIdentifiedVo }
+				}
+			}
+			connectTemplate {
+				IdentifiedVo.builder {
+					id { this@toDiskAttachmentIdentifiedVo.templateId }
+				}
+			}
+			storageDomainVo {
+				IdentifiedVo.builder {
+					id { this@toDiskAttachmentIdentifiedVo.storageId }
+				}
+			}
+			dataCenterVo {
+				IdentifiedVo.builder {
+					id { this@toDiskAttachmentIdentifiedVo.storagePoolId }
+				}
+			}
+		}
+	}
+	vmVo {
+		IdentifiedVo.builder {
+			// id { this@toDiskAttachmentIdentifiedVo }
 		}
 	}
 }
 
-fun Collection<com.itinfo.rutilvm.api.xml.OvfDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
+fun Collection<OvfCompositeDisk>.toDiskAttachmentIdentifiedVos(): List<DiskAttachmentVo> =
 	this@toDiskAttachmentIdentifiedVos.map { it.toDiskAttachmentIdentifiedVo() }
 
-fun Collection<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm>): List<VmVo> {
-	val itemById: Map<String, Vm> =
-		vms.associateBy { it.id() }
-	return this@toUnregisteredVms.map { it.toUnregisteredVm(itemById[it.id?.entityGuid.toString()]) }
+fun Collection<UnregisteredOvfOfEntities>.toUnregisteredVms(vms: List<Vm> = emptyList()): List<VmVo> {
+	return this@toUnregisteredVms.map {
+		it.toUnregisteredVm()
+	}.sortedBy {
+		it.name
+	}
 }
 
 fun Collection<UnregisteredOvfOfEntities>.toUnregisteredTemplates(templates: List<Template>): List<TemplateVo> {

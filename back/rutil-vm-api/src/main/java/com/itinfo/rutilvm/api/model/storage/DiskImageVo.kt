@@ -96,28 +96,28 @@ class DiskImageVo(
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	// val diskProfileVos: List<IdentifiedVo> = listOf()
 ): Serializable {
-	val dateCreated: String?			get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
-	val statusCode: String?				get() = status?.code
-	// val statusEn: String?			get() = status?.en ?: "N/A"
-	// val statusKr: String?			get() = status?.kr ?: "알 수 없음"
+	val dateCreated: String?				get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
+	val statusCode: String?					get() = status?.code
+	// val statusEn: String?				get() = status?.en ?: "N/A"
+	// val statusKr: String?				get() = status?.kr ?: "알 수 없음"
 
-	val contentTypeCode: String			get() = contentType?.code ?: DiskContentTypeB.data.code
-	val contentTypeEn: String 			get() = contentType?.en ?: "N/A"
-	val contentTypeKr: String			get() = contentType?.kr ?: "알 수 없음"
+	val contentTypeCode: String				get() = contentType?.code ?: DiskContentTypeB.data.code
+	val contentTypeEn: String 				get() = contentType?.en ?: "N/A"
+	val contentTypeKr: String				get() = contentType?.kr ?: "알 수 없음"
 
-	val storageTypeCode: String			get() = storageType?.code ?: DiskStorageType.image.code
-	val storageTypeEn: String			get() = storageType?.en ?: "N/A"
-	val storageTypeKr: String			get() = storageType?.kr ?: "알 수 없음"
+	val storageTypeCode: String				get() = storageType?.code ?: DiskStorageType.image.code
+	val storageTypeEn: String				get() = storageType?.en ?: "N/A"
+	val storageTypeKr: String				get() = storageType?.kr ?: "알 수 없음"
 
-	val imageTransferPhaseCode: String	get() = imageTransferPhase?.code ?: ""
-	val imageTransferPhaseEn: String	get() = imageTransferPhase?.en ?: ""
-	val imageTransferPhaseKr: String	get() = imageTransferPhase?.kr ?: ""
+	val imageTransferPhaseCode: String		get() = imageTransferPhase?.code ?: ""
+	val imageTransferPhaseEn: String		get() = imageTransferPhase?.en ?: "N/A"
+	val imageTransferPhaseKr: String		get() = imageTransferPhase?.kr ?: "알 수 없음"
 
-	val imageTransferTypeCode: String	get() = imageTransferType?.code ?: ""
-	val imageTransferTypeEn: String		get() = imageTransferType?.en ?: ""
-	val imageTransferTypeKr: String		get() = imageTransferType?.kr ?: ""
+	val imageTransferTypeCode: String		get() = imageTransferType?.code ?: ""
+	val imageTransferTypeEn: String			get() = imageTransferType?.en ?: "N/A"
+	val imageTransferTypeKr: String			get() = imageTransferType?.kr ?: "알 수 없음"
 
-	val imageTransferRunning: Boolean	get() = imageTransferPhase != null &&
+	val imageTransferRunning: Boolean		get() = imageTransferPhase != null &&
 		imageTransferType != null &&
 		imageTransferBytesSent != null &&
 		imageTransferBytesTotal != null
@@ -125,10 +125,8 @@ class DiskImageVo(
 		get() = (imageTransferBytesSent?.toDouble() ?: 0.0) / (imageTransferBytesTotal?.toDouble() ?: 0.0) * 100L
 
 	/*
-	val storageTypeEn: String
-		get() = storageType?.en ?: "N/A"
-	val storageTypeKr: String
-		get() = storageType?.kr ?: "알 수 없음"
+	val storageTypeEn: String			get() = storageType?.en ?: "N/A"
+	val storageTypeKr: String			get() = storageType?.kr ?: "알 수 없음"
 	*/
 
 	override fun toString(): String =
@@ -180,7 +178,6 @@ fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 	this@toDiskIdNames.map { it.toDiskIdName() }
 
 /*
-
 fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 	val entity = this@toDiskEntity
 	return DiskImageVo.builder {
@@ -236,6 +233,7 @@ fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
 
 
 /**
+ * [Disk.toDiskMenu]
  * 디스크 목록
  * 스토리지도메인 - 디스크 목록
  */
@@ -279,12 +277,14 @@ fun List<Disk>.toDiskMenus(conn: Connection): List<DiskImageVo> =
 fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 	val disk = this@toDcDiskMenu
 	log.info("disk.vmsPresent(): {} / {}", disk.vmsPresent(), disk.id())
-	// val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
-	// 	.firstOrNull { template ->
-	// 		template.diskAttachmentsPresent() &&
-	// 			template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
-	// 	}?.id()
-	// val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+	/*
+	val templateId: String? = conn.findAllTemplates(follow = "diskattachments").getOrDefault(emptyList())
+		.firstOrNull { template ->
+			template.diskAttachmentsPresent() &&
+				template.diskAttachments().any { diskAttachment -> diskAttachment.id() == disk.id() }
+		}?.id()
+	val tmp: Template? = templateId?.let { conn.findTemplate(it).getOrNull() }
+	*/
 	val storageDomain = conn.findStorageDomain(disk.storageDomain().id()).getOrNull()
 
 	return DiskImageVo.builder {

@@ -31,8 +31,8 @@ enum class VolumeType(
 			}
 		}
 
+		@JvmStatic fun forValue(value: Int?): VolumeType? = valueMapping[value ?: unassigned.value] ?: unassigned
+		@JvmStatic fun forCode(code: String?): VolumeType? = codeMapping[code ?: unassigned.code] ?: unassigned
 		val allVolumeTypes: List<VolumeType> = VolumeType.values().toList()
-		@JvmStatic fun forValue(value: Int?): VolumeType = valueMapping[value ?: unassigned.value] ?: unassigned
-		@JvmStatic fun forCode(code: String?): VolumeType = codeMapping[code ?: unassigned.code] ?: unassigned
 	}
 }

@@ -213,11 +213,11 @@ class VmVo (
 	override val status: VmStatusB? = VmStatusB.unknown,
 	private val iconSmall: VmIconVo? = null,
 	private val iconLarge: VmIconVo? = null,
-	val optimizeOption: VmTypeB? = VmTypeB.unknown, // VmType
+	val optimizeOption: VmTypeB? = VmTypeB.server, // VmType
 	val biosType: BiosTypeB? = BiosTypeB.cluster_default,
 	val biosBootMenu: Boolean = false,
 	val osType: VmOsType? = VmOsType.other,
-	val cpuArc: ArchitectureType? = ArchitectureType.undefined,
+	val cpuArc: ArchitectureType? = ArchitectureType.x86_64,
 	val cpuTopologyCnt: Int = 0,
 	val cpuTopologyCore: Int = 0,
 	val cpuTopologySocket: Int = 0,
@@ -295,6 +295,8 @@ class VmVo (
 	val urlLargeIcon: String				get() = iconLarge?.dataUrl ?: ""
 
 	val optimizeOptionCode: String			get() = optimizeOption?.code ?: VmTypeB.unknown.code
+	val optimizeOptionEn: String			get() = optimizeOption?.en ?: "N/A"
+	val optimizeOptionKr: String			get() = optimizeOption?.kr ?: "알 수 없음"
 
 	val biosTypeCode: String				get() = biosType?.code ?: BiosTypeB.cluster_default.code
 	val biosTypeEn: String					get() = biosType?.en ?: "N/A"
@@ -312,6 +314,10 @@ class VmVo (
 	val cpuPinningPolicyCode: String		get() = cpuPinningPolicy?.code ?: CpuPinningPolicyB.none.code
 	val cpuPinningPolicyEn: String			get() = cpuPinningPolicy?.en ?: "N/A"
 	val cpuPinningPolicyKr: String			get() = cpuPinningPolicy?.kr ?: "알 수 없음"
+
+	val displayTypeCode: String				get() = displayType?.code ?: DisplayTypeB.none.code
+	val displayTypeEn: String				get() = displayType?.en ?: "N/A"
+	val displayTypeKr: String				get() = displayType?.kr ?: "알 수 없음"
 
 	val creationTime: String?				get() = ovirtDf.formatEnhancedFromLDT(_creationTime)
 	val startTime: String?					get() = ovirtDf.formatEnhancedFromLDT(_startTime)
@@ -331,16 +337,11 @@ class VmVo (
 	val starting: Boolean						get() = status?.starting ?: false
 	val startingOrUp: Boolean					get() = status?.startingOrUp ?: false
 	val hibernating: Boolean					get() = status?.hibernating ?: false /* '수면 중' 인 상태 */
-	val downOrSuspended: Boolean
-		get() = status?.downOrSuspended ?: false
-	val qualified4QosChange: Boolean
-		get() = status?.qualified4QosChange ?: false
-	val guestCpuRunning: Boolean
-		get() = status?.guestCpuRunning ?: false
-	val poweringUpOrMigrating: Boolean
-		get() = status?.poweringUpOrMigrating ?: false
-	val migrating: Boolean
-		get() = status?.migrating ?: false
+	val downOrSuspended: Boolean				get() = status?.downOrSuspended ?: false
+	val qualified4QosChange: Boolean			get() = status?.qualified4QosChange ?: false
+	val guestCpuRunning: Boolean				get() = status?.guestCpuRunning ?: false
+	val poweringUpOrMigrating: Boolean			get() = status?.poweringUpOrMigrating ?: false
+	val migrating: Boolean						get() = status?.migrating ?: false
 
     override fun toString(): String =
 		gson.toJson(this)
@@ -357,7 +358,7 @@ class VmVo (
 		private var bBiosType: BiosTypeB? = BiosTypeB.cluster_default; fun biosType(block: () -> BiosTypeB?) { bBiosType = block() ?: BiosTypeB.cluster_default }
 		private var bBiosBootMenu: Boolean = false; fun biosBootMenu(block: () -> Boolean?) { bBiosBootMenu = block() ?: false }
 		private var bOsType: VmOsType? = VmOsType.other; fun osType(block: () -> VmOsType?) { bOsType = block() ?: VmOsType.other }
-		private var bCpuArc: ArchitectureType = ArchitectureType.undefined; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.undefined }
+		private var bCpuArc: ArchitectureType = ArchitectureType.x86_64; fun cpuArc(block: () -> ArchitectureType?) { bCpuArc = block() ?: ArchitectureType.x86_64 }
 		private var bCpuTopologyCnt: Int = 0; fun cpuTopologyCnt(block: () -> Int?) { bCpuTopologyCnt = block() ?: 0 }
 		private var bCpuTopologyCore: Int = 0; fun cpuTopologyCore(block: () -> Int?) { bCpuTopologyCore = block() ?: 0 }
 		private var bCpuTopologySocket: Int = 0; fun cpuTopologySocket(block: () -> Int?) { bCpuTopologySocket = block() ?: 0 }

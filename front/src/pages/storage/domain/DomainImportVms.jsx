@@ -18,7 +18,7 @@ import Localization              from '@/utils/Localization';
 
 /**
  * @name DomainImportVms
- * @description 도메인으로 가상머신 가져오기 목록
+ * @description 도메인에서 가상머신 가져오기 목록
  *
  * @param {string} domainId 도메인ID
  * @returns {JSX.Element} DomainImportVms

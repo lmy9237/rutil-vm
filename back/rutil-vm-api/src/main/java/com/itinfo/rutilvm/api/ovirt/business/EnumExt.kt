@@ -11,6 +11,7 @@ import org.ovirt.engine.sdk4.types.CpuPinningPolicy
 import org.ovirt.engine.sdk4.types.DataCenterStatus
 import org.ovirt.engine.sdk4.types.DiskContentType
 import org.ovirt.engine.sdk4.types.DiskFormat
+import org.ovirt.engine.sdk4.types.DiskInterface
 import org.ovirt.engine.sdk4.types.Display
 import org.ovirt.engine.sdk4.types.DisplayType
 import org.ovirt.engine.sdk4.types.FipsMode
@@ -163,6 +164,9 @@ fun Display?.findGraphicsTypeB(): GraphicsTypeB? = this@findGraphicsTypeB?.type(
 
 fun DiskContentType?.toDiskContentTypeB(): DiskContentTypeB? = DiskContentTypeB.forCode(this@toDiskContentTypeB?.value())
 fun DiskContentTypeB?.toDiskContentType(): DiskContentType = DiskContentType.fromValue(this@toDiskContentType?.code)
+
+fun DiskInterface?.toDiskInterfaceB(): DiskInterfaceB? = DiskInterfaceB.forCode(this@toDiskInterfaceB?.value())
+fun DiskInterfaceB?.toDiskInterface(): DiskInterface? = DiskInterface.fromValue(this@toDiskInterface?.code)
 
 fun FipsMode.toFipsModeB(): FipsModeB = FipsModeB.forCode(this@toFipsModeB.value())
 fun FipsModeB.toFipsMode(): FipsMode = FipsMode.fromValue(this@toFipsMode.code)

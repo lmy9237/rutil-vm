@@ -1,6 +1,5 @@
 package com.itinfo.rutilvm.api.ovirt.business
 
-import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.util.PropertiesHelper
 import java.util.*
 
@@ -121,18 +120,18 @@ class Localization {
 		//region: DiskInterfaceL
 		object DiskInterfaceL {
 			object KR {
-				val IDE								= locKr?.get(DiskInterface.ide.localizationKey)?.toString() ?: ""
-				val VirtIO_SCSI						= locKr?.get(DiskInterface.virtio_scsi.localizationKey)?.toString() ?: ""
-				val VirtIO							= locKr?.get(DiskInterface.virtio.localizationKey)?.toString() ?: ""
-				val SPAPR_VSCSI						= locKr?.get(DiskInterface.spapr_vscsi.localizationKey)?.toString() ?: ""
-				val SATA							= locKr?.get(DiskInterface.sata.localizationKey)?.toString() ?: ""
+				val IDE								= locKr?.get(DiskInterfaceB.ide.localizationKey)?.toString() ?: ""
+				val VirtIO_SCSI						= locKr?.get(DiskInterfaceB.virtio_scsi.localizationKey)?.toString() ?: ""
+				val VirtIO							= locKr?.get(DiskInterfaceB.virtio.localizationKey)?.toString() ?: ""
+				val SPAPR_VSCSI						= locKr?.get(DiskInterfaceB.spapr_vscsi.localizationKey)?.toString() ?: ""
+				val SATA							= locKr?.get(DiskInterfaceB.sata.localizationKey)?.toString() ?: ""
 			}
 			object EN {
-				val IDE								= locEn?.get(DiskInterface.ide.localizationKey)?.toString() ?: ""
-				val VirtIO_SCSI						= locEn?.get(DiskInterface.virtio_scsi.localizationKey)?.toString() ?: ""
-				val VirtIO							= locEn?.get(DiskInterface.virtio.localizationKey)?.toString() ?: ""
-				val SPAPR_VSCSI						= locEn?.get(DiskInterface.spapr_vscsi.localizationKey)?.toString() ?: ""
-				val SATA							= locEn?.get(DiskInterface.sata.localizationKey)?.toString() ?: ""
+				val IDE								= locEn?.get(DiskInterfaceB.ide.localizationKey)?.toString() ?: ""
+				val VirtIO_SCSI						= locEn?.get(DiskInterfaceB.virtio_scsi.localizationKey)?.toString() ?: ""
+				val VirtIO							= locEn?.get(DiskInterfaceB.virtio.localizationKey)?.toString() ?: ""
+				val SPAPR_VSCSI						= locEn?.get(DiskInterfaceB.spapr_vscsi.localizationKey)?.toString() ?: ""
+				val SATA							= locEn?.get(DiskInterfaceB.sata.localizationKey)?.toString() ?: ""
 			}
 		}
 		//endregion: DiskInterfaceL
@@ -312,7 +311,7 @@ class Localization {
 		object ProviderTypeL {
 			object KR {
 				val OPENSTACK_NETWORK	= locKr?.get(ProviderTypeB.openstack_network.localizationKey)?.toString() ?: ""
-				val FOREMAN 			= locKr?.get(ProviderTypeB.foreman.localizationKey).toString() ?: ""
+				val FOREMAN 			= locKr?.get(ProviderTypeB.foreman.localizationKey)?.toString() ?: ""
 				val OPENSTACK_IMAGE		= locKr?.get(ProviderTypeB.openstack_image.localizationKey)?.toString() ?: ""
 				val OPENSTACK_VOLUME	= locKr?.get(ProviderTypeB.openstack_volume.localizationKey)?.toString() ?: ""
 				val VMWARE				= locKr?.get(ProviderTypeB.vmware.localizationKey)?.toString() ?: ""
@@ -621,7 +620,7 @@ class Localization {
 		BiosTypeB.cluster_default,			// TODO: 지금은 이 값으로 그냥 고정이지만 실제로 어디서 구하는지 찾아야 함
 		BiosTypeB.q35_ovmf -> 				if (loc == "kr") BiosTypeL.KR.q35_ovmf				else BiosTypeL.EN.q35_ovmf
 		BiosTypeB.q35_secure_boot ->		if (loc == "kr") BiosTypeL.KR.q35_secure_boot		else BiosTypeL.EN.q35_secure_boot
-		else -> if (loc == "kr") "알 수 없음" else "Unknown"
+		// else -> if (loc == "kr") "알 수 없음" else "Unknown"
 	}
 
 	fun findLocalizedName4DiskContentType(type: DiskContentTypeB, loc: String = "kr"): String = when(type) {
@@ -638,12 +637,12 @@ class Localization {
 		DiskContentTypeB.unknown -> 							if (loc == "kr") DiskContentTypeL.KR.UNKNOWN else DiskContentTypeL.EN.UNKNOWN
 	}
 
-	fun findLocalizedName4DiskInterface(type: DiskInterface, loc: String = "kr"): String = when(type) {
-		DiskInterface.ide -> 			if (loc == "kr") DiskInterfaceL.KR.IDE else DiskInterfaceL.EN.IDE
-		DiskInterface.virtio_scsi -> 	if (loc == "kr") DiskInterfaceL.KR.VirtIO_SCSI else DiskInterfaceL.EN.VirtIO_SCSI
-		DiskInterface.virtio -> 		if (loc == "kr") DiskInterfaceL.KR.VirtIO else DiskInterfaceL.EN.VirtIO
-		DiskInterface.spapr_vscsi -> 	if (loc == "kr") DiskInterfaceL.KR.SPAPR_VSCSI else DiskInterfaceL.EN.SPAPR_VSCSI
-		DiskInterface.sata -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
+	fun findLocalizedName4DiskInterface(type: DiskInterfaceB, loc: String = "kr"): String = when(type) {
+		DiskInterfaceB.ide -> 			if (loc == "kr") DiskInterfaceL.KR.IDE else DiskInterfaceL.EN.IDE
+		DiskInterfaceB.virtio_scsi -> 	if (loc == "kr") DiskInterfaceL.KR.VirtIO_SCSI else DiskInterfaceL.EN.VirtIO_SCSI
+		DiskInterfaceB.virtio -> 		if (loc == "kr") DiskInterfaceL.KR.VirtIO else DiskInterfaceL.EN.VirtIO
+		DiskInterfaceB.spapr_vscsi -> 	if (loc == "kr") DiskInterfaceL.KR.SPAPR_VSCSI else DiskInterfaceL.EN.SPAPR_VSCSI
+		DiskInterfaceB.sata -> 			if (loc == "kr") DiskInterfaceL.KR.SATA else DiskInterfaceL.EN.SATA
 	}
 
 	fun findLocalizedName4DiskStorageType(type: DiskStorageType, loc: String = "kr"): String = when(type) {

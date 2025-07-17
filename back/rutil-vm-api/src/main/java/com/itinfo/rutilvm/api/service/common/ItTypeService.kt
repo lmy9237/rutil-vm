@@ -3,7 +3,7 @@ package com.itinfo.rutilvm.api.service.common
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
-import com.itinfo.rutilvm.api.ovirt.business.DiskInterface
+import com.itinfo.rutilvm.api.ovirt.business.DiskInterfaceB
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.FipsModeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
@@ -198,7 +198,7 @@ fun DiskContentTypeB.toTypeVoFromDiskContentType(): TypeVo = TypeVo(
 )
 fun List<DiskContentTypeB>.toTypeVosFromDiskContentTypes(): List<TypeVo> =
 	this@toTypeVosFromDiskContentTypes.map { it.toTypeVoFromDiskContentType() }
-fun DiskInterface.toTypeVoFromDiskInterface(): TypeVo = TypeVo(
+fun DiskInterfaceB.toTypeVoFromDiskInterface(): TypeVo = TypeVo(
 	this@toTypeVoFromDiskInterface.name,
 	this@toTypeVoFromDiskInterface.kr,
 	this@toTypeVoFromDiskInterface.en,

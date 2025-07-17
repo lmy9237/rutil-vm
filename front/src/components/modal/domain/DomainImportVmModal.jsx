@@ -95,8 +95,8 @@ const DomainImportVmModal = ({
     ...vm, 
     name: vm.name, 
     memory: vm.memory, 
-    CPU: vm.cpuTopologyCnt, 
-    cpuArc: vm.cpuArc, 
+    cpu: vm.cpuTopologyCnt, 
+    cpuArc: vm.cpuArc,
     diskCnt: vm?.diskAttachmentVos?.length ?? 0,
     mac: 
       <LabelCheckbox id={`relocation-${vm.id}`}
@@ -122,18 +122,21 @@ const DomainImportVmModal = ({
     />,
   }));
 
-  const mapDiskAttachments = (diskAttachmentVos = []) =>
-    diskAttachmentVos.map(diskAttach => {
+  const mapDiskAttachments = (
+    diskAttachmentVos = []
+  ) => [...diskAttachmentVos].map(diskAttach => {
       const disk = diskAttach?.diskImageVo || {};
       return {
+        ...disk,
         _alias: disk?.alias || '',
         // id: disk.id || '',
         virtualSize: disk?.size + " GiB" || 0,
         actualSize: disk?.actualSize + " GiB" || 0,
         status: disk?.status || '',
-        sparse: disk?.sparse === true ? "씬 프로비저닝" : "사전 할당" || '',
-        storageType: disk?.storageType || '',
+        sparse: (disk?.sparse === true ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED) || '',
+        storageType: disk?.storageTypeKr || disk?.storageType || '',
         description: disk?.description || '',
+        creationTime: disk?.dateCreated
       };
   });
 
@@ -157,20 +160,20 @@ const DomainImportVmModal = ({
       label: "현재 이름",
       value: editVmNames[vm.id] !== undefined ? editVmNames[vm.id] : vm.name || ""
     },
-    { label: Localization.kr.DESCRIPTION, value: vm.description || "" },
-    { label: Localization.kr.TEMPLATE, value: vm.templateVo?.name || "" },
-    { label: Localization.kr.OPERATING_SYSTEM, value: vm.osType || "" },
-    { label: "칩셋/펌웨어 유형", value: vm.biosType || "" },
-    { label: "그래픽 프로토콜", value: vm.displayType || "" },
-    { label: Localization.kr.OPTIMIZATION_OPTION, value: vm.optimizeOption || "" },
-    { label: `설정된 ${Localization.kr.MEMORY}`, value: checkZeroSizeToMB(vm.memoryGuaranteed) || "" },
+    { label: Localization.kr.DESCRIPTION,          value: vm.description || "" },
+    { label: Localization.kr.TEMPLATE,             value: vm.templateVo?.name || "" },
+    { label: Localization.kr.OPERATING_SYSTEM,     value: vm.osTypeName || vm.osType },
+    { label: "칩셋/펌웨어 유형",                      value: vm.biosTypeKr || vm.biosType },
+    { label: "그래픽 프로토콜",                       value: vm.displayTypeKr || vm.displayType },
+    { label: Localization.kr.OPTIMIZATION_OPTION,   value: vm.optimizeOptionKr || vm.optimizeOption },
+    { label: `설정된 ${Localization.kr.MEMORY}`,     value: checkZeroSizeToMB(vm.memoryGuaranteed) || "" },
     { label: `할당할 실제 ${Localization.kr.MEMORY}`, value: checkZeroSizeToMB(vm.memorySize) || "" },
     { label: "CPU 코어 수", value: `${vm.cpuTopologyCnt} (${vm.cpuTopologySocket}:${vm.cpuTopologyCore}:${vm.cpuTopologyThread})` || "" },
-    { label: "모니터 수", value: vm.monitor || "" },
-    { label: Localization.kr.HA, value: vm.ha === true ? "예":"아니요" || "" },
-    { label: "우선 순위", value: vm.haPriority || "" },
-    { label: "USB", value: vm.usb === true ? "활성화":"비활성화" || "" },
-    { label: Localization.kr.STATELESS, value: vm.stateless === true ? "예":"아니요" || "" },
+    { label: "모니터 수",                             value: vm.monitor || "" },
+    { label: Localization.kr.HA,                     value: vm.ha === true ? "예":"아니요" || "" },
+    { label: "우선 순위",                              value: vm.haPriority || "" },
+    { label: "USB",                                  value: vm.usb === true ? "활성화":"비활성화" || "" },
+    { label: Localization.kr.STATELESS,              value: vm.stateless === true ? "예":"아니요" || "" },
     { label: "ID", value: vm.id || "" },
   ];
 

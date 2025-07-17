@@ -1,10 +1,6 @@
 import React, { useState, useMemo } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import {
-  RVI16,
-  rvi16Eye, 
-  rvi16EyeSlash
+  RVI16, rvi16Eye,  rvi16EyeSlash
 } from "@/components/icons/RutilVmIcons";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";

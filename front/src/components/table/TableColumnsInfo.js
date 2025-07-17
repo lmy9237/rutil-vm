@@ -578,8 +578,9 @@ const TableColumnsInfo = {
     { accessor: '_alias',       header: Localization.kr.ALIAS,          clickable: true },
     { accessor: 'virtualSize',  header: Localization.kr.SIZE_VIRTUAL,   clickable: false },
     { accessor: 'actualSize',   header: Localization.kr.SIZE_ACTUAL,    clickable: false },
-    { accessor: 'storageType',  header: `${Localization.kr.STORAGE} ${Localization.kr.TYPE}`,                clickable: false },
     { accessor: 'sparse',       header: Localization.kr.SPARSE,         clickable: false },
+    { accessor: 'storageType',  header: `${Localization.kr.STORAGE} ${Localization.kr.TYPE}`,                clickable: false },
+    { accessor: 'dateCreated',  header: Localization.kr.DATE_CREATED,   clickable: false },
     { accessor: 'description',  header: Localization.kr.DESCRIPTION,    clickable: false },
   ],
   VMS_VNICPROFILES_IMPORT_FROM_STORAGE_DOMAIN: [

@@ -148,13 +148,15 @@ class StorageImportServiceImpl(
 	@Throws(Error::class)
 	override fun findAllUnregisteredVmsFromStorageDomain(storageDomainId: String): List<VmVo> {
 		log.info("findAllUnregisteredVmsFromStorageDomain ... storageDomainId: {}", storageDomainId)
+		/*
 		val res: List<Vm> = conn.findAllUnregisteredVmsFromStorageDomain(storageDomainId)
 			.getOrDefault(emptyList())
+		*/
 		val unregisteredOvfOfEntities: List<UnregisteredOvfOfEntities> =
 			rUnregisteredOvfOfEntities.findByIdStorageDomainId(storageDomainId.toUUID()).filter {
 				it.entityType == "vm".uppercase()
 			}
-		return unregisteredOvfOfEntities.toUnregisteredVms(res)
+		return unregisteredOvfOfEntities.toUnregisteredVms()
 	}
 
 	@Throws(Error::class)
