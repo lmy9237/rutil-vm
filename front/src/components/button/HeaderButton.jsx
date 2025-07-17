@@ -31,11 +31,6 @@ const HeaderButton = ({
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
 
   const [isCompactMode, setIsCompactMode] = useState(false);
-  /*const handlePopupBoxItemClick = (item) => {
-    if (item.disabled) return;
-    if (item.onClick) item.onClick();
-    setIsPopupBoxVisible(false);
-  };*/
 
   useClickOutside(popupBoxRef, (e) => {
     setIsPopupBoxVisible(false);

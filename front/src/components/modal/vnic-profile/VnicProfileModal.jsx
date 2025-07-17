@@ -184,7 +184,8 @@ const VnicProfileModal = ({
         disabled={editMode}
         loading={isNetworksLoading}
         options={networks}
-        onChange={handleSelectIdChange(setNetworkVo, networks)}
+        onChange={(selected) => setNetworkVo({ id: selected.id, name: selected.name })}
+        // onChange={handleSelectIdChange(setNetworkVo, networks)}
       />
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
@@ -200,7 +201,8 @@ const VnicProfileModal = ({
         // disabled={formState.passThrough !== "DISABLED"}
         loading={isNFiltersLoading}
         options={nFilters}
-        onChange={handleSelectIdChange(setNetworkFilterVo, nFilters)}
+        onChange={(selected) => setNetworkFilterVo({ id: selected.id, name: selected.name })}
+        // onChange={handleSelectIdChange(setNetworkFilterVo, nFilters)}
       />
       {/* <LabelCheckbox id="passThrough" label="통과"
         checked={formState.passThrough === "ENABLED"}

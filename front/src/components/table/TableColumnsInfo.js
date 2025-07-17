@@ -917,7 +917,20 @@ GET_IMPORT_VMS: [
     { accessor: 'dday',     clickable: false, header: Localization.kr.DAYS_REMAINING },
     { accessor: 'notAfter', clickable: false, header: Localization.kr.DATE_EXPIRATION },
     // { header: '버전', accessor: 'version', clickable: false },
-  ]
+  ],
+   diskTableColumns :[
+  { accessor: "select", header: "선택", align: "center" }, // ✅ 체크박스
+  { accessor: "alias", header: Localization.kr.ALIAS },
+  { accessor: "description", header: Localization.kr.DESCRIPTION },
+  { accessor: "id", header: "ID" },
+  { accessor: "virtualSize", header: Localization.kr.SIZE_VIRTUAL },
+  { accessor: "actualSize", header: Localization.kr.SIZE_ACTUAL },
+  { accessor: "domain", header: Localization.kr.DOMAIN },
+  { accessor: "interface_", header: "인터페이스" },
+  { accessor: "readOnly", header: Localization.kr.IS_READ_ONLY, align: "center" }, // ✅ 체크박스
+  { accessor: "bootable", header: Localization.kr.IS_BOOTABLE, align: "center" },  // ✅ 체크박스
+  { accessor: "sharable", header: Localization.kr.IS_SHARABLE, align: "center" },
+]
 }
 
 export default TableColumnsInfo;

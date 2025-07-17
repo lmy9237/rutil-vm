@@ -4,9 +4,6 @@
   width:38px;height:23px;
   margin-right: 9px;
 }
-.switch-outer {
-  display: flex;
-}
 .switch input {
   opacity:0;
   width:0;height:0;

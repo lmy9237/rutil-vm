@@ -3,6 +3,12 @@
   table-layout: fixed;
   width: 100%;
 }
+.section-table-outer .input-checkbox{
+  width: 100% !important;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+}
 .custom-table td,
 .custom-table th {
   max-width: 200px;
@@ -16,8 +22,6 @@
   letter-spacing:var(--letter-28);
 }
 .cell-ellipsis {
-  /* display: block; 
-  width: 100%; */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -47,14 +51,13 @@
   background-color: var(--color-hover) !important;
 }
 .section-table-outer td {
-  border: 1px solid rgb(204, 204, 204);
+  border: 1px solid var(--color-gray-2);
   height: var(--h-primary);
   padding: 0 6px;
 }
 .section-table-outer th {
   background-color: var(--color-table);
-  border: 1px solid rgb(204, 204, 204);
-  /* border: 1px solid red; */
+  border: 1px solid var(--color-gray-2);
   height: var(--h-primary);
   padding: 0 6px;
 }
@@ -75,13 +78,6 @@
 .section-table-outer > h1 {
   padding: 10px 0;
 }
-/*우클릭메뉴박스*/
-.my-context-menu{
-  position: absolute;
-  background-color: var(--color-primary-white);
-  z-index: 3;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.16);
-}
 /* tippy 툴팁 */
 .tooltip-content {
   max-width: 600px !important;
@@ -101,17 +97,6 @@ table .custom-select-wrapper button,
 table .input-container button {
   width: 100% !important;
 }
-/*th드레그*/
-/* .table-resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 6px;
-  cursor: col-resize;
-  user-select: none;
-  background-color: transparent;
-} */
 .table-resizer {
   width: 6px;
   height: 100%;
@@ -120,7 +105,6 @@ table .input-container button {
   right: 0;
   cursor: col-resize;
   z-index: 1;
-  /* 아래 추가 */
   background: transparent;
 }
 

@@ -197,13 +197,14 @@ const HostModal = ({
         onChange={() => setFormState((prev) => ({ ...prev, vgpu: formState.vgpu === "consolidated" ? "separated" : "consolidated" }))}
         tType={"통합"} fType={"분산"}
       /> */}
-
-      <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
-        checked={formState.deployHostedEngine}
-        onChange={handleInputCheck(setFormState, "deployHostedEngine", validationToast)}
-        disabled={editMode}
-        tType={"배포"} fType={"없음"}
-      />
+      <div className="w-[63%]">
+        <ToggleSwitchButton label={`${Localization.kr.HOST} 엔진 배포 작업 선택`}
+          checked={formState.deployHostedEngine}
+          onChange={handleInputCheck(setFormState, "deployHostedEngine", validationToast)}
+          disabled={editMode}
+          tType={"배포"} fType={"없음"}
+        />
+      </div>
     </BaseModal>
   );
 };

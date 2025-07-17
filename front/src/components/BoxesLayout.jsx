@@ -350,11 +350,11 @@ const RadialChartAll = ({
 
   const _label = useMemo(() => 
     type === "cpu"
-      ? "전체 호스트 CPU avg %"
+      ? "전체 호스트 CPU AVG"
       : type === "memory" 
-        ? "전체 호스트 메모리 avg %"
+        ? "전체 호스트 메모리 AVG"
         : type === "domain"
-          ? "전체 스토리지 %"
+          ? "전체 스토리지"
           : ""
   , [type, cpuMemory, storage])
 

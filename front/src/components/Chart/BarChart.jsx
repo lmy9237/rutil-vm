@@ -82,7 +82,7 @@ const BarChart = ({
     const real = [...paddedPercentages];
     const colors = displayed.map((val, i) => {
       const isEmptyLabel = paddedNames[i] === "";
-      return isEmptyLabel ? "transparent" : CONSTANT.color.byPercentage(val);
+      return isEmptyLabel ? "transparent" : CONSTANT.color.byBarPercentage(val);
     });
 
     setSeries([{ data: displayed, realData: real }]);

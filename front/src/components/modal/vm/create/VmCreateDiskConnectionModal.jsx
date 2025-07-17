@@ -184,7 +184,7 @@ const VmCreateDiskConnectionModal = ({
                       }}
                     />
                   </td>
-                  <td>
+                  <td  style={{textAlign:'center'}} >
                     {disk?.sharable ? "O" : "X"}
                   </td>
                 </tr>

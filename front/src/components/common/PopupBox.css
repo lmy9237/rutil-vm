@@ -11,11 +11,4 @@
     z-index: 3;
   }
     
-  .popup-box .btn-right-click:not(:disabled):hover {
-    background: #f0f0f0;
-  }
-  
-  .popup-box .disabled {
-    color: gray;
-    cursor: not-allowed;
-  }
+

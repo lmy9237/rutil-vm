@@ -49,7 +49,7 @@ textarea {
   text-overflow: ellipsis; 
 }
 .input-checkbox {
-  width: 34%;
+  /* width: 34%; */
   padding:7px 0;
 }
 input[type="checkbox"],

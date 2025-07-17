@@ -29,8 +29,10 @@ const QK = {
 
   ALL_VMS: "allVMs",
   ALL_DATACENTERS: "allDataCenters",
+  DATACENTER:'dataCenter',
   ALL_CLUSTERS: "allClusters",
   ALL_HOSTS: "allHosts",
+  ALL_NETWORKS: "allNetworks",
   ALL_VNICPROFILES: "allVnicProfiles",
   ALL_DISKS:"allDisks",
   ALL_STORAGEDOMAINS:"allStorageDomains",
@@ -329,7 +331,7 @@ export const useDataCenter = (
   dataCenterId,
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,  // 윈도우가 포커스될 때마다 데이터 리프레시
-  queryKey: ['dataCenter', dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
+  queryKey: [QK.DATACENTER, dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
   queryFn: async () => {
     const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
     const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
@@ -2585,7 +2587,7 @@ export const useNetworkInterfaceFromVM = (
  * @param {string} vmId 가상머신ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
- * 
+ * ApplicationFromVM
  * @see ApiManager.findApplicationsFromVM
  */
 export const useApplicationsFromVM = (
@@ -3088,7 +3090,7 @@ export const useMigration = (
       Logger.debug(`RQHook > useMigration ... res: `, res);
       
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.MIGRATION} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['hostsForMigration', 'allVms']);
+      queryClient.invalidateQueries(['hostsForMigration', QK.ALL_VMS]);
       postSuccess(res);
     },
     onError: (error) => {
@@ -4413,7 +4415,7 @@ export const useAddNetwork = (
       Logger.debug(`RQHook > useAddNetwork ... res: `, res)
       
       apiToast.ok(`${Localization.kr.NETWORK} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`);
-      queryClient.invalidateQueries('allNetworks'); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      queryClient.invalidateQueries(QK.ALL_NETWORKS); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
     onError: (error) => {
@@ -4446,7 +4448,7 @@ export const useEditNetwork = (
     onSuccess: (res, { networkId }) => {
       Logger.debug(`RQHook > useEditNetwork ... res: `, res)
       apiToast.ok(`${Localization.kr.NETWORK} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
-      queryClient.invalidateQueries('allNetworks'); // 전체 네트워크 목록 업데이트
+      queryClient.invalidateQueries(QK.ALL_NETWORKS); // 전체 네트워크 목록 업데이트
       queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트postSuccess(res);
     },
     onError: (error) => {
@@ -4481,7 +4483,7 @@ export const useDeleteNetwork = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteNetwork ... res: `, res)
       apiToast.ok(`${Localization.kr.NETWORK} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allNetworks');
+      queryClient.invalidateQueries(QK.ALL_NETWORKS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -4637,7 +4639,7 @@ export const useAddVnicProfile = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddVnicProfile ... res: `, res);
       apiToast.ok(`${Localization.kr.VNIC_PROFILE} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`);
-      queryClient.invalidateQueries('allVnicProfiles');
+      queryClient.invalidateQueries(QK.ALL_VNICPROFILES);
       postSuccess(res);
     },
     onError: (error) => {
@@ -4670,7 +4672,7 @@ export const useEditVnicProfile = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditVnicProfile ... res: `, res);
       apiToast.ok(`${Localization.kr.VNIC_PROFILE} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allVnicProfiles');
+      queryClient.invalidateQueries(QK.ALL_VNICPROFILES);
       postSuccess(res);
     },
     onError: (error) => {
@@ -4705,7 +4707,7 @@ export const useDeleteVnicProfile = (
       Logger.debug(`RQHook > useDeleteVnicProfile ... res: `, res);
       
       apiToast.ok(`${Localization.kr.VNIC_PROFILE} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allVnicProfiles');
+      queryClient.invalidateQueries(QK.ALL_VNICPROFILES);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5006,7 +5008,7 @@ export const useRegisteredVmFromDomain = (
       Logger.debug(`RQHook > useRegisteredVmFromDomain ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.VM} ${Localization.kr.IMPORT} 요청완료`,)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5092,7 +5094,7 @@ export const useRegisteredDiskFromDomain = (
       Logger.debug(`RQHook > useRegisteredDiskFromDomain ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} 요청완료`,)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5144,7 +5146,7 @@ export const useDeletRegisteredDiskFromDomain = (
       Logger.debug(`RQHook > useDeletRegisteredDiskFromDomain ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.DISK} ${Localization.kr.IMPORT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5307,7 +5309,7 @@ export const useAddDomain = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDomain ... res: `, res);
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5480,7 +5482,7 @@ export const useRefreshLunDomain = (
       Logger.debug(`RQHook > useRefreshLunDomain ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.DISK} 검사 ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -5515,7 +5517,7 @@ export const useOvfUpdateDomain = (
       Logger.debug(`RQHook > useOvfUpdateDomain ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DOMAIN} ${Localization.kr.DISK} ovf ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allStorageDomains');
+      queryClient.invalidateQueries(QK.ALL_STORAGEDOMAINS);
       postSuccess(res);
     },
     onError: (error) => {
@@ -6236,7 +6238,7 @@ export const useRemoveEvent = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
     },
@@ -6266,7 +6268,7 @@ export const useRemoveEvents = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvents ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, 'allEvents', 'allNotiEvents', 'allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, 'allNotiEvents', 'allEventsNormal']);
       closeModal();
       postSuccess(res);
     },
@@ -6839,7 +6841,7 @@ export const useEditUser = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditUser ... res: `, res);
       apiToast.ok(`${Localization.kr.USER} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allUsers');
+      queryClient.invalidateQueries(QK.ALL_USERS);
       queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },

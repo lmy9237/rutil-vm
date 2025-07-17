@@ -113,14 +113,26 @@ const CONSTANT = {
     yellow: "#FBA80E",
     blue: "#1D56BC",
     blue1: '#0A7CFF',
-    primary: "#020B79",
-    byPercentage(percentage) {
+    primary: "#020B79", 
+    norm:  "#FFC58A",  
+    crit:  "#E21D1D", 
+    byPercentage(percentage) { //원그래프
       let color = CONSTANT.color.alert;
       if (percentage < 50)      color = CONSTANT.color.ok2;
       else if (percentage < 80) color = CONSTANT.color.warn;
       return color
+    },
+    byBarPercentage(percentage) { //Bar그래프
+      if (percentage === null || percentage === undefined) return CONSTANT.color.white;
+      if (percentage === 0) return CONSTANT.color.white;
+      if (percentage < 65) return CONSTANT.color.ok;
+      if (percentage < 75) return CONSTANT.color.norm;
+      if (percentage < 90) return CONSTANT.color.warn;
+      return CONSTANT.color.crit;
     }
   }
 }
 
 export default CONSTANT;
+
+ 
