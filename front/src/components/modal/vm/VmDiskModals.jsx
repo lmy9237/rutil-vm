@@ -41,7 +41,7 @@ const VmDiskModals = ({
     create: (
       <VmDiskModal isOpen={activeModal().includes("vmdisk:create")}
         onClose={() => closeModal("vmdisk:create")}
-        diskName={`${vm?.name}_Disk${diskCount}`}
+        vmName={`${vm?.name}_Disk${diskCount}`}
         hasBootableDisk={hasBootableDisk}
       />
     ), update: (

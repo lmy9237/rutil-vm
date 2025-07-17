@@ -200,9 +200,7 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).refresh().send()
-	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
-	// 	throw Error("refresh Host 실패했습니다 ...")
-	// }
+
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("새로고침", hostId)
@@ -515,20 +513,19 @@ fun Connection.setupNetworksFromHost(
 	modifiedBonds: List<HostNic> = listOf(),
 	removedBonds: List<HostNic> = listOf(),
 	modifiedNetworkAttachments: List<NetworkAttachment> = listOf(),
+	synchronizedNetworkAttachments: List<NetworkAttachment> = listOf(),
 	removedNetworkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
-	log.info("modifiedBonds: {}", modifiedBonds.size)
-	log.info("removedBonds: {}", removedBonds.size)
-	log.info("modifiedNetworkAttachments: {}", modifiedNetworkAttachments.size)
-	log.info("removedNetworkAttachments: {}", removedNetworkAttachments.size)
 	this.srvHost(hostId).setupNetworks().apply {
 		if(removedBonds.isNotEmpty()) removedBonds(removedBonds)
 		if(removedNetworkAttachments.isNotEmpty()) removedNetworkAttachments(removedNetworkAttachments)
 		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
+		if(synchronizedNetworkAttachments.isNotEmpty()) synchronizedNetworkAttachments(synchronizedNetworkAttachments)
 		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
-	}.send()
+	// }.send()
+	}.checkConnectivity(true).commitOnSuccess(true).send()
 
-	this.srvHost(hostId).commitNetConfig().send()
+	// this.srvHost(hostId).commitNetConfig().send()
 	true
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.BOND, "호스트 네트워크 설정", hostId)

@@ -29,7 +29,7 @@ import Logger                           from "@/utils/Logger";
 // 일반 정보
 const initialFormState = {
   id: "",
-  domainType: "data", // 기본값 설정
+  storageDomainType: "data", // 기본값 설정
   storageType: "nfs", // 기본값 설정
   name: "",
   comment: "",
@@ -116,7 +116,7 @@ const DomainModal = ({
       const storage = domain?.storageVo;
       setFormState({
         id: domain?.id,
-        domainType: domain?.storageDomainType,
+        storageDomainType: domain?.storageDomainType,
         storageType: storage?.type,
         name: domain?.name,
         comment: domain?.comment,

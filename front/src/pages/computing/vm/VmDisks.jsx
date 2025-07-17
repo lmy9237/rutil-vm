@@ -6,7 +6,6 @@ import {
   useSnapshotsFromVM
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 import { useMemo } from "react";
 import Loading from "@/components/common/Loading";
 
@@ -47,7 +46,7 @@ const VmDisks = ({
         <Loading />
       ) : hasPreviewSnapshot ? (
         <div className="text-center p-20 text-red-500 font-semibold w-full">
-          스냅샷 미리보기 상태에서는 디스크 정보를 표시할 수 없습니다.
+          {Localization.kr.SNAPSHOT} 미리보기 상태에서는 {Localization.kr.DISK} 정보를 표시할 수 없습니다.
         </div>
       ) : (  
         <VmDiskDupl 

@@ -85,7 +85,6 @@ fun List<NetworkAttachment>.toNetworkAttachmentVos(): List<NetworkAttachmentVo> 
  */
 fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
 	val builder = NetworkAttachmentBuilder()
-		.inSync(this.inSync)
 		.network(NetworkBuilder().id(this.networkVo.id).build())
 		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
 

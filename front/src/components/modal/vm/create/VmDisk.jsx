@@ -1,12 +1,12 @@
 import { Suspense, useCallback, useMemo, useState } from "react";
 import Loading               from "@/components/common/Loading";
 import { ActionButton }      from "@/components/button/ActionButtons";
-import { rvi24Close, RVI36, rvi36EditHover, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
+import { RVI36, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
-import VmCreateDiskModal from "./VmCreateDiskModal";
 import VmCreateDiskConnectionModal from "./VmCreateDiskConnectionModal";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
+import VmDiskModal from "../VmDiskModal";
 
 const VmDisk = ({
   vm, vmName,
@@ -177,8 +177,7 @@ const VmDisk = ({
 
       <Suspense fallback={<Loading />}>
         {createOpen && (
-          <VmCreateDiskModal
-            isOpen={true}
+          <VmDiskModal isOpen={true}
             onClose={() => setCreateOpen(false)}
             vmName={diskNameWthSuffix()}
             dataCenterId={dataCenterId}
@@ -186,10 +185,9 @@ const VmDisk = ({
             onCreateDisk={handleCreateDisk}
           />
         )}
-        {updateOpen && (
-          <VmCreateDiskModal
-            isOpen={true}
-            onClose={() => setUpdateOpen(null)}
+        {/* {updateOpen && (
+          <VmDiskModal isOpen={true}
+            onClose={() => setUpdateOpen(false)}
             editMode
             vmData={vm}
             dataCenterId={dataCenterId}
@@ -197,7 +195,7 @@ const VmDisk = ({
             initialDisk={updateOpen}
             onCreateDisk={handleCreateDisk}
           />
-        )}
+        )} */}
         {connOpen && (
           <VmCreateDiskConnectionModal
             isOpen={true}

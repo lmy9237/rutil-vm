@@ -51,7 +51,7 @@ import java.util.UUID
  * @property wipeAfterDelete [Boolean] 삭제 후 초기화
  * @property sharable [Boolean] 공유가능 (공유가능 o 이라면 증분백업 안됨 FRONT에서 막기?)
  * @property backup [Boolean] 증분 백업 사용 (기본이 true)
- * @property format [VolumeFormat]
+ * @property format [VolumeFormat] cow는 씬, raw는 사전할당
  * @property imageId [String]
  * @property virtualSize [BigInteger] 가상크기 (provisionedSize)
  * @property actualSize [BigInteger] 실제크기
@@ -544,14 +544,15 @@ fun DiskImageVo.toRegisterDiskBuilder(): Disk {
  * 가상머신 - 가상머신 생성 - 디스크 생성
  */
 fun DiskImageVo.toDiskBuilder(): DiskBuilder {
+	// 증분백업이 true(incremental) 이라면 cow. sparse false / false(none)라면 raw. sparse true
 	return DiskBuilder()
 		.alias(this.alias)
 		.description(this.description)
 		.wipeAfterDelete(this.wipeAfterDelete)
-		.shareable(this.sharable)
-		.backup(if (this.backup) DiskBackup.INCREMENTAL else DiskBackup.NONE)
-		.format(if (this.backup) DiskFormat.COW else DiskFormat.RAW)
+		.shareable(this.sharable) // front에서 막으면 되긴함
 		.sparse(this.sparse)
+		.format(if (this.sparse) DiskFormat.COW else DiskFormat.RAW)
+		.backup(if (this.backup) DiskBackup.INCREMENTAL else DiskBackup.NONE)
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
 }
 
@@ -575,6 +576,20 @@ fun DiskImageVo.toAddSnapshotDisk(): Disk {
 		.imageId(this.imageId)
 		.build()
 }
+
+fun DiskImageVo.toAddTemplateDisk(): Disk {
+	return DiskBuilder()
+		.id(this.id)
+		.alias(this.alias)
+		.sparse(this.sparse)
+		.format(if (this.sparse) DiskFormat.COW else DiskFormat.RAW)
+		// .format(this.format.toDiskFormat())
+		// .sparse(false)
+		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
+		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
+		.build()
+}
+
 
 
 /**
@@ -617,16 +632,3 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }
-
-
-fun DiskImageVo.toAddTemplateDisk(): Disk {
-	return DiskBuilder()
-		.id(this.id)
-		.alias(this.alias)
-		.format(this.format.toDiskFormat())
-		.sparse(false)
-		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
-		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
-		.build()
-}
-

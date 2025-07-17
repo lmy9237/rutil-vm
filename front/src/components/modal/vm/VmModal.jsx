@@ -592,7 +592,7 @@ const VmModal = ({
       validationToast.fail(error);
       return;
     }
-    
+    console.log("$vmmodal", dataToSubmit)
     Logger.debug(`VmModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })

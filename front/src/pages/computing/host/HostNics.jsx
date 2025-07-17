@@ -1217,15 +1217,15 @@ const HostNics = ({
             />
           )}
 
-          <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>          
-          {/* {networkAttachmentModalState.inSync && (
-            <ActionButton actionType="default"
-              disabled={!networkAttachmentModalState.inSync}
-              label={`모든 ${Localization.kr.NETWORK} 동기화`} 
-              className="custom-ok-button mr-3"
-              onClick={() => syncallNetworks(hostId) } // 버튼 클릭시 네트워크 업데이트
-            />
-          )} */}
+      {/* <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>          
+      {networkAttachmentModalState.inSync && (
+        <ActionButton actionType="default"
+          disabled={!networkAttachmentModalState.inSync}
+          label={`모든 ${Localization.kr.NETWORK} 동기화`} 
+          className="custom-ok-button mr-3"
+          onClick={() => syncallNetworks(hostId) } // 버튼 클릭시 네트워크 업데이트
+        />
+      )} */}
           </div>
         </div>
 
@@ -1266,6 +1266,7 @@ const HostNics = ({
         value={setting}
         onChange={(e) => setSetting(e.target.checked)}
       /> */}
+      
     <br/>
       
     </div>

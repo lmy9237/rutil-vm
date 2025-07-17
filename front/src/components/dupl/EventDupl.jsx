@@ -7,7 +7,10 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import EventActionButtons     from "@/components/dupl/EventActionButtons";
 import {
+  rvi16SeverityAlert,
   rvi16SeverityAlertLined,
+  rvi16SeverityError,
+  rvi16SeverityWarning,
   RVI36,
   severity2Icon
 } from "@/components/icons/RutilVmIcons";
@@ -39,14 +42,21 @@ const EventDupl = ({
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+        
+        {/* <RVI36
+          iconDef={rvi16SeverityAlert()}
+          onClick={() => { }}
+        />
+        <RVI36
+          iconDef={rvi16SeverityError()}
+          onClick={() => { }}
+        />
+        <RVI36
+          iconDef={rvi16SeverityWarning()}
+          onClick={() => { }}
+        /> */}
         <EventActionButtons />
       </div>
-      <RVI36 className="icon cursor-pointer"
-        iconDef={rvi16SeverityAlertLined()}
-        onClick={() => {
-          
-        }}
-      />
       <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}

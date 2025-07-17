@@ -22,7 +22,8 @@ import {
 } from "@/api/RQHook";
 import { 
   checkKoreanName, convertBytesToGB,
-  emptyIdNameVo, 
+  emptyIdNameVo,
+  useSelectFirstItemEffect, 
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -85,7 +86,6 @@ const VmCreateDiskModal = ({
     data: diskAttachment
   } = useDiskAttachmentFromVm(vmData?.id, initialDisk?.id);
 
-
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
     data: domains = [], 
@@ -96,8 +96,6 @@ const VmCreateDiskModal = ({
   const { 
     data: diskProfiles = [], 
     isLoading: isDiskProfilesLoading, 
-    isError: isDiskProfilesError,
-    isSuccess: isDiskProfilesSuccess
   } = useAllDiskProfilesFromDomain(storageDomainVo.id, (e) => ({ ...e }));
 
   useEffect(() => {
@@ -109,25 +107,10 @@ const VmCreateDiskModal = ({
     }
   }, [editMode, isOpen, vmName]); 
   
-
-  useEffect(() => {
-    if (!editMode && domains.length > 0 && !storageDomainVo.id) {
-      setStorageDomainVo({ 
-        id: domains[0].id, 
-        name: domains[0].name 
-      });
-    }
-  }, [domains, editMode, storageDomainVo.id]);
+  // 도메인 첫번째 지정
+  useSelectFirstItemEffect(domains, setStorageDomainVo);
+  useSelectFirstItemEffect(diskProfiles, setDiskProfileVo);
   
-  useEffect(() => {
-    if (!editMode && diskProfiles && diskProfiles.length > 0) {
-      setDiskProfileVo({
-        id: diskProfiles[0].id,
-        name: diskProfiles[0].id
-      });
-    }
-  }, [diskProfiles, editMode]);
-
   useEffect(() => {
     if (!editMode && interfaceList.length > 0 && !formState.interface_) {
       setFormState((prev) => ({ ...prev, interface_: interfaceList[0].value }));
@@ -245,7 +228,7 @@ const VmCreateDiskModal = ({
     <BaseModal targetName={Localization.kr.DISK} submitTitle={dLabel}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleOkClick}
-      contentStyle={{ width: "700px" }} 
+      contentStyle={{ width: "600px" }} 
     >
       <div className="disk-new-img">
         <div>
@@ -253,34 +236,34 @@ const VmCreateDiskModal = ({
             value={formState.size}
             autoFocus
             disabled={editMode}
-            onChange={handleInputChange(setFormState, "size")}
+            onChange={handleInputChange(setFormState, "size", validationToast)}
           />
           {editMode && (
             <LabelInputNum label="추가크기(GB)"
               value={formState.appendSize}
-              onChange={handleInputChange(setFormState, "appendSize")}
+              onChange={handleInputChange(setFormState, "appendSize", validationToast)}
             />
           )}
           <LabelInput id="alias" label={Localization.kr.ALIAS}
             value={formState.alias} 
-            onChange={handleInputChange(setFormState, "alias")}
+            onChange={handleInputChange(setFormState, "alias", validationToast)}
           />
           <LabelInput id="description" label={Localization.kr.DESCRIPTION}
             value={formState.description} 
-            onChange={handleInputChange(setFormState, "description")}
+            onChange={handleInputChange(setFormState, "description", validationToast)}
           />
           <LabelSelectOptions label="인터페이스"
             value={formState.interface_}
             disabled={editMode}
             options={interfaceList}
-            onChange={handleInputChange(setFormState, "interface_")}
+            onChange={handleInputChange(setFormState, "interface_", validationToast)}
           />
           <LabelSelectOptionsID label={Localization.kr.DOMAIN}
             value={storageDomainVo.id}
             disabled={editMode}
             loading={isDomainsLoading}
             options={domains}
-            onChange={handleSelectIdChange(setStorageDomainVo, domains)}
+            onChange={handleSelectIdChange(setStorageDomainVo, domains, validationToast)}
           />
           {storageDomainVo && (() => {
             const domainObj = domains.find((d) => d.id === storageDomainVo.id);
@@ -295,7 +278,7 @@ const VmCreateDiskModal = ({
             value={diskProfileVo.id}
             loading={isDiskProfilesLoading}
             options={diskProfiles}
-            onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles)}
+            onChange={handleSelectIdChange(setDiskProfileVo, diskProfiles, validationToast)}
           />
           <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
             value={String(formState.sparse)}
@@ -316,7 +299,7 @@ const VmCreateDiskModal = ({
           />
           <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
             checked={Boolean(formState.sharable)} 
-            disabled={editMode} 
+            disabled={editMode || formState.sparse === true}
             onChange={handleInputCheck(setFormState, "sharable", validationToast)}
           />
           <LabelCheckbox id="readOnly" label={Localization.kr.IS_READ_ONLY}

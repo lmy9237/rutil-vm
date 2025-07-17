@@ -122,7 +122,39 @@ const HostNetworkEditModal = ({
     // IpAssignments 배열 만들기
     Logger.debug(`HostNetworkEditModal > handleOkClick ... `)
     const ipAssignments = [];
-    if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
+    // if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
+    //   ipAssignments.push({
+    //     assignmentMethod: networkModalState.ipv4Values.protocol,
+    //     ipVo: {
+    //       version: "V4",
+    //       ...(networkModalState.ipv4Values.protocol === "static"
+    //         ? {
+    //             address: networkModalState.ipv4Values.address,
+    //             gateway: networkModalState.ipv4Values.gateway,
+    //             netmask: networkModalState.ipv4Values.netmask,
+    //           }
+    //         : {} // static이 아니면 아예 값 없음
+    //       ),
+    //     },
+    //   });
+    // }
+    // if (networkModalState.ipv6Values.protocol && networkModalState.ipv6Values.protocol !== "none") {
+    //   ipAssignments.push({
+    //     assignmentMethod: networkModalState.ipv6Values.protocol,
+    //     ipVo: {
+    //       version: "V6",
+    //       ...(networkModalState.ipv6Values.protocol === "static"
+    //         ? {
+    //             address: networkModalState.ipv6Values.address,
+    //             gateway: networkModalState.ipv6Values.gateway,
+    //             netmask: networkModalState.ipv6Values.netmask,
+    //           }
+    //         : {} // static이 아니면 아예 값 없음
+    //       ),
+    //     },
+    //   });
+
+    if (networkModalState.ipv4Values.protocol) {
       ipAssignments.push({
         assignmentMethod: networkModalState.ipv4Values.protocol,
         ipVo: {
@@ -133,12 +165,13 @@ const HostNetworkEditModal = ({
                 gateway: networkModalState.ipv4Values.gateway,
                 netmask: networkModalState.ipv4Values.netmask,
               }
-            : {} // static이 아니면 아예 값 없음
-          ),
-        },
+            : {} // static 아니면 값 없음
+          )
+        }
       });
     }
-    if (networkModalState.ipv6Values.protocol && networkModalState.ipv6Values.protocol !== "none") {
+
+    if (networkModalState.ipv6Values.protocol) {
       ipAssignments.push({
         assignmentMethod: networkModalState.ipv6Values.protocol,
         ipVo: {

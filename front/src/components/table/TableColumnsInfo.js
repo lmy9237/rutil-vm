@@ -518,7 +518,7 @@ const TableColumnsInfo = {
     { accessor: 'serial',     header: 'serial',     clickable: false },
   ],
   IMPORT_FIBRE: [
-    { accessor: 'able', header: 'able',               clickable: false },
+    { accessor: 'able', header: 'able',               clickable: false, width: '7%' },
     { accessor: 'name', header: Localization.kr.NAME, clickable: true, width: '30%' },
     { accessor: 'id',   header: '스토리지 Id',          clickable: true },
   ],

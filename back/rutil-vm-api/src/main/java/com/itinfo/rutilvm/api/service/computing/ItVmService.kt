@@ -154,7 +154,6 @@ class VmServiceImpl(
 
 	@Throws(PSQLException::class, Error::class)
 	@Transactional("engineTransactionManager")
-
 	override fun add(vmVo: VmVo): VmVo? {
 		log.info("add ... vmVo: {}", vmVo)
 
@@ -224,7 +223,9 @@ class VmServiceImpl(
 		}
 
 		// VM 정보 업데이트 (메인 정보만)
-		val updatedVm: Vm = conn.updateVm(vmVo.toEditVm()).getOrNull()
+		val updatedVm: Vm = conn.updateVm(
+			vmVo.toEditVm()
+		).getOrNull()
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 변경실패 에러유형 필요
 
@@ -360,7 +361,7 @@ class VmServiceImpl(
 		val changeDisksMap = changeDisks.associateBy { it.diskImageVo.id }
 
 		val disksToDelete = existDisks.filter { !changeDisksMap.containsKey(it.disk().id()) }
-		val disksToAdd = changeDisks.filter { it.diskImageVo.id.isEmpty() || !existDisksMap.containsKey(it.diskImageVo.id) }
+		val disksToAdd = changeDisks.filter { it.diskImageVo.id.isNullOrEmpty() || !existDisksMap.containsKey(it.diskImageVo.id) }
 		val disksToUpdate = changeDisks
 			.filter { it.diskImageVo.id.isNotEmpty() && existDisksMap.containsKey(it.diskImageVo.id) }
 			.filter {

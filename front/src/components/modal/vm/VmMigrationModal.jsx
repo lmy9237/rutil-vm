@@ -112,7 +112,7 @@ const VmMigrationModal = ({
           <LabelSelectOptionsID id={`host`} label={`${Localization.kr.HOST} 선택`}
             value={targetHostId}
             options={hostsWithClusterOption}
-            disabled={hosts.length === 0}
+            disabled={hosts?.length === 0}
             onChange={(selected) => {
               if (selected?.id === "none") {
                 setTargetHostId("");
