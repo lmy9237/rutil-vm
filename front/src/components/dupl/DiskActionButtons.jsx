@@ -23,17 +23,22 @@ const DiskActionButtons = ({
 
   const selected1st = [...disksSelected][0] ?? null
 
+  // 선택한 디스크의 스토리지도메인의 상태가 active가 아니면 이동/복사버튼 비활성화
+  const domainId = selected1st?.storageDomain?.props?.id;
+  const { data: domain } = useStorageDomain(domainId);
+  const domainNotActive = domain?.status?.toLowerCase() !== "active";
+
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("disk:create"), label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0 },
     { type: "upload",  onClick: () => setActiveModal("disk:upload"), label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0 },
     { type: "update",  onClick: () => setActiveModal("disk:update"), label: Localization.kr.UPDATE, 
       disabled: disksSelected.length !== 1 || hasConnectTemplate },
     { type: "remove",  onClick: () => setActiveModal("disk:remove"), label: Localization.kr.REMOVE, 
-      disabled: disksSelected.length === 0 || hasConnectTemplate },
+      disabled: disksSelected.length === 0 || hasConnectTemplate || domainNotActive},
     { type: "move",    onClick: () => setActiveModal("disk:move"),   label: Localization.kr.MOVE,   
-      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate},
+      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate  || domainNotActive},
     { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   
-      disabled: disksSelected.length === 0 || selected1st?.sharable  },
+      disabled: disksSelected.length === 0 || selected1st?.sharable || domainNotActive}, 
   ];
 
   return (

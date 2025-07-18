@@ -11,9 +11,9 @@
 }
 .footer-company-detail li,
 .footer-company-detail.detail-item {
-  list-style-type:none;display:inline;color:#717171;
+  list-style-type:none;display:inline;color:var(--color-gray);
 }
 .footer-company-detail li:not(:first-child):before {
   content: "   |   ";
-  color:#C6C6C6;
+  color:var(--color-gray-4);
 }

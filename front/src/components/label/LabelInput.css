@@ -1,5 +1,4 @@
 .input-text,
-/*.input-select,*/
 .input-container,
 .input-password,
 .input-number {
@@ -11,13 +10,9 @@
 }
 input[type="text"],
 input[type="number"],
-input[type="password"]
-/* select,.input-select select,  */
-/* .custom-select-box  */
-{
+input[type="password"]{
   width:55%;height:var(--h-input);
   border:var(--border-default);
-  /* box-shadow: 0 0 0 1px #cfcfcf; */
   border-radius:1px;
   text-indent: 4px;
   color: var(--color-black);
@@ -49,13 +44,12 @@ textarea {
   text-overflow: ellipsis; 
 }
 .input-checkbox {
-  /* width: 34%; */
   padding:7px 0;
 }
 input[type="checkbox"],
 input[type="radio"] {
   margin-right: 6px;
-      flex-shrink: 0;
+  flex-shrink: 0;
   width: 15px;height: 15px;
   display: flex;justify-content: center;align-items:center;
   cursor: pointer;
@@ -66,13 +60,13 @@ input[type="radio"] {
 }
 .custom-select-wrapper button,
 .input-container input {
-    width: 330px;
-    max-width: 330px;
-    margin-left: auto;
-    height: var(--h-input);
-    border: var(--border-default);
-    border-radius: 1px;
-    color: var(--color-black);
+  width: 330px;
+  max-width: 330px;
+  margin-left: auto;
+  height: var(--h-input);
+  border: var(--border-default);
+  border-radius: 1px;
+  color: var(--color-black);
 }
 
 .input-container button {

@@ -13,7 +13,6 @@
 .footer > span { height: 40px; }
 .footer-content {
   overflow: hidden;
-  /* border-top: var(--border-default); */
 }
 
 .footer-nav {

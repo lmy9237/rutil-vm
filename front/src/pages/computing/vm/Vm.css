@@ -60,7 +60,7 @@
   }
 }
 .btn-vnc {
-  background-color: #001e6e;
+  background-color: var(--color-primary);
   color: var(--color-white);
   padding: 11px;
 }

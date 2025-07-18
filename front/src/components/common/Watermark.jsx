@@ -2,23 +2,6 @@ import React, { useState, useRef, useEffect } from "react"
 import Logger                    from "@/utils/Logger";
 import './Watermark.css';
 
-const styles = {
-  watermarkContainer: {
-    position:'absolute',left:0,top:0,
-    userSelect:'none', // Prevents users from selecting the watermark text
-    // overflow:'hidden', // Ensures rotated text outside the box is clipped
-  },
-  watermarkText: {
-    position: 'absolute',
-    pointerEvents: 'none', // Allows clicking through the watermark to elements below
-    opacity: 0.25, // A typical watermark opacity
-    fontSize: '54px',
-    color: '#a2a2a2',
-    transform: 'rotate(-30deg)',
-    whiteSpace: 'nowrap', // Prevent text from wrapping
-  }
-};
-
 /**
  * @name Watermark
  * @param {string} text 페턴에 들어갈 문구
@@ -70,7 +53,7 @@ export const Watermark = ({
         watermarkElements.push(
           <span key={`${i}-${j}`} className="watermark-text"
             style={{
-              ...styles.watermarkText,
+              // ...styles.watermarkText,
               top: `${i * VERTICAL_SPACING}px`,
               left: `${100+(j * HORIZONTAL_SPACING)}px`,
             }}
@@ -86,7 +69,7 @@ export const Watermark = ({
   return (
     <div className={`watermark-container ${props.className || ""}`}
       ref={containerRef}
-      style={styles.watermarkContainer}
+      // style={styles.watermarkContainer}
     >
       {props.children} {/* Render the content to be watermarked */}
       {renderWatermarks()}

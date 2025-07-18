@@ -27,7 +27,6 @@ import {
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-import "./MVnic.css";
 
 const initialFormState = {
   id: "",
@@ -178,6 +177,7 @@ const VnicProfileModal = ({
         loading={isDataCentersLoading}
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
+
       />
       <LabelSelectOptionsID label={Localization.kr.NETWORK}
         value={networkVo.id}

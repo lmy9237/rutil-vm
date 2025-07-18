@@ -1,14 +1,16 @@
 .watermark-container {
-  position: absolute;left:0;top:0;
-  background-color: var(--color-primary-white);
-  /* overflow: hidden; */
+  position: absolute;
+  left: 0;
+  top: 0;
+  user-select: none;
 }
 
 .watermark-text {
   position: absolute;
-  color: rgba(160, 160, 160, 0.35);
-  font-size: 24px; /* Adjust size */
-  transform: rotate(-30deg); /* Diagonal rotation */
-  pointer-events:none; /* Allow interaction with content below */
-  white-space:nowrap; /* Prevent text wrapping */
+  pointer-events: none; 
+  opacity: 0.25; 
+  font-size: 20px;
+  color: #a2a2a2;
+  transform: rotate(-30deg);
+  white-space: nowrap; 
 }
