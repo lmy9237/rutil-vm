@@ -1,9 +1,9 @@
 import { Tooltip } from "react-tooltip";
 import { 
   RVI16, 
-  rvi16RefreshTry,
   rvi16TriangleDown, 
   rvi16TriangleUp, 
+  rvi16TryRefresh, 
   RVI36, 
   rvi36Edit
 } from "../../../../components/icons/RutilVmIcons";
@@ -36,7 +36,7 @@ const MatchNetwork = ({
             iconDef={networkAttach.networkVo?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
           {networkAttach.inSync === false
-            ? <RVI16 className="mr-1.5" iconDef={rvi16RefreshTry()} />
+            ? <RVI16 className="mr-1.5" iconDef={rvi16TryRefresh()} />
             : ""
           } 
           {networkAttach.networkVo?.name}

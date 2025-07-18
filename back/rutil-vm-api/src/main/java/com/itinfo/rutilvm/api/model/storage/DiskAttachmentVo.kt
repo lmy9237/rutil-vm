@@ -2,8 +2,11 @@ package com.itinfo.rutilvm.api.model.storage
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
+import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskInterfaceB
+import com.itinfo.rutilvm.api.ovirt.business.toDiskInterface
 import com.itinfo.rutilvm.api.ovirt.business.toDiskInterfaceB
+import com.itinfo.rutilvm.api.ovirt.business.toDiskInterfaceBuilder
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
 
@@ -11,6 +14,7 @@ import org.slf4j.LoggerFactory
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.DiskAttachmentBuilder
 import org.ovirt.engine.sdk4.builders.DiskBuilder
+import org.ovirt.engine.sdk4.types.BiosType
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.DiskInterface
@@ -139,12 +143,13 @@ fun List<DiskAttachmentVo>.toAddSnapshotDisks(): List<DiskAttachment> =
  * DiskAttachmentBuilder
  */
 fun DiskAttachmentVo.toDiskAttachmentBuilder(): DiskAttachmentBuilder {
+	log.info("disk:{}", this@toDiskAttachmentBuilder)
 	return DiskAttachmentBuilder()
 		.active(this.active)
 		.bootable(this.bootable)
 		.passDiscard(this.passDiscard)
 		.readOnly(this.readOnly)
-		.interface_(DiskInterface.fromValue(this.interface_.toString()))
+		.interface_(this.interface_.toDiskInterfaceBuilder())
 		.logicalName(this.logicalName)
 }
 

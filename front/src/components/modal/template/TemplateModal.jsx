@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { useQueries } from "@tanstack/react-query";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
@@ -11,21 +10,20 @@ import {
   handleInputChange, 
   handleSelectIdChange,
 } from "@/components/label/HandleInput";
-import ApiManager                       from "@/api/ApiManager";
 import {
   useAddTemplate,
   useAllTemplates,
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
   useDisksFromVM,
-  useAllDomainsFromDataCenter,
+  useAllActiveDomainsFromDataCenter,
+  useAllDiskProfilesFromDomain4EachDomain,
 } from "@/api/RQHook";
 import { 
   checkDuplicateName, 
   checkName, 
   checkZeroSizeToGiB, 
   emptyIdNameVo,
-  useSelectFirstItemEffect,
   useSelectFirstNameItemEffect
 } from "@/util";
 import Localization                     from "@/utils/Localization";
@@ -73,7 +71,6 @@ const TemplateModal = ({
     isLoading: isCpuProfilesLoading
   } = useCpuProfilesFromCluster(clusterVo.id, (e) => ({ ...e, }));
 
-  
   const { /* 가상머신에 연결되어있는 디스크 목록 */
     data: disks = [],
   } = useDisksFromVM(vmSelected?.id, (e) => ({ ...e }));
@@ -82,22 +79,18 @@ const TemplateModal = ({
   const { /* 데이터센터 별 스토리지 도메인 목록 */
     data: domains = [],
     isLoading: isDomainsLoading
-  } = useAllDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
-  const getDiskProfiles = useQueries({
-    queries: domains.map((domain) => ({
-      queryKey: ['DisksFromVM', domain.id],
-      queryFn: async () => {
-        try {
-          const diskProfiles = await ApiManager.findAllDiskProfilesFromDomain(domain.id);
-          return diskProfiles || [];
-        } catch (error) {
-          console.error(`Error fetching ${domain}`, error);
-          return [];
-        }
-      }
-    })),
-  });  
+
+  const qr = useAllDiskProfilesFromDomain4EachDomain(domains, (e) => ({ ...e }));
+  
+  const isQrSuccess = useMemo(() => {
+    return qr.every((q) => q?.isSuccess);
+  }, [qr]);
+  
+  useSelectFirstNameItemEffect(clusters, setClusterVo, "Default");
+  useSelectFirstNameItemEffect(cpuProfiles, setCpuProfileVo, "Default");
+
 
   useEffect(() => {
     if (isOpen && vmSelected?.dataCenterVo?.id) {
@@ -106,22 +99,12 @@ const TemplateModal = ({
         name: vmSelected?.dataCenterVo?.name || "",
       });
       setFormState((prev) => ({
-        ...prev, name: `${vmSelected?.name || ""}_temp`
+        ...prev, 
+        name: `${vmSelected?.name || ""}_temp`
       }));
     }
   }, [isOpen, vmsSelected]);
 
-  useEffect(() => {
-    if (!isOpen) {
-      setFormState(initialFormState);
-      setDataCenterVo({ id: vmsSelected?.dataCenterVo?.id });
-    }
-  }, [isOpen]);
-
-  // 클러스터 지정
-  useSelectFirstNameItemEffect(clusters, setClusterVo, "Default");
-  // cpu 프로파일 지정
-  useSelectFirstItemEffect(cpuProfiles, setCpuProfileVo);
 
   useEffect(() => {
     if (disks && disks.length > 0) {
@@ -130,7 +113,7 @@ const TemplateModal = ({
           ...disk,
           diskImageVo: {
             ...disk.diskImageVo,
-            format: disk.diskImageVo?.format || "RAW",
+            format: disk.diskImageVo?.format || "raw",
             storageDomainVo: disk.diskImageVo?.storageDomainVo || emptyIdNameVo(),
             diskProfileVo: disk.diskImageVo?.diskProfileVo || emptyIdNameVo(),
           },
@@ -139,24 +122,18 @@ const TemplateModal = ({
     }
   }, [disks]);
 
-  // useEffect로 getDiskProfiles 결과를 정리하여 diskProfilesList 업데이트
   useEffect(() => {
-    const newDiskProfilesMap = {};
-  
-    getDiskProfiles.forEach((queryResult, idx) => {
-      const domain = domains[idx];
-      if (domain && queryResult.data && !queryResult.isLoading) {
-        newDiskProfilesMap[domain.id] = queryResult.data.body || [];
+    if (!domains || domains.length === 0 || !isQrSuccess) return;
+
+    const map = {};
+    qr.forEach((query, index) => {
+      const domain = domains[index];
+      if (domain?.id && query?.data) {
+        map[domain.id] = query.data;
       }
     });
-  
-    // 기존 값과 다를 때만 업데이트
-    const isDifferent = JSON.stringify(diskProfilesList) !== JSON.stringify(newDiskProfilesMap);
-    if (isDifferent) {
-      setDiskProfilesList(newDiskProfilesMap);
-    }
-  }, [getDiskProfiles, domains]); 
-
+    setDiskProfilesList(map);
+  }, [qr, domains, isQrSuccess]);
 
   const handleDiskChange = (index, field, value, nested = false) => {
     setDiskVoList((prev) => {
@@ -236,7 +213,7 @@ const TemplateModal = ({
         options={clusters}
         onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
       />
-      <LabelSelectOptionsID id="cpu_profile_select" label="CPU 프로파일"
+      <LabelSelectOptionsID id="cpu_profile_select" label={Localization.kr.CPU_PROFILE}
         loading={isCpuProfilesLoading}
         value={cpuProfileVo.id}
         options={cpuProfiles}
@@ -260,13 +237,10 @@ const TemplateModal = ({
                 </thead>
                 <tbody>
                   {diskVoList.map((disk, index) => {
-                    console.log("디버깅 - diskImageVo", disk.diskImageVo); // TODO: 필요없으면 제거
                     const storageDomainId = disk.diskImageVo?.storageDomainVo?.id || "";
                     const diskProfileId = disk.diskImageVo?.diskProfileVo?.id || "";
-
-                    const availableDomains = domains.filter((d) => d.status?.toUpperCase() === "ACTIVE");
-                    const selectedDomain = availableDomains.find((d) => d.id === storageDomainId);
-
+                    
+                    const selectedDomain = domains.find((d) => d.id === storageDomainId);
                     const profileOptions = diskProfilesList[storageDomainId] || [];
                     const selectedProfile = profileOptions.find((p) => p.id === diskProfileId);
 
@@ -278,11 +252,7 @@ const TemplateModal = ({
                             onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
                           />
                         </td>
-
-                        {/* 가상 크기 */}
                         <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
-
-                        {/* 포맷 */}
                         <td>
                           <LabelSelectOptions
                             id={`diskFormat-${index}`}
@@ -290,15 +260,14 @@ const TemplateModal = ({
                             options={formats}
                             onChange={(e) => handleDiskChange(index, "format", e.target.value)}
                           />
+                          <span>{disk.diskImageVo?.format}</span>
                         </td>
-
-                        {/* 스토리지 도메인 선택 */}
                         <td>
                           <LabelSelectOptionsID
                             className="template-input"
                             value={selectedDomain?.id || ""}
                             loading={isDomainsLoading}
-                            options={availableDomains}
+                            options={domains}
                             onChange={(selected) => {
                               handleDiskChange(index, "storageDomainVo", selected, true);
                               const newProfiles = diskProfilesList[selected.id] || [];
@@ -313,8 +282,6 @@ const TemplateModal = ({
                             </div>
                           )}
                         </td>
-
-                        {/* 디스크 프로파일 선택 */}
                         <td>
                           <LabelSelectOptionsID
                             className="template-input max-w-[130px]"
@@ -334,7 +301,7 @@ const TemplateModal = ({
         </>
       )}
       {!disks || disks.length === 0 ? (
-        <div className="font-bold">연결된 디스크 데이터가 없습니다.</div>
+        <div className="font-bold">연결된 {Localization.kr.DISK} 데이터가 없습니다.</div>
       ) : null}
 
       <ToggleSwitchButton
@@ -356,6 +323,6 @@ const TemplateModal = ({
 export default TemplateModal;
 
 const formats = [
-  { value: "RAW", label: "Raw" },
-  { value: "COW", label: "Cow" },
+  { value: "raw", label: "Raw" },
+  { value: "cow", label: "QCOW2" },
 ];

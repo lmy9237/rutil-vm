@@ -22,7 +22,7 @@ const TemplateGeneral = ({
     { label: Localization.kr.NAME,                 value: template?.name },
     { label: Localization.kr.DESCRIPTION,          value: template?.description },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: template?.clusterVo?.name },
-    { label: Localization.kr.OPERATING_SYSTEM,     value: template?.osType },
+    { label: Localization.kr.OPERATING_SYSTEM,     value: template?.osTypeName },
     { label: "칩셋/펌웨어 유형",                      value: template?.biosTypeKr },
     { label: "그래픽 프로토콜",                       value: template?.displayType.toUpperCase() },
     { 

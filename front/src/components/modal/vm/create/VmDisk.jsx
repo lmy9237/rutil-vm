@@ -4,9 +4,8 @@ import { ActionButton }      from "@/components/button/ActionButtons";
 import { RVI36, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
-import VmCreateDiskConnectionModal from "./VmCreateDiskConnectionModal";
-import LabelCheckbox from "@/components/label/LabelCheckbox";
 import VmDiskModal from "../VmDiskModal";
+import VmDiskConnectionModal from "../VmDiskConnectionModal";
 
 const VmDisk = ({
   vm, vmName,
@@ -197,10 +196,10 @@ const VmDisk = ({
           />
         )} */}
         {connOpen && (
-          <VmCreateDiskConnectionModal
+          <VmDiskConnectionModal
             isOpen={true}
             onClose={() => setConnOpen(false)}
-            vmData={vm}
+            vmDiskType={false}
             diskData={handleConnDisk}
             dataCenterId={dataCenterId}
             hasBootableDisk={hasBootableDisk}

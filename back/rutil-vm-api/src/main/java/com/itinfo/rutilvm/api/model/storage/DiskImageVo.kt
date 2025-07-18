@@ -605,7 +605,7 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 	val storageDomain: StorageDomain = conn.findStorageDomain(this.storageDomainVo.id)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
 
-	val storageType: org.ovirt.engine.sdk4.types.StorageType = storageDomain.storage().type()
+	val storageType: StorageType = storageDomain.storage().type()
 	return DiskBuilder()
 		.contentType( this@toUploadDisk.contentType.toDiskContentType())
 		.storageType(

@@ -35,7 +35,7 @@ const initialFormState = {
   appendSize: 0,
   alias: "",
   description: "",
-  interface_: "VIRTIO_SCSI", // 인터페이스
+  interface_: "virtio_scsi", // 인터페이스
   sparse: true, //할당정책: 씬
   active: true, // 디스크 활성화
   wipeAfterDelete: false, // 삭제 후 초기화
@@ -55,11 +55,9 @@ const initialFormState = {
  * @returns 
  */
 const VmDiskModal = ({
-  isOpen,
-  onClose,
+  isOpen, onClose,
   editMode = false,
-  vmData,
-  vmName,
+  vmData, vmName,
   dataCenterId,
   hasBootableDisk = false,
   initialDisk,
@@ -108,6 +106,12 @@ const VmDiskModal = ({
   }, [editMode, isOpen]);
 
   useEffect(() => {
+    if (!editMode && interfaceList.length > 0 && !formState.interface_) {
+      setFormState((prev) => ({ ...prev, interface_: interfaceList[0].value }));
+    }
+  }, [interfaceList, editMode, formState.interface_]);
+
+  useEffect(() => {
     if (!isOpen) {
       setFormState(() => ({
         ...initialFormState,
@@ -126,7 +130,7 @@ const VmDiskModal = ({
         appendSize: 0,
         alias: img?.alias,
         description: img?.description,
-        interface_: d.interface_ || "VIRTIO_SCSI",
+        interface_: d.interface_ || "virtio_scsi",
         sparse: img?.sparse,
         active: d.active,
         wipeAfterDelete: img?.wipeAfterDelete,
@@ -161,6 +165,7 @@ const VmDiskModal = ({
 
       const diskData = {
         ...formState,
+        id: formState.id,
         diskImageVo: {
           id: formState.id,
           alias: formState.alias,
@@ -175,11 +180,23 @@ const VmDiskModal = ({
         },
       };
 
+      const newDisk = {
+        alias: formState.alias,
+        size: formState.size,
+        interface_: formState.interface_,
+        sparse: formState.sparse,
+        bootable: formState.bootable,
+        readOnly: formState.readOnly,
+        storageDomainVo: { id: selectedDomain.id },
+        diskProfileVo: { id: selectedDiskProfile.id },
+        isCreated: true,
+      };
+
       if (editMode) {
         editDiskVm({ vmId, diskAttachmentId: formState.id, diskAttachment: diskData });
       } else if (onCreateDisk) {
-        console.log("$ diskDAta", diskData);
-        onCreateDisk(diskData);
+        console.log("$ diskDAta", newDisk);
+        onCreateDisk(newDisk);
         onClose();
       } else {
         addDiskVm({ vmId, diskData });
@@ -215,11 +232,11 @@ const VmDiskModal = ({
           value={formState.description} 
           onChange={handleInputChange(setFormState, "description", validationToast)} 
         />
-        <LabelSelectOptions label="인터페이스" 
-          value={formState.interface_} 
-          disabled={editMode} 
-          options={interfaceList} 
-          onChange={handleInputChange(setFormState, "interface_", validationToast)} 
+        <LabelSelectOptions label="인터페이스"
+          value={formState.interface_}
+          disabled={editMode}
+          options={interfaceList}
+          onChange={handleInputChange(setFormState, "interface_", validationToast)}
         />
         <LabelSelectOptionsID label={Localization.kr.DOMAIN} 
           value={storageDomainVo.id} 
@@ -282,9 +299,9 @@ const VmDiskModal = ({
 export default VmDiskModal;
 
 const interfaceList = [
-  { value: "VIRTIO_SCSI", label: "VirtIO-SCSI" },
-  { value: "VIRTIO", label: "VirtIO" },
-  { value: "SATA", label: "SATA" },
+  { value: "virtio_scsi", label: "VirtIO-SCSI" },
+  { value: "virtio", label: "VirtIO" },
+  { value: "sata", label: "SATA" },
 ];
 
 const sparseList = [

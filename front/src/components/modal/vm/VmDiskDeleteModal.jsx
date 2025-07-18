@@ -52,7 +52,7 @@ const VmDiskDeleteModal = ({
       deleteDisk({ 
         vmId, 
         diskAttachmentId: disk.id, 
-        detachOnly: !!detachOnlyList[disk.id],
+        detachOnly: !detachOnlyList[disk.id],
       });
     });
   };

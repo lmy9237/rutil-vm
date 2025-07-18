@@ -167,6 +167,7 @@ fun DiskContentTypeB?.toDiskContentType(): DiskContentType = DiskContentType.fro
 
 fun DiskInterface?.toDiskInterfaceB(): DiskInterfaceB? = DiskInterfaceB.forCode(this@toDiskInterfaceB?.value())
 fun DiskInterfaceB?.toDiskInterface(): DiskInterface? = DiskInterface.fromValue(this@toDiskInterface?.code)
+fun DiskInterfaceB?.toDiskInterfaceBuilder(): DiskInterface? = DiskInterface.fromValue(this@toDiskInterfaceBuilder?.name?.lowercase())
 
 fun FipsMode.toFipsModeB(): FipsModeB = FipsModeB.forCode(this@toFipsModeB.value())
 fun FipsModeB.toFipsMode(): FipsMode = FipsMode.fromValue(this@toFipsMode.code)

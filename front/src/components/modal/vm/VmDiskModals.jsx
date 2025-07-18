@@ -58,6 +58,7 @@ const VmDiskModals = ({
       <VmDiskConnectionModal isOpen={activeModal().includes("vmdisk:connect")}
         onClose={() => closeModal("vmdisk:connect")}
         hasBootableDisk={hasBootableDisk}
+        vmDiskType
       />
     ), activate: (
       <VmDiskActionModal isOpen={activeModal().includes("vmdisk:activate")}

@@ -41,6 +41,7 @@ const DiskActionModal = ({
   }, [isOpen]);
 
   const qr = useAllValidDomains4EachDisk(diskList, (e) => ({ ...e }));
+  // useAllActiveDomainsFromDataCenter 사용시 활성화된 항목만 나옴
   
   const isQrSuccess = useMemo(() => {
     return qr.every((q) => q?.isSuccess);
