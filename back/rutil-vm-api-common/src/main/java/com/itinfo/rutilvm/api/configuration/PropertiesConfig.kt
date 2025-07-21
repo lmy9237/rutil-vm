@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct
 open class PropertiesConfig {
 	@Value("\${application.title}")					open lateinit var title: String
 	@Value("\${application.version}")					open lateinit var version: String
+	@Value("\${application.buildNo}")					lateinit var _buildNo: String
 	@Value("\${application.release-date}")				open lateinit var releaseDate: String
 	@Value("\${application.ovirt.ip}")					open lateinit var ovirtIp: String
 	@Value("\${application.ovirt.port}")				lateinit var _ovirtPort: String
@@ -51,10 +52,9 @@ open class PropertiesConfig {
 	@Value("\${vmware.api.id}")				open lateinit var vmwareApiId: String
 	@Value("\${vmware.api.password}")			open lateinit var vmwareApiPassword: String*/
 
-	open val ovirtPort: Int
-		get() = _ovirtPort.toIntOrNull() ?: 80
-	open val ovirtPortSsl: Int
-		get() = _ovirtPortSsl.toIntOrNull() ?: 443
+	open val buildNo: Int			get() = _buildNo.toIntOrNull() ?: 1
+	open val ovirtPort: Int			get() = _ovirtPort.toIntOrNull() ?: 80
+	open val ovirtPortSsl: Int		get() = _ovirtPortSsl.toIntOrNull() ?: 443
 
 	open val thresholdCpu: Int
 		get() = _thresholdCpu.toIntOrNull() ?: 80
@@ -86,6 +86,7 @@ open class PropertiesConfig {
 		log.info("init ... ")
 		log.debug("  application.title: {}", title)
 		log.debug("  application.version: {}", version)
+		log.debug("  application.buildNo: {}", buildNo)
 		log.debug("  application.release-date: {}\n\n", releaseDate)
 		log.debug("  application.ovirt.ip: {}", ovirtIp)
 		log.debug("  application.ovirt.port: {}", ovirtPort)

@@ -58,7 +58,7 @@ const DomainAttachModal = ({
   }));
 
   const transformedDomainData = [...domains]
-    .filter((d) => d.dataCenterVo.id === "") // 데이터센터가 없는것만
+    .filter((d) => d?.dataCenterVo?.id === "") // 데이터센터가 없는것만
     .map((domain) => ({
       ...domain,
       name: domain?.name,

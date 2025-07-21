@@ -8,7 +8,7 @@ ${AnsiColor.BRIGHT_GREEN}      _\/\\\_____\//\\\__\/\\\___\/\\\____\/\\\_/\\__\/
 ${AnsiColor.BRIGHT_YELLOW}       _\/\\\______\//\\\_\//\\\\\\\\\_____\//\\\\\___\/\\\__/\\\\\\\\\______\//\\\_______\/\\\_____________\/\\\_
 ${AnsiColor.RED}        _\///________\///___\/////////_______\/////____\///__\/////////________\///________\///______________\///__
 
-${AnsiColor.BLUE}${application.title}-${application.version}
+${AnsiColor.BLUE}${application.title}-${application.version}-${application.buildNo}
 ${AnsiColor.RED}- isLiveReloadEnabled: ${spring.devtools.restart.enabled}
 
 ${AnsiColor.BLUE}:: Powered by Spring Boot ${spring-boot.version} ::

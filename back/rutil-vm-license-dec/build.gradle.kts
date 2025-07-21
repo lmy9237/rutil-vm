@@ -1,6 +1,6 @@
 group = "com.itinfo.rutil.license"
 description = "라이센스 복호화"
-version = Versions.Project.RUTIL_VM
+version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 
 val jar: Jar by tasks
 jar.enabled = true

@@ -5,7 +5,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
-import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
@@ -55,7 +55,7 @@ import java.util.UUID
  * @property imageId [String]
  * @property virtualSize [BigInteger] 가상크기 (provisionedSize)
  * @property actualSize [BigInteger] 실제크기
- * @property status [DiskStatus] 디스크상태
+ * @property status [DiskStatusB] 디스크상태
  * @property contentType [DiskContentTypeB]
  * @property storageType [DiskStorageType] 유형
  * @property createDate [String] 생성일자
@@ -80,7 +80,7 @@ class DiskImageVo(
 	val imageId: String = "",
 	val virtualSize: BigInteger = BigInteger.ZERO,
 	val actualSize: BigInteger = BigInteger.ZERO,
-	val status: DiskStatus? = DiskStatus.locked,
+	val status: DiskStatusB? = DiskStatusB.locked,
 	val contentType: DiskContentTypeB? = DiskContentTypeB.data, // unknown
 	val storageType: DiskStorageType? = DiskStorageType.image,
 	private val _dateCreated: LocalDateTime? = null,
@@ -146,7 +146,7 @@ class DiskImageVo(
 		private var bImageId: String = "";fun imageId(block: () -> String?) { bImageId = block() ?: "" }
 		private var bVirtualSize: BigInteger = BigInteger.ZERO;fun virtualSize(block: () -> BigInteger?) { bVirtualSize = block() ?: BigInteger.ZERO }
 		private var bActualSize: BigInteger = BigInteger.ZERO;fun actualSize(block: () -> BigInteger?) { bActualSize = block() ?: BigInteger.ZERO }
-		private var bStatus: DiskStatus = DiskStatus.locked;fun status(block: () -> DiskStatus?) { bStatus = block() ?: DiskStatus.locked }
+		private var bStatus: DiskStatusB = DiskStatusB.locked;fun status(block: () -> DiskStatusB?) { bStatus = block() ?: DiskStatusB.locked }
 		private var bContentType: DiskContentTypeB? = DiskContentTypeB.data;fun contentType(block: () -> DiskContentTypeB?) { bContentType = block() ?: DiskContentTypeB.data }
 		private var bStorageType: DiskStorageType? = DiskStorageType.image;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.image }
 		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
@@ -262,7 +262,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() }
 		contentType { DiskContentTypeB.forStorageValue(disk.contentType().toString()) }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
@@ -294,7 +294,7 @@ fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		description { disk.description() }
@@ -327,7 +327,7 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		description { disk.description() }
@@ -359,7 +359,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		if (storageDomain != null) {
 			dataCenterVo { storageDomain.dataCenters().first()?.fromDataCenterToIdentifiedVo() }
@@ -389,7 +389,7 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		sharable { disk.shareable() }
@@ -433,7 +433,7 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 		backup { this@toDiskImageVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskImageVo.provisionedSize() }
 		actualSize { this@toDiskImageVo.actualSize() }
-		status { DiskStatus.forCode(this@toDiskImageVo.status().value()) }
+		status { DiskStatusB.forCode(this@toDiskImageVo.status().value()) }
 		contentType { DiskContentTypeB.forStorageValue(this@toDiskImageVo.contentType().toString()) }
 		storageType { DiskStorageType.forCode(this@toDiskImageVo.storageType().toString()) }
 		// dateCreated { this@toDiskImageVo. }
@@ -468,7 +468,7 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 		backup { this@toDiskVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskVo.provisionedSize() }
 		actualSize { this@toDiskVo.actualSize() }
-		status { DiskStatus.forCode(this@toDiskVo.status().value()) }
+		status { DiskStatusB.forCode(this@toDiskVo.status().value()) }
 		contentType { DiskContentTypeB.forStorageValue(this@toDiskVo.contentType().toString()) }
 		storageType { DiskStorageType.forCode(this@toDiskVo.storageType().toString()) }
 //		createDate { this@toDiskImageVo. } // TODO
@@ -495,7 +495,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		description { disk.description() }
-		status { DiskStatus.forCode(disk.status().value()) }
+		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }

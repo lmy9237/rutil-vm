@@ -143,15 +143,15 @@ fi
 # rutilvm의 SSH 공개키를 대상 호스트로 복사하여 비밀번호 없이 로그인 가능하게 설정
 sshpass -p "$RUTILVM_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -i "$RUTILVM_KEY.pub" "$RUTILVM_USER@$HOST01_IP" > /dev/null 2>&1
 
+chown $RUTILVM_USER:$RUTILVM_GROUPNAME $RUTILVM_SSH_DIR/authorized_keys
+chmod 600 $RUTILVM_SSH_DIR/authorized_keys
 # engine이 만든 고유한 공개키를 authorized_keys 에 등록 (스스로 접근)
 ENGINE_IP=$(hostname -i)
 curl_url="https://${ENGINE_IP}:8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY"
-if ! curl -k -s -S -X GET "$curl_url" >> "$RUTILVM_SSH_DIR/authorized_keys" > /dev/null 2>&1; then
+if ! curl -k -s -S -X GET "$curl_url" >> "$RUTILVM_SSH_DIR/authorized_keys"; then
     echo "[ ERROR ] Failed to retrieve oVirt engine public key from $curl_url"
 #    exit 1
 fi
-chown $RUTILVM_USER:$RUTILVM_GROUPNAME $RUTILVM_SSH_DIR/authorized_keys
-chmod 600 $RUTILVM_SSH_DIR/authorized_keys
 
 # rutilvm 관련 디렉토리 구조 생성
 mkdir -p /opt/rutilvm

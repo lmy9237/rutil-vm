@@ -8,7 +8,15 @@ import {
 import Localization               from "@/utils/Localization";
 import VmGeneralBarChart from "../computing/vm/VmGeneralBarChart";
 import RutilGeneralBoxProps from "./RutilGeneralBoxProps";
-import { RVI16, rvi16Cluster, rvi16DataCenter, rvi16Desktop, rvi16Host, rvi16Network, rvi16Storage } from "@/components/icons/RutilVmIcons";
+import {
+  RVI16, 
+  rvi16Cluster, 
+  rvi16DataCenter, 
+  rvi16Desktop, 
+  rvi16Host, 
+  rvi16Network, 
+  rvi16Storage
+} from "@/components/icons/RutilVmIcons";
 import GeneralLayout from "@/components/GeneralLayout";
 
 /**
@@ -80,7 +88,7 @@ const RutilGeneral = () => {
           <div className="vm-info-vnc-group flex h-full">
             <div className="half-box mr-[40px]">
               <RutilVmLogo className="big"
-                details={`v${dashboard?.version} (${dashboard?.releaseDate})`}
+                details={`v${dashboard?.version}-${dashboard?.buildNo || 0} (${dashboard?.releaseDate})`}
               />
             </div>
            <InfoTable tableRows={tableRows} /> 

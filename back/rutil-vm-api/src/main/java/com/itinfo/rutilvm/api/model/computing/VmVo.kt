@@ -48,7 +48,9 @@ import com.itinfo.rutilvm.api.ovirt.business.toVmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toVmType
 import com.itinfo.rutilvm.api.ovirt.business.toVmTypeB
+import com.itinfo.rutilvm.api.repository.engine.entity.VmDiskUsageByPath
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
+import com.itinfo.rutilvm.api.repository.history.dto.findVmDiskUsageByPath
 import com.itinfo.rutilvm.api.repository.history.dto.toVmUsage
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.common.formatEnhancedFromLDT
@@ -285,6 +287,7 @@ class VmVo (
 	val nicVos: List<NicVo> = listOf(),
 	val diskAttachmentVos: List<DiskAttachmentVo> = listOf(),
 	val usageDto: UsageDto = UsageDto(),
+	val vmDiskUsage: List<VmDiskUsageByPath>? = emptyList(),
 ): Serializable, TreeNavigatable<VmStatusB> {
 	override val type: TreeNavigatableType	get() = TreeNavigatableType.VM
 	val statusCode: String 					get() = status?.code ?: VmStatusB.unknown.code
@@ -426,7 +429,8 @@ class VmVo (
 		private var bNicVos: List<NicVo> = listOf(); fun nicVos(block: () -> List<NicVo>?) { bNicVos = block() ?: listOf() }
 		private var bDiskAttachmentVos: List<DiskAttachmentVo> = listOf(); fun diskAttachmentVos(block: () -> List<DiskAttachmentVo>?) { bDiskAttachmentVos = block() ?: listOf() }
 		private var bUsageDto: UsageDto = UsageDto(); fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bIsInitialized, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bVnicProfile, bNicVos, bDiskAttachmentVos, bUsageDto)
+		private var bVmDiskUsage: List<VmDiskUsageByPath> = emptyList();fun vmDiskUsage(block: () -> List<VmDiskUsageByPath>?) { bVmDiskUsage = block() ?: emptyList() }
+        fun build(): VmVo = VmVo(bId, bName, bDescription, bComment, bStatus, bIconSmall, bIconLarge, bOptimizeOption, bBiosType, bBiosBootMenu, bOsType, bCpuArc, bCpuTopologyCnt, bCpuTopologyCore, bCpuTopologySocket, bCpuTopologyThread, bCpuPinningPolicy, bMemorySize, bMemoryGuaranteed, bMemoryMax, bHa, bHaPriority, bIoThreadCnt, bTimeOffset, bIsInitialized, bCloudInit, bScript, bMigrationMode, bMigrationPolicy, bMigrationAutoConverge, bMigrationCompression, bMigrationEncrypt, bMigrationParallelPolicy, bParallelMigration, bStorageErrorResumeBehaviour, bVirtioScsiMultiQueueEnabled, bFirstDevice, bSecDevice, bDeviceList, bMonitor, bDisplayType, bVideoType, bGuestArc, bGuestOsType, bGuestDistribution, bGuestKernelVer, bGuestTimeZone, bDeleteProtected, bStartPaused, bUsb, bHostedEngineVm, bFqdn, bNextRun, bRunOnce, bAutoStartUp, bStatusDetail, bTimeElapsed, bWindowGuestTool, bCreationTime, bStartTime, bStopTime, bIpv4, bIpv6, bHostInCluster, bHostVos, bStorageDomainVo, bCpuProfileVo, bCdRomVo, bDataCenterVo, bClusterVo, bHostVo, bSnapshotVos, bHostDeviceVos, bOriginTemplateVo, bTemplateVo, bVnicProfile, bNicVos, bDiskAttachmentVos, bUsageDto, bVmDiskUsage)
     }
 
     companion object {
@@ -482,12 +486,14 @@ fun Vm.toVmMenu(conn: Connection): VmVo {
 			ipv6 { vm.reportedDevices().findVmIpv6() }
 			timeElapsed { statistics.findVmUptime() }
 			usageDto { statistics.toVmUsage() }
+			vmDiskUsage { statistics.findVmDiskUsageByPath() }
 		} else {
 			fqdn { null }
 			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 			usageDto { null }
+			vmDiskUsage { null }
 		}
 	}
 }
@@ -584,12 +590,14 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 			hostVo { host?.fromHostToIdentifiedVo() }
 			timeElapsed { vm.statistics().findVmUptime() }
 			usageDto { vm.statistics().toVmUsage() }
+			vmDiskUsage { vm.statistics().findVmDiskUsageByPath() }
 		} else {
 			fqdn { null }
 			timeElapsed { null }
 			ipv4 { null }
 			ipv6 { null }
 			usageDto { null }
+			vmDiskUsage { vm.statistics().findVmDiskUsageByPath() }
 		}
 		dataCenterVo { if(vm.clusterPresent()) vm.cluster().dataCenter()?.fromDataCenterToIdentifiedVo() else IdentifiedVo() }
 		clusterVo { if(vm.clusterPresent()) vm.cluster().fromClusterToIdentifiedVo() else IdentifiedVo() }
@@ -703,6 +711,7 @@ fun Vm.toDiskVm(conn: Connection): VmVo {
 			ipv4 { this@toDiskVm.reportedDevices().findVmIpv4() }
 			ipv6 { this@toDiskVm.reportedDevices().findVmIpv6() }
 			usageDto { this@toDiskVm.statistics().toVmUsage() }
+			vmDiskUsage { this@toDiskVm.statistics().findVmDiskUsageByPath() }
 			hostVo { host?.fromHostToIdentifiedVo() }
 		}
 	}

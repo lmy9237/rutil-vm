@@ -47,6 +47,7 @@ const HostNetworkEditModal = ({
   const handleIpv4Change = (field, value) => {
     Logger.debug(`HostNetworkEditModal > handleIpv4Change ... field: ${field}, value: ${value}`)
     setNetworkModalState(prev => {
+      import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${value}`)
       if (field === "protocol" && value !== "static") {
         return {
           ...prev,
@@ -69,6 +70,7 @@ const HostNetworkEditModal = ({
   const handleIpv6Change = (field, value) => {
     Logger.debug(`HostNetworkEditModal > handleIpv6Change ... field: ${field}, value: ${value}`)
     setNetworkModalState(prev => {
+      import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${value}`)
       if (field === "protocol" && value !== "static") {
         return {
           ...prev,
@@ -227,7 +229,8 @@ const HostNetworkEditModal = ({
         />
 
         <div className="w-full px-4">
-          <div className ="w-[57.5%]">
+          {/* <div className ="w-[57.5%]"> */}
+          <>
             <ToggleSwitchButton label={`${Localization.kr.NETWORK} 동기화`}
               disabled={networkModalState.inSync} // true면 비활성화
               onChange={() => {
@@ -239,7 +242,7 @@ const HostNetworkEditModal = ({
             />
             {/* TODO: insync 문제 */}
             <span>{networkModalState.inSync === true ? "T" : "F"}</span>
-          </div>
+          </>
           <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">

@@ -4,7 +4,6 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
@@ -13,7 +12,7 @@ import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
@@ -339,7 +338,7 @@ class StorageServiceImpl(
 		// 	.getOrDefault(emptyList())
 		// return res.toDomainDiskMenus(conn)
 		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(storageDomainId)
-		return res?.toDiskEntities()
+		return res?.toDiskImageVoFromAllDiskEntities()
 	}
 
 	@Autowired private lateinit var rImage: ImageRepository

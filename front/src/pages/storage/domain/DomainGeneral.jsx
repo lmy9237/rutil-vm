@@ -44,7 +44,6 @@ const DomainGeneral = ({
     { label: Localization.kr.SIZE_AVAILABLE, value: checkZeroSizeToGiB(domain?.availableSize) },
     { label: Localization.kr.SIZE_USED, value: checkZeroSizeToGiB(domain?.usedSize) },
     { label: "할당된 크기", value: checkZeroSizeToGiB(domain?.commitedSize) },
-    
     ...(domain?.storageDomainType !== "import_export" ? [
       {
         label: "오버 할당 비율",

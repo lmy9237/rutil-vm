@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllAttachedStorageDomainsFromDataCenter
@@ -70,10 +71,15 @@ fun DataCenter.toNavigationalFromNetwork(conn: Connection?): TreeNavigationalDat
     }
 }
 
-fun List<DataCenter>.toNavigationalsFromNetworks(conn: Connection?): List<TreeNavigationalDataCenter> =
+fun List<DataCenter>.toNavigationalsFromNetworks(
+	conn: Connection?,
+): List<TreeNavigationalDataCenter> =
     this@toNavigationalsFromNetworks.map { it.toNavigationalFromNetwork(conn) }
 
-fun DataCenter.toNavigationalFromDataCenter4StorageDomains(conn: Connection?): TreeNavigationalDataCenter {
+fun DataCenter.toNavigationalFromDataCenter4StorageDomains(
+	conn: Connection?=null,
+	rAllDisks: AllDisksRepository?=null,
+): TreeNavigationalDataCenter {
     val storageDomains: List<StorageDomain> =
         conn?.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalFromDataCenter4StorageDomains.id(), follow = "disks")
             ?.getOrDefault(emptyList())
@@ -82,10 +88,13 @@ fun DataCenter.toNavigationalFromDataCenter4StorageDomains(conn: Connection?): T
     return TreeNavigationalDataCenter.builder {
         id { this@toNavigationalFromDataCenter4StorageDomains.id() }
         name { this@toNavigationalFromDataCenter4StorageDomains.name() }
-        storageDomains { storageDomains.fromDisksToTreeNavigationals(conn) }
+        storageDomains { storageDomains.toTreeNavigationalsFromStorageDomain(conn, rAllDisks) }
     }
 }
 
-fun List<DataCenter>.toNavigationalsFromDataCenters4StorageDomains(conn: Connection?): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsFromDataCenters4StorageDomains.map { it.toNavigationalFromDataCenter4StorageDomains(conn) }
+fun List<DataCenter>.toNavigationalsFromDataCenters4StorageDomains(
+	conn: Connection?,
+	rAllDisks: AllDisksRepository?=null,
+): List<TreeNavigationalDataCenter> =
+    this@toNavigationalsFromDataCenters4StorageDomains.map { it.toNavigationalFromDataCenter4StorageDomains(conn, rAllDisks) }
 

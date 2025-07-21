@@ -326,6 +326,24 @@ class VdsEntity(
 	val vdsStatus: VdsStatus?									get() = VdsStatus.forValue(_status)
 	val transparentHugepagesState: VdsTransparentHugePages	get() = VdsTransparentHugePages.forValue(_transparentHugepagesState)
 
+	val physicalMemInByte: BigInteger							get() = (physicalMemMb?.toLong()	/* TODO: allocationUnits 값이 "MegaByte"가 아닌 다른 단위가 있는지 확인하고 변환 방식 구현 */
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
+	val memCommitedInByte: BigInteger							get() = (memCommited?.toLong()
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
+	val memFreeInByte: BigInteger								get() = (memFree
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
+	val memSharedInByte: BigInteger							get() = (memShared
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
+	val swapFreeInByte: BigInteger							get() = (swapFree
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
+	val swapTotalInByte: BigInteger							get() = (swapTotal
+																		?.times(MB_TO_BYTE) ?: 0L)
+																		.toBigInteger()
 	override fun toString(): String =
 		gson.toJson(this@VdsEntity)
 
@@ -479,6 +497,7 @@ class VdsEntity(
 	}
 
 	companion object {
+		const val MB_TO_BYTE = 1024L * 1024L
 		inline fun builder(block: Builder.() -> Unit): VdsEntity = Builder().apply(block).build()
 	}
 }

@@ -113,13 +113,12 @@ const DomainImportVmModal = ({
         onChange={e => {setPartialAllow(prev => ({ ...prev, [vm.id]: e.target.checked }));}}
       />,
     cluster: 
-    <LabelSelectOptionsID
-      className="w-[280px]"
-      value={clusterList[vm.id] || ""}
-      loading={isDcClustersLoading}
-      options={clusters}
-      onChange={handleClusterChange(vm.id)}
-    />,
+      <LabelSelectOptionsID className="w-[280px]"
+        value={clusterList[vm.id] || ""}
+        loading={isDcClustersLoading}
+        options={clusters}
+        onChange={handleClusterChange(vm.id)}
+      />,
   }));
 
   const mapDiskAttachments = (
@@ -139,6 +138,14 @@ const DomainImportVmModal = ({
         creationTime: disk?.dateCreated
       };
   });
+
+  const mapNics = (
+    nicVos = []
+  ) => [...nicVos].map((nic) => {
+    return {
+      ...nic,
+    }
+  })
 
 
   // 개별 가상머신 row 반환
@@ -270,7 +277,7 @@ const DomainImportVmModal = ({
         {activeFilter === "network" && (
           <TablesOuter target={"network"}
             columns={TableColumnsInfo.NETWORK_INTERFACE_FROM_HOST}
-            data={[]}
+            data={mapNics(selectedVm?.nicVos || [])}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
             multiSelect={true}

@@ -1,6 +1,6 @@
 group = "com.itinfo.rutilvm.license"
 description = "라이센스 값검증"
-version = Versions.Project.RUTIL_VM
+version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 
 val jar: Jar by tasks
 jar.enabled = true

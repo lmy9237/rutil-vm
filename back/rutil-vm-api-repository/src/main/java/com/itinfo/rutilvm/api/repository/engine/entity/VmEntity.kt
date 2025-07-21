@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.google.gson.annotations.SerializedName
 import com.itinfo.rutilvm.api.ovirt.business.ArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.BiosTypeB
 import com.itinfo.rutilvm.api.ovirt.business.BootSequence
@@ -14,8 +15,7 @@ import com.itinfo.rutilvm.api.ovirt.business.VmPauseStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
-import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
-import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
+import com.itinfo.rutilvm.common.fromJson
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
@@ -274,7 +274,8 @@ class VmEntity(
 	@Column(name="default_display_type", nullable=true)
 	private var _defaultDisplayType: Int? = null,
 	val description: String = "",
-	val disksUsage: String = "",
+	@Column(name="disks_usage", nullable=true)
+	private val _disksUsage: String? = "",
 	val downtime: BigInteger? = BigInteger.ZERO,
 	val elapsedTime: BigDecimal? = BigDecimal.ZERO,
 	val emulatedMachine: String = "",
@@ -490,6 +491,7 @@ class VmEntity(
 	val status: VmStatusB?						get() = VmStatusB.forValue(_status)
 	val biosType: BiosTypeB						get() = BiosTypeB.forValue(_biosType)
 	val vmType: VmTypeB?							get() = VmTypeB.forValue(_vmType) /* a.k.a. 최적화 옵션 (optmizationOption) */
+	val diskUsage: List<VmDiskUsageByPath>		get() = if (_disksUsage.isNullOrEmpty()) emptyList() else gson.fromJson<List<VmDiskUsageByPath>>(_disksUsage)
 
 	val osType: VmOsType?							get() = dwhOsInfo?.toVmOsType()
 	val architecture: ArchitectureType? 			get() = ArchitectureType.forValue(_architecture)
@@ -514,22 +516,11 @@ class VmEntity(
 	val originType: OriginType?					get() = OriginType.forValue(_origin)
 	val origin: Int?								get() = originType?.value
 	val isHostedEngineVm: Boolean					get() = originType == OriginType.managed_hosted_engine
-
-	val virtioScsiMultiQueuesEnabled: Boolean?
-		get() = (virtioScsiMultiQueues ?: 0) > 0
-
-	val bootSequence: BootSequence?
-		get() = BootSequence.forValue(_bootSequence)
-
-	val defaultBootSequence: BootSequence?
-		get() = BootSequence.forValue(_defaultBootSequence)
-
-	val effectiveSmallIcon: VmIconEntity?
-		get() = this.iconDefaults?.smallIcon ?: this.smallIcon
-
-	val effectiveLargeIcon: VmIconEntity?
-		get() = this.iconDefaults?.largeIcon ?: this.largeIcon
-
+	val virtioScsiMultiQueuesEnabled: Boolean?	get() = (virtioScsiMultiQueues ?: 0) > 0
+	val bootSequence: BootSequence?				get() = BootSequence.forValue(_bootSequence)
+	val defaultBootSequence: BootSequence?		get() = BootSequence.forValue(_defaultBootSequence)
+	val effectiveSmallIcon: VmIconEntity?			get() = this.iconDefaults?.smallIcon ?: this.smallIcon
+	val effectiveLargeIcon: VmIconEntity?			get() = this.iconDefaults?.largeIcon ?: this.largeIcon
 	val bootableDiskVmElements: Set<DiskVmElementEntity>
 		get() = this@VmEntity.diskVmElements?.filter { it.isBoot }?.toSet() ?: emptySet()
 
@@ -724,5 +715,40 @@ class VmEntity(
 	companion object {
 		val MEGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(2.0.pow(20.0).toLong()) // 2^10 * 2^20
 		inline fun builder(block: Builder.() -> Unit): VmEntity = Builder().apply(block).build()
+	}
+}
+
+/**
+ * [VmDiskUsageByPath]
+ * 가상머신 내 디렉코리 별 디스크 사용량
+ *
+ * @author 이찬희 (@chanhi2000)
+ *
+ * @property path [String] 경로
+ * @property _total [String] 총 용량 (in Byte)
+ * @property _used [String] 사용 중 용량 (in Byte)
+ * @property fs [String] 파일시스템
+ */
+class VmDiskUsageByPath(
+	@SerializedName("path") val path: String? = "",
+	@SerializedName("total") private val _total: String? = "",
+	@SerializedName("used") private val _used: String? = "",
+	@SerializedName("fs") val fs: String? = "xfs"
+): Serializable {
+	val totalInByte: Long			get() = _total?.toLong() ?: 0L
+	val usedInByte: Long			get() = _used?.toLong() ?: 0L
+
+	override fun toString(): String =
+		gson.toJson(this@VmDiskUsageByPath)
+
+	class Builder {
+		private var bPath: String? = "";fun path(block: () -> String?) { bPath = block() ?: "" }
+		private var bTotal: String? = "";fun total(block: () -> String?) { bTotal = block() ?: "" }
+		private var bUsed: String? = "";fun used(block: () -> String?) { bUsed = block() ?: "" }
+		private var bFs: String? = "xfs";fun fs(block: () -> String?) { bFs = block() ?: "xfs" }
+		fun build(): VmDiskUsageByPath = VmDiskUsageByPath(bPath, bTotal, bUsed, bFs)
+	}
+	companion object {
+		inline fun builder(block: Builder.() -> Unit): VmDiskUsageByPath = Builder().apply(block).build()
 	}
 }

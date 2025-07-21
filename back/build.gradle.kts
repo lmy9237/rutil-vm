@@ -18,7 +18,7 @@ allprojects {
     }
 
     group = "com.itinfo.rutilvm"
-    version = Versions.Project.RUTIL_VM
+    version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 
     repositories {
         mavenCentral()

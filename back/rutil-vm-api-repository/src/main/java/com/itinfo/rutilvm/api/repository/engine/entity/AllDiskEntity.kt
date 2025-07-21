@@ -1,7 +1,7 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
-import com.itinfo.rutilvm.api.ovirt.business.DiskStatus
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
@@ -162,14 +162,14 @@ class AllDiskEntity(
 	private val _diskStorageType: Int? = null,
 	val cinderVolumeType: String = "",
 	@Column(name="disk_content_type", nullable=true)
-	private val _diskContentType: Int? = null,
+	val _diskContentType: Int? = null,
 	val backup: String = "",
 	val backupMode: String = "",
 
 ): Serializable {
 	val diskStorageType: DiskStorageType				get() = DiskStorageType.forValue(_diskStorageType)
 	val diskContentType: DiskContentTypeB				get() = DiskContentTypeB.forValue(_diskContentType)
-	val diskImageStatus: DiskStatus					get() = DiskStatus.forValue(_imagestatus)
+	val diskImageStatus: DiskStatusB					get() = DiskStatusB.forValue(_imagestatus)
 	val imageTransferPhase: ImageTransferPhaseB?		get() = if (_imageTransferPhase == null) null else ImageTransferPhaseB.forValue(_imageTransferPhase)
 	val imageTransferType: ImageTransferType?			get() = if (_imageTransferType == null) null else ImageTransferType.forValue(_imageTransferType)
 

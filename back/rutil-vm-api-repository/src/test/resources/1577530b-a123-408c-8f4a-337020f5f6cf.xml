@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ovf:Envelope xmlns:ovf="http://schemas.dmtf.org/ovf/envelope/1/"
+              xmlns:rasd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_ResourceAllocationSettingData"
+              xmlns:vssd="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/CIM_VirtualSystemSettingData"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ovf:version="4.4.0.0">
+  <References>
+    <File ovf:href="4e78127d-5b9c-4a2e-b881-d8e0f2272415/6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e"
+          ovf:id="6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e" ovf:size="200704"
+          ovf:description="Active VM" ovf:disk_storage_type="IMAGE" ovf:cinder_volume_type=""></File>
+  </References>
+  <NetworkSection>
+    <Info>List of networks</Info>
+    <Network ovf:name="ovirtmgmt"></Network>
+  </NetworkSection>
+  <Section xsi:type="ovf:DiskSection_Type">
+    <Info>List of Virtual Disks</Info>
+    <Disk ovf:diskId="6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e" ovf:size="5" ovf:actual_size="1"
+          ovf:vm_snapshot_id="600e3835-dfef-4dc6-a165-4b283bffba2c" ovf:parentRef=""
+          ovf:fileRef="4e78127d-5b9c-4a2e-b881-d8e0f2272415/6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e"
+          ovf:format="http://www.gnome.org/~markmc/qcow-image-format.html" ovf:volume-format="COW"
+          ovf:volume-type="Sparse" ovf:disk-interface="VirtIO_SCSI" ovf:read-only="false"
+          ovf:shareable="false" ovf:boot="true" ovf:pass-discard="false"
+          ovf:incremental-backup="true" ovf:disk-alias="vm-test-03_Disk1" ovf:disk-description=""
+          ovf:wipe-after-delete="false"></Disk>
+  </Section>
+  <Content ovf:id="out" xsi:type="ovf:VirtualSystem_Type">
+    <Name>vm-test-03</Name>
+    <Description></Description>
+    <Comment></Comment>
+    <CreationDate>2025/03/06 13:03:34</CreationDate>
+    <ExportDate>2025/03/06 13:42:11</ExportDate>
+    <DeleteProtected>false</DeleteProtected>
+    <SsoMethod>guest_agent</SsoMethod>
+    <IsSmartcardEnabled>false</IsSmartcardEnabled>
+    <NumOfIoThreads>1</NumOfIoThreads>
+    <TimeZone>Etc/GMT</TimeZone>
+    <default_boot_sequence>0</default_boot_sequence>
+    <Generation>4</Generation>
+    <ClusterCompatibilityVersion>4.7</ClusterCompatibilityVersion>
+    <VmType>1</VmType>
+    <ResumeBehavior>AUTO_RESUME</ResumeBehavior>
+    <MinAllocatedMem>1024</MinAllocatedMem>
+    <IsStateless>false</IsStateless>
+    <IsRunAndPause>false</IsRunAndPause>
+    <AutoStartup>false</AutoStartup>
+    <Priority>1</Priority>
+    <CreatedByUserId>b3358274-f8b3-11ef-9fca-00163e4b783e</CreatedByUserId>
+    <MigrationSupport>0</MigrationSupport>
+    <IsBootMenuEnabled>false</IsBootMenuEnabled>
+    <IsSpiceFileTransferEnabled>true</IsSpiceFileTransferEnabled>
+    <IsSpiceCopyPasteEnabled>true</IsSpiceCopyPasteEnabled>
+    <AllowConsoleReconnect>false</AllowConsoleReconnect>
+    <ConsoleDisconnectAction>LOCK_SCREEN</ConsoleDisconnectAction>
+    <ConsoleDisconnectActionDelay>0</ConsoleDisconnectActionDelay>
+    <CustomEmulatedMachine></CustomEmulatedMachine>
+    <BiosType>2</BiosType>
+    <CustomCpuName></CustomCpuName>
+    <PredefinedProperties></PredefinedProperties>
+    <UserDefinedProperties></UserDefinedProperties>
+    <MaxMemorySizeMb>4096</MaxMemorySizeMb>
+    <MultiQueuesEnabled>true</MultiQueuesEnabled>
+    <VirtioScsiMultiQueuesEnabled>false</VirtioScsiMultiQueuesEnabled>
+    <UseHostCpu>false</UseHostCpu>
+    <BalloonEnabled>true</BalloonEnabled>
+    <CpuPinningPolicy>0</CpuPinningPolicy>
+    <ClusterName>Development-Cluster</ClusterName>
+    <TemplateId>00000000-0000-0000-0000-000000000000</TemplateId>
+    <TemplateName>Blank</TemplateName>
+    <IsInitilized>false</IsInitilized>
+    <Origin>3</Origin>
+    <quota_id>ac0c9b04-5c44-4570-82e9-0246b91bceb8</quota_id>
+    <DefaultDisplayType>2</DefaultDisplayType>
+    <TrustedService>false</TrustedService>
+    <OriginalTemplateId>00000000-0000-0000-0000-000000000000</OriginalTemplateId>
+    <OriginalTemplateName>Blank</OriginalTemplateName>
+    <UseLatestVersion>false</UseLatestVersion>
+    <StopTime>2025/03/06 13:03:34</StopTime>
+    <Section ovf:id="1577530b-a123-408c-8f4a-337020f5f6cf" ovf:required="false"
+             xsi:type="ovf:OperatingSystemSection_Type">
+      <Info>Guest Operating System</Info>
+      <Description>other</Description>
+    </Section>
+    <Section xsi:type="ovf:VirtualHardwareSection_Type">
+      <Info>1 CPU, 1024 Memory</Info>
+      <System>
+        <vssd:VirtualSystemType>ENGINE 4.4.0.0</vssd:VirtualSystemType>
+      </System>
+      <Item>
+        <rasd:Caption>1 virtual cpu</rasd:Caption>
+        <rasd:Description>Number of virtual CPU</rasd:Description>
+        <rasd:InstanceId>1</rasd:InstanceId>
+        <rasd:ResourceType>3</rasd:ResourceType>
+        <rasd:num_of_sockets>1</rasd:num_of_sockets>
+        <rasd:cpu_per_socket>1</rasd:cpu_per_socket>
+        <rasd:threads_per_cpu>1</rasd:threads_per_cpu>
+        <rasd:max_num_of_vcpus>16</rasd:max_num_of_vcpus>
+        <rasd:VirtualQuantity>1</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>1024 MB of memory</rasd:Caption>
+        <rasd:Description>Memory Size</rasd:Description>
+        <rasd:InstanceId>2</rasd:InstanceId>
+        <rasd:ResourceType>4</rasd:ResourceType>
+        <rasd:AllocationUnits>MegaBytes</rasd:AllocationUnits>
+        <rasd:VirtualQuantity>1024</rasd:VirtualQuantity>
+      </Item>
+      <Item>
+        <rasd:Caption>vm-test-03_Disk1</rasd:Caption>
+        <rasd:InstanceId>6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e</rasd:InstanceId>
+        <rasd:ResourceType>17</rasd:ResourceType>
+        <rasd:HostResource>
+          4e78127d-5b9c-4a2e-b881-d8e0f2272415/6f51edf7-b9d7-4d36-ba7d-5dec4d71d53e</rasd:HostResource>
+        <rasd:Parent>00000000-0000-0000-0000-000000000000</rasd:Parent>
+        <rasd:Template>00000000-0000-0000-0000-000000000000</rasd:Template>
+        <rasd:ApplicationList></rasd:ApplicationList>
+        <rasd:StorageId>675bd7fa-ac38-49bd-a14b-73c9f2279ea4</rasd:StorageId>
+        <rasd:StoragePoolId>1b1bd4bd-c962-4cd4-8dc7-04cd946505a8</rasd:StoragePoolId>
+        <rasd:CreationDate>2025/03/06 13:03:35</rasd:CreationDate>
+        <rasd:LastModified>2025/03/06 13:03:35</rasd:LastModified>
+        <rasd:last_modified_date>2025/03/06 13:42:11</rasd:last_modified_date>
+        <Type>disk</Type>
+        <Device>disk</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>1</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>Ethernet adapter on ovirtmgmt</rasd:Caption>
+        <rasd:InstanceId>87aa2c34-fcde-441c-bd8e-0f965f497307</rasd:InstanceId>
+        <rasd:ResourceType>10</rasd:ResourceType>
+        <rasd:OtherResourceType>ovirtmgmt</rasd:OtherResourceType>
+        <rasd:ResourceSubType>3</rasd:ResourceSubType>
+        <rasd:Connection>ovirtmgmt</rasd:Connection>
+        <rasd:Linked>true</rasd:Linked>
+        <rasd:Name>nic1</rasd:Name>
+        <rasd:ElementName>nic1</rasd:ElementName>
+        <rasd:MACAddress>56:6f:4a:eb:00:12</rasd:MACAddress>
+        <rasd:speed>10000</rasd:speed>
+        <Type>interface</Type>
+        <Device>bridge</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>USB Controller</rasd:Caption>
+        <rasd:InstanceId>3</rasd:InstanceId>
+        <rasd:ResourceType>23</rasd:ResourceType>
+        <rasd:UsbPolicy>DISABLED</rasd:UsbPolicy>
+      </Item>
+      <Item>
+        <rasd:Caption>Graphical Controller</rasd:Caption>
+        <rasd:InstanceId>84abe332-d144-4f7a-9532-d2dc8f55c728</rasd:InstanceId>
+        <rasd:ResourceType>20</rasd:ResourceType>
+        <rasd:VirtualQuantity>1</rasd:VirtualQuantity>
+        <rasd:SinglePciQxl>false</rasd:SinglePciQxl>
+        <Type>video</Type>
+        <Device>vga</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <vram>16384</vram>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:Caption>Graphical Framebuffer</rasd:Caption>
+        <rasd:InstanceId>b412be77-a242-4f53-9f33-b10d16c4b927</rasd:InstanceId>
+        <rasd:ResourceType>26</rasd:ResourceType>
+        <Type>graphics</Type>
+        <Device>vnc</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:Caption>CDROM</rasd:Caption>
+        <rasd:InstanceId>0db17752-da01-49ac-898d-f3ebaf9b2796</rasd:InstanceId>
+        <rasd:ResourceType>15</rasd:ResourceType>
+        <Type>disk</Type>
+        <Device>cdrom</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>true</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <path></path>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>6180e829-4736-4599-b2c6-c54ae81a2fb2</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>virtio-serial</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>771e748f-43b9-4ef9-9d63-6fcf25dca096</rasd:InstanceId>
+        <Type>rng</Type>
+        <Device>virtio</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <source>urandom</source>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>1c9881f3-f572-4c8a-984d-f27fa7a22b0e</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>virtio-scsi</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <ioThreadId></ioThreadId>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>2d10f95c-5b29-454e-aeaa-87dc268e4c7e</rasd:InstanceId>
+        <Type>balloon</Type>
+        <Device>memballoon</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>true</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <model>virtio</model>
+        </SpecParams>
+      </Item>
+      <Item>
+        <rasd:ResourceType>0</rasd:ResourceType>
+        <rasd:InstanceId>44a0be56-88e9-4412-ba7a-7bbf1feba6ad</rasd:InstanceId>
+        <Type>controller</Type>
+        <Device>usb</Device>
+        <rasd:Address></rasd:Address>
+        <BootOrder>0</BootOrder>
+        <IsPlugged>true</IsPlugged>
+        <IsReadOnly>false</IsReadOnly>
+        <Alias></Alias>
+        <SpecParams>
+          <index>0</index>
+          <model>qemu-xhci</model>
+        </SpecParams>
+      </Item>
+    </Section>
+    <Section xsi:type="ovf:SnapshotsSection_Type">
+      <Snapshot ovf:id="600e3835-dfef-4dc6-a165-4b283bffba2c">
+        <Type>ACTIVE</Type>
+        <Description>Active VM</Description>
+        <CreationDate>2025/03/06 13:03:34</CreationDate>
+      </Snapshot>
+    </Section>
+  </Content>
+</ovf:Envelope>

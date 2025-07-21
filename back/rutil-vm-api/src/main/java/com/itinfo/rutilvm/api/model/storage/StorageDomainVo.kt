@@ -12,7 +12,6 @@ import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainType
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainTypeB
-import com.itinfo.rutilvm.api.ovirt.business.toStorageType
 import com.itinfo.rutilvm.api.ovirt.business.toStorageTypeB
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
@@ -22,11 +21,8 @@ import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.DataCenter
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.StorageDomain
-import org.ovirt.engine.sdk4.types.StorageDomainType
 import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.ovirt.engine.sdk4.types.StorageFormat
-import org.ovirt.engine.sdk4.types.StorageType
-import org.ovirt.engine.sdk4.types.StorageType.NFS
 import org.slf4j.LoggerFactory
 import java.io.Serializable
 import java.math.BigInteger
@@ -150,12 +146,13 @@ fun StorageDomain.toStorageDomainMenu(conn: Connection): StorageDomainVo {
 		id { storageDomain.id() }
 		name { storageDomain.name() }
 		description { storageDomain.description() }
-		status { dcStatus?.status().toStorageDomainStatusB() }
+		status { (storageDomain.status() ?: dcStatus?.status()).toStorageDomainStatusB() }
+		// status { dcStatus?.status().toStorageDomainStatusB() } // TODO: 데이터센터 유형을 못찾아 도메인의 상태를 unknown으로 리턴
 		// if (storageDomainStatus != null) {
 		// 	storagePoolStatus { StoragePoolStatus.forStatusValue(storageDomainStatus.status().value()) }
 		// }
-		storageType { StorageTypeB.forCode(storageDomain.type().value()) }
-		storageDomainType { StorageDomainTypeB.forCode(storageDomain.type().value()) }
+		storageType { StorageTypeB.forCode(storageDomain.type().value()) }  // TODO: 유형을 못찾아 도메인의 상태를 unknown으로 리턴
+		storageDomainType { storageDomain.type().toStorageDomainTypeB() }
 		storageVo { storageDomain.storage().toStorageVo() }
 		master { storageDomain.masterPresent() && storageDomain.master() }
 		hostedEngine { hostedVm }
@@ -179,7 +176,11 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()
 	}
 
-	log.info("cStatus:{}, doaminType: {}/{}", dcStatus?.status()?.value(), storageDomain.type().value(), StorageDomainTypeB.forCode(storageDomain.type().value()))
+	log.debug("dcStatus: {}, status: {}, domainType: {}/{}",
+		dcStatus?.status()?.value(),
+		storageDomain.status()?.value(),
+		storageDomain.type().value(), StorageDomainTypeB.forCode(storageDomain.type().value())
+	)
 
 	return StorageDomainVo.builder {
 		id { storageDomain.id() }
@@ -187,10 +188,10 @@ fun StorageDomain.toStorageDomainInfoVo(conn: Connection): StorageDomainVo {
 		description { storageDomain.description() }
 		comment { storageDomain.comment() }
 		storageDomainType {
-			if(storageDomain.type() == EXPORT) StorageDomainTypeB.import_export
+			if (storageDomain.type() == EXPORT) StorageDomainTypeB.import_export
 			else StorageDomainTypeB.forCode(storageDomain.type().value())
 		}
-		status { dcStatus?.status().toStorageDomainStatusB() }
+		status { (storageDomain.status() ?: dcStatus?.status()).toStorageDomainStatusB() }
 		master { if(storageDomain.masterPresent()) storageDomain.master() else false}
 		storageFormat { storageDomain.storageFormat().toString() }
 		size { storageDomain.toDomainSize() }
@@ -213,24 +214,28 @@ fun List<StorageDomain>.toStorageDomainInfoVos(conn: Connection): List<StorageDo
 
 
 fun StorageDomain.toDcDomainMenu(conn: Connection): StorageDomainVo {
-	val domain = this@toDcDomainMenu
+	val storageDomain = this@toDcDomainMenu
+	val dataCenter: DataCenter? = resolveDataCenter(conn)
 	val hostedVm = findHostedVmFromStorageDomain(conn)
+	val dcStatus = dataCenter?.let {
+		conn.findAttachedStorageDomainFromDataCenter(it.id(), storageDomain.id()).getOrNull()
+	}
 
 	return StorageDomainVo.builder {
-		id { domain.id() }
-		name { domain.name() }
-		description { domain.description() }
-		status { domain.status().toStorageDomainStatusB() }
+		id { storageDomain.id() }
+		name { storageDomain.name() }
+		description { storageDomain.description() }
+		status { (storageDomain.status() ?: dcStatus?.status()).toStorageDomainStatusB() }
 		hostedEngine { hostedVm }
-		comment { domain.comment() }
-		storageType { domain.storage().type().toStorageTypeB() }
-		master { domain.masterPresent() && domain.master() }
-		storageFormat { domain.storageFormat().toString() }
-		usedSize { domain.used() }
-		availableSize { domain.available() }
-		size { domain.toDomainSize() }
-		storageVo { domain.storage().toStorageVo() }
-		dataCenterVo { if(domain.dataCenterPresent()) domain.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
+		comment { storageDomain.comment() }
+		storageType { storageDomain.storage().type().toStorageTypeB() }
+		master { storageDomain.masterPresent() && storageDomain.master() }
+		storageFormat { storageDomain.storageFormat().toString() }
+		usedSize { storageDomain.used() }
+		availableSize { storageDomain.available() }
+		size { storageDomain.toDomainSize() }
+		storageVo { storageDomain.storage().toStorageVo() }
+		dataCenterVo { if(storageDomain.dataCenterPresent()) storageDomain.dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo()}
 	}
 }
 fun List<StorageDomain>.toDcDomainMenus(conn: Connection): List<StorageDomainVo> =

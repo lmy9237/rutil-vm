@@ -1,6 +1,6 @@
 group = "com.itinfo.rutilvm.api.ovirt.business"
 description = "RutilVM 백엔드 oVirt 비지니스 객체"
-version = Versions.Project.RUTIL_VM
+version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 
 val jar: Jar by tasks
 jar.enabled = true

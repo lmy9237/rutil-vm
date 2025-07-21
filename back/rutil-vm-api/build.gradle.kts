@@ -16,7 +16,7 @@ plugins {
 springBoot {
     group = "com.itinfo.rutilvm.api"
     description = "RutilVM 백엔드"
-    version = Versions.Project.RUTIL_VM
+	version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 }
 
 val profile: String = project.findProperty("profile") as? String ?: "local"

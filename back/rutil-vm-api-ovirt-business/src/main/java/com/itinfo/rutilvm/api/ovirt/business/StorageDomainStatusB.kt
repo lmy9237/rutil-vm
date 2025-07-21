@@ -33,11 +33,10 @@ enum class StorageDomainStatusB(
 			}
 		}
 
+		@JvmStatic fun forValue(value: Int?): StorageDomainStatusB = valueMapping[value ?: unattached.value] ?: unattached
+		@JvmStatic fun forCode(code: String?): StorageDomainStatusB = codeMapping[code ?: unattached.code] ?: unattached
 		val allStorageDomainStatusTypes: List<StorageDomainStatusB> = StorageDomainStatusB.values().filterNot {
 			it == unknown
 		}
-
-		@JvmStatic fun forValue(value: Int?): StorageDomainStatusB = valueMapping[value ?: unknown.value] ?: unknown
-		@JvmStatic fun forCode(code: String?): StorageDomainStatusB = codeMapping[code ?: unknown.code] ?: unknown
 	}
 }

@@ -31,8 +31,8 @@ import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
 
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
-
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
@@ -41,7 +41,7 @@ import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.xml.OvfCompositeDisk
-import com.itinfo.rutilvm.api.xml.OvfDisk
+import com.itinfo.rutilvm.api.xml.RasdItemType10
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.util.ovirt.findCluster
 import org.ovirt.engine.sdk4.Connection
@@ -79,8 +79,8 @@ fun DiskVmElementEntity.toVmDisk(): DiskImageVo {
 //endregion: DiskVmElementEntity
 
 //region: AllDiskEntity
-fun AllDiskEntity.toDiskEntity(): DiskImageVo {
-	val entity = this@toDiskEntity
+fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
+	val entity = this@toDiskImageVoFromAllDiskEntity
 	return DiskImageVo.builder {
 		id { entity.diskId.toString() }
 		alias { entity.diskAlias }
@@ -133,8 +133,8 @@ fun AllDiskEntity.toDiskEntity(): DiskImageVo {
 		}
 	}
 }
-fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
-	this@toDiskEntities.map { it.toDiskEntity() }
+fun List<AllDiskEntity>.toDiskImageVoFromAllDiskEntities(): List<DiskImageVo> =
+	this@toDiskImageVoFromAllDiskEntities.map { it.toDiskImageVoFromAllDiskEntity() }
 
 //endregion: AllDiskEntity
 
@@ -156,10 +156,12 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		size { usedDiskSize?.add(availableDiskSize) }
 		usedSize { usedDiskSize }
 		availableSize { availableDiskSize }
-		dataCenterVo { IdentifiedVo.builder {
-			id { storagePoolId.toString() }
-			name { storagePoolName }
-		}}
+		dataCenterVo {
+			IdentifiedVo.builder {
+				id { storagePoolId?.toString() }
+				name { storagePoolName }
+			}
+		}
 	}
 }
 fun List<StorageDomainEntity>.toStorageDomainEntities(): List<StorageDomainVo> =
@@ -402,6 +404,7 @@ fun UnregisteredOvfOfEntities.toUnregisteredVm(vm: Vm?=null): VmVo {
 		memoryMax { ovf?.memoryMaxInByte }
 		usb { ovf?.usbEnabled }
 		// diskAttachmentVos { ovfDisks.toDiskAttachmentIdentifiedVos() }
+		nicVos { ovf?.ovfNics?.toNicVosFromRasdItemType10s() }
 		diskAttachmentVos { ovf?.allCompositeDisks?.toDiskAttachmentIdentifiedVos() }
 	}
 }
@@ -443,6 +446,26 @@ fun UnregisteredOvfOfEntities.toUnregisteredTemplate(template: Template?=null): 
 		diskAttachmentVos { ovf?.allCompositeDisks?.toDiskAttachmentIdentifiedVos() }
 	}
 }
+
+fun RasdItemType10.toNicVoFromRasdItemType10(): NicVo = NicVo.builder {
+	id { this@toNicVoFromRasdItemType10.instanceId }
+	name { this@toNicVoFromRasdItemType10.name }
+	interface_ { this@toNicVoFromRasdItemType10.interfaceType }
+	macAddress { this@toNicVoFromRasdItemType10.macAddress }
+	linked { this@toNicVoFromRasdItemType10.linked }
+	plugged { this@toNicVoFromRasdItemType10.isPlugged }
+	// synced { this@toNicVoFromRasdItemType10.synced }
+	speed { this@toNicVoFromRasdItemType10.speed?.toBigInteger() }
+	ipv4 { this@toNicVoFromRasdItemType10.address }
+	// ipv6 { this@toNicVoFromRasdItemType10 }
+	guestInterfaceName { this@toNicVoFromRasdItemType10.elementName }
+	// networkVo { this@toNicVoFromRasdItemType10 }
+	// vnicProfileVo { this@toNicVoFromRasdItemType10.vnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
+	// networkFilterVo { this@toNicVoFromRasdItemType10.vnicProfile?.networkFilter?.toNetworkFilterVoFromNetworkFilterEntity() }
+}
+
+fun Collection<RasdItemType10>.toNicVosFromRasdItemType10s(): List<NicVo> =
+	this@toNicVosFromRasdItemType10s.map { it.toNicVoFromRasdItemType10() }
 
 fun OvfCompositeDisk.toDiskAttachmentIdentifiedVo(): DiskAttachmentVo = DiskAttachmentVo.builder {
 	id { this@toDiskAttachmentIdentifiedVo.diskId }
@@ -556,11 +579,11 @@ fun VdsEntity.toHostVoFromVdsEntity(): HostVo = HostVo.builder {
 	// transparentPage { this@toHostVoFromVdsEntity.transparentHugepagesState }
 	vmMigratingCnt { this@toHostVoFromVdsEntity.vmMigrating }
 	// vgpu { this@toHostVoFromVdsEntity.vgpuPlacement }
-	memoryTotal { this@toHostVoFromVdsEntity.physicalMemMb?.toBigInteger() } // TODO: 값 확인필요
-	memoryUsed { this@toHostVoFromVdsEntity.memCommited?.toBigInteger() } // TODO: 값 확인필요
-	memoryFree { this@toHostVoFromVdsEntity.memFree?.toBigInteger() }
+	memoryTotal { this@toHostVoFromVdsEntity.physicalMemInByte } // TODO: 값 확인필요
+	memoryUsed { this@toHostVoFromVdsEntity.memCommitedInByte } // TODO: 값 확인필요
+	memoryFree { this@toHostVoFromVdsEntity.memFreeInByte }
 	// memoryMax { this@toHostVoFromVdsEntity }
-	memoryShared { this@toHostVoFromVdsEntity.memShared?.toBigInteger() }
+	memoryShared { this@toHostVoFromVdsEntity.memSharedInByte }
 	swapTotal { this@toHostVoFromVdsEntity.swapTotal?.toBigInteger() }
 	swapFree { this@toHostVoFromVdsEntity.swapFree?.toBigInteger() }
 	// hugePage2048Free { }
@@ -683,11 +706,12 @@ fun VmEntity.toVmVo(): VmVo {
 		// isInitialized { entity.isInitialized }
 		usageDto {
 			UsageDto.builder {
-				cpuPercent { usageCpuPercent }
-				memoryPercent { usageMemPercent }
-				networkPercent { usageNetworkPercent }
+				cpuPercent { entity.usageCpuPercent }
+				memoryPercent { entity.usageMemPercent }
+				networkPercent { entity.usageNetworkPercent }
 			}
 		}
+		vmDiskUsage { entity.diskUsage }
 		ipv4 { listOf(entity.vmIp) }
 		fqdn { entity.vmFqdn }
 		cdRomVo {
@@ -811,11 +835,12 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 		timeOffset { entity.timeZone }
 		usageDto {
 			UsageDto.builder {
-				cpuPercent { usageCpuPercent }
-				memoryPercent { usageMemPercent }
-				networkPercent { usageNetworkPercent }
+				cpuPercent { entity.usageCpuPercent }
+				memoryPercent { entity.usageMemPercent }
+				networkPercent { entity.usageNetworkPercent }
 			}
 		}
+		vmDiskUsage { entity.diskUsage }
 		ipv4 { listOf(entity.vmIp) }
 		fqdn { entity.vmFqdn }
 		hostVos { hosts }

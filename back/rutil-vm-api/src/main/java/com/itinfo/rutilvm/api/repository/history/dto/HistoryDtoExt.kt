@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.history.dto
 
+import com.google.gson.reflect.TypeToken
 import com.itinfo.rutilvm.api.GB
 import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
@@ -8,7 +9,9 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmDiskUsageByPath
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
+import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllStatisticsFromHost
 import com.itinfo.rutilvm.util.ovirt.findAllVms
@@ -382,6 +385,14 @@ fun List<Statistic>.toVmUsage(): UsageDto{
         memoryPercent { this@toVmUsage.findMemoryPercent() }
         networkPercent { this@toVmUsage.findNetworkPercent() }
     }
+}
+
+fun List<Statistic>.findVmDiskUsageByPath(): List<VmDiskUsageByPath> {
+	val vmDiskUsage = this@findVmDiskUsageByPath.firstOrNull { it.name() == "disk.usage" }
+	val valueFound = vmDiskUsage?.values()?.firstOrNull()?.detail()
+	val itemType = object : TypeToken<List<VmDiskUsageByPath>>() {}.type
+	val vmDisks = gson.fromJson<List<VmDiskUsageByPath>>(valueFound, itemType)
+	return vmDisks
 }
 
 /**

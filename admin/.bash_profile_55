@@ -79,17 +79,18 @@ export DOCKER_REGISTRY_HOME=ititinfo.synology.me:50951/ititcloud
 # export DOCKER_IMG_RUTIL_VM_API=$DOCKER_REGISTRY_HOME/ititcloud/rutil-vm-api
 export DOCKER_IMG_RUTIL_VM_API=rutil-vm-api
 export DOCKER_IMG_RUTIL_VM_API_VERSION=4.0.0
-export DOCKER_IMG_RUTIL_VM_API_CURRENT=$DOCKER_IMG_RUTIL_VM_API:$DOCKER_IMG_RUTIL_VM_API_VERSION
+export DOCKER_IMG_RUTIL_VM_API_BUILD_NO=1
+export DOCKER_IMG_RUTIL_VM_API_CURRENT=$DOCKER_IMG_RUTIL_VM_API:$DOCKER_IMG_RUTIL_VM_API_VERSION-$DOCKER_IMG_RUTIL_VM_API_BUILD_NO
 export DOCKER_IMG_RUTIL_VM_API_LATEST=$DOCKER_IMG_RUTIL_VM_API:latest
 
 # export DOCKER_IMG_RUTIL_VM=$DOCKER_REGISTRY_HOME/ititcloud/rutil-vm
 export DOCKER_IMG_RUTIL_VM=rutil-vm
-export DOCKER_IMG_RUTIL_VM_CURRENT=$DOCKER_IMG_RUTIL_VM:$DOCKER_IMG_RUTIL_VM_API_VERSION
+export DOCKER_IMG_RUTIL_VM_CURRENT=$DOCKER_IMG_RUTIL_VM:$DOCKER_IMG_RUTIL_VM_API_VERSION-$DOCKER_IMG_RUTIL_VM_API_BUILD_NO
 export DOCKER_IMG_RUTIL_VM_LATEST=$DOCKER_IMG_RUTIL_VM:latest
 
 # export DOCKER_IMG_RUTIL_VM_WSPROXY=$DOCKER_REGISTRY_HOME/ititcloud/rutil-vm-wsproxy
 export DOCKER_IMG_RUTIL_VM_WSPROXY=rutil-vm-wsproxy
-export DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT=$DOCKER_IMG_RUTIL_VM_WSPROXY:$DOCKER_IMG_RUTIL_VM_API_VERSION
+export DOCKER_IMG_RUTIL_VM_WSPROXY_CURRENT=$DOCKER_IMG_RUTIL_VM_WSPROXY:$DOCKER_IMG_RUTIL_VM_API_VERSION-$DOCKER_IMG_RUTIL_VM_API_BUILD_NO
 export DOCKER_IMG_RUTIL_VM_WSPROXY_LATEST=$DOCKER_IMG_RUTIL_VM_WSPROXY:latest
 
 # Engine
@@ -150,6 +151,14 @@ function enginePki() {
 
 function enginePub() {
   curl -k -X GET "https://$(hostname -i):8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY" 
+}
+
+function saveEnginePub() {
+  RUTILVM_SSH_DIR=/home/rutilvm/.ssh
+  curl_url="https://$(hostname -i):8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY"
+  if ! curl -k -s -S -X GET "$curl_url" >> "$RUTILVM_SSH_DIR/authorized_keys" 2>/dev/null; then
+    echo "[ ERROR ] Failed to retrieve oVirt engine public key from $curl_url"
+  fi
 }
 
 function engineLog() {

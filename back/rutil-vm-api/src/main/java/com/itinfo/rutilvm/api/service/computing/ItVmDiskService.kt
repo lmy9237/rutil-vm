@@ -4,8 +4,6 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
 import com.itinfo.rutilvm.util.ovirt.*

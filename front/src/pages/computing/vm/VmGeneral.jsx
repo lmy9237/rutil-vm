@@ -262,6 +262,16 @@ const VmGeneral = ({
       }
     ];
   }, [vm?.usageDto]);
+  const vmDisksByPath = useMemo(() => {
+    const _vmDisksByPath = vm?.vmDiskUsage || [];
+    return [..._vmDisksByPath].map((e) => ({
+      ...e,
+      label: `${e. path}`,
+      value: `${convertBytesToMB(e?.totalInByte)} MB 사용 / ${convertBytesToMB(e?.usedInByte)}`,
+      total: e?.totalInByte,
+      used: e?.usedInByte,
+    }))
+  }, [vm?.vmDiskUsage])
 
   const rfbRef = useRef(null);
 

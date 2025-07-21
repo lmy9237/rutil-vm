@@ -60,15 +60,15 @@ class DashboardVo (
     val eventsWarning: Int = 0,
 	private val _dateCreated: Date? = null,
 	private val _timeElapsed: BigDecimal? = BigDecimal.ZERO,
-    val version: String = "",
+	val version: String = "",
+	val buildNo: Int = 1,
 	val releaseDate: String = "",
 
 ): Serializable {
     override fun toString(): String =
         gson.toJson(this)
 
-	val dateCreated: String
-		get() = ovirtDf.formatEnhanced(_dateCreated)
+	val dateCreated: String			get() = ovirtDf.formatEnhanced(_dateCreated)
 
 	val timeElapsedInMilli: Long
 		get() = _timeElapsed?.toLong()?.times(1000L) ?: 0L
@@ -99,9 +99,10 @@ class DashboardVo (
         private var bDateCreated: Date? = null; fun dateCreated(block: () -> Date?) { bDateCreated = block() }
 		private var bTimeElapsed: BigDecimal = BigDecimal.ZERO; fun timeElapsed(block: () -> BigDecimal?) { bTimeElapsed = block() ?: BigDecimal.ZERO }
         private var bVersion: String = ""; fun version(block: () -> String?) { bVersion = block() ?: "" }
+		private var bBuildNo: Int = 1; fun buildNo(block: () -> Int?) { bBuildNo = block() ?: 0}
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
-        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bStorageDomainsUp, bStorageDomainsDown, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bReleaseDate)
+        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bStorageDomainsUp, bStorageDomainsDown, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bBuildNo, bReleaseDate)
     }
 
     companion object {
@@ -159,7 +160,8 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
         eventsWarning { eventsWarning }
 		dateCreated { vmHostedEngine?.creationTime() }
 		timeElapsed { timeElapsed }
-        version { propConfig.version }
+		version { propConfig.version }
+		buildNo { propConfig.buildNo }
         releaseDate { propConfig.releaseDate }
     }
 }

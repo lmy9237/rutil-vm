@@ -15,6 +15,7 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskInterfaceB
 import com.itinfo.rutilvm.api.ovirt.business.DisplayTypeB
 import com.itinfo.rutilvm.api.ovirt.business.GraphicsTypeB
 import com.itinfo.rutilvm.api.ovirt.business.UsbPolicy
+import com.itinfo.rutilvm.api.ovirt.business.VmInterfaceType
 import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.ovirt.business.VmResumeBehavior
 import com.itinfo.rutilvm.api.ovirt.business.VmTypeB
@@ -526,13 +527,13 @@ class RasdItemType10(
 	instanceId: String?,
 	val caption: String? = "",
 	val otherResourceType: String? = "ovirtmgmt", // TODO: 뭔지모름
-	val resourceSubType: Int? = 3, // TODO: 뭔지모름
+	private val resourceSubType: Int? = 3, // TODO: 뭔지모름
 	val connection: String? = "ovirtmgmt",  // TODO: 뭔지모름
 	val linked: Boolean? = false,
 	val name: String? = "",
 	val elementName: String? = "",
 	val macAddress: String? = "",
-	val speed: Int? = 10000,
+	val speed: Long? = 10000L,
 	val type: String? = DEFAULT_TYPE, // controller, channel, disk, graphics video ...
 	val device: String? = DEFAULT_DEVICE, // channel.unix, disk.cdrom, grpahics.vnc, video.vga ...
 	val address: String? = "", // in UUID form
@@ -541,6 +542,8 @@ class RasdItemType10(
 	val isReadOnly: Boolean? = false,
 	val alias: String? = "",
 ): RasdItem(instanceId, 10), Serializable { // TODO: RasdItemDevice 인터페이스로 처리
+	val interfaceType: VmInterfaceType?			get() = VmInterfaceType.forValue(resourceSubType)
+
 	override fun toString(): String =
 		gson.toJson(this@RasdItemType10)
 
@@ -554,7 +557,7 @@ class RasdItemType10(
 		private var bName: String? = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bElementName: String? = "";fun elementName(block: () -> String?) { bElementName = block() ?: "" }
 		private var bMacAddress: String? = "";fun macAddress(block: () -> String?) { bMacAddress = block() ?: "" }
-		private var bSpeed: Int? = 10000;fun speed(block: () -> Int?) { bSpeed = block() ?: 10000 }
+		private var bSpeed: Long? = 10000L;fun speed(block: () -> Long?) { bSpeed = block() ?: 10000L }
 		private var bType: String? = DEFAULT_TYPE;fun type(block: () -> String?) { bType = block() ?: DEFAULT_TYPE }
 		private var bDevice: String? = DEFAULT_DEVICE;fun device(block: () -> String?) { bDevice = block() ?: DEFAULT_DEVICE }
 		private var bAddress: String? = "";fun address(block: () -> String?) { bAddress = block() ?: "" }
@@ -832,7 +835,7 @@ fun Map<String, String>.toOvfRasdItemFromMap(): RasdItem {
 			name { this@toOvfRasdItemFromMap["rasd:Name"] }
 			elementName { this@toOvfRasdItemFromMap["rasd:ElementName"] }
 			macAddress { this@toOvfRasdItemFromMap["rasd:MACAddress"] }
-			speed { this@toOvfRasdItemFromMap["rasd:speed"]?.toIntOrNull() }
+			speed { this@toOvfRasdItemFromMap["rasd:speed"]?.toLongOrNull() }
 			type { this@toOvfRasdItemFromMap["Type"] }
 			device { this@toOvfRasdItemFromMap["Device"] }
 			address { this@toOvfRasdItemFromMap["rasd:Address"] }
@@ -1299,6 +1302,8 @@ data class OvfEnvelope(
 	val allDisks: List<OvfDisk>						get() = diskSection?.disks ?: emptyList()
 	val allFiles: List<OvfFile>						get() = references?.files ?: emptyList()
 	val disksCurrent: List<OvfDisk>					get() = allDisks.filter { it.parentRef == it.fileRef }
+	// val allCompositeNetworks: List<OvfNetwork>		get() = allNetworks.toCompositeNetworks(ovfNics)
+	val allNetworks: List<OvfNetwork>				get() = networkSection?.networks ?: emptyList()
 
 	val allSnapshots: List<OvfSnapshot>				get() = virtualSystemSection?.snapshotsSection?.snapshots ?: emptyList()
 
@@ -1489,6 +1494,21 @@ fun List<OvfDisk>.toCompositeDisks(
 	}
 }
 
+fun OvfNetwork.toCompositeNetwork(
+	rasdItem: RasdItemType10?
+): OvfCompositeNetwork = OvfCompositeNetwork.builder {
+
+}
+
+fun List<OvfNetwork>.toCompositeNetworks(
+	rasdItems: List<RasdItemType10> = emptyList()
+): List<OvfCompositeNetwork> {
+	val itemByName: Map<String, RasdItemType10> = rasdItems.associateBy { it.name ?: "" }
+	return this@toCompositeNetworks.map {
+		it.toCompositeNetwork(itemByName[it.name])
+	}
+}
+
 fun String.toOvfEnvelope(): OvfEnvelope {
 	log.debug("... toOvfEnvelope")
 	val reader = this@toOvfEnvelope.toXmlElement()
@@ -1517,5 +1537,21 @@ fun String.toOvfEnvelope(): OvfEnvelope {
 		networkSection { OvfNetworkSection.builder { networks { networks  } } }
 		diskSection { OvfDiskSection.builder { disks { disks } } }
 		virtualSystemSection { vmSection }
+	}
+}
+
+
+class OvfCompositeNetwork(
+
+): Serializable {
+	override fun toString(): String =
+		gson.toJson(this@OvfCompositeNetwork)
+
+	class Builder {
+		fun build(): OvfCompositeNetwork = OvfCompositeNetwork()
+	}
+
+	companion object {
+		inline fun builder(block: Builder.() -> Unit): OvfCompositeNetwork = OvfCompositeNetwork.Builder().apply(block).build()
 	}
 }

@@ -1,5 +1,7 @@
 package com.itinfo.rutilvm.api.model.common
 
+import com.itinfo.rutilvm.api.model.storage.DiskImageVo
+import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.common.gson
 
 import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
@@ -50,6 +52,16 @@ fun List<Disk>.toNavigationalsFromDisks(): List<TreeNavigational<DiskStatus>> =
 	this@toNavigationalsFromDisks.map { it.toNavigationalFromDisks() }
 //endregion
 
+//region: DiskImageVo
+fun DiskImageVo.toNavigationalFromDiskImageVo(): TreeNavigational<DiskStatusB> = TreeNavigational.builder {
+	type { TreeNavigatableType.DISK }
+	id { this@toNavigationalFromDiskImageVo.id }
+	name { this@toNavigationalFromDiskImageVo.alias }
+	status { this@toNavigationalFromDiskImageVo.status }
+}
+
+fun List<DiskImageVo>.toNavigationalsFromDiskImageVos(): List<TreeNavigational<DiskStatusB>> =
+	this@toNavigationalsFromDiskImageVos.map { it.toNavigationalFromDiskImageVo() }
 //region: Vm
 fun Vm.toNavigationalFromVms(): TreeNavigational<VmStatusB> = TreeNavigational.builder {
 	type { TreeNavigatableType.VM }

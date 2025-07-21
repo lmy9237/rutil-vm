@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.model.common.TreeNavigationalDataCenter
 import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenter4Clusters
 import com.itinfo.rutilvm.api.model.common.toNavigationalsFromNetworks
 import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenters4StorageDomains
+import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.findAllDataCenters
@@ -45,6 +46,7 @@ class TreeNavigationServiceImpl (
 
 ): BaseService(), ItTreeNavigationService {
 	@Autowired private lateinit var rVm: VmRepository
+	@Autowired private lateinit var rAllDisks: AllDisksRepository
 
     @Throws(Error::class)
     override fun findAllNavigationalsWithClusters(): List<TreeNavigationalDataCenter> {
@@ -65,7 +67,7 @@ class TreeNavigationServiceImpl (
         log.info("toStorageDomain ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.toNavigationalsFromDataCenters4StorageDomains(conn)
+        return dataCenters.toNavigationalsFromDataCenters4StorageDomains(conn, rAllDisks)
     }
 
     companion object{

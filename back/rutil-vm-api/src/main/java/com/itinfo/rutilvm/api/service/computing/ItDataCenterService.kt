@@ -8,21 +8,17 @@ import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB.active
-import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
-import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
-import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.StoragePoolRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
-import com.itinfo.rutilvm.api.repository.engine.VmTemplateRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StoragePoolEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toDataCenterVos
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
@@ -312,7 +308,7 @@ class DataCenterServiceImpl(
 		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		// return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
 		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(dataCenterId)
-		return res?.toDiskEntities()
+		return res?.toDiskImageVoFromAllDiskEntities()
 	}
 
 	@Throws(Error::class)
@@ -343,8 +339,14 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>? {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
-		val res: List<AllDiskEntity>? = rAllDisks.findByStoragePoolIdOrderByDiskAliasAsc(dataCenterId.toUUID())
-		return res?.toDiskEntities()
+		val res: List<AllDiskEntity>? = rAllDisks.findAllByStoragePoolIdOrderByDiskAliasAsc(
+			dataCenterId.toUUID()
+		)?.filter {
+			it.numberOfVms == 0 && (
+				it.diskContentType == DiskContentTypeB.data/* || it.diskContentType == DiskContentTypeB.iso*/
+			)
+		}
+		return res?.toDiskImageVoFromAllDiskEntities()
 		// val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
 		// 	.getOrDefault(emptyList())
 		// // 디스크 포맷 필터링

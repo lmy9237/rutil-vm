@@ -97,14 +97,9 @@ class StorageDomainEntity(
 	val supportsDiscard: Boolean? = null,
 	val isHostedEngineStorage: Boolean = false,
 ) : Serializable {
-	val status: StorageDomainStatusB
-		get() = StorageDomainStatusB.forValue(_status)
-
-	val storageType: StorageTypeB
-		get() = StorageTypeB.forValue(_storageType)
-
-	val storageDomainType: StorageDomainTypeB
-		get() = StorageDomainTypeB.forValue(_storageDomainType)
+	val status: StorageDomainStatusB				get() = StorageDomainStatusB.forValue(_status)
+	val storageType: StorageTypeB					get() = StorageTypeB.forValue(_storageType)
+	val storageDomainType: StorageDomainTypeB		get() = StorageDomainTypeB.forValue(_storageDomainType)
 
 	override fun toString(): String =
 		gson.toJson(this)

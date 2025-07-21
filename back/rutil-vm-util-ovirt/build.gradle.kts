@@ -1,6 +1,6 @@
 group = "com.itinfo.rutilvm.util"
 description = "유틸 (ovirt)"
-version = Versions.Project.RUTIL_VM
+version = "${Versions.Project.RUTIL_VM}-${Versions.Project.RUTIL_VM_BUILD_NO}"
 
 val jar: Jar by tasks
 jar.enabled = true

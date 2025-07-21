@@ -13,7 +13,7 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -206,7 +206,7 @@ class DiskServiceImpl(
         //     .filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
         // return res.toDiskMenus(conn)
 		val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
-		return res.toDiskEntities()
+		return res.toDiskImageVoFromAllDiskEntities()
 			.filter { it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso }
     }
 
