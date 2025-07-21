@@ -33,7 +33,6 @@ class UsageDto(
         private var bMemoryPercent: Int? = null; fun memoryPercent(block: () -> Int?) {bMemoryPercent = block()}
         private var bNetworkPercent: Int? = null; fun networkPercent(block: () -> Int?) {bNetworkPercent = block()}
         private var bTime: LocalDateTime? = null;fun time(block: () -> LocalDateTime?) { bTime = block() }
-//        private var bTime: String = ""; fun time(block: () -> String?) {bTime = block() ?: ""}
 
         fun build(): UsageDto = UsageDto( bId, bName, bCpuPercent, bMemoryPercent, bNetworkPercent, bTime)
     }

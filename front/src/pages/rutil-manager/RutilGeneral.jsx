@@ -24,7 +24,8 @@ const RutilGeneral = () => {
   } = useDashboard();  
   
   const {
-    data: cpuMemory
+    data: cpuMemory,
+    isLoading: cpuMemoryloading
   } = useDashboardCpuMemory();
   
   const tableRows = useMemo(() => [

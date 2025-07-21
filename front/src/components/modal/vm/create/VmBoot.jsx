@@ -49,6 +49,7 @@ const VmBoot = ({
       <div className="f-btw">
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formBootState.isCdDvdChecked}
+          disabled={isos.length === 0}
           onChange={(e) => {
             const isChecked = e.target.checked;
             const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : emptyIdNameVo();
@@ -63,7 +64,7 @@ const VmBoot = ({
         <div style={{width:"55%"}}>
           <LabelSelectOptionsID
             value={formBootState.cdRomVo?.id}
-            disabled={!formBootState.isCdDvdChecked || isos.length === 0}
+            disabled={!formBootState.isCdDvdChecked}
             loading={isIsoLoading}
             options={isos}
             onChange={(e) => {

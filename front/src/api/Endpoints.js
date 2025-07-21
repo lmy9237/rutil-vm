@@ -23,6 +23,10 @@ const ENDPOINTS = {
   GET_METRIC_STORAGE: () =>                                                `${ENDPOINT_API_V1}/dashboard/storages/metric`,
   
   GET_PER_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/dashboard/hosts/${hostId}/usage`,
+  GET_PER_DATA_CENTER: (dataCenterId) =>                                   `${ENDPOINT_API_V1}/dashboard/datacenters/${dataCenterId}/usage`,
+  GET_PER_CLUSTER: (clusterId) =>                                          `${ENDPOINT_API_V1}/dashboard/clusters/${clusterId}/usage`,
+
+
   //#endregion: Dashboard
   
   //#region: DataCenter

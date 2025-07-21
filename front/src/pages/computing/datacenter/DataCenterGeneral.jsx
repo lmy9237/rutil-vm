@@ -1,7 +1,7 @@
 // DataCenterGeneral.jsx
 import React, { useMemo } from "react";
 import useGlobal from "@/hooks/useGlobal";
-import { useDataCenter } from "@/api/RQHook";
+import { useDataCenter, useUsageDataCenter } from "@/api/RQHook";
 import { InfoTable } from "@/components/table/InfoTable";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 import GeneralLayout from "@/components/GeneralLayout";
@@ -17,6 +17,7 @@ import Localization from "@/utils/Localization";
 const DataCenterGeneral = ({ datacenterId }) => {
   const { datacentersSelected } = useGlobal();
   const { data: datacenter } = useDataCenter(datacenterId);
+  const { data: db } = useUsageDataCenter(datacenterId);
 
 const tableRows = [
   { label: "ID", value: datacenter?.id },
@@ -30,24 +31,23 @@ const tableRows = [
   { label: Localization.kr.STATUS, value: Localization.kr.renderStatus(datacenter?.status) || Localization.kr.UP },
 ];
 
-  // 그래프 표시용 임의 값 구성 (향후 실제 계산 반영 가능)
   const usageItems = useMemo(() => [
     {
       label: "CPU",
-      value: 64,
-      description: "64 CPU 사용됨 | 총 128 CPU | 20 CPU 사용 가능",
+      value: db?.totalCpuUsagePercent ?? 0,
+      description: `${db?.usedCpuCore ?? 0} CPU 사용됨 | 총 ${db?.totalCpuCore ?? 0} CPU | ${db?.totalCpuCore - db?.usedCpuCore ?? 0} CPU 사용 가능`,
     },
     {
       label: "메모리",
-      value: 66,
-      description: "16.42 GB 사용됨 | 총 51.14 GB | 66% 사용 가능",
+      value: db?.totalMemoryUsagePercent ?? 0,
+      description: `${(db?.usedMemoryMB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalMemoryMB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
     {
       label: "스토리지",
-      value: 89,
-      description: "4.56 TB 사용됨 | 총 5.11 TB",
+      value: db?.totalStorageUsagePercent ?? 0,
+      description: `${(db?.usedStorageGB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalStorageGB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
-  ], []);
+  ], [db]);
 
   return (
     <GeneralLayout

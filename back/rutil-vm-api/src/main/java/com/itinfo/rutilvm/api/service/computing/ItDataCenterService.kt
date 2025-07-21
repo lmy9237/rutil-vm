@@ -408,6 +408,7 @@ class DataCenterServiceImpl(
 		return res.toDataCenterVos(conn, findNetworks = false, findStorageDomains = true, findClusters = false)
 	}
 
+
 	// 사용량 계산
 	private fun calculateUsage(host: Host): UsageDto? {
 		return if (host.status() == HostStatus.UP) {

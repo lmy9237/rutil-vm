@@ -7,6 +7,7 @@ import com.itinfo.rutilvm.api.repository.history.dto.HostUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.LineDto
 import com.itinfo.rutilvm.api.repository.history.dto.StorageUsageDto
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
+import com.itinfo.rutilvm.api.repository.history.dto.UsagePerDto
 import com.itinfo.rutilvm.api.service.computing.ItGraphService
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
@@ -252,6 +253,46 @@ class GraphController {
 	fun storageMetricChart(): ResponseEntity<List<UsageDto>> {
 		log.info("/dashboard/storages/metric ... ")
 		return ResponseEntity.ok(graph.storageMetricData())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="DataCenter 사용량",
+		notes="DataCenter 사용량"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/datacenters/{dataCenterId}/usage")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun datacentersUsage(
+		@PathVariable dataCenterId: String? = null
+	): ResponseEntity<UsagePerDto> {
+		log.info("/datacenters/{}/usage ... ", dataCenterId)
+		if (dataCenterId.isNullOrEmpty())
+			throw ErrorPattern.DATACENTER_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(graph.dataCenterUsage(dataCenterId))
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="Cluster 사용량",
+		notes="Cluster 사용량"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/clusters/{clusterId}/usage")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun clustersUsage(
+		@PathVariable clusterId: String? = null
+	): ResponseEntity<UsagePerDto> {
+		log.info("/clusters/{}/usage ... ", clusterId)
+		if (clusterId.isNullOrEmpty())
+			throw ErrorPattern.CLUSTER_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(graph.clusterUsage(clusterId))
 	}
 
 	companion object {

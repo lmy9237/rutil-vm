@@ -43,7 +43,7 @@ const EventDupl = ({
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         
-        {/* <RVI36
+        <RVI36
           iconDef={rvi16SeverityAlert()}
           onClick={() => { }}
         />
@@ -54,7 +54,7 @@ const EventDupl = ({
         <RVI36
           iconDef={rvi16SeverityWarning()}
           onClick={() => { }}
-        /> */}
+        />
         <EventActionButtons />
       </div>
       <TablesOuter target={"event"}

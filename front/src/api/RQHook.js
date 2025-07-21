@@ -322,6 +322,36 @@ export const useDashboardMetricStorage = (
     return _res
   }
 });
+
+
+export const useUsageDataCenter = (
+  dataCenterId,
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
+  queryKey: ["dashboardDataCenter"],
+  queryFn: async () => {
+    const res = await ApiManager.getDataCenter(dataCenterId)
+    const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
+    Logger.debug(`RQHook > useDashboardDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    return _res;
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
+  },
+});
+
+export const useUsageCluster = (
+  clusterId,
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
+  queryKey: ["dashboardCluster"],
+  queryFn: async () => {
+    const res = await ApiManager.getCluster(clusterId)
+    const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
+    Logger.debug(`RQHook > useDashboardCluster ... clusterId: ${clusterId}, res: `, _res);
+    return _res;
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
+  },
+});
+
 //#endregion
 
 

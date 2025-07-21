@@ -269,6 +269,15 @@ const DiskUploadModal = ({
                   )}
                 </select>
               </div> */}
+              {domainVo && (() => {
+                const domainObj = domains.find((d) => d.id === domainVo.id);
+                if (!domainObj) return null;
+                return (
+                  <div className="text-xs text-gray-500 f-end">
+                    사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+                  </div>
+                );
+              })()}
               <LabelSelectOptionsID
                 label="디스크 프로파일"
                 value={diskProfileVo.id}

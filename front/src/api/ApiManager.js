@@ -180,31 +180,6 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.GET_STORAGE_MEMORY()
   }),
-
-   /**
-   * @name ApiManager.getPerVmCpu
-   * @description vm 불러오는 값
-   * 
-   * @returns 
-   * 
-   * @see Dashboard.js (components)
-   */
-   getPerVmCpu: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.GET_PER_VM_CPU()
-  }),
-   /**
-   * @name ApiManager.getPerVmMemory
-   * @description vm 불러오는 값
-   * 
-   * @returns 
-   * 
-   * @see Dashboard.js (components)
-   */
-   getPerVmMemory: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.GET_PER_VM_MEMORY()
-  }),
   /**
   * @name ApiManager.getPerVmNetwork
   * @description vm 불러오는 값
@@ -216,8 +191,7 @@ const ApiManager = {
   getPerVmNetwork: async () => makeAPICall({
    method: "GET", 
    url: ENDPOINTS.GET_PER_VM_NETWORK()
- }),
-
+  }),
    /**
    * @name ApiManager.getMetricVmCpu
    * @description vm 불러오는 값
@@ -255,6 +229,30 @@ const ApiManager = {
    getMetricStorage: async () => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.GET_METRIC_STORAGE()
+  }),
+  /**
+   * @name ApiManager.getDataCenter
+   * @description host 전체 cpu,memory 평균값 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getDataCenter: async (dataCenterId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_PER_DATA_CENTER(dataCenterId),
+  }),
+  /**
+   * @name ApiManager.getCluster
+   * @description cluster cpu,memory 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getCluster: async (clusterId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_PER_CLUSTER(clusterId),
   }),
   //#endregion: Dashboard
 

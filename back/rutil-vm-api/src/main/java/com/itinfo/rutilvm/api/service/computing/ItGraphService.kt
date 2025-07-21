@@ -3,8 +3,11 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.api.configuration.PropertiesConfig
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
+import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsInterfaceStatisticsRepository
+import com.itinfo.rutilvm.api.repository.engine.VdsRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsStatisticsRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
@@ -13,6 +16,7 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import org.jboss.jandex.TypeTarget.Usage
+import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,6 +24,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
+import kotlin.jvm.Throws
 
 interface ItGraphService {
 	/**
@@ -119,6 +124,19 @@ interface ItGraphService {
 	fun storageMetricData(): List<UsageDto>
 	// 호스트 목록 - 그래프
 	fun hostPercent(hostId: String): UsageDto
+
+	/**
+	 * [ItGraphService.dataCenterUsage]
+	 * 데이터센터 일반정보 사용
+	 */
+	@Throws(Error::class)
+	fun dataCenterUsage(dataCenterId: String): UsagePerDto
+	/**
+	 * [ItGraphService.clusterUsage]
+	 * 클러스터 일반정보 사용
+	 */
+	@Throws(Error::class)
+	fun clusterUsage(clusterId: String): UsagePerDto
 }
 
 @Service
@@ -129,7 +147,9 @@ class GraphServiceImpl(
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
 	@Autowired private lateinit var storageDomainSamplesHistoryRepository: StorageDomainSamplesHistoryRepository
+	@Autowired private lateinit var storageDomainRepository: StorageDomainRepository
 	@Autowired private lateinit var vdsStatisticsRepository: VdsStatisticsRepository
+	@Autowired private lateinit var vdsRepository: VdsRepository
 
 
 	override fun getDashboard(): DashboardVo {
@@ -316,6 +336,30 @@ class GraphServiceImpl(
 		return usageDto
 	}
 */
+
+	override fun dataCenterUsage(dataCenterId: String): UsagePerDto {
+		log.info("dataCenterUsage ... dataCenterId: {}", dataCenterId)
+
+		val vdsList = vdsRepository.findByStoragePoolId(dataCenterId.toUUID())
+		val storageList = storageDomainRepository.findByStoragePoolId(dataCenterId.toUUID())
+
+		return vdsList.toDataCenterUsage(storageList)
+	}
+
+	override fun clusterUsage(clusterId: String): UsagePerDto {
+		log.info("clusterUsage ... clusterId: {}", clusterId)
+
+		val vdsList = vdsRepository.findByClusterId(clusterId.toUUID())
+
+		val storagePoolIds = vdsList.mapNotNull {
+			it.storagePool?.id ?: it.storagePool?.id
+		}.distinct()
+
+		val storageList = storagePoolIds.flatMap {
+			storageDomainRepository.findByStoragePoolId(it)
+		}
+		return vdsList.toDataCenterUsage(storageList)
+	}
 
 	companion object {
 		private val log by LoggerDelegate()

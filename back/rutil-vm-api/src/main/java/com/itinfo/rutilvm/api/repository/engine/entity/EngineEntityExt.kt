@@ -200,6 +200,7 @@ fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
 	// storageDomainVos {  }
 	clusterCnt { this@toDataCenterVo.clusters?.size ?: 0 }
 	clusterVos { this@toDataCenterVo.clusters?.toClusterVosFromClusterViewEntities() }
+	// hostCnt {  }
 	quotaMode { this@toDataCenterVo.quotaEnforcementType }
 }
 fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =

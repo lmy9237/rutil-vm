@@ -5,6 +5,8 @@ import com.itinfo.rutilvm.api.repository.history.entity.HostSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmInterfaceSamplesHistoryEntity
 import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import com.itinfo.rutilvm.api.error.toException
+import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VdsEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
 import com.itinfo.rutilvm.api.repository.history.entity.StorageDomainSamplesHistoryEntity
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
@@ -321,6 +323,55 @@ fun VdsStatisticsEntity.toHostUsage(): UsageDto{
 		networkPercent { this@toHostUsage.usageNetworkPercent }
 	}
 }
+
+// fun VdsEntity.toDataCenterUsage(): UsageDto{
+//
+// 	return UsageDto.builder {
+// 		cpuPercent { this@toDataCenterUsage. }
+// 		memoryPercent { this@toDataCenterUsage. }
+// 		storagePercent { this@toDataCenterUsage. }
+// 	}
+// }
+
+fun List<VdsEntity>.toDataCenterUsage(storageDomains: List<StorageDomainEntity>): UsagePerDto {
+	val totalCpuCores = this.sumOf { it.cpuCores ?: 0 }
+
+	val totalVmCores = this.sumOf { it.vmsCoresCount ?: 0 }
+	val totalPhysicalMemMb = this.sumOf { it.physicalMemMb ?: 0 }
+	val totalFreeMemMb = this.sumOf { it.memFree ?: 0L }
+
+	val totalAvailable = storageDomains.sumOf { it.availableDiskSize?.toLong() ?: 0L }
+	val totalUsed = storageDomains.sumOf { it.usedDiskSize?.toLong() ?: 0L }
+	val totalStorage = totalAvailable + totalUsed
+	println("totalCpuCores $totalCpuCores totalVmCores $totalVmCores totalPhysicalMemMb $totalPhysicalMemMb totalFreeMemMb $totalFreeMemMb")
+
+	return UsagePerDto.builder {
+		totalCpuCore { totalCpuCores }
+		usedCpuCore { totalVmCores }
+		totalCpuUsagePercent {
+			if (totalCpuCores > 0)
+				((totalVmCores.toDouble() / totalCpuCores) * 100)
+			else 0.0
+		}
+		totalMemoryGB { totalPhysicalMemMb.toDouble() / 1024 }
+		usedMemoryGB { (totalPhysicalMemMb - totalFreeMemMb.toDouble()) / 1024  }
+		totalMemoryUsagePercent {
+			if (totalPhysicalMemMb > 0) {
+				((totalPhysicalMemMb - totalFreeMemMb).toDouble() / totalPhysicalMemMb) * 100
+			} else 0.0
+		}
+		totalStorageGB { totalStorage.toDouble() }
+		usedStorageGB { totalUsed.toDouble() }
+		totalStorageUsagePercent {
+			if (totalStorage > 0L)
+				(totalUsed.toDouble() / totalStorage.toDouble()) * 100
+			else 0.0
+		}
+
+	}
+}
+
+
 
 /**
  * vm 사용량

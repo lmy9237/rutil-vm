@@ -44,36 +44,36 @@ const DiskGeneral = ({
     { label: "할당 정책", value: disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED },
   ];
 
-const usageItems = useMemo(() => {
-  const virtualSizeGiB = (disk?.virtualSize ?? 0) / 1024 ** 3;
-  const actualSizeGiB = (disk?.actualSize ?? 0) / 1024 ** 3;
+  const usageItems = useMemo(() => {
+    const virtualSizeGiB = (disk?.virtualSize ?? 0) / 1024 ** 3;
+    const actualSizeGiB = (disk?.actualSize ?? 0) / 1024 ** 3;
 
-  // 디스크 비율
-  const diskTotalTB = 200; // 기준치
-  const actualSizeTB = actualSizeGiB / 1024;
-  const diskPercent = Math.round((actualSizeTB / diskTotalTB) * 100);
+    // 디스크 비율
+    const diskTotalTB = 200; // 기준치
+    const actualSizeTB = actualSizeGiB / 1024;
+    const diskPercent = Math.round((actualSizeTB / diskTotalTB) * 100);
 
-  // 스토리지 (예시 데이터)
-  const storageTotalTB = 5.11;
-  const storageUsedTB = 4.56;
-  const storagePercent = Math.round((storageUsedTB / storageTotalTB) * 100);
+    // 스토리지 (예시 데이터)
+    const storageTotalTB = 5.11;
+    const storageUsedTB = 4.56;
+    const storagePercent = Math.round((storageUsedTB / storageTotalTB) * 100);
 
-  return [
-    {
-      label: "스토리지",
-      value: storagePercent,
-      description: `${storageUsedTB.toFixed(2)} TB 사용됨 | 총 ${storageTotalTB.toFixed(2)} TB`,
-    },
-    {
-      label: "가상 디스크",
-      value: diskPercent,
-      description:
-        actualSizeGiB < 1
-          ? `< 1 GiB 사용됨 | 총 ${diskTotalTB} TB`
-          : `${actualSizeTB.toFixed(2)} TB 사용됨 | 총 ${diskTotalTB} TB`,
-    }
-  ];
-}, [disk]);
+    return [
+      {
+        label: "스토리지",
+        value: storagePercent,
+        description: `${storageUsedTB.toFixed(2)} TB 사용됨 | 총 ${storageTotalTB.toFixed(2)} TB`,
+      },
+      {
+        label: "가상 디스크",
+        value: diskPercent,
+        description:
+          actualSizeGiB < 1
+            ? `< 1 GiB 사용됨 | 총 ${diskTotalTB} TB`
+            : `${actualSizeTB.toFixed(2)} TB 사용됨 | 총 ${diskTotalTB} TB`,
+      }
+    ];
+  }, [disk]);
 
 
   // return <InfoTable tableRows={tableRows} />;

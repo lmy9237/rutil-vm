@@ -2,7 +2,8 @@ import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperli
 import { InfoTable }              from "@/components/table/InfoTable";
 import { 
   useAllBiosTypes,
-  useCluster
+  useCluster,
+  useUsageCluster
 } from "@/api/RQHook";
 import Localization               from "@/utils/Localization";
 import { useMemo } from "react";
@@ -28,6 +29,8 @@ const ClusterGeneral = ({
     isSuccess: isClusterSuccess,
   } = useCluster(clusterId);
 
+  const { data: db } = useUsageCluster(clusterId);
+
   const {
     data: biosTypes = [],
     isLoading: isBiosTypesLoading,
@@ -40,20 +43,20 @@ const ClusterGeneral = ({
   const usageItems = useMemo(() => [
     {
       label: "CPU",
-      value: 64,
-      description: "64 CPU 사용됨 | 총 128 CPU | 20 CPU 사용 가능",
+      value: db?.totalCpuUsagePercent ?? 0,
+      description: `${db?.usedCpuCore ?? 0} CPU 사용됨 | 총 ${db?.totalCpuCore ?? 0} CPU | ${db?.totalCpuCore - db?.usedCpuCore ?? 0} CPU 사용 가능`,
     },
     {
       label: "메모리",
-      value: 66,
-      description: "16.42 GB 사용됨 | 총 51.14 GB | 66% 사용 가능",
+      value: db?.totalMemoryUsagePercent ?? 0,
+      description: `${(db?.usedMemoryMB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalMemoryMB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
     {
       label: "스토리지",
-      value: 89,
-      description: "4.56 TB 사용됨 | 총 5.11 TB",
+      value: db?.totalStorageUsagePercent ?? 0,
+      description: `${(db?.usedStorageGB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalStorageGB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
-  ], []);
+  ], [db]);
 
   const tableRows = [
     { label: "ID", value: cluster?.id },
@@ -81,9 +84,9 @@ const ClusterGeneral = ({
               <hr className="w-full" />
               <InfoTable tableRows={tableRows} />
             </div>
-            {/* <GeneralBoxProps title="용량 및 사용량">
+            <GeneralBoxProps title="용량 및 사용량">
               <VmGeneralBarChart items={usageItems} />
-            </GeneralBoxProps> */}
+            </GeneralBoxProps>
           </>
         }
         bottom={<></>}
