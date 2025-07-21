@@ -32,6 +32,11 @@ button.btn-action {
   cursor: pointer;
   opacity: 1;
 }
+.btn-right-click.disabled{
+  background-color: var(--color-input-disabled) !important;
+  color: var(--color-gray) !important;
+  cursor: no-drop !important;
+}
 .btn-right-click[disabled]{
   width: 100%;
   border: none !important;

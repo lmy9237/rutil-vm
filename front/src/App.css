@@ -161,11 +161,11 @@ html {
   --color-yellow: #FBA80E;
 
   --color-primary: #020B79;         /* 메인색 */
-  --color-primary-hover: #2E379D;    /*0*/        
-  --color-primary-white: #FFF;       /*0*/ 
-  --color-primary-h: #0b4db5;        /*0*/       
+  --color-primary-hover: #2E379D;      
+  --color-primary-white: #FFF;      
+  --color-primary-h: #0b4db5;        
   --color-bg-tooltip: #333333;       /* 툴팁 */
-  --color-hover:#E7F2FF; /*0*/ 
+  --color-hover:#E7F2FF; 
   
   --border-w: 1px; /* 테두리 두깨 */
   --thickness-border: 0.8px;
@@ -257,7 +257,6 @@ body {
 hr {
   height: var(--border-w);
   background-color: var(--color-border-default);
-  /* margin-bottom: 1px; */
 }
 ul {
   list-style-type: circle;
@@ -283,10 +282,7 @@ svg.btn { cursor: pointer; }
   overflow-x: hidden;overflow-y: auto;
   height: 100%;
 }
-/* html, body {
-  height: 100%;
-  overflow: hidden;
-} */
+
 .f-center { display:flex;align-items:center;justify-content:center; }
 .f-start  { display:flex;align-items:center;justify-content:flex-start; }
 .f-end    { display:flex;align-items:center;justify-content:flex-end; }
@@ -377,9 +373,7 @@ svg.btn { cursor: pointer; }
 .btn-icon {
   border:none;background:transparent;
 }
-.btn-icon:hover {
-  cursor: pointer;
-}
+
 .btn-icon[disabled] {
   background-color: transparent !important;
   border: none !important;

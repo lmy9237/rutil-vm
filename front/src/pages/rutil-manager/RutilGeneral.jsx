@@ -64,12 +64,13 @@ const RutilGeneral = () => {
         description: `${memoryUsed}% 사용됨 | ${100 - memoryUsed}% 사용 가능`,
       },
       {
-        label: "네트워크",
+        label: "스토리지",
         value: 0,
         description: "?% 사용됨 | ?% 사용 가능",
       },
     ];
-  }, []);
+  }, [cpuMemory?.totalCpuCore, cpuMemory?.usedCpuCore, cpuMemory?.totalMemoryGB, cpuMemory?.usedMemoryGB]);
+
   return (
     <>
     <GeneralLayout

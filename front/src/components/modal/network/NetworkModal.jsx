@@ -195,9 +195,11 @@ const NetworkModal = ({
   return (
     <BaseModal targetName={`논리 ${Localization.kr.NETWORK}`} submitTitle={nLabel}
       isOpen={isOpen} onClose={onClose}
+      // TODO vnic일때 편집모달 로딩X isClustersSuccess 여기문제
       isReady={
         editMode
-          ? isDataCentersSuccess && isClustersSuccess
+          //    ? isDataCentersSuccess && isClustersSuccess
+          ? isDataCentersSuccess
           : (!isDataCentersLoading && !isClustersLoading && isDataCentersSuccess && isClustersSuccess)
       }
       onSubmit={handleFormSubmit}

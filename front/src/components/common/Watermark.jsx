@@ -54,7 +54,8 @@ export const Watermark = ({
           <span key={`${i}-${j}`} className="watermark-text"
             style={{
               // ...styles.watermarkText,
-              top: `${i * VERTICAL_SPACING}px`,
+              //
+              // top: `${i * VERTICAL_SPACING}px`,
               left: `${100+(j * HORIZONTAL_SPACING)}px`,
             }}
           >

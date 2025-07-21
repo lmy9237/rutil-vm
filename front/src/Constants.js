@@ -125,7 +125,7 @@ const CONSTANT = {
     byBarPercentage(percentage) { //Bar그래프
       if (percentage === null || percentage === undefined) return CONSTANT.color.white;
       if (percentage === 0) return CONSTANT.color.white;
-      if (percentage < 65) return CONSTANT.color.ok;
+      if (percentage < 65) return CONSTANT.color.ok2;
       if (percentage < 75) return CONSTANT.color.norm;
       if (percentage < 90) return CONSTANT.color.warn;
       return CONSTANT.color.crit;

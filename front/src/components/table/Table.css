@@ -61,6 +61,7 @@
   height: var(--h-primary);
   padding: 0 6px;
 }
+/* 
 .section-table-outer input[type="checkbox"] {
   text-align: center;
 }
@@ -68,16 +69,18 @@
 .section-table-outer input[type="text"] {
   width: 100%;
   margin: 6px 0;
-}
+} 
+.section-table-outer > h1 {
+  padding: 10px 0;
+}  
+*/
 .section-table-outer > button {
   display: flex;
   cursor: pointer;
   padding: 5px;
   margin-bottom: 5px;
 }
-.section-table-outer > h1 {
-  padding: 10px 0;
-}
+
 /* tippy 툴팁 */
 .tooltip-content {
   max-width: 600px !important;

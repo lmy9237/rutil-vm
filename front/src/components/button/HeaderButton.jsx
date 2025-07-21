@@ -58,7 +58,7 @@ const HeaderButton = ({
 
   return (
     <div className="section-header f-btw">
-      <div className="section-header-left f-btw">
+      <div className="section-header-left f-btw h-full">
         {titleIcon && <RVI24 iconDef={titleIcon} />}
         <h1 className={`section-header-title fs-24 fw-700 ${inverseColor ? " inverse" : ""}`}>{title}</h1>
         {status && (

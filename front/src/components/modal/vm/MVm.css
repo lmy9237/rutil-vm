@@ -111,6 +111,7 @@
 }
 .checkbox-outer .input-checkbox{
   width: none !important;
+  margin-right: 9px;
 }
 
 

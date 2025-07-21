@@ -5,4 +5,4 @@
 .icon-button-conatiner > p {
   padding:3px
 }
-.icon-button-conatiner > span { color: white; }
+.icon-button-conatiner > span { color: var(--color-white); }

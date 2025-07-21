@@ -179,10 +179,15 @@ const VmActionButtons = ({
             className="dropdown-container"
           >
             <ActionButton
+              // iconDef={
+              //   consoleDropdownActive 
+              //     ? rvi16ChevronUp(isVmQualified4ConsoleConnect ? CONSTANT.color.black : CONSTANT.color.down)
+              //     : rvi16ChevronDown(isVmQualified4ConsoleConnect ? CONSTANT.color.black : CONSTANT.color.down)
+              // }
               iconDef={
                 consoleDropdownActive 
-                  ? rvi16ChevronUp(isVmQualified4ConsoleConnect ? CONSTANT.color.down : CONSTANT.color.black)
-                  : rvi16ChevronDown(isVmQualified4ConsoleConnect ? CONSTANT.color.down : CONSTANT.color.black)
+                  ? rvi16ChevronUp(allUp ? CONSTANT.color.black : CONSTANT.color.down)
+                  : rvi16ChevronDown(allUp ? CONSTANT.color.black : CONSTANT.color.down)
               }
               label={Localization.kr.CONSOLE}
               disabled={!allUp}

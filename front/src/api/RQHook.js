@@ -27,7 +27,7 @@ const QK = {
   DASHBOARD_STORAGE_MEMORY: "dashboardStorageMemory",
   DASHBOARD_PER_VM_CPU: "dashboardPerVmCpu",
 
-  ALL_VMS: "allVMs",
+
 
   ALL_DATACENTERS: "allDataCenters",
   DATACENTER:'dataCenter',
@@ -58,16 +58,98 @@ const QK = {
   NETWORK_INTERFACES_FROM_HOST: "NetworkInterfacesFromHost", 
   NETWORK_INTERFACE_FROM_HOST: "NetworkInterfaceFromHost",
   NETWORK_ATTACHMENTS_FROM_HOST: "NetworkAttachmentsFromHost",
+  HOST_DEVICES_FROM_HOST: "hostDevicesFromHost",
+  STORAGES_FROM_HOST: "storagesFromHost",
+  ISCSI_FROM_HOST: "iscsiFromHost",
+  FIBRE_FROM_HOST: "fibreFromHost",
+  SEARCH_FC_FROM_HOST: "searchFcFromHost",
 
+  ALL_VMS: "allVMs",
+  VM: "vm",
+  DISKS_FROM_VM: "disksFromVM",
+  SNAPSHOT_FROM_VM: "SnapshotFromVM",
+  SNAPSHOT_DETAIL_FROM_VM: "snapshotDetailFromVM",
+  HOST_DEVICES_FROM_VM: "hostDevicesFromVM",
+  NETWORK_INTERFACES_FROM_VM: "networkInterfacesFromVM",
+  NETWORK_INTERFACE_FROM_VM: "networkInterfaceFromVM",
+  APPLICATION_FROM_VM: "ApplicationFromVM",
+  VM_CONSOLE_ACCESS_INFO: "vmConsoleAccessInfo",
+  ALL_MIGRATABLE_HOSTS_FROM_VM: "allMigratableHostsFromVm",
+  ALL_MIGRATABLE_HOSTS_FOR_VMS: "allMigratableHosts4Vms",
+  VM_SCREENSHOT: "vmScreenshot",
+  CDROM_FROM_VM: "cdromFromVm",
+  DISK_ATTACHMENT_FROM_VM: "diskAttachmentFromVm",
+
+  ALL_TEMPLATES: "allTemplates",
+  TEMPLATE: "template",
+  ALL_VMS_FROM_TEMPLATE: "AllVmsFromTemplate",
+  ALL_NICS_FROM_TEMPLATE: "allNicsFromTemplate",
+  NIC_FROM_TEMPLATE: "nicFromTemplate",
+  ALL_DISKS_FROM_TEMPLATE: "allDisksFromTemplate",
+  ALL_STORAGES_FROM_TEMPLATE: "AllStoragesFromTemplate",
 
   ALL_NETWORKS: "allNetworks",
+  NETWORK: "network",
+  CLUSTERS_FROM_NETWORK: "clustersFromNetwork",
+  CONNECTED_HOSTS_FROM_NETWORK: "connectedHostsFromNetwork",
+  DISCONNECTED_HOSTS_FROM_NETWORK: "disconnectedHostsFromNetwork",
+  VM_FROM_NETWORK: "vmFromNetwork",
+  TEMPLATE_FROM_NETWORK: "templateFromNetwork",
+  VNIC_PROFILES_FROM_NETWORK: "vnicProfilesFromNetwork",
+  ALL_NETWORK_PROVIDERS: "allNetworkProviders",
+
   ALL_VNICPROFILES: "allVnicProfiles",
+  VNIC_ID: "vnicId",
+  ALL_VMS_FROM_VNIC_PROFILES: "AllVmsFromVnicProfiles",
+  ALL_TEMPLATES_FROM_VNIC_PROFILES: "AllTemplatesFromVnicProfiles",
+  ALL_NETWORK_FILTERS: "allNetworkFilters",
+
   ALL_DISKS:"allDisks",
-  ALL_STORAGEDOMAINS:"allStorageDomains",
+  CDROMS_FOR_DISKS: "cdromsForDisks",
+  DISK: "disk",
+  ALL_VMS_FROM_DISK: "allVmsFromDisk",
+  ALL_STORAGE_DOMAINS_FROM_DISK: "allStorageDomainsFromDisk",
+
   ALL_EVENTS: "allEvents",
-  ALL_PROVIDERS: "allProviders",
-  ALL_USERS: "allUsers",
+  EVENTS_FROM_DATA_CENTER: "eventsFromDataCenter",
+  EVENTS_FROM_CLUSTER: "eventsFromCluster",
+  EVENTS_FROM_HOST: "eventsFromHost",
+  EVENTS_FROM_VM: "eventsFromVM",
+  EVENTS_FROM_DOMAIN: "eventsFromDomain",
+  EVENTS_FROM_TEMPLATE: "eventsFromTemplate",
+  ALL_EVENTS_NORMAL: "allEventsNormal",
+  ALL_NOTI_EVENTS: "allNotiEvents",
+
   ALL_JOBS: "allJobs",
+  JOB: "job",
+
+  ALL_PROVIDERS: "allProviders",
+  PROVIDER: "provider",
+
+  ALL_USERS: "allUsers",
+  USER: "user",
+
+  ALL_STORAGEDOMAINS:"allStorageDomains",
+  ALL_VALID_DOMAINS: "AllValidDomains",
+  ALL_NFS_STORAGE_DOMAINS: "allNfsStorageDomains",
+  DOMAIN_BY_ID: "DomainById",
+  ALL_DATA_CENTERS_FROM_DOMAIN: "allDataCentersFromDomain",
+  ALL_HOSTS_FROM_DOMAIN: "allHostsFromDomain",
+  ALL_VMS_FROM_DOMAIN: "allVMsFromDomain",
+  ALL_UNREGISTER_VM_FROM_DOMAIN: "AllUnregisterVMFromDomain",
+  ALL_DISKS_FROM_DOMAIN: "allDisksFromDomain",
+ALL_TEMPLATES_FROM_DOMAIN: "allTemplatesFromDomain",
+
+DASHBOARD_METRIC_VM_CPU: "dashboardMetricVmCpu",
+DASHBOARD_METRIC_VM_MEMORY: "dashboardMetricVmMemory",
+DASHBOARD_METRIC_STORAGE: "dashboardMetricStorage",
+
+ALL_BIOS_TYPES: "allBiosTypes",
+ALL_DISK_CONTENT_TYPES: "allDiskContentTypes",
+ALL_MIGRATION_SUPPORTS: "allMigrationSupports",
+ALL_QUOTA_ENFORCEMENT_TYPES: "allQuotaEnforcementTypes",
+ALL_VM_TYPES: "allVmTypes",
+ 
 }
 //#endregion: 쿼리Key
 
@@ -283,7 +365,7 @@ export const useDashboardMetricVmCpu = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardMetricVmCpu'],
+  queryKey: [QK.DASHBOARD_METRIC_VM_CPU],
   queryFn: async () => {
     Logger.debug(`useDashboardMetricVmCpu ...`);
     const res = await ApiManager.getMetricVmCpu()
@@ -298,7 +380,7 @@ export const useDashboardMetricVmMemory = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardMetricVmMemory'],
+  queryKey: [QK.DASHBOARD_METRIC_VM_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getMetricVmMemory()
     const _res = mapPredicate
@@ -312,7 +394,7 @@ export const useDashboardMetricStorage = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['dashboardMetricStorage'],
+  queryKey: [QK.DASHBOARD_METRIC_STORAGE],
   queryFn: async () => {
     const res = await ApiManager.getMetricStorage()
     const _res = mapPredicate
@@ -1659,7 +1741,7 @@ export const useHostDevicesFromHost = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['hostDevicesFromHost', hostId],
+  queryKey: [QK.HOST_DEVICES_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromHost(hostId);
     const _res = mapPredicate
@@ -1686,7 +1768,7 @@ export const useStoragesFromHost = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['storagesFromHost', hostId],
+  queryKey: [QK.STORAGES_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllStoragesFromHost(hostId);
     const _res = mapPredicate
@@ -1712,7 +1794,7 @@ export const useIscsiFromHost = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['iscsiFromHost', hostId],
+  queryKey: [QK.ISCSI_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllIscsiFromHost(hostId);
     const _res = mapPredicate
@@ -1738,7 +1820,7 @@ export const useFibreFromHost = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['fibreFromHost', hostId],
+  queryKey: [QK.FIBRE_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllFibreFromHost(hostId);
     const _res = mapPredicate
@@ -1777,7 +1859,7 @@ export const useSearchIscsiFromHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSearchIscsiFromHost ... res: `, res);
       apiToast.ok(`iSCSI ${Localization.kr.IMPORT} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['iscsiFromHost']);
+      queryClient.invalidateQueries([QK.ISCSI_FROM_HOST]);
       postSuccess(res);
     },
     onError: (error) => {
@@ -1803,7 +1885,7 @@ export const useSearchFcFromHost = (
   postSuccess=()=>{}, postError
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['searchFcFromHost', hostId],
+  queryKey: [QK.SEARCH_FC_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findSearchFcFromHost(hostId);
     const _res = mapPredicate
@@ -1870,7 +1952,7 @@ export const useLoginIscsiFromHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useLoginIscsiFromHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.IMPORT} iscsi ${Localization.kr.LOGIN} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['iscsiFromHost']);
+      queryClient.invalidateQueries([QK.ISCSI_FROM_HOST]);
       postSuccess(res);
     },
     onError: (error) => {
@@ -2302,7 +2384,7 @@ export const useAllVMs = (
 export const useVm = (
   vmId
 ) => useQuery({
-  queryKey: ['vm', vmId],
+  queryKey: [QK.VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findVM(vmId);
     const _res = validateAPI(res) ?? {};
@@ -2327,7 +2409,7 @@ export const useDisksFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['disksFromVM', vmId],
+  queryKey: [QK.DISKS_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findDisksFromVM(vmId);
     const _res = mapPredicate
@@ -2353,7 +2435,7 @@ export const useSnapshotsFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['SnapshotFromVM', vmId],
+  queryKey: [QK.SNAPSHOT_FROM_VM, vmId],
   queryFn: async () => {
     Logger.debug(`useSnapshotFromVM ... ${vmId}`);
     const res = await ApiManager.findSnapshotsFromVM(vmId);
@@ -2381,7 +2463,7 @@ export const useSnapshotDetailFromVM = (
   vmId, snapshotId
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['snapshotDetailFromVM', vmId, snapshotId], // snapshotId 추가
+  queryKey: [QK.SNAPSHOT_DETAIL_FROM_VM, vmId, snapshotId], // snapshotId 추가
   queryFn: async () => {
     if (!vmId || !snapshotId) {
       Logger.warn('RQHook > useSnapshotDetailFromVM ... Missing VM ID or Snapshot ID');
@@ -2420,7 +2502,7 @@ export const useAddSnapshotFromVM = (
       Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
       
       apiToast.ok(`${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['snapshotFromVM', 'snapshotDetailFromVM']); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      queryClient.invalidateQueries(['snapshotFromVM', QK.SNAPSHOT_DETAIL_FROM_VM]); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
     onError: (error) => {
@@ -2568,7 +2650,7 @@ export const useHostDevicesFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['hostDevicesFromVM', vmId],
+  queryKey: [QK.HOST_DEVICES_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findHostdevicesFromVM(vmId);
     const _res = mapPredicate
@@ -2597,7 +2679,7 @@ export const useNetworkInterfacesFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['networkInterfacesFromVM', vmId],
+  queryKey: [QK.NETWORK_INTERFACES_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findNicsFromVM(vmId);
     const _res = mapPredicate
@@ -2626,7 +2708,7 @@ export const useNetworkInterfaceFromVM = (
   nicId
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['networkInterfaceFromVM', vmId],
+  queryKey: [QK.NETWORK_INTERFACE_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findNicFromVM(vmId, nicId);
     const _res = validateAPI(res) ?? {}
@@ -2653,7 +2735,7 @@ export const useApplicationsFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['ApplicationFromVM', vmId],
+  queryKey: [QK.APPLICATION_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findApplicationsFromVM(vmId);
     const _res = mapPredicate
@@ -2676,7 +2758,7 @@ export const useVmConsoleAccessInfo = (
   vmId
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vmConsoleAccessInfo', vmId],
+  queryKey: [QK.VM_CONSOLE_ACCESS_INFO, vmId],
   queryFn: async () => {
     const res = await ApiManager.findVmConsoleAccessInfo(vmId);
     const _res = validateAPI(res) ?? {}
@@ -3085,7 +3167,7 @@ export const useAllMigratableHostsFromVM = (
   mapPredicate
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allMigratableHostsFromVm', ...vmId],
+  queryKey: [QK.ALL_MIGRATABLE_HOSTS_FROM_VM, ...vmId],
   queryFn: async () => {
     const res = await ApiManager.findAllMigratableHostsFromVM(vmId);
     const _res = mapPredicate
@@ -3112,7 +3194,7 @@ export const useAllMigratableHosts4Vms = (
   mapPredicate
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allMigratableHosts4Vms', ...vmIds],
+  queryKey: [QK.ALL_MIGRATABLE_HOSTS_FOR_VMS, ...vmIds],
   queryFn: async () => {
     const res = await ApiManager.findAllMigratableHosts4Vms(vmIds);
     const _res = mapPredicate
@@ -3169,7 +3251,7 @@ export const useVmScreenshot = (
   vmId
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vmScreenshot', vmId],
+  queryKey: [QK.VM_SCREENSHOT, vmId],
   queryFn: async () => {
     const res = await ApiManager.takeVmScreenshot(vmId);
     const _res = validateAPI(res) ?? {};
@@ -3189,7 +3271,7 @@ export const useCdromFromVm = (
   vmId, current=false,
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['cdromFromVm', vmId],
+  queryKey: [QK.CDROM_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findCdromFromVm(vmId, current);
     const _res = validateAPI(res) ?? {};
@@ -3385,7 +3467,7 @@ export const useDiskAttachmentFromVm = (
   vmId, diskAttachmentId
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['diskAttachmentFromVm', vmId, diskAttachmentId],
+  queryKey: [QK.DISK_ATTACHMENT_FROM_VM, vmId, diskAttachmentId],
   queryFn: async () => {
     const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
     const _res = validateAPI(res) ?? {};
@@ -3418,7 +3500,7 @@ export const useAddDiskFromVM = (
       Logger.debug(`RQHook > useAddDiskFromVM ... res: `, res);
       
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('disksFromVM');
+      queryClient.invalidateQueries(QK.DISKS_FROM_VM);
       postSuccess(res);
     },
     onError: (error) => {
@@ -3710,7 +3792,7 @@ export const useAllTemplates = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allTemplates'],
+  queryKey: [QK.ALL_TEMPLATES],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplates()
     const _res = mapPredicate
@@ -3731,7 +3813,7 @@ export const useAllTemplates = (
 export const useTemplate = (
   templateId
 ) => useQuery({
-  queryKey: ['template', templateId],
+  queryKey: [QK.TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findTemplate(templateId);
     const _res = validateAPI(res) ?? {};
@@ -3758,7 +3840,7 @@ export const useAllVmsFromTemplate = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllVmsFromTemplate', templateId],
+  queryKey: [QK.ALL_VMS_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findVMsFromTemplate(templateId);
     const _res = mapPredicate
@@ -3785,7 +3867,7 @@ export const useAllNicsFromTemplate = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNicsFromTemplate', templateId],
+  queryKey: [QK.ALL_NICS_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findAllNicsFromTemplate(templateId);
     const _res = mapPredicate
@@ -3816,7 +3898,7 @@ export const useNicFromTemplate = (
   mapPredicate = (e) => ({ ...e }),
 ) =>
   useQuery({
-    queryKey: ['nicFromTemplate', templateId, nicId],
+    queryKey: [QK.NIC_FROM_TEMPLATE, templateId, nicId],
     queryFn: async () => {
       const res = await ApiManager.findNicFromTemplate(templateId, nicId);
       const validated = validateAPI(res); 
@@ -3839,7 +3921,7 @@ export const useAllDisksFromTemplate = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allDisksFromTemplate', templateId],
+  queryKey: [QK.ALL_DISKS_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findDisksFromTemplate(templateId);
     const _res = mapPredicate
@@ -3866,7 +3948,7 @@ export const useAllStoragesFromTemplate = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllStoragesFromTemplate', templateId],
+  queryKey: [QK.ALL_STORAGES_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findStorageDomainsFromTemplate(templateId);
     const _res = mapPredicate
@@ -3904,7 +3986,7 @@ export const useAddTemplate = (
       Logger.debug(`RQHook > useAddTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allTemplates');
+      queryClient.invalidateQueries(QK.ALL_TEMPLATES);
       postSuccess(res);
     },
     onError: (error) => {
@@ -3938,8 +4020,8 @@ export const useEditTemplate = (
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allTemplates');
-      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries(QK.ALL_TEMPLATES);
+      queryClient.invalidateQueries([QK.TEMPLATE, templateId]); // templateId 올바르게 사용
       postSuccess(res);
     },
     onError: (error) => {
@@ -3973,8 +4055,8 @@ export const useDeleteTemplate = (
       Logger.debug(`RQHook > useEditTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allTemplates');
-      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries(QK.ALL_TEMPLATES);
+      queryClient.invalidateQueries([QK.TEMPLATE, templateId]); // templateId 올바르게 사용
       postSuccess(res);
     },
     onError: (error) => {
@@ -3999,7 +4081,7 @@ export const useAllBiosTypes = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allBiosTypes'],
+  queryKey: [QK.ALL_BIOS_TYPES],
   queryFn: async () => {
     const res = await ApiManager.findAllBiosTypes();
     const _res = mapPredicate
@@ -4021,7 +4103,7 @@ export const useAllDiskContentTypes = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allDiskContentTypes'],
+  queryKey: [QK.ALL_DISK_CONTENT_TYPES],
   queryFn: async () => {
     const res = await ApiManager.findAllDiskContentTypes();
     const _res = mapPredicate
@@ -4043,7 +4125,7 @@ export const useAllMigrationSupports = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allMigrationSupports'],
+  queryKey: [QK.ALL_MIGRATION_SUPPORTS],
   queryFn: async () => {
     const res = await ApiManager.findAllMigrationSupports();
     const _res = mapPredicate
@@ -4065,7 +4147,7 @@ export const useAllQuotaEnforcementTypes = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allQuotaEnforcementTypes'],
+  queryKey: [QK.ALL_QUOTA_ENFORCEMENT_TYPES],
   queryFn: async () => {
     const res = await ApiManager.findAllQuotaEnforcementTypes();
     const _res = mapPredicate
@@ -4087,7 +4169,7 @@ export const useAllVmTypes = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allVmTypes'],
+  queryKey: [QK.ALL_VM_TYPES],
   queryFn: async () => {
     const res = await ApiManager.findAllVmTypes();
     const _res = mapPredicate
@@ -4124,8 +4206,8 @@ export const useAddNicFromTemplate = (
       Logger.debug(`RQHook > useAddNicFromTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
-      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries([QK.ALL_NICS_FROM_TEMPLATE, QK.ALL_TEMPLATES]);
+      queryClient.invalidateQueries([QK.TEMPLATE, templateId]); // templateId 올바르게 사용
       postSuccess(res);
     },
     onError: (error) => {
@@ -4159,8 +4241,8 @@ export const useEditNicFromTemplate = (
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
-      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries([QK.ALL_NICS_FROM_TEMPLATE, QK.ALL_TEMPLATES]);
+      queryClient.invalidateQueries([QK.TEMPLATE, templateId]); // templateId 올바르게 사용
       postSuccess(res);
     },
     onError: (error) => {
@@ -4196,8 +4278,8 @@ export const useDeleteNetworkFromTemplate = (
       Logger.debug(`RQHook > useEditNicFromTemplate ... res: `, res)
       
       apiToast.ok(`${Localization.kr.TEMPLATE} ${Localization.kr.NICS} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['allNicsFromTemplate', 'allTemplates']);
-      queryClient.invalidateQueries(['template', templateId]); // templateId 올바르게 사용
+      queryClient.invalidateQueries([QK.ALL_NICS_FROM_TEMPLATE, QK.ALL_TEMPLATES]);
+      queryClient.invalidateQueries([QK.TEMPLATE, templateId]); // templateId 올바르게 사용
       postSuccess(res);
     },
     onError: (error) => {
@@ -4221,7 +4303,7 @@ export const useAllNetworks = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNetworks'],
+  queryKey: [QK.ALL_NETWORKS],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworks();
     const _res = mapPredicate
@@ -4241,7 +4323,7 @@ export const useAllNetworks = (
 export const useNetwork = (
   networkId
 ) => useQuery({
-  queryKey: ['network', networkId],
+  queryKey: [QK.NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findNetwork(networkId);
     const _res = validateAPI(res) ?? {};
@@ -4267,7 +4349,7 @@ export const useAllClustersFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['clustersFromNetwork', networkId],
+  queryKey: [QK.CLUSTERS_FROM_NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllClustersFromNetwork(networkId);
     const _res = mapPredicate
@@ -4293,7 +4375,7 @@ export const useConnectedHostsFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['connectedHostsFromNetwork', networkId],
+  queryKey: [QK.CONNECTED_HOSTS_FROM_NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findConnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
@@ -4323,7 +4405,7 @@ export const useDisconnectedHostsFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['disconnectedHostsFromNetwork', networkId],
+  queryKey: [QK.DISCONNECTED_HOSTS_FROM_NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findDisconnectedHostsFromNetwork(networkId);
     const _res = mapPredicate
@@ -4353,7 +4435,7 @@ export const useAllVmsFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vmFromNetwork', networkId],
+  queryKey: [QK.VM_FROM_NETWORK, networkId],
   queryFn: async () => {
     Logger.debug(`useAllVmsFromNetwork ... ${networkId}`);
     const res = await ApiManager.findAllVmsFromNetwork(networkId);
@@ -4376,7 +4458,7 @@ export const useAllTemplatesFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['templateFromNetwork', networkId],
+  queryKey: [QK.TEMPLATE_FROM_NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromNetwork(networkId);
     const _res = mapPredicate
@@ -4402,7 +4484,7 @@ const qpAllVnicProfilesFromNetwork = (
   mapPredicate = (e) => ({ ...e }),
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['vnicProfilesFromNetwork', networkId],
+  queryKey: [QK.VNIC_PROFILES_FROM_NETWORK, networkId],
   queryFn: async () => {
     const res = await ApiManager.findAllVnicProfilesFromNetwork(networkId);
     const _res = mapPredicate
@@ -4412,7 +4494,6 @@ const qpAllVnicProfilesFromNetwork = (
     return _res;
   },
   enabled: !!networkId,
-  // suspense: true,
 })
 /**
  * @name useAllVnicProfilesFromNetwork
@@ -4506,8 +4587,8 @@ export const useEditNetwork = (
     onSuccess: (res, { networkId }) => {
       Logger.debug(`RQHook > useEditNetwork ... res: `, res)
       apiToast.ok(`${Localization.kr.NETWORK} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
-      queryClient.invalidateQueries(QK.ALL_NETWORKS); // 전체 네트워크 목록 업데이트
-      queryClient.invalidateQueries(['networkById', networkId]); // 수정된 네트워크 상세 정보 업데이트postSuccess(res);
+      queryClient.invalidateQueries(QK.ALL_NETWORKS); 
+      queryClient.invalidateQueries([QK.NETWORK, networkId]);
     },
     onError: (error) => {
       Logger.error(error.message);
@@ -4563,7 +4644,7 @@ export const useAllNetworkProviders = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNetworkProviders'],
+  queryKey: [QK.ALL_NETWORK_PROVIDERS],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkProviders();
     const _res = mapPredicate
@@ -4607,7 +4688,7 @@ export const useAllVnicProfiles = (
  * @returns useQuery 훅
  */
 export const useVnicProfile = (vnicId) => useQuery({
-  queryKey: ['vnicId', vnicId],
+  queryKey: [QK.VNIC_ID, vnicId],
   queryFn: async () => {
     const res = await ApiManager.findVnicProfile(vnicId);
     const _res = validateAPI(res) ?? {};
@@ -4633,7 +4714,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllVmsFromVnicProfiles', vnicProfileId],
+  queryKey: [QK.ALL_VMS_FROM_VNIC_PROFILES, vnicProfileId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromVnicProfiles(vnicProfileId);
     const _res = mapPredicate
@@ -4659,7 +4740,7 @@ export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllTemplatesFromVnicProfiles', vnicProfileId],
+  queryKey: [QK.ALL_TEMPLATES_FROM_VNIC_PROFILES, vnicProfileId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromVnicProfiles(vnicProfileId);
     const _res = mapPredicate
@@ -4789,7 +4870,7 @@ export const useAllNetworkFilters = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNetworkFilters'],
+  queryKey: [QK.ALL_NETWORK_FILTERS],
   queryFn: async () => {
     const res = await ApiManager.findAllNetworkFilters();
     const _res = mapPredicate
@@ -4838,7 +4919,7 @@ export const qpAllValidDomains = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllValidDomains'],
+  queryKey: [QK.ALL_VALID_DOMAINS],
   queryFn: async () => {
     const res = await ApiManager.findAllValidStorageDomains();
     Logger.debug('findAllValidStorageDomains raw result:', res);
@@ -4915,7 +4996,7 @@ export const useAllNfsStorageDomains = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNfsStorageDomains'],
+  queryKey: [QK.ALL_NFS_STORAGE_DOMAINS],
   queryFn: async () => {
     const res = await ApiManager.findAllNfsStorageDomains()
     const _res = mapPredicate
@@ -4933,7 +5014,7 @@ export const useAllNfsStorageDomains = (
  * @returns useQuery 훅
  */
 export const useStorageDomain = (storageDomainId) => useQuery({
-  queryKey: ['DomainById', storageDomainId],
+  queryKey: [QK.DOMAIN_BY_ID, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findDomain(storageDomainId);
     const _res = validateAPI(res) ?? {};
@@ -4959,7 +5040,7 @@ export const useAllDataCentersFromDomain = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allDataCentersFromDomain', storageDomainId],
+  queryKey: [QK.ALL_DATA_CENTERS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDataCentersFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -4984,7 +5065,7 @@ export const useAllHostsFromDomain = (
   storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  queryKey: ['allHostsFromDomain', storageDomainId],
+  queryKey: [QK.ALL_HOSTS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllHostsFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -5010,7 +5091,7 @@ export const useAllVMsFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allVMsFromDomain', storageDomainId],
+  queryKey: [QK.ALL_VMS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllVMsFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -5038,7 +5119,7 @@ export const useAllUnregisteredVMsFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['AllUnregisterVMFromDomain', storageDomainId], 
+  queryKey: [QK.ALL_UNREGISTER_VM_FROM_DOMAIN, storageDomainId], 
   queryFn: async () => {
     const res = await ApiManager.findAllUnregisterdVMsFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -5102,7 +5183,7 @@ export const useAllDisksFromDomain = (storageDomainId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allDisksFromDomain', storageDomainId],
+  queryKey: [QK.ALL_DISKS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllDisksFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -5240,7 +5321,7 @@ export const useAllTemplatesFromDomain = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allTemplatesFromDomain', storageDomainId],
+  queryKey: [QK.ALL_TEMPLATES_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllTemplatesFromDomain(storageDomainId);
     const _res = mapPredicate
@@ -5812,7 +5893,7 @@ export const useCdromsDisks = (diskIds = []) =>
         cdroms: validateAPI(r) ?? [],
       }));
     },
-    queryKey: ['cdromsForDisks', diskIds],
+    queryKey: [QK.CDROMS_FOR_DISKS, diskIds],
     enabled: diskIds.length > 0,
   });
 
@@ -5826,7 +5907,7 @@ export const useCdromsDisks = (diskIds = []) =>
 export const useDisk = (
   diskId
 ) => useQuery({
-  queryKey: ['disk', diskId],
+  queryKey: [QK.DISK, diskId],
   queryFn: async () => {
     const res = await ApiManager.findDisk(diskId);
     const _res = validateAPI(res) ?? {};
@@ -5852,7 +5933,7 @@ export const useAllVmsFromDisk = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allVmsFromDisk', diskId],
+  queryKey: [QK.ALL_VMS_FROM_DISK, diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllVmsFromDisk(diskId);
     const _res = mapPredicate
@@ -5879,7 +5960,7 @@ export const useAllStorageDomainsFromDisk = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allStorageDomainsFromDisk', diskId],
+  queryKey: [QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId);
     const _res = mapPredicate
@@ -6136,7 +6217,7 @@ export const useAllEventsFromDataCenter = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromDataCenter', datacenterId],
+  queryKey: [QK.EVENTS_FROM_DATA_CENTER, datacenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, datacenterId });
     const _res = mapPredicate
@@ -6164,7 +6245,7 @@ export const useAllEventsFromCluster = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromCluster', clusterId],
+  queryKey: [QK.EVENTS_FROM_CLUSTER, clusterId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, clusterId });
     const _res = mapPredicate
@@ -6193,7 +6274,7 @@ export const useAllEventsFromHost = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromHost', hostId],
+  queryKey: [QK.EVENTS_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, hostId });
     const _res = mapPredicate
@@ -6222,7 +6303,7 @@ export const useAllEventsFromVM = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromVM', vmId],
+  queryKey: [QK.EVENTS_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, vmId });
     const _res = mapPredicate
@@ -6251,7 +6332,7 @@ export const useAllEventsFromDomain = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromDomain', storageDomainId],
+  queryKey: [QK.EVENTS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, storageDomainId });
     const _res = mapPredicate
@@ -6280,7 +6361,7 @@ export const useAllEventsFromTemplate = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['eventsFromTemplate', templateId],
+  queryKey: [QK.EVENTS_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, templateId });
     const _res = mapPredicate
@@ -6303,7 +6384,7 @@ export const useAllEventsNormal = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allEventsNormal'],
+  queryKey: [QK.ALL_EVENTS_NORMAL],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({
       page: 0, size: 100
@@ -6320,7 +6401,7 @@ export const useAllEventsAlert = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['allNotiEvents'],
+  queryKey: [QK.ALL_NOTI_EVENTS],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({
       page: 0, size: 20, minSeverity: "alert", startDate: "recent",
@@ -6350,7 +6431,7 @@ export const useRemoveEvent = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, 'allNotiEvents', 'allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_NOTI_EVENTS , QK.ALL_EVENTS_NORMAL]);
       closeModal();
       postSuccess(res);
     },
@@ -6380,7 +6461,7 @@ export const useRemoveEvents = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvents ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, 'allNotiEvents', 'allEventsNormal']);
+      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_NOTI_EVENTS , QK.ALL_EVENTS_NORMAL]);
       closeModal();
       postSuccess(res);
     },
@@ -6423,7 +6504,7 @@ export const useJob = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['job', jobId],
+  queryKey: [QK.JOB, jobId],
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
     const _res = validateAPI(res) ?? {}
@@ -6456,8 +6537,8 @@ export const useAddJob = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddJob ... res: `, res);
       apiToast.ok(`${Localization.kr.JOB} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allJobs');
-      queryClient.invalidateQueries(['job', res.id]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries(QK.ALL_JOBS);
+      queryClient.invalidateQueries([QK.JOB, res.id]); // 수정된 네트워크 상세 정보 업데이트
       closeModal();
       postSuccess(res);
     },
@@ -6493,8 +6574,8 @@ export const useEndJob = (
     onSuccess: (res, { jobId }) => {
       Logger.debug(`RQHook > useEndJob ... res: `, res);
       apiToast.ok(`${Localization.kr.JOB} ${Localization.kr.END} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allJobs');
-      queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries(QK.ALL_JOBS);
+      queryClient.invalidateQueries([QK.JOB, jobId]); // 수정된 네트워크 상세 정보 업데이트
       closeModal();
       postSuccess(res);
     },
@@ -6530,8 +6611,8 @@ export const useRemoveJob = (
     onSuccess: (res, { jobId }) => {
       Logger.debug(`RQHook > useRemoveJob ... res: `, res);
       apiToast.ok(`${Localization.kr.JOB} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allJobs');
-      queryClient.invalidateQueries(['job', jobId]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries(QK.ALL_JOBS);
+      queryClient.invalidateQueries([QK.JOB, jobId]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },
     onError: (error) => {
@@ -6565,7 +6646,7 @@ export const useRemoveJobs = (
     onSuccess: (res, { jobIds }) => {
       Logger.debug(`RQHook > removeJobs ... res: `, res);
       apiToast.ok(`${Localization.kr.JOB} 일괄${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('allJobs');
+      queryClient.invalidateQueries(QK.ALL_JOBS);
       closeModal();
       postSuccess(res);
     },
@@ -6613,7 +6694,7 @@ export const useProvider = (
   providerId,
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['provider', providerId], 
+  queryKey: [QK.PROVIDER, providerId], 
   queryFn: async () => {
     const res = await ApiManager.findProvider(providerId); 
     const _res = validateAPI(res) ?? {};
@@ -6845,7 +6926,7 @@ export const useUser = (
   exposeDetail = false
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: ['user'],
+  queryKey: [QK.USER],
   queryFn: async () => {
     const res = await ApiManager.findUser(username, exposeDetail)
     const _res = validateAPI(res) ?? {}
@@ -6919,7 +7000,7 @@ export const useAddUser = (
       Logger.debug(`RQHook > useAddUser ... res: `, res);
       apiToast.ok(`${Localization.kr.USER} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
       queryClient.invalidateQueries('allUsers,user');
-      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries([QK.USER, user.username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },
     onError: (error) => {
@@ -6954,7 +7035,7 @@ export const useEditUser = (
       Logger.debug(`RQHook > useEditUser ... res: `, res);
       apiToast.ok(`${Localization.kr.USER} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
       queryClient.invalidateQueries(QK.ALL_USERS);
-      queryClient.invalidateQueries(['user', user.username]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries([QK.USER, user.username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },
     onError: (error) => {
@@ -6985,7 +7066,7 @@ export const useUpdatePasswordUser = (
       Logger.debug(`RQHook > useChangePasswordUser ... res: `, res);
       apiToast.ok(`${Localization.kr.USER} 비밀번호 ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
       queryClient.invalidateQueries(QK.ALL_USERS);
-      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries([QK.USER, username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },
     onError: (error) => {
@@ -7020,7 +7101,7 @@ export const useRemoveUser = (
       Logger.debug(`RQHook > useRemoveUser ... res: `, res);
       apiToast.ok(`${Localization.kr.USER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       queryClient.invalidateQueries('allUsers,user');
-      queryClient.invalidateQueries(['user', username]); // 수정된 네트워크 상세 정보 업데이트
+      queryClient.invalidateQueries([QK.USER, username]); // 수정된 네트워크 상세 정보 업데이트
       postSuccess(res);
     },
     onError: (error) => {
