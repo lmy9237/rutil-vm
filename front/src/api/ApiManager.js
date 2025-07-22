@@ -1022,11 +1022,24 @@ const ApiManager = {
      * @param {String} hostId - 호스트 ID
      * @returns {Promise<Object>} API 응답 결과
      */
-  refreshHost: async (hostId) => {
+  reinstallHost: async (hostId, host, deployHostedEngine=false) => {
     return makeAPICall({
       method: "POST",
+      url: ENDPOINTS.REINSTALL_HOST(hostId, deployHostedEngine),  // ID를 URL에 포함
+      data: host,
+    });
+  },
+  /**
+     * @name ApiManager.refreshHost
+     * @description 호스트 새로고침
+     * 
+     * @param {String} hostId - 호스트 ID
+     * @returns {Promise<Object>} API 응답 결과
+     */
+  refreshHost: async (hostId) => {
+    return makeAPICall({
+      method: "PUT",
       url: ENDPOINTS.REFRESH_HOST(hostId),  // ID를 URL에 포함
-      data: hostId
     });
   },
   /**

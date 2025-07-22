@@ -26,7 +26,10 @@ import TemplateDisks          from "./TemplateDisks";
  */
 const TemplateInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
+  const { 
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { id: templateId, section } = useParams();
   const {
     data: template,
@@ -36,22 +39,6 @@ const TemplateInfo = () => {
   const { templatesSelected, setTemplatesSelected } = useGlobal()
 
   const [activeTab, setActiveTab] = useState("general")
-
-  useEffect(() => {
-    if (isTemplateError || (!isTemplateLoading && !template)) {
-      navigate("/computing/templates");
-    }
-    setTemplatesSelected(template)
-  }, [template]);
-
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`TemplateInfo > handleTabClick ... templateId: ${templateId}`)
-    const path = tab === "general"
-      ? `/computing/templates/${templateId}`
-      : `/computing/templates/${templateId}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, [templateId]);
 
   const tabs = useMemo(() => ([
     { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
@@ -66,10 +53,6 @@ const TemplateInfo = () => {
     template?.name,
     [...tabs].find((section) => section.id === activeTab)?.label,
   ]), [template, tabs, activeTab]);
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
   const renderSectionContent = useCallback(() => {
     Logger.debug(`TemplateInfo > renderSectionContent ...`)
@@ -91,6 +74,29 @@ const TemplateInfo = () => {
     { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
     { type: "addVm",  onClick: () => setActiveModal("vm:create"),       label: `새 ${Localization.kr.VM}`, },
   ], [])
+
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`TemplateInfo > handleTabClick ... templateId: ${templateId}`)
+    const path = tab === "general"
+      ? `/computing/templates/${templateId}`
+      : `/computing/templates/${templateId}/${tab}`;
+    navigate(path);
+    setTabInPage("/computing/templates", tab);
+    setActiveTab(tab);
+  }, [templateId]);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isTemplateError || (!isTemplateLoading && !template)) {
+      navigate("/computing/templates");
+    }
+    const currentTabInPage = tabInPage("/computing/templates")
+    setActiveTab(currentTabInPage)
+    setTemplatesSelected(template)
+  }, [template]);
 
   return (
     <SectionLayout>

@@ -39,7 +39,10 @@ import Logger                 from "@/utils/Logger";
  */
 const DomainInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
+  const { 
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { 
     setDomainsSelected, setDatacentersSelected,
     setSourceContext
@@ -64,53 +67,41 @@ const DomainInfo = () => {
   const isMaintenance = domain?.status?.toUpperCase() === "MAINTENANCE";
   const isUnattached = domain?.status?.toUpperCase() === "UNATTACHED";
 
-  useEffect(() => {
-    if (isDomainError || (!isDomainLoading && !domain)) {
-      navigate("/computing/vms");
-    }
-    setDomainsSelected(domain)
-  }, [domain]);
-
   const [activeTab, setActiveTab] = useState("general");
 /* 가져오기에 따른 탭 메뉴 활성화 */
   const tabs = useMemo(() => {
-  const isImportExport = domain?.storageDomainType?.toLowerCase() === "import_export";
+    const isImportExport = domain?.storageDomainType?.toLowerCase() === "import_export";
 
-  if (isImportExport) {
-    return [
+    if (isImportExport) {
+      return [
+        { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+        { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
+        { id: "importVms",    label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`,       onClick: () => handleTabClick("importVms") },
+        { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") },
+        { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
+      ];
+    }
+
+    const baseSections = [
       { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
       { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
-      { id: "importVms",    label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`,       onClick: () => handleTabClick("importVms") },
-      { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") },
+      { id: "vms",          label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
+      { id: "templates",    label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
+      { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+      { id: "diskSnapshots", label: "디스크 스냅샷",              onClick: () => handleTabClick("diskSnapshots") },
       { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
-  }
 
-  const baseSections = [
-    { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-    { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
-    { id: "vms",          label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
-    { id: "templates",    label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
-    { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
-    { id: "diskSnapshots", label: "디스크 스냅샷",              onClick: () => handleTabClick("diskSnapshots") },
-    { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
-  ];
-
-  if (!isUNKNOWN) {
-    if (importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0) {
-      baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
-      baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
-      baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
+    if (!isUNKNOWN) {
+      if (importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0) {
+        baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
+        baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });
+        baseSections.splice(7, 0, { id: "importDisks", label: `${Localization.kr.DISK} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importDisks") });
+      }
     }
-  }
 
-  return baseSections;
+    return baseSections;
 }, [domainId, domain?.status, domain?.storageDomainType, importVms, importTemplates, importDisks]);
-
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
   const handleTabClick = useCallback((tab) => {
     const path = tab === "general"
@@ -118,24 +109,14 @@ const DomainInfo = () => {
       : `/storages/domains/${domainId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
+    setTabInPage("/storages/domains", tab)
   }, [domainId]);
-
-  useEffect(() => {
-    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
-    setDatacentersSelected(domain?.dataCenterVo)
-    setDomainsSelected(domain);
-    setSourceContext("fromDomain");
-    importVmsRefetch();
-    importTemplatesRefetch();
-    importDisksRefetch();
-  }, [domain])
 
   const pathData = useMemo(() => ([
     domain?.name,
     tabs.find((section) => section.id === activeTab)?.label,
   ]), [domain, tabs, activeTab]);
 
-  
   const renderSectionContent = useCallback(() => {
     const SectionComponent = {
       general: DomainGeneral,
@@ -174,6 +155,33 @@ const DomainInfo = () => {
     { type: "updateOvf", label: "OVF 업데이트", onClick: handleUpdateOvf,  disabled: !isACTIVE || (isMaintenance || isUnattached) },
     { type: "refreshlun", label: "디스크 검사", onClick: handleRefresh,     disabled: !isACTIVE || (isMaintenance || isUnattached) },
   ]), [domain?.status]);
+
+  useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... section: ${section}`)
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isDomainError || (!isDomainLoading && !domain)) {
+      navigate("/computing/vms");
+    }
+    setDomainsSelected(domain)
+  }, [domain]);
+
+  useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
+    setDatacentersSelected(domain?.dataCenterVo)
+    setDomainsSelected(domain);
+    setSourceContext("fromDomain");
+    // const currentTabInPage = ((importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0)) ? tabInPage("/storages/domains") : "general" 
+    /* 
+    const currentTabInPage = tabInPage("/storages/domains")
+    setActiveTab(currentTabInPage)
+    */
+    importVmsRefetch();
+    importTemplatesRefetch();
+    importDisksRefetch();
+  }, [domain/* , importVms, importTemplates, importDisks */])
 
   return (
     <SectionLayout>

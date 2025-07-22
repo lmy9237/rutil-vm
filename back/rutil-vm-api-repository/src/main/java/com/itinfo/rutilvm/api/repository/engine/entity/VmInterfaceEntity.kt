@@ -1,22 +1,21 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
-
 import com.itinfo.rutilvm.api.ovirt.business.VmInterfaceType
 import com.itinfo.rutilvm.common.gson
-import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import org.hibernate.annotations.Type
 import java.util.UUID
 import java.io.Serializable
-import java.math.BigDecimal
-import java.math.BigInteger
 import java.time.LocalDateTime
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.OneToMany
 import javax.persistence.ManyToOne
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 /**
@@ -47,21 +46,37 @@ class VmInterfaceEntity(
 
 	// --- Relationships ---
 	// The VM this NIC belongs to. The DDL references vm_static.
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE],
+	)
 	@JoinColumn(
 		name="vm_guid",
 		referencedColumnName="vm_guid",
-		nullable=false
+		nullable=true
 	)
-	val vm: VmStaticEntity? = null, // Assumes you have a VmStaticEntity
+	@NotFound(action = NotFoundAction.IGNORE)
+	val vm: VmEntity? = null,
 
 	// The VNIC Profile applied to this NIC.
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE],
+	)
 	@JoinColumn(
 		name="vnic_profile_id",
 		referencedColumnName="id"
 	)
-	val vnicProfile: VnicProfileEntity? = null // From our previous step
+	@NotFound(action = NotFoundAction.IGNORE)
+	val vnicProfile: VnicProfileEntity? = null, // From our previous step
+
+	@OneToOne(
+		mappedBy="vmInterface", // This MUST match the property name in VmInterfaceStatisticsEntity
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.ALL], // If you delete the interface, delete its stats too
+		orphanRemoval=true
+	)
+	val stats: VmInterfaceStatisticsEntity? = null
 ) : Serializable {
 	val interfaceType: VmInterfaceType		get() = VmInterfaceType.forValue(_interfaceType)
 
@@ -78,10 +93,11 @@ class VmInterfaceEntity(
 		private var bUpdateDate: LocalDateTime? = null; fun updateDate(block: () -> LocalDateTime?) { bUpdateDate = block() }
 		private var bLinked: Boolean = true; fun linked(block: () -> Boolean?) { bLinked = block() ?: true }
 		private var bSynced: Boolean? = true; fun synced(block: () -> Boolean?) { bSynced = block() ?: true }
-		private var bVm: VmStaticEntity? = null; fun vm(block: () -> VmStaticEntity?) { bVm = block() }
+		private var bVm: VmEntity? = null; fun vm(block: () -> VmEntity?) { bVm = block() }
 		private var bVnicProfile: VnicProfileEntity? = null; fun vnicProfile(block: () -> VnicProfileEntity?) { bVnicProfile = block() }
+		private var bStats: VmInterfaceStatisticsEntity? = null; fun stats(block: () -> VmInterfaceStatisticsEntity?) { bStats = block() }
 
-		fun build(): VmInterfaceEntity = VmInterfaceEntity(bId, bMacAddr, bName, bSpeed, bInterfaceType, bCreateDate, bUpdateDate, bLinked, bSynced, bVm, bVnicProfile)
+		fun build(): VmInterfaceEntity = VmInterfaceEntity(bId, bMacAddr, bName, bSpeed, bInterfaceType, bCreateDate, bUpdateDate, bLinked, bSynced, bVm, bVnicProfile, bStats)
 	}
 
 	companion object {

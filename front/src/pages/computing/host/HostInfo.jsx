@@ -40,7 +40,10 @@ import "./Host.css";
  */
 const HostInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage
+  } = useUIState()
   const { setHostsSelected } = useGlobal()
   const { id: hostId, section } = useParams();
   const { 
@@ -56,13 +59,6 @@ const HostInfo = () => {
   const isInstalling = host?.status?.toUpperCase() === "INSTALLING";
   const isReboot = host?.status?.toUpperCase() === "REBOOT";
 
-  useEffect(() => {
-    if (isHostError || (!isHostLoading && !host)) {
-      navigate("/computing/rutil-manager/hosts");
-    }
-    setHostsSelected(host)
-  }, [host]);
-
   const [activeTab, setActiveTab] = useState("general");
   const tabs = useMemo(() => ([
     { id: "general",        label: Localization.kr.GENERAL,               onClick: () => handleTabClick("general") },
@@ -73,16 +69,13 @@ const HostInfo = () => {
     { id: "events",         label: Localization.kr.EVENT,                 onClick: () => handleTabClick("events") },
   ]), [hostId])
 
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`HostInfo > handleTabClick ... hostId: ${hostId}`);
     const path = tab === "general"
         ? `/computing/hosts/${hostId}`
         : `/computing/hosts/${hostId}/${tab}`;
     navigate(path);
+    setTabInPage("/computing/hosts", tab);
     setActiveTab(tab);
   }, [hostId]);
 
@@ -104,23 +97,38 @@ const HostInfo = () => {
       events: HostEvents,
     }[activeTab];
     return SectionComponent ? <SectionComponent hostId={hostId} /> : null;
-  }, [activeTab, hostId]);
+  }, [activeTab, hostId]);   
 
   // 편집, 삭제 버튼들
   const sectionHeaderButtons = useMemo(() => ([
-    { type: "host:update", onClick: () => setActiveModal("host:update"), label: Localization.kr.UPDATE, disabled: isInstalling || isReboot, }, 
-    { type: "host:remove", onClick: () => setActiveModal("host:remove"), label: Localization.kr.REMOVE, disabled: !isMaintenance || isInstalling, },
+    { type: "host:update", onClick: () => setActiveModal("host:update"),             label: Localization.kr.UPDATE, disabled: isInstalling || isReboot, }, 
+    { type: "host:remove", onClick: () => setActiveModal("host:remove"),             label: Localization.kr.REMOVE, disabled: !isMaintenance || isInstalling, },
   ]), [host])
 
   const popupItems = [
-    { type: "deactivate", onClick: () => setActiveModal("host:deactivate"), label: Localization.kr.MAINTENANCE,  disabled: isInstalling || isNonOperational || !isUp, },
-    { type: "activate", onClick: () => setActiveModal("host:activate"),     label: Localization.kr.ACTIVATE,     disabled: !isMaintenance || isUp || isInstalling, },
-    { type: "restart", onClick: () => setActiveModal("host:restart"),       label: Localization.kr.RESTART,      disabled: !isUp || isInstalling, },
-    { type: "reInstall", onClick: () => setActiveModal("host:reInstall"),   label: Localization.kr.REINSTALL,    disabled: isUp || isInstalling, },
-    { type: "enrollCert", onClick: () => setActiveModal("host:enrollCert"), label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, disabled: isUp || isInstalling, },
-    { type: "haOn", onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",    disabled: !isUp || isInstalling, }, 
-    { type: "haOff", onClick: () => setActiveModal("host:haOff"),           label: "글로벌 HA 유지 관리를 비활성화",  disabled: !isUp || isInstalling, },
+    { type: "deactivate",    onClick: () => setActiveModal("host:deactivate"),       label: Localization.kr.MAINTENANCE,          disabled: isInstalling || isNonOperational || !isUp, },
+    { type: "activate",      onClick: () => setActiveModal("host:activate"),         label: Localization.kr.ACTIVATE,             disabled: !isMaintenance || isUp || isInstalling, },
+    { type: "restart",       onClick: () => setActiveModal("host:restart"),          label: Localization.kr.RESTART,              disabled: !isUp || isInstalling, },
+    { type: "refresh",       onClick: () => setActiveModal("host:refresh"),          label: Localization.kr.REFRESH_CAPABILITIES, disabled: !isUp || isInstalling  },
+    { type: "reinstall",     onClick: () => setActiveModal("host:reinstall"),        label: Localization.kr.REINSTALL,            disabled: isUp || isInstalling || !isMaintenance, },
+    { type: "enrollCert",    onClick: () => setActiveModal("host:enrollCert"),       label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, disabled: isUp || isInstalling, },
+    { type: "haOn",          onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",           disabled: !isUp || isInstalling, }, 
+    { type: "haOff",         onClick: () => setActiveModal("host:haOff"),            label: "글로벌 HA 유지 관리를 비활성화",          disabled: !isUp || isInstalling, },
   ];
+
+  useEffect(() => {
+    Logger.debug(`HostInfo > useEffect ... section: ${section}`)
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isHostError || (!isHostLoading && !host)) {
+      navigate("/computing/rutil-manager/hosts");
+    }
+    const currentTabInPage = tabInPage("/computing/hosts")
+    setActiveTab(currentTabInPage)
+    setHostsSelected(host)
+  }, [host]);
 
   return (
     <SectionLayout>

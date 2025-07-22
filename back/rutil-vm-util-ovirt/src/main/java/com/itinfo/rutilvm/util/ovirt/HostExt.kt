@@ -196,11 +196,29 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException() else it
 }
 
+fun Connection.reinstallHost(
+	hostId: String,
+	rootPassword: String,
+	deployHostedEngine: Boolean?=false
+): Result<Boolean> = runCatching {
+	checkHostExists(hostId)
+	this.srvHost(hostId).install()
+		.rootPassword(rootPassword)
+		.deployHostedEngine(deployHostedEngine)
+		.reboot(true)
+		.activate(true)
+		.send()
+	true
+}.onSuccess {
+	Term.HOST.logSuccess("재설치", hostId)
+}.onFailure {
+	Term.HOST.logFail("재설치", it, hostId)
+	throw if (it is Error) it.toItCloudException() else it
+}
 
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).refresh().send()
-
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("새로고침", hostId)

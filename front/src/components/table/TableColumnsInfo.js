@@ -61,7 +61,7 @@ const TableColumnsInfo = {
     { accessor: 'cluster',       header: Localization.kr.CLUSTER,                              clickable: true },
     { accessor: 'dataCenter',    header: Localization.kr.DATA_CENTER,                          clickable: false },
     { accessor: 'vmCnt',         header: `${Localization.kr.VM} ${Localization.kr.COUNT}`,     clickable: false ,align: "center" , width: 80},
-    { accessor: 'status',        header: Localization.kr.STATUS,                               clickable: false, width: 50 },
+    { accessor: '_status',       header: Localization.kr.STATUS,                               clickable: false, width: 50 },
     { accessor: 'memoryUsage',   header: Localization.kr.MEMORY,                               clickable: false, width: 50 },
     { accessor: 'cpuUsage',      header: Localization.kr.CPU,                                  clickable: false, width: 50 },
     { accessor: 'networkUsage',  header: Localization.kr.NETWORK,                              clickable: false, width: 50 },

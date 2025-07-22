@@ -25,7 +25,10 @@ import VnicProfileTemplates   from "./VnicProfileTemplates";
 const VnicProfileInfo = () => {
   const navigate = useNavigate();
   const { id: vnicProfileId, section } = useParams();
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { setVnicProfilesSelected } = useGlobal()
   const {
     data: vnicProfile, 
@@ -36,29 +39,10 @@ const VnicProfileInfo = () => {
   
   const [activeTab, setActiveTab] = useState('vms');
 
-  useEffect(() => {
-    if (isVnicProfileError || (!isVnicProfileLoading && !vnicProfile)) {
-      navigate('/vnicPrfiles');
-    }
-    setVnicProfilesSelected(vnicProfile)
-  }, [isVnicProfileError, isVnicProfileLoading, vnicProfile]);
-
   const tabs = useMemo(() => [
     { id: 'vms',        label: Localization.kr.VM,        onClick: () => handleTabClick("vms") },
     { id: 'templates',  label: Localization.kr.TEMPLATE,  onClick: () => handleTabClick("templates") },
   ], []);
-
-  const handleTabClick = useCallback((tab) => {
-    const path = tab === 'vms' 
-      ? `/vnicProfiles/${vnicProfileId}/vms`
-      : `/vnicProfiles/${vnicProfileId}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, [vnicProfileId]);
-
-  useEffect(() => {
-    setActiveTab(section || 'vms');
-  }, [section]);
 
   const pathData = useMemo(() => ([
     vnicProfile?.name, 
@@ -77,6 +61,30 @@ const VnicProfileInfo = () => {
     { type: "update", label: Localization.kr.UPDATE, onClick: () => setActiveModal("vnicprofile:update"), },
     { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("vnicprofile:remove"), },
   ]
+
+  const handleTabClick = useCallback((tab) => {
+    const path = tab === 'vms' 
+      ? `/vnicProfiles/${vnicProfileId}/vms`
+      : `/vnicProfiles/${vnicProfileId}/${tab}`;
+    navigate(path);
+    setTabInPage("/vnicProfiles", tab);
+    setActiveTab(tab);
+  }, [vnicProfileId]);
+
+  useEffect(() => {
+    setActiveTab(section || 'vms');
+  }, [section]);
+
+  useEffect(() => {
+    if (isVnicProfileError || (!isVnicProfileLoading && !vnicProfile)) {
+      navigate('/vnicPrfiles');
+    }
+    const currentTabInPage = tabInPage("/vnicPrfiles") == "general" 
+      ? "vms"
+      : tabInPage("/vnicPrfiles");
+    setActiveTab(currentTabInPage);
+    setVnicProfilesSelected(vnicProfile);
+  }, [isVnicProfileError, isVnicProfileLoading, vnicProfile]);
 
   return (
     <SectionLayout>

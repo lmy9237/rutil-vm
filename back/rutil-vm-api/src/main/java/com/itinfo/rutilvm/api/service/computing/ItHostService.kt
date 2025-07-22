@@ -47,6 +47,7 @@ interface ItHostService {
 	 * 호스트 생성 (전원관리 제외)
 	 *
 	 * @param hostVo [HostVo]
+	 * @param deployHostedEngine [Boolean] 엔진 배포 여부
 	 * @return [HostVo]?
 	 */
 	@Throws(Error::class)

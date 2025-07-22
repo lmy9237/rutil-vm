@@ -5,8 +5,11 @@ import HostModal from "./HostModal";
 import HostActionModal from "./HostActionModal";
 import HostCommitNetModal from "./HostCommitNetModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteHost } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import {
+  useDeleteHost
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name HostModals
@@ -27,6 +30,10 @@ const HostModals = ({
     ), update: (
       <HostModal key={"host:update"} isOpen={activeModal().includes("host:update")} editMode 
         onClose={() => closeModal("host:update")}
+      />
+    ), reinstall: (
+      <HostModal key={"host:reinstall"} isOpen={activeModal().includes("host:reinstall")} reinstallMode
+        onClose={() => closeModal("host:reinstall")}
       />
     ), remove: (
       <DeleteModal key={"host:remove"} isOpen={activeModal().includes("host:remove")}
@@ -66,7 +73,7 @@ const ACTIONS = [
   "host:activate",
   "host:restart",
   "host:refresh",
-  // "host:reInstall",
+  // "host:reinstall",
   "host:enrollCert",
   "host:haOn",
   "host:haOff",

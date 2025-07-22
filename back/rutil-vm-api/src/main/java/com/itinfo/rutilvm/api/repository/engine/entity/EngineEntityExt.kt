@@ -341,6 +341,12 @@ fun NetworkFilterEntity.toNetworkFilterVoFromNetworkFilterEntity(): NetworkFilte
 }
 fun Collection<NetworkFilterEntity>.toNetworkFilterVosFromNetworkFilterEntities(): List<NetworkFilterVo> =
 	this@toNetworkFilterVosFromNetworkFilterEntities.map { it.toNetworkFilterVoFromNetworkFilterEntity() }
+fun NetworkFilterEntity.toIdentifiedVoFromNetworkFilterEntity(): IdentifiedVo = IdentifiedVo.builder {
+	id { this@toIdentifiedVoFromNetworkFilterEntity.filterId.toString() }
+	name { this@toIdentifiedVoFromNetworkFilterEntity.filterName }
+}
+fun Collection<NetworkFilterEntity>.toIdentifiedVosFromNetworkFilterEntities(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromNetworkFilterEntities.map { it.toIdentifiedVoFromNetworkFilterEntity() }
 //region: NetworkFilterEntity
 
 //region: UnregisteredDiskEntity
@@ -767,13 +773,18 @@ fun Collection<VmEntity>.toVmVosFromVmEntities(): List<VmVo> {
 	return this@toVmVosFromVmEntities.map { it.toVmVo() }
 }
 
-fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
-	val entity = this@toVmVoFromVmEntity
-	val hosts: List<IdentifiedVo> = if (entity.dedicatedVmForVds.isNullOrEmpty()) {
+fun VmEntity?.toVmVoFromVmEntity(
+	vm: Vm?=null
+): VmVo? {
+	val entity = this@toVmVoFromVmEntity ?: return null
+	// NOTE: VmInterface에서 가상머신ID에 대한 가상머신을 못 가져 오는 경우가 있음.
+	val hosts: List<IdentifiedVo>? = if (
+  		entity.dedicatedVmForVds.isNullOrEmpty()
+	) {
 		emptyList()
-	} else entity.dedicatedVmForVds!!
-		.split(",")
-		.mapNotNull { id ->
+	} else entity.dedicatedVmForVds
+		?.split(",")
+		?.mapNotNull { id ->
 			id.trim().takeIf { it.isNotEmpty() }?.let {
 				IdentifiedVo.builder {
 					id { it }
@@ -894,7 +905,7 @@ fun VmEntity.toVmVoFromVmEntity(vm: Vm?): VmVo {
 fun Collection<VmEntity>.toVmVosFromVmEntities(vms: List<Vm>? = null): List<VmVo> {  // TODO: 다 연결 되었을 때 vms없이 mapping
 	val itemById: Map<String, Vm>? =
 		vms?.associateBy { it.id() }
-	return this@toVmVosFromVmEntities.map { it.toVmVoFromVmEntity(itemById?.get(it.vmGuid.toString())) }
+	return this@toVmVosFromVmEntities.mapNotNull { it.toVmVoFromVmEntity(itemById?.get(it.vmGuid.toString())) }
 }
 
 fun VmEntity.toIdentifiedVoFromVmEntity(): IdentifiedVo = IdentifiedVo.builder {
@@ -1107,8 +1118,9 @@ fun VnicProfileEntity.toVnicProfileVoFromVnicProfileEntity(): VnicProfileVo = Vn
 	}
 	migration { this@toVnicProfileVoFromVnicProfileEntity.migratable }
 	portMirroring { this@toVnicProfileVoFromVnicProfileEntity.portMirroring }
-	failOVer { this@toVnicProfileVoFromVnicProfileEntity.failoverVnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
-	// dataCenterVo { this@toVnicProfileVoFromVnicProfileEntity.network?.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	networkFilterVo { this@toVnicProfileVoFromVnicProfileEntity.networkFilter?.toIdentifiedVoFromNetworkFilterEntity() }
+	failover { this@toVnicProfileVoFromVnicProfileEntity.failoverVnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
+	dataCenterVo { this@toVnicProfileVoFromVnicProfileEntity.network?.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
 	networkVo { this@toVnicProfileVoFromVnicProfileEntity.network?.toIdentifiedVoFromNetworkEntity() }
 }
 fun VnicProfileEntity.toIdentifiedVoFromVnicProfileEntity(): IdentifiedVo = IdentifiedVo.builder {
@@ -1128,18 +1140,25 @@ fun VmInterfaceEntity.toNicVoFromVmInterfaceEntity(): NicVo = NicVo.builder {
 	interface_ { this@toNicVoFromVmInterfaceEntity.interfaceType }
 	macAddress { this@toNicVoFromVmInterfaceEntity.macAddr }
 	linked { this@toNicVoFromVmInterfaceEntity.linked }
-	// plugged {  } // TODO: 값 확인 필요
+	// plugged { this@toNicVoFromVmInterfaceEntity }
 	synced { this@toNicVoFromVmInterfaceEntity.synced }
 	// ipv4 { this@toNicVoFromVmInterfaceEntity }
 	// ipv6 { this@toNicVoFromVmInterfaceEntity }
 	// guestInterfaceName { this@toNicVoFromVmInterfaceEntity. }
-	// networkVo { this@toNicVoFromVmInterfaceEntity }
+	rxSpeed { this@toNicVoFromVmInterfaceEntity.stats?.rxRate?.toBigInteger() /* data.current.rx.bps */}
+	txSpeed { this@toNicVoFromVmInterfaceEntity.stats?.txRate?.toBigInteger() /* data.current.tx.bps */ }
+	rxTotalSpeed { (this@toNicVoFromVmInterfaceEntity.stats?.rxTotal ?: 0L).toBigInteger() /* data.total.rx */ }
+	txTotalSpeed { (this@toNicVoFromVmInterfaceEntity.stats?.txTotal ?: 0L).toBigInteger() /* data.total.tx */ }
+	vmVo { this@toNicVoFromVmInterfaceEntity.vm?.toVmVoFromVmEntity() }
 	vnicProfileVo { this@toNicVoFromVmInterfaceEntity.vnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
 	networkFilterVo { this@toNicVoFromVmInterfaceEntity.vnicProfile?.networkFilter?.toNetworkFilterVoFromNetworkFilterEntity() }
 }
 fun VmInterfaceEntity.toIdentifiedVoFromVmInterfaceEntity(): IdentifiedVo = IdentifiedVo.builder {
-
+	id { this@toIdentifiedVoFromVmInterfaceEntity.id.toString() }
+	name { this@toIdentifiedVoFromVmInterfaceEntity.name }
 }
+fun Collection<VmInterfaceEntity>.toNicVosFromVmInterfaceEntities(): List<NicVo> =
+	this@toNicVosFromVmInterfaceEntities.map { it.toNicVoFromVmInterfaceEntity() }
 //endregion: VmInterfaceEntity
 
 

@@ -44,11 +44,9 @@ const Tables = ({
   // 재접할 때 처음접속할 때
   const useFirstLoading = (isLoading) => {
     const isFirst = useRef(true);
-
     if (!isLoading) {
       isFirst.current = false;
     }
-
     return isLoading && isFirst.current;
   };
   const isFirstLoading = useFirstLoading(isLoading); 

@@ -11,6 +11,12 @@ import {
 import Logger                 from "@/utils/Logger";
 import "./MainOuter.css";
 
+/**
+ * @name SideNavbar
+ * @description 사이드 네비게이션 바
+ * 
+ * @returns {JSX.Element} SideNavbar
+ */
 const SideNavbar = () => {
   const location = useLocation();
   const {

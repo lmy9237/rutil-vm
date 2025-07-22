@@ -444,6 +444,36 @@ class HostController {
 
 	@ApiOperation(
 		httpMethod="POST",
+		value="호스트 재설치",
+		notes="호스트를 재설치"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="hostId", value="호스트 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="host", value="호스트", dataTypeClass=HostVo::class, paramType="body"),
+		ApiImplicitParam(name="deployHostedEngine", value="호스트 엔진 배포 작업 여부", dataTypeClass=Boolean::class, paramType="query", defaultValue="false")
+	)
+	@ApiResponses(
+		ApiResponse(code = 201, message = "CREATED"),
+		ApiResponse(code = 404, message = "NOT_FOUND")
+	)
+	@PostMapping("/{hostId}/reinstall")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.CREATED)
+	fun reinstall(
+		@PathVariable hostId: String?,
+		@RequestBody host: HostVo? = null,
+		@RequestParam(defaultValue = "false") deployHostedEngine: Boolean
+	): ResponseEntity<Boolean> {
+		if (hostId.isNullOrEmpty())
+			throw ErrorPattern.HOST_ID_NOT_FOUND.toException()
+		if (host == null)
+			throw ErrorPattern.HOST_NOT_FOUND.toException()
+		log.info("/computing/hosts/{}/reinstall?deployHostedEngine={} ... 호스트 재설치", hostId, deployHostedEngine)
+		return ResponseEntity.ok(iHostOp.reinstall(hostId, host, deployHostedEngine))
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
 		value="호스트 새로고침 모드전환",
 		notes="호스트를 새로고침"
 	)
@@ -454,7 +484,7 @@ class HostController {
 		ApiResponse(code = 201, message = "CREATED"),
 		ApiResponse(code = 404, message = "NOT_FOUND")
 	)
-	@PostMapping("/{hostId}/refresh")
+	@PutMapping("/{hostId}/refresh")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
 	fun refresh(

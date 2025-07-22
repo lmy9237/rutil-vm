@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.service.computing
 
 import com.itinfo.rutilvm.api.configuration.CertConfig
+import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.cert.toRemoteConnMgmt
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
@@ -20,8 +21,10 @@ import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
 import com.itinfo.rutilvm.util.ssh.model.activateGlobalHA
 import com.itinfo.rutilvm.util.ssh.model.deactivateGlobalHA
 import com.itinfo.rutilvm.util.ssh.model.rebootSystem
+import com.itinfo.rutilvm.util.ssh.model.registerRutilVMPubkey2Host
 
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostStatus
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -85,7 +88,18 @@ interface ItHostOperationService {
      * @return [Boolean]
      */
     @Throws(Error::class)
-    fun globalHaDeactivate(hostId: String): Boolean
+	fun globalHaDeactivate(hostId: String): Boolean
+	/**
+	 * [ItHostOperationService.reinstall]
+	 * 호스트 관리 - 재설치
+	 *
+	 * @param hostId [String] 호스트 아이디
+	 * @param host [HostVo] 호스트 정보
+	 * @param deployHostedEngine [Boolean] 호스트 엔진 배포 작업 여
+	 * @return [Boolean]
+	 */
+	@Throws(Error::class)
+	fun reinstall(hostId: String, hostVo: HostVo, deployHostedEngine: Boolean): Boolean
 	/**
 	 * [ItHostOperationService.refresh]
 	 * 호스트 관리 - 새로고침
@@ -95,7 +109,6 @@ interface ItHostOperationService {
 	 */
 	@Throws(Error::class)
 	fun refresh(hostId: String): Boolean
-
 	/**
 	 * [ItHostOperationService.commitNetConfig]
 	 * 호스트 재부팅 확인
@@ -199,12 +212,35 @@ class HostOperationServiceImpl(
         // val res: Result<Boolean> = conn.deactiveGlobalHaFromHost(hostId)
 		val resHost2EnableGlobalHA: HostVo? = iHost.findOne(hostId)
 		if (resHost2EnableGlobalHA?.status == VdsStatus.down) {
-			throw ErrorPattern.HOST_INACTIVE.toError()
+			throw ErrorPattern.HOST_INACTIVE.toException()
 		}
 		val remoteConnMgmt: RemoteConnMgmt? = resHost2EnableGlobalHA?.toRemoteConnMgmt(certConfig.ovirtSSHPrvKey)
 		val res: Boolean? = remoteConnMgmt?.deactivateGlobalHA()
         return res == true
     }
+
+	@Throws(Error::class)
+	override fun reinstall(
+		hostId: String,
+		hostVo: HostVo,
+		deployHostedEngine: Boolean
+	): Boolean {
+		log.info("reinstall ... hostId: {} hostVo: {}, deployHostedEngine: {}", hostId, hostVo, deployHostedEngine)
+		// val resHost2Reinstall: HostVo? = iHost.findOne(hostId)
+		val rootPassword: String = hostVo.ssh?.rootPassword ?: "" /*throw ErrorPattern.HOST_ROOT_PASSWORD_MISSING*/
+		val res: Result<Boolean> = conn.reinstallHost(hostId, rootPassword, deployHostedEngine)
+		log.info("reinstall ... registering rutilvm's pubkey to host's rutilvm begins")
+		log.debug("reinstall ... sshRootPassword: {}", rootPassword)
+		val engineRemoteMgmt: RemoteConnMgmt? = certConfig.ovirtEngineSSH
+		engineRemoteMgmt?.registerRutilVMPubkey2Host(
+			hostVo.address,
+			hostVo.ssh?.port?.toInt(),
+			hostVo.ssh?.rootPassword,
+			certConfig.ovirtSSHPubkey
+		)
+		log.info("add ... registering rutilvm's pubkey to host's rutilvm ends")
+		return res.isSuccess
+	}
 
 	@Throws(Error::class)
 	override fun refresh(hostId: String): Boolean {

@@ -15,11 +15,18 @@ import {
 import {
   useAddHost,
   useEditHost,
+  useReinstallHost,
   useHost,
   useAllClusters,
   useAllHosts,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  emptyIdNameVo, 
+  useSelectItemEffect, 
+  useSelectItemOrDefaultEffect
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MHost.css";
@@ -45,10 +52,15 @@ const initialFormState = {
 const HostModal = ({ 
   isOpen,
   onClose,
-  editMode=false
+  editMode=false,
+  reinstallMode=false,
 }) => {
   const { validationToast } = useValidationToast();
-  const hLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const hLabel = reinstallMode
+    ? Localization.kr.REINSTALL
+    : editMode 
+      ? Localization.kr.UPDATE
+      : Localization.kr.CREATE;
 
   const { datacentersSelected, clustersSelected, hostsSelected } = useGlobal();
   const hostId = useMemo(() => [...hostsSelected][0]?.id, [hostsSelected]);
@@ -73,6 +85,7 @@ const HostModal = ({
 
   const { mutate: addHost } = useAddHost(onClose, onClose);
   const { mutate: editHost } = useEditHost(onClose, onClose);
+  const { mutate: reinstallHost } = useReinstallHost(onClose, onClose);
   
   const { 
     data: clusters = [], 
@@ -85,7 +98,7 @@ const HostModal = ({
       setFormState(initialFormState);
       setClusterVo(emptyIdNameVo());
     }
-    if (editMode && host) {
+    if ((editMode || reinstallMode) && host) {
       setFormState({
         id: host?.id,
         name: host?.name,
@@ -101,7 +114,7 @@ const HostModal = ({
         name: host?.clusterVo?.name
       });
     }
-  }, [isOpen, editMode, host]);
+  }, [isOpen, editMode, reinstallMode, host]);
 
   // 클러스터 지정
   useSelectItemOrDefaultEffect(clusterId, editMode, clusters, setClusterVo, "Default");
@@ -113,7 +126,7 @@ const HostModal = ({
     const duplicateError = checkDuplicateName(hosts, formState.name, formState.id);
     if (duplicateError) return duplicateError;
 
-    if (!editMode && !formState.sshRootPassword) return "비밀번호를 입력해주세요.";
+    if (!(editMode || reinstallMode) && !formState.sshRootPassword) return "비밀번호를 입력해주세요.";
     if (!clusterVo.id) return `${Localization.kr.CLUSTER}를 선택해주세요.`;
     return null;
   };
@@ -135,16 +148,18 @@ const HostModal = ({
     };
 
     Logger.debug(`HostModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit); // 데이터를 확인하기 위한 로그
-    editMode
-      ? editHost({ hostId: formState.id, hostData: dataToSubmit })
-      : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.deployHostedEngine), });
+    reinstallMode 
+      ? reinstallHost({ hostId: formState.id, hostData: dataToSubmit, deployHostedEngine: String(formState.deployHostedEngine)})
+      : editMode
+        ? editHost({ hostId: formState.id, hostData: dataToSubmit })
+        : addHost({ hostData: dataToSubmit, deployHostedEngine: String(formState.deployHostedEngine), });
   };
 
   return (
     <BaseModal targetName={Localization.kr.HOST} submitTitle={hLabel}
       isOpen={isOpen} onClose={onClose}
       isReady={
-        editMode 
+        (editMode || reinstallMode)
           ? (isHostSuccess && isHostsSuccess && isClustersSuccess)
           : (isHostsSuccess && isClustersSuccess)
       }
@@ -153,7 +168,7 @@ const HostModal = ({
     >
       <LabelSelectOptionsID label={`${Localization.kr.HOST} ${Localization.kr.CLUSTER}`}
         value={clusterVo.id}
-        disabled={editMode && !isMaintenance}
+        disabled={(editMode || reinstallMode) && !isMaintenance}
         loading={isClustersLoading}
         options={clusters}
         onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
@@ -161,25 +176,27 @@ const HostModal = ({
       <hr />
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
+        disabled={reinstallMode}
         value={formState.name}
         onChange={handleInputChange(setFormState, "name", validationToast)}
       />
       <LabelInput id="comment" label={Localization.kr.COMMENT}
+        disabled={reinstallMode}
         value={formState.comment}
         onChange={handleInputChange(setFormState, "comment", validationToast)}
       />
       <LabelInput id="address" label={`${Localization.kr.HOST} 이름/IP`}
+        disabled={(editMode || reinstallMode)}
         value={formState.address}
-        disabled={editMode}
         onChange={handleInputChange(setFormState, "address", validationToast)}
       />
       <LabelInputNum id="sshPort" label="SSH 포트"
         value={formState.sshPort}
-        disabled={editMode}
+        disabled={(editMode || reinstallMode)}
         onChange={handleInputChange(setFormState, "sshPort", validationToast)}
       />
       <hr />
-      {!editMode && (
+      {!(editMode) && (
         <>
           <div className="font-semibold py-1.5">
             <label>인증</label>

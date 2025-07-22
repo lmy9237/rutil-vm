@@ -1,3 +1,4 @@
+import { RVI16 } from "../icons/RutilVmIcons";
 import "./FilterButtons.css";
 
 /**
@@ -17,8 +18,8 @@ const FilterButtons = ({
   onClick=()=>{},
 }) => (
   <div className="host-filter-btns f-start">
-    {options.map(({ key, label }) => (
-      <FilterButton key={key}
+    {options.map(({ key, label, icon=null, }) => (
+      <FilterButton key={key} icon={icon}
         onClick={() => onClick(key)}
         label={label}
         isActive={activeOption === key}
@@ -29,13 +30,15 @@ const FilterButtons = ({
 
 const FilterButton = ({
   label,
+  icon,
   isActive,
   ...props
 }) => (
   <button key={props.key}
-    className={isActive ? "active" : ""}
+    className={`f-center ${isActive ? "active" : ""}`}
     {...props}
   >
+    {icon && <RVI16 iconDef={icon} />}
     {label}
   </button>
 )

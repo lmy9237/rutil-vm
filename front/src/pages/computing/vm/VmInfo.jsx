@@ -42,7 +42,10 @@ import "./Vm.css";
  */
 const VmInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { setVmsSelected } = useGlobal()
   const { id: vmId, section } = useParams();
   const {
@@ -66,13 +69,6 @@ const VmInfo = () => {
   const allOkay2PowerDown = vm?.qualified4PowerDown;
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
-
-  useEffect(() => {
-    if (isVmError || (!isVmLoading && !vm)) {
-      navigate("/computing/vms");
-    }
-    setVmsSelected(vm)
-  }, [vm]);
   
   const [activeTab, setActiveTab] = useState("general")
   const tabs = useMemo(() => ([
@@ -86,10 +82,6 @@ const VmInfo = () => {
     { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
   ]), [vmId]);
 
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}`)
     const path = tab === "general"
@@ -97,6 +89,7 @@ const VmInfo = () => {
       : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
     setActiveTab(tab);
+    setTabInPage("/computing/vms", tab)
   }, [vmId]);
 
   const pathData = useMemo(() => ([
@@ -104,7 +97,6 @@ const VmInfo = () => {
     tabs.find((section) => section.id === activeTab)?.label,
   ]), [vm, tabs, activeTab]);
 
-  
   // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
@@ -141,6 +133,19 @@ const VmInfo = () => {
     { type: "templates", onClick: () => setActiveModal("vm:templates"),     label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: !isDown, }, 
     { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: "OVA로 내보내기",  disabled: !isDown, },
   ];
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isVmError || (!isVmLoading && !vm)) {
+      navigate("/computing/vms");
+    }
+    const currentTabInPage = tabInPage("/computing/vms")
+    setActiveTab(currentTabInPage)
+    setVmsSelected(vm)
+  }, [vm]);
 
   return (
     <SectionLayout>

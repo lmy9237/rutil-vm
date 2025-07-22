@@ -62,7 +62,7 @@ fun Connection.exportTemplate(templateId: String, exclusive: Boolean, toStorageD
 @Throws(Error::class)
 fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> = runCatching {
 	val vm = checkVm(vmId)
-	if (vm.status() == VmStatus.UP) {
+	if (vm?.status() == VmStatus.UP) {
 		throw ErrorPattern.VM_STATUS_ERROR.toError()
 	}
 

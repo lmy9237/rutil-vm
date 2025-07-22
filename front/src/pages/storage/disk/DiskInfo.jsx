@@ -7,15 +7,14 @@ import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import { rvi24HardDrive }     from "@/components/icons/RutilVmIcons";
+import DiskGeneral            from "./DiskGeneral";
+import DiskVms                from "./DiskVms";
+import DiskDomains            from "./DiskDomains";
 import {
   useDisk
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
-import DiskGeneral            from "./DiskGeneral";
-import DiskVms                from "./DiskVms";
-import DiskDomains            from "./DiskDomains";
-
 /**
  * @name DiskInfo
  * @description 디스크 종합정보
@@ -25,7 +24,10 @@ import DiskDomains            from "./DiskDomains";
  */
 const DiskInfo = () => {
   const navigate = useNavigate();
-  const { setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { setDisksSelected } = useGlobal()
   const { id: diskId, section } = useParams();
   const {
@@ -37,13 +39,6 @@ const DiskInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
 
-  useEffect(() => {
-    if (isDiskError || (!isDiskLoading && !disk)) {
-      navigate("/storages/disks");
-    }
-    setDisksSelected(disk)
-  }, [disk]);
-
   const tabs = useMemo(() => ([
     { id: "general",  label: Localization.kr.GENERAL,  onClick: () => handleTabClick("general") },
     { id: "vms",      label: Localization.kr.VM,       onClick: () => handleTabClick("vms") },
@@ -51,19 +46,6 @@ const DiskInfo = () => {
   ].filter((tab) => 
     !(disk?.contentType === "OVF_STORE" && tab.id === "vms")) /* OVF_STORE 유형일 때 가상머신 탭 보여줄 필요 없음 */
   ), [disk, diskId]);
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  const handleTabClick = useCallback((tab) => {
-    const path = tab === "general"
-        ? `/storages/disks/${diskId}`
-        : `/storages/disks/${diskId}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, [diskId]);
-
   
   const pathData = useMemo(() => ([
     disk?.alias,
@@ -87,6 +69,28 @@ const DiskInfo = () => {
     { type: "copy",   label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
     // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },
   ];
+
+  const handleTabClick = useCallback((tab) => {
+    const path = tab === "general"
+        ? `/storages/disks/${diskId}`
+        : `/storages/disks/${diskId}/${tab}`;
+    navigate(path);
+    setTabInPage("/storages/disks", tab);
+    setActiveTab(tab);
+  }, [diskId]);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isDiskError || (!isDiskLoading && !disk)) {
+      navigate("/storages/disks");
+    }
+    const currentTabInPage = tabInPage("/storages/disks")
+    setActiveTab(currentTabInPage)
+    setDisksSelected(disk)
+  }, [disk]);
 
   return (
     <SectionLayout>

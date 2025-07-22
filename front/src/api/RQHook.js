@@ -1994,9 +1994,9 @@ export const useAddHost = (
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
     return useMutation({
-    mutationFn: async ({ hostData, deployHostedEngine }) => {
+    mutationFn: async ({ hostId, hostData, deployHostedEngine }) => {
       closeModal();
-      const res = await ApiManager.addHost(hostData, deployHostedEngine);
+      const res = await ApiManager.addHost(hostId, hostData, deployHostedEngine);
       const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
       return _res;
@@ -2222,6 +2222,40 @@ export const useEnrollHostCertificate = (
     },
   });
 }
+/**
+ * @name useReinstallHost
+ * @description 호스트 재설치 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * @see ApiManager.refreshHost
+ */
+export const useReinstallHost = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async ({ hostId, hostData, deployHostedEngine }) => {
+      closeModal();
+      const res = await ApiManager.reinstallHost(hostId, hostData, deployHostedEngine);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > useReinstallHost ... hostId: ${hostId}`);
+      return _res;
+    },
+    onSuccess: (res) => {
+      Logger.debug(`RQHook > useReinstallHost ... res: `, res);
+      apiToast.ok(`${Localization.kr.HOST} 기능을 ${Localization.kr.REFRESH} ${Localization.kr.REQ_COMPLETE}`)
+      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      postSuccess(res);
+    },
+    onError: (error) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      postError && postError(error);
+    },
+  });
+};
 
 
 /**

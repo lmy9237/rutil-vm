@@ -1,8 +1,10 @@
+import { useState, useCallback } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
+import FilterButtons          from "@/components/button/FilterButtons";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import EventActionButtons     from "@/components/dupl/EventActionButtons";
@@ -30,31 +32,32 @@ const EventDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const { eventsSelected, setEventsSelected } = useGlobal()
-  const transformedData = [...events].map((e) => ({
+  const [activeSeverityType, setActiveSeverityType] = useState("all");
+  const transformedData = [...events].filter((e) => (
+    (activeSeverityType === "all") 
+      ? true
+      : e?.severity?.toUpperCase() === activeSeverityType.toUpperCase()
+  )).map((e) => ({
     ...e,
     _severity: severity2Icon(e?.severity),
+    searchText: `${e?.id} ${e?.severity || "normal"} ${e?.logType} ${e?.description}`.toLowerCase(),
   }))
   
   // ✅ 검색 기능 적용
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
+  const eventFilters = [
+    { key: "all",       label: "모두", },
+    { key: "alert",     label: "알림", icon: rvi16SeverityAlert() },
+    { key: "error",     label: "실패", icon: rvi16SeverityError() },
+    { key: "warning",   label: "경고", icon: rvi16SeverityWarning() },    
+  ];
+
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-        
-        <RVI36
-          iconDef={rvi16SeverityAlert()}
-          onClick={() => { }}
-        />
-        <RVI36
-          iconDef={rvi16SeverityError()}
-          onClick={() => { }}
-        />
-        <RVI36
-          iconDef={rvi16SeverityWarning()}
-          onClick={() => { }}
-        />
+        <FilterButtons options={eventFilters} activeOption={activeSeverityType} onClick={setActiveSeverityType} />
         <EventActionButtons />
       </div>
       <TablesOuter target={"event"}

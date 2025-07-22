@@ -10,16 +10,18 @@ import java.util.UUID
 @Repository
 interface VnicProfileRepository: JpaRepository<VnicProfileEntity, UUID> {
 	@Query("""
-SELECT vp FROM VnicProfileEntity vp
-LEFT JOIN FETCH vp.network
+SELECT DISTINCT vp FROM VnicProfileEntity vp
+LEFT JOIN FETCH vp.network AS n
+LEFT JOIN FETCH n.storagePool AS sp
 LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 """)
 	override fun findAll(): List<VnicProfileEntity>
 
 	@Query("""
-SELECT vp FROM VnicProfileEntity vp
-LEFT JOIN FETCH vp.network
+SELECT DISTINCT vp FROM VnicProfileEntity vp
+LEFT JOIN FETCH vp.network AS n
+LEFT JOIN FETCH n.storagePool AS sp
 LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 AND vp.id = :id
@@ -27,4 +29,16 @@ AND vp.id = :id
 	fun findByVnicProfileId(
 		@Param("id") id: UUID
 	): VnicProfileEntity?
+
+	@Query("""
+SELECT DISTINCT vp FROM VnicProfileEntity vp
+LEFT JOIN FETCH vp.network AS n
+LEFT JOIN FETCH n.storagePool AS sp
+LEFT JOIN FETCH vp.networkFilter nf
+WHERE 1=1
+AND n.id = :networkId
+""")
+	fun findByNetworkId(
+		@Param("networkId") networkId: UUID
+	): List<VnicProfileEntity>
 }

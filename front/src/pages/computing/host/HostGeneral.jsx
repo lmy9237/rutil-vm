@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import useGlobal                  from "@/hooks/useGlobal";
 import { InfoTable }              from "@/components/table/InfoTable";
+import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
+import GeneralLayout              from "@/components/GeneralLayout";
 import VmGeneralBarChart          from "../vm/VmGeneralBarChart";
 import HostGeneralChart           from "./HostGeneralChart";
 import { 
@@ -8,10 +10,8 @@ import {
   useHost
 } from "@/api/RQHook";
 import { convertBytesToMB }       from "@/util";
-import "./Host.css";
-import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import GeneralLayout from "@/components/GeneralLayout";
 import Localization from "@/utils/Localization";
+import "./Host.css";
 
 /**
  * @name HostGeneral

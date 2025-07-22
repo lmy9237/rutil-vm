@@ -342,7 +342,7 @@ class VmEntity(
 	val migrationPolicyId: UUID? = null,
 	@Column(name="migration_support", nullable=true)
 	private val _migrationSupport: Int? = null,
-	val minAllocatedMem: Int? = null,
+	val minAllocatedMem: BigInteger? = BigInteger.ZERO,
 	val multiQueuesEnabled: Boolean? = null,
 	val namespace: String = "",
 	val nextRunConfigExists: Boolean? = null,
@@ -635,7 +635,7 @@ class VmEntity(
 		private var bMigrationDowntime: Int = -1; fun migrationDowntime(block: () -> Int?) { bMigrationDowntime = block() ?: -1 }
 		private var bMigrationPolicyId: UUID? = null; fun migrationPolicyId(block: () -> UUID?) { bMigrationPolicyId = block() }
 		private var bMigrationSupport: MigrationSupport? = MigrationSupport.unknown; fun migrationSupport(block: () -> MigrationSupport?) { bMigrationSupport = block() ?: MigrationSupport.unknown }
-		private var bMinAllocatedMem: Int = -1; fun minAllocatedMem(block: () -> Int?) { bMinAllocatedMem = block() ?: -1 }
+		private var bMinAllocatedMem: BigInteger? = BigInteger.ZERO; fun minAllocatedMem(block: () -> BigInteger?) { bMinAllocatedMem = block() ?: BigInteger.ZERO }
 		private var bMultiQueuesEnabled: Boolean? = null; fun multiQueuesEnabled(block: () -> Boolean?) { bMultiQueuesEnabled = block() }
 		private var bNamespace: String = ""; fun namespace(block: () -> String?) { bNamespace = block() ?: "" }
 		private var bNextRunConfigExists: Boolean? = null; fun nextRunConfigExists(block: () -> Boolean?) { bNextRunConfigExists = block() }

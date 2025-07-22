@@ -22,7 +22,7 @@ private val log = LoggerFactory.getLogger(DataCenterVo::class.java)
 
 /**
  * [DataCenterVo]
- * 데이터센터
+ * 데이터센터 (a.k.a. 스토리지 풀)
  *
  * @property id [String]
  * @property name [String]
@@ -77,7 +77,6 @@ class DataCenterVo (
 		private var bClusterVos: List<ClusterVo> = listOf();fun clusterVos(block: () -> List<ClusterVo>?) { bClusterVos = block() ?: listOf() }
 		private var bNetworkVos: List<IdentifiedVo> = listOf();fun networkVos(block: () -> List<IdentifiedVo>?) { bNetworkVos = block() ?: listOf() }
 		private var bStorageDomainVos: List<StorageDomainVo> = listOf();fun storageDomainVos(block: () -> List<StorageDomainVo>?) { bStorageDomainVos = block() ?: listOf() }
-
 		fun build(): DataCenterVo = DataCenterVo(bId, bName, bComment, bDescription, bStorageType, bVersion, bVersionMajor, bVersionMinor, bQuotaMode, bStatus, bDomainStatus, bClusterCnt, bHostCnt, bClusterVos, bNetworkVos, bStorageDomainVos, )
 	}
 
@@ -202,10 +201,11 @@ fun StorageDomain.toStorageDomainDataCenter(conn: Connection): List<DataCenterVo
 		}
 	}
 }
-
-
 // region: builder
+
+
 /**
+ * [DataCenterVo.toDataCenterBuilder]
  * 데이터센터 빌더
  */
 fun DataCenterVo.toDataCenterBuilder(): DataCenterBuilder = DataCenterBuilder()

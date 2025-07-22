@@ -6,6 +6,12 @@ import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
+import NetworkGeneral         from "./NetworkGeneral";
+import NetworkVnicProfiles    from "./NetworkVnicProfiles";
+import NetworkHosts           from "./NetworkHosts";
+import NetworkVms             from "./NetworkVms";
+import NetworkTemplates       from "./NetworkTemplates";
+import NetworkClusters        from "./NetworkClusters";
 import {
   rvi24Network
 } from "@/components/icons/RutilVmIcons";
@@ -14,12 +20,6 @@ import {
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
-import NetworkGeneral         from "./NetworkGeneral";
-import NetworkVnicProfiles    from "./NetworkVnicProfiles";
-import NetworkHosts           from "./NetworkHosts";
-import NetworkVms             from "./NetworkVms";
-import NetworkTemplates       from "./NetworkTemplates";
-import NetworkClusters        from "./NetworkClusters";
 
 /**
  * @name NetworkInfo
@@ -31,7 +31,10 @@ import NetworkClusters        from "./NetworkClusters";
 const NetworkInfo = () => {
   const navigate = useNavigate();
   const { id: networkId, section } = useParams();
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { networksSelected, setNetworksSelected } = useGlobal()
   const {
     data: network,
@@ -41,13 +44,6 @@ const NetworkInfo = () => {
 
   const [activeTab, setActiveTab] = useState("general");
 
-  useEffect(() => {
-    if (isNetworkError || (!isNetworkLoading && !network)) {
-      navigate("/networks");
-    }
-    setNetworksSelected(network)
-  }, [network, navigate]);
-
   const tabs = useMemo(() => [
     { id: "general",       label: Localization.kr.GENERAL,      onClick: () => handleTabClick("general") },
     { id: "vnicProfiles",  label: Localization.kr.VNIC_PROFILE, onClick: () => handleTabClick("vnicProfiles") },
@@ -56,19 +52,6 @@ const NetworkInfo = () => {
     { id: "vms",           label: Localization.kr.VM,           onClick: () => handleTabClick("vms") },
     { id: "templates",     label: Localization.kr.TEMPLATE,     onClick: () => handleTabClick("templates") },
   ], [networkId]);
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  const handleTabClick = useCallback((tab) => {
-    const path =
-      tab === "general"
-        ? `/networks/${networkId}`
-        : `/networks/${networkId}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, [networkId]);
   
   const pathData = useMemo(() => [
     network?.name,
@@ -93,6 +76,29 @@ const NetworkInfo = () => {
     { type: "remove", label: Localization.kr.REMOVE, onClick: () => setActiveModal("network:remove") },
   ]), []);
 
+  const handleTabClick = useCallback((tab) => {
+    const path =
+      tab === "general"
+        ? `/networks/${networkId}`
+        : `/networks/${networkId}/${tab}`;
+    navigate(path);
+    setTabInPage("/networks", tab);
+    setActiveTab(tab);
+  }, [network]);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isNetworkError || (!isNetworkLoading && !network)) {
+      navigate("/networks");
+    }
+    const currentTabInPage = tabInPage("/networks")
+    setActiveTab(currentTabInPage)
+    setNetworksSelected(network)
+  }, [network, navigate]);
+  
   return (
     <SectionLayout>
       <HeaderButton title={network?.name}

@@ -45,15 +45,18 @@ fun Connection.findVm(vmId: String?="", follow: String?=""): Result<Vm?> = runCa
 }
 
 
-fun Connection.startVm(vmId: String?="", usingInitialization: Vm? = null): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
+fun Connection.startVm(
+	vmId: String?="",
+	usingInitialization: Vm?=null
+): Result<Boolean> = runCatching {
+	val vm: Vm? = checkVm(vmId)
 
 	val diskAttachments = this.findAllDiskAttachmentsFromVm(vmId).getOrDefault(listOf())
 	if (!diskAttachments.any { it.bootable() }) {
 		log.error("가상머신 디스크 중 부팅 가능한 디스크가 없음")
 		throw ErrorPattern.DISK_ATTACHMENT_NOT_BOOTABLE.toError()
 	}
-	if(vm.status() == VmStatus.UP){
+	if (vm?.status() == VmStatus.UP) {
 		// log.error("가상머신 상태가 up인 상태")
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
@@ -100,8 +103,8 @@ fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runC
 }
 
 fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
-	if(vm.status() == VmStatus.DOWN){
+	val vm: Vm? = checkVm(vmId)
+	if (vm?.status() == VmStatus.DOWN){
 		log.error("가상머신 상태가 Down인 상태")
 		throw ErrorPattern.VM_STATUS_ERROR.toError()
 	}
@@ -118,7 +121,7 @@ fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
 }
 
 fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
+	val vm: Vm? = checkVm(vmId)
 	this.srvVm(vmId).suspend().send()
 	// this.expectVmStatus(vmId, VmStatus.SUSPENDED)
 	true
@@ -136,8 +139,7 @@ fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
 
 // TODO: 종료되지 않고 다시 올라올때가 잇음, expectVmStatus대신 다른 함수 써야 할지 확인 필요
 fun Connection.shutdownVm(vmId: String): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
-
+	val vm: Vm? = checkVm(vmId)
 	this.srvVm(vmId).shutdown().send()
 	// this.expectVmStatus(vmId, VmStatus.DOWN)
 	true
@@ -224,9 +226,9 @@ fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
 
 // diskDelete 디스크 삭제 여부
 fun Connection.removeVm(vmId: String, diskDelete: Boolean = false): Result<Boolean> = runCatching {
-	val vm: Vm = checkVm(vmId)
-	if (vm.deleteProtected()) throw ErrorPattern.VM_PROTECTED.toError()
-	if(vm.status() == VmStatus.UP) {
+	val vm: Vm? = checkVm(vmId)
+	if (vm?.deleteProtected() == true) throw ErrorPattern.VM_PROTECTED.toError()
+	if (vm?.status() == VmStatus.UP) {
 		log.debug("가상머신이 실행중인 상태")
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}

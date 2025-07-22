@@ -6,12 +6,17 @@ import com.itinfo.rutilvm.api.model.computing.VmVo
 import com.itinfo.rutilvm.api.model.computing.toTemplateIdNames
 import com.itinfo.rutilvm.api.model.computing.toVmsIdName
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.repository.engine.VnicProfileRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.VnicProfileEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toVnicProfileVosFromVnicProfileEntities
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VnicProfile
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 interface ItVnicProfileService{
@@ -93,6 +98,8 @@ interface ItVnicProfileService{
 class VnicProfileServiceImpl(
 ): BaseService(), ItVnicProfileService {
 
+	@Autowired private lateinit var rVnicProfiles: VnicProfileRepository
+
     @Throws(Error::class)
     override fun findAll(): List<VnicProfileVo> {
         log.info("findAll ... ")
@@ -103,8 +110,11 @@ class VnicProfileServiceImpl(
     @Throws(Error::class)
     override fun findAllFromNetwork(networkId: String): List<VnicProfileVo> {
         log.info("findAllFromNetwork ... networkId: {}", networkId)
-        val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId, follow = "network.datacenter").getOrDefault(emptyList())
-        return res.toVnicProfileMenus(conn)
+		val vnicProfilesFound: List<VnicProfileEntity> = rVnicProfiles.findByNetworkId(networkId.toUUID())
+		return vnicProfilesFound.toVnicProfileVosFromVnicProfileEntities()
+        /*val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId, follow = "network.datacenter")
+			.getOrDefault(emptyList())
+        return res.toVnicProfileMenus(conn)*/
     }
 
     @Throws(Error::class)

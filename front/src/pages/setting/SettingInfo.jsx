@@ -1,24 +1,26 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import SettingUsers           from "./SettingUsers";
 import SettingSessions        from "./SettingSessions";
-import SettingCerts    from "./SettingCerts";
+import SettingProviders       from "./SettingProviders";
+import SettingCerts           from "./SettingCerts";
 import {
   rvi24Gear
 } from "@/components/icons/RutilVmIcons";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./Setting.css";
-import SettingProviders from "./SettingProviders";
 
 /**
  * @name SettingInfo
  * @description 관리
  * (/settings/:sectionId)
+ * 
  * @returns {JSX.Element} SettingInfo
  * 
  * @see App
@@ -38,17 +40,6 @@ const SettingInfo = () => {
     // { id: 'app_settings', label: '설정' },
     // { id: 'user_sessionInfo', label: '계정설정' },
   ], []);
-
-  useEffect(() => {
-    setActiveTab(!section ? "users" : section);
-  }, [section]);
-
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`SettingInfo > handleTabClick ... tab: ${tab}`)
-    const path = `/settings/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, []);
   
   const pathData = useMemo(() => [
     Localization.kr.MANAGEMENT,
@@ -68,6 +59,17 @@ const SettingInfo = () => {
     const SectionComponent = sectionComponents[activeTab];
     return SectionComponent ? <SectionComponent /> : null;
   };
+
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`SettingInfo > handleTabClick ... tab: ${tab}`)
+    const path = `/settings/${tab}`;
+    navigate(path);
+    setActiveTab(tab);
+  }, []);
+
+  useEffect(() => {
+    setActiveTab(section || "users");
+  }, [section]);
 
   return (
     <SectionLayout>

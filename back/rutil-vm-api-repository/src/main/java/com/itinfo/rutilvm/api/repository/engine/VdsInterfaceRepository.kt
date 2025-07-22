@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface VdsInterfaceRepository : JpaRepository<VdsInterfaceEntity, UUID> {
+interface VdsInterfaceRepository: JpaRepository<VdsInterfaceEntity, UUID> {
 	fun findByVdsStaticVdsIdAndName(vdsId: UUID, name: String): VdsInterfaceEntity?
 	fun findByVdsStaticVdsIdAndNetworkName(vdsId: UUID, networkName: String): VdsInterfaceEntity?
 	fun findAllByVdsStaticVdsId(vdsId: UUID): List<VdsInterfaceEntity>

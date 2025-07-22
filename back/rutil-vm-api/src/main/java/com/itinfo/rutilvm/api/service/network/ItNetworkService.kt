@@ -15,15 +15,19 @@ import com.itinfo.rutilvm.api.repository.engine.NameServerRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkClusterViewRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkFilterRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
+import com.itinfo.rutilvm.api.repository.engine.VmInterfaceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.VmStaticRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterViewEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkFilterEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmInterfaceEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toClusterVoFromNetworkClusterViewEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkFilterVosFromNetworkFilterEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVoFromNetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toNicVosFromVmInterfaceEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -191,10 +195,12 @@ class NetworkServiceImpl(
 
 	@Autowired private lateinit var rNetwork: NetworkRepository
 	@Autowired private lateinit var rNetworkClusters: NetworkClusterViewRepository
+	@Autowired	private lateinit var rVmInterfaces: VmInterfaceRepository
 	@Autowired private lateinit var rDnsConfigs: DnsResolverConfigurationRepository
 	@Autowired private lateinit var rNameServers: NameServerRepository
 	@Autowired private lateinit var rNetworkFilters: NetworkFilterRepository
 	@Autowired private lateinit var rVms: VmRepository
+	@Autowired private lateinit var rVmStatics: VmStaticRepository
 
 	@Throws(Error::class)
 	override fun findAll(): List<NetworkVo> {
@@ -362,16 +368,25 @@ class NetworkServiceImpl(
 	}
 
 	@Throws(Error::class)
+	@Transactional(value="engineTransactionManager", readOnly=true) // 간혹가다 VmInterface에서 조회불가능한 가상머신ID가 있어 오류 발생하여 이를 방지하기 위함
 	override fun findAllVmsNicFromNetwork(networkId: String): List<NicVo> {
 		log.info("findAllVmsFromNetwork ... networkId: {}", networkId)
-		val res: List<Vm> = conn.findAllVms(follow = "nics.vnicprofile,nics.statistics").getOrDefault(emptyList())
-				.filter {
-					it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
-				}
-
+		val vmInterfacesFound: List<VmInterfaceEntity> = rVmInterfaces.findAll()
+		return vmInterfacesFound.filter {
+			rVmStatics.findByVmGuid(it.vm?.vmGuid) != null &&
+			it.vnicProfile != null
+			// try { conn.checkVm(it.vm?.vmGuid.toString());true } catch (e: Error) { log.error("findAllVmsFromNetwork ... vm NOT FOUND! {}", it.vm?.vmGuid);false }
+		}.toNicVosFromVmInterfaceEntities()
+		/*
+		val res: List<Vm> = conn.findAllVms(follow = "nics.vnicprofile,nics.statistics")
+			.getOrDefault(emptyList())
+			.filter {
+				it.nics().any { nic -> nic.vnicProfile().network().id() == networkId }
+			}
 		return res.flatMap { vm ->
 			vm.nics().map { nic -> nic.toNetworkVmMenu(conn) } // NicVo로 변환
 		}
+		*/
 	}
 
 	@Throws(Error::class)

@@ -424,10 +424,10 @@ fun List<Statistic>.toVmUsage(): UsageDto{
 
 fun List<Statistic>.findVmDiskUsageByPath(): List<VmDiskUsageByPath> {
 	val vmDiskUsage = this@findVmDiskUsageByPath.firstOrNull { it.name() == "disk.usage" }
-	val valueFound = vmDiskUsage?.values()?.firstOrNull()?.detail()
 	val itemType = object : TypeToken<List<VmDiskUsageByPath>>() {}.type
-	val vmDisks = gson.fromJson<List<VmDiskUsageByPath>>(valueFound, itemType)
-	return vmDisks
+	val valueFound = vmDiskUsage?.values()?.firstOrNull()?.detail()
+	val vmDiskUsages = if (valueFound == null) emptyList() else gson.fromJson<List<VmDiskUsageByPath>>(valueFound, itemType)
+	return vmDiskUsages
 }
 
 /**

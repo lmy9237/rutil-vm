@@ -44,7 +44,7 @@ class VmSnapshotEntity(
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "vm_id", referencedColumnName = "vm_guid")
-	val vm: VmStaticEntity? = VmStaticEntity()
+	val vm: VmStaticEntity? = null,
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -53,7 +53,7 @@ class VmSnapshotEntity(
 		private var bSnapshotId: UUID? = null;fun snapshotId(block: () -> UUID?) { bSnapshotId = block() }
 		private var bDescription: String = "";fun description(block: () -> String?) { bDescription = block() ?: "" }
 		private var bCreationDate: LocalDateTime? = null;fun creationDate(block: () -> LocalDateTime?) { bCreationDate = block() }
-		private var bVm: VmStaticEntity? = VmStaticEntity();fun vm(block: () -> VmStaticEntity?) { bVm = block() ?: VmStaticEntity() }
+		private var bVm: VmStaticEntity? = null;fun vm(block: () -> VmStaticEntity?) { bVm = block() }
 		fun build(): VmSnapshotEntity = VmSnapshotEntity(bSnapshotId, bDescription, bCreationDate, bVm)
 	}
 

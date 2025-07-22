@@ -52,10 +52,8 @@ fun Connection.checkVmExists(vmId: String?="") {
 		throw ErrorPattern.VM_NOT_FOUND.toError()
 	}
 }
-fun Connection.checkVm(vmId: String?=""): Vm {
-	return this.findVm(vmId)
-		.getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-}
+fun Connection.checkVm(vmId: String?=""): Vm? =
+	this.findVm(vmId).getOrThrow()
 
 fun Connection.checkTemplateExists(templateId: String) {
 	if (this.findTemplate(templateId).isFailure) {

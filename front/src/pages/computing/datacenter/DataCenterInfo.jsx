@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
 import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -12,11 +12,13 @@ import DataCenterVms from "./DataCenterVms";
 import DataCenterDomains from "./DataCenterDomains";
 import DataCenterNetworks from "./DataCenterNetworks";
 import DataCenterEvents from "./DataCenterEvents";
-import Localization from "../../../utils/Localization";
-import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
-import { useDataCenter } from "../../../api/RQHook";
-import Logger from "../../../utils/Logger";
 import DataCenterGeneral from "./DataCenterGeneral";
+import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
+import {
+  useDataCenter
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DataCenterInfo
@@ -43,17 +45,12 @@ const DataCenterInfo = () => {
     isError: isDataCenterError,
     isSuccess: isDataCenterSuccess,
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { setDatacentersSelected, setSourceContext } = useGlobal()
   const [activeTab, setActiveTab] = useState("general");
-
-  useEffect(() => {
-    if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
-      navigate("/computing/rutil-manager/datacenters");
-    }
-    setDatacentersSelected(dataCenter)
-    setSourceContext("fromDatacenter")
-  }, [dataCenter]);
 
   const homePath = useMemo(() => {
     // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
@@ -67,13 +64,6 @@ const DataCenterInfo = () => {
       : "computing"; // 기본값을 'computing'으로 설정
     return `/${currentSection}/datacenters/${dataCenterId}`
   }, [location, dataCenterId])
-
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
-    const path = `${homePath}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, [homePath]);
 
   const tabs = useMemo(() => ([
     { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
@@ -89,10 +79,6 @@ const DataCenterInfo = () => {
     dataCenter?.name,
     tabs.find((section) => section.id === activeTab)?.label,
   ]), [dataCenter, activeTab]);
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
   const renderSectionContent = useCallback(() => {
     const SectionComponent = {
@@ -113,6 +99,28 @@ const DataCenterInfo = () => {
     { type: "update", onClick: () => setActiveModal("datacenter:update"), label: Localization.kr.UPDATE, },
     { type: "remove", onClick: () => setActiveModal("datacenter:remove"), label: Localization.kr.REMOVE, },
   ]), []);
+
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
+    const path = `${homePath}/${tab}`;
+    navigate(path);
+    setTabInPage("/computing/datacenters", tab);
+    setActiveTab(tab);
+  }, [homePath]);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
+      navigate("/computing/rutil-manager/datacenters");
+    }
+    const currentTabInPage = tabInPage("/computing/datacenters")
+    setActiveTab(currentTabInPage)
+    setDatacentersSelected(dataCenter)
+    setSourceContext("fromDatacenter")
+  }, [dataCenter, navigate]);
 
   return (
     <SectionLayout>

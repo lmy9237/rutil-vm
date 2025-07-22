@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import useUIState from "../../../hooks/useUIState";
-import useGlobal from "../../../hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import SectionLayout from "../../../components/SectionLayout";
 import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
 import HeaderButton from "../../../components/button/HeaderButton";
@@ -11,10 +11,12 @@ import ClusterHosts from "./ClusterHosts";
 import ClusterVms from "./ClusterVms";
 import ClusterNetworks from "./ClusterNetworks";
 import ClusterEvents from "./ClusterEvents";
-import { useCluster } from "../../../api/RQHook";
 import { rvi24Cluster } from "../../../components/icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
-import Logger from "../../../utils/Logger";
+import {
+  useCluster
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Cluster.css";
 
 /**
@@ -41,16 +43,12 @@ const ClusterInfo = () => {
     isError: isClusterError,
     isSuccess: isClusterSuccess,
   } = useCluster(clusterId, (e) => ({ ...e }));
-  const {  setActiveModal, } = useUIState()
+  const { 
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
   const { setClustersSelected } = useGlobal()
   const [activeTab, setActiveTab] = useState("general");
-
-  useEffect(() => {
-    if (isClusterError || (!isClusterLoading && !cluster)) {
-      navigate("/computing/rutil-manager/clusters");
-    }
-    setClustersSelected(cluster)
-  }, [cluster, navigate]);
 
   const tabs = useMemo(() => ([
     { id: "general",  label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
@@ -60,24 +58,10 @@ const ClusterInfo = () => {
     { id: "events",   label: Localization.kr.EVENT,   onClick: () => handleTabClick("events") },
   ]), [clusterId]);
 
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
-    const path =
-      tab === "general"
-        ? `/computing/clusters/${clusterId}`
-        : `/computing/clusters/${clusterId}/${tab}`;
-    navigate(path);
-    setActiveTab(tab);
-  }, []);
-
   const pathData = useMemo(() => ([
     cluster?.name,
     tabs.find((section) => section.id === activeTab)?.label,
   ]), [activeTab, cluster])
-
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
 
   const renderSectionContent = useCallback(() => {
     Logger.debug(`ClusterInfo > renderSectionContent ... `)
@@ -95,6 +79,30 @@ const ClusterInfo = () => {
     { type: "update", onClick: () => setActiveModal("cluster:update"), label: Localization.kr.UPDATE, },
     { type: "remove", onClick: () => setActiveModal("cluster:remove"), label: Localization.kr.REMOVE, },
   ]), []);
+
+  useEffect(() => {
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    if (isClusterError || (!isClusterLoading && !cluster)) {
+      navigate("/computing/rutil-manager/clusters");
+    }
+    const currentTabInPage = tabInPage("/computing/clusters")
+    setActiveTab(currentTabInPage)
+    setClustersSelected(cluster)
+  }, [cluster, navigate]);
+
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
+    const path =
+      tab === "general"
+        ? `/computing/clusters/${clusterId}`
+        : `/computing/clusters/${clusterId}/${tab}`;
+    navigate(path);
+    setTabInPage("/computing/clusters", tab);
+    setActiveTab(tab);
+  }, []);
 
   return (
     <SectionLayout>

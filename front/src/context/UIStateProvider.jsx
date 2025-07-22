@@ -7,12 +7,15 @@ export const UIStateProvider = ({ children }) => {
   const KEY_UI_STATE = "uiState";
   const KEY_CURRENT_PAGE = "currentPage"                              /* 현재위치 (in File) */
   const KEY_ACTIVE_MODAL = "activeModal";                             /* (활성화 된) 모달 */
-  const KEY_VNC_SCREENSHOT_DATA_URLS = "vncScreenshotDataUrls";                  /* VNC 화면 */
+  const KEY_VNC_SCREENSHOT_DATA_URLS = "vncScreenshotDataUrls";       /* VNC 화면 */
+  const KEY_TAB_IN_PAGE = "tabInPage";       /* VNC 화면 */
+
 
   const initialState = JSON.parse(sessionStorage.getItem(KEY_UI_STATE)) ?? {
     [KEY_CURRENT_PAGE]: "",
     [KEY_ACTIVE_MODAL]: [],
     [KEY_VNC_SCREENSHOT_DATA_URLS]: {},
+    [KEY_TAB_IN_PAGE]: {},
   }
   const [sUIState, sSetUIState] = useState(initialState)
   const _UIState = () => Object.assign({}, sUIState, JSON.parse(sessionStorage.getItem(KEY_UI_STATE)))
@@ -31,7 +34,6 @@ export const UIStateProvider = ({ children }) => {
       [KEY_CURRENT_PAGE]: newV
     });
   }
-  
   //#endregion: 현재 위치 (in File)
 
   //#region: 활성화 된 모달
@@ -97,8 +99,23 @@ export const UIStateProvider = ({ children }) => {
     });
   }
   const clearVncScreenshotDataUrl = (vmId="") => setVncScreenshotDataUrl(vmId, null)
-  
   //#endregion: Vnc 스크린샷 이미지 데이터
+
+  //#region: 탭 지점 기록
+  const tabInPage = (path="") => _UIState()[KEY_TAB_IN_PAGE][path] ?? "general";
+  const setTabInPage = (path="", newV="") => {
+    Logger.debug(`UIStateProvider > setTabInPage ... path: ${path} newV: ${newV}`)
+    _setUIState({
+      ...sUIState,
+      [KEY_TAB_IN_PAGE]: {
+        ..._UIState()[KEY_TAB_IN_PAGE],
+        [path]: newV
+      }
+    });
+  }
+
+  //#endregion: 탭 지점 기록
+
 
   return (
     <UIStateContext.Provider value={
@@ -106,7 +123,8 @@ export const UIStateProvider = ({ children }) => {
         _setUIState,
         currentPage, setCurrentPage,
         activeModal, setActiveModal, closeModal,
-        vncScreenshotDataUrl, setVncScreenshotDataUrl, clearVncScreenshotDataUrl
+        vncScreenshotDataUrl, setVncScreenshotDataUrl, clearVncScreenshotDataUrl,
+        tabInPage, setTabInPage
       }
     }>
       {children}

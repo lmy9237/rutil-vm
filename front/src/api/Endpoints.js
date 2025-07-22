@@ -112,6 +112,7 @@ const ENDPOINTS = {
   RESTART_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/restart`, 
   STOP_HOST: (hostId) =>                                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/stop`, 
   ENROLL_HOST_CERTIFICATE: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/enrollCert`, 
+  REINSTALL_HOST: (hostId, deployHostedEngine) =>                          `${ENDPOINT_API_V1}/computing/hosts/${hostId}/reinstall?deployHostedEngine=${deployHostedEngine}`,
   REFRESH_HOST: (hostId) =>                                                `${ENDPOINT_API_V1}/computing/hosts/${hostId}/refresh`, 
   COMMIT_NET_CONFIG_HOST: (hostId) =>                                      `${ENDPOINT_API_V1}/computing/hosts/${hostId}/commitNetConfig`, 
   ACTIVATE_HA_HOST: (hostId) =>                                            `${ENDPOINT_API_V1}/computing/hosts/${hostId}/activateGlobal`,

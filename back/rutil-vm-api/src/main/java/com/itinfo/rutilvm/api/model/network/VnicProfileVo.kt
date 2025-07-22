@@ -41,7 +41,7 @@ class VnicProfileVo(
 	val passThrough: VnicPassThroughMode = VnicPassThroughMode.DISABLED,
 	val migration: Boolean = false,
 	val portMirroring: Boolean = false,
-	val failOVer: IdentifiedVo = IdentifiedVo(),  // vnicprofile이 들어감
+	val failover: IdentifiedVo = IdentifiedVo(),  // vnicprofile이 들어감
 	val networkFilterVo: IdentifiedVo =  IdentifiedVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	val networkVo: IdentifiedVo = IdentifiedVo(),
@@ -56,12 +56,12 @@ class VnicProfileVo(
 		private var bPassThrough: VnicPassThroughMode = VnicPassThroughMode.DISABLED;fun passThrough(block: () -> VnicPassThroughMode) { bPassThrough = block() ?: VnicPassThroughMode.DISABLED }
 		private var bMigration: Boolean = false;fun migration(block: () -> Boolean?) { bMigration = block() ?: false }
 		private var bPortMirroring: Boolean = false;fun portMirroring(block: () -> Boolean?) { bPortMirroring = block() ?: false }
-		private var bFailOver: IdentifiedVo = IdentifiedVo();fun failOVer(block: () -> IdentifiedVo?) { bFailOver = block() ?: IdentifiedVo() }
+		private var bFailover: IdentifiedVo = IdentifiedVo();fun failover(block: () -> IdentifiedVo?) { bFailover = block() ?: IdentifiedVo() }
 		private var bNetworkFilterVo: IdentifiedVo = IdentifiedVo();fun networkFilterVo(block: () -> IdentifiedVo?) { bNetworkFilterVo = block() ?: IdentifiedVo() }
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 
-		fun build(): VnicProfileVo = VnicProfileVo(bId, bName, bDescription, bPassThrough, bMigration, bPortMirroring, bFailOver, bNetworkFilterVo, bDataCenterVo, bNetworkVo)
+		fun build(): VnicProfileVo = VnicProfileVo(bId, bName, bDescription, bPassThrough, bMigration, bPortMirroring, bFailover, bNetworkFilterVo, bDataCenterVo, bNetworkVo)
 	}
 
 	companion object {
@@ -120,8 +120,6 @@ fun VnicProfile.toVnicProfileMenu(conn: Connection): VnicProfileVo {
 fun List<VnicProfile>.toVnicProfileMenus(conn: Connection): List<VnicProfileVo> =
 	this@toVnicProfileMenus.map { it.toVnicProfileMenu(conn) }
 
-
-
 // region: builder
 /**
  * vnicProfile 빌더
@@ -134,7 +132,7 @@ fun VnicProfileVo.toVnicProfileBuilder(): VnicProfileBuilder {
 		builder
 			.passThrough(VnicPassThroughBuilder().mode(VnicPassThroughMode.fromValue(passThrough.toString())))
 			.migratable(migration)
-			.failover(VnicProfileBuilder().id(failOVer.id))
+			.failover(VnicProfileBuilder().id(failover.id))
 	}else{
 		builder
 			.networkFilter(NetworkFilterBuilder().id(networkFilterVo.id))
