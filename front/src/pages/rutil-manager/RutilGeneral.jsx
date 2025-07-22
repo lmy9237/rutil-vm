@@ -3,7 +3,8 @@ import RutilVmLogo                from "@/components/common/RutilVmLogo";
 import { InfoTable }              from "@/components/table/InfoTable";
 import {
   useDashboard,
-  useDashboardCpuMemory
+  useDashboardCpuMemory,
+  useDashboardStorage
 } from "@/api/RQHook";
 import Localization               from "@/utils/Localization";
 import VmGeneralBarChart from "../computing/vm/VmGeneralBarChart";
@@ -31,10 +32,8 @@ const RutilGeneral = () => {
     data: dashboard
   } = useDashboard();  
   
-  const {
-    data: cpuMemory,
-    isLoading: cpuMemoryloading
-  } = useDashboardCpuMemory();
+  const { data: cpuMemory } = useDashboardCpuMemory();
+  const { data: storage } = useDashboardStorage();
   
   const tableRows = useMemo(() => [
     { label: Localization.kr.DATA_CENTER, value: dashboard?.datacenters ?? 0 },
@@ -73,8 +72,8 @@ const RutilGeneral = () => {
       },
       {
         label: "스토리지",
-        value: 0,
-        description: "?% 사용됨 | ?% 사용 가능",
+        value: (storage?.usedPercent ?? 0).toFixed(0),
+        description: `${(storage?.usedPercent ?? 0).toFixed(0)}% 사용됨 | ${(100 - storage?.usedPercent ?? 0).toFixed(0)}% 사용 가능`,
       },
     ];
   }, [cpuMemory?.totalCpuCore, cpuMemory?.usedCpuCore, cpuMemory?.totalMemoryGB, cpuMemory?.usedMemoryGB]);

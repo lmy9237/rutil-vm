@@ -282,10 +282,10 @@ const TableColumnsInfo = {
   TEMPLATES: [
     { accessor: '_name',        header: Localization.kr.NAME,         clickable: true},
     { accessor: 'creationTime', header: Localization.kr.DATE_CREATED, clickable: false },
-    { accessor: 'status',       header: Localization.kr.STATUS,       clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
-    { accessor: 'version',      header: '버전',                        clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: 'status',       header: Localization.kr.STATUS,       clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
+    // { accessor: 'version',      header: '버전',                        clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'comment',      header: Localization.kr.COMMENT,      clickable: false },
-    { accessor: 'status',       header: '보관',                        clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN  },
+    // { accessor: 'status',       header: '보관',                        clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'cluster',      header: Localization.kr.CLUSTER,      clickable: true },
     { accessor: 'dataCenter',   header: Localization.kr.DATA_CENTER,  clickable: true },
     { accessor: 'description',  header: Localization.kr.DESCRIPTION,  clickable: false },

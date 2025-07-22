@@ -71,7 +71,7 @@ const TemplateModal = ({
     isLoading: isCpuProfilesLoading
   } = useCpuProfilesFromCluster(clusterVo.id, (e) => ({ ...e, }));
 
-  const { /* 가상머신에 연결되어있는 디스크 목록 */
+  const { 
     data: disks = [],
   } = useDisksFromVM(vmSelected?.id, (e) => ({ ...e }));
 
@@ -113,7 +113,8 @@ const TemplateModal = ({
           ...disk,
           diskImageVo: {
             ...disk.diskImageVo,
-            format: disk.diskImageVo?.format || "raw",
+            format: "cow",
+            // format: disk.diskImageVo?.format || "cow",
             storageDomainVo: disk.diskImageVo?.storageDomainVo || emptyIdNameVo(),
             diskProfileVo: disk.diskImageVo?.diskProfileVo || emptyIdNameVo(),
           },
@@ -228,11 +229,11 @@ const TemplateModal = ({
               <table>
                 <thead>
                   <tr>
-                    <th >{Localization.kr.ALIAS}</th>
+                    <th>{Localization.kr.ALIAS}</th>
                     <th>{Localization.kr.SIZE_VIRTUAL}</th>
-                    <th >포맷</th>
+                    <th>포맷</th>
                     <th style={{width:"10px"}}>{Localization.kr.TARGET}</th>
-                    <th >{Localization.kr.DISK_PROFILE}</th>
+                    <th>{Localization.kr.DISK_PROFILE}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -324,6 +325,6 @@ const TemplateModal = ({
 export default TemplateModal;
 
 const formats = [
-  { value: "raw", label: "Raw" },
   { value: "cow", label: "QCOW2" },
+  { value: "raw", label: "Raw" },
 ];

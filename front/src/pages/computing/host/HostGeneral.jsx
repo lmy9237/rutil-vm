@@ -46,75 +46,6 @@ const HostGeneral = ({
     hostPerRefetch();
   }, [hostId]); // hostId가 변경될 때마다 실행
 
-  // const renderGeneralTab = useMemo(() => ([
-  //   { label: `${Localization.kr.HOST} 이름/IP`, value: host?.name },
-  //   { label: "SPM 우선순위", value: host?.spmPriority },
-  //   { label: "활성 가상 머신", value: host?.vmSizeVo?.upCnt },
-  //   { label: "논리 CPU 코어 수", value: host?.hostHwVo?.cpuTopologyAll },
-  //   // { label: "온라인 논리 CPU 코어 수", value: host?.hostHwVo?.cpuOnline },
-  //   { label: `부팅 ${Localization.kr.TIME}`, value: host?.bootingTime },
-  //   { label: "Hosted Engine HA", value: `${host?.hostedActive === true ? "활성화": "비활성화"} (점수: ${host?.hostedScore})` },
-  //   { label: "iSCSI 개시자 이름", value: host?.iscsi },
-  //   { label: "Kdump Integration Status", value: host?.kdump === "DISABLED" ? "비활성화됨" : "활성화됨" },
-  //   { label: "물리적 메모리", value: `${convertBytesToMB(host?.memoryTotal)} MB 합계 | ${convertBytesToMB(host?.memoryUsed)} MB 사용됨 | ${convertBytesToMB(host?.memoryFree)} MB ${Localization.kr.AVAILABLE}`, },
-  //   { label: "Swap 크기", value: `${convertBytesToMB(host?.swapTotal)} MB 합계 | ${convertBytesToMB(host?.swapUsed)} MB 사용됨 | ${convertBytesToMB(host?.swapFree)} MB ${Localization.kr.AVAILABLE}`, },
-  //   { label: "장치 통과", value: host?.devicePassThrough ? "활성" : "비활성" },
-  //   { label: "최대 여유 메모리", value: `${convertBytesToMB(host?.memoryMax)} MB`, },/*새로운 가상 머신의 스케줄링을 위한 최대 여유 메모리 */
-  //   { label: "Huge Pages (size: free/total)", value: `2048: ${host?.hugePage2048Free}/${host?.hugePage2048Total}, 1048576: ${host?.hugePage1048576Free}/${host?.hugePage1048576Total}`, },
-  //   { label: "SELinux 모드", value: host?.seLinux },
-  // ]), [host]);
-
-  // const renderHardwareTab = useMemo(() => ([
-  //   { label: "제조사", value: host?.hostHwVo?.manufacturer },
-  //   { label: "버전", value: host?.hostHwVo?.hwVersion },
-  //   { label: "UUID", value: host?.hostHwVo?.uuid },
-  //   { label: "일련 번호", value: host?.hostHwVo?.serialNum },
-  //   { label: Localization.kr.PRODUCT_FAMILY, value: host?.hostHwVo?.family },
-  //   { label: `${Localization.kr.PRODUCT} ${Localization.kr.NAME}`, value: host?.hostHwVo?.productName },
-  //   { label: "CPU 모델", value: host?.hostHwVo?.cpuName },
-  //   { label: "CPU 유형", value: host?.hostHwVo?.cpuType },
-  //   { label: "CPU 소켓", value: host?.hostHwVo?.cpuTopologySocket },
-  //   { label: "소켓당 CPU 코어", value: host?.hostHwVo?.cpuTopologyCore },
-  //   { label: "코어당 CPU의 스레드", value: host?.hostHwVo?.cpuTopologyThread },
-  // ]), [host]);
-
-  // const renderSoftwareTab = useMemo(() => ([
-  //   { label: "OS 버전", value: host?.hostSwVo?.osVersion },
-  //   // { label: "OS 정보", value: host?.hostSwVo?.osInfo },
-  //   { label: "커널 버전", value: host?.hostSwVo?.kernalVersion },
-  //   { label: "KVM 버전", value: host?.hostSwVo?.kvmVersion },
-  //   { label: "LIBVIRT 버전", value: host?.hostSwVo?.libvirtVersion },
-  //   { label: "VDSM 버전", value: host?.hostSwVo?.vdsmVersion },
-  //   { label: "SPICE 버전", value: host?.hostSwVo?.spiceVersion },
-  //   { label: "GlusterFS 버전", value: host?.hostSwVo?.glustersfsVersion },
-  //   { label: "CEPH 버전", value: host?.hostSwVo?.cephVersion },
-  //   { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion },
-  //   { label: "Nmstate 버전", value: host?.hostSwVo?.nmstateVersion },
-  //   { label: "VNC 암호화", value: "비활성화됨" },
-  //   { label: "OVN configured", value: Localization.kr.YES },
-  // ]), [host]);
-
-  // const sampledata = useMemo(() => ([
-  //   { label: "KVM 버전", value: host?.hostSwVo?.kvmVersion },
-  //   { label: "LIBVIRT 버전", value: host?.hostSwVo?.libvirtVersion },
-  //   { label: "VDSM 버전", value: host?.hostSwVo?.vdsmVersion },
-  //   { label: "SPICE 버전", value: host?.hostSwVo?.spiceVersion },
-  //   { label: "GlusterFS 버전", value: host?.hostSwVo?.glustersfsVersion },
-  //   { label: "CEPH 버전", value: host?.hostSwVo?.cephVersion },
-  //   { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion },
-  //   { label: "Nmstate 버전", value: host?.hostSwVo?.nmstateVersion },
-  // ]), [host]);
-
-  // const tabs = useMemo(() => ([
-  //   { tab: "general",  label: Localization.kr.GENERAL,  tableRows: renderGeneralTab },
-  //   { tab: "hardware", label: Localization.kr.HARDWARE, tableRows: renderHardwareTab },
-  //   { tab: "software", label: Localization.kr.SOFTWARE, tableRows: renderSoftwareTab },
-  // ]), [renderGeneralTab, renderHardwareTab, renderSoftwareTab]);
-
-  // const rows4ActiveTab = useMemo(() => ([
-  //   tabs.find(({ tab }) => tab === activeTab)?.tableRows || []
-  // ]), [tabs, activeTab])
-  
   const systemTableRows = [
     { label: "ID", value: host?.id },
     { label: `${Localization.kr.HOST} ${Localization.kr.NAME}/IP`, value: host?.name },
@@ -151,7 +82,7 @@ const HostGeneral = ({
     { label: "KVM 버전", value: host?.hostSwVo?.kvmVersion },
     { label: "LIBVIRT 버전", value: host?.hostSwVo?.libvirtVersion },
     { label: "VDSM 버전", value: host?.hostSwVo?.vdsmVersion },
-    { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion || "-" }
+    // { label: "Open vSwitch 버전", value: host?.hostSwVo?.openVswitchVersion || "-" }
   ];
 
   // 그래프값
@@ -178,25 +109,31 @@ const HostGeneral = ({
       }
     ];
   }, [host]);
+
   return (
     <>
     <GeneralLayout
       top={
         <>
-          <GeneralBoxProps title="시스템 정보"><InfoTable tableRows={systemTableRows} /></GeneralBoxProps>
-          <GeneralBoxProps title="하드웨어"> <InfoTable tableRows={hardwareTableRows} /></GeneralBoxProps>
+          <GeneralBoxProps title="시스템 정보">
+            <InfoTable tableRows={systemTableRows} />
+          </GeneralBoxProps>
+          <GeneralBoxProps title="하드웨어">
+            <InfoTable tableRows={hardwareTableRows} />
+          </GeneralBoxProps>
           <GeneralBoxProps title="용량 및 사용량">
             <VmGeneralBarChart items={usageItems} />
           </GeneralBoxProps>
-          
         </>
       }
       bottom={
         <>
-          <div className=" grid-col-span-2">
+          <div className="grid-col-span-2">
             <HostGeneralChart per={hostPer}/>
           </div>
-          <GeneralBoxProps title="소프트웨어"><InfoTable tableRows={softwareTableRows} /></GeneralBoxProps>
+          <GeneralBoxProps title="소프트웨어">
+            <InfoTable tableRows={softwareTableRows} />
+          </GeneralBoxProps>
         </>
       }
     />

@@ -256,7 +256,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
  * 호스트 상세정보
  *
  * @param conn [Connection]
- * @param hostConfigurationEntity [HostConfigurationEntity]? 호스트 사용량
+ * @param hostConfigurationEntity [HostConfigurationEntity]?
  * @return [HostVo]
  */
 fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfigurationEntity, usageDto: UsageDto?): HostVo {

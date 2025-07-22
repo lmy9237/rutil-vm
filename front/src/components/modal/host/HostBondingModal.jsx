@@ -28,9 +28,20 @@ const HostBondingModal = ({
     return existingBondNames.includes(name);
   };
 
-  const isCustomMode = editMode && (
-    bondModalState.editTarget?.bondingVo?.optionVos?.some(opt => opt.name !== "mode")
-  );
+  const originalMode = bondModalState.editTarget?.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value;
+
+  // 사용자 정의 조건: mode 외에 miimon을 제외한 항목이 존재해야 함
+  const hasCustomOptions = (bondModalState.editTarget?.bondingVo?.optionVos?.some(opt =>
+    opt.name !== "mode" && opt.name !== "miimon"
+  )) || false;
+
+  const isUserModeDisabled =
+    !editMode ||
+    (bondModalState.optionMode !== "7" && (
+      bondModalState.optionMode !== originalMode || !hasCustomOptions
+    ));
+
+
 
   const validateForm = () => {
     Logger.debug(`HostBondingModal > validateForm ... `)
@@ -99,15 +110,20 @@ const HostBondingModal = ({
       />
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={bondModalState.optionMode}
-        options={optionList}
+        options={
+          editMode
+            ? optionList.filter(opt => ["1", "2", "3", "4", "7"].includes(opt.value))
+            : optionList
+        }
         onChange={handleInputChange(setBondModalState, "optionMode", validationToast)}
+        
       />
-      <span>{bondModalState.optionMode}</span>
+      <span>{bondModalState.optionMode}</span><br/>
+      <span>{bondModalState.userMode}</span>
       <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={bondModalState.userMode}
         onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
-        disabled={editMode && bondModalState.optionMode !== bondModalState.editTarget?.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value}
-
+        disabled={isUserModeDisabled}
       />
     </BaseModal>
   );
@@ -123,4 +139,5 @@ const optionList = [
   { value: "4", label: "(Mode 4) Dynamic link aggregation (802.3ad)" },
   { value: "5", label: "(Mode 5) Adaptive transmit load balancing (balance-tlb)" },
   { value: "6", label: "(Mode 6) Adaptive load balancing (balance-alb)" },
+  { value: "7", label: "사용자 정의" },
 ];

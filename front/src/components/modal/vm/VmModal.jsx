@@ -23,7 +23,6 @@ import {
   useVm,
   useDisksFromVM,
   useNetworkInterfacesFromVM,
-  useStorageDomain,
   useAllVMs, 
 } from '@/api/RQHook';
 import VmCommon from './create/VmCommon';
@@ -44,12 +43,6 @@ import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import './MVm.css';
 
-
-const defaultNic = {
-  id: "", name: "nic1",
-  vnicProfileVo: emptyIdNameVo(),
-  networkVo: emptyIdNameVo(),
-};
 
 // 일반
 const infoform = {
@@ -111,19 +104,26 @@ const bootForm = {
   biosBootMenu: false, // 부팅메뉴 활성화
 };
 
+const defaultNic = {
+  id: "", 
+  name: "nic1",
+  vnicProfileVo: emptyIdNameVo(),
+  networkVo: emptyIdNameVo(),
+};
+
+
 const VmModal = ({ 
   isOpen, 
   onClose, 
   editMode=false,
-  copyMode=false,
+  // copyMode=false,
 }) => {
   const { validationToast } = useValidationToast();
   const vLabel = editMode 
-    ? Localization.kr.UPDATE
-    : copyMode 
-      ? Localization.kr.COPY 
-      : Localization.kr.CREATE;
-
+    ? Localization.kr.UPDATE : Localization.kr.CREATE;
+    // : copyMode 
+      // ? Localization.kr.COPY 
+      
   const { 
     vmsSelected, templatesSelected 
   } = useGlobal();
@@ -659,7 +659,7 @@ const VmModal = ({
                 formInfoState={formInfoState}
                 setFormInfoState={setFormInfoState}
               />
-              {!copyMode && (
+              {/* {!copyMode && ( */}
                 <VmDisk
                   editMode={editMode}
                   vm={vm}
@@ -669,7 +669,7 @@ const VmModal = ({
                   setDiskListState={setDiskListState}
                   disabled={templateVo.id !== CONSTANT.templateIdDefault} // 기본템플릿이 아닐때는 버튼 disabled처리
                 />
-              )}
+              {/* )} */}
               <VmNic
                 editMode={editMode}
                 nics={nics}

@@ -131,7 +131,7 @@ const VmImportModal = ({
       dataCenter: props.dataCenter || "",
       cluster: props.cluster || "",
       username: selectedProvider.authUsername || "",
-      password: "Vmware1!" // "" 가 맞는값
+      password: ""
     }));
   }, [providerVo, providers]);
 

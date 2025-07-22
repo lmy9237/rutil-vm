@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
@@ -10,7 +9,6 @@ import TablesOuter            from "@/components/table/TablesOuter";
 import TableRowClick          from "@/components/table/TableRowClick";
 import TemplateActionButtons  from "@/components/dupl/TemplateActionButtons";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 
 const TemplateDupl = ({
   templates = [],  columns = [],
@@ -39,6 +37,7 @@ const TemplateDupl = ({
         {temp?.dataCenterVo?.name}
       </TableRowClick>
     ),
+    status: (temp?.status).toUpperCase(),
     creationTime: temp?.creationTime === "2008. 04. 01. 06:00:00" ? "" : temp?.creationTime,
     version: "",
     searchText: `${temp?.name} ${temp?.clusterVo?.name || ""} ${temp?.dataCenterVo?.name || ""}`.toLowerCase(),

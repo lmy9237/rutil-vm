@@ -236,6 +236,22 @@ export const useDashboardHosts = (
   },
 });
 
+/**
+ * 호스트 실시간 사용량 1분단위로 90만
+ * @returns 
+ */
+export const useDashboardHostList = (
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
+  queryKey: ["allGrpahHosts"],
+  queryFn: async () => {
+    const res = await ApiManager.getHostList()
+    const _res = validateAPI(res) ?? {}
+    Logger.debug(`RQHook > useDashboardHostList ... res: `, _res);
+    return _res
+  },
+});
+
 export const useDashboardDomain = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({

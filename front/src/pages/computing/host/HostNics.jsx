@@ -14,7 +14,6 @@ import {
   useNetworkFromCluster,
   useNetworkInterfacesFromHost,
   useSetupNetworksFromHost,
-  useSyncallNetworksHost,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -34,7 +33,6 @@ import {
 } from "./hostNics/TransHostNicData";
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
-import { background } from "storybook/internal/theming";
 import { emptyIdNameVo } from "@/util";
 
 const HostNics = ({
@@ -47,7 +45,6 @@ const HostNics = ({
   const { data: hostNics = [] } = useNetworkInterfacesFromHost(hostId, (e) => ({ ...e }));
   const { data: networkAttachments = [] } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
-  const { mutate: syncallNetworks } = useSyncallNetworksHost();
   const { mutate: setupNetwork } = useSetupNetworksFromHost();
 
   // 변경 정보
@@ -144,7 +141,10 @@ const HostNics = ({
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
   const [isBondingEditMode, setIsEditBondingMode] = useState(false); // 본딩 편집 모드
   const [bondModalState, setBondModalState] = useState({
-    name: "", optionMode: "1", userMode: "", editTarget: null
+    name: "", 
+    optionMode: "1", 
+    userMode: "", 
+    editTarget: null
   }); // 본딩 모달에 넘길 정보
 
   // 네트워크 모달 관리
@@ -504,10 +504,10 @@ const HostNics = ({
     ]);
 
     setDragItemFlag(true);
-    toast({ 
-      variant: "success",
-      description: `handleDropUnassignedNetworkToNic  ${newAttachment.networkVo?.name}을(를) ${newAttachment.hostNicVo?.name} 본딩에 추가했습니다.`, 
-    });
+    // toast({ 
+    //   variant: "success",
+    //   description: `handleDropUnassignedNetworkToNic  ${newAttachment.networkVo?.name}을(를) ${newAttachment.hostNicVo?.name} 본딩에 추가했습니다.`, 
+    // });
   };
 
   /**
@@ -814,9 +814,9 @@ const HostNics = ({
       ...transferredAttachments
     ]);
     setDragItemFlag(true);
-    toast({ 
-      description: `handleAddBaseNicToBond ${draggedNic.name}을(를) ${targetBond.name} 본딩에 추가했습니다.` 
-    });
+    // toast({ 
+    //   description: `handleAddBaseNicToBond ${draggedNic.name}을(를) ${targetBond.name} 본딩에 추가했습니다.` 
+    // });
   };
 
 
@@ -890,7 +890,7 @@ const HostNics = ({
       setRemoveNAs(prev => [ ...prev, bondNetworks.map(na => ({ id: na.id })) ]);
 
       setDragItemFlag(true);
-      toast({ description: `본딩 ${targetBond.name} 해제되어 각각의 NIC로 분리되었습니다.`});
+      // toast({ description: `본딩 ${targetBond.name} 해제되어 각각의 NIC로 분리되었습니다.`});
     } else { 
       // 3개 이상이면 해당 NIC만 본딩에서 분리하고 bond는 남김
       const remainSlaves = allSlaves.filter(s => s.name !== draggedNic.name);
@@ -952,7 +952,7 @@ const HostNics = ({
           : bond
       ));
       setDragItemFlag(true);
-      toast({ description: `선택한 NIC(${draggedNic.name})만 본딩에서 해제되었습니다.`}); 
+      // toast({ description: `선택한 NIC(${draggedNic.name})만 본딩에서 해제되었습니다.`}); 
     }
   };
   
@@ -1217,15 +1217,7 @@ const HostNics = ({
             />
           )}
 
-      {/* <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>          
-      {networkAttachmentModalState.inSync && (
-        <ActionButton actionType="default"
-          disabled={!networkAttachmentModalState.inSync}
-          label={`모든 ${Localization.kr.NETWORK} 동기화`} 
-          className="custom-ok-button mr-3"
-          onClick={() => syncallNetworks(hostId) } // 버튼 클릭시 네트워크 업데이트
-        />
-      )} */}
+        {/* <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>           */}
           </div>
         </div>
 

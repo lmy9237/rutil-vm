@@ -93,11 +93,19 @@ interface ItGraphService {
 	fun storageAvgLineData(): List<StorageUsageDto>
 
 	/**
+	 * [ItGraphService.hostUsageLineData]
+	 * 호스트 한개의 cpu, memory, network 사용량
+	 * 선그래프
+	 * @return List<[HostUsageDto]>
+	 */
+	fun hostUsageLineData(): List<UsageDto>
+
+	/**
 	 * [ItGraphService.hostHourlyUsageLineData]
 	 * 호스트 한개의 cpu, memory, network 사용량
 	 * 1시간 별로 출력
 	 * 선그래프
-	 * @return List<[HostUsageDto]>
+	 * @return List<[UsageDto]>
 	 */
 	fun hostHourlyUsageLineData(hostId: String): List<UsageDto>
 
@@ -222,6 +230,12 @@ class GraphServiceImpl(
 				avgDomainUsagePercent = (it[1] as Number).toDouble(),
 			)
 		}
+	}
+
+	override fun hostUsageLineData(): List<UsageDto> {
+		log.info("hostUsageLineData ... ")
+		val rawResult: List<HostSamplesHistoryEntity> = hostSamplesHistoryRepository.findAllHost()
+		return rawResult.toHostCharts(conn)
 	}
 
 	override fun hostHourlyUsageLineData(hostId: String): List<UsageDto> {

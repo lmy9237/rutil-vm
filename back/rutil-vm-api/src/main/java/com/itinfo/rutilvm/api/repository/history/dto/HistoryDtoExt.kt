@@ -29,6 +29,7 @@ import org.ovirt.engine.sdk4.types.Statistic
 import java.sql.Timestamp
 
 import java.time.LocalDateTime
+import java.util.UUID
 
 //region: HostUsageDto
 fun HostSamplesHistoryEntity.toHostUsageDto(): HostUsageDto {
@@ -231,7 +232,6 @@ fun VmSamplesHistoryEntity.toVmCpuUsageDto(conn: Connection): UsageDto {
 fun List<VmSamplesHistoryEntity>.toVmCpuUsageDtos(conn: Connection): List<UsageDto> =
     this@toVmCpuUsageDtos.map { it.toVmCpuUsageDto(conn) }
 
-
 fun List<Array<Any>>.toUsageDtoList(): List<UsageDto> {
 	return this.map { row ->
 		val time = when (val ts = row[0]) {
@@ -252,6 +252,27 @@ fun List<Array<Any>>.toUsageDtoList(): List<UsageDto> {
 		}
 	}
 }
+
+// fun List<Array<Any>>.toUsageDto(): List<UsageDto> {
+// 	return this.map { row ->
+// 		val time = when (val ts = row[1]) {
+// 			is Timestamp -> ts.toLocalDateTime()
+// 			is LocalDateTime -> ts
+// 			else -> throw IllegalArgumentException("Unsupported time type: ${ts::class}")
+// 		}
+// 		val hostId = (row[0] as? UUID)
+// 		val cpuPercent = (row[2] as? Number)?.toInt()
+// 		val memoryPercent = (row[3] as? Number)?.toInt()
+//
+// 		UsageDto.builder {
+// 			this.id { hostId.toString() }
+// 			this.time { time }
+// 			this.cpuPercent { cpuPercent }
+// 			this.memoryPercent { memoryPercent }
+// 		}
+// 	}
+// }
+
 
 fun VmSamplesHistoryEntity.toVmMemUsageDto(conn: Connection): UsageDto {
     val vm: Vm = conn.findVm(this@toVmMemUsageDto.vmId.toString())
@@ -317,6 +338,20 @@ fun HostSamplesHistoryEntity.toHostMemChart(conn: Connection): UsageDto {
 }
 fun List<HostSamplesHistoryEntity>.toHostMemCharts(conn: Connection): List<UsageDto> =
     this@toHostMemCharts.map { it.toHostMemChart(conn) }
+
+fun HostSamplesHistoryEntity.toHostChart(conn: Connection): UsageDto {
+    val host: Host = conn.findHost(this@toHostChart.hostId.toString())
+        .getOrNull() ?: throw ErrorPattern.HOST_NOT_FOUND.toException()
+    return UsageDto.builder {
+		time { this@toHostChart.historyDatetime }
+		id { host.id() }
+        name { host.name() }
+		cpuPercent { this@toHostChart.cpuUsagePercent }
+        memoryPercent { this@toHostChart.memoryUsagePercent }
+    }
+}
+fun List<HostSamplesHistoryEntity>.toHostCharts(conn: Connection): List<UsageDto> =
+    this@toHostCharts.map { it.toHostChart(conn) }
 
 
 fun VdsStatisticsEntity.toHostUsage(): UsageDto{

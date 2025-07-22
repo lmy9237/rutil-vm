@@ -175,6 +175,23 @@ class GraphController {
 		return ResponseEntity.ok(graph.hostHourlyUsageLineData(hostId))
 	}
 
+	@ApiOperation(
+		httpMethod="GET",
+		value="Host 그래프",
+		notes="Host 의 그래프"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/hosts")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun hostChart(
+	): ResponseEntity<List<UsageDto>> {
+		log.info("/dashboard/hosts ... ")
+		return ResponseEntity.ok(graph.hostUsageLineData())
+	}
+
 	/*@ApiOperation(
 		httpMethod="GET",
 		value="VM cpu Per 그래프",

@@ -43,17 +43,17 @@ const ClusterGeneral = ({
   const usageItems = useMemo(() => [
     {
       label: "CPU",
-      value: db?.totalCpuUsagePercent ?? 0,
+      value: (db?.totalCpuUsagePercent ?? 0).toFixed(0),
       description: `${db?.usedCpuCore ?? 0} CPU 사용됨 | 총 ${db?.totalCpuCore ?? 0} CPU | ${db?.totalCpuCore - db?.usedCpuCore ?? 0} CPU 사용 가능`,
     },
     {
       label: "메모리",
-      value: db?.totalMemoryUsagePercent ?? 0,
+      value: (db?.totalMemoryUsagePercent ?? 0).toFixed(0),
       description: `${(db?.usedMemoryMB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalMemoryMB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
     {
       label: "스토리지",
-      value: db?.totalStorageUsagePercent ?? 0,
+      value: (db?.totalStorageUsagePercent ?? 0).toFixed(0),
       description: `${(db?.usedStorageGB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalStorageGB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
     },
   ], [db]);

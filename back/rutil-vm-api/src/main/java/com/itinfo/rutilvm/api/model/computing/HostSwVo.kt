@@ -73,5 +73,6 @@ fun Host.toHostSwVo(hostConfigurationEntity: HostConfigurationEntity): HostSwVo 
         // [Request processing failed; nested exception is java.lang.NullPointerException] with root cause
         this.libvirtVersion = if (this@toHostSwVo.libvirtVersionPresent()) this@toHostSwVo.libvirtVersion().fullVersion() else ""
         this.vdsmVersion = if (this@toHostSwVo.versionPresent()) this@toHostSwVo.version().fullVersion() else ""
+
     }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
+import { Label }                        from "@/components/ui/label"
 import BaseModal                        from "../BaseModal";
 import DomainImportNfs                  from "./import/DomainImportNfs";
 import DomainImportFibre                from "./import/DomainImportFibre";
@@ -218,13 +219,16 @@ const DomainImportModal = ({
       isOpen={isOpen} onClose={onClose}
       isReady={
         datacenters.length > 0 &&
-        domains.length > 0 &&
+        domains.length > 0 /* &&
         hosts.length > 0 &&
-        (!isFibre || isFibresSuccess)
+        (!isFibre || isFibresSuccess) */
       }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "730px"}}
     >
+      {/* ([...hosts].length === 0) && <div className="storage-domain-new-first">
+        <Label>데이터센터 내 지정 할 호스트가 존재하지 않습니다.</Label>
+      </div> */}
       <div className="storage-domain-new-first">
         <div>
           <LabelSelectOptionsID label={Localization.kr.DATA_CENTER}
@@ -251,7 +255,6 @@ const DomainImportModal = ({
           />
         </div>
         <hr/>
-
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}

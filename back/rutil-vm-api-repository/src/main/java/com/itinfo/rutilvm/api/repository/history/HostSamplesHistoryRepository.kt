@@ -135,4 +135,36 @@ LIMIT 10
 	)
 	fun findHostUsageWithNetwork(@Param("hostId") hostId: UUID): List<Array<Any>>
 
+
+	@Query(
+		nativeQuery = true,
+		value = """
+select
+	h.host_id,
+    h.history_datetime,
+    h.cpu_usage_percent,
+    h.memory_usage_percent
+FROM
+    host_samples_history h
+WHERE
+    host_status = 1
+	AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 10 = 0
+ORDER BY
+    history_datetime desc
+    """
+	)
+	fun findHostUsage(): List<Array<Any>>
+
+	@Query(
+		nativeQuery = true,
+		value = """
+        select *
+		FROM host_samples_history
+		WHERE
+		host_status = 1
+		AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 10 = 0
+        ORDER BY history_datetime DESC
+		LIMIT 90
+    """)
+	fun findAllHost(): List<HostSamplesHistoryEntity>
 }

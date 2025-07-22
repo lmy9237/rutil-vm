@@ -4,8 +4,10 @@ import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import HostDupl               from "@/components/dupl/HostDupl";
 import {
   useAllHosts,
+  useDashboardHostList,
 } from "@/api/RQHook";
 import Logger                 from "@/utils/Logger";
+import HostChart from "../computing/host/HostChart";
 
 /**
  * @name RutilHosts
@@ -16,6 +18,10 @@ import Logger                 from "@/utils/Logger";
  */
 const RutilHosts = () => {
   const { setHostsSelected } = useGlobal()
+
+  const { 
+    data: hostList
+  } = useDashboardHostList();
 
   const {
     data: hosts = [],
@@ -34,11 +40,18 @@ const RutilHosts = () => {
   }, []);
 
   return (
+    <>
     <HostDupl columns={TableColumnsInfo.HOSTS}
       hosts={hosts}
       refetch={refetchHosts} isRefetching={isHostsRefetching}
       isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
     />
+    <div style={{width:"1200px"}}>
+      <HostChart per={hostList} cpu={true}/>
+      <HostChart per={hostList} cpu={false}/>
+    </div>
+    </>
+
   );
 };
 
