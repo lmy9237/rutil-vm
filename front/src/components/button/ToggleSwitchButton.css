@@ -40,3 +40,13 @@ input:checked + .slider.round:before {
 .toggle-status {
   min-width: 30px;
 }
+/* 비활성화 상태 */
+.switch-disabled {
+  cursor: no-drop;
+}
+
+.switch-disabled .slider.round {
+  background-color: var(--color-gray-4) !important; 
+  cursor: no-drop;
+}
+

@@ -270,7 +270,8 @@ const NetworkModal = ({
         />
           
         <div className="mtu-input-outer flex items-center gap-3">
-          <ToggleSwitchButton id="mtuToggle" label="MTU 설정"
+          <ToggleSwitchButton id="mtuToggle" label="MTU 설정" minimizeWidth={
+            true}
             checked={formState.mtu !== 0}
             onChange={(e) => {
               setFormState((prev) => ({ ...prev, mtu: e.target.checked ? 1500 : 0 }));

@@ -49,7 +49,7 @@ const DomainDeleteModal = ({
       onSubmit={handleFormSubmit}
       shouldWarn={true}
       promptText={`${domainsSelected[0]?.name} 를(을) ${Localization.kr.REMOVE} 하시겠습니까?`}
-      contentStyle={{ width: "670px" }}
+      contentStyle={{ width: "660px" }}
     >
       <div style={{ display: "flex" }}>
         <LabelCheckbox id="format" label="포맷 하시겠습니까?"
@@ -64,6 +64,7 @@ const DomainDeleteModal = ({
         disabled={!format}
         onChange={handleSelectIdChange(setHostVo, hosts)}
       />
+      <br/>
     </BaseModal>
   );
 };

@@ -231,7 +231,7 @@ const TemplateModal = ({
                     <th >{Localization.kr.ALIAS}</th>
                     <th>{Localization.kr.SIZE_VIRTUAL}</th>
                     <th >포맷</th>
-                    <th style={{width:"240px"}}>{Localization.kr.TARGET}</th>
+                    <th style={{width:"10px"}}>{Localization.kr.TARGET}</th>
                     <th >{Localization.kr.DISK_PROFILE}</th>
                   </tr>
                 </thead>
@@ -250,6 +250,7 @@ const TemplateModal = ({
                           <LabelInput label=""
                             value={disk.diskImageVo?.alias || ""}
                             onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
+                            className="w-[150px]"
                           />
                         </td>
                         <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
@@ -264,7 +265,7 @@ const TemplateModal = ({
                         </td>
                         <td>
                           <LabelSelectOptionsID
-                            className="template-input"
+                            className="template-input max-w-[200px]"
                             value={selectedDomain?.id || ""}
                             loading={isDomainsLoading}
                             options={domains}
@@ -284,7 +285,7 @@ const TemplateModal = ({
                         </td>
                         <td>
                           <LabelSelectOptionsID
-                            className="template-input max-w-[130px]"
+                            className="template-input max-w-[240px]"
                             value={selectedProfile?.id || ""}
                             loading={false}
                             options={profileOptions}

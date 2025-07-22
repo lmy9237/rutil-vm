@@ -3,23 +3,11 @@
   width:100%;height:var(--h-modal-content);
 }
 
-/*도메인 삭제*/
-.domain-delete-popup{
-  width: 38%;height: 33.4vh;
-}
 /*도메인 파괴*/
 .destroy-text{
   color: red;
   font-weight: 600;
-  padding: 10px 0;
-  text-align: center;
 }
-/*도메인 유지관리*/
-.domain-name-box{
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
 .get-template-info{
   overflow-y: auto;
   height: 26vh;
@@ -49,6 +37,10 @@
   padding: 7px;
 }
 
+.filter-table  .info-table-wrapper {
+    max-height: 372px !important;
+    overflow-y: auto !important;
+}
 /* iscsi 대상검색*/
 .target-search-outer{
   padding: 12px 0;
@@ -69,8 +61,8 @@
 
 .input-inline-wrap {
   display: flex;
-  align-items: flex-end; /* 라벨 높이 맞추기 */
-  gap: 20px;             /* 주소-포트 사이 간격 */
+  align-items: flex-end;
+  gap: 20px;            
   margin-bottom: 8px;
 }
 

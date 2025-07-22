@@ -227,7 +227,7 @@ const DomainImportVmModal = ({
     <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "780px" }} 
+      contentStyle={{ width: "980px" }} 
     >
       <div className="section-table-outer">
         <TablesOuter target={"vm"}

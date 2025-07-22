@@ -104,7 +104,7 @@ const VmDeleteModal = ({
       isReady={diskQueries.every(q => q.status === "success" || q.status === "error")}
       onSubmit={handleFormSubmit}
       promptText={`다음 항목을 ${Localization.kr.REMOVE}하시겠습니까?`}
-      contentStyle={{ width: "690px"}} 
+      contentStyle={{ width: "660px"}} 
       shouldWarn={true}
     >
       {ids?.map((vmId, index) => {
@@ -112,8 +112,8 @@ const VmDeleteModal = ({
         const isDisabled = disks.length === 0;
 
         return (
-          <div key={vmId} className="f-btw">
-            <span className="fs-16 p-3.5 w-full flex f-start">
+          <div key={vmId} className="f-btw p-1.5">
+            <span className="fs-13 font-bold w-full flex f-start">
               <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
               {names[index]}
             </span>
@@ -126,6 +126,7 @@ const VmDeleteModal = ({
           </div>
         );
       })}
+      <br/>
     </BaseModal>
   );
 };

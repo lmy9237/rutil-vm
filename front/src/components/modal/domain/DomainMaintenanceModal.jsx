@@ -45,7 +45,7 @@ const DomainMaintenanceModal = ({
       contentStyle={{ width: "600px" }}
       shouldWarn={true}      
     >
-      <div className="domain-name-box flex f-start">
+      <div className="flex f-start font-bold mb-3">
         <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
         {names.join(", ")}
       </div>

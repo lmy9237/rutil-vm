@@ -54,7 +54,9 @@ input[type="radio"] {
   display: flex;justify-content: center;align-items:center;
   cursor: pointer;
 }
-/* select박스 */
+.select-label{
+  font-size: 12px !important;
+}
 .custom-select-wrapper {
   padding: 8px 0;
 }
