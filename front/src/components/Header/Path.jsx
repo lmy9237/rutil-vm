@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +16,10 @@ const Path = ({
   basePath = "/",
 }) => {
   const navigate = useNavigate();
+  const {
+    activeModal, setActiveModal,
+    tabInPage, setTabInPage,
+  } = useUIState()
 
   return (
     <Breadcrumb>
@@ -29,7 +34,13 @@ const Path = ({
                   <BreadcrumbPage>{element}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink
-                    onClick={() => index === 0 && navigate(basePath)}
+                    onClick={() => {
+                      if (index === 0) {
+                        const basePathElements = basePath.split("/")
+                        setTabInPage(basePathElements.slice(0, basePathElements.length-1).join("/"), "");
+                        navigate(basePath)
+                      }
+                    }}
                     className={index === 0 ? "cursor-pointer hover:underline " : ""}
                   >
                     {element}

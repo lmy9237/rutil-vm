@@ -34,6 +34,7 @@ import {
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 import { emptyIdNameVo } from "@/util";
+import Spinner from "@/components/common/Spinner";
 
 const HostNics = ({
   hostId
@@ -123,12 +124,15 @@ const HostNics = ({
     }
   }, [hostId, hostNics, networkAttachments, networks]);
   
+  // 저장버튼 누르면 로딩중 표시
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // 드래그 항목에 대한 cancelFlag 처리
   // 원래 있던 할당된 네트워크 목록 && 변경된 네트워크 목록의 값이 === 0 이면, 취소버튼만
   useEffect(() => {
     setCancelFlag(baseItems.networkAttachment.length === 0 && movedItems.networkAttachment.length === 0);
   }, [baseItems, movedItems]);
-  
+
 
   // 네트워크 필수,필요하지않음 분리버튼
   const [networkFilter, setNetworkFilter] = useState('all');
@@ -201,6 +205,7 @@ const HostNics = ({
 
   // 전송
   const handleFormSubmit = () => {
+    setIsSubmitting(true); // 시작 시 true(로딩중표시)
     // 본딩되는 slave NIC의 이름/ID 추출
     const bondedSlaveNames = modifiedBonds
       .flatMap(bond => bond.bondingVo.slaveVos.map(s => s.name));
@@ -231,11 +236,27 @@ const HostNics = ({
       })),
       networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ id: na.id }))
     };
+    setupNetwork(
+      { hostId, hostNetworkVo },
+      {
+        onSuccess: async () => {
+          // toast({ description: "네트워크 변경이 저장되었습니다." });
+          await Promise.all([
+            refetchNics(),
+            refetchNAs(),
+            refetchNetworks()
+          ]);
+          resetState(); 
+        },
+        onError: (e) => {
+          toast({ variant: "destructive", description: "네트워크 변경 실패: " + e?.message });
+        }
+      }
+    );
+    // Logger.debug(`HostNics > handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
+    // setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
 
-    Logger.debug(`HostNics > handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
-    setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
-
-    resetState(); // 초기화
+    // resetState(); // 초기화
   };
 
   // 변경 감지를 위한 유틸리티 함수들
@@ -1197,11 +1218,32 @@ const HostNics = ({
           {/* 변경항목이 있다면 활성화 */}
           {!cancelFlag && dragItemFlag && (
             <>
-              <ActionButton actionType="default"  
-                label={Localization.kr.OK} 
+             {/* {isSubmitting ? (
+                <ActionButton
+                  actionType="default"
+                  className="custom-ok-button mr-3"
+                  disabled
+                  label={
+                    <div className="flex items-center gap-2">
+                      <Spinner size="sm" />
+                      저장 중...
+                    </div>
+                  }
+                />
+              ) : (
+                <ActionButton
+                  actionType="default"
+                  className="custom-ok-button mr-3"
+                  onClick={handleFormSubmit}
+                  label={Localization.kr.OK}
+                />
+              )} */}
+              <ActionButton
+                actionType="default"
                 className="custom-ok-button mr-3"
-                onClick={handleFormSubmit} // 버튼 클릭시 네트워크 업데이트
-              />
+                onClick={handleFormSubmit}
+                label={Localization.kr.OK}
+                />
               <ActionButton actionType="default"
                 label={Localization.kr.CANCEL}
                 className="custom-ok-button"

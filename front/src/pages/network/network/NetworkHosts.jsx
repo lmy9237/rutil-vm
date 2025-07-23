@@ -10,7 +10,7 @@ import SearchBox               from "@/components/button/SearchBox";
 import TablesOuter             from "@/components/table/TablesOuter";
 import TableRowClick           from "@/components/table/TableRowClick";
 import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
-import { status2Icon }         from "@/components/icons/RutilVmIcons";
+import { RVI16, rvi16TryRefresh, status2Icon }         from "@/components/icons/RutilVmIcons";
 import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
@@ -90,6 +90,7 @@ const NetworkHosts = ({
       if (activeFilter === "connected") {
         return {
           ...baseData,
+          // 비동기 아이콘<RVI16 iconDef={rvi16TryRefresh("#000281")} />
           networkDeviceStatus: status2Icon(host?.hostNicVos[0]?.status),
           networkDevice: host?.hostNicVos[0]?.name,
           speed: checkZeroSizeToMbps(host?.hostNicVos[0]?.speed),

@@ -169,7 +169,7 @@ const VmNicModal = ({
         typeof formInfoState.name === "string"
       }
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "690px" }}
+      contentStyle={{ width: "600px" }}
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formInfoState.name}
@@ -205,14 +205,14 @@ const VmNicModal = ({
         value={formInfoState.macAddress}
         onChange={handleInputChange(setFormInfoState, "macAddress")}
       /> */}
-      <div className="nic-toggle w-[61%]">
+      <div className="nic-toggle">
         <ToggleSwitchButton id="linked-toggle" label="링크 상태"
           checked={formInfoState.linked}
           onChange={() => handleRadioChange("linked", !formInfoState.linked)}
           tType="Up" fType="Down"
         />
       </div>
-      <div className="nic-toggle w-[61%]">
+      <div className="nic-toggle">
         <ToggleSwitchButton id="plugged-toggle" label="카드 상태"
           checked={formInfoState.plugged}
           onChange={() => handleRadioChange("plugged", !formInfoState.plugged)}

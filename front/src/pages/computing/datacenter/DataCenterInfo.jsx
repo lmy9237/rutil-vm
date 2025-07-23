@@ -52,18 +52,19 @@ const DataCenterInfo = () => {
   const { setDatacentersSelected, setSourceContext } = useGlobal()
   const [activeTab, setActiveTab] = useState("general");
 
-  const homePath = useMemo(() => {
-    // 현재 경로에서 섹션 추출: computing, storages, networks 중 하나
+  const _baseHomePath = useMemo(() => {
     const section = location.pathname.split("/")[1]; // 첫 번째 세그먼트가 섹션 정보
-    Logger.debug(`DataCenterInfo > homePath ... section: ${section}`)
-
-    // 섹션이 유효한 값인지 확인 (예외 처리 포함)
     const validSections = ["computing", "storages", "networks"];
-    const currentSection = validSections.includes(section)
+    const res = validSections.includes(section)
       ? section
       : "computing"; // 기본값을 'computing'으로 설정
-    return `/${currentSection}/datacenters/${dataCenterId}`
+    Logger.debug(`DataCenterInfo > _baseHomePath ... section: ${section}, res: ${res}`)
+    return res;
   }, [location, dataCenterId])
+
+  const homePath = useMemo(() => {
+    return `/${_baseHomePath}/datacenters/${dataCenterId}`
+  }, [location, dataCenterId, _baseHomePath])
 
   const tabs = useMemo(() => ([
     { id: "general",        label: Localization.kr.GENERAL, onClick: () => handleTabClick("general") },
@@ -104,7 +105,7 @@ const DataCenterInfo = () => {
     Logger.debug(`DataCenterInfo > handleTabClick ... tab: ${tab}`)
     const path = `${homePath}/${tab}`;
     navigate(path);
-    setTabInPage("/computing/datacenters", tab);
+    setTabInPage(`/${_baseHomePath}/datacenters`, tab);
     setActiveTab(tab);
   }, [homePath]);
 
@@ -116,8 +117,8 @@ const DataCenterInfo = () => {
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
       navigate("/computing/rutil-manager/datacenters");
     }
-    const currentTabInPage = tabInPage("/computing/datacenters")
-    setActiveTab(currentTabInPage)
+    const currentTabInPage = tabInPage(`/${_baseHomePath}/datacenters`)
+    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setDatacentersSelected(dataCenter)
     setSourceContext("fromDatacenter")
   }, [dataCenter, navigate]);

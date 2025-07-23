@@ -188,11 +188,12 @@ const DiskActionModal = ({
             {diskList.length > 0 ? (
               diskList?.map((disk, index) => (
                 <tr key={disk.id || index}>
-                  <td>
+                  <td >
                     {activeModal().includes("disk:move") ? (
                       disk.alias
                     ) : (
                       <LabelInput label={""}
+                        className="max-w-[180px]"
                         value={aliases[disk.id] || ""}
                         onChange={(e) => { 
                           const newAlias = e.target.value;
@@ -201,7 +202,7 @@ const DiskActionModal = ({
                       />
                     )}
                   </td>
-                  <td>{disk?.virtualSize}</td>
+                  <td className="mw-[130px]">{disk?.virtualSize}</td>
                   <td>{disk.storageDomainVo?.name || ""}</td>
                   <td className="w-[230px]">
                     <LabelSelectOptionsID

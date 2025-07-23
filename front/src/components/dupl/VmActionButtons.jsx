@@ -108,7 +108,7 @@ const VmActionButtons = ({
 
   const manageActions = [
     { type: "import",     onClick: () => setActiveModal("vm:copy"),           label: Localization.kr.IMPORT, },
-    { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,        disabled: vmsSelected.length !== 1 || allPause },
+    { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,  disabled:true   }, //   disabled: vmsSelected.length !== 1 || allPause 
     { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vmsSelected.length !== 1 || isDown },
     //{ type: "remove",   onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown },
     { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },

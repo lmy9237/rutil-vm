@@ -88,8 +88,8 @@ const VmInfo = () => {
       ? `/computing/vms/${vmId}` 
       : `/computing/vms/${vmId}/${tab}`;
     navigate(path);
+    setTabInPage("/computing/vms", tab);
     setActiveTab(tab);
-    setTabInPage("/computing/vms", tab)
   }, [vmId]);
 
   const pathData = useMemo(() => ([
@@ -143,7 +143,7 @@ const VmInfo = () => {
       navigate("/computing/vms");
     }
     const currentTabInPage = tabInPage("/computing/vms")
-    setActiveTab(currentTabInPage)
+    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage);
     setVmsSelected(vm)
   }, [vm]);
 

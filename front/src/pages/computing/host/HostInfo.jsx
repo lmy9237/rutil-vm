@@ -126,7 +126,7 @@ const HostInfo = () => {
       navigate("/computing/rutil-manager/hosts");
     }
     const currentTabInPage = tabInPage("/computing/hosts")
-    setActiveTab(currentTabInPage)
+    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setHostsSelected(host)
   }, [host]);
 
