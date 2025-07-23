@@ -6,7 +6,6 @@ import com.itinfo.rutilvm.api.error.ItemNotFoundException
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromNetworkFiltersToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
@@ -145,14 +144,14 @@ interface ItNetworkService {
 	@Throws(Error::class)
 	fun findConnectedHostsFromNetwork(networkId: String): List<HostVo>
 	/**
-	 * [ItNetworkService.findDisConnectedHostsFromNetwork]
+	 * [ItNetworkService.findDisconnectedHostsFromNetwork]
 	 * 네트워크 호스트 연결 해제목록
 	 *
 	 * @param networkId [String] 네트워크 아이디
 	 * @return List<[HostVo]>
 	 */
 	@Throws(Error::class)
-	fun findDisConnectedHostsFromNetwork(networkId: String): List<HostVo>
+	fun findDisconnectedHostsFromNetwork(networkId: String): List<HostVo>
 	/**
 	 * [ItNetworkService.findAllVmsNicFromNetwork]
 	 * 네트워크 가상머신 목록
@@ -340,23 +339,21 @@ class NetworkServiceImpl(
 	@Throws(Error::class)
 	override fun findConnectedHostsFromNetwork(networkId: String): List<HostVo> {
 		log.info("findConnectedHostsFromNetwork ... networkId: {}", networkId)
-
 		val res: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
-				val clusterNetworks = conn.findAllNetworksFromCluster(host.cluster().id()).getOrDefault(emptyList())
+				val clusterNetworks = conn.findAllNetworksFromCluster(host.cluster().id())
+					.getOrDefault(emptyList())
 					.any { it.id() == networkId }
-				// [ItHostNicService.findAllNetworkAttachmentsFromHost] 참조
-				// val nat: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(host.id(), follow = "host,host_nic,network").getOrDefault(emptyList())
-				// res.toNetworkAttachmentVos()
-				host.networkAttachments().any { it.network().id() == networkId } && clusterNetworks
+				host.networkAttachments()
+					.any { it.network().id() == networkId } && clusterNetworks
 			}
 
 		return res.toNetworkHostMenus(conn, networkId)
 	}
 
 	@Throws(Error::class)
-	override fun findDisConnectedHostsFromNetwork(networkId: String): List<HostVo> {
-		log.info("findDisConnectedHostsFromNetwork ... networkId: {}", networkId)
+	override fun findDisconnectedHostsFromNetwork(networkId: String): List<HostVo> {
+		log.info("findDisconnectedHostsFromNetwork ... networkId: {}", networkId)
 		val network = checkNetwork(networkId)
 		val hosts: List<Host> = conn.findAllHosts(follow = "cluster.datacenter,networkattachments,nics").getOrDefault(emptyList())
 			.filter { host ->
@@ -364,7 +361,7 @@ class NetworkServiceImpl(
 					.any { it.id() == networkId }
 				host.networkAttachments().none { it.network().id() == networkId } && clusterNetworks
 			}
-		return hosts.toNetworkDisConnectedHostMenus()
+		return hosts.toNetworkDisconnectedHostMenus()
 	}
 
 	@Throws(Error::class)

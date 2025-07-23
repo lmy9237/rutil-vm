@@ -75,7 +75,7 @@ class HostNicVo(
 	val bondingVo: BondingVo = BondingVo(), // 본딩
 	val hostVo: IdentifiedVo = IdentifiedVo(),
 	val networkVo: IdentifiedVo = IdentifiedVo(), // null 일수도 잇음
-	// val networkVo: NetworkVo = NetworkVo(),
+	val networkAttachmentVo: NetworkAttachmentVo? = null,
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -105,9 +105,10 @@ class HostNicVo(
 		private var bBondingVo: BondingVo = BondingVo(); fun bondingVo(block: () -> BondingVo?) { bBondingVo = block() ?: BondingVo() }
 		private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
 		private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
+		private var bNetworkAttachmentVo: NetworkAttachmentVo? = null; fun networkAttachmentVo(block: () -> NetworkAttachmentVo?) { bNetworkAttachmentVo = block() }
 		// private var bNetworkVo: NetworkVo = NetworkVo(); fun networkVo(block: () -> NetworkVo?) { bNetworkVo = block() ?: NetworkVo() }
 
-		fun build(): HostNicVo = HostNicVo( bId,  bName,  bMacAddress,  bMtu,  bBridged,  bStatus,  bSpeed,  bRxSpeed,  bTxSpeed,  bRxTotalSpeed,  bTxTotalSpeed,  bRxTotalError,  bTxTotalError,  bVlan, bAdAggregatorId,  bBootProtocol,  bIpv6BootProtocol,  bIp,  bIpv6, bBaseInterface, bBondingVo,  bHostVo,  bNetworkVo, )
+		fun build(): HostNicVo = HostNicVo(bId,  bName,  bMacAddress,  bMtu,  bBridged,  bStatus,  bSpeed,  bRxSpeed,  bTxSpeed,  bRxTotalSpeed,  bTxTotalSpeed,  bRxTotalError,  bTxTotalError,  bVlan, bAdAggregatorId,  bBootProtocol,  bIpv6BootProtocol,  bIp,  bIpv6, bBaseInterface, bBondingVo,  bHostVo,  bNetworkVo, bNetworkAttachmentVo)
 	}
 
 	companion object {

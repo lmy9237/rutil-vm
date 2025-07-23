@@ -69,7 +69,10 @@ const NetworkHosts = ({
       const baseData = {
         ...host,
         icon: status2Icon(host?.status),
-        async: "",
+        async: 
+          ([...host?.networkAttachmentVos].find((n) => (
+            n?.networkVo?.id === networkId // 해당 네트워크 건만 추출
+          )))?.inSync === false ? status2Icon("async") : <></>,
         host: ( 
           <TableRowClick type="host" id={host?.id}>
             {host?.name}

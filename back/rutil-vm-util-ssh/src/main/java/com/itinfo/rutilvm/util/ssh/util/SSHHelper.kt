@@ -93,8 +93,8 @@ fun Session.executeAll(commands: List<String>): Result<Boolean> = runCatching {
 
 	// 시작!
 	channel?.connect()
-
-	/*val startTime = System.currentTimeMillis()
+	/*
+	val startTime = System.currentTimeMillis()
 	while (channel?.isClosed == false && System.currentTimeMillis() - startTime < 30000) {
 		Thread.sleep(100)
 	}
@@ -103,33 +103,33 @@ fun Session.executeAll(commands: List<String>): Result<Boolean> = runCatching {
 		return@runCatching false
 	}*/
 
-
 	val startTime = System.currentTimeMillis()
 	while (channel?.isClosed == false && System.currentTimeMillis() - startTime < 30000) {
 		Thread.sleep(100)
 	}
 	val exitStatus = channel?.exitStatus
 	log.debug("\n================ Results ================")
-	log.debug("Exit Status: $exitStatus")/*
+	log.debug("Exit Status: $exitStatus")
+	/*
 	if (!commandOutput.isNullOrEmpty())
 		log.debug("Output:\n$commandOutput")
 
 	if (!commandError.isNullOrEmpty())
-		log.error("Error:\n$commandError")*/
+		log.error("Error:\n$commandError")
+	*/
 
 	if (exitStatus == 0)
-		log.info("\n✅ Shell Execution Successful.")
+		log.info("\n✅ 쉘 명령어 실행 성공")
 	else
-		throw JSchException("❌ Shell Execution Failed")
+		throw JSchException("❌ 쉘 명령어 실행 실패 $commands")
 
 	// 종료
-	channel?.disconnect()
+	channel.disconnect()
 	this@executeAll.disconnect()
 	true
 }.onSuccess {
 	log.info("명령어 실행 성공 ... ")
 }.onFailure {
 	log.error("명령어 실행 실패: {}", it.localizedMessage)
-	// throw if (it is Error) it.toItCloudException() else it
 	throw it
 }

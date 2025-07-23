@@ -5,7 +5,9 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.ovirtDf
 import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.network.HostNicVo
+import com.itinfo.rutilvm.api.model.network.NetworkAttachmentVo
 import com.itinfo.rutilvm.api.model.network.toHostNicVos
+import com.itinfo.rutilvm.api.model.network.toNetworkAttachmentVos
 import com.itinfo.rutilvm.api.model.network.toSlaveHostNicVos
 import com.itinfo.rutilvm.api.ovirt.business.SELinuxModeB
 import com.itinfo.rutilvm.api.ovirt.business.VdsSpmStatus
@@ -117,8 +119,8 @@ class HostVo (
     val vmVos: List<VmVo> = listOf(),
     val hostNicVos: List<HostNicVo> = listOf(),
     val usageDto: UsageDto = UsageDto(),
+	val networkAttachmentVos: List<NetworkAttachmentVo>? = emptyList(),
 	// val certificate: HCertificateVo = HCertificateVo(),
-
 ): Serializable {
 	val seLinuxCode: String				get() = seLinux?.code ?: SELinuxModeB.disabled.code
 	val seLinuxEn: String				get() = seLinux?.en ?: "N/A"
@@ -130,14 +132,14 @@ class HostVo (
 	val statusEn: String				get() = status?.en ?: "N/A"
 	val statusKr: String				get() = status?.kr ?: "알 수 없음"
 
-	val bootingTime: String				get() = ovirtDf.formatEnhanced(_bootingTime)
-	val uptimeInMilli: Long				get() = Date().time - (_bootingTime?.time ?: 0L)
-	val isHostedEngine: Boolean			get() = hostedEngine != null
-	val hostedActive: Boolean			get() = hostedEngine?.active == true
-	val hostedConfigured: Boolean		get() = hostedEngine?.configured == true
-	val hostedScore: Int				get() = hostedEngine?.score ?: 0
-	val isGlobalMaintenance: Boolean	get() = hostedEngine?.globalMaintenance == true
-	val isLocalMaintenance: Boolean		get() = hostedEngine?.localMaintenance == true
+	val bootingTime: String						get() = ovirtDf.formatEnhanced(_bootingTime)
+	val uptimeInMilli: Long						get() = Date().time - (_bootingTime?.time ?: 0L)
+	val isHostedEngine: Boolean					get() = hostedEngine != null
+	val hostedActive: Boolean					get() = hostedEngine?.active == true
+	val hostedConfigured: Boolean				get() = hostedEngine?.configured == true
+	val hostedScore: Int						get() = hostedEngine?.score ?: 0
+	val isGlobalMaintenance: Boolean			get() = hostedEngine?.globalMaintenance == true
+	val isLocalMaintenance: Boolean				get() = hostedEngine?.localMaintenance == true
 
 	val upTime: String
 		get() = if (
@@ -195,8 +197,8 @@ class HostVo (
         private var bVmVos: List<VmVo> = listOf();fun vmVos(block: () -> List<VmVo>?) { bVmVos = block() ?: listOf() }
         private var bHostNicVos: List<HostNicVo> = listOf();fun hostNicVos(block: () -> List<HostNicVo>?) { bHostNicVos = block() ?: listOf() }
         private var bUsageDto: UsageDto = UsageDto();fun usageDto(block: () -> UsageDto?) { bUsageDto = block() ?: UsageDto() }
-
-        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSsh, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto,)
+		private var bNetworkAttachmentVos: List<NetworkAttachmentVo>? = emptyList(); fun networkAttachmentVos(block: () -> List<NetworkAttachmentVo>?) { bNetworkAttachmentVos = block() ?: emptyList() }
+        fun build(): HostVo = HostVo(bId, bName, bComment, bAddress, bDevicePassThrough, bIscsi, bKdump, bKsm, bSeLinux, bHostedEngine, bHostedEngineVM, bSpmPriority, bSpmStatus, bSsh, bStatus, bTransparentPage, bVmMigratingCnt, bVgpu, bMemoryTotal, bMemoryUsed, bMemoryFree, bMemoryMax, bMemoryShared, bSwapTotal, bSwapUsed, bSwapFree, bHugePage2048Free, bHugePage2048Total, bHugePage1048576Free, bHugePage1048576Total, bBootingTime, bHostHwVo, bHostSwVo, bClusterVo, bDataCenterVo, bVmSizeVo, bVmVos, bHostNicVos, bUsageDto, bNetworkAttachmentVos)
     }
     companion object {
         inline fun builder(block: HostVo.Builder.() -> Unit): HostVo = HostVo.Builder().apply(block).build()
@@ -215,6 +217,7 @@ fun Collection<Host>.toIdentifiedVosFromHosts(): List<IdentifiedVo> =
     this@toIdentifiedVosFromHosts.map { it.toIdentifiedVoFromHost() }
 
 /**
+ * [Host.toHostMenu]
  * 호스트 메뉴 목록
  *
  * @param conn [Connection]
@@ -248,6 +251,7 @@ fun Host.toHostMenu(conn: Connection, usageDto: UsageDto?): HostVo {
         usageDto { usageDto }
         spmStatus { host.spm().status().toVdsSpmStatus() }
 		bootingTime { Date(statistics.findBootTime() * 1000) }
+		networkAttachmentVos { host.networkAttachments().toNetworkAttachmentVos() }
     }
 }
 
@@ -297,6 +301,7 @@ fun Host.toHostInfo(conn: Connection, hostConfigurationEntity: HostConfiguration
 		clusterVo { cluster?.fromClusterToIdentifiedVo() }
         vmSizeVo { host.findVmCntFromHost() }
 		usageDto { usageDto }
+		networkAttachmentVos { host.networkAttachments().toNetworkAttachmentVos() }
     }
 }
 
@@ -314,26 +319,29 @@ fun Host.toNetworkHostMenu(conn: Connection, networkId: String): HostVo {
         clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
         dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
         hostNicVos { filteredNics.toSlaveHostNicVos(conn) }
+		networkAttachmentVos { host.networkAttachments().toNetworkAttachmentVos() }
     }
 }
 fun List<Host>.toNetworkHostMenus(conn: Connection, networkId: String): List<HostVo> =
     this@toNetworkHostMenus.map { it.toNetworkHostMenu(conn, networkId) }
 
 /**
+ * [Host.toNetworkDisconnectedHostMenu]
  * 네트워크에서 호스트 볼때
  */
-fun Host.toNetworkDisConnectedHostMenu(): HostVo {
-	val host = this@toNetworkDisConnectedHostMenu
+fun Host.toNetworkDisconnectedHostMenu(): HostVo {
+	val host = this@toNetworkDisconnectedHostMenu
     return HostVo.builder {
         id { host.id() }
         name { host.name() }
         status { host.status().toVdsStatus() }
         clusterVo { if(host.clusterPresent()) host.cluster().fromClusterToIdentifiedVo() else IdentifiedVo()}
         dataCenterVo { if(host.clusterPresent() && host.cluster().dataCenterPresent()) host.cluster().dataCenter().fromDataCenterToIdentifiedVo() else IdentifiedVo() }
+		networkAttachmentVos { host.networkAttachments().toNetworkAttachmentVos() }
     }
 }
-fun List<Host>.toNetworkDisConnectedHostMenus(): List<HostVo> =
-    this@toNetworkDisConnectedHostMenus.map { it.toNetworkDisConnectedHostMenu() }
+fun Collection<Host>?.toNetworkDisconnectedHostMenus(): List<HostVo> =
+    this@toNetworkDisconnectedHostMenus?.map { it.toNetworkDisconnectedHostMenu() } ?: emptyList()
 
 /**
  * 호스트 전체 출력

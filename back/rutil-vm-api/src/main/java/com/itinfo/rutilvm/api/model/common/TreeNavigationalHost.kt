@@ -49,6 +49,7 @@ fun Host.toNavigationalFromHost(conn: Connection?, rVm: VmRepository?=null): Tre
 		?.filter {
 			//it.status?.runningOrPaused == true ||
 			it.status == VmStatusB.powering_up ||
+			it.status == VmStatusB.reboot_in_progress ||
 			it.status == VmStatusB.up ||
 			it.status == VmStatusB.saving_state ||
 			it.status == VmStatusB.restoring_state ||

@@ -128,7 +128,7 @@ const VmNics2 = ({
       <div className="dupl-header-group f-start align-start gap-4 w-full mb-2">
         <NicActionButtons />
       </div>
-      <TablesOuter target={"vnic"} 
+      <TablesOuter target={"nic"} 
         columns={TableColumnsInfo.NICS2_FROM_VM}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}

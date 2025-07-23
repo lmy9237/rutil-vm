@@ -76,11 +76,12 @@ fun NetworkAttachment.toNetworkAttachmentVo(): NetworkAttachmentVo {
 		nameServerList { dns }
 	}
 }
-fun List<NetworkAttachment>.toNetworkAttachmentVos(): List<NetworkAttachmentVo> =
-	this@toNetworkAttachmentVos.map { it.toNetworkAttachmentVo() }
+fun Collection<NetworkAttachment>?.toNetworkAttachmentVos(): List<NetworkAttachmentVo> =
+	this@toNetworkAttachmentVos?.map { it.toNetworkAttachmentVo() } ?: emptyList()
 
 
 /**
+ * [NetworkAttachmentVo.toModifiedNetworkAttachment]
  * 호스트 네트워크 수정 modified_network_attachments
  */
 fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {

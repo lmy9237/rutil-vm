@@ -70,21 +70,11 @@ open class CertManager(
 			)
 		}
 
-	open val version: String
-		get() = if (cert == null) "N/A" else "v${cert?.version}"
-
-	open val address: String
-		get() = connInfo?.host ?: ""
-
-	private val _notAfter: Date?
-		get() = cert?.notAfter
-
-	open val notAfter: String
-		get() = "${_notAfter ?: "N/A"}"
-
-	open val serialNumber: BigInteger?
-		get() = cert?.serialNumber ?: BigInteger.ZERO
-
+	open val version: String				get() = if (cert == null) "N/A" else "v${cert?.version}"
+	open val address: String				get() = connInfo?.host ?: ""
+	private val _notAfter: Date?			get() = cert?.notAfter
+	open val notAfter: String				get() = "${_notAfter ?: "N/A"}"
+	open val serialNumber: BigInteger?		get() = cert?.serialNumber ?: BigInteger.ZERO
 	private val _daysRemaining: Long?
 		get() {
 			val currentDate = Date()

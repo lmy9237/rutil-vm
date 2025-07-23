@@ -2,6 +2,7 @@ package com.itinfo.rutilvm.api.repository.engine.entity
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.auth.UserSessionVo
+import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.EventVo
@@ -55,6 +56,7 @@ import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
 import org.ovirt.engine.sdk4.types.DiskAttachment
+import org.ovirt.engine.sdk4.types.JobStatus
 import org.ovirt.engine.sdk4.types.Property
 import org.ovirt.engine.sdk4.types.VnicPassThroughMode
 import org.springframework.data.domain.Page
@@ -74,6 +76,23 @@ fun List<AuditLogEntity>.toEventVos(): List<EventVo> =
 fun Page<AuditLogEntity>.toEventVosPage(): Page<EventVo> =
 	this@toEventVosPage.map { it.toEventVo() }
 //endregion: AuditLogEntity
+
+
+//region: JobEntity
+fun JobEntity.toJobVo(): JobVo = JobVo.builder {
+	id { this@toJobVo.jobId.toString() }
+	description { this@toJobVo.description }
+	status { JobStatus.fromValue(this@toJobVo.status) }
+	// ownerId { }
+	autoCleared { this@toJobVo.isAutoCleared }
+	external { this@toJobVo.isExternal }
+	startTime { this@toJobVo.startTime.toDate() }
+	endTime { this@toJobVo.endTime.toDate() }
+	lastUpdated { this@toJobVo.lastUpdateTime.toDate() }
+}
+fun Collection<JobEntity>.toJobVo(): List<JobVo> =
+	this@toJobVo.map { it.toJobVo() }
+//endregion: JobEntity
 
 
 //region: DiskVmElementEntity
@@ -1258,7 +1277,4 @@ fun AdditionalProperties4Vmware.toPropertyBuildersFromAdditionalProperties4Vmwar
 	}
 	return props
 }
-
-
-
 //endregion: ProviderEntity

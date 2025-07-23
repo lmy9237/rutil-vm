@@ -17,6 +17,13 @@ WHERE 1=1
 AND j.actionType = :actionType
 """)
 	fun findAllByActionType(actionType: String): Collection<JobEntity>
+	@Query("""
+SELECT j FROM JobEntity j
+LEFT JOIN FETCH j.steps AS s
+WHERE 1=1
+AND j.jobId = :jobId
+""")
+	fun findByJobId(jobId: UUID?): JobEntity?
 	@Modifying
 	@Query("""
 DELETE FROM JobEntity j WHERE 1=1

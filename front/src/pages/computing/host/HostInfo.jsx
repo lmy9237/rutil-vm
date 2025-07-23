@@ -58,6 +58,8 @@ const HostInfo = () => {
   const isNonOperational = host?.status?.toUpperCase() === "NON_OPERATIONAL"
   const isInstalling = host?.status?.toUpperCase() === "INSTALLING";
   const isReboot = host?.status?.toUpperCase() === "REBOOT";
+  const isGlobalMaintenance = host?.globalMaintenance === true
+  const isHostedConfigured = host?.hostedConfigured === true
 
   const [activeTab, setActiveTab] = useState("general");
   const tabs = useMemo(() => ([
@@ -112,8 +114,8 @@ const HostInfo = () => {
     { type: "refresh",       onClick: () => setActiveModal("host:refresh"),          label: Localization.kr.REFRESH_CAPABILITIES, disabled: !isUp || isInstalling  },
     { type: "reinstall",     onClick: () => setActiveModal("host:reinstall"),        label: Localization.kr.REINSTALL,            disabled: isUp || isInstalling || !isMaintenance, },
     { type: "enrollCert",    onClick: () => setActiveModal("host:enrollCert"),       label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, disabled: isUp || isInstalling, },
-    { type: "haOn",          onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",           disabled: !isUp || isInstalling, }, 
-    { type: "haOff",         onClick: () => setActiveModal("host:haOff"),            label: "글로벌 HA 유지 관리를 비활성화",          disabled: !isUp || isInstalling, },
+    { type: "haOn",          onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",           disabled: !isHostedConfigured || /*!isMaintenance ||*/ isGlobalMaintenance, }, 
+    { type: "haOff",         onClick: () => setActiveModal("host:haOff"),            label: "글로벌 HA 유지 관리를 비활성화",          disabled: !isHostedConfigured || /*!isMaintenance ||*/ !isGlobalMaintenance, },
   ];
 
   useEffect(() => {

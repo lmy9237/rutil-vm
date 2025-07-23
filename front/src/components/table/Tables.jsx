@@ -185,6 +185,7 @@ const Tables = ({
     }
   
     setSortedData(filteredData);
+    setCurrentPage(1);
   }, [data, searchQuery, sortConfig]);
   
 

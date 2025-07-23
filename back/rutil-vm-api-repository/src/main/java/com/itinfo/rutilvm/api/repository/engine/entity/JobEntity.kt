@@ -48,15 +48,15 @@ class JobEntity(
 	@Lob
 	@Type(type="org.hibernate.type.TextType")
 	val description: String? = "",
-	val status: String? = "",
+	var status: String? = "",
 	@Column(name="owner_id", unique = true, nullable = true)
 	@Type(type="org.hibernate.type.PostgresUUIDType")
 	val ownerId: UUID? = null,
 	val visible: Boolean? = true,
-	val startTime: LocalDateTime? = null,
-	val endTime: LocalDateTime? = null,
+	var startTime: LocalDateTime? = null,
+	var endTime: LocalDateTime? = null,
 	@UpdateTimestamp
-	val lastUpdateTime: LocalDateTime? = null,
+	var lastUpdateTime: LocalDateTime? = null,
 	val correlationId: String? = "",
 	val isExternal: Boolean? = false,
 	val isAutoCleared: Boolean? = true,

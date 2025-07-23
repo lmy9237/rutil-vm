@@ -728,7 +728,7 @@ export const status2Icon = (
     case "ACTIVE":
     case Localization.kr.renderStatus("ACTIVE"):   
     case "OPERATIONAL":
-    case Localization.kr.renderStatus("OPERATIONAL"):  iconDef = rvi16TriangleUp(); break;
+    case Localization.kr.renderStatus("OPERATIONAL"):  iconDef = rvi16TriangleUp();break;
     case "INSTALLING":
     case Localization.kr.renderStatus("INSTALLING"):   iconDef = rvi16Install;break;
     case "DOWN":
@@ -773,6 +773,8 @@ export const status2Icon = (
     case "NEXTRUN":                                iconDef = rvi16ExclamationMark();break;
     case "NON_RESPONSIVE":
     case "NON_OPERATIONAL":                        iconDef = rvi16NonOperational();break;
+    case Localization.kr.ASYNC:
+    case "ASYNC":                                  iconDef = rvi16TryRefresh();break;
     case "UNKNOWN":
     default:                                       iconDef = rvi16QuestionMark();break;
   }

@@ -536,10 +536,10 @@ yes | cp -p "$brand_path/patternfly-no-reset.css" "$ovirt_engine_brands/bundled/
 
 echo "[ INFO  ] ok: [localhost]"
 
-#redirect_conf="/etc/httpd/conf.d/ovirt-engine-root-redirect.conf"
-#IP4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
-#sed -i '/^.*\/ovirt-engine/s/^/#/g' $redirect_conf
-#echo "RedirectMatch ^/$ https://$IP4:8443" >> $redirect_conf
+redirect_conf="/etc/httpd/conf.d/ovirt-engine-root-redirect.conf"
+IP4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+sed -i '/^.*\/ovirt-engine/s/^/#/g' $redirect_conf
+echo "RedirectMatch ^/$ https://$IP4:8443" >> $redirect_conf
 
 #ssl_conf="/etc/httpd/conf.d/ssl.conf"
 #sed -i 's/<\/VirtualHost>//g' $ssl_conf

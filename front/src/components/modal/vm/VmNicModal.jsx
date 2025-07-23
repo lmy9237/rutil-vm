@@ -30,7 +30,7 @@ const initialFormState = {
   linked: true, 
   plugged: true,
   macAddress: "",
-  interface_: "VIRTIO",
+  interface_: "virtio",
 };
 
 const VmNicModal = ({ 
@@ -78,7 +78,7 @@ const VmNicModal = ({
   const filteredInterfaceOptions = useMemo(() => {
     const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
     if (selectedVnicProfile?.passThrough === "ENABLED") {
-      return interfaceOptions.filter((opt) => opt.value === "PCI_PASSTHROUGH");
+      return interfaceOptions.filter((opt) => opt.value === "pci_passthrough");
     }
     return interfaceOptions;
   }, [vnics, vnicProfileVo]);
@@ -100,7 +100,7 @@ const VmNicModal = ({
         linked: nicsdetail?.linked ?? true,
         plugged: nicsdetail?.plugged ?? true,
         macAddress: nicsdetail?.macAddress || "",
-        interface_: nicsdetail?.interface_ || "VIRTIO",
+        interface_: nicsdetail?.interface_ || "virtio",
       });
       setVnicProfileVo({
         id: nicsdetail?.vnicProfileVo?.id,
@@ -126,7 +126,7 @@ const VmNicModal = ({
   useEffect(() => {
     const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
     if (selectedVnicProfile?.passThrough === "ENABLED") {
-      setFormInfoState(prev => ({ ...prev, interface_: "PCI_PASSTHROUGH" }));
+      setFormInfoState(prev => ({ ...prev, interface_: "pci_passthrough" }));
     } else {
       setFormInfoState(prev => ({ ...prev, interface_: "VIRTIO" }));
     }
@@ -252,16 +252,16 @@ export default VmNicModal;
 
 // 유형
 const interfaceOptions = [
-  { value: "E1000", label: "e1000" },
-  { value: "E1000E", label: "e1000e" },
-  { value: "PCI_PASSTHROUGH", label: "pci_passthrough" },
-  { value: "RTL8139", label: "rtl8139" },
-  { value: "RTL8139_VIRTIO", label: "rtl8139_virtio" },
-  { value: "SPAPR_VLAN", label: "spapr_vlan" },
-  { value: "VIRTIO", label: "virtio" },
+  { value: "e1000", label: "e1000" },
+  { value: "e1000e", label: "e1000e" },
+  { value: "pci_passthrough", label: "pci_passthrough" },
+  { value: "rtl8139", label: "rtl8139" },
+  { value: "rtl8139_virtio", label: "rtl8139_virtio" },
+  { value: "spapr_vlan", label: "spapr_vlan" },
+  { value: "virtio", label: "virtio" },
 ];
 
 const pciPassthroughOption = [
-  { value: "PCI_PASSTHROUGH", label: "pci_passthrough" }
+  { value: "pci_passthrough", label: "pci_passthrough" }
 ];
 

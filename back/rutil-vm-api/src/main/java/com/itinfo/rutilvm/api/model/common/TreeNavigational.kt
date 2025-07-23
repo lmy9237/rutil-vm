@@ -11,7 +11,6 @@ import com.itinfo.rutilvm.api.ovirt.business.toVmTemplateStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toVmStatusB
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 
-
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.DiskStatus
 import org.ovirt.engine.sdk4.types.Network

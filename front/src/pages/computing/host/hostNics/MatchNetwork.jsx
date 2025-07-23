@@ -5,7 +5,8 @@ import {
   rvi16TriangleUp, 
   rvi16TryRefresh, 
   RVI36, 
-  rvi36Edit
+  rvi36Edit,
+  status2Icon
 } from "../../../../components/icons/RutilVmIcons";
 import NetworkToolTip from "./NetworkToolTip";
 
@@ -36,7 +37,7 @@ const MatchNetwork = ({
             iconDef={networkAttach.networkVo?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
           {networkAttach.inSync === false
-            ? <RVI16 className="mr-1.5" iconDef={rvi16TryRefresh()} />
+            ? status2Icon("async")
             : ""
           } 
           {networkAttach.networkVo?.name}

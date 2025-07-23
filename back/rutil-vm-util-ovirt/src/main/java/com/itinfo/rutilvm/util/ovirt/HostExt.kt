@@ -39,7 +39,7 @@ fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Resu
 
 fun Connection.findHost(hostId: String, follow: String = ""): Result<Host?> = runCatching {
 	srvHost(hostId).get().apply {
-		if (follow.isNotEmpty()) follow(follow)
+		if (follow.isNotEmpty()) follow("cluster,networkattachments,$follow")
 	}.allContent(true).send().host()
 
 }.onSuccess {

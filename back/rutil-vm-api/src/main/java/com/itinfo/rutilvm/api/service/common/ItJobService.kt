@@ -6,9 +6,12 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.common.JobVo.Companion.REGEX_DESCRIPTION_EXCLUDE
 import com.itinfo.rutilvm.api.model.common.toJob
+import com.itinfo.rutilvm.api.model.common.toJobEntity
 import com.itinfo.rutilvm.api.model.common.toJobVo
 import com.itinfo.rutilvm.api.model.common.toJobVos
 import com.itinfo.rutilvm.api.repository.engine.JobsRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.JobEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toJobVo
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.addJob
 import com.itinfo.rutilvm.util.ovirt.endJob
@@ -16,10 +19,12 @@ import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.findAllJobs
 import com.itinfo.rutilvm.util.ovirt.findJob
 import org.ovirt.engine.sdk4.types.Job
+import org.ovirt.engine.sdk4.types.JobStatus
 import org.postgresql.util.PSQLException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 interface ItJobService {
 	/**
@@ -41,7 +46,6 @@ interface ItJobService {
 	 */
 	@Throws(Error::class)
 	fun findOne(jobId: String): JobVo
-
 	/**
 	 * [ItJobService.add]
 	 * (외부) 작업 생성
@@ -51,6 +55,15 @@ interface ItJobService {
 	 */
 	@Throws(Error::class)
 	fun add(job: JobVo): JobVo?
+	/**
+	 * [ItJobService.addQuick]
+	 * (외부) 작업 생성
+	 *
+	 * @param job [JobVo]
+	 * @return [JobVo]?
+	 */
+	@Throws(Error::class)
+	fun addQuick(job: JobVo): JobVo?
 	/**
 	 * [ItJobService.add]
 	 * (외부) 작업 생성
@@ -69,7 +82,6 @@ interface ItJobService {
 	 */
 	@Throws(Error::class)
 	fun end(jobId: String): Boolean?
-
 	/**
 	 * [ItJobService.remove]
 	 * 작업 제거
@@ -117,6 +129,18 @@ class JobServiceImpl(
 		val job2Add: Job = job.toJob()
 		val res: Job? = conn.addJob(job2Add).getOrNull()
 		return res?.toJobVo()
+	}
+
+	override fun addQuick(job: JobVo): JobVo? {
+		log.info("addQuick ... job: {}", job)
+		val jobAdded = add(job)
+		val job2Modify: JobEntity = rJobs.findByJobId(jobAdded?.id?.toUUID()) ?: throw ErrorPattern.JOB_NOT_FOUND.toException()
+		val jobModified: JobEntity? = rJobs.save(job2Modify.apply {
+			status = job.status.name
+			endTime = LocalDateTime.now()
+			lastUpdateTime = LocalDateTime.now()
+		})
+		return jobModified?.toJobVo()
 	}
 
 	override fun end(jobId: String): Boolean? {

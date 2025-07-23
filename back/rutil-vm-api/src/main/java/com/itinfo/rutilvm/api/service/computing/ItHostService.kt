@@ -112,7 +112,7 @@ class HostServiceImpl(
 	@Throws(Error::class)
 	override fun findAll(): List<HostVo> {
 		log.info("findAll ... ")
-		val res: List<Host> = conn.findAllHosts(follow = "cluster").getOrDefault(emptyList())
+		val res: List<Host> = conn.findAllHosts(follow = "cluster,networkattachments").getOrDefault(emptyList())
 		return res.map { it.toHostMenu(conn, calculateUsage(it))}
 	}
 

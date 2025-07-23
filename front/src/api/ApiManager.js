@@ -982,7 +982,7 @@ const ApiManager = {
    */
   restartHost: async (hostId) => {
     return makeAPICall({
-      method: "POST",
+      method: "PUT",
       url: ENDPOINTS.RESTART_HOST(hostId),  // ID를 URL에 포함
       data: hostId
     });

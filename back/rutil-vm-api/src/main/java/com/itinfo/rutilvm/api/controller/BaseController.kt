@@ -6,14 +6,18 @@ import com.itinfo.rutilvm.api.error.IdNotFoundException
 import com.itinfo.rutilvm.api.error.InvalidRequestException
 import com.itinfo.rutilvm.api.error.ItemNotFoundException
 import com.itinfo.rutilvm.api.error.ResourceLockedException
+import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.response.toRes
+import com.itinfo.rutilvm.api.repository.engine.JobsRepository
+import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.util.ovirt.error.FailureType
 import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
 
 import io.swagger.annotations.Api
 import org.ovirt.engine.sdk4.Error
 import org.postgresql.util.PSQLException
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
@@ -30,10 +34,13 @@ class RootController: BaseController() {
 open class BaseController(
 
 ) {
+	@Autowired private lateinit var iJob: ItJobService
+
 	@ExceptionHandler(InvalidRequestException::class, PSQLException::class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	fun handleInvalidRequest(e: Throwable): ResponseEntity<Res<Any?>> {
 		log.error("handleInvalidRequest ... e: {}", e::class.simpleName)
+		iJob.addQuick(JobVo.rutilvmFail(e.localizedMessage))
 		return HttpStatus.BAD_REQUEST.toResponseEntity(e.localizedMessage)
 	}
 
@@ -48,6 +55,7 @@ open class BaseController(
 	@ResponseStatus(HttpStatus.LOCKED)
 	fun handleLocked(e: Throwable): ResponseEntity<Res<Any?>>  {
 		log.error("handleLocked ... e: {}", e::class.simpleName)
+		iJob.addQuick(JobVo.rutilvmFail(e.localizedMessage))
 		return HttpStatus.LOCKED.toResponseEntity(e.localizedMessage)
 	}
 
@@ -55,18 +63,21 @@ open class BaseController(
 	@ResponseStatus(HttpStatus.LOCKED)
 	fun handleConflict(e: Throwable): ResponseEntity<Res<Any?>>  {
 		log.error("handleConflict ... e: {}", e::class.simpleName)
+		iJob.addQuick(JobVo.rutilvmFail(e.localizedMessage))
 		return HttpStatus.CONFLICT.toResponseEntity(e.localizedMessage)
 	}
 
 	@ExceptionHandler(Error::class, ItCloudException::class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	fun handleOvirtError(e: Throwable): ResponseEntity<Res<Any?>> {
-		log.error("handleOvirtError ... e: {}", e::class.simpleName)
+		log.error("handleOvirtError ... e::class.simpleName: {}, e.message: {}", e::class.simpleName, e.message)
 		val rawMessage = e.message ?: ""
 		val refinedMessage = Regex("""Fault detail is ['"]\[(.*?)]['"]""").find(rawMessage)?.groupValues?.get(1)
 			?: rawMessage
 		val resultMessage = "실패: 알수없는 이, 이유: $refinedMessage"
 
+		if (e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == false)
+			iJob.addQuick(JobVo.rutilvmFail(refinedMessage))
 		return when {
 			// ovirt-sdk 에서 예외로 분류 되는 오류
 			e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == true -> HttpStatus.NOT_FOUND.toResponseEntity(resultMessage)

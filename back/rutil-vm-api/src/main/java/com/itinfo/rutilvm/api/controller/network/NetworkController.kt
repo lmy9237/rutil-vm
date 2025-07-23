@@ -5,7 +5,6 @@ import com.itinfo.rutilvm.api.controller.BaseController
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
-import com.itinfo.rutilvm.api.model.computing.ClusterVo
 import com.itinfo.rutilvm.api.model.computing.DataCenterVo
 import com.itinfo.rutilvm.api.model.computing.HostVo
 import com.itinfo.rutilvm.api.model.network.NetworkFilterVo
@@ -320,7 +319,7 @@ class NetworkController: BaseController() {
 		log.info("/networks/{}/disconnectHosts ... 네트워크 호스트 목록", networkId)
 		if (networkId.isNullOrEmpty())
 			throw ErrorPattern.NETWORK_ID_NOT_FOUND.toException()
-		return ResponseEntity.ok(iNetwork.findDisConnectedHostsFromNetwork(networkId))
+		return ResponseEntity.ok(iNetwork.findDisconnectedHostsFromNetwork(networkId))
 	}
 
 

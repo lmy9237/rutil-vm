@@ -69,8 +69,8 @@ const QK = {
   ALL_VMS: "allVMs",
   VM: "vm",
   DISKS_FROM_VM: "disksFromVM",
-  ALL_DISKS_FROM_VM:"allDisksFromVm",
-  SNAPSHOT_FROM_VM: "SnapshotFromVM",
+  ALL_DISKS_FROM_VM: "allDisksFromVm",
+  SNAPSHOT_FROM_VM: "snapshotFromVM",
   SNAPSHOT_DETAIL_FROM_VM: "snapshotDetailFromVM",
   HOST_DEVICES_FROM_VM: "hostDevicesFromVM",
   NETWORK_INTERFACES_FROM_VM: "networkInterfacesFromVM",
@@ -1223,12 +1223,13 @@ export const useAddCluster = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddCluster ... res: `, res);
       apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.CLUSTERS_FROM_DATA_CENTER,QK.ALL_TREE_NAVIGATIONS,]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       postError && postError(error);
     },
   });
@@ -1258,14 +1259,14 @@ export const useEditCluster = (
       Logger.debug(`RQHook > useEditCluster ... res: `, res);
       apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.CLUSTERS_FROM_DATA_CENTER]);
-      queryClient.invalidateQueries(QK.ALL_CLUSTERS,clusterId);
+      queryClient.invalidateQueries(QK.ALL_CLUSTERS, clusterId);
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { clusterId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.CLUSTERS_FROM_DATA_CENTER]);
-      queryClient.invalidateQueries(QK.ALL_CLUSTERS,clusterId);
+      queryClient.invalidateQueries(QK.ALL_CLUSTERS, clusterId);
       postError && postError(error);
     },
   });
@@ -1292,18 +1293,18 @@ export const useDeleteCluster = (
       Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}`)
       return _res;
     },
-    onSuccess: (res) => {
+    onSuccess: (res, { clusterId }) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
-      apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.REMOVE}  ${Localization.kr.REQ_COMPLETE}`)
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.ALL_TREE_NAVIGATIONS]);
-      queryClient.removeQueries([QK.ALL_CLUSTERS,QK.CLUSTERS_FROM_DATA_CENTER,QK.ALL_TREE_NAVIGATIONS]);
+      apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
+      queryClient.removeQueries([QK.CLUSTER, clusterId])
       setClustersSelected([])
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.ALL_TREE_NAVIGATIONS]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       postError && postError(error);
     },
   });
@@ -1547,16 +1548,17 @@ export const useSetupNetworksFromHost = (
       Logger.debug(`RQHook > useSetupNetworksFromHost ... hostId: ${hostId}, hostNetworkVo: `, hostNetworkVo)
       return _res
     },
-    onSuccess: (res,{hostId}) => {
+    onSuccess: (res, { hostId }) => {
       Logger.debug(`RQHook > useSetupNetworksFromHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.NICS} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_ATTACHMENTS_FROM_HOST]);
       queryClient.removeQueries(QK.HOST, hostId);
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { hostId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_ATTACHMENTS_FROM_HOST]);
       queryClient.removeQueries(QK.HOST, hostId);
       postError && postError(error);
     },
@@ -1593,6 +1595,7 @@ export const useSyncallNetworksHost = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -1878,12 +1881,13 @@ export const useSearchIscsiFromHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useSearchIscsiFromHost ... res: `, res);
       apiToast.ok(`iSCSI ${Localization.kr.IMPORT} ${Localization.kr.REQ_COMPLETE}`);
-      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST]); 
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -1971,12 +1975,13 @@ export const useLoginIscsiFromHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useLoginIscsiFromHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.IMPORT} iscsi ${Localization.kr.LOGIN} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.ISCSI_FROM_HOST]);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -1996,9 +2001,9 @@ export const useAddHost = (
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
     return useMutation({
-    mutationFn: async ({ hostId, hostData, deployHostedEngine }) => {
+    mutationFn: async ({ hostData, deployHostedEngine }) => {
       closeModal();
-      const res = await ApiManager.addHost(hostId, hostData, deployHostedEngine);
+      const res = await ApiManager.addHost(hostData, deployHostedEngine);
       const _res = validateAPI(res) ?? {};
       Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
       return _res;
@@ -2006,12 +2011,13 @@ export const useAddHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS); // 호스트 추가 성공 시 'allDHosts' 쿼리를 리패칭하여 목록을 최신화   
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2040,12 +2046,13 @@ export const useEditHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2074,12 +2081,13 @@ export const useDeleteHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2109,12 +2117,13 @@ export const useDeactivateHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.MAINTENANCE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2144,12 +2153,13 @@ export const useActivateHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.ACTIVATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2179,12 +2189,13 @@ export const useRestartHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRestartHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.RESTART} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2214,12 +2225,13 @@ export const useEnrollHostCertificate = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEnrollHostCertificate ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} 인증서 등록 ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2248,12 +2260,13 @@ export const useReinstallHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useReinstallHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} 기능을 ${Localization.kr.REFRESH} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2284,12 +2297,13 @@ export const useRefreshHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRefreshHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} 기능을 ${Localization.kr.REFRESH} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2318,14 +2332,14 @@ export const useCommitNetConfigHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usecommitNetConfigHost ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.REBOOT} 확인 ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2354,12 +2368,13 @@ export const useActivateGlobalHaHost = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > ussActivateGlobalHaHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} 글로벌 HA 유지관리 활성화 ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2387,14 +2402,14 @@ export const useDeactivateGlobalHaHost = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateGlobalHaHost ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.HOST} 글로벌 HA 유지관리 비활성화 ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_HOSTS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS]);
       postError && postError(error);
     },
   });
@@ -2462,7 +2477,7 @@ export const useDisksFromVM = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.DISKS_FROM_VM, vmId],
+  queryKey: [QK.ALL_DISKS_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findDisksFromVM(vmId);
     const _res = mapPredicate
@@ -2551,16 +2566,18 @@ export const useAddSnapshotFromVM = (
       Logger.debug(`RQHook > useAddSnapshotFromVM ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
       return _res
     },
-    onSuccess: (res) => {
+    onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useAddSnapshotFromVM ... res: ${JSON.stringify(res)}`)
-      
       apiToast.ok(`${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['snapshotFromVM', QK.SNAPSHOT_DETAIL_FROM_VM]); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2588,14 +2605,16 @@ export const useDeleteSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteSnapshot ... res: `, res)
-      
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2617,14 +2636,16 @@ export const usePreviewSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > usePreviewSnapshot ... res: `, res)
-      
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.PREVIEW} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2646,14 +2667,16 @@ export const useCommitSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useCommitSnapshot ... res: `, res)
-      
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.COMMENT} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2675,14 +2698,16 @@ export const useUndoSnapshot = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useUndoSnapshot ... res: `, res)
-      
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.UNDO} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('snapshotsFromVM'); // 쿼리 캐시 무효화
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOT_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2847,13 +2872,15 @@ export const useRemoteViewerConnectionFileFromVm = (
       Logger.debug(`RQHook > useRemoteViewerConnectionFileFromVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.CONSOLE} 원격 뷰어 접속파일 다운로드 ${Localization.kr.REQ_COMPLETE}`)
       triggerDownload(res, "console.vv")
-      queryClient.invalidateQueries("allVMs");
-      queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2882,13 +2909,13 @@ export const useAddVm = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_VMS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postSuccess(res);
     },
     onError: (error) => {
-      queryClient.invalidateQueries(QK.ALL_VMS);
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -2915,15 +2942,16 @@ export const useEditVm = (
     },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useEditVm ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_VMS);
-      queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
       postError && postError(error);
     },
   });
@@ -2952,16 +2980,17 @@ export const useDeleteVm = (
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      invalidateQueriesWithDefault(queryClient, [
-        QK.ALL_VMS, QK.ALL_DISKS_FROM_VM
-      ])
-      queryClient.invalidateQueries(['vmId', vmId]); // 수정된 네트워크 상세 정보 업데이트
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
       queryClient.invalidateQueries(['editVmById', vmId])
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries(['editVmById', vmId])
       postError && postError(error);
     },
   });
@@ -2996,6 +3025,7 @@ export const useStartVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -3029,6 +3059,7 @@ export const useStartOnceVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -3062,6 +3093,7 @@ export const usePauseVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
       postError && postError(error);
     },
   });
@@ -3096,6 +3128,7 @@ export const useShutdownVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
       postError && postError(error);
     },
   });
@@ -3129,6 +3162,7 @@ export const usePowerOffVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
       postError && postError(error);
     },
   });
@@ -3163,6 +3197,7 @@ export const useRebootVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
       postError && postError(error);
     },
   });
@@ -3196,6 +3231,7 @@ export const useResetVM = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
       postError && postError(error);
     },
   });
@@ -3278,12 +3314,15 @@ export const useMigration = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useMigration ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.MIGRATION} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(['hostsForMigration', QK.ALL_VMS]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
+      queryClient.invalidateQueries(['hostsForMigration']);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
+      queryClient.invalidateQueries(['hostsForMigration']);
       postError && postError(error);
     },
   });
@@ -3350,14 +3389,14 @@ export const useUpdateCdromFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useUpdateCdromFromVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.UPDATE_CDROM} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.ALL_VMS]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -3385,12 +3424,13 @@ export const useExportVM = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useExportVM ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.EXPORT} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_VMS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -3419,12 +3459,13 @@ export const useAddNicFromVM = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddNicFromVM ... res: `, res);
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.NETWORK_INTERFACE_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3451,16 +3492,18 @@ export const useEditNicFromVM = (
       Logger.debug(`RQHook > useEditNicFromVM ... vmId: ${vmId}, nicId: ${nicId}, nicData: ${nicData}`);
       return _res
     },
-    onSuccess: (res) => {
+    onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useEditNicFromVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries('NetworkInterfaceByVMId,NetworkInterfaceFromVM');
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
       postError && postError(error);
     },
   });
@@ -3489,14 +3532,14 @@ export const useDeleteNetworkInterface = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteNetworkInterface ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.NETWORK_INTERFACE_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3546,14 +3589,14 @@ export const useAddDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDiskFromVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.DISKS_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3581,14 +3624,14 @@ export const useEditDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useEditDiskFromVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.DISKS_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3616,14 +3659,14 @@ export const useDeleteDiskFromVM = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteDiskFromVM ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_DISKS_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3691,6 +3734,7 @@ export const useConnDiskListFromVM = (
       apiToast.ok(`${Localization.kr.DISK} 일괄 ${Localization.kr.CONNECTION} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries(QK.VM, vmId);
+      // closeModal("vmdisk:connect")
       postSuccess(res);
     },
     onError: (error) => {
@@ -3698,6 +3742,7 @@ export const useConnDiskListFromVM = (
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries(QK.VM, vmId);
+      // closeModal("vmdisk:connect")
       postError && postError(error);
     },
   });
@@ -3725,12 +3770,13 @@ export const useDeactivateDiskFromVm = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeactivateDiskFromVm ... res: `, res);
       apiToast.ok(`${Localization.kr.DISK} 일괄 ${Localization.kr.MAINTENANCE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_DISKS_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3758,12 +3804,13 @@ export const useActivateDiskFromVm = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useActivateDiskFromVm ... res: `, res);
       apiToast.ok(`${Localization.kr.DISK} 일괄 ${Localization.kr.ACTIVATE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_DISKS_FROM_VM);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS_FROM_VM]);
       postError && postError(error);
     },
   });
@@ -3791,14 +3838,14 @@ export const useImportVm = (
     },
     onSuccess: (res) => {
       Logger.debug(`RQHook > useImportVm ... res: `, res);
-      
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.IMPORT} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries(QK.ALL_VMS);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS]);
       postError && postError(error);
     },
   });
@@ -4076,7 +4123,7 @@ export const useEditTemplate = (
       queryClient.invalidateQueries([QK.TEMPLATE, templateId]);
       postSuccess(res);
     },
-    onError: (error) => {
+    onError: (error, { templateId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_TEMPLATES]);
@@ -4653,6 +4700,7 @@ export const useEditNetwork = (
       invalidateQueriesWithDefault(queryClient, [QK.ALL_NETWORKS]);
       queryClient.invalidateQueries([QK.NETWORK, networkId]);
       closeModal();
+      
       postError && postError(error);
     },
   });
@@ -5892,7 +5940,9 @@ export const useAllDisks = (
   },
   // staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
-export const useCdromsDisks = (diskIds = []) =>
+export const useCdromsDisks = (
+  diskIds = []
+) =>
   useQuery({
     queryKey: [QK.CDROMS_FOR_DISKS, diskIds],
     queryFn: async () => {
@@ -6071,7 +6121,7 @@ export const useAddDisk = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useAddDisk ... res: `, res);
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);      
       postSuccess(res);
     },
     onError: (error) => {
@@ -6089,7 +6139,7 @@ export const useAddDisk = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useEditDisk = (
-  postSuccess=()=>{}, postError
+  postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
@@ -6608,7 +6658,7 @@ export const useJob = (
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
 export const useAddJob = (
-  postSuccess=()=>{}, postError
+  postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient()
   const { closeModal } = useUIState();
@@ -6884,8 +6934,8 @@ export const useDeleteProvider = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useDeleteProvider ... res: `, res);
       apiToast.ok(`${Localization.kr.PROVIDER} ${Localization.kr.REMOVE}  ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.removeQueries(`allProviders,${QK.ALL_TREE_NAVIGATIONS}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_TREE_NAVIGATIONS]);
+      queryClient.removeQueries(`allProviders,${QK.ALL_TREE_NAVIGATIONS}`);
       setProvidersSelected([])
       postSuccess(res);
     },

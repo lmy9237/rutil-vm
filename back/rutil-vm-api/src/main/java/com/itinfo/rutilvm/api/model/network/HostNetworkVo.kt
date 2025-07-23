@@ -7,6 +7,12 @@ import java.io.Serializable
 
 private val log = LoggerFactory.getLogger(HostNetworkVo::class.java)
 
+/**
+ * [HostNetworkVo]
+ * 호스트 네트워크 정보
+ *
+ * @author 이찬희 (@chanhi2000)
+ */
 class HostNetworkVo (
 	val bonds: List<HostNicVo> = listOf(),
 	val bondsToRemove: List<HostNicVo> = listOf(),
@@ -20,7 +26,6 @@ class HostNetworkVo (
 		private var bBondsToRemove: List<HostNicVo> = listOf(); fun bondsToRemove(block: () -> List<HostNicVo>?) { bBondsToRemove = block() ?: listOf() }
 		private var bNetworkAttachments: List<NetworkAttachmentVo> = listOf(); fun networkAttachments(block: () -> List<NetworkAttachmentVo>?) { bNetworkAttachments = block() ?: listOf() }
 		private var bNetworkAttachmentsToRemove: List<NetworkAttachmentVo> = listOf(); fun networkAttachmentsToRemove(block: () -> List<NetworkAttachmentVo>?) { bNetworkAttachmentsToRemove = block() ?: listOf() }
-
         fun build(): HostNetworkVo = HostNetworkVo(bBonds, bBondsToRemove, bNetworkAttachments, bNetworkAttachmentsToRemove)
     }
 

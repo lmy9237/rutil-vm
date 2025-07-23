@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.itinfo.rutilvm.util.ssh.util.SSHHelper
 import com.itinfo.rutilvm.util.ssh.util.executeAll
 import com.jcraft.jsch.JSch
+import com.jcraft.jsch.JSchException
 import com.jcraft.jsch.Session
 import org.slf4j.LoggerFactory
 import java.io.Serializable
@@ -68,12 +69,14 @@ open class RemoteConnMgmt(
  * SSH로 global HA 활성화
  *
  */
+@Throws(JSchException::class)
 fun RemoteConnMgmt.activateGlobalHA(): Boolean? {
 	log.info("enableGlobalHA ... ")
 	val session: Session? = toInsecureSession()
 	return session?.executeAll(listOf(SSHHelper.SSH_COMMAND_SET_MAINTENANCE_ACTIVE))?.getOrThrow()
 }
 
+@Throws(JSchException::class)
 fun RemoteConnMgmt.deactivateGlobalHA(): Boolean? {
 	log.info("deactivateGlobalHA ... ")
 	val session: Session? = toInsecureSession()
@@ -84,6 +87,7 @@ fun RemoteConnMgmt.deactivateGlobalHA(): Boolean? {
  * [RemoteConnMgmt.rebootHostViaSSH]
  * SSH로 재시작
  */
+@Throws(JSchException::class)
 fun RemoteConnMgmt.rebootSystem(command: String? = SSHHelper.SSH_COMMAND_RESTART): Boolean? {
 	log.info("rebootSystem ... ")
 	val session: Session? = toInsecureSession()

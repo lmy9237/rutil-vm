@@ -169,6 +169,8 @@ export const Localization = {
     SCREENSHOT: "스크린샷",
     CLIPBOARD: "클립보드",
     FULLSCREEN: "전체화면",
+    SYNC: "동기",
+    ASYNC: "비동기",
 
     PLACEHOLDER: "임력하세요.",
     PLACEHOLDER_SELECT: "선택하세요.",
@@ -297,6 +299,7 @@ export const Localization = {
       else if (_status === "STARTED")  return "시작됨";
       else if (_status === "FAILED")  return "실패";
       else if (_status === "FINISHED")  return "완료";
+      else if (_status === "ASYNC") return "비동기";
       else if (_status === "UNKNOWN")  return "알 수 없음";
       else if (_status === "IN_PREVIEW")  return "미리보기";
       return _status;
