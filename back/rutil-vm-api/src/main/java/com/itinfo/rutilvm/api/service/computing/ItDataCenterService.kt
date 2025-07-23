@@ -292,10 +292,6 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findAllActiveStorageDomainsFromDataCenter(dataCenterId: String): List<StorageDomainVo> {
 		log.info("findAllFromDataCenter ... dataCenterId: {}", dataCenterId)
-		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
-		// 	.getOrDefault(emptyList())
-		// 	.filter { it.status() == StorageDomainStatus.ACTIVE }
-		// return res.toActiveDomains()
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
 			.toStorageDomainEntities()

@@ -1191,7 +1191,6 @@ const HostNics = ({
                   )}
                 </div>
               </div>
-              
             );
           })}
           <div className="header-right-btns">

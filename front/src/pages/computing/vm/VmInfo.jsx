@@ -74,7 +74,7 @@ const VmInfo = () => {
   const tabs = useMemo(() => ([
     { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
     // { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
-    { id: "nics",        label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+    { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
     { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
     { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
     { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },

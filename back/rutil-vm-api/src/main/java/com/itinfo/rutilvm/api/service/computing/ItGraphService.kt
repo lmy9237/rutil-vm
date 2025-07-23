@@ -94,7 +94,7 @@ interface ItGraphService {
 
 	/**
 	 * [ItGraphService.hostUsageLineData]
-	 * 호스트 한개의 cpu, memory, network 사용량
+	 * 호스트 cpu, memory, network 사용량
 	 * 선그래프
 	 * @return List<[HostUsageDto]>
 	 */

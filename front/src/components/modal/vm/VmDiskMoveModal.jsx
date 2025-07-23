@@ -1,89 +1,70 @@
-import React, { useState, useEffect } from "react";
-import { useQueries } from "@tanstack/react-query";
+import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
-import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
-import ApiManager                       from "@/api/ApiManager";
 import { 
+  useAllStorageDomainsToMoveFromDisk4EachDisk,
   useMoveDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import "../domain/MDomain.css";
 import { checkZeroSizeToGiB } from "@/util";
-import Logger from "@/utils/Logger";
 
 const VmDiskMoveModal = ({ 
   isOpen,
   onClose,
 }) => {
   const { validationToast } = useValidationToast();
-  const { activeModal, } = useUIState()
-  const { disksSelected } = useGlobal()
+  const { vmsSelected, disksSelected } = useGlobal()
+  
+  const vm = useMemo(() => [...vmsSelected][0], [vmsSelected]);
   
   const [diskList, setDiskList] = useState([]);
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
-
+  console.log("$disksSelected", disksSelected)
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
   useEffect(() => {
     if (isOpen && disksSelected.length > 0) {
-      setDiskList(disksSelected.map(disk => disk.diskImageVo));
+      setDiskList(disksSelected);
     }
   }, [isOpen]);
 
-  const getDomains = useQueries({
-    queries: diskList?.map((disk) => ({
-      queryKey: ['allDomainsFromDataCenter', disk?.dataCenterVo?.id],
-      queryFn: async () => {
-        try {
-          const domains = await ApiManager.findAllDomainsFromDataCenter(disk?.dataCenterVo?.id);
-          return domains || [];
-        } catch (error) {
-          console.error(`Error fetching ${disk}`, error);
-          return [];
-        }
-      }
-    })),
-  });
-
-  useEffect(() => {
-    Logger.debug(`DomainImportTemplateModal > validateForm ... diskList: `, diskList)
-    Logger.debug(`DomainImportTemplateModal > validateForm ... getDomains: `, getDomains)
-  }, [diskList, getDomains]);
+  const qr = useAllStorageDomainsToMoveFromDisk4EachDisk(diskList, (e) => ({ ...e }));
+  
+  const isQrSuccess = useMemo(() => {
+    return qr.every((q) => q?.isSuccess);
+  }, [qr]);
 
   useEffect(() => {
     const newDomainList = {};
 
-    for (let i = 0; i < getDomains.length; i++) {
-      const queryResult = getDomains[i];
+    for (let i = 0; i < qr.length; i++) {
+      const allDomains = qr[i]?.data ?? []
       const disk = diskList[i];
-      const currentDomainId = disk?.storageDomainVo?.id;
+      const currentDomainId = disk?.diskImageVo?.storageDomainVo?.id;
 
-      if (disk && queryResult.data && queryResult.isSuccess) {
-        const domains = queryResult.data?.body ?? [];
-        const filteredDomains = domains
-          .filter(d => d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId)
-          .map(d => ({
-            id: d.id,
-            name: d.name,
-            availableSize: d.availableSize,
-            size: d.size,
-          }));
-
-        newDomainList[disk.id] = filteredDomains;
-      }
+      const filteredDomains = [...allDomains].filter((d) => {
+        return d.status?.toUpperCase() === "ACTIVE" && d.id !== currentDomainId;
+      }).map((d) => ({
+        id: d.id,
+        name: d.name,
+        availableSize: d.availableSize,
+        usedSize: d.usedSize,
+      }));
+      newDomainList[disk?.id] = filteredDomains;
     }
 
     const isDifferent = JSON.stringify(domainList) !== JSON.stringify(newDomainList);
     if (isDifferent) {
       setDomainList(newDomainList);
     }
-  }, [getDomains, diskList, activeModal]);
-
+  }, [qr, diskList]);
+  
   useEffect(() => {
+    // domainList가 갱신될 때마다 실행
     if (!domainList || Object.keys(domainList).length === 0) return;
 
     setTargetDomains(prev => {
@@ -125,7 +106,6 @@ const VmDiskMoveModal = ({
     diskList?.forEach((disk) => {
       let selectedDomainId = targetDomains[disk.id];
   
-      // 선택된 도메인이 없다면, 첫 번째 도메인 자동 선택
       if (!selectedDomainId) {
         const availableDomains = domainList[disk.id] || [];
         if (availableDomains.length > 0) {
@@ -163,33 +143,34 @@ const VmDiskMoveModal = ({
           </thead>
           <tbody>
             {diskList.length > 0 ? (
-              diskList?.map((disk, index) => (
-                <tr key={disk.id || index}>
-                  <td>{disk.alias}</td>
-                  <td>{checkZeroSizeToGiB(disk?.virtualSize)}</td>
-                  <td>{disk.storageDomainVo?.name || ""}</td>
-                  <td className="w-[230px]">
-                    <LabelSelectOptionsID className="w-full"
-                      value={targetDomains[disk.id] || ""}
-                      options={domainList[disk.id] || []}
-                      onChange={(selected) => {
-                        setTargetDomains((prev) => ({ ...prev, [disk.id]: selected.id }));
-                      }}
-                    />
-                    {targetDomains[disk.id] && (() => {
-                      const domainObj = (domainList[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
-                      if (!domainObj) return null;
-                      return (
-                        <div className="text-xs text-gray-500 mt-1">
-                          사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)}
-                          {" / "}
-                          총 용량: {checkZeroSizeToGiB(domainObj.size)}
-                        </div>
-                      );
-                    })()}
-                  </td>
-                </tr>
-              ))
+              diskList?.map((disk, index) => {
+                const image = disk?.diskImageVo;
+
+                return (
+                  <tr key={disk.id || index}>
+                    <td>{image.alias}</td>
+                    <td>{checkZeroSizeToGiB(image?.virtualSize)}</td>
+                    <td>{image.storageDomainVo?.name || ""}</td>
+                    <td className="w-[230px]">
+                      <LabelSelectOptionsID className="w-full"
+                        value={targetDomains[disk.id] || ""}
+                        options={domainList[disk.id] || []}
+                        onChange={(selected) => {
+                          setTargetDomains((prev) => ({ ...prev, [disk.id]: selected.id }));
+                        }}
+                      />
+                      {targetDomains[disk.id] && (() => {
+                        const domainObj = (domainList[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
+                        if (!domainObj) return null;
+                        return (
+                          <div className="text-xs text-gray-500 mt-1">
+                            사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(domainObj.availableSize + domainObj.usedSize)}
+                          </div>
+                        );
+                      })()}
+                    </td>
+                  </tr>
+              )})
             ) : (
               <tr>
                 <td colSpan="5" style={{ textAlign: "center" }}>

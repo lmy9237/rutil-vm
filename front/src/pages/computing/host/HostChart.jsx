@@ -14,32 +14,45 @@ const HostChart = ({ per, cpu=true }) => {
   }, []);
 
   useEffect(() => {
-    if (Array.isArray(per) && per.length > 0) {
-      const sorted = [...per].sort((a, b) => new Date(a.time) - new Date(b.time));
-
-      const grouped = {};
-      sorted.forEach((item) => {
-        const timeKey = formatDate(item.time); // "HH:mm"
-        if (!grouped[item.id]) {
-          grouped[item.id] = {
-            name: item.name,
-            data: [],
-          };
-        }
-        if (typeof (cpu ? item.cpuPercent : item.memoryPercent) === "number") {
-          grouped[item.id].data.push({
-            x: timeKey,
-            y: Math.floor(cpu ? item.cpuPercent : item.memoryPercent),
-          });
-        }
-      });
-
-      const newSeries = Object.values(grouped);
-      setSeries(newSeries);
-    } else {
+    if (!Array.isArray(per) || per.length === 0) {
       setSeries([]);
+      return;
     }
-  }, [per, formatDate]);
+
+    const sorted = [...per].sort((a, b) => new Date(a.time) - new Date(b.time));
+
+    // 1. 시간대 기준 Key 목록 생성
+    const timeKeySet = new Set(sorted.map((item) => formatDate(item.time)));
+    const timeKeys = Array.from(timeKeySet).sort();
+
+    // 2. 호스트 기준 그룹핑
+    const hostMap = {};
+
+    sorted.forEach((item) => {
+      if (!hostMap[item.name]) {
+        hostMap[item.name] = {};
+      }
+
+      const timeKey = formatDate(item.time);
+      const value = cpu ? item.cpuPercent : item.memoryPercent;
+
+      hostMap[item.name][timeKey] =
+        typeof value === "number" ? Math.floor(value) : null;
+    });
+
+    // 3. 각 호스트에 대해 timeKey 기준 정렬된 series 만들기
+    const newSeries = Object.entries(hostMap)
+    .sort(([nameA], [nameB]) => nameA.localeCompare(nameB)) // name 기준 오름차순 정렬
+    .map(([name, valueMap]) => {
+      const data = timeKeys.map((timeKey) => ({
+        x: timeKey,
+        y: valueMap[timeKey] ?? null,
+      }));
+      return { name, data };
+    });
+
+    setSeries(newSeries);
+  }, [per, formatDate, cpu]);
 
   const chartOptions = {
     chart: {

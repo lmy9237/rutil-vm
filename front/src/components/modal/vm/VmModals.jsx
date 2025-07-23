@@ -17,6 +17,7 @@ import VmVncClipboardPasteModal            from "./VmVncClipboardPasteModal";
 import Localization                        from "@/utils/Localization";
 import Logger                              from "@/utils/Logger";
 import "./MVm.css";
+import VmMigrationModal2 from "./VmMigrationModal2";
 
 /**
  * @name VmModals
@@ -86,6 +87,11 @@ const VmModals = ({
     ), migration: (
       <VmMigrationModal key={"vm:migration"} isOpen={activeModal().includes("vm:migration")} 
         onClose={() => closeModal("vm:migration")}
+        vmId={vmsSelected[0]?.id}
+      />
+    ), migration2: (
+      <VmMigrationModal2 key={"vm:migration2"} isOpen={activeModal().includes("vm:migration2")} 
+        onClose={() => closeModal("vm:migration2")}
         vmId={vmsSelected[0]?.id}
       />
     ), ova: (

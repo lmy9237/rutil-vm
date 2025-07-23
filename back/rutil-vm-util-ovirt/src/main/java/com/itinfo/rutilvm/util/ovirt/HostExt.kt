@@ -531,16 +531,16 @@ fun Connection.setupNetworksFromHost(
 	modifiedBonds: List<HostNic> = listOf(),
 	removedBonds: List<HostNic> = listOf(),
 	modifiedNetworkAttachments: List<NetworkAttachment> = listOf(),
-	// synchronizedNetworkAttachments: List<NetworkAttachment> = listOf(),
+	synchronizedNetworkAttachments: List<NetworkAttachment> = listOf(),
 	removedNetworkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().apply {
 		if(removedBonds.isNotEmpty()) removedBonds(removedBonds)
 		if(removedNetworkAttachments.isNotEmpty()) removedNetworkAttachments(removedNetworkAttachments)
 		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
-		// if(synchronizedNetworkAttachments.isNotEmpty()) synchronizedNetworkAttachments(synchronizedNetworkAttachments)
+		if(synchronizedNetworkAttachments.isNotEmpty()) synchronizedNetworkAttachments(synchronizedNetworkAttachments)
 		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
-	}.send()
+	}.commitOnSuccess(true).send()
 	// }.checkConnectivity(true).send()
 
 	this.srvHost(hostId).commitNetConfig().send()

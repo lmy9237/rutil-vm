@@ -8,25 +8,26 @@ import LabelInput                       from "@/components/label/LabelInput";
 import { 
   useCopyDisk, 
   useMoveDisk,
-  useAllValidDomains4EachDisk,
+  useAllStorageDomainsToMoveFromDisk4EachDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
+import { checkZeroSizeToGiB } from "@/util";
 
 const DiskActionModal = ({ 
   isOpen,
   onClose,
 }) => {
   const { validationToast } = useValidationToast();
-  const { activeModal, } = useUIState()
+  const { activeModal, } = useUIState();
+  const { disksSelected } = useGlobal();
   const daLabel = activeModal().includes("disk:move")
     ? Localization.kr.MOVE 
     : Localization.kr.COPY;
-  const { disksSelected } = useGlobal()
   
   const [diskList, setDiskList] = useState([]);
-  const [allDomainsByDisk, setAllDomainsByDisk] = useState({});
+  const [domainList, setDomainList] = useState({});
 
   const [aliases, setAliases] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
@@ -35,18 +36,17 @@ const DiskActionModal = ({
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
   useEffect(() => {
-    if (isOpen && [...disksSelected].length > 0) {
+    if (isOpen && disksSelected.length > 0) {
       setDiskList(disksSelected);
     }
   }, [isOpen]);
 
-  const qr = useAllValidDomains4EachDisk(diskList, (e) => ({ ...e }));
-  // useAllActiveDomainsFromDataCenter 사용시 활성화된 항목만 나옴
+  const qr = useAllStorageDomainsToMoveFromDisk4EachDisk(diskList, (e) => ({ ...e }));
   
   const isQrSuccess = useMemo(() => {
     return qr.every((q) => q?.isSuccess);
   }, [qr]);
-  
+
   useEffect(() => {
     if (activeModal().includes("disk:copy")) {
       const initialAliases = {};
@@ -59,11 +59,9 @@ const DiskActionModal = ({
   }, [activeModal, diskList]);
 
   useEffect(() => {
-    Logger.debug(`DiskActionModal > useEffect ... `)
     const newDomainList = {};
 
     for (let i = 0; i < qr.length; i++) {
-      Logger.debug(`DiskActionModal > useEffect ... looping! i: ${i}`)
       const allDomains = qr[i]?.data ?? []
       const disk = diskList[i];
       const currentDomainId = disk?.storageDomainVo?.id;
@@ -77,30 +75,26 @@ const DiskActionModal = ({
         id: d.id,
         name: d.name,
         availableSize: d.availableSize,
-        size: d.size,
+        usedSize: d.usedSize,
       }));
-
-      /* setDomainList((prev) => {
-
-      }) */
       newDomainList[disk?.id] = filteredDomains;
     }
 
-    const isDifferent = JSON.stringify(allDomainsByDisk) !== JSON.stringify(newDomainList);
+    const isDifferent = JSON.stringify(domainList) !== JSON.stringify(newDomainList);
     if (isDifferent) {
-      setAllDomainsByDisk(newDomainList);
+      setDomainList(newDomainList);
     }
   }, [qr, diskList, activeModal]);
 
   useEffect(() => {
     // domainList가 갱신될 때마다 실행
-    if (!allDomainsByDisk || Object.keys(allDomainsByDisk).length === 0) return;
+    if (!domainList || Object.keys(domainList).length === 0) return;
 
     setTargetDomains(prev => {
       const next = { ...prev };
       let changed = false;
 
-      Object.entries(allDomainsByDisk).forEach(([diskId, domains]) => {
+      Object.entries(domainList).forEach(([diskId, domains]) => {
         if (domains && domains.length > 0 && !next[diskId]) {
           next[diskId] = domains[0].id;
           changed = true;
@@ -109,20 +103,18 @@ const DiskActionModal = ({
 
       return changed ? next : prev;
     });
-  }, [allDomainsByDisk]);
+  }, [domainList]);
 
 
   
   const validateForm = () => {
     if (!diskList.length) return "가져올 디스크가 없습니다.";
-    
     for (const disk of diskList) {
       const selectedDomainId = targetDomains[disk.id];
       if (!selectedDomainId || selectedDomainId.trim() === "none") {
         return `"${disk.alias}" 디스크에 디스크 프로파일이 지정되지 않았습니다.`;
       }
     }
-
     return null;
   };
 
@@ -182,7 +174,6 @@ const DiskActionModal = ({
     >
     <div className="py-3">
       <div className="section-table-outer">
-        {/* <h1 className="fs-16">디스크 할당:</h1> */}
         <table>
           <thead>
             <tr>
@@ -216,17 +207,17 @@ const DiskActionModal = ({
                     <LabelSelectOptionsID
                      className="w-full"
                       value={targetDomains[disk.id] || ""}
-                      options={allDomainsByDisk[disk.id] || []}
+                      options={domainList[disk.id] || []}
                       onChange={(selected) => {
                         setTargetDomains((prev) => ({ ...prev, [disk.id]: selected.id }));
                       }}
                     />
                     {targetDomains[disk.id] && (() => {
-                      const domainObj = (allDomainsByDisk[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
+                      const domainObj = (domainList[disk.id] || []).find((d) => d.id === targetDomains[disk.id]);
                       if (!domainObj) return null;
                       return (
                         <div className="text-xs text-gray-500 mt-1">
-                          사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+                          사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(domainObj.availableSize + domainObj.usedSize)}
                         </div>
                       );
                     })()}

@@ -253,7 +253,7 @@ class DataCenterController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{dataCenterId}/activeDomains")
+	@GetMapping("/{dataCenterId}/storageDomains/active")
 	@ResponseStatus(HttpStatus.OK)
 	@ResponseBody
 	fun domainsFromDataCenter(

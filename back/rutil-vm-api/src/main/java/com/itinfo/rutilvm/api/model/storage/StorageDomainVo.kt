@@ -383,6 +383,7 @@ fun StorageDomain.toStorageDomainSize(): StorageDomainVo {
 	return StorageDomainVo.builder {
 		id { this@toStorageDomainSize.id() }
 		name { this@toStorageDomainSize.name() }
+		status { this@toStorageDomainSize.status().toStorageDomainStatusB() }
 		storageType { StorageTypeB.forCode(this@toStorageDomainSize.type().value()) }
 		master { if(this@toStorageDomainSize.masterPresent()) this@toStorageDomainSize.master() else false }
 		usedSize { this@toStorageDomainSize.used() }

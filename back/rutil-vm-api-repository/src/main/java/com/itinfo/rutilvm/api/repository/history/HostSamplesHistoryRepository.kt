@@ -158,13 +158,18 @@ ORDER BY
 	@Query(
 		nativeQuery = true,
 		value = """
-        select *
-		FROM host_samples_history
-		WHERE
-		host_status = 1
-		AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 10 = 0
-        ORDER BY history_datetime DESC
-		LIMIT 90
+        SELECT *
+FROM host_samples_history
+WHERE host_status = 1
+AND history_datetime IN (
+    SELECT DISTINCT history_datetime
+    FROM host_samples_history
+    WHERE host_status = 1
+      AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 10 = 0
+    ORDER BY history_datetime DESC
+    LIMIT 15
+)
+ORDER BY history_datetime DESC
     """)
 	fun findAllHost(): List<HostSamplesHistoryEntity>
 }

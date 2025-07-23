@@ -35,6 +35,7 @@ import com.itinfo.rutilvm.util.ovirt.suspendVm
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
+import org.ovirt.engine.sdk4.types.HostStatus.UP
 import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmStatus
@@ -277,12 +278,15 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	override fun findAllMigratableHostsFromVm(vmId: String): List<IdentifiedVo> {
 		log.info("findAllMigratableHostsFromVm ... vmId: {}", vmId)
 		val vm: Vm? = conn.findVm(vmId).getOrNull()
+		log.info("vm!!.cluster().id()={} vm.host().id()={} ", vm!!.cluster().id(), vm.host().id())
+
 		val hosts: List<Host> = conn.findAllHostsFromCluster(vm!!.cluster().id())
 			.getOrDefault(listOf())
-			.filter { it.id() != vm.host().id() }
+			.filter { it.status() == UP && it.id() != vm.host().id() }
 
 		// VM이 현재 실행 중인 호스트의 네트워크 목록 (id로 set 변환)
 		val myNetworks = findAllNetworksFromHost(vm.host().id())
+		myNetworks.forEach { println(it.name) }
 		val myNetworkIds = myNetworks.map { it.id }.toSet()
 
 		// 최종 결과 담을 리스트
@@ -300,6 +304,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 				migratableHosts.add(IdentifiedVo(host.id(), host.name()))
 			}
 		}
+		migratableHosts.forEach { println(it.name) }
 
 		return migratableHosts
 	}

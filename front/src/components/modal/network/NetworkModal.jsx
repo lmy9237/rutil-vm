@@ -228,8 +228,7 @@ const NetworkModal = ({
         />
         <hr />
 
-        <div id="vlan-enabled-group"
-          className="f-btw">
+        <div id="vlan-enabled-group" className="f-btw">
          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
             checked={formState.vlanEnabled} 
             onChange={(e) => //TODO 토스트 추가예정

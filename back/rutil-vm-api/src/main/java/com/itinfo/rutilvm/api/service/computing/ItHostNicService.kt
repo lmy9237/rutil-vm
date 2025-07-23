@@ -127,18 +127,19 @@ class ItHostNicServiceImpl(
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
 		log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
 
-		// val (synced, modified) = hostNetworkVo.networkAttachments.partition { it.inSync }
-		// log.info("synced: {}, modified: {}", synced.size, modified.size)
+		val (modified, synced) = hostNetworkVo.networkAttachments.partition { !it.inSync }
+		log.info("synced: {}, modified: {}", synced.size, modified.size)
 
+		// syncallNetworksHost(hostId)
+		// Thread.sleep(2000)
 		val res: Result<Boolean> = conn.setupNetworksFromHost(
 			hostId,
 			hostNetworkVo.bonds.toModifiedBonds(),
 			hostNetworkVo.bondsToRemove.toRemoveBonds(),
-			hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
-			// synced.map { it.toModifiedNetworkAttachment() },
+			modified.map { it.toModifiedNetworkAttachment() },
+			synced.map { it.toModifiedNetworkAttachment() },
 			hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
 		)
-		syncallNetworksHost(hostId)
 		return res.isSuccess
 	}
 

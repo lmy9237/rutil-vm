@@ -40,8 +40,8 @@ interface ItStorageService {
 	 *
 	 * @return List<[StorageDomainVo]> 스토리지 도메인 목록
 	 */
-	@Throws(Error::class)
-	fun findAllValidStorageDomain(): List<StorageDomainVo>
+	// @Throws(Error::class)
+	// fun findAllValidStorageDomain(): List<StorageDomainVo>
 	/**
 	 * [ItStorageService.findAllNfs]
 	 * 스토리지 도메인(NFS) 목록
@@ -231,14 +231,14 @@ class StorageServiceImpl(
 			.filter { it.isNotGlanceStorageType }
 	}
 
-	@Throws(Error::class)
-	override fun findAllValidStorageDomain(): List<StorageDomainVo> {
-		log.info("findAllValidStorageDomain ...")
-		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
-		return res
-			.toStorageDomainEntities()
-			.filter { it.isValidActiveStorageDomain }
-	}
+	// @Throws(Error::class)
+	// override fun findAllValidStorageDomain(): List<StorageDomainVo> {
+	// 	log.info("findAllValidStorageDomain ...")
+	// 	val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
+	// 	return res
+	// 		.toStorageDomainEntities()
+	// 		.filter { it.isValidActiveStorageDomain }
+	// }
 
 	@Throws(Error::class)
 	override fun findAllNfs(): List<StorageVo> {

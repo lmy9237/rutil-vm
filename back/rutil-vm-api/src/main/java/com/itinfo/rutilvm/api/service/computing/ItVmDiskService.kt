@@ -3,9 +3,12 @@ package com.itinfo.rutilvm.api.service.computing
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.repository.engine.AllDisksForVmsRepository
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.AllDisksForVmsEntity
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.storage.ItStorageService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import org.ovirt.engine.sdk4.Error
@@ -160,6 +163,7 @@ class VmDiskService(
 
 ): BaseService(), ItVmDiskService {
 	@Autowired private lateinit var rAllDisks: AllDisksRepository
+	@Autowired private lateinit var rAllDiskVm: AllDisksForVmsRepository
 
 	@Throws(Error::class)
 	override fun findAllFromVm(vmId: String): List<DiskAttachmentVo> {
@@ -167,8 +171,12 @@ class VmDiskService(
 		// val vm = conn.findVm(vmId).getOrNull()
 		// val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
 		// return res.toDiskEntities()
+
 		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId).getOrDefault(emptyList())
 		return res.toDiskAttachmentVos(conn)
+
+		// val res: List<AllDisksForVmsEntity>? = rAllDiskVm.findAllDiskByVmId(vmId.toUUID())
+		// return res.to
 	}
 
 	@Throws(Error::class)

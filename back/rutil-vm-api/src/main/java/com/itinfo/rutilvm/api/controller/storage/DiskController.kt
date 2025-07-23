@@ -176,7 +176,7 @@ class DiskController: BaseController() {
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/{diskId}/move")
+	@GetMapping("/{diskId}/storageDomains/move")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	fun findAllStorageDomainsToMoveFromDisk(

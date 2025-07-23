@@ -623,27 +623,7 @@ export const useAllDomainsFromDataCenter = (
 ) => useQuery({
   ...qpAllDomainsFromDataCenter(dataCenterId, mapPredicate)
 });
-/**
- * @name useAllDomainsFromDataCenter4EachDisk
- * @description (디스크가 소속 된) 데이터센터 내 스토리지 도메인 목록조회 useQueries훅
- * 
- * @param {*} disks 디스크 목록
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQueries훅
- * 
- * @see ApiManager.findAllDomainsFromDataCenter
- */
-export const useAllDomainsFromDataCenter4EachDisk = (
-  disks=[],
-  mapPredicate = (e) => ({ ...e })
-) => useQueries({
-  queries: [...disks]?.map((d, i) => {
-    Logger.debug(`RQHook > useAllDomainsFromDataCenter4EachDisk ... d: `, d);
-    return {
-      ...qpAllDomainsFromDataCenter(d?.dataCenterVo?.id, mapPredicate),
-    }
-  })
-});
+
 
 
 /**
@@ -4948,86 +4928,7 @@ export const useAllStorageDomains = (
     Logger.debug(`RQHook > useAllStorageDomains ... res: `, _res);
     return _res;
   }
-})
-
-/**
- * @name qpAllValidDomains
- * @description Valid 도메인 목록조회 useQuery훅
- * 
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllValidStorageDomains
- */
-export const qpAllValidDomains = (
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.ALL_VALID_DOMAINS],
-  queryFn: async () => {
-    const res = await ApiManager.findAllValidStorageDomains();
-    Logger.debug('findAllValidStorageDomains raw result:', res);
-    const _res = mapPredicate
-    ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
-    : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > qpAllValidDomains ...`, _res);
-    return _res;
-  },
 });
-
-/**
- * @name useAllValidDomains
- * @description Valid 스토리지 도메인 목록조회 useQuery훅
- * 
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQuery훅
- * 
- * @see ApiManager.findAllValidStorageDomains
- */
-export const useAllValidDomains = (
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  ...qpAllValidDomains(mapPredicate)
-});
-/**
- * @name useAllValidDomains4EachDisk
- * @description 스토리지 도메인 목록조회 useQueries훅
- * 
- * @param {*} disks 디스크 목록
- * @param {function} mapPredicate 목록객체 변형 처리
- * @returns useQueries훅
- * 
- * @see ApiManager.findAllValidStorageDomains
- */
-export const useAllValidDomains4EachDisk = (
-  disks = [],
-  mapPredicate = (e) => ({ ...e })
-) => useQueries({
-  queries: [...disks]?.map((d, i) => {
-    Logger.debug(`RQHook > useAllValidDomains4EachDisk ... d: `, d);
-    return {
-      ...qpAllValidDomains(d?.dataCenterVo?.id, mapPredicate),
-       enabled: !!dataCenterId, 
-    }
-  })
-});
-// export const useAllValidDomains4EachDisk = (
-//   disks = [],
-//   mapPredicate = (e) => ({ ...e })
-// ) => useQueries({
-//   queries: disks.map((disk) => ({
-//     queryKey: ['AllValidDomains', disk.id], // 고유 key로 설정
-//     queryFn: async () => {
-//       const res = await ApiManager.findAllValidStorageDomains();
-//       Logger.debug(`findAllValidStorageDomains raw result for disk ${disk.id}:`, res);
-//       const _res = mapPredicate
-//         ? validateAPI(res)?.map(mapPredicate) ?? []
-//         : validateAPI(res) ?? [];
-//       Logger.debug(`RQHook > useAllValidDomains4EachDisk disk ${disk.id} result:`, _res);
-//       return _res;
-//     },
-//   }))
-// });
 
 
 /**
@@ -5410,7 +5311,7 @@ export const useAllUnregisteredTemplatesFromDomain = (
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findAllDataCenterFromDomain
+ * @see ApiManager.findAllDiskProfilesFromDomain
  */
 export const qpAllDiskProfilesFromDomain = (
   storageDomainId,
@@ -5436,7 +5337,7 @@ export const qpAllDiskProfilesFromDomain = (
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findAllDomainsFromDataCenter
+ * @see ApiManager.findAllDiskProfilesFromDomain
  */
 export const useAllDiskProfilesFromDomain = (
   storageDomainId,
@@ -5446,14 +5347,14 @@ export const useAllDiskProfilesFromDomain = (
 });
 
 /**
- * @name useAllActiveDomainsFromDataCenter4EachDisk
- * @description (디스크가 소속 된) 데이터센터 내 스토리지 도메인 목록조회 useQueries훅
+ * @name useAllDiskProfilesFromDomain4EachDomain
+ * @description 도메인 내 디스크 프로파일 목록조회 useQueries훅
  * 
- * @param {*} disks 디스크 목록
+ * @param {*} domains 도메인 목록
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQueries훅
  * 
- * @see ApiManager.findAllDomainsFromDataCenter
+ * @see ApiManager.findAllDiskProfilesFromDomain
  */
 export const useAllDiskProfilesFromDomain4EachDomain = (
   domains=[],
@@ -6023,6 +5924,72 @@ export const useAllStorageDomainsFromDisk = (
   },
   enabled: !!diskId,
 })
+
+/**
+ * @name qpAllStorageDomainsToMoveFromDisk
+ * @description 디스크 이동할수 있는 스토리지 도메인 목록조회 useQuery훅
+ * 
+ * @param {string} diskId 디스크 ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllStorageDomainsToMoveFromDisk
+ */
+export const qpAllStorageDomainsToMoveFromDisk = (
+  diskId,
+  mapPredicate = (e) => ({ ...e })
+) => ({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['allStorageDomainsToMoveFromDisk', diskId],
+  queryFn: async () => {
+    const res = await ApiManager.findAllStorageDomainsToMoveFromDisk(diskId);
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > qpAllStorageDomainsToMoveFromDisk ... diskId: ${diskId}, res: `, _res);
+    return _res;
+  },
+  enabled: !!diskId, // diskId 있을 때만 쿼리 실행
+});
+/**
+ * @name useAllStorageDomainsToMoveFromDisk
+ * @description 디스크 이동할수 있는 스토리지 도메인 목록조회 useQuery훅
+ * 
+ * @param {string} diskId 디스크 ID
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findAllStorageDomainsToMoveFromDisk
+ */
+export const useAllStorageDomainsToMoveFromDisk = (
+  diskId,
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  ...qpAllStorageDomainsToMoveFromDisk(diskId, mapPredicate)
+});
+
+/**
+ * @name useAllStorageDomainsToMoveFromDisk4EachDisk
+ * @description 디스크 이동할수 있는 스토리지 도메인 목록조회 useQueries훅
+ * 
+ * @param {*} disks 디스크 목록
+ * @param {function} mapPredicate 목록객체 변형 처리
+ * @returns useQueries훅
+ * 
+ * @see ApiManager.findAllStorageDomainsToMoveFromDisk
+ */
+export const useAllStorageDomainsToMoveFromDisk4EachDisk = (
+  disks=[],
+  mapPredicate = (e) => ({ ...e })
+) => useQueries({
+  queries: [...disks]?.map((d, i) => {
+    Logger.debug(`RQHook > useAllStorageDomainsToMoveFromDisk4EachDisk ... d: `, d);
+    return {
+      ...qpAllStorageDomainsToMoveFromDisk(d?.id, mapPredicate),
+    }
+  })
+});
+
 
 /**
  * @name useAddDisk

@@ -37,7 +37,7 @@ const ENDPOINTS = {
   FIND_HOSTS_FROM_DATA_CENTER: (dataCenterId) =>                           `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/hosts`, 
   FIND_VMS_FROM_DATA_CENTER: (dataCenterId) =>                             `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/vms`, 
   FIND_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/storageDomains`, 
-  FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) =>          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/activeDomains`,
+  FIND_ACTIVE_STORAGE_DOMAINS_FROM_DATA_CENTER: (dataCenterId) =>          `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/storageDomains/active`,
   FIND_NETWORKS_FROM_DATA_CENTER: (dataCenterId) =>                        `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/networks`, 
   FIND_TEMPLATES_FROM_DATA_CENTER: (dataCenterId) =>                       `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/templates`,
   FIND_ATTACH_DISK_LIST_FROM_DATA_CENTER:(dataCenterId) =>                 `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/unattachedDiskImages`,
@@ -249,7 +249,7 @@ const ENDPOINTS = {
 
   //#region: StorageDomain
   FIND_ALL_STORAGE_DOMAINS: () =>                                          `${ENDPOINT_API_V1}/storages/domains`,
-  FIND_ALL_VALID_STORAGE_DOMAINS: () =>                                    `${ENDPOINT_API_V1}/storages/domains/valid`,
+  // FIND_ALL_VALID_STORAGE_DOMAINS: () =>                                    `${ENDPOINT_API_V1}/storages/domains/valid`,
   FIND_ALL_NFS_STORAGE_DOMAINS: () =>                                      `${ENDPOINT_API_V1}/storages/domains/nfs`,
   FIND_STORAGE_DOMAIN: (storageDomainId) =>                                `${ENDPOINT_API_V1}/storages/domains/${storageDomainId}`,
   
@@ -309,7 +309,7 @@ const ENDPOINTS = {
   EDIT_DISK: (diskId) =>                                                   `${ENDPOINT_API_V1}/storages/disks/${diskId}`,
   DELETE_DISK: (diskId) =>                                                 `${ENDPOINT_API_V1}/storages/disks/${diskId}`,
   COPY_DISK: (diskId) =>                                                   `${ENDPOINT_API_V1}/storages/disks/${diskId}/copy`,
-  FIND_STORAGE_DOMAINS_TO_MOVE_DISK: (diskId) =>                           `${ENDPOINT_API_V1}/storages/disks/${diskId}/move`,
+  FIND_STORAGE_DOMAINS_TO_MOVE_DISK: (diskId) =>                           `${ENDPOINT_API_V1}/storages/disks/${diskId}/storageDomains/move`,
   MOVE_DISK: (diskId, storageDomainId) =>                                  `${ENDPOINT_API_V1}/storages/disks/${diskId}/move/${storageDomainId}`,
   REFRESH_LUN_DISK: (diskId) =>                                            `${ENDPOINT_API_V1}/storages/disks/${diskId}/refreshLun`,
   UPLOAD_DISK: () =>                                                       `${ENDPOINT_API_V1}/storages/disks/upload`,

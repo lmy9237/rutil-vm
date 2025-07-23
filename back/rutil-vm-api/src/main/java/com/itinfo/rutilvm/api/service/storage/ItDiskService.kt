@@ -15,10 +15,12 @@ import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
 import com.itinfo.rutilvm.api.service.BaseService
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 
 import org.ovirt.engine.sdk4.types.*
+import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -120,7 +122,7 @@ interface ItDiskService {
      * @return List<[StorageDomainVo]>
      */
     @Throws(Error::class)
-    fun findAllStorageDomainsToMoveFromDisk(diskId: String): List<StorageDomainVo>
+    fun findAllStorageDomainsToMoveFromDisk(diskId: String): List<StorageDomainVo>?
     /**
      * [ItDiskService.move]
      * 디스크 이동
@@ -275,12 +277,13 @@ class DiskServiceImpl(
     }
 
     @Throws(Error::class)
-    override fun findAllStorageDomainsToMoveFromDisk(diskId: String): List<StorageDomainVo> {
+    override fun findAllStorageDomainsToMoveFromDisk(diskId: String): List<StorageDomainVo>? {
         log.info("findAllStorageDomainsToMoveFromDisk ... diskId: $diskId")
-        val disk: Disk = conn.findDisk(diskId)
-            .getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
-        val res: List<StorageDomain> = conn.findAllStorageDomains().getOrDefault(emptyList())
-            .filter { it.id() != disk.storageDomains().first().id() && it.status() == StorageDomainStatus.ACTIVE }
+		val disk: AllDiskEntity? = rAllDisks.findByDiskId(diskId.toUUID())
+		val res = conn.findAllAttachedStorageDomainsFromDataCenter(disk?.storagePoolId.toString())
+				.getOrDefault(listOf())
+				.filter { it.status() == StorageDomainStatus.ACTIVE && it.type() != EXPORT }
+				// .filter { it.id() != disk?.storageId && it.status() == StorageDomainStatus.ACTIVE && it.type() != EXPORT }
         return res.toStorageDomainSizes()
     }
 

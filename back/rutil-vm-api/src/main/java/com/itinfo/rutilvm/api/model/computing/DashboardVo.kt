@@ -54,6 +54,7 @@ class DashboardVo (
     val storageDomains: Int = 0,
     val storageDomainsUp: Int = 0,
     val storageDomainsDown: Int = 0,
+	val networks: Int = 0,
     val events: Int = 0,
     val eventsAlert: Int = 0,
     val eventsError: Int = 0,
@@ -92,6 +93,7 @@ class DashboardVo (
         private var bStorageDomains: Int = 0; fun storageDomains(block: () -> Int?) { bStorageDomains = block() ?: 0}
         private var bStorageDomainsUp: Int = 0; fun storageDomainsUp(block: () -> Int?) { bStorageDomainsUp = block() ?: 0}
         private var bStorageDomainsDown: Int = 0; fun storageDomainsDown(block: () -> Int?) { bStorageDomainsDown = block() ?: 0}
+        private var bNetworks: Int = 0; fun networks(block: () -> Int?) { bNetworks = block() ?: 0}
         private var bEvents: Int = 0; fun events(block: () -> Int?) { bEvents = block() ?: 0}
         private var bEventAlert: Int = 0; fun eventsAlert(block: () -> Int?) { bEventAlert = block() ?: 0}
         private var bEventError: Int = 0; fun eventsError(block: () -> Int?) { bEventError = block() ?: 0}
@@ -102,7 +104,7 @@ class DashboardVo (
 		private var bBuildNo: Int = 1; fun buildNo(block: () -> Int?) { bBuildNo = block() ?: 0}
         private var bReleaseDate: String = ""; fun releaseDate(block: () -> String?) { bReleaseDate = block() ?: "" }
 
-        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bStorageDomainsUp, bStorageDomainsDown, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bBuildNo, bReleaseDate)
+        fun build(): DashboardVo = DashboardVo(bDatacenters, bDatacentersUp, bDatacentersDown, bClusters, bHosts, bHostsUp, bHostsDown, bVms, bVmsUp, bVmsDown, bStorageDomains, bStorageDomainsUp, bStorageDomainsDown, bNetworks, bEvents, bEventAlert, bEventError, bEventsWarning, bDateCreated, bTimeElapsed, bVersion, bBuildNo, bReleaseDate)
     }
 
     companion object {
@@ -116,6 +118,7 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
     val allVms = this.findAllVms(follow="statistics").getOrDefault(listOf())
     val allClusters = this.findAllClusters().getOrDefault(listOf())
     val allStorageDomains = this.findAllStorageDomains().getOrDefault(listOf())
+	val allNetworks = this.findAllNetworks().getOrDefault(listOf())
 	val allEvents = this.findAllEvents("severity > normal and time > Today sortby time desc")
 		.getOrDefault(listOf())
 
@@ -154,6 +157,7 @@ fun Connection.toDashboardVo(propConfig: PropertiesConfig): DashboardVo {
         storageDomains { std.size }
 		storageDomainsUp { storageDomainUpList.size }
 		storageDomainsDown { storageDomainDownList.size }
+		networks { allNetworks.size }
         events { eventsTotal }
         eventsAlert { eventsAlert }
         eventsError { eventsError }

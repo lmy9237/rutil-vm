@@ -2524,10 +2524,10 @@ const ApiManager = {
    * 
    * @see
    */
-  findAllValidStorageDomains: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.FIND_ALL_VALID_STORAGE_DOMAINS(),
-  }),
+  // findAllValidStorageDomains: async () => makeAPICall({
+  //   method: "GET", 
+  //   url: ENDPOINTS.FIND_ALL_VALID_STORAGE_DOMAINS(),
+  // }),
   /**
    * @name ApiManager.findAllNfsStorageDomains
    * @description storagedomain Nfs 목록
@@ -3100,6 +3100,20 @@ const ApiManager = {
     url: ENDPOINTS.FIND_STORAGE_DOMAINS_FROM_DISK(diskId),
     // defaultValues: DEFAULT_VALUES.FIND_STORAGE_DOMAINS_FROM_DISK
   }),
+
+  /**
+   * @name ApiManager.findAllStorageDomainsToMoveFromDisk
+   * @description 디스크 이동을 위한 api
+   *
+   * @param {string} diskId
+   * @returns 
+   * 
+   * @see
+   */
+  findAllStorageDomainsToMoveFromDisk: async (diskId) => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_STORAGE_DOMAINS_TO_MOVE_DISK(diskId),
+  }),  
 
   /**
    * @name ApiManager.addDisk

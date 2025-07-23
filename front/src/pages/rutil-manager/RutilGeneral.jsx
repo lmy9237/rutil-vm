@@ -109,7 +109,7 @@ const RutilGeneral = () => {
           icon={<RVI16 iconDef={rvi16DataCenter()} />}
           badge={dashboard?.datacenters ?? 0}
         >
-          <div>Default :</div>
+          {/* <div>Default :</div> */}
           <div>{`${dashboard?.clusters ?? 0} 클러스터`}</div>
           <div>{`${dashboard?.hosts ?? 0} 호스트`}</div>
         </RutilGeneralBoxProps>
@@ -119,7 +119,7 @@ const RutilGeneral = () => {
           icon={<RVI16 iconDef={rvi16Cluster()} />}
           badge={dashboard?.clusters ?? 0}
         >
-          <div>Default :</div>
+          {/* <div>Default :</div> */}
           <div>{`${dashboard?.hosts ?? 0} 호스트`}</div>
           <div>{`${dashboard?.vms ?? 0} 가상머신`}</div>
         </RutilGeneralBoxProps>
@@ -131,7 +131,7 @@ const RutilGeneral = () => {
         >
           <div>{`${dashboard?.hostsUp ?? 0} 연결됨`}</div>
           <div>{`${dashboard?.hostsDown ?? 0} 연결 끊김`}</div>
-          <div>-</div>
+          {/* <div>-</div> */}
         </RutilGeneralBoxProps>
 
         <RutilGeneralBoxProps
@@ -139,7 +139,7 @@ const RutilGeneral = () => {
           icon={<RVI16 iconDef={rvi16Desktop()} />}
           badge={dashboard?.vms ?? 0}
         >
-          <div>{`${dashboard?.vms ?? 0} 전체`}</div>
+          {/* <div>{`${dashboard?.vms ?? 0} 전체`}</div> */}
           <div>{`${dashboard?.vmsUp ?? 0} 전원 켜짐`}</div>
           <div>{`${dashboard?.vmsDown ?? 0} 종료됨`}</div>
         </RutilGeneralBoxProps>
@@ -149,17 +149,16 @@ const RutilGeneral = () => {
           icon={<RVI16 iconDef={rvi16Storage()} />}
           badge={dashboard?.storageDomains ?? 0}
         >
-          <div>총 {dashboard?.storageDomains ?? 0} 개</div>
-          <div>-</div>
-          <div>-</div>
+          <div>{`${dashboard?.storageDomainsUp ?? 0} 활성화`}</div>
+          <div>{`${dashboard?.storageDomainsDown ?? 0} 비활성화`}</div>
         </RutilGeneralBoxProps>
 
         <RutilGeneralBoxProps
           title="네트워크"
           icon={<RVI16 iconDef={rvi16Network()} />}
-          badge={1}
+          badge={dashboard?.networks ?? 0}
         >
-          <div>ovirtmgmt</div>
+          {/* <div>ovirtmgmt</div> */}
           <div>{`${dashboard?.hosts ?? 0} 호스트`}</div>
           <div>{`${dashboard?.vms ?? 0} 가상머신`}</div>
         </RutilGeneralBoxProps>

@@ -71,7 +71,10 @@ const VmDiskActionModal = ({
 
     Logger.debug(`VmDiskActionModal > handleFormSubmit ... `)
     const actionFn = actionMap[action];
-    ids.forEach((diskAttachId) => actionFn({ vmId: vmId, diskAttachmentId: diskAttachId }));
+    
+    ids.forEach((diskAttachId) => 
+      actionFn({ vmId: vmId, diskAttachmentId: diskAttachId })
+    );
   };
 
   return (

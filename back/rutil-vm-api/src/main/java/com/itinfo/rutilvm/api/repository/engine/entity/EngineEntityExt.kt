@@ -32,6 +32,8 @@ import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
+import com.itinfo.rutilvm.api.model.storage.toVmDisk
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
 
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
@@ -39,16 +41,20 @@ import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VolumeType
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
+import com.itinfo.rutilvm.api.ovirt.business.toDiskInterfaceB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.xml.OvfCompositeDisk
 import com.itinfo.rutilvm.api.xml.RasdItemType10
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.util.ovirt.findCluster
+import com.itinfo.rutilvm.util.ovirt.findDisk
+import com.itinfo.rutilvm.util.ovirt.findVm
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
+import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.Property
 import org.ovirt.engine.sdk4.types.VnicPassThroughMode
 import org.springframework.data.domain.Page
@@ -137,6 +143,30 @@ fun List<AllDiskEntity>.toDiskImageVoFromAllDiskEntities(): List<DiskImageVo> =
 	this@toDiskImageVoFromAllDiskEntities.map { it.toDiskImageVoFromAllDiskEntity() }
 
 //endregion: AllDiskEntity
+
+//region: AllDisksForVmsEntity
+
+fun AllDisksForVmsEntity.toDiskAttachmentVoFromAllDisksForVmsEntity(): DiskAttachmentVo {
+	return DiskAttachmentVo.builder {
+		id { this@toDiskAttachmentVoFromAllDisksForVmsEntity.diskId.toString() }
+		name { this@toDiskAttachmentVoFromAllDisksForVmsEntity.diskAlias }
+		active { this@toDiskAttachmentVoFromAllDisksForVmsEntity.active }
+		// bootable { this@toDiskAttachmentVoFromAllDisksForVmsEntity.isb }
+		// readOnly { this@toDiskAttachmentVoFromAllDisksForVmsEntity. }
+		// passDiscard { this@toDiskAttachmentVoFromAllDisksForVmsEntity.isp }
+		// interface_ { this@toDiskAttachmentVoFromAllDisksForVmsEntity.di }
+		logicalName { this@toDiskAttachmentVoFromAllDisksForVmsEntity.logicalName }
+		// diskImageVo { disk?.toVmDisk(conn) }
+		vmVo {
+			IdentifiedVo.builder {
+				id { this@toDiskAttachmentVoFromAllDisksForVmsEntity.vmId.toString() }
+				name { this@toDiskAttachmentVoFromAllDisksForVmsEntity.vmNames }
+			}
+		}
+	}
+}
+
+//endregion: AllDisksForVmsEntity
 
 //region: StorageDomainEntity
 fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {

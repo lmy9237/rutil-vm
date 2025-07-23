@@ -262,7 +262,6 @@ const TemplateModal = ({
                             options={formats}
                             onChange={(e) => handleDiskChange(index, "format", e.target.value)}
                           />
-                          <span>{disk.diskImageVo?.format}</span>
                         </td>
                         <td>
                           <LabelSelectOptionsID
