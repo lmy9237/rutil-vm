@@ -23,7 +23,7 @@ LEFT JOIN FETCH j.steps AS s
 WHERE 1=1
 AND j.description LIKE CONCAT('%',:description,'%')
 """)
-	fun findAllByDescriptionLike(actionType: String, description: String): Collection<JobEntity>
+	fun findAllByDescriptionLike(description: String): Collection<JobEntity>
 	@Query("""
 SELECT j FROM JobEntity j
 LEFT JOIN FETCH j.steps AS s

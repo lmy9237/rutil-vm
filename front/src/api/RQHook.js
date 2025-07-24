@@ -7107,7 +7107,7 @@ export const useAuthenticate = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, username]]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, user.username]]);
       postError && postError(error);
     },
   })
