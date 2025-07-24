@@ -3,7 +3,7 @@ import useGlobal                  from "@/hooks/useGlobal";
 import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
 import GeneralLayout              from "@/components/GeneralLayout";
-import VmGeneralBarChart          from "../vm/VmGeneralBarChart";
+import VmGeneralBarChart          from "../../../components/Chart/GeneralBarChart";
 import HostGeneralChart           from "./HostGeneralChart";
 import { 
   useDashboardHost, 

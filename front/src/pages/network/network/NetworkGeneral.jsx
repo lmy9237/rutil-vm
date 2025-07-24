@@ -8,7 +8,7 @@ import {
 import Localization               from "@/utils/Localization";
 import GeneralLayout from "@/components/GeneralLayout";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import VmGeneralBarChart from "@/pages/computing/vm/VmGeneralBarChart";
+import VmGeneralBarChart from "@/components/Chart/GeneralBarChart";
 
 /**
  * @name NetworkGeneral

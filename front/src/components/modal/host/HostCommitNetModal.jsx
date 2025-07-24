@@ -55,7 +55,8 @@ const HostCommitNetModal = ({
       <div className="py-2">
         {host?.spmStatus === "보통" ? (
           <div className="destroy-text">
-            적절한 수동 재부팅이 이루어 지지 않은 이 호스트에 이 동작을 실행 할 경우 가상 머신이 여러 호스트에서 중복적으로 실행되어 가상 머신의 데이터를 손실할 수 있습니다!
+            적절한 수동 재부팅이 이루어 지지 않은 이 호스트에 이 동작을 실행 할 경우 <br/>
+            가상 머신이 여러 호스트에서 중복적으로 실행되어 가상 머신의 데이터를 손실할 수 있습니다!
           </div>
         ): (
           <div className="destroy-text">

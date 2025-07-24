@@ -7,7 +7,7 @@ import {
   useDashboardStorage
 } from "@/api/RQHook";
 import Localization               from "@/utils/Localization";
-import VmGeneralBarChart from "../computing/vm/VmGeneralBarChart";
+import VmGeneralBarChart from "../../components/Chart/GeneralBarChart";
 import RutilGeneralBoxProps from "./RutilGeneralBoxProps";
 import {
   RVI16, 

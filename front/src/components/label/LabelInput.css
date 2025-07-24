@@ -46,8 +46,7 @@ textarea {
 .input-checkbox {
   padding:7px 0;
 }
-input[type="checkbox"],
-input[type="radio"] {
+input[type="checkbox"] {
   margin-right: 6px;
   flex-shrink: 0;
   width: 15px;height: 15px;

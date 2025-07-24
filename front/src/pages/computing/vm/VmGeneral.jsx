@@ -18,7 +18,7 @@ import {
   rvi16DesktopFlag,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
-import VmGeneralBarChart          from "@/pages/computing/vm/VmGeneralBarChart";
+import VmGeneralBarChart          from "@/components/Chart/GeneralBarChart";
 import {
   useVm,
   useVmScreenshot,
@@ -32,6 +32,7 @@ import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
 import Logger                     from "@/utils/Logger";
 import "./Vm.css"
+import GeneralBarChart from "@/components/Chart/GeneralBarChart";
 
 /**
  * @name VmGeneral
@@ -254,14 +255,21 @@ const VmGeneral = ({
     const network = vm?.usageDto?.networkPercent ?? 0;
     return [
       {
-        label: "CPU", value: cpu, description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
+        label: "CPU", 
+        value: cpu, 
+        description: `${cpu}% 사용됨 | ${100 - cpu}% 사용 가능`,
       }, {
-        label: Localization.kr.MEMORY, value: memory, description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
+        label: Localization.kr.MEMORY, 
+        value: memory, 
+        description: `${memory}% 사용됨 | ${100 - memory}% 사용 가능`,
       }, {
-        label: Localization.kr.NETWORK, value: network, description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
+        label: Localization.kr.NETWORK, 
+        value: network, 
+        description: `${network}% 사용됨 | ${100 - network}% 사용 가능`,
       }
     ];
-  }, [vm?.usageDto]);
+  }, [vmId, vm?.usageDto]);
+
   const vmDisksByPath = useMemo(() => {
     const _vmDisksByPath = vm?.vmDiskUsage || [];
     return [..._vmDisksByPath].map((e) => ({
@@ -371,7 +379,7 @@ const VmGeneral = ({
           </div>
         
           <GeneralBoxProps title="용량 및 사용량" className="vm-bar-chart-outer">
-            <VmGeneralBarChart items={usageItems} />
+            <GeneralBarChart items={usageItems} />
           </GeneralBoxProps>
        
         </>

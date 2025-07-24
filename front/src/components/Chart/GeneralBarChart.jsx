@@ -15,7 +15,7 @@ import {
   rvi24Network,
   rvi24Storage,
 } from "@/components/icons/RutilVmIcons";
-import "./VmGeneralBarChart.css";
+import "./GeneralBarChart.css";
 
 // label 기준 icon 매핑
 const labelIconMap = {
@@ -27,12 +27,12 @@ const labelIconMap = {
 };
 
 /**
- * @name VmGeneralBarChart
+ * @name GeneralBarChart
  * @description label 기반 icon 자동 지정 바 차트
  *
  * @prop {Array} items - { label, value, color, description } 형태의 객체 배열
  */
-const VmGeneralBarChart = ({ items = [] }) => {
+const GeneralBarChart = ({ items = [] }) => {
   const containerClass = `vm-bar-chart-container${
     items.length === 3 ? " space-between-3" : ""
   }`;
@@ -92,4 +92,4 @@ const VmGeneralBarChart = ({ items = [] }) => {
 };
 
 
-export default VmGeneralBarChart;
+export default GeneralBarChart;

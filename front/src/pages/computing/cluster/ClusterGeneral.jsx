@@ -8,8 +8,8 @@ import {
 import Localization               from "@/utils/Localization";
 import { useMemo } from "react";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import VmGeneralBarChart from "../vm/VmGeneralBarChart";
 import GeneralLayout from "@/components/GeneralLayout";
+import GeneralBarChart from "../../../components/Chart/GeneralBarChart";
 
 /**
  * @name ClusterGeneral
@@ -85,7 +85,7 @@ const ClusterGeneral = ({
               <InfoTable tableRows={tableRows} />
             </div>
             <GeneralBoxProps title="용량 및 사용량">
-              <VmGeneralBarChart items={usageItems} />
+              <GeneralBarChart items={usageItems} />
             </GeneralBoxProps>
           </>
         }

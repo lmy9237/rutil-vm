@@ -14,7 +14,7 @@ import {
 } from "@/util";
 import Localization               from "@/utils/Localization";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import VmGeneralBarChart from "@/pages/computing/vm/VmGeneralBarChart";
+import VmGeneralBarChart from "@/components/Chart/GeneralBarChart";
 import GeneralLayout from "@/components/GeneralLayout";
 import { RVI24, rvi24Storage } from "@/components/icons/RutilVmIcons";
 

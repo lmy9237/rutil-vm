@@ -5,9 +5,9 @@ import { useDataCenter, useUsageDataCenter } from "@/api/RQHook";
 import { InfoTable } from "@/components/table/InfoTable";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 import GeneralLayout from "@/components/GeneralLayout";
-import VmGeneralBarChart from "@/pages/computing/vm/VmGeneralBarChart";
-import { RVI24, rvi24Datacenter } from "@/components/icons/RutilVmIcons";
+
 import Localization from "@/utils/Localization";
+import GeneralBarChart from "@/components/Chart/GeneralBarChart";
 
 /**
  * @name DataCenterGeneral
@@ -17,7 +17,12 @@ import Localization from "@/utils/Localization";
 const DataCenterGeneral = ({ datacenterId }) => {
   const { datacentersSelected } = useGlobal();
   const { data: datacenter } = useDataCenter(datacenterId);
-  const { data: db } = useUsageDataCenter(datacenterId);
+  const {
+    data: usage,
+    isLoading: isUsageLoading,
+    isSuccess: isUsageSuccess,
+    isError: isUsageError,
+  } = useUsageDataCenter(datacenterId);
 
 const tableRows = [
   { label: "ID", value: datacenter?.id },
@@ -31,23 +36,27 @@ const tableRows = [
   { label: Localization.kr.STATUS, value: Localization.kr.renderStatus(datacenter?.status) || Localization.kr.UP },
 ];
 
-  const usageItems = useMemo(() => [
+const usageItems = useMemo(() => {
+  const cpu = usage?.totalCpuUsagePercent ?? 0;
+  const memory = usage?.totalMemoryUsagePercent ?? 0;
+  const storage = usage?.totalStorageUsagePercent ?? 0;
+
+  return [
     {
       label: "CPU",
-      value: (db?.totalCpuUsagePercent ?? 0).toFixed(0),
-      description: `${db?.usedCpuCore ?? 0} CPU 사용됨 | 총 ${db?.totalCpuCore ?? 0} CPU | ${db?.totalCpuCore - db?.usedCpuCore ?? 0} CPU 사용 가능`,
-    },
-    {
+      value: cpu.toFixed(0),
+      description: `${cpu.toFixed(0)}% 사용됨 | ${(100 - cpu).toFixed(0)}% 사용 가능`,
+    }, {
       label: "메모리",
-      value: (db?.totalMemoryUsagePercent ?? 0).toFixed(0),
-      description: `${(db?.usedMemoryMB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalMemoryMB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
-    },
-    {
+      value: memory.toFixed(0),
+      description: `${memory.toFixed(0)}% 사용됨 | ${(100 - memory).toFixed(0)}% 사용 가능`,
+    }, {
       label: "스토리지",
-      value: (db?.totalStorageUsagePercent ?? 0).toFixed(0),
-      description: `${(db?.usedStorageGB ?? 0).toFixed(2)} GB 사용됨 | 총 ${(db?.totalStorageGB ?? 0).toFixed(2)} GB | ${(db?.totalMemoryUsagePercent ?? 0).toFixed(0)}% 사용 가능`,
+      value: storage.toFixed(0),
+      description: `${storage.toFixed(0)}% 사용됨 | ${(100 - storage).toFixed(0)}% 사용 가능`,
     },
-  ], [db]);
+  ];
+}, [datacenterId, usage]);
 
   return (
     <GeneralLayout
@@ -58,8 +67,8 @@ const tableRows = [
             <hr className="w-full" />
             <InfoTable tableRows={tableRows} />
           </div>
-          <GeneralBoxProps title="용량 및 사용량">
-            <VmGeneralBarChart items={usageItems} />
+          <GeneralBoxProps title="용량 및 사용량" isLoading={isUsageLoading} isSuccess={isUsageSuccess}>
+            <GeneralBarChart items={usageItems} />
           </GeneralBoxProps>
         </>
       }

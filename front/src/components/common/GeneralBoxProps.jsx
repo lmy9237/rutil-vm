@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "@/components/common/Loading";
 import "./GeneralBoxProps.css";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const GeneralBoxProps = ({
   title,
@@ -10,6 +12,7 @@ const GeneralBoxProps = ({
   moreLink,
   enableOverflowCheck = false,
   className = "", 
+  // isLoading=true, isSuccess=false, isError
 }) => {
   const contentRef = useRef(null);
   const [isOverflow, setIsOverflow] = useState(false);
@@ -48,15 +51,16 @@ const GeneralBoxProps = ({
         ref={contentRef}
       >
         <div className="box-inner-content h-full">
+          {/* isLoading ? <Loading /> : isSuccess ? children : children*/}
           {children}
         </div>
-      
       </div>
-        {enableOverflowCheck && isOverflow && moreLink && (
-          <div className="more-button mt-3" onClick={handleMoreClick}>
-            + more
-          </div>
-        )}
+
+      {enableOverflowCheck && isOverflow && moreLink && (
+        <div className="more-button mt-3" onClick={handleMoreClick}>
+          + more
+        </div>
+      )}
     </div>
   );
 };

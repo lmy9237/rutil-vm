@@ -443,7 +443,7 @@ export const useUsageDataCenter = (
   dataCenterId,
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
-  queryKey: [QK.DASHBOARD_DATA_CENTER],
+  queryKey: [QK.DASHBOARD_DATA_CENTER, dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.getDataCenter(dataCenterId)
     const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
@@ -457,7 +457,7 @@ export const useUsageCluster = (
   clusterId,
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
-  queryKey: [QK.DASHBOARD_CLUSTER],
+  queryKey: [QK.DASHBOARD_CLUSTER, clusterId],
   queryFn: async () => {
     const res = await ApiManager.getCluster(clusterId)
     const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
@@ -1558,6 +1558,7 @@ export const useSetupNetworksFromHost = (
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.NICS} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_ATTACHMENTS_FROM_HOST]);
       queryClient.invalidateQueries(QK.HOST, hostId);
+      // queryClient.removeQueries(QK.HOST, hostId);
       postSuccess(res);
     },
     onError: (error, { hostId }) => {
@@ -1565,6 +1566,7 @@ export const useSetupNetworksFromHost = (
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_ATTACHMENTS_FROM_HOST]);
       queryClient.invalidateQueries(QK.HOST, hostId);
+      // queryClient.removeQueries(QK.HOST, hostId);
       postError && postError(error);
     },
   });
@@ -2614,14 +2616,14 @@ export const useDeleteSnapshot = (
       Logger.debug(`RQHook > useDeleteSnapshot ... res: `, res)
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId); // 데이터센터 추가 성공 시 'allDataCenters' 쿼리를 리패칭하여 목록을 최신화
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postError && postError(error);
     },
   });
@@ -2645,14 +2647,14 @@ export const usePreviewSnapshot = (
       Logger.debug(`RQHook > usePreviewSnapshot ... res: `, res)
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.PREVIEW} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postError && postError(error);
     },
   });
@@ -2676,7 +2678,7 @@ export const useCommitSnapshot = (
       Logger.debug(`RQHook > useCommitSnapshot ... res: `, res)
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.COMMENT} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
@@ -2706,14 +2708,14 @@ export const useUndoSnapshot = (
       Logger.debug(`RQHook > useUndoSnapshot ... res: `, res)
       apiToast.ok(`${Localization.kr.SNAPSHOT} ${Localization.kr.UNDO} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
-      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
+      queryClient.invalidateQueries(QK.ALL_SNAPSHOTS_FROM_VM, vmId);
       postError && postError(error);
     },
   });
