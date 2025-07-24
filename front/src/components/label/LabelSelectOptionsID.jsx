@@ -86,7 +86,7 @@ const LabelSelectOptionsID = forwardRef(({
             ) : (
               _options.map((opt) => (
                 <SelectItem key={opt.id} value={opt.id}>
-                  {opt.name}: {opt.id} {etcLabel}
+                  {opt.name}{import.meta.env.DEV &&`: ${opt.id}`} {etcLabel}
                 </SelectItem>
               ))
             )}

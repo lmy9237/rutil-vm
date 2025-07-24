@@ -59,12 +59,13 @@ class NetworkAttachmentVo (
 fun NetworkAttachment.toNetworkAttachmentVo(): NetworkAttachmentVo {
 	val nAtt = this@toNetworkAttachmentVo
 	val ip =
-		if(nAtt.ipAddressAssignmentsPresent()) {
+		if (nAtt.ipAddressAssignmentsPresent()) {
 			nAtt.ipAddressAssignments().map { it.toIpAddressAssignmentVo() }
 		} else { emptyList() }
 	val dns =
-		if(nAtt.dnsResolverConfigurationPresent()){ nAtt.dnsResolverConfiguration().nameServers() }
-		else { null }
+		if (nAtt.dnsResolverConfigurationPresent()){
+			nAtt.dnsResolverConfiguration().nameServers() }
+		else { emptyList() }
 
 	return NetworkAttachmentVo.builder {
 		id { nAtt.id() }
@@ -78,7 +79,6 @@ fun NetworkAttachment.toNetworkAttachmentVo(): NetworkAttachmentVo {
 }
 fun Collection<NetworkAttachment>?.toNetworkAttachmentVos(): List<NetworkAttachmentVo> =
 	this@toNetworkAttachmentVos?.map { it.toNetworkAttachmentVo() } ?: emptyList()
-
 
 /**
  * [NetworkAttachmentVo.toModifiedNetworkAttachment]

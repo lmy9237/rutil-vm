@@ -133,6 +133,7 @@ class JobEntity(
 
 	companion object {
 		const val ACTION_TYPE_EXCLUDE = "ScreenshotVm"
+		const val ACTION_TYPE_EXTERNAL = "AddExternalJob"
 		inline fun builder(block: Builder.() -> Unit): JobEntity = Builder().apply(block).build()
 	}
 }

@@ -20,25 +20,31 @@ import org.springframework.transaction.annotation.Transactional
 class JobRemoveScheduler {
 	@Autowired private lateinit var rJobs: JobsRepository
 
+	val jobs2RemoveVmScreenshot: List<JobEntity>
+		get() = rJobs.findAllByActionType(JobEntity.Companion.ACTION_TYPE_EXCLUDE).toList()
+	val jobs2RemoveRutilVmRelated: List<JobEntity>
+		get() = rJobs.findAllByActionTypeAndDescriptionLike(JobEntity.Companion.ACTION_TYPE_EXTERNAL, "Not Found").toList()
+	val jobs2RemoveRutilVmRelated: List<JobEntity>
+		get() = rJobs.findAllByActionTypeAndDescriptionLike(JobEntity.Companion.ACTION_TYPE_EXTERNAL, "Not Found").toList()
+
 	@Scheduled(fixedDelay = 5 * 60 * 1000) // 5분 단위
 	@Throws(PSQLException::class, Error::class)
 	@Transactional("engineTransactionManager")
 	open fun removeJobsInSchedule(): Boolean {
 		log.info("removeJobsInSchedule ... RUNNING!")
-		val jobs2RemoveFound: List<JobEntity> =
-			rJobs.findAllByActionType(JobEntity.Companion.ACTION_TYPE_EXCLUDE).toList()
-		log.debug("removeJobsInSchedule ... jobs2RemoveFound: {}", jobs2RemoveFound.size)
-		if (jobs2RemoveFound.isEmpty()) {
+		val allJobs2Remove: List<JobEntity> = jobs2RemoveVmScreenshot + jobs2RemoveRutilVmRelated
+		log.debug("removeJobsInSchedule ... allJobs2Remove: {}", allJobs2Remove.size)
+		if (allJobs2Remove.isEmpty()) {
 			log.info("removeJobsInSchedule ... NO job found. Abort RUNNING!")
 			return true
 		}
 		try {
-			val res: Int = rJobs.removeByIds(jobs2RemoveFound.mapNotNull { it.jobId })
-			log.info("removeJobsInSchedule ... SUCCESS: ${jobs2RemoveFound.size}")
-			return res == jobs2RemoveFound.size
+			val res: Int = rJobs.removeByIds(allJobs2Remove.mapNotNull { it.jobId })
+			log.info("removeJobsInSchedule ... SUCCESS: ${allJobs2Remove.size}")
+			return res == allJobs2Remove.size
 		} catch (e: IllegalArgumentException) {
 			e.printStackTrace()
-			log.error("removeJobsInSchedule ... FAILED: ${jobs2RemoveFound.size}")
+			log.error("removeJobsInSchedule ... FAILED: ${allJobs2Remove.size}")
 			return false
 		}
 	}

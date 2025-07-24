@@ -6188,7 +6188,7 @@ export const useDeleteDisk = (
       Logger.debug(`RQHook > useDeleteDisk ... diskId: ${diskId}`);
       return _res;
     },
-    onSuccess: (res,{diskId}) => {
+    onSuccess: (res, { diskId }) => {
       Logger.debug(`RQHook > useDeleteDisk ... res: `, res);
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
@@ -7094,20 +7094,20 @@ export const useAuthenticate = (
       Logger.debug(`RQHook > useAuthenticate ... username: ${username}, password: ${password}`);
       return _res;
     },
-    onSuccess: (res, {username}) => {
+    onSuccess: (res, { username }) => {
       Logger.debug(`RQHook > useAuthenticate ... res: `, res);
       if (!res) throw Error("[403] 로그인에 실패했습니다. 사용자ID 또는 비밀번호가 다릅니다.")
       setAuth({ 
         username: username,
         isUserAuthenticated: res,
       })
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, user.username]]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, username]]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, user.username]]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_USERS,[QK.USER, username]]);
       postError && postError(error);
     },
   })
