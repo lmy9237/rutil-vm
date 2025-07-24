@@ -6,7 +6,7 @@ import {
   useStartVM,
   usePauseVM,
   usePowerOffVM,
-  useShutdownVM,
+  useShutdownVm,
   useRebootVM,
   useResetVM,
 } from "@/api/RQHook";
@@ -18,7 +18,7 @@ const ACTIONS = {
   "vm:pause":    { label: Localization.kr.PAUSE,       hook: usePauseVM },
   "vm:reboot":   { label: Localization.kr.REBOOT,      hook: useRebootVM },
   "vm:reset":    { label: Localization.kr.RESET,       hook: useResetVM },
-  "vm:shutdown": { label: Localization.kr.END,         hook: useShutdownVM },
+  "vm:shutdown": { label: Localization.kr.END,         hook: useShutdownVm },
   "vm:powerOff": { label: Localization.kr.POWER_OFF,   hook: usePowerOffVM },
 };
 

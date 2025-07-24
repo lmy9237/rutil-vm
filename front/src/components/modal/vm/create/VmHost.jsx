@@ -92,7 +92,7 @@ const VmHost = ({
             <div>
               <select
                 multiple
-                value={formHostState.hostVos.map((host) => host.id)}
+                value={(formHostState.hostVos || []).map((host) => host.id)}
                 onChange={(e) => {
                   const selectedIds = Array.from(e.target.selectedOptions, (option) => option.value);
                   Logger.debug(`선택된 호스트 ID 목록: ${selectedIds}`);
@@ -105,7 +105,7 @@ const VmHost = ({
               >
                 <div className="host-select-list">
                   {hosts.map((host) => {
-                    const isSelected = formHostState.hostVos.some((h) => h.id === host.id);
+                    const isSelected = (formHostState.hostVos || []).some((h) => h.id === host.id);
                     return (
                       <div
                         key={host.id}

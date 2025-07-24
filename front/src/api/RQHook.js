@@ -1,12 +1,14 @@
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useApiToast }        from "@/hooks/useSimpleToast";
-import useAuth                from "@/hooks/useAuth";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import ApiManager             from "@/api/ApiManager";
-import { triggerDownload }    from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { useNavigate } from "react-router-dom";
+import useTmi                        from "@/hooks/useTmi";
+import { useApiToast }               from "@/hooks/useSimpleToast";
+import useAuth                       from "@/hooks/useAuth";
+import useUIState                    from "@/hooks/useUIState";
+import useGlobal                     from "@/hooks/useGlobal";
+import ApiManager                    from "@/api/ApiManager";
+import { triggerDownload }           from "@/util";
+import Localization                  from "@/utils/Localization";
+import Logger                        from "@/utils/Logger";
 
 export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1 분
 export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; 5 // 5분
@@ -66,7 +68,7 @@ const QK = {
   FIBRE_FROM_HOST: "fibreFromHost",
   SEARCH_FC_FROM_HOST: "searchFcFromHost",
 
-  ALL_VMS: "allVMs",
+  ALL_VMS: "allVms",
   VM: "vm",
   DISKS_FROM_VM: "disksFromVM",
   ALL_DISKS_FROM_VM: "allDisksFromVm",
@@ -163,19 +165,35 @@ const QK = {
   ALL_VM_TYPES: "allVmTypes", 
 }
 
-const defaultQPs = {
+export const QP_DEFAULT = {
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT,
+  refetchInactive: true,
   staleTime: DEFAULT_STALE_TIME,
   cacheTime: DEFAULT_CACHE_TIME,
 }
 //#endregion: 쿼리Key
 
 //#region: Navigation
+const qpAllTreeNavigations = (
+  type,
+  mapPredicate = (e) => ({ ...e }),
+) => ({
+  ...QP_DEFAULT,
+  queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: type }],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
+  queryFn: async () => {
+    const res = await ApiManager.findAllTreeNaviations(type);
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
+    Logger.debug(`RQHook > qpAllTreeNavigations ... type: ${type}, res: `, _res);
+    return _res;
+  },
+})
 /**
  * @name useAllTreeNavigations
  * @description 트리네비게이션 API
  * 
- * @param {string} type =
+ * @param {string} type 
  * @param {function} mapPredicate 변형 조건
  * 
  * @returns 
@@ -185,25 +203,15 @@ export const useAllTreeNavigations = (
   type = "none",
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
-  ...defaultQPs,
-  queryKey: [QK.ALL_TREE_NAVIGATIONS, type],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
-  queryFn: async () => {
-    const res = await ApiManager.findAllTreeNaviations(type);
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? []
-      : validateAPI(res) ?? []
-    Logger.debug(`RQHook > useAllTreeNavigations ... type: ${type}, res: `, _res);
-    return _res;
-  },
+  ...qpAllTreeNavigations(type, mapPredicate),
 });
-
 //#endregion
 
 //#region: Dashboard
 export const useDashboard = (
 
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.DASHBOARD],
   queryFn: async () => {
     const res = await ApiManager.getDashboard()
@@ -216,7 +224,7 @@ export const useDashboard = (
 export const useDashboardCpuMemory = (
 
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.DASHBOARD_CPU_MEMORY],
   queryFn: async () => {
     const res = await ApiManager.getCpuMemory()
@@ -229,7 +237,7 @@ export const useDashboardCpuMemory = (
 export const useDashboardStorage = (
 
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.DASHBOARD_STORAGE],
   queryFn: async () => {
     const res = await ApiManager.getStorage()
@@ -242,7 +250,7 @@ export const useDashboardStorage = (
 export const useDashboardHosts = (
 
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.DASHBOARD_HOSTS],
   queryFn: async () => {
     const res = await ApiManager.getHosts()
@@ -914,6 +922,7 @@ export const useDeleteDataCenter = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
+  const navigate = useNavigate();
     return useMutation({
     mutationFn: async (dataCenterId) => {
       closeModal();
@@ -927,6 +936,7 @@ export const useDeleteDataCenter = (
       apiToast.ok(`${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DATACENTERS]);
       queryClient.removeQueries(QK.DATACENTER, dataCenterId);
+      navigate(`/computing/rutil-manager/datacenters`)
       postSuccess()
     },
     onError: (error) => {
@@ -1286,23 +1296,27 @@ export const useDeleteCluster = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
-  const { setClustersSelected } = useGlobal()
-  const { closeModal } = useUIState();
+  const { datacentersSelected, setClustersSelected } = useGlobal()
+  const { closeModal, clearTabInPage } = useUIState();
   const { apiToast } = useApiToast();
+  const navigate = useNavigate();
     return useMutation({
     mutationFn: async (clusterId) => {
       closeModal();
       const res = await ApiManager.deleteCluster(clusterId);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useEditCluster ... clusterId: ${clusterId}`)
+      Logger.debug(`RQHook > useDeleteCluster ... clusterId: ${clusterId}`)
       return _res;
     },
     onSuccess: (res, { clusterId }) => {
       Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
       apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
-      queryClient.removeQueries([QK.CLUSTER, clusterId])
+      queryClient.removeQueries(QK.CLUSTER, clusterId)
       setClustersSelected([])
+      const datacenterId = datacentersSelected[0]?.id
+      datacenterId && clearTabInPage("/computing/datacenters");
+      navigate(datacenterId ? `/computing/datacenters/${datacenterId}/clusters` : `/computing/rutil-manager/datacenters`)
       postSuccess(res);
     },
     onError: (error) => {
@@ -2079,7 +2093,8 @@ export const useDeleteHost = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    return useMutation({
+  const { clustersSelected } = useGlobal()
+  return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
       const res = await ApiManager.deleteHost(hostId)
@@ -2087,10 +2102,13 @@ export const useDeleteHost = (
       Logger.debug(`RQHook > useDeleteHost ... hostId: ${hostId}`)
       return _res;
     },
-    onSuccess: (res) => {
+    onSuccess: (res, { hostId }) => {
       Logger.debug(`RQHook > useDeleteHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
+      queryClient.invalidateQueries(QK.HOST, hostId)
+      const clusterId = clustersSelected[0]?.id
+      navigate(clusterId ? `/computing/clusters/${clusterId}/hosts` : `/computing/rutil-manager/clusters`)
       postSuccess(res);
     },
     onError: (error) => {
@@ -2461,7 +2479,7 @@ export const useAllVMs = (
 export const useVm = (
   vmId
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findVM(vmId);
@@ -2977,7 +2995,9 @@ export const useDeleteVm = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    return useMutation({
+  const { hostsSelected } = useGlobal();
+  const navigate = useNavigate();
+  return useMutation({
     mutationFn: async ({ vmId, detachOnly }) => {
       closeModal();
       const res = await ApiManager.deleteVM(vmId, detachOnly);
@@ -2990,15 +3010,15 @@ export const useDeleteVm = (
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries([QK.VM, vmId]);
-      queryClient.invalidateQueries(['editVmById', vmId])
+      const hostId = hostsSelected[0]?.id
+      navigate(hostId ? `/computing/hosts/${hostId}/vms` : `/computing/rutil-manager/vms`)
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
-      queryClient.invalidateQueries([QK.VM, vmId]);
-      queryClient.invalidateQueries(['editVmById', vmId])
+      queryClient.removeQueries([QK.VM, vmId]);
       postError && postError(error);
     },
   });
@@ -3114,12 +3134,12 @@ export const usePauseVM = (
 };
 
 /**
- * @name useShutdownVM
+ * @name useShutdownVm
  * @description 가상머신 종료 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useShutdownVM = (
+export const useShutdownVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
@@ -3130,21 +3150,21 @@ export const useShutdownVM = (
       closeModal();
       const res = await ApiManager.shutdownVM(vmId);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useShutdownVM ... vmId: ${vmId}`);
+      Logger.debug(`RQHook > useShutdownVm ... vmId: ${vmId}`);
       return _res;
     },
     onSuccess: (res, { vmId }) => {
-      Logger.debug(`RQHook > useShutdownVM ... res: `, res);
+      Logger.debug(`RQHook > useShutdownVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.END} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
-      queryClient.invalidateQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries(QK.VM, vmId);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
-      queryClient.invalidateQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries(QK.VM, vmId);
       postError && postError(error);
     },
   });
@@ -3173,14 +3193,14 @@ export const usePowerOffVM = (
       Logger.debug(`RQHook > usePowerOffVM ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.POWER_OFF} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
-      queryClient.invalidateQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries(QK.VM, vmId);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS])
-      queryClient.invalidateQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries(QK.VM, vmId);
       postError && postError(error);
     },
   });
@@ -6201,8 +6221,10 @@ export const useDeleteDisk = (
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
+  const { domainsSelected } = useGlobal();
   const { apiToast } = useApiToast();
-    return useMutation({
+  const navigate = useNavigate();
+  return useMutation({
     mutationFn: async (diskId) => {
       closeModal();
       const res = await ApiManager.deleteDisk(diskId);
@@ -6215,6 +6237,8 @@ export const useDeleteDisk = (
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
       queryClient.removeQueries(QK.DISK, diskId);
+      const domainId = domainsSelected[0]?.id
+      domainId && navigate(`/storage/domains/${domainId}/disks`);
       postSuccess(res);
     },
     onError: (error) => {
@@ -6346,7 +6370,7 @@ export const useAllEvents = ({
   page = null, size = null, minSeverity = null, startDate = null,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_EVENTS, page],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents(page, size, minSeverity, startDate)
@@ -6375,7 +6399,7 @@ export const useAllEventsFromDataCenter = ({
   page=null, size=null, datacenterId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_DATA_CENTER, datacenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, datacenterId });
@@ -6403,7 +6427,7 @@ export const useAllEventsFromCluster = ({
   page=null, size=null, clusterId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_CLUSTER, clusterId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, clusterId });
@@ -6432,7 +6456,7 @@ export const useAllEventsFromHost = ({
   page=null, size=null, hostId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, hostId });
@@ -6461,7 +6485,7 @@ export const useAllEventsFromVM = ({
   page=null, size=null, vmId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, vmId });
@@ -6490,7 +6514,7 @@ export const useAllEventsFromDomain = ({
   page=null, size=null, storageDomainId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, storageDomainId });
@@ -6519,7 +6543,7 @@ export const useAllEventsFromTemplate = ({
   page=null, size=null, templateId,
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_TEMPLATE, templateId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, templateId });
@@ -6542,7 +6566,7 @@ export const useAllEventsFromTemplate = ({
 export const useAllEventsNormal = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_EVENTS_NORMAL],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({
@@ -6559,7 +6583,7 @@ export const useAllEventsNormal = (
 export const useAllEventsAlert = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_NOTI_EVENTS],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({
@@ -6638,7 +6662,7 @@ export const useRemoveEvents = (
 export const useAllJobs = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_JOBS],
   queryFn: async () => {
     const res = await ApiManager.findAllJobs()
@@ -6659,7 +6683,7 @@ export const useAllJobs = (
 export const useJob = (
   jobId,
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.JOB, jobId],
   queryFn: async () => {
     const res = await ApiManager.findJob(jobId)
@@ -6831,7 +6855,7 @@ export const useRemoveJobs = (
 export const useAllProviders = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_PROVIDERS],
   queryFn: async () => {
     const res = await ApiManager.findAllProviders();
@@ -6852,7 +6876,7 @@ export const useAllProviders = (
 export const useProvider = (
   providerId,
 ) => useQuery({
-  ...defaultQPs,
+  ...QP_DEFAULT,
   queryKey: [QK.PROVIDER, providerId], 
   queryFn: async () => {
     const res = await ApiManager.findProvider(providerId); 
@@ -7363,13 +7387,33 @@ export const useAttachCert = (
 };
 //#endregion: Certificate(s)
 
-export function invalidateQueriesWithDefault(
+export async function invalidateQueriesWithDefault(
   queryClient = null,
   qks=[],
 ) {
-  [...qks].forEach((e) => queryClient.invalidateQueries([e]));
-  queryClient.invalidateQueries(QK.ALL_JOBS);
-  queryClient.invalidateQueries(QK.ALL_TREE_NAVIGATIONS);
+  for (qk of qks) {
+    await queryClient.invalidateQueries(qk);
+  }
+  await queryClient.invalidateQueries({
+    queryKey: [QK.ALL_JOBS],
+    exact,
+    refetchType: 'active',
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "cluster" }],
+    exact,
+    refetchType: 'active'
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "network" }],
+    exact,
+    refetchType: 'active'
+  });
+  await queryClient.invalidateQueries({
+    queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "storage" }],
+    exact,
+    refetchType: 'active'
+  });
 }
 
 export const validateAPI = (res) => {

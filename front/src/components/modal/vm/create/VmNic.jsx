@@ -81,7 +81,6 @@ const VmNic = ({
       <p className="mb-0.5">
         {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} {Localization.kr.NICS}를 설정하세요.
       </p>
-  
       <DynamicInputList
         values={nicsState}
         onChange={handleChange}

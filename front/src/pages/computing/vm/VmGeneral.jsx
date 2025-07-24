@@ -4,9 +4,9 @@ import { openNewTab }             from "@/navigation";
 import { useValidationToast }     from "@/hooks/useSimpleToast";
 import useUIState                 from "@/hooks/useUIState";
 import useGlobal                  from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralLayout              from "@/components/GeneralLayout";
-import Vnc                        from "@/components/Vnc"
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
 import TableRowClick              from "@/components/table/TableRowClick";
 import { VmOsIcon, VmOsScreenshot }               from "@/components/icons/VmOs";
@@ -20,6 +20,7 @@ import VmGeneralBarChart          from "@/components/Chart/GeneralBarChart";
 import {
   useVm,
   useVmScreenshot,
+  useRemoteViewerConnectionFileFromVm,
   useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useAllSnapshotsFromVm,
@@ -63,10 +64,6 @@ const VmGeneral = ({
     isSuccess: isVmSuccess,
   } = useVm(vmId);
 
-  const {
-    data: vmScreenshot,
-  } = useVmScreenshot(vmId);
-
   const { //디스크목록
     data: disks = [],
     isLoading: isDisksLoading,
@@ -97,6 +94,17 @@ const VmGeneral = ({
     label: e?.kr
   }))
   
+  const {
+    data: vmScreenshot,
+  } = useVmScreenshot(vmId);
+
+  const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
+  const handleDownloadRemoteViewerConnectionFile = (e) => {
+    Logger.debug(`VmGeneral > handleDownloadRemoteViewerConnectionFile ... `)
+    e.preventDefault();
+    downloadRemoteViewerConnectionFileFromVm(vm?.id)
+  }
+  
   useEffect(() => {
     if (vm?.hostVo)
       setHostsSelected(vm?.hostVo)
@@ -126,12 +134,7 @@ const VmGeneral = ({
   const hardwareTableRows = [
     { 
       label: "최적화 옵션", 
-      value: 
-        vm?.optimizeOption === "server"
-          ? "서버 "
-          : vm?.optimizeOption === "high_performance"
-            ? "고성능"
-            : "데스크톱"
+      value: vm?.optimizeOptionKr
     }, { 
       label: Localization.kr.CPU, 
       value: `${vm?.cpuTopologyCnt} (${vm?.cpuTopologySocket}:${vm?.cpuTopologyCore}:${vm?.cpuTopologyThread})` 
@@ -293,8 +296,8 @@ const VmGeneral = ({
 
   const rfbRef = useRef(null);
 
-  const handleStartConsole = useCallback(() => {
-    Logger.debug(`VmOsIcon > handleStartConsole ... `);
+  const handleOpenWebConsole = useCallback(() => {
+    Logger.debug(`VmOsIcon > handleOpenWebConsole ... `);
     if (vmId === undefined || vmId === null || vmId === "") {
       validationToast.fail("웹 콘솔을 시작할 수 없습니다. (가상머신 ID 없음)");
       return;
@@ -363,25 +366,11 @@ const VmGeneral = ({
             <hr className="w-full"/>
             
             <div className="vm-info-vnc-group ">
-              <div className="vm-info-vnc v-center gap-8">
-                {
-                  (vm?.running && !vm?.hostedEngineVm && vmScreenshot)
-                    ? <VmOsScreenshot dataUrl={vmScreenshot}
-                        onClick={handleStartConsole}
-                      /> 
-                    : <VmOsIcon dataUrl={vm?.urlLargeIcon}
-                      disabled={!vm?.qualified4ConsoleConnect}
-                      onClick={handleStartConsole}
-                    />
-                }
-                <button 
-                  onClick={handleStartConsole}
-                  className="btn-vnc w-full fs-14"
-                  disabled={!vm?.qualified4ConsoleConnect}
-                >
-                  웹 콘솔 시작
-                </button>
-              </div>
+              <VmVncMonitor vm={vm}
+                screenshot={vmScreenshot}
+                onWebConsole={handleOpenWebConsole}
+                onRemoteViewer={handleDownloadRemoteViewerConnectionFile}
+              />
               <div className="half-box vm-info-content">
                 <InfoTable tableRows={generalTableRows} />
               </div>
@@ -426,12 +415,50 @@ const VmGeneral = ({
           </GeneralBoxProps>
         </>}
       />
-      {/* <OVirtWebAdminHyperlink
+      <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}
         path={`vms-general;name=${vmsSelected[0]?.name}`} 
-      /> */}
+      />
     </>
   );
 };
+
+const VmVncMonitor = ({
+  vm,
+  screenshot,
+  onWebConsole=()=>{},
+  onRemoteViewer=()=>{},
+}) => {
+  return (
+    <div className="vm-info-vnc v-center gap-8">
+      {
+      (vm?.running && !vm?.hostedEngineVm && screenshot)
+        ? <VmOsScreenshot dataUrl={screenshot}
+            onClick={onWebConsole}
+          /> 
+        : <VmOsIcon dataUrl={vm?.urlLargeIcon}
+          disabled={!vm?.qualified4ConsoleConnect}
+          onClick={onWebConsole}
+        />
+      }
+      <div className="v-center w-full gap-4">
+        <button 
+          onClick={onWebConsole}
+          className="btn-vnc w-full fs-14"
+          disabled={!vm?.qualified4ConsoleConnect}
+        >
+          웹 콘솔
+        </button>
+        <button 
+          onClick={onRemoteViewer}
+          className="btn-vnc w-full fs-14"
+          disabled={!vm?.qualified4ConsoleConnect}
+        >
+          원격뷰어 접속파일 다운로드
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default VmGeneral;

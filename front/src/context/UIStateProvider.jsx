@@ -113,7 +113,7 @@ export const UIStateProvider = ({ children }) => {
       }
     });
   }
-
+  const clearTabInPage = (path="") => setTabInPage(path, null)
   //#endregion: 탭 지점 기록
 
 
@@ -124,7 +124,7 @@ export const UIStateProvider = ({ children }) => {
         currentPage, setCurrentPage,
         activeModal, setActiveModal, closeModal,
         vncScreenshotDataUrl, setVncScreenshotDataUrl, clearVncScreenshotDataUrl,
-        tabInPage, setTabInPage
+        tabInPage, setTabInPage, clearTabInPage
       }
     }>
       {children}

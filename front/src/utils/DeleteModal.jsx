@@ -53,7 +53,7 @@ const DeleteModal = ({
               // UUID가 포함된 상세 경로 → 
               // 최상위 경로로 이동 (RutilManager)
               const parentPath = currentPath.split("/")[1]
-              navigate(`/${parentPath}/rutil-manager`); // 일단 오류가 안나도록 보정
+              // navigate(`/${parentPath}/rutil-manager`); // 일단 오류가 안나도록 보정
             }
             // UUID가 없으면 아무 것도 하지 않음 → 현재 화면 유지
           }

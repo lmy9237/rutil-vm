@@ -8,12 +8,6 @@ import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
-import {
-  useAllSnapshotsFromVm,
-  useVm
-} from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 import VmGeneral              from "./VmGeneral";
 import VmNics2                from "./VmNics2";
 import VmSnapshots            from "./VmSnapshots";
@@ -21,6 +15,12 @@ import VmApplications         from "./VmApplications";
 import VmHostDevices          from "./VmHostDevices";
 import VmEvents               from "./VmEvents";
 import VmDisks                from "./VmDisks";
+import {
+  useAllSnapshotsFromVm,
+  useVm
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 import "./Vm.css";
 
 /**

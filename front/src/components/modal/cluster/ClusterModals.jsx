@@ -1,12 +1,12 @@
 import React from 'react';
 import useUIState           from "@/hooks/useUIState";
 import useGlobal            from "@/hooks/useGlobal";
+import DeleteModal          from "@/utils/DeleteModal";
+import ClusterModal         from "./ClusterModal";
 import {
   useDeleteCluster
 } from "@/api/RQHook";
-import DeleteModal from "@/utils/DeleteModal";
-import Localization from "@/utils/Localization";
-import ClusterModal from "./ClusterModal";
+import Localization         from "@/utils/Localization";
 
 /**
  * @name ClusterModals

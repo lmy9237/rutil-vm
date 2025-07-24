@@ -44,8 +44,9 @@ fun Cluster.toNavigationalFromCluster(conn: Connection?=null, rVm: VmRepository?
 		?.filter {
 			it.status === VmStatusB.down ||
 			it.status === VmStatusB.not_responding ||
-			it.status === VmStatusB.reboot_in_progress ||
 			it.status === VmStatusB.image_locked ||
+			it.status === VmStatusB.image_illegal ||
+			it.status === VmStatusB.wait_for_launch ||
 			it.status === VmStatusB.suspended
 		} ?: emptyList()
 	// conn.findAllVmsFromCluster(this@toNavigational.id(), "status=down or status=notresponding or status=rebootinprogress or status=imagelocked or status=suspended").getOrDefault(listOf())

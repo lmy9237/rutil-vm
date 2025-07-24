@@ -1,12 +1,13 @@
 import React, { useState, Suspense, useRef } from "react";
+import Tippy from "@tippyjs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import useContextMenu         from "@/hooks/useContextMenu";
-import useClickOutside        from "@/hooks/useClickOutside";
 import SelectedIdView         from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox              from "@/components/button/SearchBox";
 import TablesRow              from "@/components/table/TablesRow";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import NicActionButtons       from "@/components/dupl/VmNicActionButtons";
@@ -18,15 +19,14 @@ import {
   rvi24ChevronDown,
   rvi24ChevronRight,
 } from "@/components/icons/RutilVmIcons";
-import { checkZeroSizeToMbps } from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 import "./Vm.css"
 import VmNicModals from "@/components/modal/vm/VmNicModals";
 import TablesOuter from "@/components/table/TablesOuter";
 import useSearch from "@/hooks/useSearch";
 import TableRowClick from "@/components/table/TableRowClick";
-import Tippy from "@tippyjs/react";
+import { checkZeroSizeToMbps } from "@/util";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 /**
  * @name VmNics2
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -49,10 +49,11 @@ const VmNics2 = ({
 
   const {
     data: nics = [],
-    isLoading: isvmNicsLoading,
-    isError: isvmNicsError,
-    isSuccess: isvmNicsSuccess,
-    isRefetching: isvmNicsRefetching
+    isLoading: isVmNicsLoading,
+    isError: isVmNicsError,
+    isSuccess: isVmNicsSuccess,
+    isRefetching: isVmNicsRefetching,
+    refetch: refetchVmNics,
   } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
 
   const transformedData = nics
@@ -61,15 +62,15 @@ const VmNics2 = ({
       ...nic,
       id: nic?.id,
       name: nic?.name,
-      status: nic?.status,
-      linked: 
+      _status: nic?.statusKr,
+      _linked: 
         <FontAwesomeIcon
           icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
           style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
           fixedWidth
         />,
       // nic?.linked ? "연결됨": "연결해제됨",
-      plugged: 
+      _plugged: 
         <FontAwesomeIcon
           icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
           style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
@@ -119,13 +120,15 @@ const VmNics2 = ({
       rxTotalSpeed: nic?.rxTotalSpeed?.toLocaleString() || "0",
       txTotalSpeed: nic?.txTotalSpeed?.toLocaleString() || "0",
       pkts: `${nic?.rxTotalError}` || "1",    
+      searchText: `${nic?.id} ${nic?.name}`.toLowerCase(),
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full mb-2">
+      <div className="dupl-header-group f-start align-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVmNics} />
         <NicActionButtons />
       </div>
       <TablesOuter target={"nic"} 
@@ -135,7 +138,7 @@ const VmNics2 = ({
         shouldHighlight1stCol={true}
         multiSelect={true}
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
-        isLoading={isvmNicsLoading} isRefetching={isvmNicsRefetching} isError={isvmNicsError} isSuccess={isvmNicsSuccess}
+        isLoading={isVmNicsLoading} isRefetching={isVmNicsRefetching} isError={isVmNicsError} isSuccess={isVmNicsSuccess}
       />
       <SelectedIdView items={nicsSelected} />
       <OVirtWebAdminHyperlink

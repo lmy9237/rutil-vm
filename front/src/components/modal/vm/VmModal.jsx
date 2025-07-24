@@ -125,7 +125,7 @@ const VmModal = ({
       // ? Localization.kr.COPY 
       
   const { 
-    vmsSelected, templatesSelected 
+    vmsSelected, templatesSelected, hostsSelected
   } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const templateId = templatesSelected[0]?.id;
@@ -145,7 +145,9 @@ const VmModal = ({
   const [formSystemState, setFormSystemState] = useState(systemForm);
   const [formCloudState, setFormCloudState] = useState(cloudForm);
   const [formConsoleState, setFormConsoleState] = useState(consoleForm);
-  const [formHostState, setFormHostState] = useState(hostForm);
+  const [formHostState, setFormHostState] = useState({
+    ...hostForm,
+  });
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
 
@@ -310,8 +312,8 @@ const VmModal = ({
       });
       setFormHostState({
         hostInCluster: vm?.hostInCluster || true,
-        hostVos: (vm?.hostVos || [])?.map((host) => {
-          return { id: host.id, name: host.name}}),
+        hostVos: (vm?.hostVos || [])?.map((h) => {
+          return { id: h.id, name: h.name}}),
         migrationMode: vm?.migrationMode || "migratable",
       });
       setFormHaState({
@@ -488,6 +490,19 @@ const VmModal = ({
     }
   }, [editMode, vnics]);
 
+  useEffect(() => {
+    Logger.debug(`VmModal > useEffect ... hostsSelected CHECK`)
+    if (!editMode) {
+      setFormHostState((prev) => ({
+        ...prev,
+        hostVos: (hostsSelected || []).map((h) => ({
+          id: h?.id,
+          name: h?.name
+        }))
+      }))
+    }
+  }, [editMode], hostsSelected)
+
 
   useEffect(() => {
     const selectedOS = formInfoState.osType;
@@ -522,7 +537,7 @@ const VmModal = ({
 
     // VmHost
     ...formHostState,
-    hostVos: formHostState.hostVos.map((host) => ({ id: host.id })),
+    hostVos: (formHostState.hostVos || []).map((host) => ({ id: host.id })),
 
     // VmHa
     ...formHaState,
