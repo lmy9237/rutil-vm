@@ -4,13 +4,11 @@ import { openNewTab }             from "@/navigation";
 import { useValidationToast }     from "@/hooks/useSimpleToast";
 import useUIState                 from "@/hooks/useUIState";
 import useGlobal                  from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
 import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralLayout              from "@/components/GeneralLayout";
 import Vnc                        from "@/components/Vnc"
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
 import TableRowClick              from "@/components/table/TableRowClick";
-import SemiCircleChart            from "@/components/Chart/SemiCircleChart";
 import { VmOsIcon, VmOsScreenshot }               from "@/components/icons/VmOs";
 import {
   RVI16,
@@ -215,18 +213,30 @@ const VmGeneral = ({
         </TableRowClick>
     }, {
       label: Localization.kr.DOMAIN,
-      value: [...new Set(vm?.diskAttachmentVos?.map(diskAtt => 
-        <TableRowClick type="domain" id={diskAtt?.disk?.storageDomainVo?.id}>
-          {diskAtt?.disk?.storageDomainVo?.name}
+      value: [...new Map(disks.map(diskAtt => {
+          const id = diskAtt?.diskImageVo?.storageDomainVo?.id;
+          const name = diskAtt?.diskImageVo?.storageDomainVo?.name;
+          return id && name ? [id, { id, name }] : null;
+        })
+        .filter(Boolean)
+      ).values()].map(({ id, name }, idx) => (
+        <TableRowClick key={id} type="domain" id={id}>
+          {name}
         </TableRowClick>
-      ))].join(", ")
+      ))
     }, {
       label: Localization.kr.NETWORK,
-      value: [...new Set(vm?.nicVos?.map(nic => 
-        <TableRowClick type="network" id={nic?.networkVo?.id}>
-          {nic?.networkVo?.name}
+      value: [...new Map(nics?.map(nic => {
+          const id = nic?.networkVo?.id;
+          const name = nic?.networkVo?.name;
+          return id && name ? [id, { id, name }] : null;
+        })
+        .filter(Boolean)
+      ).values()].map(({ id, name }, idx) => (
+        <TableRowClick key={id} type="network" id={id}>
+          {name}
         </TableRowClick>
-      ))].join(", ")
+      ))
     }
   ];
 

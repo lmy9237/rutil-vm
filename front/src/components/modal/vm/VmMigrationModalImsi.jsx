@@ -5,15 +5,13 @@ import BaseModal                        from "../BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import {
   useAllMigratableHostsFromVM,
-  useHostsFromCluster,
   useMigration
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
-import TabNavButtonGroup from "@/components/common/TabNavButtonGroup";
 
 
-const VmMigrationModal2 = ({ 
+const VmMigrationModalImsi = ({ 
   isOpen, 
   onClose,
 }) => {
@@ -22,18 +20,11 @@ const VmMigrationModal2 = ({
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const clusterVo = vmsSelected[0]?.clusterVo;
 
-  const [selectedModalTab, setSelectedModalTab] = useState("common");
-  const tabs = useMemo(() => [
-    { id: "common",  label: `${Localization.kr.VM}`,    onClick: () => setSelectedModalTab("common") },
-    { id: "disk",    label: `${Localization.kr.DISK}`,  onClick: () => setSelectedModalTab("disk") },
-    { id: "all",     label: `${Localization.kr.VM}/${Localization.kr.DISK}`,   onClick: () => setSelectedModalTab("all") },
-    ], []);
-
   const {
     data: hosts=[],
     isLoading: isHostsLoading,
     isSuccess: isHostSuccess,
-  } = useHostsFromCluster(clusterVo?.id ?? "");
+  } = useAllMigratableHostsFromVM(vmId ?? "");
 
   const { mutate: migration } = useMigration(onClose, onClose);
 
@@ -53,32 +44,22 @@ const VmMigrationModal2 = ({
   const hostsWithClusterOption = useMemo(() => {
     if (!clusterVo) return [];
 
-    const currentHostId = vmsSelected[0]?.hostVo?.id;
-
-    // 내부 함수: 현재 VM이 실행 중인 호스트 제외
-    const getFilteredHosts = (hosts, currentHostId) => {
-      if (!currentHostId) return hosts;
-      return hosts.filter((host) => host.id !== currentHostId);
-    };
-
-    const filteredHosts = getFilteredHosts(hosts, currentHostId);
-
-    if (!filteredHosts || filteredHosts.length === 0) {
+    // 호스트가 하나도 없을 때
+    if (!hosts || hosts.length === 0) {
       return [{
         id: "none",
         name: `${Localization.kr.MIGRATION} 가능한 ${Localization.kr.HOST} 없음`
       }];
     }
 
+    // 정상일 때 클러스터 자동선택 + hosts
     const clusterHostOption = {
       id: clusterVo.id ?? "",
       name: `${Localization.kr.CLUSTER} ${clusterVo?.name} 내의 ${Localization.kr.HOST} 자동선택`,
     };
 
-    return [clusterHostOption, ...filteredHosts];
-  }, [hosts, clusterVo, vmsSelected]);
-
-
+    return [clusterHostOption, ...hosts];
+  }, [hosts, clusterVo]);
 
   const validateForm = () => {    
     if(targetHostId ==="none") 
@@ -105,30 +86,25 @@ const VmMigrationModal2 = ({
   };
 
   return (
-    <BaseModal targetName={Localization.kr.MIGRATION} submitTitle={""}
+    <BaseModal targetName={Localization.kr.VM} submitTitle={Localization.kr.MIGRATION}
       isOpen={isOpen} onClose={onClose}
       isReady={isHostSuccess}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "800px" }}
+      contentStyle={{ width: "650px" }}
     >
-    <div className="popup-content-outer flex">
-
-      <TabNavButtonGroup  tabs={tabs} tabActive={selectedModalTab} />
-       <div className="vm-edit-select-tab">
-        <div className="edit-first-content pb-0.5">
-          {selectedModalTab === "common" && (
-            <>
-            <br/>
-            <span>현재 {Localization.kr.HOST} {vmsSelected[0]?.hostVo?.name}</span>
+      <form id="modal-vm-migration">
+        <div className="migration-article">
+          <p className="fw-bold mb-2">다음 {Localization.kr.VM}을 {Localization.kr.MIGRATION}합니다</p>
+          <span>현재 {Localization.kr.HOST} {vmsSelected[0]?.hostVo?.name}</span>
           <br/><br/>
 
           <div>
             {vmList.map((vm) => (
               <>
-                <div key={vm.id} className="flex fw-bold">
-                  <div className="mr-1.5">- <span>{vm.name}</span></div>
-                </div>
-                <br/>
+              <div key={vm.id} className="flex fw-bold">
+                <div className="mr-1.5">- <span>{vm.name}</span></div>
+              </div>
+              <br/>
               </>
             ))}
           </div>
@@ -147,20 +123,19 @@ const VmMigrationModal2 = ({
               setIsCluster(selected?.id === clusterVo.id);
             }}
           />
+          {/* {import.meta.env.DEV && <span>{targetHostId}</span>} <br/>
+          {import.meta.env.DEV && <span>{isCluster === true ? "T" : "F"}</span>} */}
           <LabelCheckbox id={`affinity`}
             label={`선택한 ${Localization.kr.VM}을 사용하여 양극 강제 연결 그룹의 모든 가상 시스템을 ${Localization.kr.MIGRATION}합니다.`}
             value=""
             onChange={(e) => setAffinityClosure(e.target.checked)}
           />
-          </>
-          )}
-        </div>
-      </div>
+          {/* {import.meta.env.DEV && <span>{affinityClosure === true ? "T" : "F"}</span>} */}
 
-      
-    </div>
+        </div> 
+      </form>
     </BaseModal>
   );
 };
 
-export default VmMigrationModal2;
+export default VmMigrationModalImsi;

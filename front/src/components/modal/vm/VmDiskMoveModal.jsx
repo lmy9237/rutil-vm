@@ -23,7 +23,7 @@ const VmDiskMoveModal = ({
   const [diskList, setDiskList] = useState([]);
   const [domainList, setDomainList] = useState({});
   const [targetDomains, setTargetDomains] = useState({});
-  console.log("$disksSelected", disksSelected)
+  
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);
 
   useEffect(() => {

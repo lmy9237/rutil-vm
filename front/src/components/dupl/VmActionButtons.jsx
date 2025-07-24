@@ -153,12 +153,12 @@ const VmActionButtons = ({
       label: Localization.kr.MIGRATION,                               
       disabled: !isMigrateEnabled
     },
-    { 
-      type: "migration2",  
-      onClick: () => setActiveModal("vm:migration2"),   
-      label: `${Localization.kr.MIGRATION}2`,                               
-      disabled: !isMigrateEnabled
-    },
+    // { 
+    //   type: "migration2",  
+    //   onClick: () => setActiveModal("vm:migration2"),   
+    //   label: `${Localization.kr.MIGRATION}2`,                               
+    //   disabled: !isMigrateEnabled
+    // },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));

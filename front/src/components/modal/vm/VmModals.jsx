@@ -9,15 +9,13 @@ import VmModal                             from "./VmModal";
 import TemplateModal                       from "@/components/modal/template/TemplateModal";
 import DomainImportVmTemplateModal         from "@/components/modal/domain/DomainImportVmTemplateModal";
 import VmExportOVAModal                    from "./VmExportOVAModal";
-import VmMigrationModal                    from "./VmMigrationModal";
 import VmStartOnceModal                    from "./VmStartOnceModal";
 import VmUpdateCdromModal                  from "./VmUpdateCdromModal";
 import VmImportModal                       from "./VmImportModal";
 import VmVncClipboardPasteModal            from "./VmVncClipboardPasteModal";
-import Localization                        from "@/utils/Localization";
 import Logger                              from "@/utils/Logger";
 import "./MVm.css";
-import VmMigrationModal2 from "./VmMigrationModal2";
+import VmMigrationModal from "./VmMigrationModal";
 
 /**
  * @name VmModals
@@ -89,11 +87,11 @@ const VmModals = ({
         onClose={() => closeModal("vm:migration")}
         vmId={vmsSelected[0]?.id}
       />
-    ), migration2: (
-      <VmMigrationModal2 key={"vm:migration2"} isOpen={activeModal().includes("vm:migration2")} 
-        onClose={() => closeModal("vm:migration2")}
-        vmId={vmsSelected[0]?.id}
-      />
+    // ), migration2: (
+    //   <VmMigrationModal2 key={"vm:migration2"} isOpen={activeModal().includes("vm:migration2")} 
+    //     onClose={() => closeModal("vm:migration2")}
+    //     vmId={vmsSelected[0]?.id}
+    //   />
     ), ova: (
       <VmExportOVAModal key={"vm:ova"} isOpen={activeModal().includes("vm:ova")}
         onClose={() => closeModal("vm:ova")}     
