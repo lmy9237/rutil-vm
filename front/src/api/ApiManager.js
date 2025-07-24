@@ -1334,7 +1334,7 @@ const ApiManager = {
   }),
 
     /**
-   * @name ApiManager.findSnapshotsFromVM
+   * @name ApiManager.findAllSnapshotsFromVm
    * @description 스냅샷 목록
    *
    * @param {string} vmId
@@ -1342,7 +1342,7 @@ const ApiManager = {
    * 
    * @see
    */
-  findSnapshotsFromVM : async (vmId) => makeAPICall({
+  findAllSnapshotsFromVm : async (vmId) => makeAPICall({
     method: "GET", 
     url: ENDPOINTS.FIND_ALL_SNAPSHOTS_FROM_VM(vmId), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_SNAPSHOTS_FROM_VM
@@ -1359,7 +1359,7 @@ const ApiManager = {
    */
   findSnapshotFromVm : async (vmId, snapshotId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_ALL_SNAPSHOTS_FROM_VM(vmId, snapshotId), 
+    url: ENDPOINTS.FIND_SNAPSHOT_FROM_VM(vmId, snapshotId), 
     // defaultValues: DEFAULT_VALUES.FIND_ALL_SNAPSHOTS_FROM_VM
   }),
   /**

@@ -137,7 +137,7 @@ const ENDPOINTS = {
   MOVE_DISK_FROM_VM: (vmId) =>                                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/move`, 
   COPY_DISK_FROM_VM: (vmId) =>                                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/copy`, 
 
-  FIND_SNAPSHOTS_FROM_VM: (vmId) =>                                        `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
+  FIND_ALL_SNAPSHOTS_FROM_VM: (vmId) =>                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
   FIND_SNAPSHOT_FROM_VM: (vmId, snapshotId) =>                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/${snapshotId}`, 
   ADD_SNAPSHOT_FROM_VM: (vmId) =>                                          `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
   DELETE_SNAPSHOTS_FROM_VM: (vmId) =>                                      `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, // 스냅샷 여러개

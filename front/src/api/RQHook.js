@@ -2504,7 +2504,7 @@ export const useDisksFromVM = (
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findSnapshotsFromVM
+ * @see ApiManager.findAllSnapshotsFromVm
  */
 export const useAllSnapshotsFromVm = (
   vmId,
@@ -2513,7 +2513,7 @@ export const useAllSnapshotsFromVm = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_SNAPSHOTS_FROM_VM, vmId],
   queryFn: async () => {
-    const res = await ApiManager.findSnapshotsFromVM(vmId);
+    const res = await ApiManager.findAllSnapshotsFromVm(vmId);
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
@@ -2554,12 +2554,12 @@ export const useSnapshotDetailFromVM = (
 
 
 /**
- * @name useaddSnapshotFromVm
+ * @name useAddSnapshotFromVm
  * @description 가상머신 스냅샷 생성 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useaddSnapshotFromVm = (
+export const useAddSnapshotFromVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
@@ -2570,11 +2570,11 @@ export const useaddSnapshotFromVm = (
       closeModal();
       const res = await ApiManager.addSnapshotFromVm(vmId, snapshotData)
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useaddSnapshotFromVm ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
+      Logger.debug(`RQHook > useAddSnapshotFromVm ... vmId: ${vmId}, snapshotData: ${JSON.stringify(snapshotData, null, 2)}`)
       return _res
     },
     onSuccess: (res, { vmId }) => {
-      Logger.debug(`RQHook > useaddSnapshotFromVm ... res: ${JSON.stringify(res)}`)
+      Logger.debug(`RQHook > useAddSnapshotFromVm ... res: ${JSON.stringify(res)}`)
       apiToast.ok(`${Localization.kr.VM}에서 ${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.SNAPSHOT_DETAIL_FROM_VM]);
       queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
