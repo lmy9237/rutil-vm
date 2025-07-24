@@ -24,8 +24,6 @@ class JobRemoveScheduler {
 		get() = rJobs.findAllByActionType(JobEntity.Companion.ACTION_TYPE_EXCLUDE).toList()
 	val jobs2RemoveRutilVmRelated: List<JobEntity>
 		get() = rJobs.findAllByActionTypeAndDescriptionLike(JobEntity.Companion.ACTION_TYPE_EXTERNAL, "Not Found").toList()
-	val jobs2RemoveRutilVmRelated: List<JobEntity>
-		get() = rJobs.findAllByActionTypeAndDescriptionLike(JobEntity.Companion.ACTION_TYPE_EXTERNAL, "Not Found").toList()
 
 	@Scheduled(fixedDelay = 5 * 60 * 1000) // 5분 단위
 	@Throws(PSQLException::class, Error::class)
