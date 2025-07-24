@@ -24,7 +24,7 @@ import {
   useVmScreenshot,
   useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
-  useSnapshotsFromVM,
+  useAllSnapshotsFromVm,
   useDisksFromVM,
   useNetworkInterfacesFromVM,
 } from "@/api/RQHook";
@@ -233,7 +233,7 @@ const VmGeneral = ({
   const {
     data: snapshots = [],
     isLoading: isSnapshotsLoading,
-  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const snapshotList = useMemo(() =>
     (snapshots || [])

@@ -3,6 +3,8 @@ package com.itinfo.rutilvm.util.ovirt
 import com.itinfo.rutilvm.api.ovirt.business.model.Term
 import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
 import com.itinfo.rutilvm.api.ovirt.business.model.logFail
+import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
 
 import com.itinfo.rutilvm.util.ovirt.error.*
 
@@ -27,7 +29,7 @@ fun Connection.findAllOpenStackNetworkProviders(): Result<List<OpenStackNetworkP
 	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("목록조회")
 }.onFailure {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "목록조회") else it
 }
 
 fun Connection.srvOpenStackNetworkProvider(networkProviderId: String): OpenstackNetworkProviderService =
@@ -40,49 +42,46 @@ fun Connection.findOpenStackNetworkProviderFirst(): Result<OpenStackNetworkProvi
 	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("상세조회")
 }.onFailure {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "상세조회") else it
 }
 
 fun Connection.findOpenStackProviderFirstId(): String =
 	systemService.openstackNetworkProvidersService().list().send().providers().first().id()
 
-
 fun Connection.srvOpenStackNetwork(openstackNetworkId: String): OpenstackNetworkService =
 	systemService.openstackNetworkProvidersService().providerService(this.findOpenStackProviderFirstId()).networksService().networkService(openstackNetworkId)
 
-
 fun Connection.importOpenStackNetwork(openstackNetworkId: String, dataCenterId: String): Result<Boolean> = runCatching {
 	this.srvOpenStackNetwork(openstackNetworkId).import_().dataCenter(DataCenterBuilder().id(dataCenterId).build()).send()
-
 	true
 }.onSuccess {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("가져오기")
 }.onFailure {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("가져오기", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "가져오기", openstackNetworkId) else it
 }
 
 
 fun Connection.findOpenStackNetworkProvider(networkProviderId: String): Result<OpenStackNetworkProvider> = runCatching {
 	this.srvOpenStackNetworkProvider(networkProviderId).get().send().provider()
 }.onSuccess {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("상세조회")
+	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccessWithin(Term.EXTERNAL_NETWORK_PROVIDER, "상세조회")
 }.onFailure {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.OPEN_STACK_NETWORK_PROVIDER.logFailWithin(Term.EXTERNAL_NETWORK_PROVIDER, "상세조회", it)
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "상세조회", networkProviderId) else it
 }
 
 
 fun Connection.findAllOpenStackNetworksFromNetworkProvider(networkProviderId: String): Result<List<OpenStackNetwork>> = runCatching {
-	if(this.findOpenStackNetworkProvider(networkProviderId).isFailure){
+	if (this.findOpenStackNetworkProvider(networkProviderId).isFailure) {
 		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
 	}
 	this.srvOpenStackNetworkProvider(networkProviderId).networksService().list().send().networks()
 }.onSuccess {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("목록")
+	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccessWithin(Term.EXTERNAL_NETWORK_PROVIDER, "목록조회")
 }.onFailure {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("목록", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.OPEN_STACK_NETWORK_PROVIDER.logFailWithin(Term.EXTERNAL_NETWORK_PROVIDER, "목록조회", it)
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "목록조회", networkProviderId) else it
 }
 
 fun Connection.findOpenStackNetworkFromNetworkProvider(networkProviderId: String, openstackNetworkId: String): Result<OpenStackNetwork> = runCatching {
@@ -91,8 +90,8 @@ fun Connection.findOpenStackNetworkFromNetworkProvider(networkProviderId: String
 	}
 	this.srvOpenStackNetworkProvider(networkProviderId).networksService().networkService(openstackNetworkId).get().send().network()
 }.onSuccess {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("목록")
+	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("상세조회")
 }.onFailure {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("목록", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.OPEN_STACK_NETWORK_PROVIDER.logFail("상세조회", it)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.OPEN_STACK_NETWORK_PROVIDER, Term.EXTERNAL_NETWORK_PROVIDER, "상세조회", networkProviderId, openstackNetworkId) else it
 }

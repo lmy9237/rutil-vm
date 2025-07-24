@@ -26,7 +26,7 @@ fun Connection.findAllSystemPermissions(follow: String): Result<List<Permission>
 	Term.SYSTEM_PERMISSION.logSuccess("목록조회")
 }.onFailure {
 	Term.SYSTEM_PERMISSION.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.SYSTEM_PERMISSION, "목록조회") else it
 }
 
 fun Connection.srvSystemPermission(permissionId: String): PermissionService =
@@ -38,7 +38,7 @@ fun Connection.findSystemPermission(permissionId: String): Result<Permission?> =
 	Term.SYSTEM_PERMISSION.logSuccess("상세조회", permissionId)
 }.onFailure {
 	Term.SYSTEM_PERMISSION.logFail("상세조회", it, permissionId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.SYSTEM_PERMISSION, "상세조회", permissionId) else it
 }
 
 fun Connection.addSystemPermission(permission: Permission): Result<Permission?> = runCatching {
@@ -47,7 +47,7 @@ fun Connection.addSystemPermission(permission: Permission): Result<Permission?> 
 	Term.SYSTEM_PERMISSION.logSuccess("생성", it.id())
 }.onFailure {
 	Term.SYSTEM_PERMISSION.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.SYSTEM_PERMISSION, "생성") else it
 }
 
 fun Connection.removePermission(permissionId: String): Result<Boolean> = runCatching {
@@ -57,5 +57,5 @@ fun Connection.removePermission(permissionId: String): Result<Boolean> = runCatc
 	Term.SYSTEM_PERMISSION.logSuccess("삭제", permissionId)
 }.onFailure {
 	Term.SYSTEM_PERMISSION.logFail("삭제", it, permissionId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.SYSTEM_PERMISSION, "삭제", permissionId) else it
 }

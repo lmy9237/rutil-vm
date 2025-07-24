@@ -29,7 +29,7 @@ fun Connection.findAllEvents(searchQuery: String = "", follow: String = "", max:
 	Term.EVENT.logSuccess("목록조회")
 }.onFailure {
 	Term.EVENT.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EVENT, "목록조회") else it
 }
 
 private fun Connection.srvEvent(eventId: String): EventService =
@@ -41,7 +41,7 @@ fun Connection.findEvent(eventId: String): Result<Event?> = runCatching {
 	Term.EVENT.logSuccess("상세조회")
 }.onFailure {
 	Term.EVENT.logFail("상세조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EVENT, "상세조회", eventId) else it
 }
 
 fun Connection.removeEvent(eventId: String): Result<Boolean?> = runCatching {
@@ -51,6 +51,6 @@ fun Connection.removeEvent(eventId: String): Result<Boolean?> = runCatching {
 	Term.EVENT.logSuccess("삭제")
 }.onFailure {
 	Term.EVENT.logFail("삭제")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EVENT, "삭제", eventId) else it
 }
 

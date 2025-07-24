@@ -20,7 +20,7 @@ fun Connection.findAllClusterLevels(): Result<List<ClusterLevel>> = runCatching 
 	Term.CLUSTER_LEVEL.logSuccess("목록조회")
 }.onFailure {
 	Term.CLUSTER_LEVEL.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.CLUSTER_LEVEL, "목록조회") else it
 }
 
 private fun Connection.srvClusterLevelService(levelId: String): ClusterLevelService =
@@ -32,5 +32,5 @@ fun Connection.findClusterLevel(levelId: String): Result<ClusterLevel?> = runCat
 	Term.CLUSTER_LEVEL.logSuccess("상세조회")
 }.onFailure {
 	Term.CLUSTER_LEVEL.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.CLUSTER_LEVEL, "상세조회", levelId) else it
 }

@@ -27,7 +27,7 @@ fun Connection.findAllUsers(follow: String = ""): Result<List<User>> = runCatchi
 	Term.USER.logSuccess("목록조회")
 }.onFailure {
 	Term.USER.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.USER, "목록조회") else it
 }
 
 private fun Connection.srvUser(userId: String): UserService =
@@ -39,7 +39,7 @@ fun Connection.findUser(userId: String): Result<User?> = runCatching {
 	Term.USER.logSuccess("상세조회")
 }.onFailure {
 	Term.USER.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.USER, "상세조회", userId) else it
 }
 
 fun Connection.addUser(user: User): Result<User?> = runCatching {
@@ -48,7 +48,7 @@ fun Connection.addUser(user: User): Result<User?> = runCatching {
 	Term.USER.logSuccess("생성")
 }.onFailure {
 	Term.USER.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.USER, "생성") else it
 }
 
 fun Connection.srvAssignedPermissionsFromUser(userId: String): AssignedPermissionsService =
@@ -60,7 +60,7 @@ fun Connection.findAllAssignedPermissionsFromUser(userId: String): Result<List<P
 	Term.USER.logSuccessWithin(Term.PERMISSION, "목록조회", userId)
 }.onFailure {
 	Term.USER.logFailWithin(Term.PERMISSION, "목록조회", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.PERMISSION, "목록조회", userId) else it
 }
 
 fun Connection.addPermissionFromUser(userId: String, permission: Permission): Result<Permission?> = runCatching {
@@ -69,7 +69,7 @@ fun Connection.addPermissionFromUser(userId: String, permission: Permission): Re
 	Term.USER.logSuccessWithin(Term.PERMISSION, "생성", userId)
 }.onFailure {
 	Term.USER.logFailWithin(Term.PERMISSION, "생성", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.PERMISSION, "생성", userId) else it
 }
 
 fun Connection.srvAssignedPermissionFromUser(userId: String, permissionId: String): PermissionService =
@@ -81,7 +81,7 @@ fun Connection.findAssignedPermissionFromUser(userId: String, permissionId: Stri
 	Term.USER.logSuccessWithin(Term.PERMISSION, "상세조회", userId)
 }.onFailure {
 	Term.USER.logFailWithin(Term.PERMISSION, "상세조회", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.PERMISSION, "상세조회", userId, permissionId) else it
 }
 
 fun Connection.removeAssignedPermissionFromUser(userId: String, permissionId: String): Result<Boolean> = runCatching {
@@ -91,7 +91,7 @@ fun Connection.removeAssignedPermissionFromUser(userId: String, permissionId: St
 	Term.USER.logSuccessWithin(Term.PERMISSION, "삭제", userId)
 }.onFailure {
 	Term.USER.logFailWithin(Term.PERMISSION, "삭제", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.PERMISSION, "삭제", userId, permissionId) else it
 }
 
 
@@ -104,7 +104,7 @@ fun Connection.findAllAssignedRolesFromUser(userId: String): Result<List<Role>> 
 	Term.USER.logSuccessWithin(Term.ROLE, "목록조회", userId)
 }.onFailure {
 	Term.USER.logFailWithin(Term.ROLE, "목록조회", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.ROLE, "목록조회", userId) else it
 }
 
 fun Connection.srvAssignedRoleFromUser(userId: String, roleId: String): RoleService =
@@ -113,8 +113,8 @@ fun Connection.srvAssignedRoleFromUser(userId: String, roleId: String): RoleServ
 fun Connection.findAssignedRoleFromUser(userId: String, roleId: String): Result<Role?> = runCatching {
 	this.srvAssignedRoleFromUser(userId, roleId).get().send().role()
 }.onSuccess {
-	Term.USER.logSuccessWithin(Term.PERMISSION, "상세조회", userId)
+	Term.USER.logSuccessWithin(Term.ROLE, "상세조회", userId)
 }.onFailure {
-	Term.USER.logFailWithin(Term.PERMISSION, "상세조회", it, userId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.USER.logFailWithin(Term.ROLE, "상세조회", it, userId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.USER, Term.ROLE, "상세조회", userId) else it
 }

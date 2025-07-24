@@ -3,7 +3,7 @@ import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl             from "@/components/dupl/VmDiskDupl";
 import {
   useDisksFromVM,
-  useSnapshotsFromVM
+  useAllSnapshotsFromVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import { useMemo } from "react";
@@ -34,7 +34,7 @@ const VmDisks = ({
   const {
     data: snapshots = [],
     isLoading: isSnapshotsLoading
-  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const hasPreviewSnapshot = useMemo(() => {
     return snapshots.some(snap => snap?.status?.toUpperCase() === "in_preview");

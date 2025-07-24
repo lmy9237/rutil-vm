@@ -1205,7 +1205,7 @@ const ApiManager = {
         method: "DELETE",
         url: ENDPOINTS.DELETE_DISK_FROM_VM(vmId, diskAttachmentId, detachOnly), 
         data: diskAttachmentId, 
-        // defaultValues: DEFAULT_VALUES.DELETE_SNAPSHOTS_FROM_VM
+        // defaultValues: DEFAULT_VALUES.DELETE_ALL_SNAPSHOTS_FROM_VM
       });
     },
   /**
@@ -1344,8 +1344,8 @@ const ApiManager = {
    */
   findSnapshotsFromVM : async (vmId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_SNAPSHOTS_FROM_VM(vmId), 
-    // defaultValues: DEFAULT_VALUES.FIND_SNAPSHOTS_FROM_VM
+    url: ENDPOINTS.FIND_ALL_SNAPSHOTS_FROM_VM(vmId), 
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_SNAPSHOTS_FROM_VM
   }),
   /**
    * @name ApiManager.findSnapshotFromVm
@@ -1359,18 +1359,18 @@ const ApiManager = {
    */
   findSnapshotFromVm : async (vmId, snapshotId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_SNAPSHOT_FROM_VM(vmId, snapshotId), 
-    // defaultValues: DEFAULT_VALUES.FIND_SNAPSHOT_FROM_VM
+    url: ENDPOINTS.FIND_ALL_SNAPSHOTS_FROM_VM(vmId, snapshotId), 
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_SNAPSHOTS_FROM_VM
   }),
   /**
-   * @name ApiManager.addSnapshotFromVM
+   * @name ApiManager.addSnapshotFromVm
    * @description 가상머신 스냅샷 생성
    * 
    * @param {string} vmId
    * @param {Object} snapshotData - 추가할 디스크 정보
    * @returns {Promise<Object>} API 응답 결과
    */
-  addSnapshotFromVM: async (vmId, snapshotData) => {
+  addSnapshotFromVm: async (vmId, snapshotData) => {
     return makeAPICall({
       method: "POST",
       url: ENDPOINTS.ADD_SNAPSHOT_FROM_VM(vmId),
@@ -1389,9 +1389,9 @@ const ApiManager = {
   deleteSnapshotsFromVM: async (vmId, snapshotData) => {
     return makeAPICall({
       method: "DELETE",
-      url: ENDPOINTS.DELETE_SNAPSHOTS_FROM_VM(vmId), 
+      url: ENDPOINTS.DELETE_ALL_SNAPSHOTS_FROM_VM(vmId), 
       data: snapshotData, 
-      // defaultValues: DEFAULT_VALUES.DELETE_SNAPSHOTS_FROM_VM
+      // defaultValues: DEFAULT_VALUES.DELETE_ALL_SNAPSHOTS_FROM_VM
     });
   },
 
@@ -1406,9 +1406,9 @@ const ApiManager = {
     deleteSnapshotFromVM: async (vmId, snapshotId) => {
       return makeAPICall({
         method: "DELETE",
-        url: ENDPOINTS.DELETE_SNAPSHOT_FROM_VM(vmId,snapshotId), 
+        url: ENDPOINTS.DELETE_ALL_SNAPSHOTS_FROM_VM(vmId,snapshotId), 
         data: snapshotId, 
-        // defaultValues: DEFAULT_VALUES.DELETE_SNAPSHOTS_FROM_VM
+        // defaultValues: DEFAULT_VALUES.DELETE_ALL_SNAPSHOTS_FROM_VM
       });
     },
   /**
@@ -1422,8 +1422,8 @@ const ApiManager = {
   previewSnapshotFromVM: async (vmId, snapshotId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.PREVIEW_SNAPSHOT_FROM_VM(vmId, snapshotId),
-      // defaultValues: DEFAULT_VALUES.PREVIEW_SNAPSHOT_FROM_VM
+      url: ENDPOINTS.PREVIEW_ALL_SNAPSHOTS_FROM_VM(vmId, snapshotId),
+      // defaultValues: DEFAULT_VALUES.PREVIEW_ALL_SNAPSHOTS_FROM_VM
     });
   },
   /**
@@ -1436,8 +1436,8 @@ const ApiManager = {
   cloneSnapshotFromVM: async (vmId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.CLONE_SNAPSHOTS_FROM_VM(vmId),
-      // defaultValues: DEFAULT_VALUES.CLONE_SNAPSHOTS_FROM_VM
+      url: ENDPOINTS.CLONE_ALL_SNAPSHOTS_FROM_VM(vmId),
+      // defaultValues: DEFAULT_VALUES.CLONE_ALL_SNAPSHOTS_FROM_VM
     });
   },
   /**
@@ -1450,8 +1450,8 @@ const ApiManager = {
   commitSnapshotFromVM: async (vmId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.COMMIT_SNAPSHOTS_FROM_VM(vmId),
-      // defaultValues: DEFAULT_VALUES.COMMIT_SNAPSHOTS_FROM_VM
+      url: ENDPOINTS.COMMIT_ALL_SNAPSHOTS_FROM_VM(vmId),
+      // defaultValues: DEFAULT_VALUES.COMMIT_ALL_SNAPSHOTS_FROM_VM
     });
   },
   /**
@@ -1464,8 +1464,8 @@ const ApiManager = {
   undoSnapshotFromVM: async (vmId) => {
     return makeAPICall({
       method: "POST",
-      url: ENDPOINTS.UNDO_SNAPSHOTS_FROM_VM(vmId),
-      // defaultValues: DEFAULT_VALUES.UNDO_SNAPSHOTS_FROM_VM
+      url: ENDPOINTS.UNDO_ALL_SNAPSHOTS_FROM_VM(vmId),
+      // defaultValues: DEFAULT_VALUES.UNDO_ALL_SNAPSHOTS_FROM_VM
     });
   },
 

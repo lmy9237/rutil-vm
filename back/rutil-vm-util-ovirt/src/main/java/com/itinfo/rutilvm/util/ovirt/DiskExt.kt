@@ -25,12 +25,11 @@ fun Connection.findAllDisks(searchQuery: String = ""): Result<List<Disk>> = runC
 	this.srvAllDisks().list().apply {
 		if (searchQuery.isNotEmpty()) search(searchQuery).caseSensitive(false)
 	}.send().disks()
-
 }.onSuccess {
 	Term.DISK.logSuccess("목록조회")
 }.onFailure {
 	Term.DISK.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "목록조회") else it
 }
 
 fun Connection.srvDisk(diskId: String): DiskService =
@@ -44,7 +43,7 @@ fun Connection.findDisk(diskId: String, follow: String = ""): Result<Disk?> = ru
 	Term.DISK.logSuccess("상세조회")
 }.onFailure {
 	Term.DISK.logFail("상세조회", target = diskId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "상세조회", diskId) else it
 }
 
 fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<StorageDomain>> = runCatching {
@@ -56,10 +55,10 @@ fun Connection.findAllStorageDomainsFromDisk(diskId: String): Result<List<Storag
 
 	storageDomains
 }.onSuccess {
-	Term.DISK.logSuccess("{} 목록조회", Term.STORAGE_DOMAIN.description)
+	Term.DISK.logSuccessWithin(Term.STORAGE_DOMAIN, "목록조회")
 }.onFailure {
-	Term.DISK.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	Term.DISK.logFailWithin(Term.STORAGE_DOMAIN,"목록조회")
+	throw if (it is Error) it.toItCloudException(Term.DISK, "목록조회", diskId) else it
 }
 
 fun List<Disk>.nameDuplicateDisk(diskName: String, diskId: String? = null): Boolean =
@@ -80,7 +79,7 @@ fun Connection.addDisk(disk: Disk): Result<Disk?> = runCatching {
 	Term.DISK.logSuccess("생성")
 }.onFailure {
 	Term.DISK.logFail("생성")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "생성") else it
 }
 
 fun Connection.updateDisk(disk: Disk): Result<Disk?> = runCatching {
@@ -97,7 +96,7 @@ fun Connection.updateDisk(disk: Disk): Result<Disk?> = runCatching {
 	Term.DISK.logSuccess("편집")
 }.onFailure {
 	Term.DISK.logFail("편집")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "편집", disk.id()) else it
 }
 
 fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
@@ -109,7 +108,7 @@ fun Connection.removeDisk(diskId: String): Result<Boolean> = runCatching {
 	Term.DISK.logSuccess("삭제")
 }.onFailure {
 	Term.DISK.logFail("삭제")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "편집", diskId) else it
 }
 
 fun Connection.expectDiskDeleted(diskId: String, interval: Long = 1000L, timeout: Long = 60000L): Boolean {
@@ -146,7 +145,7 @@ fun Connection.moveDisk(diskId: String, domainId: String): Result<Boolean> = run
 	Term.DISK.logSuccess("이동")
 }.onFailure {
 	Term.DISK.logFail("이동")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "이동", diskId) else it
 }
 
 // 근데 복사시 복사대상이 되는 디스크도 같이 Lock 걸리고 같이 잠김
@@ -155,17 +154,18 @@ fun Connection.copyDisk(diskId: String, diskAlias: String, domainId: String): Re
 	val storageDomain = checkStorageDomain(domainId)
 
 	this.srvDisk(diskId).copy().disk(DiskBuilder().id(diskId).alias(diskAlias)).storageDomain(storageDomain).send()
-
-	// if (!expectDiskStatus(disk.id())) {
-	// 	log.error("디스크 복사 실패 ... 시간 초과")
-	// 	return Result.failure(Error("시간 초과"))
-	// }
+	/*
+	if (!expectDiskStatus(disk.id())) {
+		log.error("디스크 복사 실패 ... 시간 초과")
+		return Result.failure(Error("시간 초과"))
+	}
+	*/
 	true
 }.onSuccess {
 	Term.DISK.logSuccess("복사")
 }.onFailure {
 	Term.DISK.logFail("복사")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "복사", diskId) else it
 }
 
 fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> = runCatching {
@@ -175,10 +175,10 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 	true
 
 }.onSuccess {
-	Term.DISK.logSuccess("Lun 새로고침")
+	Term.DISK.logSuccessWithin(Term.HOST, "Lun 새로고침")
 }.onFailure {
-	Term.DISK.logFail("Lun 새로고침")
-	throw if (it is Error) it.toItCloudException() else it
+	Term.DISK.logFailWithin(Term.HOST, "Lun 새로고침")
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.DISK, Term.HOST,"복사", diskId, hostId) else it
 }
 
 fun Connection.findImageTransferId4DiskImageDownload(
@@ -194,7 +194,7 @@ fun Connection.findImageTransferId4DiskImageDownload(
 	Term.DISK.logSuccess("파일 다운로드 준비")
 }.onFailure {
 	Term.DISK.logFail("파일 다운로드 준비")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "파일 다운로드 준비", diskId) else it
 }
 
 // 디스크 이미지 업로드하기 위해 하는 세팅
@@ -215,7 +215,7 @@ fun Connection.findImageTransferId4DiskImageUpload(
 	Term.DISK.logSuccess("파일 업로드 준비")
 }.onFailure {
 	Term.DISK.logFail("파일 업로드 준비")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.DISK, "파일 업로드 준비") else it
 }
 
 private fun Connection.preparedImageTransfer(
@@ -269,7 +269,7 @@ private fun Connection.addImageTransfer(
 	Term.IMAGE_TRANSFER.logSuccess("작업추가")
 }.onFailure {
 	Term.IMAGE_TRANSFER.logFail("작업추가")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업추가") else it
 }
 
 fun Connection.cancelImageTransfer(
@@ -281,12 +281,12 @@ fun Connection.cancelImageTransfer(
 	Term.IMAGE_TRANSFER.logSuccess("작업취소")
 }.onFailure {
 	Term.IMAGE_TRANSFER.logFail("작업취소")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업취소", imageTransferId) else it
 }
 
 
-fun Connection.srvImageTransfer(imageTransferId: String): ImageTransferService =
-	this.srvAllImageTransfer().imageTransferService(imageTransferId)
+fun Connection.srvImageTransfer(imagetransferId: String): ImageTransferService =
+	this.srvAllImageTransfer().imageTransferService(imagetransferId)
 
 private fun Connection.findAllImageTransfers(): Result<List<ImageTransfer>> = runCatching {
 	this.srvAllImageTransfer().list().send().imageTransfer()
@@ -294,16 +294,16 @@ private fun Connection.findAllImageTransfers(): Result<List<ImageTransfer>> = ru
 	Term.IMAGE_TRANSFER.logSuccess("목록조회")
 }.onFailure {
 	Term.IMAGE_TRANSFER.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "목록조회") else it
 }
 
-fun Connection.findImageTransfer(imageId: String): Result<ImageTransfer?> = runCatching {
-	this.srvImageTransfer(imageId).get().send().imageTransfer()
+fun Connection.findImageTransfer(imagetransferId: String): Result<ImageTransfer?> = runCatching {
+	this.srvImageTransfer(imagetransferId).get().send().imageTransfer()
 }.onSuccess {
 	Term.IMAGE_TRANSFER.logSuccess("상세조회")
 }.onFailure {
 	Term.IMAGE_TRANSFER.logFail("상세조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "상세조회", imagetransferId) else it
 }
 
 /**
@@ -345,7 +345,7 @@ fun Connection.findAllPermissionsFromDisk(diskId: String): Result<List<Permissio
 	Term.DISK.logSuccessWithin(Term.PERMISSION, "목록조회", diskId)
 }.onFailure {
 	Term.DISK.logFailWithin(Term.PERMISSION, "목록조회", it, diskId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.DISK, Term.PERMISSION,"목록조회", diskId) else it
 }
 
 
@@ -357,7 +357,7 @@ fun Connection.findAllVmsFromDisk(diskId: String): Result<List<Vm>> = runCatchin
 	Term.DISK.logSuccessWithin(Term.VM, "목록조회", diskId)
 }.onFailure {
 	Term.DISK.logFailWithin(Term.VM, "목록조회", it, diskId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.DISK, Term.VM, "목록조회", diskId) else it
 }
 
 

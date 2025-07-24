@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
 import com.itinfo.rutilvm.api.ovirt.business.model.logFail
 
 import com.itinfo.rutilvm.util.ovirt.error.toItCloudException
+import com.itinfo.rutilvm.util.ovirt.error.toItCloudExceptionWithin
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.services.JobService
@@ -27,7 +28,7 @@ fun Connection.findAllJobs(searchQuery: String = "", follow: String = ""): Resul
 	Term.JOB.logSuccess("목록조회")
 }.onFailure {
 	Term.JOB.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.JOB, "목록조회") else it
 }
 
 private fun Connection.srvJob(jobId: String): JobService =
@@ -42,7 +43,7 @@ fun Connection.findJob(jobId: String, follow: String = ""): Result<Job?> = runCa
 	Term.JOB.logSuccess("상세조회")
 }.onFailure {
 	Term.JOB.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.JOB, "상세조회", jobId) else it
 }
 
 fun Connection.addJob(job: Job): Result<Job?> = runCatching {
@@ -61,17 +62,17 @@ fun Connection.endJob(jobId: String): Result<Boolean?> = runCatching {
 	Term.JOB.logSuccess("종료")
 }.onFailure {
 	Term.JOB.logFail("종료", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.JOB, "종료", jobId) else it
 }
 
 fun Connection.clearJob(jobId: String): Result<Boolean?> = runCatching {
 	this.srvJob(jobId).clear().send()
 	true
 }.onSuccess {
-	Term.JOB.logSuccess("지우기")
+	Term.JOB.logSuccess("삭제")
 }.onFailure {
-	Term.JOB.logFail("지우기", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.JOB.logFail("삭제", it)
+	throw if (it is Error) it.toItCloudException(Term.JOB, "삭제", jobId) else it
 }
 
 private fun Connection.srvSteps(jobId: String): StepsService =
@@ -85,7 +86,7 @@ fun Connection.findAllSteps(jobId: String, follow: String = ""): Result<List<Ste
 	Term.STEP.logSuccess("목록조회")
 }.onFailure {
 	Term.STEP.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.STEP, "목록조회", jobId) else it
 }
 
 private fun Connection.srvStep(jobId: String, stepId: String): StepService =
@@ -99,5 +100,5 @@ fun Connection.srvStep(jobId: String, stepId: String, follow: String = ""): Resu
 	Term.STEP.logSuccess("상세조회")
 }.onFailure {
 	Term.STEP.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.STEP, "상세조회", jobId) else it
 }

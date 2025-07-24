@@ -29,7 +29,7 @@ fun Connection.findAllAffinityLabels(): Result<List<AffinityLabel>> = runCatchin
 	Term.AFFINITY_LABEL.logSuccess("목록조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.AFFINITY_LABEL, "목록조회") else it
 }
 
 fun Connection.srvAffinityLabel(alId: String): AffinityLabelService =
@@ -41,7 +41,7 @@ fun Connection.findAffinityLabel(alId: String): Result<AffinityLabel?> = runCatc
 	Term.AFFINITY_LABEL.logSuccess("상세조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.AFFINITY_LABEL, "상세조회", alId) else it
 }
 
 fun Connection.srvVmsFromAffinityLabel(alId: String): AffinityLabelVmsService =
@@ -53,7 +53,7 @@ fun Connection.findAllVmsFromAffinityLabel(alId: String): Result<List<Vm>> = run
 	Term.AFFINITY_LABEL.logSuccessWithin(Term.VM, "목록조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFailWithin(Term.VM, "목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.AFFINITY_LABEL, Term.VM,"목록조회", alId) else it
 }
 
 fun Connection.srvVmFromAffinityLabel(alId: String, vmId: String): AffinityLabelVmService =
@@ -65,7 +65,7 @@ fun Connection.findVmFromAffinityLabel(alId: String, vmId: String): Result<Vm?> 
 	Term.AFFINITY_LABEL.logSuccessWithin(Term.VM, "상세조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFailWithin(Term.VM, "상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.AFFINITY_LABEL, Term.VM,"상세조회", alId, vmId) else it
 }
 
 fun Connection.srvHostsFromAffinityLabel(alId: String): AffinityLabelHostsService =
@@ -77,7 +77,7 @@ fun Connection.findAllHostsFromAffinityLabel(alId: String): Result<List<Host>> =
 	Term.AFFINITY_LABEL.logSuccessWithin(Term.HOST, "목록조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFailWithin(Term.HOST, "목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.AFFINITY_LABEL, Term.HOST,"목록조회", alId) else it
 }
 
 fun Connection.srvHostFromAffinityLabel(alId: String, hostId: String): AffinityLabelHostService =
@@ -89,7 +89,7 @@ fun Connection.findHostFromAffinityLabel(alId: String, hostId: String): Result<H
 	Term.AFFINITY_LABEL.logSuccessWithin(Term.HOST, "상세조회")
 }.onFailure {
 	Term.AFFINITY_LABEL.logFailWithin(Term.HOST, "상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.AFFINITY_LABEL, Term.HOST,"상세조회", alId, hostId) else it
 }
 
 

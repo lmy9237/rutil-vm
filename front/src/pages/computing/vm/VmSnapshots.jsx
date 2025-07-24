@@ -23,7 +23,7 @@ import {
   status2Icon,
 } from "@/components/icons/RutilVmIcons";
 import {
-  useSnapshotsFromVM,
+  useAllSnapshotsFromVm,
   useVm,
 } from "@/api/RQHook";
 import { convertBytesToMB }             from "@/util";
@@ -58,7 +58,7 @@ const VmSnapshots = ({
     isLoading: isSnapshotsLoading,
     isError: isSnapshotsError,
     isSuccess: isSnapshotsSuccess
-  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const transformedData = useMemo(() => [...snapshots]?.map((snapshot) => ({
     ...snapshot,

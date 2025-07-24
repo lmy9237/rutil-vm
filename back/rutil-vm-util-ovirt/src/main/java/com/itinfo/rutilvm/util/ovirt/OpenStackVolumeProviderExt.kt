@@ -21,7 +21,7 @@ fun Connection.findAllOpenStackVolumeProviders(): Result<List<OpenStackVolumePro
 	Term.OPEN_STACK_VOLUME_PROVIDER.logSuccess("목록조회")
 }.onFailure {
 	Term.OPEN_STACK_VOLUME_PROVIDER.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_VOLUME_PROVIDER, "목록조회") else it
 }
 
 private fun Connection.srvOpenStackVolumeProvider(openStackVolumeProviderId: String): OpenstackVolumeProviderService =
@@ -33,5 +33,5 @@ fun Connection.findOpenStackVolumeProvider(openStackVolumeProviderId: String): R
 	Term.OPEN_STACK_VOLUME_PROVIDER.logSuccess("상세조회")
 }.onFailure {
 	Term.OPEN_STACK_VOLUME_PROVIDER.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_VOLUME_PROVIDER, "상세조회", openStackVolumeProviderId) else it
 }

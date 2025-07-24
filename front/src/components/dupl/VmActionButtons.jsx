@@ -8,7 +8,7 @@ import useClickOutside          from "@/hooks/useClickOutside";
 import { openNewTab }           from "@/navigation";
 import { 
   useRemoteViewerConnectionFileFromVm, 
-  useSnapshotsFromVM,
+  useAllSnapshotsFromVm,
 } from "@/api/RQHook";
 import {
   ActionButtons, 
@@ -98,7 +98,7 @@ const VmActionButtons = ({
   }
 
   // 스냅샷 미리보기 있으면 가상머신 시작 취소
-  const { data: snapshots = [] } = useSnapshotsFromVM(selected1st?.id, (e) => ({ ...e }));
+  const { data: snapshots = [] } = useAllSnapshotsFromVm(selected1st?.id, (e) => ({ ...e }));
   const hasPreviewSnapshot = useMemo(() => {
     return snapshots.some(s => s.status?.toUpperCase() === "in_preview");
   }, [snapshots]);

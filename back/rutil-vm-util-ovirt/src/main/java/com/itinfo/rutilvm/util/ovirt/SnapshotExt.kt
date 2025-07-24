@@ -6,7 +6,7 @@ import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
 
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.error.toError
-import com.itinfo.rutilvm.util.ovirt.error.toItCloudException
+import com.itinfo.rutilvm.util.ovirt.error.toItCloudExceptionWithin
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.services.SnapshotDisksService
@@ -33,7 +33,8 @@ fun Connection.findAllSnapshotsFromVm(vmId: String, follow: String = ""): Result
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it}
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "목록조회", vmId) else it
+}
 
 private fun Connection.srvSnapshotFromVm(vmId: String, snapshotId: String): SnapshotService =
 	this.srvSnapshotsFromVm(vmId).snapshotService(snapshotId)
@@ -48,8 +49,7 @@ fun Connection.findSnapshotFromVm(vmId: String, snapshotId: String, follow: Stri
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "상세조회", vmId,snapshotId) else it
 }
 
 fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Boolean> = runCatching {
@@ -69,7 +69,7 @@ fun Connection.addSnapshotFromVm(vmId: String, snapshot: Snapshot): Result<Boole
 		if (it.message?.contains("409|review".toRegex()) == true)
 			ErrorPattern.SNAPSHOT_CONFLICT_WHILE_PREVIEWING_SNAPSHOT.toError()
 		else
-			it.toItCloudException()
+			it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "생성", vmId)
 	else it
 }
 
@@ -82,7 +82,7 @@ fun Connection.removeSnapshotFromVm(vmId: String, snapshotId: String): Result<Bo
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "삭제", snapshotId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "삭제", it, snapshotId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "삭제", vmId, snapshotId) else it
 }
 
 fun Connection.removeMultiSnapshotFromVm(vmId: String, snapshotIds: List<String>): Result<Boolean> = runCatching {
@@ -95,21 +95,20 @@ fun Connection.removeMultiSnapshotFromVm(vmId: String, snapshotIds: List<String>
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.SNAPSHOT, "삭제", vmId)
+	Term.VM.logSuccessWithin(Term.SNAPSHOT, "일괄삭제", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.SNAPSHOT, "삭제", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.SNAPSHOT, "일괄삭제", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "일괄삭제", vmId) else it
 }
 
 fun Connection.previewSnapshotFromVm(vmId: String, snapshot: Snapshot/*, restoreMemory: Boolean*/): Result<Boolean> = runCatching {
 	this.srvVm(vmId).previewSnapshot()/*.restoreMemory(restoreMemory)*/.snapshot(snapshot).send()
 	true
-
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "미리보기", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "미리보기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "미리보기", vmId, snapshot.id()) else it
 }
 
 fun Connection.commitSnapshotFromVm(vmId: String): Result<Boolean> = runCatching {
@@ -120,7 +119,7 @@ fun Connection.commitSnapshotFromVm(vmId: String): Result<Boolean> = runCatching
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "커밋", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "커밋", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "미리보기", vmId) else it
 }
 
 fun Connection.undoSnapshotFromVm(vmId: String): Result<Boolean> = runCatching {
@@ -131,7 +130,7 @@ fun Connection.undoSnapshotFromVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "되돌리기", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "되돌리기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "되돌리기", vmId) else it
 }
 
 fun Connection.cloneSnapshotFromVm(vmId: String, vm: Vm): Result<Boolean> = runCatching {
@@ -142,7 +141,7 @@ fun Connection.cloneSnapshotFromVm(vmId: String, vm: Vm): Result<Boolean> = runC
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "복제", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "복제", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "복제", vmId) else it
 }
 
 private fun Connection.srvSnapshotDisksFromVm(vmId: String, snapshotId: String): SnapshotDisksService =
@@ -150,12 +149,11 @@ private fun Connection.srvSnapshotDisksFromVm(vmId: String, snapshotId: String):
 
 fun Connection.findAllSnapshotDisksFromVm(vmId: String, snapshotId: String): Result<List<Disk>> = runCatching {
 	this.srvSnapshotDisksFromVm(vmId, snapshotId).list().send().disks()
-
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "디스크 목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "디스크 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "디스크 목록조회", vmId, snapshotId) else it
 }
 
 private fun Connection.srvSnapshotNicsFromVm(vmId: String, snapshotId: String): SnapshotNicsService =
@@ -167,7 +165,7 @@ fun Connection.findAllSnapshotNicsFromVm(vmId: String, snapshotId: String): Resu
 	Term.VM.logSuccessWithin(Term.SNAPSHOT, "NIC 목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.SNAPSHOT, "NIC 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.SNAPSHOT, "NIC 목록조회", vmId, snapshotId) else it
 }
 
 

@@ -115,7 +115,7 @@ class ItHostStorageServiceImpl(
 		val fibres: List<HostStorage> = conn.findAllHostStoragesFromHost(hostId).getOrDefault(emptyList())
 			.filter { it.type() == StorageType.FCP && it.logicalUnits().first().volumeGroupIdPresent() } // 기본 한개라는 가정하에
 
-		val res: List<StorageDomain> = conn.unRegisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
+		val res: List<StorageDomain> = conn.unregisteredStorageDomainsFromHost(hostId).getOrDefault(emptyList())
 
 		return res.map { storageDomain ->
 			val storageDomainVo = storageDomain.toStorageDomainInfoVo(conn)

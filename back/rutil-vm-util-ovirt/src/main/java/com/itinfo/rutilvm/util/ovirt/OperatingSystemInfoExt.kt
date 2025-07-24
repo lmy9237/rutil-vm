@@ -20,5 +20,5 @@ fun Connection.findAllOperatingSystems(): Result<List<OperatingSystemInfo>> = ru
 	Term.OPERATING_SYSTEM.logSuccess("목록조회")
 }.onFailure {
 	Term.OPERATING_SYSTEM.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPERATING_SYSTEM, "목록조회") else it
 }

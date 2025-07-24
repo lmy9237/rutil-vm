@@ -21,5 +21,5 @@ fun Connection.addExternalVmImport(externalVmImport: ExternalVmImport): Result<E
 	Term.EXTERNAL_VM.logSuccess("생성", it.name())
 }.onFailure {
 	Term.EXTERNAL_VM.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_VM, "생성") else it
 }

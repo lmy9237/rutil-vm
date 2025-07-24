@@ -24,6 +24,7 @@ enum class Term(
 	BOND("(네트워크) 본드"),
 	NIC("네트워크 인터페이스"),
 	VM("가상머신"),
+	VM_NIC("가상머신 NIC"),
 	EXTERNAL_VM("외부 가상머신"),
 	CONSOLE("콘솔"),
 	TICKET("티켓"),
@@ -73,6 +74,18 @@ enum class Term(
 	STEP("작업과정"),
 	UNKNOWN("알 수 없음")
 	;
+
+	fun toStrongMessage(action: String, t: Throwable?=null, targetId: String?=""): String {
+		val target: String = if (targetId?.isEmpty() == false) " ($targetId) " else ""
+		return "${this@Term.description} $action$target${if (t == null) "성공!" else "실패 ... 이유: "}${t?.stackTraceToString()} "
+	}
+
+	fun toStrongMessageWithin(withinTerm: Term, action: String, t: Throwable?=null, targetId: String?="", withinTarget: String?=""): String {
+		var target: String = if (targetId?.isEmpty() == false) " ($targetId" else ""
+		target += if (withinTarget?.isEmpty() == false) ":$withinTarget) " else ") "
+		return "${withinTerm.description} 내 ${this@Term.description} $action$target${if (t == null) "성공!" else "실패 ... 이유: "}${t?.stackTraceToString()}"
+	}
+
 }
 
 fun Term.logSuccess(action: String?="", target: String?="") {

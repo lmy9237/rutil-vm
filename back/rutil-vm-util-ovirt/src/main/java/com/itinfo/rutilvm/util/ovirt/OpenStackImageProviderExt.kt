@@ -21,7 +21,7 @@ fun Connection.findAllOpenStackImageProviders(): Result<List<OpenStackImageProvi
 	Term.OPEN_STACK_IMAGE_PROVIDER.logSuccess("목록조회")
 }.onFailure {
 	Term.OPEN_STACK_IMAGE_PROVIDER.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_IMAGE_PROVIDER, "목록조회") else it
 }
 
 private fun Connection.srvOpenStackImageProvider(openStackImageProviderId: String): OpenstackImageProviderService =
@@ -33,5 +33,5 @@ fun Connection.findOpenStackImageProvider(openStackImageProviderId: String): Res
 	Term.OPEN_STACK_IMAGE_PROVIDER.logSuccess("상세조회", openStackImageProviderId)
 }.onFailure {
 	Term.OPEN_STACK_IMAGE_PROVIDER.logFail("상세조회", it, openStackImageProviderId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_IMAGE_PROVIDER, "상세조회", openStackImageProviderId) else it
 }

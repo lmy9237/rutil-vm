@@ -1,6 +1,6 @@
 #!/bin/bash
 # 
-# Last Edit : 20250716-01
+# Last Edit : 20250723-01
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Change engine repositories]"
 
@@ -145,6 +145,7 @@ sshpass -p "$RUTILVM_PASSWORD" ssh-copy-id -o StrictHostKeyChecking=no -i "$RUTI
 
 chown $RUTILVM_USER:$RUTILVM_GROUPNAME $RUTILVM_SSH_DIR/authorized_keys
 chmod 600 $RUTILVM_SSH_DIR/authorized_keys
+
 # engine이 만든 고유한 공개키를 authorized_keys 에 등록 (스스로 접근)
 ENGINE_IP=$(hostname -i)
 curl_url="https://${ENGINE_IP}:8443/ovirt-engine/services/pki-resource?resource=engine-certificate&format=OPENSSH-PUBKEY"
@@ -498,8 +499,19 @@ chown postgres:postgres /var/lib/pgsql/data/pg_hba.conf
 systemctl restart postgresql
 echo "[ INFO  ] ok: [localhost]"
 
-systemctl restart httpd >/dev/null 2>&1
-systemctl restart ovirt-engine >/dev/null 2>&1
+redirect_conf="/etc/httpd/conf.d/ovirt-engine-root-redirect.conf"
+IP4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
+sed -i '/^.*\/ovirt-engine/s/^/#/g' $redirect_conf
+echo "RedirectMatch ^/$ https://$IP4:8443" >> $redirect_conf
+
+#ssl_conf="/etc/httpd/conf.d/ssl.conf"
+#sed -i 's/<\/VirtualHost>//g' $ssl_conf
+#echo '#<Location "/ovirt-engine">' >> $ssl_conf
+#echo "#    Order mutual-failure"   >> $ssl_conf
+#echo "#    Allow from $IP4" >> $ssl_conf
+#echo "#</Location>" >> $ssl_conf
+#echo "</VirtualHost>" >> $ssl_conf
+#systemctl restart httpd >/dev/null 2>&1
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Cockpit UI settings]"
 # 브랜딩 파일들이 위치한 경로와 복사 대상 경로 변수 선언
@@ -534,21 +546,10 @@ yes | cp -p "$brand_path/ovirt_middle_logo.png" "$ovirt_web_ui_branding"
 # ovirt_engine_brands 내 하위 디렉토리(bundled/patternfly-next/)로 patternfly-no-reset.css 파일 복사
 yes | cp -p "$brand_path/patternfly-no-reset.css" "$ovirt_engine_brands/bundled/patternfly-next/"
 
+systemctl restart httpd >/dev/null 2>&1
+systemctl restart ovirt-engine >/dev/null 2>&1
+
 echo "[ INFO  ] ok: [localhost]"
-
-redirect_conf="/etc/httpd/conf.d/ovirt-engine-root-redirect.conf"
-IP4=$(/sbin/ip -o -4 addr list eth0 | awk '{print $4}' | cut -d/ -f1)
-sed -i '/^.*\/ovirt-engine/s/^/#/g' $redirect_conf
-echo "RedirectMatch ^/$ https://$IP4:8443" >> $redirect_conf
-
-#ssl_conf="/etc/httpd/conf.d/ssl.conf"
-#sed -i 's/<\/VirtualHost>//g' $ssl_conf
-#echo '#<Location "/ovirt-engine">' >> $ssl_conf
-#echo "#    Order mutual-failure"   >> $ssl_conf
-#echo "#    Allow from $IP4" >> $ssl_conf
-#echo "#</Location>" >> $ssl_conf
-#echo "</VirtualHost>" >> $ssl_conf
-#systemctl restart httpd >/dev/null 2>&1
 
 # 엔진 백업 실행
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Start engine configuration backup]"

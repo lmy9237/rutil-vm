@@ -4,7 +4,7 @@ import useGlobal               from "@/hooks/useGlobal";
 import BaseModal from "../BaseModal";
 import LabelInput from "../../label/LabelInput";
 import ToggleSwitchButton from "../../button/ToggleSwitchButton";
-import { useAddSnapshotFromVM } from "../../../api/RQHook";
+import { useaddSnapshotFromVm } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import Logger from "../../../utils/Logger";
 import "./MVm.css";
@@ -24,7 +24,7 @@ const VmSnapshotModal = ({
   const { vmsSelected } = useGlobal(); // vmsSelected 직접 읽기
   const selectedVm = vmsSelected?.[0] ?? null; // 첫 번째 VM 기준으로
 
-  const { mutate: addSnapshotFromVM } = useAddSnapshotFromVM(onClose, onClose);
+  const { mutate: addSnapshotFromVm } = useaddSnapshotFromVm(onClose, onClose);
   
   useEffect(() => {
     if (isOpen  && selectedVm) {
@@ -43,7 +43,7 @@ const VmSnapshotModal = ({
     };
     Logger.debug(`VmSnapshotModal > handleFormSubmit ... snap: ${JSON.stringify(dataToSubmit, null, 2)}`);
 
-    addSnapshotFromVM({ vmId: selectedVm.id, snapshotData: dataToSubmit });
+    addSnapshotFromVm({ vmId: selectedVm.id, snapshotData: dataToSubmit });
   };
 
   return (

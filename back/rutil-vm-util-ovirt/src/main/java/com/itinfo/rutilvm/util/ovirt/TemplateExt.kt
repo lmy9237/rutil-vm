@@ -26,7 +26,7 @@ fun Connection.findAllTemplates(searchQuery: String = "", follow: String = ""): 
 	Term.TEMPLATE.logSuccess("목록조회")
 }.onFailure {
 	Term.TEMPLATE.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "목록조회") else it
 }
 
 private fun Connection.srvTemplate(templateId: String): TemplateService =
@@ -41,7 +41,7 @@ fun Connection.findTemplate(templateId: String, follow: String = ""): Result<Tem
 	Term.TEMPLATE.logSuccess("상세조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFail("상세조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "상세조회", templateId) else it
 }
 
 fun List<Template>.templateHasDuplicateName(templateName: String, templateId: String = ""): Boolean =
@@ -56,7 +56,7 @@ fun Connection.exportTemplate(templateId: String, exclusive: Boolean, toStorageD
 	Term.TEMPLATE.logSuccess("내보내기", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFail("내보내기", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "내보내기", templateId) else it
 }
 
 @Throws(Error::class)
@@ -74,7 +74,7 @@ fun Connection.addTemplate(vmId: String, template: Template): Result<Template?> 
 	Term.TEMPLATE.logSuccess("생성", vmId)
 }.onFailure {
 	Term.TEMPLATE.logFail("생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "생성") else it
 }
 
 fun Connection.updateTemplate(templateId: String, template: Template): Result<Template?> = runCatching {
@@ -92,7 +92,7 @@ fun Connection.updateTemplate(templateId: String, template: Template): Result<Te
 	Term.TEMPLATE.logSuccess("편집")
 }.onFailure {
 	Term.TEMPLATE.logFail("편집", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "편집", templateId) else it
 }
 
 fun Connection.removeTemplate(templateId: String): Result<Boolean> = runCatching {
@@ -104,7 +104,7 @@ fun Connection.removeTemplate(templateId: String): Result<Boolean> = runCatching
 	Term.TEMPLATE.logSuccess("삭제", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFail("삭제", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "삭제", templateId) else it
 }
 
 private fun Connection.srvWatchdogsFromTemplate(templateId: String): TemplateWatchdogsService =
@@ -116,7 +116,7 @@ fun Connection.findAllWatchdogsFromTemplate(templateId: String): Result<List<Wat
 	Term.TEMPLATE.logSuccessWithin(Term.WATCHDOG, "목록조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.WATCHDOG,"목록조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.WATCHDOG,  "목록조회", templateId) else it
 }
 
 private fun Connection.srvCdromsFromTemplate(templateId: String): TemplateCdromsService =
@@ -128,7 +128,7 @@ fun Connection.findAllCdromsFromTemplate(templateId: String): Result<List<Cdrom>
 	Term.TEMPLATE.logSuccessWithin(Term.CD_ROM, "목록조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.CD_ROM,"목록조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.CD_ROM,  "목록조회", templateId) else it
 }
 
 private fun Connection.srvDiskAttachmentsFromTemplate(templateId: String): TemplateDiskAttachmentsService =
@@ -143,7 +143,7 @@ fun Connection.findAllDiskAttachmentsFromTemplate(templateId: String, follow: St
 	Term.TEMPLATE.logSuccessWithin(Term.DISK_ATTACHMENT, "목록조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.DISK_ATTACHMENT,"목록조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.DISK_ATTACHMENT,  "목록조회", templateId) else it
 }
 
 private fun Connection.srvDiskAttachmentFromTemplate(templateId: String, diskAttachmentId: String): TemplateDiskAttachmentService =
@@ -155,7 +155,7 @@ fun Connection.findDiskAttachmentFromTemplate(templateId: String, diskAttachment
 	Term.TEMPLATE.logSuccessWithin(Term.DISK_ATTACHMENT, "상세조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.DISK_ATTACHMENT,"상세조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.DISK_ATTACHMENT,  "상세조회", templateId, diskAttachmentId) else it
 }
 
 private fun Connection.srvNicsFromTemplate(templateId: String): TemplateNicsService =
@@ -170,7 +170,7 @@ fun Connection.findAllNicsFromTemplate(templateId: String, follow: String = ""):
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "목록조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"목록조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.NIC,  "목록조회", templateId) else it
 }
 private fun Connection.srvNicFromTemplate(templateId: String, nicId: String): TemplateNicService =
 	this.srvNicsFromTemplate(templateId).nicService(nicId)
@@ -181,7 +181,7 @@ fun Connection.findNicFromTemplate(templateId: String, nicId: String): Result<Ni
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "상세조회", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"상세조회", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.NIC,  "상세조회", templateId, nicId) else it
 }
 
 fun Connection.addNicFromTemplate(templateId: String, nic: Nic): Result<Nic?> = runCatching {
@@ -190,7 +190,7 @@ fun Connection.addNicFromTemplate(templateId: String, nic: Nic): Result<Nic?> = 
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "생성", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"생성", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.NIC,  "생성", templateId) else it
 }
 
 fun Connection.updateNicFromTemplate(templateId: String, nic: Nic): Result<Nic?> = runCatching {
@@ -199,7 +199,7 @@ fun Connection.updateNicFromTemplate(templateId: String, nic: Nic): Result<Nic?>
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "편집", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"편집", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.NIC,  "편집", templateId, nic.id()) else it
 }
 
 fun Connection.removeNicFromTemplate(templateId: String, nicId: String): Result<Boolean> = runCatching {
@@ -209,7 +209,7 @@ fun Connection.removeNicFromTemplate(templateId: String, nicId: String): Result<
 	Term.TEMPLATE.logSuccessWithin(Term.NIC, "제거", templateId)
 }.onFailure {
 	Term.TEMPLATE.logFailWithin(Term.NIC,"제거", it, templateId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.TEMPLATE, Term.NIC,  "제거", templateId, nicId) else it
 }
 
 

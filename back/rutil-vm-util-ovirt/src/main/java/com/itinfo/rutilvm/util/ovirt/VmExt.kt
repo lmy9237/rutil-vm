@@ -27,7 +27,7 @@ fun Connection.findAllVms(searchQuery: String?="", follow: String?=""): Result<L
 	Term.VM.logSuccess("목록조회")
 }.onFailure {
 	Term.VM.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "목록조회") else it
 }
 
 fun Connection.srvVm(vmId: String?=""): VmService =
@@ -41,7 +41,7 @@ fun Connection.findVm(vmId: String?="", follow: String?=""): Result<Vm?> = runCa
 	Term.VM.logSuccess("상세조회", vmId)
 }.onFailure {
 	Term.VM.logFail("상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "상세조회", vmId) else it
 }
 
 
@@ -72,7 +72,7 @@ fun Connection.startVm(
 	Term.VM.logSuccess("시작", vmId)
 }.onFailure {
 	Term.VM.logFail("시작", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "시작", vmId) else it
 }
 
 fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runCatching {
@@ -99,7 +99,7 @@ fun Connection.startOnceVm(vm: Vm, windowGuest: Boolean): Result<Boolean> = runC
 	Term.VM.logSuccess("한번 시작", vm.id())
 }.onFailure {
 	Term.VM.logFail("한번 시작", it, vm.id())
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "한번 시작", vm.id()) else it
 }
 
 fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
@@ -117,7 +117,7 @@ fun Connection.stopVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccess("전원끄기", vmId)
 }.onFailure {
 	Term.VM.logFail("전원끄기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "전원끄기", vmId) else it
 }
 
 fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
@@ -133,8 +133,7 @@ fun Connection.suspendVm(vmId: String): Result<Boolean> = runCatching {
 		if (it.message?.contains("review".toRegex()) == true)
 			ErrorPattern.VM_CONFLICT_WHILE_PREVIEWING_SNAPSHOT.toError()
 		else
-			it.toItCloudException()
-	else it
+			it.toItCloudException(Term.VM, "일시정지", vmId) else it
 }
 
 // TODO: 종료되지 않고 다시 올라올때가 잇음, expectVmStatus대신 다른 함수 써야 할지 확인 필요
@@ -148,7 +147,7 @@ fun Connection.shutdownVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccess("종료", vmId)
 }.onFailure {
 	Term.VM.logFail("종료", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "종료", vmId) else it
 }
 
 fun Connection.rebootVm(vmId: String): Result<Boolean> = runCatching {
@@ -161,7 +160,7 @@ fun Connection.rebootVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccess("재부팅", vmId)
 }.onFailure {
 	Term.VM.logFail("재부팅", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "재부팅", vmId) else it
 }
 
 fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
@@ -174,22 +173,19 @@ fun Connection.resetVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccess("재설정", vmId)
 }.onFailure {
 	Term.VM.logFail("재설정", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "재설정", vmId) else it
 }
 
 fun Connection.detachVm(vmId: String): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
 	this.srvVm(vmId).detach().send()
-
 	true
-
 }.onSuccess {
 	Term.VM.logSuccess("분리", vmId)
 }.onFailure {
 	Term.VM.logFail("분리", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "분리", vmId) else it
 }
-
 
 fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
@@ -204,9 +200,8 @@ fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
 	Term.VM.logSuccess("생성", it.id())
 }.onFailure {
 	Term.VM.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "생성") else it
 }
-
 
 fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
@@ -221,7 +216,7 @@ fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
 	Term.VM.logSuccess("편집", it.id())
 }.onFailure {
 	Term.VM.logFail("편집", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "편집") else it
 }
 
 // diskDelete 디스크 삭제 여부
@@ -229,7 +224,7 @@ fun Connection.removeVm(vmId: String, diskDelete: Boolean = false): Result<Boole
 	val vm: Vm? = checkVm(vmId)
 	if (vm?.deleteProtected() == true) throw ErrorPattern.VM_PROTECTED.toError()
 	if (vm?.status() == VmStatus.UP) {
-		log.debug("가상머신이 실행중인 상태")
+		log.info("가상머신({})이 실행중인 상태", vm.id())
 		throw ErrorPattern.VM_STATUS_UP.toError()
 	}
 
@@ -239,7 +234,7 @@ fun Connection.removeVm(vmId: String, diskDelete: Boolean = false): Result<Boole
 	Term.VM.logSuccess("삭제", vmId)
 }.onFailure {
 	Term.VM.logFail("삭제", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "삭제") else it
 }
 
 /*
@@ -294,7 +289,7 @@ fun Connection.exportVm(
 	Term.VM.logSuccess("내보내기", vmId)
 }.onFailure {
 	Term.VM.logFail("내보내기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "내보내기", vmId) else it
 }
 
 fun Connection.migrationVm(vmId: String, clusterId: String, affinityClosure: Boolean): Result<Boolean> = runCatching {
@@ -310,7 +305,7 @@ fun Connection.migrationVm(vmId: String, clusterId: String, affinityClosure: Boo
 	Term.VM.logSuccess("마이그레이션", vmId)
 }.onFailure {
 	Term.VM.logFail("마이그레이션", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "마이그레이션", vmId) else it
 }
 
 fun Connection.migrationVmToHost(vmId: String, hostId: String, affinityClosure: Boolean): Result<Boolean> = runCatching {
@@ -339,7 +334,7 @@ fun Connection.cancelMigrationVm(vmId: String): Result<Boolean> = runCatching {
 	Term.VM.logSuccess("마이그레이션 취소", vmId)
 }.onFailure {
 	Term.VM.logFail("마이그레이션 취소", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.VM, "마이그레이션 취소", vmId) else it
 }
 
 private const val DEFAULT_ID_CDROM = "00000000-0000-0000-0000-000000000000" // CD-ROM은 어느환경에서 하나만 존재하는 것으로 확인
@@ -357,7 +352,7 @@ fun Connection.findAllCdromsFromVm(vmId: String?=""): Result<List<Cdrom>> = runC
 	Term.VM.logSuccessWithin(Term.CD_ROM, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CD_ROM, "목록조회", vmId) else it
 }
 
 private fun Connection.srvVmCdromFromVm(vmId: String?=""): VmCdromService =
@@ -374,7 +369,7 @@ fun Connection.findCdromFromVm(vmId: String?="", current: Boolean?=false): Resul
 	Term.VM.logSuccessWithin(Term.CD_ROM, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CD_ROM, "상세조회", vmId) else it
 }
 
 fun Connection.addCdromFromVm(vmId: String?="", cdromFileId: String?=""): Result<Cdrom?> = runCatching {
@@ -386,7 +381,7 @@ fun Connection.addCdromFromVm(vmId: String?="", cdromFileId: String?=""): Result
 	Term.VM.logSuccessWithin(Term.CD_ROM, "생성", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CD_ROM, "생성", vmId) else it
 }
 
 fun Connection.updateCdromFromVm(vmId: String?="", newCdromId: String?="", current:Boolean?=false): Result<Cdrom?> = runCatching {
@@ -400,7 +395,7 @@ fun Connection.updateCdromFromVm(vmId: String?="", newCdromId: String?="", curre
 	Term.VM.logSuccessWithin(Term.CD_ROM, "편집", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "편집", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CD_ROM, "편집", vmId, newCdromId) else it
 }
 
 fun Connection.removeCdromFromVm(vmId: String?="", current:Boolean?=false): Result<Boolean?> = runCatching {
@@ -414,7 +409,7 @@ fun Connection.removeCdromFromVm(vmId: String?="", current:Boolean?=false): Resu
 	Term.VM.logSuccessWithin(Term.CD_ROM, "삭제", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CD_ROM, "삭제", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CD_ROM, "삭제", vmId) else it
 }
 
 private fun Connection.srvNicsFromVm(vmId: String): VmNicsService =
@@ -430,7 +425,7 @@ fun Connection.findAllNicsFromVm(vmId: String, follow: String = ""): Result<List
 	Term.VM.logSuccessWithin(Term.NIC, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.NIC, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "목록조회", vmId) else it
 }
 
 fun Connection.srvNicFromVm(vmId: String, nicId: String): VmNicService =
@@ -443,10 +438,10 @@ fun Connection.findNicFromVm(vmId: String, nicId: String, follow: String = ""): 
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().nic()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "목록조회", vmId)
+	Term.VM.logSuccessWithin(Term.NIC, "상세조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.NIC, "상세조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "상세조회", vmId, nicId) else it
 }
 
 fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
@@ -472,7 +467,7 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 	Term.VM.logSuccessWithin(Term.NIC, "생성", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.NIC, "생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "생성", vmId) else it
 }
 
 fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
@@ -489,10 +484,10 @@ fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolea
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "생성 여러개", vmId)
+	Term.VM.logSuccessWithin(Term.NIC, "여러건 생성", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "생성 여러개", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.NIC, "여러건 생성", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "여러건 생성", vmId) else it
 }
 
 fun Connection.updateNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
@@ -506,7 +501,7 @@ fun Connection.updateNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatchi
 	Term.VM.logSuccessWithin(Term.NIC, "편집", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.NIC, "편집", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "편집", vmId, nic.id()) else it
 }
 
 fun Connection.updateMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
@@ -522,10 +517,10 @@ fun Connection.updateMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<B
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "편집 여러개", vmId)
+	Term.VM.logSuccessWithin(Term.NIC, "여러건 편집", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "편집 여러개", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.NIC, "여러건 편집", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "여러건 편집", vmId) else it
 }
 
 fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = runCatching {
@@ -544,7 +539,7 @@ fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = r
 	Term.VM.logSuccessWithin(Term.NIC, "제거", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.NIC, "제거", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "제거", vmId, nicId) else it
 }
 
 fun Connection.removeMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<Boolean> = runCatching {
@@ -560,10 +555,10 @@ fun Connection.removeMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<B
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "편집 여러개", vmId)
+	Term.VM.logSuccessWithin(Term.NIC, "여러건 제거", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "편집 여러개", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.NIC, "여러건 제거", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "여러건 제거", vmId) else it
 }
 
 fun List<Nic>.nameDuplicateVmNic(name: String, id: String? = null): Boolean =
@@ -576,10 +571,10 @@ fun Connection.srvReportedDevicesFromVm(vmId: String): VmReportedDevicesService 
 fun Connection.findAllReportedDevicesFromVm(vmId: String): Result<List<ReportedDevice>> = runCatching {
 	this.srvReportedDevicesFromVm(vmId).list().send().reportedDevice()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.VM, "보고된 디바이스 목록조회", vmId)
+	Term.VM.logSuccessWithin(Term.REPORTED_DEVICE, "목록조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.VM, "보고된 디바이스 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.REPORTED_DEVICE, "목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.REPORTED_DEVICE, "목록조회", vmId) else it
 }
 
 
@@ -589,14 +584,14 @@ fun Connection.srvReportedDevicesFromVmNics(vmId: String, nicId: String): VmRepo
 fun Connection.findAllReportedDevicesFromVmNic(vmId: String, nicId: String): Result<List<ReportedDevice>> = runCatching {
 	this.srvReportedDevicesFromVmNics(vmId, nicId).list().send().reportedDevice()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "보고된 디바이스 목록조회", vmId)
+	Term.VM_NIC.logSuccessWithin(Term.REPORTED_DEVICE, "목록조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "보고된 디바이스 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM_NIC.logFailWithin(Term.REPORTED_DEVICE, "목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM_NIC, Term.REPORTED_DEVICE, "목록조회", vmId, nicId) else it
 }
 
-fun Connection.srvReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: String): VmReportedDeviceService =
-	this.srvReportedDevicesFromVmNics(vmId, nicId).reportedDeviceService(rpId)
+fun Connection.srvReportedDeviceFromVmNic(vmId: String, nicId: String, reportedDeviceId: String): VmReportedDeviceService =
+	this.srvReportedDevicesFromVmNics(vmId, nicId).reportedDeviceService(reportedDeviceId)
 
 fun Connection.findReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: String): Result<ReportedDevice?> = runCatching {
 	this.srvReportedDeviceFromVmNic(vmId, nicId, rpId).get().send().reportedDevice()
@@ -604,9 +599,8 @@ fun Connection.findReportedDeviceFromVmNic(vmId: String, nicId: String, rpId: St
 	Term.VM.logSuccessWithin(Term.NIC, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.NIC, "상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.REPORTED_DEVICE, "상세조회", vmId, nicId) else it
 }
-
 
 private fun Connection.srvAllDiskAttachmentsFromVm(vmId: String?=""): DiskAttachmentsService =
 	this.srvVm(vmId).diskAttachmentsService()
@@ -622,7 +616,7 @@ fun Connection.findAllDiskAttachmentsFromVm(vmId: String?="", follow: String?=""
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "목록조회", vmId) else it
 }
 
 fun Connection.srvDiskAttachmentFromVm(vmId: String?="", diskAttachmentId: String?=""): DiskAttachmentService =
@@ -639,7 +633,7 @@ fun Connection.findDiskAttachmentFromVm(vmId: String?="", diskAttachmentId: Stri
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "상세조회", vmId, diskAttachmentId) else it
 }
 
 fun Connection.addDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachment): Result<DiskAttachment> = runCatching {
@@ -657,7 +651,7 @@ fun Connection.addDiskAttachmentToVm(vmId: String, diskAttachment: DiskAttachmen
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "붙이기", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT,"붙이기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "붙이기", vmId, diskAttachment.id()) else it
 }
 
 fun Connection.addMultipleDiskAttachmentsToVm(
@@ -673,10 +667,10 @@ fun Connection.addMultipleDiskAttachmentsToVm(
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "여러 개 붙이기", vmId)
+	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "여러건 붙이기", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "여러 개 붙이기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "여러건 붙이기", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "붙이기", vmId) else it
 }
 
 fun Connection.updateDiskAttachmentToVm(
@@ -693,10 +687,10 @@ fun Connection.updateDiskAttachmentToVm(
 
 	diskAttachUpdated ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "붙이기", vmId)
+	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "편집", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT,"붙이기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.DISK_ATTACHMENT,"편집", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "편집", vmId, diskAttachment.id()) else it
 }
 
 fun Connection.updateMultipleDiskAttachmentsToVm(vmId: String, diskAttachments: List<DiskAttachment>): Result<Boolean> = runCatching {
@@ -711,10 +705,10 @@ fun Connection.updateMultipleDiskAttachmentsToVm(vmId: String, diskAttachments: 
 	}
 	allSuccessful
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "여러 개 붙이기", vmId)
+	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "여러건 편집", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "여러 개 붙이기", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "여러건 편집", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "여러건 편집", vmId) else it
 }
 
 fun Connection.removeDiskAttachmentToVm(
@@ -737,7 +731,7 @@ fun Connection.removeDiskAttachmentToVm(
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "삭제", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "삭제", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM_NIC, Term.DISK_ATTACHMENT, "여러건 편집", vmId) else it
 }
 
 
@@ -761,8 +755,8 @@ fun Connection.activeDiskAttachmentToVm(vmId: String, diskAttachmentId: String):
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "활성화", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "활성화 실패", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "활성화", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "활성화", vmId, diskAttachmentId) else it
 }
 
 fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: String): Result<Boolean> = runCatching {
@@ -784,8 +778,8 @@ fun Connection.deactivateDiskAttachmentToVm(vmId: String, diskAttachmentId: Stri
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "비활성화", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "비활성화 실패", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.DISK_ATTACHMENT, "비활성화", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.DISK_ATTACHMENT, "비활성화", vmId, diskAttachmentId) else it
 }
 
 // acitve가 true면 활성화, false면 비활성화를 요구
@@ -820,7 +814,7 @@ fun Connection.findAllVmGraphicsConsolesFromVm(vmId: String): Result<List<Graphi
 	Term.VM.logSuccessWithin(Term.CONSOLE, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CONSOLE, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CONSOLE, "목록조회", vmId) else it
 }
 
 private fun Connection.srvVmGraphicsConsoleFromVm(vmId: String, graphicsConsoleId: String): VmGraphicsConsoleService =
@@ -832,7 +826,7 @@ fun Connection.findVmGraphicsConsoleFromVm(vmId: String, graphicsConsoleId: Stri
 	Term.VM.logSuccessWithin(Term.CONSOLE, "상세조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.CONSOLE, "상세조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.CONSOLE, "상세조회", vmId, graphicsConsoleId) else it
 }
 
 fun Connection.findTicketFromVm(vmId: String, expiry: BigInteger? = null): Result<Ticket?> = runCatching {
@@ -845,7 +839,7 @@ fun Connection.findTicketFromVm(vmId: String, expiry: BigInteger? = null): Resul
 	Term.CONSOLE.logSuccessWithin(Term.TICKET, "발행", vmId)
 }.onFailure {
 	Term.CONSOLE.logFailWithin(Term.TICKET, "발행", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.CONSOLE, Term.TICKET, "발행", vmId) else it
 }
 
 fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: String, expiry: BigInteger? = null): Result<Ticket?> = runCatching {
@@ -858,7 +852,7 @@ fun Connection.findTicketFromVmGraphicsConsole(vmId: String, graphicsConsoleId: 
 	Term.CONSOLE.logSuccessWithin(Term.TICKET, "발행", vmId)
 }.onFailure {
 	Term.CONSOLE.logFailWithin(Term.TICKET, "발행", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.CONSOLE, Term.TICKET, "발행", vmId) else it
 }
 
 fun Connection.generateRemoteViewerConnectionFile(vmId: String, graphicsConsoleId: String): Result<String?> = runCatching {
@@ -867,7 +861,7 @@ fun Connection.generateRemoteViewerConnectionFile(vmId: String, graphicsConsoleI
 	Term.CONSOLE.logSuccessWithin(Term.REMOTE_VIEWER, "다운로드", vmId)
 }.onFailure {
 	Term.CONSOLE.logFailWithin(Term.REMOTE_VIEWER, "다운로드", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.CONSOLE, Term.REMOTE_VIEWER, "다운로드", vmId, graphicsConsoleId) else it
 }
 
 private fun Connection.srvStatisticsFromVm(vmId: String): StatisticsService =
@@ -877,10 +871,10 @@ fun Connection.findAllStatisticsFromVm(vmId: String): Result<List<Statistic>> = 
 	this.srvStatisticsFromVm(vmId).list().send().statistics()
 
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.STATISTIC, "STATISTIC 목록조회", vmId)
+	Term.VM.logSuccessWithin(Term.STATISTIC, "목록조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.VM, "STATISTIC 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM.logFailWithin(Term.STATISTIC,"목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.STATISTIC, "목록조회", vmId) else it
 }
 
 private fun Connection.srvStatisticsFromVmNic(vmId: String, nicId: String): StatisticsService =
@@ -891,10 +885,10 @@ fun Connection.findAllStatisticsFromVmNic(vmId: String, nicId: String): Result<L
 
 	this.srvStatisticsFromVmNic(vmId, nicId).list().send().statistics()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "통계 목록조회", vmId)
+	Term.VM_NIC.logSuccessWithin(Term.STATISTIC, "목록조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "통계 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM_NIC.logFailWithin(Term.STATISTIC, "목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM_NIC, Term.STATISTIC, "목록조회", vmId, nicId) else it
 }
 
 private fun Connection.srvAffinityLabelsFromVm(vmId: String): AssignedAffinityLabelsService =
@@ -906,7 +900,7 @@ fun Connection.findAllAffinityLabelsFromVm(vmId: String): Result<List<AffinityLa
 	Term.VM.logSuccessWithin(Term.AFFINITY_LABEL, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.AFFINITY_LABEL, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.AFFINITY_LABEL, "목록조회", vmId) else it
 }
 
 fun Connection.srvNicNetworkFilterParametersFromVm(vmId: String, nicId: String): NicNetworkFilterParametersService =
@@ -915,19 +909,19 @@ fun Connection.srvNicNetworkFilterParametersFromVm(vmId: String, nicId: String):
 fun Connection.findAllNicNetworkFilterParametersFromVm(vmId: String, nicId: String): Result<List<NetworkFilterParameter>> = runCatching {
 	this.srvNicNetworkFilterParametersFromVm(vmId, nicId).list().send().parameters()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "NFP 목록조회", vmId)
+	Term.VM_NIC.logSuccessWithin(Term.NETWORK_FILTER, "목록조회", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "NFP 목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM_NIC.logFailWithin(Term.NETWORK_FILTER, "목록조회", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM_NIC, Term.NETWORK_FILTER, "목록조회", vmId, nicId) else it
 }
 
 fun Connection.addNicNetworkFilterParameterFromVm(vmId: String, nicId: String, nfp: NetworkFilterParameter): Result<NetworkFilterParameter> = runCatching {
 	this.srvNicNetworkFilterParametersFromVm(vmId, nicId).add().parameter(nfp).send().parameter()
 }.onSuccess {
-	Term.VM.logSuccessWithin(Term.NIC, "NFP 생성", vmId)
+	Term.VM_NIC.logSuccessWithin(Term.NETWORK_FILTER, "생성", vmId)
 }.onFailure {
-	Term.VM.logFailWithin(Term.NIC, "NFP 생성", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.VM_NIC.logFailWithin(Term.NETWORK_FILTER, "생성", it, vmId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM_NIC, Term.NETWORK_FILTER, "생성", vmId, nicId) else it
 }
 
 
@@ -945,7 +939,7 @@ fun Connection.findAllApplicationsFromVm(vmId: String, follow: String = ""): Res
 	Term.VM.logSuccessWithin(Term.APPLICATION, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.APPLICATION, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.APPLICATION, "목록조회", vmId) else it
 }
 
 private fun Connection.srvHostDevicesFromVm(vmId: String): VmHostDevicesService =
@@ -957,7 +951,7 @@ fun Connection.findAllHostDevicesFromVm(vmId: String): Result<List<HostDevice>> 
 	Term.VM.logSuccessWithin(Term.HOST_DEVICES, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.HOST_DEVICES, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.HOST_DEVICES, "목록조회", vmId) else it
 
 }
 
@@ -972,8 +966,7 @@ fun Connection.findAllAssignedPermissionsFromVm(vmId: String): Result<List<Permi
 	Term.VM.logSuccessWithin(Term.PERMISSION, "목록조회", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.PERMISSION, "목록조회", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
-
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.PERMISSION, "목록조회", vmId) else it
 }
 
 // CPU Topology 계산 최적화

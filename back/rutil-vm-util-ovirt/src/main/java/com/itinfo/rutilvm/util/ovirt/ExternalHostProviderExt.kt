@@ -22,7 +22,7 @@ fun Connection.findAllExternalHostProviders(): Result<List<ExternalHostProvider>
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("목록조회")
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "목록조회") else it
 }
 
 private fun Connection.srvExternalHostProvider(externalHostProviderId: String): ExternalHostProviderService =
@@ -34,7 +34,7 @@ fun Connection.findExternalHostProvider(externalHostProviderId: String): Result<
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("상세조회")
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("상세조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "상세조회", externalHostProviderId) else it
 }
 
 fun Connection.addExternalHostProvider(externalHostProvider: ExternalHostProvider): Result<ExternalHostProvider?> = runCatching {
@@ -46,7 +46,7 @@ fun Connection.addExternalHostProvider(externalHostProvider: ExternalHostProvide
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("생성", it.id())
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "생성") else it
 }
 
 fun Connection.updateExternalHostProvider(externalHostProvider: ExternalHostProvider): Result<ExternalHostProvider?> = runCatching {
@@ -58,7 +58,7 @@ fun Connection.updateExternalHostProvider(externalHostProvider: ExternalHostProv
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("편집", it.id())
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("편집", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "편집", externalHostProvider.id()) else it
 }
 
 fun Connection.removeExternalHostProvider(externalHostProviderId: String): Result<Boolean> = runCatching {
@@ -69,7 +69,7 @@ fun Connection.removeExternalHostProvider(externalHostProviderId: String): Resul
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("삭제", externalHostProviderId)
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("삭제", it, externalHostProviderId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "삭제", externalHostProviderId) else it
 }
 
 fun Connection.testConnectivityExternalHostProvider(externalHostProviderId: String): Result<Boolean> = runCatching {
@@ -80,16 +80,5 @@ fun Connection.testConnectivityExternalHostProvider(externalHostProviderId: Stri
 	Term.EXTERNAL_HOST_PROVIDER.logSuccess("상세조회")
 }.onFailure {
 	Term.EXTERNAL_HOST_PROVIDER.logFail("상세조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.EXTERNAL_HOST_PROVIDER, "상세조회", externalHostProviderId) else it
 }
-
-
-fun Connection.findAllExternalHostProvider(): Result<List<ExternalProvider>> = runCatching {
-	this.srvExternalHostProviders().list().send().providers()
-}.onSuccess {
-	Term.EXTERNAL_HOST_PROVIDER.logSuccess("목록조회")
-}.onFailure {
-	Term.EXTERNAL_HOST_PROVIDER.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
-}
-

@@ -23,15 +23,17 @@ fun Connection.findAllNetworkFilters(follow: String = ""): Result<List<NetworkFi
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().filters()
 
-	// if (follow.isNotEmpty())
-	// 	this.srvNetworkFilters().list().follow(follow).send().filters()
-	// else
-	// 	this.srvNetworkFilters().list().send().filters()
+	/*
+	if (follow.isNotEmpty())
+		this.srvNetworkFilters().list().follow(follow).send().filters()
+	else
+		this.srvNetworkFilters().list().send().filters()
+		*/
 }.onSuccess {
 	Term.NETWORK_FILTER.logSuccess("목록조회")
 }.onFailure {
 	Term.NETWORK_FILTER.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK_FILTER, "목록조회") else it
 }
 
 private fun Connection.srvNetworkFilter(networkFilterId: String): NetworkFilterService =
@@ -43,5 +45,5 @@ fun Connection.findNetworkFilter(networkFilterId: String): Result<NetworkFilter?
 	Term.NETWORK_FILTER.logSuccess("상세조회", networkFilterId)
 }.onFailure {
 	Term.NETWORK_FILTER.logFail("상세조회", it, networkFilterId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK_FILTER, "상세조회", networkFilterId) else it
 }

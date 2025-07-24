@@ -24,7 +24,7 @@ fun Connection.findAllRoles(follow: String = ""): Result<List<Role>> = runCatchi
 	Term.ROLE.logSuccess("목록조회")
 }.onFailure {
 	Term.ROLE.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.ROLE, "목록조회") else it
 }
 
 private fun Connection.srvRole(roleId: String): RoleService =
@@ -36,5 +36,5 @@ fun Connection.findRole(roleId: String): Result<Role?> = runCatching {
 	Term.ROLE.logSuccess("상세조회")
 }.onFailure {
 	Term.ROLE.logFail("상세조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.ROLE, "상세조회", roleId) else it
 }

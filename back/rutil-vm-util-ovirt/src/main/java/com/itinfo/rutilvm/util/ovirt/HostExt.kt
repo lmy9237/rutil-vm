@@ -12,11 +12,6 @@ import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
-import com.jcraft.jsch.ChannelExec
-import com.jcraft.jsch.JSch
-import org.ovirt.engine.sdk4.builders.HostNicBuilder
-import java.net.InetAddress
-
 
 fun Connection.srvHosts(): HostsService =
 	this.systemService.hostsService()
@@ -34,7 +29,7 @@ fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Resu
 	Term.HOST.logSuccess("목록조회")
 }.onFailure {
 	Term.HOST.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "목록조회") else it
 }
 
 fun Connection.findHost(hostId: String, follow: String = ""): Result<Host?> = runCatching {
@@ -46,7 +41,7 @@ fun Connection.findHost(hostId: String, follow: String = ""): Result<Host?> = ru
 	Term.HOST.logSuccess("상세조회", hostId)
 }.onFailure {
 	Term.HOST.logFail("상세조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "상세조회", hostId) else it
 }
 
 fun List<Host>.nameDuplicateHost(hostName: String, hostId: String? = null): Boolean =
@@ -75,9 +70,8 @@ fun Connection.addHost(
 }.onSuccess {
 	Term.HOST.logSuccess("생성")
 }.onFailure {
-	log.error("호스트 생성 실패")
 	Term.HOST.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "생성") else it
 }
 
 fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
@@ -93,7 +87,7 @@ fun Connection.updateHost(host: Host): Result<Host?> = runCatching {
 	Term.HOST.logSuccess("편집", host.id())
 }.onFailure {
 	Term.HOST.logFail("편집", it, host.id())
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "편집", host.id()) else it
 }
 
 fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
@@ -119,7 +113,7 @@ fun Connection.removeHost(hostId: String): Result<Boolean> = runCatching {
 	Term.HOST.logSuccess("삭제", hostId)
 }.onFailure {
 	Term.HOST.logFail("삭제", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "삭제", hostId) else it
 }
 
 @Throws(InterruptedException::class)
@@ -150,10 +144,10 @@ fun Connection.findAllVmsFromHost(hostId: String, searchQuery: String = "",follo
 	}.send().vms().filter { it.host()?.id() == hostId }
 
 }.onSuccess {
-	Term.HOST.logSuccess("vms 조회", hostId)
+	Term.HOST.logSuccessWithin(Term.VM, "목록조회", hostId)
 }.onFailure {
-	Term.HOST.logFail("vms 조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.VM, "목록조회", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.VM, "목록조회", hostId) else it
 }
 
 fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
@@ -173,7 +167,7 @@ fun Connection.deactivateHost(hostId: String): Result<Boolean> = runCatching {
 	Term.HOST.logSuccess("비활성화", hostId)
 }.onFailure {
 	Term.HOST.logFail("비활성화", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "비활성화", hostId) else it
 }
 
 
@@ -193,7 +187,7 @@ fun Connection.activateHost(hostId: String): Result<Boolean> = runCatching {
 	Term.HOST.logSuccess("활성화", hostId)
 }.onFailure {
 	Term.HOST.logFail("활성화", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "활성화", hostId) else it
 }
 
 fun Connection.reinstallHost(
@@ -213,7 +207,7 @@ fun Connection.reinstallHost(
 	Term.HOST.logSuccess("재설치", hostId)
 }.onFailure {
 	Term.HOST.logFail("재설치", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "재설치", hostId) else it
 }
 
 fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
@@ -224,7 +218,7 @@ fun Connection.refreshHost(hostId: String): Result<Boolean> = runCatching {
 	Term.HOST.logSuccess("새로고침", hostId)
 }.onFailure {
 	Term.HOST.logFail("새로고침", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "새로고침", hostId) else it
 }
 
 fun Connection.syncallNetworksHost(hostId: String): Result<Boolean> = runCatching {
@@ -236,21 +230,23 @@ fun Connection.syncallNetworksHost(hostId: String): Result<Boolean> = runCatchin
 	Term.HOST.logSuccess("네트워크 동기화", hostId)
 }.onFailure {
 	Term.HOST.logFail("네트워크 동기화", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "네트워크 동기화", hostId) else it
 }
 
 fun Connection.commitNetConfigHost(hostId: String): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
 	this.srvHost(hostId).commitNetConfig().send()
-	// if (!this.expectHostStatus(hostId, HostStatus.UP)) {
-	// 	throw Error("refresh Host 실패했습니다 ...")
-	// }
+	/*
+	if (!this.expectHostStatus(hostId, HostStatus.UP)) {
+		throw Error("refresh Host 실패했습니다 ...")
+	}
+	*/
 	true
 }.onSuccess {
 	Term.HOST.logSuccess("재부팅 확인", hostId)
 }.onFailure {
 	Term.HOST.logFail("재부팅 확인", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "재부팅 확인", hostId) else it
 }
 
 
@@ -262,7 +258,7 @@ fun Connection.enrollCertificate(hostId: String): Result<Boolean> = runCatching 
 	Term.HOST.logSuccess("인증서 등록", hostId)
 }.onFailure {
 	Term.HOST.logFail("인증서 등록", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "인증서 등록", hostId) else it
 }
 
 fun Connection.rebootFromHost(hostId: String, ssh: Ssh?=null): Result<Boolean> = runCatching {
@@ -283,7 +279,7 @@ fun Connection.rebootFromHost(hostId: String, ssh: Ssh?=null): Result<Boolean> =
 	Term.HOST.logSuccess("재부팅", hostId)
 }.onFailure {
 	Term.HOST.logFail("재부팅", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.HOST, "재부팅", hostId) else it
 }
 
 fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
@@ -299,20 +295,20 @@ fun Connection.activeGlobalHaFromHost(hostId: String): Result<Boolean> = runCatc
 	TODO("ssh 로 구현")
 	true
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 활성화")
+	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 HA 활성화")
 }.onFailure {
-	Term.HOST.logFailWithin(Term.HOST,"글로벌 ha 활성화", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.HOST,"글로벌 HA 활성화", it)
+	throw if (it is Error) it.toItCloudException(Term.HOST, "글로벌 HA 활성화", hostId) else it
 }
 
 fun Connection.deactiveGlobalHaFromHost(hostId: String): Result<Boolean> = runCatching {
 	val host = checkHost(hostId)
 	TODO("ssh 로 구현")
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 ha 비활성화")
+	Term.HOST.logSuccessWithin(Term.HOST,"글로벌 HA 비활성화")
 }.onFailure {
-	Term.HOST.logFailWithin(Term.HOST,"글로벌 ha 비활성화", it)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.HOST,"글로벌 HA 비활성화", it)
+	throw if (it is Error) it.toItCloudException(Term.HOST, "글로벌 HA 비활성화", hostId) else it
 }
 
 
@@ -323,7 +319,7 @@ fun Connection.findPowerManagementFromHost(hostId: String, fenceType: FenceType)
 	Term.HOST.logSuccessWithin(Term.POWER_MANAGEMENT,"상세조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.POWER_MANAGEMENT,"상세조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.POWER_MANAGEMENT,"상세조회", hostId) else it
 }
 
 fun Connection.migrateHostFromVm(vmId: String, host: Host): Result<Boolean> = runCatching {
@@ -334,7 +330,7 @@ fun Connection.migrateHostFromVm(vmId: String, host: Host): Result<Boolean> = ru
 	Term.VM.logSuccessWithin(Term.HOST,"이동", vmId)
 }.onFailure {
 	Term.VM.logFailWithin(Term.HOST,"이동", it, vmId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.HOST,"이동", vmId, host.id()) else it
 }
 
 /**
@@ -377,8 +373,8 @@ fun Connection.findAllHostNicsFromHost(hostId: String, follow: String = ""): Res
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"목록조회", hostId)
 }.onFailure {
-	Term.HOST.logFailWithin(Term.HOST_NIC,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.HOST_NIC, "목록조회", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.HOST_NIC, "목록조회", hostId) else it
 }
 
 private fun Connection.srvHostNicFromHost(hostId: String, hostNicId: String): HostNicService =
@@ -393,7 +389,7 @@ fun Connection.findNicFromHost(hostId: String, hostNicId: String, follow: String
 	Term.HOST.logSuccessWithin(Term.HOST_NIC,"상세조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.HOST_NIC,"상세조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.HOST_NIC, "목록조회", hostId, hostNicId) else it
 }
 
 fun Connection.findAllStatisticsFromHostNic(hostId: String, hostNicId: String): Result<List<Statistic>> = runCatching {
@@ -402,7 +398,7 @@ fun Connection.findAllStatisticsFromHostNic(hostId: String, hostNicId: String): 
 	Term.HOST_NIC.logSuccessWithin(Term.STATISTIC,"목록조회", hostId)
 }.onFailure {
 	Term.HOST_NIC.logFailWithin(Term.STATISTIC,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST_NIC, Term.STATISTIC, "목록조회", hostId, hostNicId) else it
 }
 
 private fun Connection.srvStatisticsFromHost(hostId: String): StatisticsService =
@@ -410,14 +406,12 @@ private fun Connection.srvStatisticsFromHost(hostId: String): StatisticsService 
 
 fun Connection.findAllStatisticsFromHost(hostId: String): Result<List<Statistic>> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvStatisticsFromHost(hostId).list().send().statistics()
-
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.STATISTIC,"목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.STATISTIC,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STATISTIC, "목록조회", hostId) else it
 }
 
 fun Connection.srvHostStoragesFromHost(hostId: String): HostStorageService =
@@ -432,7 +426,7 @@ fun Connection.findAllHostStoragesFromHost(hostId: String): Result<List<HostStor
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.STORAGE,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STORAGE, "목록조회", hostId) else it
 }
 
 fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<List<HostStorage>> = runCatching {
@@ -442,29 +436,25 @@ fun Connection.discoverIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails)
 	}
 	srv.storageService().list().send().storages()
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
+	Term.HOST.logSuccessWithin(Term.STORAGE,"(iscsci) 목록조회", hostId)
 }.onFailure {
-	Term.HOST.logFailWithin(Term.STORAGE,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.STORAGE,"(iscsci) 목록조회", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STORAGE, "(iscsci) 목록조회", hostId) else it
 }
 
-fun Connection.unRegisteredStorageDomainsFromHost(hostId: String): Result<List<StorageDomain>> = runCatching {
+fun Connection.unregisteredStorageDomainsFromHost(hostId: String): Result<List<StorageDomain>> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvHost(hostId).unregisteredStorageDomainsDiscover().send().storageDomains()
-
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
+	Term.HOST.logSuccessWithin(Term.STORAGE,"(등록되지않은) 목록조회", hostId)
 }.onFailure {
-	Term.HOST.logFailWithin(Term.STORAGE,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.STORAGE,"(등록되지않은) 목록조회", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STORAGE, "(등록되지않은) 목록조회", hostId) else it
 }
 
 fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): Result<Boolean> = runCatching {
 	checkHostExists(hostId)
-
 	this.srvHost(hostId).iscsiLogin().iscsi(iscsiDetails).send()
-
 	true
 
 	// 버전 4.4 부터 분리될 예정?
@@ -472,10 +462,10 @@ fun Connection.loginIscsiFromHost(hostId: String, iscsiDetails: IscsiDetails): R
 	// this.srvHost(hostId).discoverIscsi().send().discoveredTargets()
 
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.STORAGE,"iscsi 로그인 성공", hostId)
+	Term.HOST.logSuccessWithin(Term.STORAGE,"iscsi 로그인", hostId)
 }.onFailure {
-	Term.HOST.logFailWithin(Term.STORAGE,"iscsi 로그인 실패", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.STORAGE,"iscsi 로그인", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STORAGE, "iscsi 로그인", hostId) else it
 }
 
 private fun Connection.srvStoragesFromHost(hostId: String): HostStorageService =
@@ -490,7 +480,7 @@ fun Connection.findAllStoragesFromHost(hostId: String, follow: String = ""): Res
 	Term.HOST.logSuccessWithin(Term.STORAGE,"목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.STORAGE,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.STORAGE, "목록조회", hostId) else it
 }
 
 private fun Connection.srvNetworkAttachmentsFromHost(hostId: String): NetworkAttachmentsService =
@@ -506,7 +496,7 @@ fun Connection.findAllNetworkAttachmentsFromHost(hostId: String, follow: String 
 	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT,"목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.NETWORK_ATTACHMENT, "목록조회", hostId) else it
 }
 
 private fun Connection.srvNetworkAttachmentFromHost(hostId: String, networkAttachmentId: String): NetworkAttachmentService =
@@ -519,10 +509,10 @@ fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId
 	}.send().attachment()
 
 }.onSuccess {
-	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"조회", hostId)
+	Term.HOST.logSuccessWithin(Term.NETWORK_ATTACHMENT,"상세조회", hostId)
 }.onFailure {
-	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT,"조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	Term.HOST.logFailWithin(Term.NETWORK_ATTACHMENT,"상세조회", it, hostId)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.NETWORK_ATTACHMENT, "상세조회", hostId, networkAttachmentId) else it
 }
 
 
@@ -549,7 +539,7 @@ fun Connection.setupNetworksFromHost(
 	Term.HOST.logSuccessWithin(Term.BOND, "호스트 네트워크 설정", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.BOND, "호스트 네트워크 설정", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.BOND, "호스트 네트워크 설정", hostId) else it
 }
 
 
@@ -562,7 +552,7 @@ fun Connection.findAllFenceAgentsFromHost(hostId: String): Result<List<Agent>> =
 	Term.HOST.logSuccessWithin(Term.FENCE_AGENT, "목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.FENCE_AGENT, "목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.FENCE_AGENT, "목록조회", hostId) else it
 }
 
 fun Connection.addFenceAgent(hostId: String, agent: Agent): Result<Agent?> = runCatching {
@@ -571,7 +561,7 @@ fun Connection.addFenceAgent(hostId: String, agent: Agent): Result<Agent?> = run
 	Term.HOST.logSuccessWithin(Term.FENCE_AGENT, "생성", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.FENCE_AGENT, "생성", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.FENCE_AGENT, "생성", hostId) else it
 }
 
 private fun Connection.srvAllIscsiDetailsFromHost(hostId: String): HostService.IscsiDiscoverRequest =
@@ -583,7 +573,7 @@ fun Connection.findAllIscsiTargetsFromHost(hostId: String, iscsiDetails: IscsiDe
 	Term.HOST.logSuccessWithin(Term.ISCSI_DETAIL, "목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.ISCSI_DETAIL, "목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.ISCSI_DETAIL, "목록조회", hostId) else it
 }
 
 fun Connection.findAllCpuUnitFromHost(hostId: String): Result<List<HostCpuUnit>> = runCatching {
@@ -592,7 +582,7 @@ fun Connection.findAllCpuUnitFromHost(hostId: String): Result<List<HostCpuUnit>>
 	Term.HOST.logSuccessWithin(Term.HOST_CPU_UNIT, "목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.HOST_CPU_UNIT, "목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.HOST_CPU_UNIT, "목록조회", hostId) else it
 }
 
 fun Connection.findAllHostDeviceFromHost(hostId: String): Result<List<HostDevice>> = runCatching {
@@ -603,7 +593,7 @@ fun Connection.findAllHostDeviceFromHost(hostId: String): Result<List<HostDevice
 	Term.HOST.logSuccessWithin(Term.HOST_DEVICES, "목록조회", hostId)
 }.onFailure {
 	Term.HOST.logFailWithin(Term.HOST_DEVICES, "목록조회", it, hostId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.HOST, Term.HOST_DEVICES, "목록조회", hostId) else it
 }
 
 // fun Connection.findAllPermissionFromHost(hostId: String): Result<List<Permission>> = runCatching {

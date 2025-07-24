@@ -19,15 +19,17 @@ fun Connection.findAllGroups(follow: String): Result<List<Group>> = runCatching 
 	this.srvGroups().list().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().groups()
-	// if (follow.isNotEmpty())
-	// 	this.srvGroups().list().follow(follow).send().groups()
-	// else
-	// 	this.srvGroups().list().send().groups()
+	/*
+	if (follow.isNotEmpty())
+		this.srvGroups().list().follow(follow).send().groups()
+	else
+		this.srvGroups().list().send().groups()
+		*/
 }.onSuccess {
 	Term.GROUP.logSuccess("목록조회")
 }.onFailure {
 	Term.GROUP.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.GROUP, "목록조회") else it
 }
 
 private fun Connection.srvGroup(groupId: String): GroupService =
@@ -39,5 +41,5 @@ fun Connection.findGroup(groupId: String): Result<Group?> = runCatching {
 	Term.GROUP.logSuccess("상세조회", groupId)
 }.onFailure {
 	Term.GROUP.logFail("상세조회", it, groupId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.GROUP, "상세조회", groupId) else it
 }

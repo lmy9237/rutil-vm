@@ -28,7 +28,7 @@ fun Connection.findAllNetworks(searchQuery: String = "", follow: String = ""): R
 	Term.NETWORK.logSuccess("목록조회")
 }.onFailure {
 	Term.NETWORK.logFail("목록조회", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK, "목록조회") else it
 }
 
 fun Connection.srvNetwork(networkId: String?=""): NetworkService =
@@ -43,7 +43,7 @@ fun Connection.findNetwork(networkId: String?="", follow: String?=""): Result<Ne
 	Term.NETWORK.logSuccess("상세조회", networkId)
 }.onFailure {
 	Term.NETWORK.logFail("상세조회", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK, "상세조회", networkId) else it
 }
 
 fun Connection.addNetwork(network: Network): Result<Network?> = runCatching {
@@ -55,7 +55,7 @@ fun Connection.addNetwork(network: Network): Result<Network?> = runCatching {
 	Term.NETWORK.logSuccess("생성")
 }.onFailure {
 	Term.NETWORK.logFail("생성", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK, "생성") else it
 }
 
 fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
@@ -67,7 +67,7 @@ fun Connection.updateNetwork(network: Network): Result<Network?> = runCatching {
 	Term.NETWORK.logSuccess("편집", it.id())
 }.onFailure {
 	Term.NETWORK.logFail("편집", it)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK, "편집", network.id()) else it
 }
 
 fun Connection.removeNetwork(networkId: String): Result<Boolean> = runCatching {
@@ -79,7 +79,7 @@ fun Connection.removeNetwork(networkId: String): Result<Boolean> = runCatching {
 	Term.NETWORK.logSuccess("삭제", networkId)
 }.onFailure {
 	Term.NETWORK.logFail("삭제", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.NETWORK, "삭제", networkId) else it
 }
 
 fun Connection.srvVnicProfilesFromNetwork(networkId: String): AssignedVnicProfilesService =
@@ -96,7 +96,7 @@ fun Connection.findAllVnicProfilesFromNetwork(networkId: String, follow: String 
 	Term.NETWORK.logSuccessWithin(Term.VNIC_PROFILE, "목록조회", networkId)
 }.onFailure {
 	Term.NETWORK.logFailWithin(Term.VNIC_PROFILE, "목록조회", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.NETWORK, Term.VNIC_PROFILE,"목록조회", networkId) else it
 }
 
 fun Connection.srvVnicProfileFromNetwork(networkId: String, vnicProfileId: String): AssignedVnicProfileService =
@@ -110,7 +110,7 @@ fun Connection.findVnicProfileFromNetwork(networkId: String, vnicProfileId: Stri
 	Term.NETWORK.logSuccessWithin(Term.VNIC_PROFILE, "상세조회", networkId)
 }.onFailure {
 	Term.NETWORK.logFailWithin(Term.VNIC_PROFILE, "상세조회", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.NETWORK, Term.VNIC_PROFILE, "상세조회", networkId) else it
 }
 
 
@@ -124,7 +124,7 @@ fun Connection.findAllNetworkLabelsFromNetwork(networkId: String): Result<List<N
 	Term.NETWORK.logSuccessWithin(Term.NETWORK_LABEL, "목록조회", networkId)
 }.onFailure {
 	Term.NETWORK.logFailWithin(Term.NETWORK_LABEL, "상세조회", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.NETWORK, Term.NETWORK_LABEL, "상세조회", networkId) else it
 }
 
 fun Connection.addNetworkLabelFromNetwork(networkId: String, networkLabel: NetworkLabel): Result<NetworkLabel> = runCatching {
@@ -136,7 +136,7 @@ fun Connection.addNetworkLabelFromNetwork(networkId: String, networkLabel: Netwo
 } .onFailure {
 	Term.NETWORK.logFailWithin(Term.NETWORK_LABEL, "생성", it, networkLabel.name())
 	// log.error("{} 내 {} 생성 실패... {}", Term.NETWORK, Term.NETWORK_LABEL, it.localizedMessage)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.NETWORK, Term.NETWORK_LABEL, "생성", networkId) else it
 }
 
 private fun Connection.srvNetworkLabelFromNetwork(networkId: String, networkLabelId: String): NetworkLabelService =
@@ -150,7 +150,7 @@ fun Connection.removeNetworkLabelFromNetwork(networkId: String, networkLabelId: 
 	Term.NETWORK.logSuccessWithin(Term.NETWORK_LABEL, "삭제", networkId)
 }.onFailure {
 	Term.NETWORK.logFailWithin(Term.NETWORK_LABEL, "삭제", it, networkId)
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.NETWORK, Term.NETWORK_LABEL, "삭제", networkId, networkLabelId) else it
 }
 
 // private fun Connection.srvPermissionsFromNetwork(networkId: String): AssignedPermissionsService =

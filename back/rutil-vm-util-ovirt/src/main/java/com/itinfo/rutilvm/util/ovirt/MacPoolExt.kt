@@ -20,5 +20,5 @@ fun Connection.findAllMacPools(): Result<List<MacPool>> = runCatching {
 	Term.MAC_POOL.logSuccess("목록조회")
 }.onFailure {
 	Term.MAC_POOL.logFail("목록조회")
-	throw if (it is Error) it.toItCloudException() else it
+	throw if (it is Error) it.toItCloudException(Term.MAC_POOL, "목록조회") else it
 }

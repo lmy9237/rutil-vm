@@ -9,7 +9,7 @@ import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
 import {
-  useSnapshotsFromVM,
+  useAllSnapshotsFromVm,
   useVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
@@ -56,7 +56,7 @@ const VmInfo = () => {
   } = useVm(vmId);
   const { 
     data: snapshots = [] 
-  } = useSnapshotsFromVM(vmId, (e) => ({ ...e }));
+  } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const hasLockedSnapshot = useMemo(() => {
     return snapshots.some(s => s.status?.toUpperCase() === "locked");
