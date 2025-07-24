@@ -89,7 +89,7 @@ const NetworkTemplates = ({
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         multiSelect={true}
         shouldHighlight1stCol={true}
-        onRowClick={(selectedRows) => nicsSelected(selectedRows)} // 선택된 항목 업데이트
+        onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={nicsSelected}/>

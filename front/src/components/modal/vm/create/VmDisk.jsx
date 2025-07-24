@@ -106,7 +106,7 @@ const VmDisk = ({
           const size = disk?.size || disk?.virtualSize;
 
           return (
-            <div key={index} className="disk-item f-btw mb-0.5">
+            <div key={index} className="disk-item f-btw mb-0.5 mb-3">
               <div className="f-start">
                 <span style={{ marginRight: "25px" }}>
                   {disk.deleted ? (
@@ -139,7 +139,7 @@ const VmDisk = ({
                     </div> */}
                     {/* <div>완전 삭제</div> */}
 
-                    <button className="instance-disk-btn ml-0 mb-3" onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제 취소</button>  
+                    <button className="instance-disk-btn ml-0" onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제 취소</button>  
                     {/* <RVI36 className="btn-icon"
                       iconDef={rvi24Close}
                       currentColor="transparent"

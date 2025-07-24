@@ -198,7 +198,7 @@ const HostModal = ({
       <hr />
       {!(editMode) && (
         <>
-          <div className="font-semibold py-1.5">
+          <div className="font-semibold mt-4 mb-2">
             <label>인증</label>
           </div>
           <LabelInput label="사용자 이름" value="root" disabled={true} />
