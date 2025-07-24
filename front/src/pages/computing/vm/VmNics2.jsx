@@ -137,7 +137,6 @@ const VmNics2 = ({
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         isLoading={isvmNicsLoading} isRefetching={isvmNicsRefetching} isError={isvmNicsError} isSuccess={isvmNicsSuccess}
       />
-
       <SelectedIdView items={nicsSelected} />
       <OVirtWebAdminHyperlink
         name={`${Localization.kr.COMPUTING}>${Localization.kr.VM}>${vmsSelected[0]?.name}`}

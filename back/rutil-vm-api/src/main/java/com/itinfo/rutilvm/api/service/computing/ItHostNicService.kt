@@ -127,19 +127,18 @@ class ItHostNicServiceImpl(
 	override fun setUpNetworksFromHost(hostId: String, hostNetworkVo: HostNetworkVo): Boolean {
 		log.info("setUpNetworksFromHost ... hostId: {}, hostNetworkVo: {}", hostId, hostNetworkVo)
 
-		val (modified, synced) = hostNetworkVo.networkAttachments.partition { !it.inSync }
-		log.info("synced: {}, modified: {}", synced.size, modified.size)
+		// val synced = hostNetworkVo.networkAttachments.filter { !it.inSync }
+		// log.info("modifiSize: {}, syncedSize: {}, synced: {}", hostNetworkVo.networkAttachments.toModifiedNetworkAttachments().size, synced.size, synced.map { println(it.networkVo.name) })
 
-		// syncallNetworksHost(hostId)
-		// Thread.sleep(2000)
 		val res: Result<Boolean> = conn.setupNetworksFromHost(
-			hostId,
-			hostNetworkVo.bonds.toModifiedBonds(),
-			hostNetworkVo.bondsToRemove.toRemoveBonds(),
-			modified.map { it.toModifiedNetworkAttachment() },
-			synced.map { it.toModifiedNetworkAttachment() },
-			hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
+			hostId = hostId,
+			modifiedBonds = hostNetworkVo.bonds.toModifiedBonds(),
+			removedBonds = hostNetworkVo.bondsToRemove.toRemoveBonds(),
+			synchronizedNetworkAttachments = hostNetworkVo.networkAttachmentsToSync.toSyncNetworkAttachments(),
+			modifiedNetworkAttachments = hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
+			removedNetworkAttachments = hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
 		)
+		//
 		return res.isSuccess
 	}
 

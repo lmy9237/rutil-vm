@@ -520,8 +520,8 @@ fun Connection.setupNetworksFromHost(
 	hostId: String,
 	modifiedBonds: List<HostNic> = listOf(),
 	removedBonds: List<HostNic> = listOf(),
-	modifiedNetworkAttachments: List<NetworkAttachment> = listOf(),
 	synchronizedNetworkAttachments: List<NetworkAttachment> = listOf(),
+	modifiedNetworkAttachments: List<NetworkAttachment> = listOf(),
 	removedNetworkAttachments: List<NetworkAttachment> = listOf()
 ): Result<Boolean> = runCatching {
 	this.srvHost(hostId).setupNetworks().apply {
@@ -531,9 +531,8 @@ fun Connection.setupNetworksFromHost(
 		if(synchronizedNetworkAttachments.isNotEmpty()) synchronizedNetworkAttachments(synchronizedNetworkAttachments)
 		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
 	}.commitOnSuccess(true).send()
-	// }.checkConnectivity(true).send()
 
-	this.srvHost(hostId).commitNetConfig().send()
+	// this.srvHost(hostId).commitNetConfig().send()
 	true
 }.onSuccess {
 	Term.HOST.logSuccessWithin(Term.BOND, "호스트 네트워크 설정", hostId)

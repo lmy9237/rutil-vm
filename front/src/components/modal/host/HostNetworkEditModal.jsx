@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
-import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
@@ -193,20 +192,43 @@ const HostNetworkEditModal = ({
     }
 
     // NetworkAttachmentVo 형식 맞추기 (id는 기존 networkAttachment id)
-    const networkEditData = {
+    // const networkEditData = {
+    //   id: networkModalState.id,
+    //   networkVo: networkModalState.networkVo,
+    //   hostNicVo: networkModalState.hostNicVo,
+    //   ipAddressAssignments: ipAssignments,
+    //   dnsServers: networkModalState.dnsServers.filter(Boolean),
+    //   // inSync: initialInSync === false && networkModalState.inSync === true
+    // };
+
+    // Logger.debug("HostNetworkEditModal > handleOkClick ... networkEditData:", networkEditData);
+    // // 부모로 넘김
+    // onNetworkEdit(networkEditData);
+    // onClose();
+    const attachmentsToSync = (initialInSync === false && networkModalState.inSync === true)
+      ? [{
+          id: networkModalState.id,
+          networkVo: networkModalState.networkVo,
+          hostNicVo: networkModalState.hostNicVo,
+          ipAddressAssignments: ipAssignments,
+          dnsServers: networkModalState.dnsServers.filter(Boolean)
+        }]
+      : [];
+
+    const attachmentsToModify = [{
       id: networkModalState.id,
       networkVo: networkModalState.networkVo,
       hostNicVo: networkModalState.hostNicVo,
       ipAddressAssignments: ipAssignments,
-      dnsServers: networkModalState.dnsServers.filter(Boolean),
-      // inSync: initialInSync === false && networkModalState.inSync === true, // 변경 감지
-      inSync: initialInSync !== networkModalState.inSync // 백엔드 용도
-    };
+      dnsServers: networkModalState.dnsServers.filter(Boolean)
+    }];
 
-    Logger.debug("HostNetworkEditModal > handleOkClick ... networkEditData:", networkEditData);
-    // 부모로 넘김
-    onNetworkEdit(networkEditData);
+    onNetworkEdit({
+      synchronizedNetworkAttachments: attachmentsToSync,
+      modifiedNetworkAttachments: attachmentsToModify
+    });
     onClose();
+
   };
 
 
@@ -239,8 +261,12 @@ const HostNetworkEditModal = ({
               </>
             )}
           </>
-            <span>{initialInSync === true ? "T" : "F"}</span><br/>
-            <span>{networkModalState.inSync === true ? "T" : "F"}</span><br/>
+          {import.meta.env.DEV && 
+            <>
+              <span>{initialInSync === true ? "T" : "F"}</span><br/>
+              <span>{networkModalState.inSync === true ? "T" : "F"}</span>
+            </>
+          }
           <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
@@ -250,10 +276,14 @@ const HostNetworkEditModal = ({
                 disabled={!networkModalState.inSync}
                 onChange={e => handleIpv4Change('protocol', e.target.value)}
               />
-              <span>{networkModalState.ipv4Values.protocol}</span><br/>
-              <span>{networkModalState.ipv4Values.address}</span><br/>
-              <span>{networkModalState.ipv4Values.netmask}</span><br/>
-              <span>{networkModalState.ipv4Values.gateway}</span><br/>
+              {import.meta.env.DEV && 
+                <>
+                  <span>{networkModalState.ipv4Values.protocol}</span><br/>
+                  <span>{networkModalState.ipv4Values.address}</span><br/>
+                  <span>{networkModalState.ipv4Values.netmask}</span><br/>
+                  <span>{networkModalState.ipv4Values.gateway}</span><br/>
+                </>
+              }
 
               <LabelInput id="ip_address" label="IP"
                 value={networkModalState.ipv4Values.address}

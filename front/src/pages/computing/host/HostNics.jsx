@@ -34,7 +34,6 @@ import {
 import FilterButtons from "@/components/button/FilterButtons";
 import SnapshotHostBackground from "@/components/common/SnapshotHostBackground";
 import { emptyIdNameVo } from "@/util";
-import Spinner from "@/components/common/Spinner";
 
 const HostNics = ({
   hostId
@@ -52,6 +51,7 @@ const HostNics = ({
   const [modifiedBonds, setModifiedBonds] = useState([]); // 생성/수정 본딩
   const [removeBonds, setRemoveBonds] = useState([]);     // 삭제 본딩
   const [modifiedNAs, setModifiedNAs] = useState([]);     // 연결 네트워크
+  const [syncNAs, setSyncNAs] = useState([]);     // 비동기 네트워크
   const [removeNAs, setRemoveNAs] = useState([]);         // 삭제 네트워크
 
   // networkattachment 해제될 때 정보를 별도 보관
@@ -200,8 +200,36 @@ const HostNics = ({
         recentlyUnassignedNAs
       )
     );
+
+    // inSync이 undefined이거나 false이고 새로 생성되는 경우 true로 강제
+    if (!networkAttachment.inSync && !networkAttachment.id) {
+      setNetworkAttachmentModalState(prev => ({ ...prev, inSync: true }));
+    }
     setIsNetworkEditPopup(true);
   };
+
+  const handleNetworkEdit = ({ synchronizedNetworkAttachments = [], modifiedNetworkAttachments = [] }) => {
+    setModifiedNAs(prev => {
+      const updated = [...prev];
+      modifiedNetworkAttachments.forEach(mod => {
+        const idx = updated.findIndex(p => p.id === mod.id);
+        if (idx >= 0) updated[idx] = mod;
+        else updated.push(mod);
+      });
+      return updated;
+    });
+
+    setSyncNAs(prev => {
+      const updated = [...prev];
+      synchronizedNetworkAttachments.forEach(sync => {
+        const idx = updated.findIndex(p => p.id === sync.id);
+        if (idx >= 0) updated[idx] = sync;
+        else updated.push(sync);
+      });
+      return updated;
+    });
+  };
+
 
   // 전송
   const handleFormSubmit = () => {
@@ -230,10 +258,17 @@ const HostNics = ({
       networkAttachments: filteredModifiedNAs.map(na => ({
         hostNicVo: na.hostNicVo, // id, name 모두 보낼 수 있음
         networkVo: na.networkVo, // id, name
-        inSync: na.inSync ?? true,
+        // inSync: na.inSync ?? true,
         ipAddressAssignments: na.ipAddressAssignments || [],
         nameServerList: na.dnsServers || [], // HostNetworkEditModal에서 dnsServers로 관리하고 있으면 nameServerList로 이름 맞춰주기
       })),
+      networkAttachmentsToSync: syncNAs.map(na => ({
+        hostNicVo: na.hostNicVo,
+        networkVo: na.networkVo,
+        inSync: na.inSync ?? true,
+        ipAddressAssignments: na.ipAddressAssignments || [],
+        nameServerList: na.dnsServers || [],
+      })), 
       networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ id: na.id }))
     };
     setupNetwork(
@@ -256,7 +291,7 @@ const HostNics = ({
     // Logger.debug(`HostNics > handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
     // setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
 
-    // resetState(); // 초기화
+    resetState(); // 초기화
   };
 
   // 변경 감지를 위한 유틸리티 함수들
@@ -1130,11 +1165,11 @@ const HostNics = ({
     setDragItem(null);
   };
   
+
   return (
     <>
     <div className="w-full">
       <SnapshotHostBackground className="split-outer f-btw w-full">
-        {/* 작업 탭 */}
         <div className="split-item split-item-two-thirds"
           onDragOver={e => {
             if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
@@ -1152,7 +1187,7 @@ const HostNics = ({
           <div className="row group-span mb-4 items-center">
             <div className="col-40 fs-16">인터페이스</div>
             <div className="col-20"></div>
-            <div className="col-40 fs-16">할당된 논리 네트워크</div>
+            <div className="col-40 fs-16">할당된 {Localization.kr.NETWORK}</div>
           </div>
           <br/>
 
@@ -1162,8 +1197,9 @@ const HostNics = ({
             );
             return (
               <div className="row group-span mb-4 items-center" key={nic.id} >
+                
                 {/* 인터페이스 */}
-                <div className="col-40" onDragOver={(e) => e.preventDefault()}>
+                <div className="col-40" onDragOver={(e) => e.preventDefault()} >
                   {nic.bondingVo?.slaveVos?.length > 0 
                     ? <BondNic
                         nic={nic}
@@ -1218,26 +1254,6 @@ const HostNics = ({
           {/* 변경항목이 있다면 활성화 */}
           {!cancelFlag && dragItemFlag && (
             <>
-             {/* {isSubmitting ? (
-                <ActionButton
-                  actionType="default"
-                  className="custom-ok-button mr-3"
-                  disabled
-                  label={
-                    <div className="flex items-center gap-2">
-                      <Spinner size="sm" />
-                      저장 중...
-                    </div>
-                  }
-                />
-              ) : (
-                <ActionButton
-                  actionType="default"
-                  className="custom-ok-button mr-3"
-                  onClick={handleFormSubmit}
-                  label={Localization.kr.OK}
-                />
-              )} */}
               <ActionButton
                 actionType="default"
                 className="custom-ok-button mr-3"
@@ -1257,8 +1273,6 @@ const HostNics = ({
               onClick={() => resetState()}
             />
           )}
-
-        {/* <span>{networkAttachmentModalState.inSync === true ?"T":"F"}</span>           */}
           </div>
         </div>
 
@@ -1268,7 +1282,7 @@ const HostNics = ({
           onDrop={(e) => handleDrop(e, "attach")}
         >
           <div className="unassigned-network text-center mb-4">
-            <span className="fs-16">할당되지 않은 논리 네트워크</span>
+            <span className="fs-16">할당되지 않은 논리 {Localization.kr.NETWORK}</span>
           </div>
           <FilterButtons
             options={filterOptions}
@@ -1291,15 +1305,6 @@ const HostNics = ({
           ))}
         </div>
       </SnapshotHostBackground>
-      {/* <LabelCheckbox id="connection" label={`${Localization.kr.HOST}와 Engine간의 연결을 확인`}
-        value={connection}
-        onChange={(e) => setConnection(e.target.checked)}
-      />
-      <LabelCheckbox id="networkSetting" label={`${Localization.kr.NETWORK} 설정 저장`}
-        value={setting}
-        onChange={(e) => setSetting(e.target.checked)}
-      /> */}
-      
     <br/>
       
     </div>

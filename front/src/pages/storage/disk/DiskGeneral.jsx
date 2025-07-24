@@ -1,5 +1,6 @@
 import { InfoTable }              from "@/components/table/InfoTable";
 import {
+  useAllStorageDomainsFromDisk,
   useDisk
 } from "@/api/RQHook";
 import {
@@ -10,7 +11,6 @@ import Localization               from "@/utils/Localization";
 import GeneralLayout from "@/components/GeneralLayout";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 import VmGeneralBarChart from "@/components/Chart/GeneralBarChart";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import useGlobal from "@/hooks/useGlobal";
 import { useMemo } from "react";
 
@@ -33,44 +33,44 @@ const DiskGeneral = ({
     isSuccess: isDiskSuccess,
   } = useDisk(diskId);
 
+  const {
+    data: domains = [],
+  } = useAllStorageDomainsFromDisk(diskId, (e) => ({ ...e }));
+
   const tableRows = [
     { label: "ID", value: disk?.id },
     { label: Localization.kr.ALIAS, value: disk?.alias },
-    // { label: "ID", value: disk?.id },
     { label: Localization.kr.DESCRIPTION, value: disk?.description },
     { label: Localization.kr.DOMAIN, value: disk?.storageDomainVo?.name },
-    { label: "가상 디스크 크기", value: `${convertBytesToGB(disk?.virtualSize)} GB` },
-    { label: "실제 가상 디스크 크기", value: checkZeroSizeToGiB(disk?.actualSize) },
+    { label: Localization.kr.SIZE_VIRTUAL, value: `${convertBytesToGB(disk?.virtualSize)} GB` },
+    { label: Localization.kr.SIZE_ACTUAL, value: checkZeroSizeToGiB(disk?.actualSize) },
     { label: "할당 정책", value: disk?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED },
   ];
 
   const usageItems = useMemo(() => {
-    const virtualSizeGiB = (disk?.virtualSize ?? 0) / 1024 ** 3;
-    const actualSizeGiB = (disk?.actualSize ?? 0) / 1024 ** 3;
+    const virtualSizeGiB = checkZeroSizeToGiB(disk?.virtualSize ?? 0);
+    const actualSizeGiB = checkZeroSizeToGiB(disk?.actualSize ?? 0);
+    const diskPercent = (disk?.virtualSize > 0)
+      ? Math.round((disk?.actualSize / disk?.virtualSize) * 100)
+      : 0;
 
-    // 디스크 비율
-    const diskTotalTB = 200; // 기준치
-    const actualSizeTB = actualSizeGiB / 1024;
-    const diskPercent = Math.round((actualSizeTB / diskTotalTB) * 100);
-
-    // 스토리지 (예시 데이터)
-    const storageTotalTB = 5.11;
-    const storageUsedTB = 4.56;
-    const storagePercent = Math.round((storageUsedTB / storageTotalTB) * 100);
+    const domain = domains[0];
+    const diskSize = (domain?.size / (1024 ** 4)).toFixed(2);
+    const usedSizeTB = (domain?.usedSize / (1024 ** 4)).toFixed(2);
+    const storagePercent = domain?.size > 0
+      ? Math.round((domain?.usedSize / domain?.size) * 100)
+      : 0;
 
     return [
       {
         label: "스토리지",
         value: storagePercent,
-        description: `${storageUsedTB.toFixed(2)} TB 사용됨 | 총 ${storageTotalTB.toFixed(2)} TB`,
+        description: `${usedSizeTB} TB 사용됨 | 총 ${diskSize} TB`,
       },
       {
         label: "가상 디스크",
         value: diskPercent,
-        description:
-          actualSizeGiB < 1
-            ? `< 1 GiB 사용됨 | 총 ${diskTotalTB} TB`
-            : `${actualSizeTB.toFixed(2)} TB 사용됨 | 총 ${diskTotalTB} TB`,
+        description: `${actualSizeGiB} 사용됨 | 총 ${virtualSizeGiB}`,
       }
     ];
   }, [disk]);

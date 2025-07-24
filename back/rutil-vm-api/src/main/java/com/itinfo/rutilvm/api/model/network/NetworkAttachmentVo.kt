@@ -5,13 +5,14 @@ import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
-import org.ovirt.engine.sdk4.builders.DnsResolverConfigurationBuilder
 import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.builders.NetworkAttachmentBuilder
 import org.ovirt.engine.sdk4.builders.NetworkBuilder
 import org.ovirt.engine.sdk4.types.NetworkAttachment
+import org.slf4j.LoggerFactory
 import java.io.Serializable
 
+private val log = LoggerFactory.getLogger(NetworkAttachmentVo::class.java)
 /**
  * [NetworkAttachmentVo]
  *
@@ -85,6 +86,7 @@ fun Collection<NetworkAttachment>?.toNetworkAttachmentVos(): List<NetworkAttachm
  * 호스트 네트워크 수정 modified_network_attachments
  */
 fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
+	log.info("this: {}", this@toModifiedNetworkAttachment)
 	val builder = NetworkAttachmentBuilder()
 		.network(NetworkBuilder().id(this.networkVo.id).build())
 		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
@@ -101,6 +103,26 @@ fun NetworkAttachmentVo.toModifiedNetworkAttachment(): NetworkAttachment {
 // 여러개
 fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttachment> =
     this.map { it.toModifiedNetworkAttachment() }
+
+
+fun NetworkAttachmentVo.toSyncNetworkAttachment(): NetworkAttachment {
+	log.info("this: {}", this@toSyncNetworkAttachment)
+	val builder = NetworkAttachmentBuilder()
+		.network(NetworkBuilder().id(this.networkVo.id).build())
+		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())
+
+	if(this.ipAddressAssignments.isNotEmpty()){
+		builder.ipAddressAssignments(this.ipAddressAssignments.toIpAddressAssignments())
+	}
+	// if (this.nameServerList != null) {
+	// 	builder.dnsResolverConfiguration(DnsResolverConfigurationBuilder().nameServers(this.nameServerList).build())
+	// }
+	return builder.build()
+}
+
+// 여러개
+fun List<NetworkAttachmentVo>.toSyncNetworkAttachments(): List<NetworkAttachment> =
+    this.map { it.toSyncNetworkAttachment() }
 
 /**
  * 호스트 네트워크 remove_network_attachments

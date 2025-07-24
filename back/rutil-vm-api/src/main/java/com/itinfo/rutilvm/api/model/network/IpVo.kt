@@ -5,7 +5,10 @@ import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.IpBuilder
 import org.ovirt.engine.sdk4.types.Ip
 import org.ovirt.engine.sdk4.types.IpVersion
+import org.slf4j.LoggerFactory
 import java.io.Serializable
+
+private val log = LoggerFactory.getLogger(IpVo::class.java)
 
 class IpVo (
     val address: String = "",

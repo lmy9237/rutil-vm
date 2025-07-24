@@ -48,8 +48,8 @@ class HostSamplesHistoryEntity(
 	val hostId: UUID? = null,
 
 	val historyDatetime: LocalDateTime = LocalDateTime.MIN,
-	val memoryUsagePercent: Int? = -1,
-	val cpuUsagePercent: Int? = -1,
+	val memoryUsagePercent: Int? = null,
+	val cpuUsagePercent: Int? = null,
 
 	val ksmCpuPercent: Int? = null,
 	val activeVms: Int? = null,
@@ -70,8 +70,8 @@ class HostSamplesHistoryEntity(
 		private var bHistoryId: Int = -1;fun historyId(block: () -> Int?) { bHistoryId = block() ?: -1 }
 		private var bHostId: UUID? = null;fun hostId(block: () -> UUID?) { bHostId = block() }
 		private var bHistoryDatetime: LocalDateTime = LocalDateTime.MIN;fun historyDatetime(block: () -> LocalDateTime?) { bHistoryDatetime = block() ?: LocalDateTime.MIN }
-		private var bMemoryUsagePercent: Int? = 0;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block() ?: 0 }
-		private var bCpuUsagePercent: Int? = 0;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() ?: 0 }
+		private var bMemoryUsagePercent: Int? = 0;fun memoryUsagePercent(block: () -> Int?) { bMemoryUsagePercent = block()  }
+		private var bCpuUsagePercent: Int? = 0;fun cpuUsagePercent(block: () -> Int?) { bCpuUsagePercent = block() }
 		private var bKsmCpuPercent: Int? = 0;fun ksmCpuPercent(block: () -> Int?) { bKsmCpuPercent = block() ?: 0 }
 		private var bActiveVms: Int = 0;fun activeVms(block: () -> Int?) { bActiveVms = block() ?: 0 }
 		private var bTotalVms: Int = 0;fun totalVms(block: () -> Int?) { bTotalVms = block() ?: 0 }

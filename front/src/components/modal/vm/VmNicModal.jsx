@@ -8,7 +8,6 @@ import LabelInput              from "@/components/label/LabelInput";
 import LabelSelectOptions      from "@/components/label/LabelSelectOptions";
 import { 
   handleInputChange, 
-  handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
   useAddNicFromVM,
@@ -58,9 +57,7 @@ const VmNicModal = ({
   const { 
     data: networkAttachments = [] 
   } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
-  const {
-    data: vm
-  } = useVm(vmId);
+  const { data: vm } = useVm(vmId);
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
   const { 
     data: vnics=[],
@@ -128,7 +125,7 @@ const VmNicModal = ({
     if (selectedVnicProfile?.passThrough === "ENABLED") {
       setFormInfoState(prev => ({ ...prev, interface_: "pci_passthrough" }));
     } else {
-      setFormInfoState(prev => ({ ...prev, interface_: "VIRTIO" }));
+      setFormInfoState(prev => ({ ...prev, interface_: "virtio" }));
     }
   }, [vnicProfileVo, vnics]);
 
@@ -175,13 +172,6 @@ const VmNicModal = ({
         value={formInfoState.name}
         onChange={handleInputChange(setFormInfoState, "name",validationToast)}
       />
-      {/* <LabelSelectOptionsID label="프로파일"
-        value={vnicProfileVo?.id}
-        loading={isNicsLoading}
-        options={vnics}
-        onChange={handleSelectIdChange(setVnicProfileVo, vnics)}
-        // etcLabel={networkVo?.name} // 네트워크명
-      /> */}
       <LabelSelectOptions label="프로파일"
         value={vnicProfileVo?.id}
         loading={isNicsLoading}

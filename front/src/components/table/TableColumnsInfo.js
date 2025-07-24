@@ -167,8 +167,8 @@ const TableColumnsInfo = {
     { accessor: 'guestInterfaceName', header: '게스트 인터페이스 이름',   clickable: false },
   ],
   NICS2_FROM_VM: [
-    { accessor: 'linked',             header: '링크상태',                 clickable: false, width: '7%' },
-    { accessor: 'plugged',            header: '연결상태',                 clickable: false, width: '7%' },
+    { accessor: 'linked',             header: '링크상태',                 clickable: false, width: '4%' },
+    { accessor: 'plugged',            header: '연결상태',                 clickable: false, width: '4%' },
     { accessor: 'name',               header: Localization.kr.NAME,                 clickable: false, width: '7%' },
     { accessor: 'network',        header: `${Localization.kr.NETWORK}`, clickable: false },
     { accessor: 'vnicProfile',    header: '프로파일',           clickable: false },

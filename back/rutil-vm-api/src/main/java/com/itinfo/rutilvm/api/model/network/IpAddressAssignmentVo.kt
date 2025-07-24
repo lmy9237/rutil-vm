@@ -5,7 +5,10 @@ import com.itinfo.rutilvm.common.gson
 import org.ovirt.engine.sdk4.builders.IpAddressAssignmentBuilder
 import org.ovirt.engine.sdk4.types.BootProtocol
 import org.ovirt.engine.sdk4.types.IpAddressAssignment
+import org.slf4j.LoggerFactory
 import java.io.Serializable
+
+private val log = LoggerFactory.getLogger(IpAddressAssignmentVo::class.java)
 
 class IpAddressAssignmentVo (
     val assignmentMethod: String = "", //BootProtocol

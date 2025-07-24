@@ -31,38 +31,38 @@ const VmDiskDupl = ({
     disksSelected, setDisksSelected,
   } = useGlobal(); // 다중 선택된 디스크
 
-  const transformedData = [...vmDisks].map((d) => {
-    const diskImage = d?.diskImageVo;
-    // const status = d?.active ? "UP" : "DOWN"; 
-    return {
-      ...d,
-      icon: status2Icon(d?.active ? "UP" : "DOWN"),
-      iconSortKey: getStatusSortKey(diskImage?.status),
-      _alias: (
-        <TableRowClick type="disk" id={diskImage?.id}>
-          {diskImage?.alias}
-        </TableRowClick>
-      ),
-      description: diskImage?.description,
-      bootable: d?.bootable ? Localization.kr.YES: "",
-      readOnly: d?.readOnly ? Localization.kr.YES : "",
-      sharable: diskImage?.sharable ? Localization.kr.YES : "",
-      status: (diskImage?.imageTransferRunning) ? `잠김 (${diskImage?.imageTransferPercent.toFixed(2)}%)`: diskImage?.status.toUpperCase(),
-      // status: diskImage?.status,
-      active: d?.active,
-      interface: d?.interface_,
-      storageType: diskImage?.storageType,
-      sparse: diskImage?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
-      virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
-      actualSize: checkZeroSizeToGiB(diskImage?.actualSize),
-      storageDomain: (
-        <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
-          {diskImage?.storageDomainVo?.name}
-        </TableRowClick>
-      ),
-      searchText: `${diskImage?.alias} ${diskImage?.storageDomainVo?.name || ""} ${vmsSelected[0]?.name || ""}`.toLowerCase(),
-    };
-  });
+  const transformedData = [...vmDisks]
+  .sort((a, b) => { return (a?.diskImageVo?.alias?.toLowerCase()).localeCompare(b?.diskImageVo?.alias?.toLowerCase()) })
+    .map((d) => {
+      const diskImage = d?.diskImageVo;
+      return {
+        ...d,
+        icon: status2Icon(d?.active ? "UP" : "DOWN"),
+        iconSortKey: getStatusSortKey(diskImage?.status),
+        _alias: (
+          <TableRowClick type="disk" id={diskImage?.id}>
+            {diskImage?.alias}
+          </TableRowClick>
+        ),
+        description: diskImage?.description,
+        bootable: d?.bootable ? Localization.kr.YES: "",
+        readOnly: d?.readOnly ? Localization.kr.YES : "",
+        sharable: diskImage?.sharable ? Localization.kr.YES : "",
+        status: (diskImage?.imageTransferRunning) ? `잠김 (${diskImage?.imageTransferPercent.toFixed(2)}%)`: diskImage?.status.toUpperCase(),
+        active: d?.active,
+        interface: d?.interface_,
+        storageType: diskImage?.storageType,
+        sparse: diskImage?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
+        virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
+        actualSize: checkZeroSizeToGiB(diskImage?.actualSize),
+        storageDomain: (
+          <TableRowClick type="domain" id={diskImage?.storageDomainVo?.id}>
+            {diskImage?.storageDomainVo?.name}
+          </TableRowClick>
+        ),
+        searchText: `${diskImage?.alias} ${diskImage?.storageDomainVo?.name || ""} ${vmsSelected[0]?.name || ""}`.toLowerCase(),
+      };
+    });
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 

@@ -1,4 +1,3 @@
-// DataCenterGeneral.jsx
 import React, { useMemo } from "react";
 import useGlobal from "@/hooks/useGlobal";
 import { useDataCenter, useUsageDataCenter } from "@/api/RQHook";

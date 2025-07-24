@@ -326,8 +326,6 @@ class GraphServiceImpl(
 
 	override fun hostPercent(hostId: String): UsageDto {
 		val vdsStatisticsEntity: VdsStatisticsEntity = vdsStatisticsRepository.findByVdsId(hostId.toUUID())
-		log.info("hostPercent ... hostId: {}", vdsStatisticsEntity.toHostUsage())
-
 		return vdsStatisticsEntity.toHostUsage()
 		// val hostSampleHistoryEntity: HostSamplesHistoryEntity =
 		// 	hostSamplesHistoryRepository.findFirstByHostIdOrderByHistoryDatetimeDesc(hostId.toUUID())
