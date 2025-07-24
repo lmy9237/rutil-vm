@@ -4,9 +4,6 @@ services:
   rutil-vm-api:
     image: rutil-vm-api:latest
     container_name: rutil-vm-api
-#    deploy:
-#      mode: replicated
-#      replicas: 2
     ports:
       - "6690:6690"
     environment:
@@ -14,51 +11,51 @@ services:
       LANGUAGE: ko_KR;ko;en_US;en
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
-      RUTIL_VM_OVIRT_IP: 192.168.0.20
+      RUTIL_VM_OVIRT_IP: 192.168.0.87
       RUTIL_VM_OVIRT_PORT_HTTPS: 8443
       RUTIL_VM_PORT_HTTPS: 6690
       RUTIL_VM_SSL_KEY_STORE: /app/certs/keystore.p12
       RUTIL_VM_SSL_KEY_STORE_PASSWORD: rutil-vm-api
       RUTIL_VM_SSL_KEY_ALIAS: rutil-vm-api
-      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.20;localhost;rutil-vm;rutilvm-ititinfo.com
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.87;rutilvm-dev.ititinfo.com;localhost;rutil-vm
       RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
       RUTIL_VM_OVIRT_LOGIN_LIMIT: 5
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
       RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT: 60000
       RUTIL_VM_OVIRT_SSH_CERT_LOCATION: /app/tmp
       RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
-      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@192.168.0.20:22
+      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@192.168.0.87:22
       RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
         Bag Attributes
-            localKeyID: C6 92 40 9E 76 28 9A 0E B9 60 11 16 50 64 50 40 45 BB 99 38
+            localKeyID: A7 76 64 78 64 18 E3 3D 58 32 0D BE 58 3A 4C D1 C5 52 E4 A9 
         Key Attributes: <No Attributes>
         -----BEGIN PRIVATE KEY-----
-        MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDOI/ilVhe9SjIA
-        3uBUzxc9WHAEC0EIxYTowBl9bvGh2S4cvnBOygV1+3D2iWUzFFZhJ3AN8Ml9pJ5G
-        a/Lc2Rz5DZ+3qRV8Vi4S3w3VQndHYGJbrVAx2om5Ex2iQnDZsDsvVzKGT0FNjN+D
-        HX3miKilmnk3mLXuEi46HkAOgz1o4LWXRmZO2XbiYPy95FYHRsh8oYRy8yj7qmfW
-        8OtOFEbB9Oq5/t4Fbl1bS3qoZueDxG7s2aIb9VKGduOLgfxUbudluFDo43Fisqkz
-        3KwxMMZEKyL5YXsh10IySufT1Guko8PicYaz1s91Atp9TiQF7BORH5uVZXDaxnNH
-        rdkzl5sBAgMBAAECggEAKtGD+2vnoHUB7/ZbqKIflKmDEwP3bUgB9Iq6gLiDzneb
-        QXM5RtRlz/z7mOovMC4AR0v21Z53a/a+vaf8mW0rvHvc+jxP7zTDez4D1JFqz1Ow
-        +pQEfWaEhwH2fNbKNB2MHahCIW3jBaXGY6jDlxg517Q/i5HX8GysV3wjGCCgp+Dt
-        ko5wjeMrhFZA7FJEbDM+Cfl01kfTEGbLzyrKM7Y2urQg+BWB3bMh4jIVZI7BUAuK
-        NyEJI8+ron2En/9TMEEkZdCfrSKpTeOV1mnOn//Ds3KztoML660FicnJcZT+6RyO
-        a8xjcSPQM2AROcxkDRgnGfjCodSfj0ExMjSYqJOF8QKBgQD1cAUx02Xy5aEHrFQH
-        DWxzCjHs66WkeSnsto4hi5dsCTtKkN5v2+nleqxiNhBWxDDJLOeGAojRiSO1v3Am
-        0WkQ9N5DzJGzr331PM1GmbIKSuVK77YHNbqQkuXQbXMQE1LPm6oYFx8TE2aeGNGA
-        /MBxCDbNuuoziNB9ichWuH0fdQKBgQDXAwQkK/JQVnTmQgDTsmEXAi0eKZUQ9tXt
-        72LbPUyI3NDM24HYEjenya3nOG7dWN0UCCKywOQPqg0R0tcx37C68qqFNRlCecaa
-        A3DdhLhEHzcA14BEYxiNdo/Z0tesR3BxiJof/ro7CHxZZKnPhUiEPJlbrH883wHR
-        WHaY2zJH3QKBgHuQM+1Lwk2w8YsNZRhP18Nq5IukbzYIkeTMW23j+w228BSwLmwe
-        SPjw84xWL4+fIfiGFOFQsVTcOBAuGuZQExcoUCXN/aR6u20VeTsL8ahg4GMDn56t
-        nAlhCzYNhBoZwF0ov091hH10DPuW/xJzLOc6/WxBp9reDCjHjwapxsRpAoGBALwd
-        tHLdTE1Dx1Vp7AVL7SxPSCA6q2RDQhrBthExSZP49mo1px3fmngfuRoywrTAufR7
-        xbf1kdOuqW6ttH+7QYnfJJgVQ/toRf2cAxScuQdI9Du1UFEFDoc+c09V7EKb4mJC
-        7O4PVOqvWvRvYS7iYvbnehm+Czi7uIBr0J+eMBi1AoGADrGcP/gLPTLa20QMq36I
-        QBQIw3wsDxaKZMFsyHEcy46gwJ1VecRPP8NsA9dUWl70ZtJAeYBVACWFP5w/KPqK
-        inTUL/0d5Ia0zNh2td3Eo6aF750Yj2Xp1IvDfLyy9bVjOAoWYYFGYNMKDAjFhhX+
-        m1ZfyozwFI02oLCm+i+nyAc=
+        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCv+KXZH1EFAyR2
+        MI+2t30tPvdpAlQjUZH7T8AvwgqBJfrHKt5oXBdz8yqcQFIfY93orV2itTImQ0wc
+        P39af5tps2a9D/cKOYIBMbkryKJYFp77/Igs2fRI+Wg+pEW3V+1KjIm/Te1wwXC2
+        xXogsngY3LYgZiZ0Da8HOsPoqasslIkOFJt9jkiJ8VJ6RmZ2UcTpNZ/EVhstT4xO
+        Rb6R9XkY/afS+jnEDmydodYsOdxnRYth39Ihmiv+PyBUXZvCl+lCSA8CBeXB8RI/
+        p0OvSPZH6G/rZLUMEwY319Qz9qT45915XewRD876xCwjAObS+iJnTGCK0Zr15t9c
+        IIWL9uEbAgMBAAECggEBAIpQLkuSyePerHIZiVxcrQ87RsxLAEciflPCQ5VGN2t7
+        prmVgGsWt3hz0TIvfF0f6fRRECAru9dHXjN11WwUkNtsH3zLZ6mpuf2mT52Sfcgv
+        P5dgzsgyKEiTgNR72jBZ9DF8dWjgn5jY8vc2EOBSZwNjt+OPZvohJ0nPbt0ZP2ox
+        p9WYLDxj6x7tNfxjfWSexz3iL/jIOS31dHJi2KQqYAfBFX686orZ7hXxEYbn4EE0
+        MbJzNIyLLx9tFXjtObxxd0Kv0GAc6hyn8qvr962d7eQKmbI0pauoBGdEgDpytnF7
+        DNqb7cV0y5Z1Zrax7Zla3MKiXDzNlEg+9dTuXkQ2wEECgYEA3yCkznB8/B7hNsPr
+        OVyoAWzHn1cXtrzeIKA04fxPVY21Y89TYL1sOvC/UMKw4ec9Mxm9C0Ys0BcY8vZi
+        Rd8WtaSVsi51n95FmQWN18Uv+T/BX4iyJkL70hAaZQMD99seYI4q0yVQc6u11k4l
+        PdvnrLco1H4HM6Ly+iGEhXlB6j8CgYEAyeV8MkBk3yZcI+8poRKvT31WRucFSl4A
+        k4SaIUpzvrU4nWP5BUcE1Avo9uux5LUgdp+ocn4Tzm6VMjo55qNmOjwiyECNjvTL
+        j7XpYFZKT3CX/LipdC+jJo/IDVpICBnX99JOr/QfpQsQvBuVd1707dksVtGK57Zp
+        EizznESyeiUCgYAWoyA1VZJInfVpcf0WZ8Efy+KA1vwv7P94Pei/mLKP0n25r5oc
+        8Xrei/hNAEOj16sM2SqlzyvSvNUqKTcVMaoDKbyKRE5otstG2Bpo7reMSRycTakN
+        WrRjvoB/CQxJBDETyLitjVaZNa2QHYOHwBzEGB0LWfHvGjQejnH8fK3kTwKBgCKP
+        0XH8ygfVVkKkh3jWbQJrj2B13db8PpcCRSxbxXKpLTbsTU3U+YOfQlM6x+pCA3ur
+        Gzf2U0escIf3pb/Qywg/ESk8u770MwC4AGqIexIcUThnGEMWgJRyWqnGgbw5SFpZ
+        OzUt0lj7ivLYuf6EV+N7oPZ/yoqeFGCTJ2Th8betAoGBAJ390IAZsC9PdHz5h3YD
+        xX88I7CzGxcpKf7eXZg1jDXoPh0N/UQgKrAEmqcwB+ezaKYfcn1P26rHFoJwIiUy
+        cFNLhmfVVIu0xjv6juQfnTmNns3sGXNKumW2AhSUOZqM+VfK8QhMv5BgZ5k/iMcc
+        jIHNJ9HrCNUCCrhgg1J5CyHF
         -----END PRIVATE KEY-----
       POSTGRES_JDBC_PORT: 5432
       POSTGRES_DATASOURCE_JDBC_ID: rutil
@@ -67,7 +64,6 @@ services:
       - /opt/rutilvm/rutil-vm-api/logs:/app/logs:rw
       - /opt/rutilvm/rutil-vm-api/certs:/app/certs:rw
       - /opt/rutilvm/rutil-vm-api/tmp:/app/tmp:rw
-      # - /root/.ssh:/root/.ssh:rw
       - /home/rutilvm/.ssh:/root/.ssh:rw
       - /etc/hosts:/etc/hosts:ro
       - /etc/localtime:/etc/localtime:ro
@@ -91,11 +87,11 @@ services:
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
       NODE_ENV: production
-      __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.20
+      __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.87
       __RUTIL_VM_LOGGING_ENABLED__: true
       __RUTIL_VM_ITEMS_PER_PAGE__: 25
       __RUTIL_VM_IS_LICENCE_VERIFIED__: false
-      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지입니다
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지
     volumes:
       - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro

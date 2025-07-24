@@ -1,0 +1,126 @@
+version: "3"
+
+services:
+  rutil-vm-api:
+    image: rutil-vm-api:latest
+    container_name: rutil-vm-api
+    ports:
+      - "6690:6690"
+    environment:
+      TZ: Asia/Seoul
+      LANGUAGE: ko_KR;ko;en_US;en
+      LC_ALL: ko_KR.UTF-8
+      LANG: ko_KR.utf8
+      RUTIL_VM_OVIRT_IP: 192.168.0.58
+      RUTIL_VM_OVIRT_PORT_HTTPS: 8443
+      RUTIL_VM_PORT_HTTPS: 6690
+      RUTIL_VM_SSL_KEY_STORE: /app/certs/keystore.p12
+      RUTIL_VM_SSL_KEY_STORE_PASSWORD: rutil-vm-api
+      RUTIL_VM_SSL_KEY_ALIAS: rutil-vm-api
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.58;test.ititinfo.local;localhost;rutil-vm
+      RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
+      RUTIL_VM_OVIRT_LOGIN_LIMIT: 5
+      RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
+      RUTIL_VM_OVIRT_SSH_JSCH_CONNECTION_TIMEOUT: 60000
+      RUTIL_VM_OVIRT_SSH_CERT_LOCATION: /app/tmp
+      RUTIL_VM_OVIRT_SSH_PRVKEY_LOCATION: /root/.ssh/id_rsa
+      RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@192.168.0.58:22
+      RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
+        Bag Attributes
+            localKeyID: 6A E6 26 ED 85 44 4A BF BF C6 CD 10 75 97 7B 5F 29 C9 BF 53 
+        Key Attributes: <No Attributes>
+        -----BEGIN PRIVATE KEY-----
+        MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5orTmQbXOKA2s
+        upfBcV0yBTbquFoq8TTpFcj5GCoNChIHq4JaUezNcbB1Icd1yMMjxvwfApMefRke
+        HqWi5yu+ldQI0vM+oRQ4gwXjJrLgIiZTdGW3vJHY5NeTBrrXzxMbkGppEBK1O/nW
+        9b0IuWFgVmGZnXy3xQ532b5O8r1qCTFPVoJZ0ihTA+kz73nd0KNri9ZKT1q8GibW
+        Atf1Pf5YysVz4VrbABII2HOqT/BJNSNMBpAnLCP+Q6WOxjDxA5tNn6ZUUlsmxwgH
+        3EuPMiGIiKHD6Pi47EPCgJtop63DbKUFUIJingDrZPHlUN0Fk/ZKYGtGOqf+ZhKa
+        FgyJmvDVAgMBAAECggEAEyrwwOHCEwJhvxcZOlkpRVPygrP8Y3i6fOLJ+KZ9GRGU
+        IQSdlhPlfqUhkkaloMzVEWmneNA8PqauJEUH11VFWA2CclLN2Qaq3tbwka7aQ3hj
+        OrTHF/y5loqyk7TbMBNqpqr3wdduBxalSoPfO/pgSqFAvKrdSOBpCQkLtH0t/7e8
+        QbnoFRcfVbatV5Z/Dw0CzXgOOSXgrE6abNKUjR9FHj+Gds9b80L150lDfx5lR9EV
+        Z/WQersxs+EZr2mCMy40XI6bIY4Jmm5EVJ+j8LOvAnm9KT8UhrBFKMIB9a47CtRv
+        dl6w3VmvoK3rZF5InK5g6SUfxXYB0pZ6QF3McZIuAQKBgQDa2AMgUPc6/gVmse74
+        BH+8NASmSYLpI7hlJcfL/awQ/2TPPv6bgxiWxSkbgkmrXUw7RDmKn2Wr65D3apqr
+        CTa4VxnTzsq3aaYiuy7wn3KJpF63yLlPPeaJJYdX4mE+qAJbyYcYiuDBvzQqaEr2
+        3ILB0TfVSsPC2iJBENnx4L8agQKBgQDZJ07GXJEQyRiSsHbRKLhMxietQLDViW2l
+        QvANYMiotG6sdkOG/XRbScT0MXx5kuFoUAVMCRfALOwMSEp7s/UBH36bxkoe+Suv
+        vEdXq43RsMLqNW+uGsn2WMI7GZ5JifnhUfMhvGeZWNkMGi8PPu8FgXEvoNSg8sVl
+        AX8cAe0kVQKBgQCbGCfvCTKNvmU5iLThVN7qFLuO1d5POB+An6vfaCI/0aAyOGTc
+        9aXBhG1Dr6xiJDbYcduN4LV/h+0vS3/d4yPCtQf60j1ciyVQy/PSWE4mOjVeboTW
+        Ifp2DADFSgy9CPjS8BosTJBI/ycLPuqR1WldztaQ9PGT8GACWNz8zNjjAQKBgH0z
+        tq2TzWgaKfrZl4f8rFZHobS4qbxUok04jOOJu+fZMD5raX+5Po8rt0z8A0KtNx1H
+        leZDD9iTjf1+6MLt/QMKv5rc9vtoupF2QsP/e6M9AQS8jomZlHxerI4atTK9RL9u
+        2nnHAQxfN7VMm3l01acc/L9zQWUS1FDqTfk9+xaJAoGBAMdbJdbaIbc95LT2OcDQ
+        K7YzVkWDd7Sp5Flo61T/cHmI7shRC238AwwmEYMxPPr1NmeSvvr8JWS3HxYSMDGu
+        J+OeKSfgZxTi8Wp8RRppzAdtphCl/TNJmwgNJ49P+0/H1Me8Moleo8A3wI62Sd13
+        pdARuzKSVaKlM8BDz/8Vg6sq
+        -----END PRIVATE KEY-----
+      POSTGRES_JDBC_PORT: 5432
+      POSTGRES_DATASOURCE_JDBC_ID: rutil
+      POSTGRES_DATASOURCE_JDBC_PW: rutil1!
+    volumes:
+      - /opt/rutilvm/rutil-vm-api/logs:/app/logs:rw
+      - /opt/rutilvm/rutil-vm-api/certs:/app/certs:rw
+      - /opt/rutilvm/rutil-vm-api/tmp:/app/tmp:rw
+      - /home/rutilvm/.ssh:/root/.ssh:rw
+      - /etc/hosts:/etc/hosts:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - ovirt_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:6690/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  rutil-vm:
+    image: rutil-vm:latest
+    container_name: rutil-vm
+    ports:
+      - "443:443"
+    environment:
+      TZ: Asia/Seoul
+      LANGUAGE: ko_KR;ko;en_US;en
+      LC_ALL: ko_KR.UTF-8
+      LANG: ko_KR.utf8
+      NODE_ENV: production
+      __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.58
+      __RUTIL_VM_LOGGING_ENABLED__: true
+      __RUTIL_VM_ITEMS_PER_PAGE__: 25
+      __RUTIL_VM_IS_LICENCE_VERIFIED__: false
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지
+    volumes:
+      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
+      - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
+    networks:
+      - ovirt_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail https://localhost:433 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+    
+  rutil-vm-wsproxy:
+    image: rutil-vm-wsproxy:latest
+    container_name: rutil-vm-wsproxy
+    ports:
+      - "9999:9999"
+    environment:
+      TZ: Asia/Seoul
+      LANGUAGE: ko_KR;ko;en_US;en
+      LC_ALL: ko_KR.UTF-8
+      LANG: ko_KR.utf8
+      PORT: 9999
+    volumes:
+      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
+    networks:
+      - ovirt_network
+    restart: unless-stopped
+
+networks:
+  ovirt_network:
+    driver: bridge

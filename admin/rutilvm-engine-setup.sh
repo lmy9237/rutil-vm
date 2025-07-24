@@ -1,6 +1,6 @@
 #!/bin/bash
 # 
-# Last Edit : 20250723-01
+# Last Edit : 20250724-01 (이찬희)
 
 echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Change engine repositories]"
 
@@ -204,7 +204,7 @@ services:
       LC_ALL: ko_KR.UTF-8
       LANG: ko_KR.utf8
       RUTIL_VM_OVIRT_IP: ENGINE_IP
-      RUTIL_VM_OVIRT_PORT_HTTPS: 8443                                                         
+      RUTIL_VM_OVIRT_PORT_HTTPS: 8443
       RUTIL_VM_PORT_HTTPS: 6690
       RUTIL_VM_SSL_KEY_STORE: /app/certs/keystore.p12
       RUTIL_VM_SSL_KEY_STORE_PASSWORD: rutil-vm-api
@@ -236,7 +236,7 @@ OVIRT_ENGINE_PRIVATE_KEY
       interval: 10s
       timeout: 10s
       retries: 3
-    restart: on-failure
+    restart: unless-stopped
 
   rutil-vm:
     image: rutil-vm:latest
@@ -251,9 +251,9 @@ OVIRT_ENGINE_PRIVATE_KEY
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: ENGINE_IP
       __RUTIL_VM_LOGGING_ENABLED__: true
-      __RUTIL_VM_ITEMS_PER_PAGE__: 20
+      __RUTIL_VM_ITEMS_PER_PAGE__: 25
       __RUTIL_VM_IS_LICENCE_VERIFIED__: false
-      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지입니다
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지
     volumes:
       - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
@@ -264,7 +264,7 @@ OVIRT_ENGINE_PRIVATE_KEY
       interval: 10s
       timeout: 10s
       retries: 3
-    restart: always
+    restart: unless-stopped
     
   rutil-vm-wsproxy:
     image: rutil-vm-wsproxy:latest
@@ -278,10 +278,10 @@ OVIRT_ENGINE_PRIVATE_KEY
       LANG: ko_KR.utf8
       PORT: 9999
     volumes:
-      - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
+      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
-    restart: always # undefined으로 인자가 갈 때 죽음
+    restart: unless-stopped
 
 networks:
   ovirt_network:

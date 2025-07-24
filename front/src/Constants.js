@@ -43,7 +43,7 @@ const watermarkText = () => {
   let _value = "테스트용 입니다."; // 기본값
   try {
     _value = import.meta.env.VITE_RUTIL_VM_WATERMARK_TEXT;
-    if (import.meta.env.PROD) _value = '__RUTIL_VM_WATERMARK_TEXT__';
+    if (import.meta.env.PROD) _value = `__RUTIL_VM_WATERMARK_TEXT__`;
   } catch(e) {
      console.error(`Constants > baseUrl ... ${e.message}`)
   }

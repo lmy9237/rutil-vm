@@ -4,11 +4,8 @@ services:
   rutil-vm-api:
     image: rutil-vm-api:latest
     container_name: rutil-vm-api
-#    deploy:
-#      mode: replicated
-#      replicas: 2
     ports:
-      - "6690:6690"    
+      - "6690:6690"
     environment:
       TZ: Asia/Seoul
       LANGUAGE: ko_KR;ko;en_US;en
@@ -20,7 +17,7 @@ services:
       RUTIL_VM_SSL_KEY_STORE: /app/certs/keystore.p12
       RUTIL_VM_SSL_KEY_STORE_PASSWORD: rutil-vm-api
       RUTIL_VM_SSL_KEY_ALIAS: rutil-vm-api
-      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.70;localhost;rutil-vm;rutilvm-dev.ititinfo.com
+      RUTIL_VM_CORS_ALLOWED_ORIGINS: 192.168.0.70;rutilvm-dev.ititinfo.com;localhost;rutil-vm
       RUTIL_VM_CORS_ALLOWED_ORIGINS_PORT: 3000;3443;443
       RUTIL_VM_OVIRT_LOGIN_LIMIT: 5
       RUTIL_VM_OVIRT_SSH_JSCH_LOG_ENABLED: true
@@ -30,7 +27,7 @@ services:
       RUTIL_VM_OVIRT_SSH_ENGINE_ADDRESS: rutilvm@192.168.0.70:22
       RUTIL_VM_OVIRT_SSH_ENGINE_PRVKEY: |
         Bag Attributes
-            localKeyID: CB 74 02 70 04 F6 53 60 4F 9C B0 FA 6E 2C 1C 17 CD BF 05 09
+            localKeyID: CB 74 02 70 04 F6 53 60 4F 9C B0 FA 6E 2C 1C 17 CD BF 05 09 
         Key Attributes: <No Attributes>
         -----BEGIN PRIVATE KEY-----
         MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxPHcKeplWxMyo
@@ -64,10 +61,9 @@ services:
       POSTGRES_DATASOURCE_JDBC_ID: rutil
       POSTGRES_DATASOURCE_JDBC_PW: rutil1!
     volumes:
-      - ./rutil-vm-api/logs:/app/logs:rw
-      - ./rutil-vm-api/certs:/app/certs:rw
-      - ./rutil-vm-api/tmp:/app/tmp:rw
-      # - /root/.ssh:/root/.ssh:rw
+      - /opt/rutilvm/rutil-vm-api/logs:/app/logs:rw
+      - /opt/rutilvm/rutil-vm-api/certs:/app/certs:rw
+      - /opt/rutilvm/rutil-vm-api/tmp:/app/tmp:rw
       - /home/rutilvm/.ssh:/root/.ssh:rw
       - /etc/hosts:/etc/hosts:ro
       - /etc/localtime:/etc/localtime:ro
@@ -78,7 +74,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
-    restart: on-failure
+    restart: unless-stopped
 
   rutil-vm:
     image: rutil-vm:latest
@@ -93,11 +89,11 @@ services:
       NODE_ENV: production
       __RUTIL_VM_OVIRT_IP_ADDRESS__: 192.168.0.70
       __RUTIL_VM_LOGGING_ENABLED__: true
-      __RUTIL_VM_ITEMS_PER_PAGE__: 20
+      __RUTIL_VM_ITEMS_PER_PAGE__: 25
       __RUTIL_VM_IS_LICENCE_VERIFIED__: false
-      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지입니다
+      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지
     volumes:
-      - ./rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
+      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
     networks:
       - ovirt_network
@@ -106,7 +102,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
-    restart: always
+    restart: unless-stopped
     
   rutil-vm-wsproxy:
     image: rutil-vm-wsproxy:latest
@@ -120,10 +116,10 @@ services:
       LANG: ko_KR.utf8
       PORT: 9999
     volumes:
-      - ./rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
+      - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/home/node/fullchain.pem:ro
     networks:
       - ovirt_network
-    restart: always # undefined으로 인자가 갈 때 죽음
+    restart: unless-stopped
 
 networks:
   ovirt_network:

@@ -25,6 +25,7 @@
 
 192.168.0.50         ovirt43.ititinfo.local
 192.168.0.53         on-manage
+192.168.0.55         ovirt45.test.local
 
 # 70번 그룹
 192.168.0.70         rutilvm-dev.ititinfo.com
@@ -38,9 +39,10 @@
 192.168.0.80         rutilvm-test.ititinfo.com
 192.168.0.81         host01.ititinfo.com
 192.168.0.82         host02.ititinfo.com
-192.168.0.90            itcloud.ititinfo.com
+192.168.0.87         testengine
+192.168.0.90         itcloud.ititinfo.com
 192.168.219.200      jdh-manage
-192.168.0.190      test-manage
-192.168.0.180      on45-engine
-192.168.0.181         on45-host01
+192.168.0.190        test-manage
+192.168.0.180        on45-engine
+192.168.0.181        on45-host01
 ##endregion

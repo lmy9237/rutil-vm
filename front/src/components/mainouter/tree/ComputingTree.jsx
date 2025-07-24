@@ -155,13 +155,13 @@ const ComputingTree = ({}) => {
                             <TreeMenuItem level={4}
                               title={host.name}
                               iconDef={
-                                host?.status?.toUpperCase() === "UNKNOWn".toUpperCase() 
+                                host?.status?.toUpperCase() === "UNKNOWN".toUpperCase() 
                                   ? rvi16QuestionMark("currentColor")
                                   : host?.status?.toUpperCase() === "MAINTENANCE"
                                     ? rvi16Wrench("currentColor")
                                     : host?.status?.toUpperCase() === "PREPARING_FOR_MAINTENANCE" || 
                                       host?.status?.toUpperCase() === "REBOOT"
-                                      ? rvi16Refresh("currentColor") // (질문) TODO: 새 아이콘 디자인 필요 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
+                                      ? rvi16Refresh("currentColor") // TODO: (질문) 새 아이콘 디자인 필요 (호스트아이콘 우측하단 및 refresh 아이콘 배치, 이름 rvi16HostRefresh)
                                       : rvi16Host("currentColor")
                               }
                               isSelected={() => location.pathname.includes(host?.id)}
@@ -197,7 +197,6 @@ const ComputingTree = ({}) => {
                                 <TreeMenuItem level={5}
                                   title={vm?.name}
                                   iconDef={status2TreeIcon("vm", vm?.status)}
-                                  // TODO: host에 붙어있지만 상태가 이상한 경우에 대한 조건처리
                                   isSelected={() => location.pathname.includes(vm?.id)}
                                   isContextSelected={contextMenuType() === "vm" && contextMenu()?.item?.id === vm?.id}
                                   isNextLevelVisible={isHostOpen}
