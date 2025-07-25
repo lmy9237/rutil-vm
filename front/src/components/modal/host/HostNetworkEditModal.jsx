@@ -265,9 +265,9 @@ const HostNetworkEditModal = ({
             <>
               <span>{initialInSync === true ? "T" : "F"}</span><br/>
               <span>{networkModalState.inSync === true ? "T" : "F"}</span>
+          <hr/>
             </>
           }
-          <hr/>
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
               <LabelSelectOptions id="ipv4_mtu" label="부트 프로토콜"                  

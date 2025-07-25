@@ -51,7 +51,7 @@ const HostNics = ({
   const [modifiedBonds, setModifiedBonds] = useState([]); // 생성/수정 본딩
   const [removeBonds, setRemoveBonds] = useState([]);     // 삭제 본딩
   const [modifiedNAs, setModifiedNAs] = useState([]);     // 연결 네트워크
-  const [syncNAs, setSyncNAs] = useState([]);     // 비동기 네트워크
+  const [syncNAs, setSyncNAs] = useState([]);             // 비동기 네트워크
   const [removeNAs, setRemoveNAs] = useState([]);         // 삭제 네트워크
 
   // networkattachment 해제될 때 정보를 별도 보관
@@ -108,6 +108,7 @@ const HostNics = ({
     setModifiedBonds([]);
     setRemoveBonds([]);
     setModifiedNAs([]);
+    setSyncNAs([]);
     setRemoveNAs([]);
     setRecentlyUnassignedNAs([]);
   }, [hostNics, transNAData, transDetachNetworkData]);
@@ -197,6 +198,7 @@ const HostNics = ({
         baseItems.networkAttachment, 
         movedItems.networkAttachment,
         modifiedNAs,
+        // syncNAs,?
         recentlyUnassignedNAs
       )
     );
@@ -244,7 +246,9 @@ const HostNics = ({
       !(bondedSlaveNames.includes(na.hostNicVo.name) && !na.hostNicVo.name.startsWith("bond"))
     );
 
-    const filteredRemoveNAs = removeNAs.filter(na => !modifiedNAs.some(mod => mod.id === na.id));
+    const filteredRemoveNAs = removeNAs.filter(na => 
+      !modifiedNAs.some(mod => mod.id === na.id)
+    );
     
     const hostNetworkVo = {
       bonds: modifiedBonds.map(bond => ({
@@ -269,8 +273,11 @@ const HostNics = ({
         ipAddressAssignments: na.ipAddressAssignments || [],
         nameServerList: na.dnsServers || [],
       })), 
-      networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ id: na.id }))
+      networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ 
+        id: na.id 
+      }))
     };
+
     setupNetwork(
       { hostId, hostNetworkVo },
       {
@@ -288,9 +295,6 @@ const HostNics = ({
         }
       }
     );
-    // Logger.debug(`HostNics > handleFormSubmit ... dataToSubmit: `, hostNetworkVo); // 데이터 출력
-    // setupNetwork({ hostId: hostId, hostNetworkVo: hostNetworkVo });
-
     resetState(); // 초기화
   };
 

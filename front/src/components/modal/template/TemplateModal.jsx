@@ -279,7 +279,7 @@ const TemplateModal = ({
                           />
                           {selectedDomain && (
                             <div className="text-xs text-gray-500 f-end">
-                              사용 가능: {selectedDomain.availableSize} GiB / 총 용량: {selectedDomain.size} GiB
+                              사용 가능: {checkZeroSizeToGiB(selectedDomain.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(selectedDomain.availableSize + selectedDomain.usedSize)}
                             </div>
                           )}
                         </td>

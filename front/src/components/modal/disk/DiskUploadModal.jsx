@@ -22,7 +22,8 @@ import {
   checkName, 
   convertBytesToGB,
   emptyIdNameVo,
-  readString, readUint32, readBigUint64, toGiB
+  readString, readUint32, readBigUint64, toGiB,
+  checkZeroSizeToGiB
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -247,34 +248,13 @@ const DiskUploadModal = ({
                 loading={isDomainsLoading}
                 options={domains}
                 onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}
-                // onChange={(e) => {
-                //   const selected = domains.find(d => d.id === e.target.value);
-                //   if (selected) setDomainVo({ id: selected.id, name: selected.name });
-                // }}
               />
-              {/*<div className="input-select custom-select-wrapper">
-                <label>스토리지 도메인</label>
-                <select 
-                  value={domainVo.id} 
-                  onChange={handleSelectIdChange(setDomainVo, domains)}
-                >
-                  {isDomainsLoading ? (
-                    <option>로딩중~</option>
-                  ) : (
-                    domains.map((opt) => (
-                      <option key={opt.id} value={opt.id}>
-                        {opt.name} (사용가능: {convertBytesToGB(opt.availableSize)}, 총 {Localization.kr.SIZE_TOTAL}: {convertBytesToGB(opt.usedSize+opt.availableSize)})
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div> */}
               {domainVo && (() => {
                 const domainObj = domains.find((d) => d.id === domainVo.id);
                 if (!domainObj) return null;
                 return (
                   <div className="text-xs text-gray-500 f-end">
-                    사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+                    사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(domainObj.availableSize + domainObj.usedSize)}
                   </div>
                 );
               })()}
@@ -302,14 +282,6 @@ const DiskUploadModal = ({
                   onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
                 />
               </div>
-              {/* <div className='img-checkbox-outer'>
-                <LabelCheckbox label={Localization.kr.IS_SHARABLE}
-                  id="sharable"
-                  className="sharable"
-                  checked={sharable}
-                  onChange={(e) => setSharable(e.target.checked)}
-                />
-                </div> */}
             </div>
           </div>
         </div>
