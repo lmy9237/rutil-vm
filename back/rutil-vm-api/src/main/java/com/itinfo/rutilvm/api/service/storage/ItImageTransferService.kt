@@ -5,7 +5,10 @@ import com.itinfo.rutilvm.api.model.common.JobVo
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.common.ItJobService
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.util.ovirt.cancelImageTransfer
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import com.itinfo.rutilvm.util.ovirt.pauseImageTransfer
+import com.itinfo.rutilvm.util.ovirt.resumeImageTransfer
 import com.itinfo.rutilvm.util.ovirt.srvImageTransfer
 
 import io.netty.handler.ssl.SslContextBuilder
@@ -58,7 +61,6 @@ interface ItImageTransferService {
 		file: MultipartFile,
 		imageTransferId: String
 	): Boolean
-
 	/**
 	 * [ItImageTransferService.downloadFile]
 	 * 파일을 다운로드
@@ -73,6 +75,27 @@ interface ItImageTransferService {
 		filename: String?,
 //		disk: Disk,
 	): Mono<ResponseEntity<Flux<DataBuffer>>>
+	/**
+	 * [ItImageTransferService.cancel]
+	 * 이미지 전송 취소
+	 *
+	 * @param imageTransferId [String] 이미지 이송 ID
+	 */
+	fun cancel(imageTransferId: String): Boolean
+	/**
+	 * [ItImageTransferService.pause]
+	 * 이미지 전송 일시정지
+	 *
+	 * @param imageTransferId [String] 이미지 이송 ID
+	 */
+	fun pause(imageTransferId: String): Boolean
+	/**
+	 * [ItImageTransferService.resume]
+	 * 이미지 전송 재개
+	 *
+	 * @param imageTransferId [String] 이미지 이송 ID
+	 */
+	fun resume(imageTransferId: String): Boolean
 }
 
 @Service
@@ -247,7 +270,25 @@ class ImageTransferServiceImpl(
 		}
 	}
 
-private val webClient: WebClient by lazy {
+	override fun cancel(imageTransferId: String): Boolean {
+		log.info("cancel ... imageTransferId: {}", imageTransferId)
+		val res: Result<Boolean> = conn.cancelImageTransfer(imageTransferId)
+		return res.isSuccess
+	}
+
+	override fun pause(imageTransferId: String): Boolean {
+		log.info("pause ... imageTransferId: {}", imageTransferId)
+		val res: Result<Boolean> = conn.pauseImageTransfer(imageTransferId)
+		return res.isSuccess
+	}
+
+	override fun resume(imageTransferId: String): Boolean {
+		log.info("resume ... imageTransferId: {}", imageTransferId)
+		val res: Result<Boolean> = conn.resumeImageTransfer(imageTransferId)
+		return res.isSuccess
+	}
+
+	private val webClient: WebClient by lazy {
 		var reactorNettyHttpClient: ReactorNettyHttpClient
 		val nettySslContextBuilder = SslContextBuilder.forClient()
 

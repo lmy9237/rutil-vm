@@ -181,6 +181,20 @@ fun Connection.refreshLunDisk(diskId: String, hostId: String): Result<Boolean> =
 	throw if (it is Error) it.toItCloudExceptionWithin(Term.DISK, Term.HOST,"복사", diskId, hostId) else it
 }
 
+fun Connection.findImageTransferIdInProgress(
+	diskId: String
+): Result<String> = runCatching {
+	val imageTransfer: ImageTransfer? = srvAllImageTransfer().list().send().imageTransfer().firstOrNull {
+		it.image().idPresent() && it.image().id() == diskId
+	}
+	imageTransfer?.id() ?: ""
+}.onSuccess {
+	Term.IMAGE_TRANSFER.logSuccess("상세조회")
+}.onFailure {
+	Term.IMAGE_TRANSFER.logFail("상세조회")
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "상세조회", diskId) else it
+}
+
 fun Connection.findImageTransferId4DiskImageDownload(
 	diskId: String
 ): Result<String> = runCatching {
@@ -272,21 +286,45 @@ private fun Connection.addImageTransfer(
 	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업추가") else it
 }
 
+fun Connection.srvImageTransfer(imageTransferId: String): ImageTransferService =
+	this.srvAllImageTransfer().imageTransferService(imageTransferId)
+
 fun Connection.cancelImageTransfer(
 	imageTransferId: String
-): Result<Boolean?> = runCatching {
-	this.srvAllImageTransfer().imageTransferService(imageTransferId).cancel().send()
+): Result<Boolean> = runCatching {
+	this.srvImageTransfer(imageTransferId).cancel().send()
 	true
 }.onSuccess {
-	Term.IMAGE_TRANSFER.logSuccess("작업취소")
+	Term.IMAGE_TRANSFER.logSuccess("작업 취소")
 }.onFailure {
-	Term.IMAGE_TRANSFER.logFail("작업취소")
-	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업취소", imageTransferId) else it
+	Term.IMAGE_TRANSFER.logFail("작업 취소")
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업 취소", imageTransferId) else it
 }
 
+fun Connection.pauseImageTransfer(
+	imageTransferId: String
+): Result<Boolean> = runCatching {
+	this.srvImageTransfer(imageTransferId).pause().send()
+	true
+}.onSuccess {
+	Term.IMAGE_TRANSFER.logSuccess("작업 일시정지")
+}.onFailure {
+	Term.IMAGE_TRANSFER.logFail("작업 일시정지")
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업 일시정지", imageTransferId) else it
+}
 
-fun Connection.srvImageTransfer(imagetransferId: String): ImageTransferService =
-	this.srvAllImageTransfer().imageTransferService(imagetransferId)
+fun Connection.resumeImageTransfer(
+	imageTransferId: String
+): Result<Boolean> = runCatching {
+	this.srvImageTransfer(imageTransferId).resume().send()
+	true
+}.onSuccess {
+	Term.IMAGE_TRANSFER.logSuccess("작업 재개")
+}.onFailure {
+	Term.IMAGE_TRANSFER.logFail("작업 재개")
+	throw if (it is Error) it.toItCloudException(Term.IMAGE_TRANSFER, "작업 재개", imageTransferId) else it
+}
+
 
 private fun Connection.findAllImageTransfers(): Result<List<ImageTransfer>> = runCatching {
 	this.srvAllImageTransfer().list().send().imageTransfer()

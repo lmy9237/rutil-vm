@@ -10,7 +10,6 @@ import com.itinfo.rutilvm.api.model.toIdentifiedVosFromVmCdroms
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
-import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
@@ -165,6 +164,33 @@ interface ItDiskService {
 	 */
 	@Throws(Error::class, IOException::class)
 	fun download(diskId: String): Mono<ResponseEntity<Flux<DataBuffer>>>
+	/**
+	 * [ItDiskService.cancelImageTransfer]
+	 * 디스크 이미지 전송 취소
+	 *
+	 * @param diskId [String] 디스크ID
+	 * @throws IOException
+	 */
+	@Throws(Error::class)
+	fun cancelImageTransfer(diskId: String): Boolean
+	/**
+	 * [ItDiskService.pauseImageTransfer]
+	 * 디스크 이미지 전송 일시정지
+	 *
+	 * @param diskId [String] 디스크ID
+	 * @throws IOException
+	 */
+	@Throws(Error::class)
+	fun pauseImageTransfer(diskId: String): Boolean
+	/**
+	 * [ItDiskService.resumeImageTransfer]
+	 * 디스크 이미지 전송 재개
+	 *
+	 * @param diskId [String] 디스크ID
+	 * @throws IOException
+	 */
+	@Throws(Error::class)
+	fun resumeImageTransfer(diskId: String): Boolean
     /**
      * [ItDiskService.refreshLun]
      * lun 새로고침
@@ -306,8 +332,7 @@ class DiskServiceImpl(
         return res.isSuccess
     }
 
-
-	@Autowired private lateinit var iImageTransfer: ItImageTransferService
+	@Autowired private lateinit var iImageTransfers: ItImageTransferService
 
     @Throws(Error::class, IOException::class)
     override fun upload(file: MultipartFile, image: DiskImageVo): Boolean {
@@ -320,22 +345,47 @@ class DiskServiceImpl(
 			image.toUploadDisk(conn, file.size)
 		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
 
-        return iImageTransfer.uploadFile(file, imageTransferId)
+        return iImageTransfers.uploadFile(file, imageTransferId)
     }
 
 	@Throws(Error::class, IOException::class)
 	override fun download(diskId: String): Mono<ResponseEntity<Flux<DataBuffer>>> {
 		log.info("download ... diskId: {}", diskId)
 		val disk: Disk = conn.findDisk(diskId).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
-		val req4transferBuilder: ImageTransfer = disk.toImageTransfer()
 		val imageTransferId4Download: String = conn.findImageTransferId4DiskImageDownload(
 			diskId
 		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
-		return iImageTransfer.downloadFile(imageTransferId4Download, disk?.alias())
+		return iImageTransfers.downloadFile(imageTransferId4Download, disk.alias())
 	}
 
+	override fun cancelImageTransfer(diskId: String): Boolean {
+		log.info("cancelImageTransfer ... diskId: {}", diskId)
+		conn.findDisk(diskId).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		val imageTransferIdFound: String = conn.findImageTransferIdInProgress(
+			diskId
+		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
+		return iImageTransfers.cancel(imageTransferIdFound)
+	}
 
-    @Throws(Error::class)
+	override fun pauseImageTransfer(diskId: String): Boolean {
+		log.info("pauseImageTransfer ... diskId: {}", diskId)
+		conn.findDisk(diskId).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		val imageTransferIdFound: String = conn.findImageTransferIdInProgress(
+			diskId
+		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
+		return iImageTransfers.pause(imageTransferIdFound)
+	}
+
+	override fun resumeImageTransfer(diskId: String): Boolean {
+		log.info("resumeImageTransfer ... diskId: {}", diskId)
+		conn.findDisk(diskId).getOrNull() ?: throw ErrorPattern.DISK_NOT_FOUND.toException()
+		val imageTransferIdFound: String = conn.findImageTransferIdInProgress(
+			diskId
+		).getOrNull() ?: throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
+		return iImageTransfers.resume(imageTransferIdFound)
+	}
+
+	@Throws(Error::class)
     override fun refreshLun(diskId: String, hostId: String): Boolean {
         log.info("refreshLun ... ")
         // TODO: hostId 구하는 방법

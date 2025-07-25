@@ -299,6 +299,77 @@ ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String
 		return iDisk.download(diskId)
 	}
 
+	@ApiOperation(
+		httpMethod="PUT",
+		value="이미지 전송 취소",
+		notes="이미지 전송를 취소한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{diskId}/cancel")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
+	fun cancel(
+		@PathVariable diskId: String? = "",
+	): ResponseEntity<Boolean> {
+		log.info("/storages/disks/{}/cancel ... 이미지 전송 취소", diskId)
+		if (diskId.isNullOrEmpty())
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(iDisk.cancelImageTransfer(diskId))
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
+		value="이미지 전송 일시중지",
+		notes="이미지 전송를 일시중지한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{diskId}/pause")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
+	fun pause(
+		@PathVariable diskId: String? = "",
+	): ResponseEntity<Boolean> {
+		log.info("/storages/disks/{}/pause ... 이미지 전송 일시중지", diskId)
+		if (diskId.isNullOrEmpty())
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(iDisk.pauseImageTransfer(diskId))
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
+		value="이미지 전송 재개",
+		notes="이미지 전송를 재개한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name = "diskId", value = "디스크 ID", dataTypeClass = String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{diskId}/resume")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	@Throws(IdNotFoundException::class, InvalidRequestException::class, IOException::class)
+	fun resume(
+		@PathVariable diskId: String? = "",
+	): ResponseEntity<Boolean> {
+		log.info("/storages/disks/{}/resume ... 이미지 전송 재개", diskId)
+		if (diskId.isNullOrEmpty())
+			throw ErrorPattern.DISK_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(iDisk.resumeImageTransfer(diskId))
+	}
 
 	@ApiOperation(
 		httpMethod="POST",
