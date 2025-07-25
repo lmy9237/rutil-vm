@@ -87,6 +87,12 @@ class ImageTransferServiceImpl(
 		imageTransferId: String
 	): Boolean {
 		log.info("uploadFile ... ")
+		val physicalFileSize = file.size
+		if (physicalFileSize == 0L) {
+			// throw ErrorPattern.IMAGE_TRANSFER_NOT_FOUND.toException()
+			throw IOException("Cannot upload an empty file.")
+		}
+
 		/*val jobAdded = iJob.add(JobVo.builder {
 			name { "디스크 파일 업로드" }
 			description { "(RutilVM에서) 디스크 파일 업로드 <${imageTransferId}>" }
@@ -95,21 +101,29 @@ class ImageTransferServiceImpl(
 		})*/
 		val imageTransferService: ImageTransferService = conn.srvImageTransfer(imageTransferId)
 		val transferUrl = imageTransferService.get().send().imageTransfer().transferUrl()
-		log.debug("uploadFile ... transferUrl: $transferUrl")
-
 		disableSSLVerification()
+
 		val url = URL(transferUrl)
 		(url.openConnection() as? HttpsURLConnection)?.apply {
 			allowUserInteraction = true
-			setRequestMethod("PUT")
+			requestMethod = "PUT"
 			setRequestProperty("PUT", url.path)
-			setRequestProperty("Content-Length", file.size.toString())
-			setFixedLengthStreamingMode(file.size)
-			setDoOutput(true)
+			setRequestProperty("Content-Length", physicalFileSize.toString())
+			setFixedLengthStreamingMode(physicalFileSize)
+			doOutput = true
 		}?.also { http ->
 			try {
+				log.info("uploadFile ... Connecting to $url} for upload...")
 				http.connect()
-				log.info("uploadFile ... CONNECTION MADE!")
+				log.info("uploadFile ... CONNECTION ESTABLISHED! Uploading file {}, ({} MB) ...", file.originalFilename, physicalFileSize / (1024 * 1024))
+				file.inputStream.use { fis ->
+					http.outputStream.use { hos ->
+						// A 1MB buffer is a good, robust choice for large files.
+						val bytesCopied = fis.copyTo(hos, bufferSize = 1024 * 1024)
+						log.info("uploadFile ... Successfully copied {} bytes.", bytesCopied)
+					}
+				}
+				/*
 				val bufferSize = calculateOptimalBufferSize(file.size)
 				val buffer = ByteArray(bufferSize)
 				val insBuffered: InputStream = BufferedInputStream(file.inputStream, bufferSize)
@@ -120,17 +134,25 @@ class ImageTransferServiceImpl(
 					}
 					outsBuffered.flush()
 				}
+				*/
+				if (http.responseCode !in 200..299) {
+					val errorDetails = http.errorStream?.bufferedReader()?.readText() ?: "No details."
+					throw IOException(
+						"Upload failed with HTTP status: ${http.responseCode} ${http.responseMessage}. Details: $errorDetails"
+					)
+				}
+				log.info("Upload complete. Finalizing image transfer...")
+				// imageTransferService.finalize_().send() // Finalize the transfer in oVirt
 				imageTransferService.finalize_().send()
+				log.info("Image transfer finalized successfully.")
 				http.disconnect()
 			} catch(e: IOException) {
 				log.info("uploadFile ... 실패!")
 				e.printStackTrace()
 				throw e
+			} finally {
+				http.disconnect()
 			}
-			/*jobAdded?.id?.let { id ->
-				log.info("uploadFile ... 최근작업 ({}) 종료처리!", id)
-				iJob.end(id)
-			}*/
 		}
 		return true
 	}

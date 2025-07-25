@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.model.toIdentifiedVosFromVmCdroms
 import com.itinfo.rutilvm.api.model.response.Res
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
+import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity

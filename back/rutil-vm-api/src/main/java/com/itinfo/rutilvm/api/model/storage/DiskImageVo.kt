@@ -620,8 +620,8 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 				else -> org.ovirt.engine.sdk4.types.DiskStorageType.IMAGE
 			}
 		)
-		.provisionedSize(when(storageType) {
-			StorageType.FCP -> this@toUploadDisk.virtualSize.toLong()
+		.provisionedSize(when(this@toUploadDisk.format) {
+		 	VolumeFormat.cow -> this@toUploadDisk.virtualSize.toLong()
 			else -> fileSize
 		})
 		.sparse(storageType == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
