@@ -62,9 +62,12 @@ const VmInfo = () => {
     return snapshots.some(s => s.status?.toUpperCase() === "locked");
   }, [snapshots]);
   
-  const isUp = vm?.running ?? false;
-  const isDown = vm?.notRunning ?? false;
-  const isPause = vm?.status?.toUpperCase() === "paused" || vm?.status?.toUpperCase() === "suspended"; 
+  // const isUp = vm?.running ?? false;
+  // const isDown = vm?.notRunning ?? false;
+  const isUp = vm?.status?.toUpperCase() === "UP";
+  const isDown = vm?.status?.toUpperCase() === "DOWN";
+  const isPause = vm?.status?.toUpperCase() === "PAUSED" || vm?.status?.toUpperCase() === "SUSPENDED";
+  const isRebootable = vm?.status?.toUpperCase() === "UP" || vm?.status?.toUpperCase() === "POWERING_UP";
   const isMaintenance = vm?.status?.toUpperCase() === "MAINTENANCE";
   const allOkay2PowerDown = vm?.qualified4PowerDown;
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
@@ -117,11 +120,13 @@ const VmInfo = () => {
     { type: "update",    onClick: () => setActiveModal("vm:update"),        label: Localization.kr.UPDATE, },
     { type: "start",     onClick: () => setActiveModal("vm:start"),         label: Localization.kr.START,       disabled: !(isDown || isPause || isMaintenance) },
     { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE,       disabled: !isUp },
-    { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT,      disabled: !isUp },
-    { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET,       disabled: !isUp },
-    { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
-    { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
-    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isVmQualified4ConsoleConnect },
+    { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT,      disabled: !isRebootable },
+    { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET,       disabled: !isRebootable },
+    // { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
+    // { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
+    { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: isDown, },
+    { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: isDown  },
+    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isDown || !isPause },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) || hasLockedSnapshot  },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isVmQualified2Migrate },
   ]), [vm, vmId, isUp, isDown, hasLockedSnapshot]);
@@ -129,9 +134,9 @@ const VmInfo = () => {
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),       label: Localization.kr.IMPORT, }, */
     { type: "copyVm",    onClick: () => setActiveModal("vm:copy"),          label: `${Localization.kr.VM} 복제` },
-    { type: "remove",    onClick: () => setActiveModal("vm:remove"),        label: Localization.kr.REMOVE, disabled: !isDown, },
+    { type: "remove",    onClick: () => setActiveModal("vm:remove"),        label: Localization.kr.REMOVE, disabled: !isDown },
     { type: "templates", onClick: () => setActiveModal("vm:templates"),     label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: !isDown, }, 
-    { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: "OVA로 내보내기",  disabled: !isDown, },
+    { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: `ova로 ${Localization.kr.EXPORT}`,  disabled: isPause, },
   ];
 
   useEffect(() => {

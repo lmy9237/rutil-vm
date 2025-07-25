@@ -54,19 +54,19 @@ const TableColumnsInfo = {
   HOSTS: [
     { accessor: "icon",          header: Localization.kr.STATUS,                               clickable: false, width: 30 },
     { accessor: "_hostedEngine", header: Localization.kr.ENGINE,                               clickable: false, width: 30  },
-    { accessor: "ha",            header: "HA",                                                 clickable: false, width: 30 },
+    { accessor: "ha",            header: "HA",                                                 clickable: false, width: 30,align: "center" },
     { accessor: '_name',         header: Localization.kr.NAME,                                 clickable: true,  },
     { accessor: 'comment',       header: Localization.kr.COMMENT,                              clickable: false},
     { accessor: 'address',       header: `${Localization.kr.HOST} ${Localization.kr.NAME}/IP`, clickable: false },
     { accessor: 'cluster',       header: Localization.kr.CLUSTER,                              clickable: true },
     { accessor: 'dataCenter',    header: Localization.kr.DATA_CENTER,                          clickable: false },
     { accessor: 'vmCnt',         header: `${Localization.kr.VM} ${Localization.kr.COUNT}`,     clickable: false ,align: "center" , width: 80},
-    { accessor: '_status',       header: Localization.kr.STATUS,                               clickable: false, width: 50 },
+    { accessor: '_status',       header: Localization.kr.STATUS,                               clickable: false, width: 50,align: "center" },
     { accessor: 'memoryUsage',   header: Localization.kr.MEMORY,                               clickable: false, width: 50 },
     { accessor: 'cpuUsage',      header: Localization.kr.CPU,                                  clickable: false, width: 50 },
     { accessor: 'networkUsage',  header: Localization.kr.NETWORK,                              clickable: false, width: 50 },
-    { accessor: 'spmStatus',     header: 'SPM',                                                clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN},
-    { accessor: 'upTime',        header: Localization.kr.UP_TIME,                              clickable: false, width: 50 },
+    { accessor: 'spmStatus',     header: 'SPM',                                                clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN,align: "center"},
+    { accessor: 'upTime',        header: Localization.kr.UP_TIME,                              clickable: false, width: 50 ,align: "center"},
   ],
   VMS_FROM_HOST: [
     { accessor: "icon",          header: Localization.kr.STATUS,      clickable: false,   width: DEFAULT_WIDTH_ICON_COLUMN },
@@ -838,7 +838,7 @@ GET_IMPORT_VMS: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }, width: 150 },
+    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }, width: 300 },
     { header: '세부작업', accessor: 'numSteps',align: "center", width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'},
     { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime'},

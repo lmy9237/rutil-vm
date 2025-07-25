@@ -38,10 +38,7 @@
   text-overflow: ellipsis;  
 }
 /*마이그레이션 팝업*/
-.migration-article {
-  padding: 10px 0;
-  margin-bottom: 10px;
-}
+
 
 /*보류*/
 /*..버튼 가져오기 팝업*/

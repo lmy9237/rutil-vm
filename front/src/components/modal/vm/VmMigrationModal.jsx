@@ -260,13 +260,12 @@ const VmMigrationModal = ({
       isOpen={isOpen} onClose={onClose}
       isReady={isHostSuccess}
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "900px" }}
+      contentStyle={{ width: "800px" }}
     >
     <div className="popup-content-outer flex">
-
       <TabNavButtonGroup  tabs={tabs} tabActive={selectedModalTab} />
-      <div className="vm-edit-select-tab">
-        <div className="edit-first-content pb-0.5">
+      <div className="vm-edit-select-tab px-[15px]">
+        <div className="edit-first-content min-h-[180px]">
           {selectedModalTab === "vm" && (
             <VmMigrationTabVM
               vmsSelected={vmsSelected}

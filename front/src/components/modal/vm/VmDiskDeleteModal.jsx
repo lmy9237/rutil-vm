@@ -6,6 +6,7 @@ import LabelCheckbox from "../../label/LabelCheckbox";
 import Logger from "../../../utils/Logger";
 import useGlobal from "@/hooks/useGlobal";
 import { useValidationToast } from "@/hooks/useSimpleToast";
+import { RVI16, rvi16ChevronRight } from "@/components/icons/RutilVmIcons";
 
 /**
  * @name VmDiskDeleteModal
@@ -62,7 +63,7 @@ const VmDiskDeleteModal = ({
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleFormSubmit}
       promptText={`다음 항목을 삭제하시겠습니까?`}
-      contentStyle={{ width: "630px" }}
+      contentStyle={{ width: "660px" }}
       shouldWarn={true}
     >
       {diskList.map((disk) => {
@@ -70,8 +71,11 @@ const VmDiskDeleteModal = ({
         const alias = disk?.diskImageVo?.alias || "";
 
         return (
-          <div key={diskId} className="f-btw">
-            <span className="fs-16 p-3.5 w-full">{alias} {disk?.bootable? "(부팅)" : ""}</span>
+          <div key={diskId} className="f-btw mb-3">
+            <div className="f-center">
+              <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
+              <span className="font-bold flex f-start fs-13">{alias} {disk?.bootable? "(부팅)" : ""}</span>
+            </div>
             <LabelCheckbox label={`완전 ${Localization.kr.REMOVE}`}
               id={`diskDelete-${diskId}`}
               checked={!!detachOnlyList[diskId]}

@@ -1,3 +1,8 @@
+/* type="password"일 때 브라우저에서 제공하는 기본적인 눈모양 아이콘 제거*/
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
 .input-text,
 .input-container,
 .input-password,

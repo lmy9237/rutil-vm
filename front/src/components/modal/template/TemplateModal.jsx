@@ -251,7 +251,7 @@ const TemplateModal = ({
                           <LabelInput label=""
                             value={disk.diskImageVo?.alias || ""}
                             onChange={(e) => handleDiskChange(index, "alias", e.target.value)}
-                            className="w-[150px]"
+                            className="max-w-[150px]"
                           />
                         </td>
                         <td>{checkZeroSizeToGiB(disk.diskImageVo?.virtualSize)}</td>
@@ -265,7 +265,7 @@ const TemplateModal = ({
                         </td>
                         <td>
                           <LabelSelectOptionsID
-                            className="template-input max-w-[200px]"
+                            className="template-input max-w-[180px]"
                             value={selectedDomain?.id || ""}
                             loading={isDomainsLoading}
                             options={domains}
@@ -285,7 +285,7 @@ const TemplateModal = ({
                         </td>
                         <td>
                           <LabelSelectOptionsID
-                            className="template-input max-w-[240px]"
+                            className="template-input max-w-[230px]"
                             value={selectedProfile?.id || ""}
                             loading={false}
                             options={profileOptions}

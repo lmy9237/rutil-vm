@@ -52,10 +52,10 @@ const DomainDataCenterActionButtons = ({
   ); // TODO: 알 수 없는 상태로 돼 있을 떄, 붙이기가 되는지 의문
 
   const basicActions = [
-    { type: "attach",      onClick: () => setActiveModal("domaindatacenter:attach"),      label: Localization.kr.ATTACH,      /* disabled: !isUnattached */ }, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
-    { type: "detach",      onClick: () => setActiveModal("domaindatacenter:detach"),      label: Localization.kr.DETACH,      disabled: datacentersSelected.length === 0 || isLocked || isActive || !isMaintenance || isPreparingForMaintenance, },
-    { type: "activate",    onClick: () => setActiveModal("domaindatacenter:activate"),    label: Localization.kr.ACTIVATE,    disabled: datacentersSelected.length === 0 || isLocked || isActive || (!isMaintenance && !isPreparingForMaintenance), },
-    { type: "maintenance", onClick: () => setActiveModal("domaindatacenter:maintenance"), label: Localization.kr.MAINTENANCE, disabled: datacentersSelected.length === 0 || isLocked || isMaintenance || isPreparingForMaintenance, },
+    { type: "attach",      onClick: () => setActiveModal("domaindatacenter:attach"),      label: Localization.kr.ATTACH,      disabled: isActive}, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
+    { type: "detach",      onClick: () => setActiveModal("domaindatacenter:detach"),      label: Localization.kr.DETACH,      disabled: !selectedDomain1st || isLocked || isActive || !isMaintenance || isPreparingForMaintenance, },
+    { type: "activate",    onClick: () => setActiveModal("domaindatacenter:activate"),    label: Localization.kr.ACTIVATE,    disabled: !selectedDomain1st || isLocked || isActive || (!isMaintenance && !isPreparingForMaintenance), },
+    { type: "maintenance", onClick: () => setActiveModal("domaindatacenter:maintenance"), label: Localization.kr.MAINTENANCE, disabled: domainsSelected.length !== 1 || isLocked || isMaintenance || isPreparingForMaintenance, },
   ];
  
   return (

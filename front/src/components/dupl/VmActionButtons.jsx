@@ -23,7 +23,7 @@ import Logger                   from "@/utils/Logger";
 
 /**
  * @name VmActionButtons
- * @description 가상머신 관련 액션버튼
+ * @description 가상머신 관련 액션버튼 (주석처리 삭제예정)
  * 
  * @returns {JSX.Element} VmActionButtons
  * 
@@ -49,9 +49,19 @@ const VmActionButtons = ({
 
   const selected1st = [...vmsSelected][0] ?? null
 
-  const isUp = selected1st?.running ?? false;
-  const isDown = selected1st?.notRunning ?? false;
+  // const isUp = selected1st?.running ?? false;
+  // const isDown = selected1st?.notRunning ?? false;
+  const isUp = selected1st?.status?.toUpperCase() === "UP";
+  const isDown = selected1st?.status?.toUpperCase() === "DOWN";
   const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
+  const isRebootable = vmsSelected.length > 0 && vmsSelected.every(vm => { 
+    const status = vm?.status?.toUpperCase();
+    return status === "UP" || status === "POWERING_UP";
+  });
+  const isConsoleEnabled = vmsSelected.length > 0 && vmsSelected.some(vm => {
+    const status = vm?.status?.toUpperCase();
+    return !["PAUSED", "SUSPENDED", "DOWN"].includes(status);
+  });
   const isPause = selected1st?.status?.toUpperCase() === "PAUSED" || 
     selected1st?.status?.toUpperCase() === "SUSPENDED"; 
   const isTemplate = selected1st?.upOrPaused;
@@ -63,11 +73,8 @@ const VmActionButtons = ({
   const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
-  const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
-  const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm.notRunning ?? false);
-  const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => 
-    vm?.status?.toUpperCase() === "PAUSED" || vm?.status?.toUpperCase() === "SUSPENDED"
-  );
+  // const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
+  const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.status?.toUpperCase() === "UP");
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
     const status = vm.status?.toLowerCase();
     return (
@@ -102,18 +109,18 @@ const VmActionButtons = ({
   const hasPreviewSnapshot = useMemo(() => {
     return snapshots.some(s => s.status?.toUpperCase() === "in_preview");
   }, [snapshots]);
-  const hasLockedSnapshot = useMemo(() => {
+  const hasLockedSnapshot = useMemo(() => { 
     return snapshots.some(s => s.status?.toUpperCase() === "locked");
   }, [snapshots]);
 
   const manageActions = [
     { type: "import",     onClick: () => setActiveModal("vm:copy"),           label: Localization.kr.IMPORT, },
     { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,  disabled:true   }, //   disabled: vmsSelected.length !== 1 || allPause 
-    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vmsSelected.length !== 1 || isDown },
-    //{ type: "remove",   onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown },
-    { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm },
-    { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
-    { type: "ova",        onClick: () => {},                                  label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length !== 1 || !isDown },
+    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vmsSelected.length !== 1 || !isUp },
+    { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm  },
+    //{ type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
+    { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || !isDown },
+    { type: "ova",        onClick: () => {},                                  label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length === 0 || isPause },
   ];
 
   const consoleActions = [
@@ -142,11 +149,14 @@ const VmActionButtons = ({
     },
     /* { type: "startOnce",  onClick: () => setActiveModal("vm:startOnce"),   label: `한번 ${Localization.kr.START}`,                          disabled: vmsSelected.length !== 1 || !(isDown || isPause || isMaintenance)  }, */
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
-    { type: "reboot",     onClick: () => setActiveModal("vm:reboot"),      label: Localization.kr.REBOOT,                                  disabled: !allUp },
-    { type: "reset",      onClick: () => setActiveModal("vm:reset"),       label: Localization.kr.RESET,                                   disabled: !allUp },
-    { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
-    { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
-    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,                           disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
+    { type: "reboot", onClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: vmsSelected.length === 0  || !isRebootable },
+    { type: "reset",  onClick: () => setActiveModal("vm:reset"),  label: Localization.kr.RESET,  disabled: vmsSelected.length === 0  ||!isRebootable },
+    // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                      disabled: vmsSelected.length === 0 || isDown},
+    { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                disabled: vmsSelected.length === 0 || isDown},
+    //{ type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isConsoleEnabled},
     { 
       type: "migration",  
       onClick: () => setActiveModal("vm:migration"),   
