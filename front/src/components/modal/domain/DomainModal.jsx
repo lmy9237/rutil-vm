@@ -14,15 +14,15 @@ import {
 } from "@/components/label/HandleInput";
 import {
   useAddDomain,
-  useAllDataCenters,
   useStorageDomain,
   useEditDomain,
   useHostsFromDataCenter,
   useFibreFromHost,
   useAllNfsStorageDomains,
   useAllStorageDomains,
+  useAllDataCentersWithHosts,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo, useSelectFirstItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
+import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -64,15 +64,16 @@ const DomainModal = ({
   const isNfs = formState.storageType === "nfs";
   const isFibre = formState.storageType === "fcp";
 
-  const { data: domain } = useStorageDomain(domainId);
-  const { data: domains = [] } = useAllStorageDomains((e) => ({ ...e }));
-  
   const { mutate: addDomain } = useAddDomain(onClose, onClose);
   const { mutate: editDomain } = useEditDomain(onClose, onClose); // 편집은 단순 이름, 설명 변경정도
+  
+  const { data: domain } = useStorageDomain(domainId);
+  const { data: domains = [] } = useAllStorageDomains((e) => ({ ...e }));
+
   const { 
     data: datacenters = [],
     isLoading: isDatacentersLoading 
-  } = useAllDataCenters((e) => ({ ...e }));
+  } = useAllDataCentersWithHosts((e) => ({ ...e }));
 
   const {
     data: hosts = [],
@@ -82,36 +83,45 @@ const DomainModal = ({
   const { 
     data: nfsList = [] 
   } = useAllNfsStorageDomains((e) => ({ ...e }));
+
   const {
     data: fibres = [],
     refetch: refetchFibres,
     isLoading: isFibresLoading,
     isError: isFibresError, 
     isSuccess: isFibresSuccess
-  } = useFibreFromHost(hostVo?.id || undefined, (e) => ({ ...e }));
+  } = useFibreFromHost(hostVo?.id, (e) => ({ ...e }));
 
   const getAvailableDomainTypes = useMemo(() => {
     const hasImportExport = domains.some(d => d.storageDomainType === "import_export");
     return [
       { value: "data", label: "데이터" },
       { value: "iso", label: "ISO" },
-      ...(hasImportExport ? [] : [{ value: "import_export", label: Localization.kr.EXPORT }])
+      ...(hasImportExport 
+          ? [] 
+          : [{ value: "import_export", label: Localization.kr.EXPORT }]
+        )
     ];
   }, [domains]);
 
-  const resetFormStates = () => {
-    setFormState(initialFormState);
-    setHostVo(emptyIdNameVo());
-    setStorageTypes([]);
-    setNfsAddress("");
-    setLunId("");
-  };
+  
+  useEffect(() => {
+    if (!editMode && isOpen) {
+      setFormState(initialFormState);
+      setHostVo(emptyIdNameVo());
+      setNfsAddress("");
+      setLunId("");
+    }
+  }, [isOpen, editMode]);
 
   useEffect(() => {
-    if (!isOpen) {
-      resetFormStates();
-      return;
+    if(!editMode){
+      setNfsAddress("");
+      setLunId("");
     }
+  }, [editMode, formState.storageType]);
+
+  useEffect(() => {
     if (editMode && domain) {
       const storage = domain?.storageVo;
       setFormState({
@@ -138,62 +148,33 @@ const DomainModal = ({
       } else if(storage.type === "fcp") {
         setLunId(storage?.volumeGroupVo?.logicalUnitVos[0]?.id);
       }
-    } else {
-      resetFormStates();
     }
-  }, [isOpen, editMode, domain]);
+  }, [editMode, domain]);
   
   // 데이터센터 지정
   useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default");
+  useSelectItemEffect(hostVo?.id, editMode, hosts, setHostVo);
 
-  // 호스트 지정
-  useSelectFirstItemEffect(hosts, setHostVo);
+  
   // useEffect(() => {
-  //   if (!editMode && hosts && hosts.length > 0 && !hostVo.id) {
-  //     const firstH = hosts[0];
-  //     setHostVo({ 
-  //       id: firstH.id, 
-  //       name: firstH.name 
-  //     });
+  //   if (!editMode && isFibre && hostVo?.id) {
+  //     refetchFibres();
   //   }
-  // }, [hosts, editMode, hostVo.id]);
-
-  useEffect(() => {
-    if (!editMode && dataCenterVo.id) {
-      setFormState((prev) => ({ ...initialFormState, storageDomainType: prev.storageDomainType }));
-      setStorageTypes(storageTypeOptions(initialFormState.storageDomainType));
-      setNfsAddress("");
-      setLunId("");
-      if (hostVo?.id) {
-        refetchFibres();
-      }
-    }
-  }, [dataCenterVo, editMode, hostVo?.id, refetchFibres]);
-  
-  useEffect(() => {
-    if (!editMode && isFibre && hostVo?.id) {
-      refetchFibres();
-    }
-  }, [hostVo?.id, isFibre, editMode, refetchFibres]);
+  // }, [hostVo?.id, isFibre, editMode, refetchFibres]);
   
 
   useEffect(() => {
+    // 도메인 기능에 따른 스토리지 유형 선택
     const options = storageTypeOptions(formState.storageDomainType);
     setStorageTypes(options);
+
     if (!editMode && options.length > 0) {
       setFormState((prev) => ({ ...prev, storageType: options[0].value}));
     }
   }, [formState.storageDomainType, editMode]);
 
-  useEffect(() => {
-    if(!editMode){
-      setNfsAddress("");
-      setLunId("");
-    }
-  }, [editMode, formState.storageType]);
 
   const validateForm = () => {
-    Logger.debug(`DomainModal > validateForm ... `)
     const nameError = checkName(formState.name);
     if (nameError) return nameError;
     const duplicateError = checkDuplicateName(domains, formState.name, formState.id);
@@ -212,7 +193,7 @@ const DomainModal = ({
     }
 
     if (isFibre) {
-      if (!lunId) return "LUN을 반드시 선택해주세요."; // 🔥 추가된 부분
+      if (!lunId) return "LUN을 반드시 선택해주세요.";
       const selectedLogicalUnit = fibres
         .map(f => f.logicalUnitVos[0])
         .find(lun => lun?.id === lunId);
@@ -233,7 +214,6 @@ const DomainModal = ({
       return;
     }
   
-    Logger.debug(`DomainModal > handleFormSubmit ... `)
     if (isFibre && !editMode) {
       const selectedLogicalUnit = fibres
         .map(f => f.logicalUnitVos[0])
@@ -257,7 +237,11 @@ const DomainModal = ({
       .find(lun => lun?.id === lunId);
   
     const storageVo = isNfs
-      ? { type: "nfs", address: storageAddress, path: storagePath }
+      ? { 
+          type: "nfs", 
+          address: storageAddress, 
+          path: storagePath 
+        }
       : {
           type: "fcp",
           volumeGroupVo: { logicalUnitVos: [{ id: logicalUnit.id }] }
@@ -306,7 +290,7 @@ const DomainModal = ({
             value={formState.storageDomainType}
             disabled={editMode}
             options={getAvailableDomainTypes}
-            onChange={handleInputChange(setFormState, "domainType", validationToast)}
+            onChange={handleInputChange(setFormState, "storageDomainType", validationToast)}
           />
           <LabelSelectOptions id="storage-type" label="스토리지 유형"
             value={formState.storageType}
@@ -345,7 +329,11 @@ const DomainModal = ({
 
       {/* NFS 의 경우 */}
       {isNfs && (
-        <DomainNfs editMode={editMode} nfsAddress={nfsAddress} setNfsAddress={setNfsAddress} />
+        <DomainNfs 
+          editMode={editMode} 
+          nfsAddress={nfsAddress} 
+          setNfsAddress={setNfsAddress} 
+        />
       )}
 
       {/* Fibre 의 경우 */}

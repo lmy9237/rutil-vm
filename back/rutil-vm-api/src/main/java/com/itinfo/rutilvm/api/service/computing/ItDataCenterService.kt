@@ -43,6 +43,14 @@ interface ItDataCenterService {
 	@Throws(Error::class)
 	fun findAll(): List<DataCenterVo>
 	/**
+	 * [ItDataCenterService.findAllWithHosts
+	 * 데이터센터 전체 목록
+	 *
+	 * @return List<[DataCenterVo]> 데이터센터 목록
+	 */
+	@Throws(Error::class)
+	fun findAllWithHosts(): List<DataCenterVo>
+	/**
 	 * [ItDataCenterService.findOne]
 	 * 데이터센터 정보 (편집창)
 	 *
@@ -217,6 +225,13 @@ class DataCenterServiceImpl(
 		// val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
 		val storagePools: List<StoragePoolEntity> = rStoragePools.findAllWithClusters()
 		return storagePools.toDataCenterVos()
+	}
+
+	@Throws(Error::class)
+	override fun findAllWithHosts(): List<DataCenterVo> {
+		log.info("findAllWithHosts ... ")
+		val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
+		return res.toDataCentersMenu(conn).filter { it.hostCnt != 0 }
 	}
 
 	@Throws(Error::class)

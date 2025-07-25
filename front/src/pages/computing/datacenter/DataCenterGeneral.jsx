@@ -1,6 +1,14 @@
 import React, { useMemo } from "react";
 import useGlobal from "@/hooks/useGlobal";
-import { useDataCenter, useUsageDataCenter } from "@/api/RQHook";
+import { 
+  useAllDomainsFromDataCenter, 
+  useAllNetworksFromDataCenter, 
+  useClustersFromDataCenter, 
+  useDataCenter, 
+  useHostsFromDataCenter, 
+  useUsageDataCenter, 
+  useVMsFromDataCenter 
+} from "@/api/RQHook";
 import { InfoTable } from "@/components/table/InfoTable";
 import GeneralBoxProps from "@/components/common/GeneralBoxProps";
 import GeneralLayout from "@/components/GeneralLayout";
@@ -16,6 +24,13 @@ import GeneralBarChart from "@/components/Chart/GeneralBarChart";
 const DataCenterGeneral = ({ datacenterId }) => {
   const { datacentersSelected } = useGlobal();
   const { data: datacenter } = useDataCenter(datacenterId);
+
+  const { data: clusters = [] } = useClustersFromDataCenter(datacenterId, (e) => ({...e,}));
+  const { data: hosts = [] } = useHostsFromDataCenter(datacenterId, (e) => ({...e,}));
+  const { data: vms = [] } = useVMsFromDataCenter(datacenterId, (e) => ({...e,}));
+  const { data: domains = [] } = useAllDomainsFromDataCenter(datacenterId, (e) => ({...e,}));
+  const { data: networks = [] } = useAllNetworksFromDataCenter(datacenterId, (e) => ({...e,}));
+
   const {
     data: usage,
     isLoading: isUsageLoading,
@@ -23,15 +38,16 @@ const DataCenterGeneral = ({ datacenterId }) => {
     isError: isUsageError,
   } = useUsageDataCenter(datacenterId);
 
+
 const tableRows = [
   { label: "ID", value: datacenter?.id },
   { label: Localization.kr.NAME, value: datacenter?.name },
   { label: Localization.kr.DESCRIPTION, value: datacenter?.description },
-  { label: Localization.kr.CLUSTER, value: datacenter?.clusterVos?.length ?? 0 },
-  { label: Localization.kr.HOST, value: datacenter?.hostCnt ?? 0 },
-  { label: Localization.kr.VM, value: datacenter?.vmSize?.allCnt ?? 0 },
-  { label: Localization.kr.NETWORK, value: datacenter?.networkVos?.length ?? 0 },
-  { label: Localization.kr.DOMAIN, value: datacenter?.storageDomainVos?.length ?? 0 },
+  { label: Localization.kr.CLUSTER, value: clusters?.length ?? 0 },
+  { label: Localization.kr.HOST, value: hosts?.length ?? 0 },
+  { label: Localization.kr.VM, value: vms?.length ?? 0 },
+  { label: Localization.kr.NETWORK, value: networks?.length ?? 0 },
+  { label: Localization.kr.DOMAIN, value: domains?.length ?? 0 },
   { label: Localization.kr.STATUS, value: Localization.kr.renderStatus(datacenter?.status) || Localization.kr.UP },
 ];
 

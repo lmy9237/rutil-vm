@@ -21,7 +21,7 @@ import {
   useAllActiveDomainsFromDataCenter,
 } from "@/api/RQHook";
 import { 
-  checkKoreanName, convertBytesToGB, convertGBToBytes,
+  checkKoreanName, checkZeroSizeToGiB, convertBytesToGB, convertGBToBytes,
   emptyIdNameVo,
   useSelectFirstItemEffect
 } from "@/util";
@@ -250,7 +250,7 @@ const VmDiskModal = ({
           if (!domainObj) return null;
           return (
             <div className="text-xs text-gray-500 f-end">
-              사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+              사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(domainObj.size)}
             </div>
           );
         })()}

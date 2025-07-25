@@ -36,6 +36,7 @@ import java.io.Serializable
 import java.math.BigInteger
 import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.math.pow
 
 /**
  * [DiskImageVo]
@@ -43,7 +44,7 @@ import java.util.UUID
  * 가상머신 - 생성 - 인스턴스 이미지 - 생성
  *
  * @property id [String]
- * @property size [BigInteger]
+ * @property size [BigInteger] 단위: Byte
  * @property appendSize [BigInteger] 확장크기
  * @property alias [String] 별칭(이름과 같음)
  * @property description [String] 설명
@@ -53,8 +54,8 @@ import java.util.UUID
  * @property backup [Boolean] 증분 백업 사용 (기본이 true)
  * @property format [VolumeFormat] cow는 씬, raw는 사전할당
  * @property imageId [String]
- * @property virtualSize [BigInteger] 가상크기 (provisionedSize)
- * @property actualSize [BigInteger] 실제크기
+ * @property virtualSize [BigInteger] 가상크기 (provisionedSize) (Byte)
+ * @property actualSize [BigInteger] 실제크기  단위: Byte
  * @property status [DiskStatusB] 디스크상태
  * @property contentType [DiskContentTypeB]
  * @property storageType [DiskStorageType] 유형
@@ -121,8 +122,12 @@ class DiskImageVo(
 		imageTransferType != null &&
 		imageTransferBytesSent != null &&
 		imageTransferBytesTotal != null
-	val imageTransferPercent: Double?
+	val imageTransferPercent: Double
 		get() = (imageTransferBytesSent?.toDouble() ?: 0.0) / (imageTransferBytesTotal?.toDouble() ?: 0.0) * 100L
+
+	val sizeInGiB: Long						get() = size.divide(GIGABYTE_2_BYTE).toLong()
+	val virtualSizeInGiB: Long				get() = virtualSize.divide(GIGABYTE_2_BYTE).toLong()
+	val actualSizeInGiB: Long				get() = actualSize.divide(GIGABYTE_2_BYTE).toLong()
 
 	/*
 	val storageTypeEn: String			get() = storageType?.en ?: "N/A"
@@ -166,6 +171,7 @@ class DiskImageVo(
 	}
 	companion  object {
 		private val log by LoggerDelegate()
+		val GIGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(1024L*1024L*1024L)
 		inline fun builder(block: Builder.() -> Unit): DiskImageVo = Builder().apply(block).build()
 	}
 }

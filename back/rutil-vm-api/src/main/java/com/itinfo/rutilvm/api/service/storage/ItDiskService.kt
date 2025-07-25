@@ -204,9 +204,7 @@ class DiskServiceImpl(
     @Throws(Error::class)
     override fun findAll(): List<DiskImageVo> {
         log.info("findAll ... ")
-        // val res: List<Disk> = conn.findAllDisks().getOrDefault(emptyList())
-        //     .filter { it.contentType() != DiskContentType.OVF_STORE } // ovf_store 값은 제외하고
-        // return res.toDiskMenus(conn)
+
 		val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
 		return res.toDiskImageVoFromAllDiskEntities()
 			.filter { it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso }

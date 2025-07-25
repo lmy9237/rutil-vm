@@ -45,8 +45,6 @@ const DiskModals = ({
     ), action: (
       <DiskActionModal key={modalValue} isOpen={isAction}
         onClose={() => closeModal(modalValue)}
-        actionType={actionType}
-        data={disksSelected}
       />
     ),
   };

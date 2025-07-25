@@ -20,7 +20,7 @@ import {
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain,
 } from "../../../api/RQHook";
-import { checkName, convertBytesToGB, emptyIdNameVo, useSelectFirstItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }  from "../../../util";
+import { checkName, checkZeroSizeToGiB, convertBytesToGB, emptyIdNameVo, useSelectFirstItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }  from "../../../util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -276,7 +276,7 @@ const DiskModal = ({
             if (!domainObj) return null;
             return (
               <div className="text-xs text-gray-500 f-end">
-                사용 가능: {domainObj.availableSize} GiB {" / "} 총 용량: {domainObj.size} GiB
+                사용 가능: {checkZeroSizeToGiB(domainObj.availableSize)} {" / "} 총 용량: {checkZeroSizeToGiB(domainObj.size)}
               </div>
             );
           })()}

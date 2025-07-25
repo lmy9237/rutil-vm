@@ -15,6 +15,7 @@ import {
 } from "@/components/icons/RutilVmIcons";
 import { getStatusSortKey }          from "@/components/icons/GetStatusSortkey";
 import Localization                  from "@/utils/Localization";
+import { checkZeroSizeToGiB } from "@/util";
 /**
  * @name DomainDupl
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
@@ -66,9 +67,9 @@ DomainDupl = ({
         : domain?.storageType === "iscsi"
             ? "iSCSI"
             : "Fibre Channel",
-    size: domain?.size + " GiB",
-    availableSize: domain?.availableSize + " GiB",
-    usedSize: domain?.usedSize + " GiB",
+    sizeToGB: checkZeroSizeToGiB(domain?.size),
+    availableSizeToGB: checkZeroSizeToGiB(domain?.availableSize),
+    usedSizeToGB: checkZeroSizeToGiB(domain?.usedSize),
     searchText: `${domain?.name} ${domain?.storageDomainType} ${domain?.storageType} ${domain?.size}GB`
   }));
 

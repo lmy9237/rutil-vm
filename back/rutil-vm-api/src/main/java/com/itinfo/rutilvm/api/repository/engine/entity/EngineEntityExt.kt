@@ -202,9 +202,9 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		storageFormat { storageDomainFormatType.toString() }
 		hostedEngine { isHostedEngineStorage }
 		comment { storageComment }
-		size { usedDiskSize?.add(availableDiskSize) }
-		usedSize { usedDiskSize }
-		availableSize { availableDiskSize }
+		size { usedDiskSizeInByte.add(availableDiskSizeInByte) }
+		usedSize { usedDiskSizeInByte }
+		availableSize { availableDiskSizeInByte }
 		dataCenterVo {
 			IdentifiedVo.builder {
 				id { storagePoolId?.toString() }
@@ -251,7 +251,6 @@ fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
 	// storageDomainVos {  }
 	clusterCnt { this@toDataCenterVo.clusters?.size ?: 0 }
 	clusterVos { this@toDataCenterVo.clusters?.toClusterVosFromClusterViewEntities() }
-	// hostCnt {  }
 	quotaMode { this@toDataCenterVo.quotaEnforcementType }
 }
 fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =

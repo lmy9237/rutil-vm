@@ -75,6 +75,22 @@ class DataCenterController: BaseController() {
 	}
 
 	@ApiOperation(
+		httpMethod="GET",
+		value="데이터센터 목록 조회",
+		notes="전체 데이터센터 목록을 조회한다"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/hosts")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun datacentersHosts(): ResponseEntity<List<DataCenterVo?>> {
+		log.info("/computing/datacenters/hosts ... 데이터센터 목록")
+		return ResponseEntity.ok(iDataCenter.findAllWithHosts())
+	}
+
+	@ApiOperation(
 		httpMethod="POST",
 		value="데이터센터 생성",
 		notes="데이터센터를 생성한다"

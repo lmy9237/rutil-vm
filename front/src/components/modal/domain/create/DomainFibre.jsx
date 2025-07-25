@@ -28,16 +28,6 @@ const DomainFibre = ({
     lunsSelected, setLunsSelected
   } = useGlobal()
   
-  /*
-  const {
-    data: fibres = [],
-    refetch: refetchFibres,
-    isLoading: isFibresLoading,
-    isError: isFibresError, 
-    isSuccess: isFibresSuccess
-  } = useFibreFromHost(hostId || undefined, (e) => ({ ...e }));
-  */
-
   // 편집일 때
   const transDomainData = useMemo(() => {
     const storage = domain?.storageVo?.volumeGroupVo?.logicalUnitVos[0];

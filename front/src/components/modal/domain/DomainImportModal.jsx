@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import { Label }                        from "@/components/ui/label"
 import BaseModal                        from "../BaseModal";
 import DomainImportNfs                  from "./import/DomainImportNfs";
 import DomainImportFibre                from "./import/DomainImportFibre";
@@ -14,13 +13,13 @@ import {
 } from "@/components/label/HandleInput";
 import {
   useImportDomain,
-  useAllDataCenters,
   useHostsFromDataCenter,
   useSearchFcFromHost,
   useAllNfsStorageDomains,
   useAllStorageDomains,
+  useAllDataCentersWithHosts,
 } from "../../../api/RQHook";
-import { checkName, emptyIdNameVo, useSelectFirstItemEffect }                    from "@/util";
+import { checkName, emptyIdNameVo, useSelectFirstItemEffect, useSelectFirstNameItemEffect, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -57,20 +56,22 @@ const DomainImportModal = ({
 
   const { mutate: importDomain } = useImportDomain(onClose, onClose);
   
+  const { data: domains = [] } = useAllStorageDomains((e) => ({ ...e }));
+
   const { 
     data: datacenters = [],
     isLoading: isDatacentersLoading 
-  } = useAllDataCenters((e) => ({ ...e }));
-  const { 
-    data: domains = [],
-    isLoading: isDomainsLoading 
-  } = useAllStorageDomains((e) => ({ ...e }));
+  } = useAllDataCentersWithHosts((e) => ({ ...e }));
 
   const {
     data: hosts = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
-  const { data: nfsList = [] } = useAllNfsStorageDomains((e) => ({ ...e }));
+
+  const { 
+    data: nfsList = [] 
+  } = useAllNfsStorageDomains((e) => ({ ...e }));
+  
   const { 
     data: fibres = [], 
     isLoading: isFibresLoading,
@@ -83,9 +84,16 @@ const DomainImportModal = ({
     return [
       { value: "data", label: "데이터" },
       { value: "iso", label: "ISO" },
-      ...(hasImportExport ? [] : [{ value: "import_export", label: Localization.kr.EXPORT }])
+      ...(hasImportExport 
+          ? [] 
+          : [{ value: "import_export", label: Localization.kr.EXPORT }]
+        )
     ];
   }, [domains]);
+
+  // 데이터센터 지정
+  useSelectItemOrDefaultEffect(datacenterId, false, datacenters, setDataCenterVo, "Default");
+  useSelectItemEffect(hostVo?.id, false, hosts, setHostVo);
 
   const resetFormStates = () => {
     setFormState(initialFormState);
@@ -98,21 +106,9 @@ const DomainImportModal = ({
   useEffect(() => {
     if (!isOpen) {
       resetFormStates();
-      return;
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ id: selected?.id, name: selected?.name });
-    } else if (datacenters.length > 0) {
-      // datacenterId가 없다면 기본 데이터센터 선택
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ id: firstDc.id, name: firstDc.name });
-    }
-  }, [datacenterId, datacenters]);
 
   useEffect(() => {
     if (dataCenterVo.id) {
@@ -123,18 +119,8 @@ const DomainImportModal = ({
       setStorageTypes(storageTypeOptions(initialFormState.storageDomainType));
       setNfsAddress("");
       setId("");
-      // refetchFibres();
     }
   }, [dataCenterVo]);
-  useSelectFirstItemEffect(hosts, setHostVo);
-  /*
-  useEffect(() => {
-    if (hosts && hosts.length > 0) {
-      const firstH = hosts[0];
-      setHostVo({ id: firstH.id, name: firstH.name });
-    }
-  }, [hosts]);
-  */
 
   useEffect(() => {
     const options = storageTypeOptions(formState.storageDomainType);

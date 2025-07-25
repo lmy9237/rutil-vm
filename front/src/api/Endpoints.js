@@ -32,6 +32,7 @@ const ENDPOINTS = {
   
   //#region: DataCenter
   FIND_ALL_DATA_CENTERS: () =>                                             `${ENDPOINT_API_V1}/computing/datacenters`,
+  FIND_ALL_DATA_CENTERS_WITH_HOSTS: () =>                                   `${ENDPOINT_API_V1}/computing/datacenters/hosts`,
   FIND_DATA_CENTER: (dataCenterId) =>                                      `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
   FIND_CLUSTERS_FROM_DATA_CENTER: (dataCenterId) =>                        `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/clusters`, 
   FIND_HOSTS_FROM_DATA_CENTER: (dataCenterId) =>                           `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}/hosts`, 

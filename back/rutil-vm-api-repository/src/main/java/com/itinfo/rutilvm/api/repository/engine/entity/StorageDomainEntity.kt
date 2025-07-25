@@ -26,12 +26,12 @@ import javax.persistence.Table
  * @property storageDescription [String] 스토리지 도메인 설명
  * @property storageComment [String] 스토리지 도메인 코멘트
  * @property storagePoolId [UUID] 스토리지 풀 ID
- * @property availableDiskSize [BigInteger] 사용 가능한 디스크 크기 (GB)
- * @property confirmedAvailableDiskSize [BigInteger] 확정된 사용 가능한 디스크 크기 (GB)
+ * @property availableDiskSize [BigInteger] 사용 가능한 디스크 크기 (GiB)
+ * @property confirmedAvailableDiskSize [BigInteger] 확정된 사용 가능한 디스크 크기 (GiB)
  * @property vdoSavings [BigInteger] VDO 절감량 (GB)
- * @property usedDiskSize [BigInteger] 사용된 디스크 크기 (GB)
- * @property commitedDiskSize [BigInteger] 커밋된 디스크 크기 (GB)
- * @property actualImagesSize [BigInteger] 실제 이미지 크기 (GB)
+ * @property usedDiskSize [BigInteger] 사용된 디스크 크기 (GiB)
+ * @property commitedDiskSize [BigInteger] 커밋된 디스크 크기 (GiB)
+ * @property actualImagesSize [BigInteger] 실제 이미지 크기 (GiB)
  * @property status [Int] 스토리지 도메인 상태
  * @property storagePoolName [String] 스토리지 풀 이름
  * @property _storageType [Int] 스토리지 타입
@@ -97,9 +97,16 @@ class StorageDomainEntity(
 	val supportsDiscard: Boolean? = null,
 	val isHostedEngineStorage: Boolean = false,
 ) : Serializable {
-	val status: StorageDomainStatusB				get() = StorageDomainStatusB.forValue(_status)
-	val storageType: StorageTypeB					get() = StorageTypeB.forValue(_storageType)
-	val storageDomainType: StorageDomainTypeB		get() = StorageDomainTypeB.forValue(_storageDomainType)
+	val status: StorageDomainStatusB					get() = StorageDomainStatusB.forValue(_status)
+	val storageType: StorageTypeB						get() = StorageTypeB.forValue(_storageType)
+	val storageDomainType: StorageDomainTypeB			get() = StorageDomainTypeB.forValue(_storageDomainType)
+
+	val availableDiskSizeInByte: BigInteger				get() = availableDiskSize?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
+	val confirmedAvailableDiskSizeInByte: BigInteger	get() = confirmedAvailableDiskSize?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
+	val vdoSavingsInByte: BigInteger					get() = vdoSavings?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
+	val usedDiskSizeInByte: BigInteger					get() = usedDiskSize?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
+	val commitedDiskSizeInByte: BigInteger				get() = commitedDiskSize?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
+	val actualImagesSizeInByte: BigInteger				get() = actualImagesSize?.multiply(GIGABYTE_2_BYTE) ?: BigInteger.ZERO
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -142,6 +149,7 @@ class StorageDomainEntity(
 	}
 
 	companion object {
+		val GIGABYTE_2_BYTE: BigInteger = BigInteger.valueOf(1024L*1024L*1024L)
 		inline fun builder(block: Builder.() -> Unit): StorageDomainEntity = Builder().apply(block).build()
 	}
 }

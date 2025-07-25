@@ -39,7 +39,6 @@ const DiskDupl = ({
     [...disks].map((d) => d.id)
   ), [disks]);
 
-  
   const {
     data: diskContentTypes = [],
     isLoading: isDiskContentTypesLoading
@@ -67,8 +66,8 @@ const DiskDupl = ({
         </TableRowClick>
       ),
       sharable: d?.sharable ? "O" : "",
-      icon1: d?.bootable ? "🔑" : "",
-      icon2: d?.readOnly ? "🔒" : "",
+      icon1: d?.bootable ? "O" : "",
+      icon2: d?.readOnly ? "O" : "",
       status: (d?.imageTransferRunning) ? (`${d?.imageTransferPhaseKr} (${d?.imageTransferPercent.toFixed(2)}%)`): d?.status.toUpperCase(),
       sparse: d?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
       storageType: d?.storageTypeKr ?? d?.storageType, 
@@ -76,8 +75,8 @@ const DiskDupl = ({
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
       ].filter(Boolean).join(", "),
-      virtualSize: checkZeroSizeToGiB(d?.virtualSize),
-      actualSize: checkZeroSizeToGiB(d?.actualSize),
+      virtualSizeToGB: checkZeroSizeToGiB(d?.virtualSize),
+      actualSizeToGB: checkZeroSizeToGiB(d?.actualSize),
     };
 
     // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)

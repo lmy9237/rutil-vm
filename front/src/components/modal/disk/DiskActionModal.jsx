@@ -11,7 +11,6 @@ import {
   useAllStorageDomainsToMoveFromDisk4EachDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
-import Logger                           from "@/utils/Logger";
 import "../domain/MDomain.css";
 import { checkZeroSizeToGiB } from "@/util";
 
@@ -202,7 +201,7 @@ const DiskActionModal = ({
                       />
                     )}
                   </td>
-                  <td className="mw-[130px]">{disk?.virtualSize}</td>
+                  <td className="mw-[130px]">{checkZeroSizeToGiB(disk?.virtualSize)}</td>
                   <td>{disk.storageDomainVo?.name || ""}</td>
                   <td className="w-[230px]">
                     <LabelSelectOptionsID

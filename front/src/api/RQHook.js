@@ -502,6 +502,28 @@ export const useAllDataCenters = (
   }
 });
 /**
+ * @name useAllDataCentersWithHosts
+ * @description 데이터센터 목록조회 useQuery훅
+ *
+ * @param {function} mapPredicate 객체 변형 처리
+ * 
+ * @see ApiManager.findAllDataCenters
+ */
+export const useAllDataCentersWithHosts = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
+  queryKey: [QK.ALL_DATACENTERS],
+  queryFn: async () => {
+    const res = await ApiManager.findAllDataCentersWithHosts();
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
+    Logger.debug(`RQHook > useAllDataCentersWithHosts ... res: `, _res);
+    return _res;
+  }
+});
+/**
  * @name useDataCenter
  * @description 데이터센터 정보 useQuery훅
  *
@@ -727,7 +749,7 @@ export const useAllActiveDomainsFromDataCenter4EachDisk = (
 export const qpAllNetworksFromDataCenter = (
   dataCenterId,
   mapPredicate = (e) => ({ ...e })
-) => useQuery({
+) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORKS_FROM_DATA_CENTER, dataCenterId],
   queryFn: async () => {
@@ -744,7 +766,7 @@ export const qpAllNetworksFromDataCenter = (
 export const useAllNetworksFromDataCenter = (
   datacenterId,
   mapPredicate = (e) => ({ ...e })
-) => useQuery=({
+) => useQuery({
   ...qpAllNetworksFromDataCenter(datacenterId, mapPredicate)
 });
 

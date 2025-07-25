@@ -284,6 +284,18 @@ const ApiManager = {
     // defaultValues: DEFAULT_VALUES.FIND_ALL_DATA_CENTERS
   }),
   /**
+   * @name ApiManager.findAllDataCentersWithHosts
+   * @description datacenter 목록 (호스트가 있는)
+   *
+   * @returns 
+   * 
+   * @see Computing.js (components/Computing)
+   */
+  findAllDataCentersWithHosts: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.FIND_ALL_DATA_CENTERS_WITH_HOSTS(), 
+  }),
+  /**
    * @name ApiManager.findDataCenter
    * @description datacenter
    *
