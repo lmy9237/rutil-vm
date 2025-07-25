@@ -29,6 +29,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## 4.0.0-2 - 2025-07-25
+
+- [`api-v4.0.0-2`][api-v4.0.0-2]: 백엔드
+- [`web-v4.0.0-2`][web-v4.0.0-2]: 프론트앤드
+
+### Added
+
+- [@chanhi2000][chanhi2000]
+  - `${front}` 각 상세 페이지 별 탭에 대한 기억처리
+  - `${devops}` ovirt,rutilvm 환경관리 bash_profile 추가개발
+- [@dhj27][dhj27]
+  - `${back}${front}` : datacenter 용량/사용량 (`useUsageDataCenter`)
+  - `${back}${front}` : cluster 용량/사용량 (`useUsageCluster`)
+  - `${back}` : AllDisksForVmsRepository, AllDisksForVmsEntity, DiskVmElementExtendedEntity 추가
+  - `${back}` : 호스트가 있는 데이터센터 목록 출력 api 추가 (스토리지 도메인 생성 데이터센터 목록   출력위해)
+  - `${front}` :가상머신 마이그레이션 모달 2(디스크 이동 포함)
+- [@lmy9237][lmy9237]
+  - `${front}` 가상머신 액션버튼 > 마이그레이션 활성화 조건 추가
+
+### Changed/Fixed
+
+- [@chanhi2000][chanhi2000]
+  - `${front}`/`${back}` 스토리지 도메인 > 가상머신 가져오기 목록 느림 → db 로 코드변환
+  - `${front}` 스토리지 도메인 연결 버튼 활성화에 대한 조건 정상화
+  - `${front}` 스토리지 도메인 > 디스크 출력기능 정상화 (진행중)
+  - `${front}`/`${back}` 스토리지 도메인 > 가상머신 가져오기 항목 문제 (ovf관련)
+  - `${front}`/`${back}` 스토리지도메인 / 데이터센터 상태 값에 따른 UI반응 및 목록출력 정상화 출력기준변경
+  - `${front}` 호스트 생성/편집: disabled 일 때 toggle switch 안보이도록 (레이블 css 처리)
+  - `${back}`/`${front}` 네트워크 > 호스트 목록에서 비동기여부 확인기능 추가
+  - `${front}` 이벤트: 탭 클릭 시 페이지 1로 설정
+  - `${front}` 데이터센터 → 클러스터 삭제 시 부모 데이터센터로 페이지 이동
+  - `${front}` 호스트 → 가상머신 생성하면 자동으로 해당 호스트 선택
+  - `${back}` 디스크 업로드: qcow 업로드 복구
+  - 네트워크 > vNIC 프로필: 목록 출력 정상화 (로딩중에서 값 표출 안됌)
+  - 네트워크 > 클러스터 > 네트워크관리: 목록 출력 정상화 (값 불량)
+  - `${front}` 가상머신 시작 대기중 상태 일 때 트리메뉴에서 없어짐
+- [@dhj27][dhj27]
+  - `${back}` : template disk 생성 부분 (qcow, raw)
+  - `${back}` : 호스트 10분 출력 그래프 수정
+  - `${back}` : 디스크 이동/복사에 필요한 스토리지 도메인 목록 api 수정
+  - `${back}` : rutilvm 대시보드에 들어갈 network개수 추가
+  - `${back}` : hostnic 수정(미완)
+  - `${back}` : 가상머신 마이그레이션 가능한 호스트 목록 수정(미완)
+  - `${back}` : disk, domain 단위 단일화 gb -> byte
+  - `${front}` : 호스트 > 네트워크 어뎁터 이름항목에 본딩이 있을 떄 대괄호 안으로 slave이름목록 추가
+  - `${front}` : 디스크 업로드 모달: 스토리지 용량 표시 추가
+  - `${front}` : 디스크 이동,복사 모달:  용량값표시 불량 해소, 선택박스 목록출력 등등
+  - `${front}` : 호스트 네트워크 모달: 비동기 항목 토글 ->체크박스 변환
+  - `${front}` : 데이터 센터 일반 항목(가상머신, 클러스터 등) 개수 추가
+  - `${front}` : 클러스터 생셩/편집: network 목록 값 출력 문제해소
+  - `${front}` : 도메인 생성/편집: 텍스트 입력값 사라지는 문제 해결
+- [@lmy9237][lmy9237]
+  - `${front}` 호스트네트워크 드레그기능 오류 수정 ( 상태변경 후 확인버튼을 누르면 네트워크가 계속빠지는 현상)
+  - `${front}` 가상머신 디스크모달 체크박스 간격 수정
+  - `${front}` 템플릿생성 모달 테이블 간격수정 (진행중)
+  - `${front}` 도메인 파괴 모달 디자인 및 문구내용 수정
+  - `${front}` 디스크 이동,복사 모달 가로 스크롤 넘치는 것 수정
+  - `${front}` 삭제모달 스타일 통일(DELETE 모달과 모양 및 크기 스타일 통일)
+  - `${front}` bar그래프 색 통일
+  - `${front}` 쿼리키 수정
+  - `${front}` 미리보기 아이콘 교체 (폰트어썸삭제)
+  - `${front}` 가상머신 네트워크인터페이스 생성,편집 디자인 수정
+  - `${front}` “호스트 재부팅 상태 확인” 모달 디자인 수정
+  - `${front}` 네트워크 → 템플릿 테이블 선택 안됨
+  - `${front}` 호스트 생성 모달 인증 텍스트 공간 띄우기
+  - `${front}` 가상머신 action버튼 조건 수정
+  - `${front}` 호스트 테이블 데이터 가운데정렬(spm,상태,업타임,HA)
+  - `${front}` 마이그레이션 모달 디자인수정
+  - `${front}` 가상머신 → 디스크 가상머신이 켜져있거나 일시중지상태 가상머신의 디스크는 삭제버튼 비활성화
+  - `${front}` footer 작업명 컬럼넓이 늘리기
+  - `${front}` 스토리지 도메인 > 데이터센터: 활성화 돼있는 데이터센터가 있으면 “연결” 버튼 비활성화
+  - `${front}` 데이터센터 > 스토리지 도메인: 선택 된 스토리지도메인이 없으면 “유지보수” 버튼 비활성화
+
+### Removed
+
+- [@chanhi2000][chanhi2000]
+- [@dhj27][dhj27]
+- [@lmy9237][lmy9237]
+  - `${front}` 크롬이 아닌 다른브라우저에서 input type password일 때 기본적으로 나오는 눈 아이콘 제거
+
 ## 4.0.0 - 2025-07-18
 
 - [`api-v4.0.0`][api-v4.0.0]: 백엔드
@@ -1623,8 +1703,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 프로젝트 병합 후 첫 릴리즈
 
-[api-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.8...web-v4.0.0
-[web-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.8...api-v4.0.0
+[api-v4.0.0-2]: https://github.com/ititcloud/rutil-vm/compare/web-v4.0.0...web-v4.0.0-2
+[web-v4.0.0-2]: https://github.com/ititcloud/rutil-vm/compare/api-v4.0.0...api-v4.0.0-2
+[api-v4.0.0]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.8...web-v4.0.0
+[web-v4.0.0]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.8...api-v4.0.0
 [api-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.7...web-v0.3.8
 [web-v0.3.8]: https://github.com/ititcloud/rutil-vm/compare/api-v0.3.7...api-v0.3.8
 [api-v0.3.7]: https://github.com/ititcloud/rutil-vm/compare/web-v0.3.6...web-v0.3.7

@@ -48,9 +48,9 @@ FROM eclipse-temurin:11-jdk-focal
 LABEL maintainer="Chan Hee Lee <chanhi2000@gmail.com>"
 LABEL description="RutilVM (API)"
 LABEL version="4.0.0"
-LABEL build-no="1"
+LABEL build-no="2"
 LABEL vcs-url="https://github.com/ititcloud/rutil-vm"
-LABEL build-date="2025-07-18"
+LABEL build-date="2025-07-25"
 LABEL commit-hash="05f9e12ee27c1532623112d1df92004226d0d347"
 LABEL license="Apache-2.0"
 LABEL environment="production"
@@ -64,7 +64,7 @@ RUN apt-get update && \
 
 ENV RUTIL_VM_VERSION=4.0.0
 ENV RUTIL_VM_BUILD_NO=1
-ENV RUTIL_VM_RELEASE_DATE=2025-07-18
+ENV RUTIL_VM_RELEASE_DATE=2025-07-25
 ENV RUTIL_VM_PORT_HTTP=8080
 ENV RUTIL_VM_PORT_HTTPS=8443
 ENV RUTIL_VM_OVIRT_PORT_HTTPS=2443

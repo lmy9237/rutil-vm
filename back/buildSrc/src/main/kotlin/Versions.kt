@@ -2,7 +2,7 @@ object Versions {
     object Project {
         const val OKESTRO = "0.0.5"
         const val RUTIL_VM = "4.0.0"
-        const val RUTIL_VM_BUILD_NO = 1
+        const val RUTIL_VM_BUILD_NO = 2
     }
     const val java = "1.8"
     const val gradle = "7.4.2"
