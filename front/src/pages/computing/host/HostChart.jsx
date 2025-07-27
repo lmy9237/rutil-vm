@@ -4,11 +4,15 @@ import ReactApexChart from "react-apexcharts";
 const HostChart = ({ per, cpu=true }) => {
   const [series, setSeries] = useState([]);
 
-  const formatDate = useCallback((isoDate) => {
+  const formatDateKey = useCallback((isoDate) => {
+    const date = new Date(isoDate);
+    return date.toISOString(); // ISO 전체로 하면 정확하게 정렬 가능
+  }, []);
+
+  const formatTimeLabel = useCallback((isoDate) => {
     const date = new Date(isoDate);
     return (
-      date.getHours().toString().padStart(2, "0") +
-      ":" +
+      date.getHours().toString().padStart(2, "0") + ":" +
       date.getMinutes().toString().padStart(2, "0")
     );
   }, []);
@@ -21,38 +25,36 @@ const HostChart = ({ per, cpu=true }) => {
 
     const sorted = [...per].sort((a, b) => new Date(a.time) - new Date(b.time));
 
-    // 1. 시간대 기준 Key 목록 생성
-    const timeKeySet = new Set(sorted.map((item) => formatDate(item.time)));
+    const timeKeySet = new Set(sorted.map((item) => formatDateKey(item.time)));
     const timeKeys = Array.from(timeKeySet).sort();
 
-    // 2. 호스트 기준 그룹핑
-    const hostMap = {};
+    const timeLabelMap = {};
+    timeKeys.forEach((key) => {
+      timeLabelMap[key] = formatTimeLabel(key);
+    });
 
+    const hostMap = {};
     sorted.forEach((item) => {
       if (!hostMap[item.name]) {
         hostMap[item.name] = {};
       }
-
-      const timeKey = formatDate(item.time);
+      const key = formatDateKey(item.time);
       const value = cpu ? item.cpuPercent : item.memoryPercent;
-
-      hostMap[item.name][timeKey] =
-        typeof value === "number" ? Math.floor(value) : null;
+      hostMap[item.name][key] = typeof value === "number" ? Math.floor(value) : null;
     });
 
-    // 3. 각 호스트에 대해 timeKey 기준 정렬된 series 만들기
     const newSeries = Object.entries(hostMap)
-    .sort(([nameA], [nameB]) => nameA.localeCompare(nameB)) // name 기준 오름차순 정렬
-    .map(([name, valueMap]) => {
-      const data = timeKeys.map((timeKey) => ({
-        x: timeKey,
-        y: valueMap[timeKey] ?? null,
-      }));
-      return { name, data };
-    });
+      .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
+      .map(([name, valueMap]) => {
+        const data = timeKeys.map((key) => ({
+          x: timeLabelMap[key],
+          y: valueMap[key] ?? null,
+        }));
+        return { name, data };
+      });
 
     setSeries(newSeries);
-  }, [per, formatDate, cpu]);
+  }, [per, formatDateKey, formatTimeLabel, cpu]);
 
   const chartOptions = {
     chart: {

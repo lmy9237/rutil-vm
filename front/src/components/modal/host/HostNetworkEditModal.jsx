@@ -228,7 +228,6 @@ const HostNetworkEditModal = ({
       modifiedNetworkAttachments: attachmentsToModify
     });
     onClose();
-
   };
 
 
@@ -359,7 +358,7 @@ const HostNetworkEditModal = ({
                     />
                   </div> 
                 ))) :(
-                  <span>해야함</span>
+                  <span></span>
                 )
               }
             </>

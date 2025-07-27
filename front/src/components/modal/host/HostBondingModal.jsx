@@ -41,8 +41,6 @@ const HostBondingModal = ({
       bondModalState.optionMode !== originalMode || !hasCustomOptions
     ));
 
-
-
   const validateForm = () => {
     Logger.debug(`HostBondingModal > validateForm ... `)
     const nameError = checkName(bondModalState.name);
@@ -118,12 +116,17 @@ const HostBondingModal = ({
         onChange={handleInputChange(setBondModalState, "optionMode", validationToast)}
         
       />
-      <span>{bondModalState.optionMode}</span><br/>
-      <span>{bondModalState.userMode}</span>
+      {import.meta.env.DEV && 
+        <>
+        <span>bondModalState.optionMode {bondModalState.optionMode}</span><br/>
+        <span>originalMode: {originalMode}</span><br/>
+        <span>userMode: {bondModalState.userMode}</span>
+        </>
+      } 
       <LabelInput id="user_mode" label="사용자 정의 모드"        
         value={bondModalState.userMode}
-        onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
         disabled={isUserModeDisabled}
+        onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
       />
     </BaseModal>
   );

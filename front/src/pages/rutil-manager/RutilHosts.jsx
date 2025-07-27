@@ -46,9 +46,13 @@ const RutilHosts = () => {
       refetch={refetchHosts} isRefetching={isHostsRefetching}
       isLoading={isHostsLoading} isError={isHostsError} isSuccess={isHostsSuccess}
     />
-    <div style={{width:"1200px"}}>
-      <HostChart per={hostList} cpu={true}/>
-      <HostChart per={hostList} cpu={false}/>
+    <div style={{ width: "1200px", display: "flex", justifyContent: "space-between", gap: "20px" }}>
+      <div style={{ flex: 1 }}>
+        <HostChart per={hostList} cpu={true} />
+      </div>
+      <div style={{ flex: 1 }}>
+        <HostChart per={hostList} cpu={false} />
+      </div>
     </div>
     </>
 
