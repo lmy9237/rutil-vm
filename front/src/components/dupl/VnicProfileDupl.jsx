@@ -7,7 +7,6 @@ import OVirtWebAdminHyperlink   from "@/components/common/OVirtWebAdminHyperlink
 import SearchBox                from "@/components/button/SearchBox";
 import TablesOuter              from "@/components/table/TablesOuter";
 import TableRowClick            from "@/components/table/TableRowClick";
-import TableColumnsInfo         from "@/components/table/TableColumnsInfo";
 import VnicProfileActionButtons from "./VnicProfileActionButtons";
 import Localization             from "@/utils/Localization";
 import Logger                   from "@/utils/Logger";
@@ -48,6 +47,7 @@ const VnicProfileDupl = ({
         {vnic?.dataCenterVo?.name}
       </TableRowClick>
     ),
+    portMirroring: vnic?.portMirroring === true ? "O":"",
     passThrough: vnic?.passThrough === "DISABLED" ? "아니요" : Localization.kr.YES,
     networkFilter: vnic?.networkFilterVo?.name || "-",
     searchText: `${vnic?.name} ${vnic?.networkVo?.name || ""} ${vnic?.dataCenterVo?.name || ""} ${vnic?.networkFilterVo?.name || ""}`

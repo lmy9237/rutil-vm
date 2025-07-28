@@ -106,7 +106,7 @@ fun List<NetworkAttachmentVo>.toModifiedNetworkAttachments(): List<NetworkAttach
 
 
 fun NetworkAttachmentVo.toSyncNetworkAttachment(): NetworkAttachment {
-	log.info("this: {}", this@toSyncNetworkAttachment)
+	log.info("toSyncNetworkAttachment: {}", this@toSyncNetworkAttachment)
 	val builder = NetworkAttachmentBuilder()
 		.network(NetworkBuilder().id(this.networkVo.id).build())
 		.hostNic(HostNicBuilder().name(this.hostNicVo.name).build())

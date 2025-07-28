@@ -127,8 +127,7 @@ export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = 
 
   return {
     name: "",
-    optionMode: "1",
-    userMode: "",
+    optionVos: [{ name: "mode", value: 1 }], // 기본값
     editTarget: [
       { ...nic1, networks: getNetworksFromNic(nic1) },
       { ...nic2, networks: getNetworksFromNic(nic2) }
@@ -143,22 +142,12 @@ export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = 
  * @returns 
  */
 export function getBondModalStateForEdit(bond) {
-  const optionVos = bond.bondingVo.optionVos || [];
-  const modeOpt = optionVos.find(opt => opt.name === "mode");
-  const modeValue = modeOpt?.value ?? "1";
-
-  const hasCustomOptions = optionVos.some(opt =>
-    opt.name !== "mode" && opt.name !== "miimon"
-  );
-
   return {
     name: bond.name,
-    optionMode: hasCustomOptions ? "7" : modeValue,
-    userMode: optionVos.map(opt => `${opt.name}=${opt.value}`).join(' ') || "",
+    optionVos: bond.bondingVo?.optionVos ?? [],
     editTarget: bond
   };
 }
-
 
 
 /**

@@ -145,12 +145,12 @@ const HostNics = ({
   // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
   const [isBondingEditMode, setIsEditBondingMode] = useState(false); // 본딩 편집 모드
+  // 본딩 모달에 넘길 정보
   const [bondModalState, setBondModalState] = useState({
     name: "", 
-    optionMode: "1", 
-    userMode: "", 
+    optionVos: [ { name: "mode", value: 1 } ],
     editTarget: null
-  }); // 본딩 모달에 넘길 정보
+  }); 
 
   // 네트워크 모달 관리
   const [isNetworkEditPopup, setIsNetworkEditPopup] = useState(false);  // 네트워크 편집 모달 오픈
@@ -254,8 +254,12 @@ const HostNics = ({
       bonds: modifiedBonds.map(bond => ({
         name: bond.name,
         bondingVo: {
-          slaveVos: bond.bondingVo.slaveVos.map(slave => ({ name: slave.name })),
-          optionVos: bond.bondingVo.optionVos.map(option => ({ name: option.name, value: option.value  }))
+          slaveVos: bond.bondingVo.slaveVos.map(slave => ({ 
+            name: slave.name 
+          })),
+          optionVos: bond.bondingVo.optionVos.map(option => ({ 
+            name: option.name, value: option.value  
+          }))
         }
       })),
       bondsToRemove: removeBonds.map(bond => ({ name: bond.name })),
@@ -316,6 +320,7 @@ const HostNics = ({
 
     // 네트워크 할당 변경사항 감지
     const newModifiedNAs = [];
+    const newSyncNAs = [];
     const newRemoveNAs = [];
     
     // 현재 본딩된 NIC들 찾기
@@ -410,6 +415,7 @@ const HostNics = ({
       modifiedBonds: newModifiedBonds,
       removeBonds: newRemoveBonds,
       modifiedNAs: newModifiedNAs,
+      // syncNAs: newSyncNAs,
       removeNAs: newRemoveNAs
     };
   }, [baseItems, movedItems]);
@@ -763,7 +769,7 @@ const HostNics = ({
     });
 
     tossCreateBondingData(sourceNic, targetNic);
-    // toast({ description: "handleDropNicForBonding" });
+    toast({ description: "handleDropNicForBonding" });
   };
 
 

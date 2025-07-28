@@ -45,7 +45,6 @@ const BondNic = ({
             <div className="f-start gap-1">
               <RVI16 iconDef={slave.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
               {slave.name}
-              {/* {idView(slave)} */}
             </div>
             <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" />
           </div>

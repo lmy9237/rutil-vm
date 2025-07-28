@@ -467,6 +467,7 @@ const TableColumnsInfo = {
     { accessor: 'creationTime', header: Localization.kr.DATE_CREATED, clickable: false },
   ],
   VMS_FROM_STORAGE_DOMAIN: [
+    { accessor: "icon",           header: Localization.kr.STATUS,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: '_name',          header: Localization.kr.ALIAS,        clickable: false },
     { accessor: 'disk',           header: '디스크',                      clickable: false },
     { accessor: 'snapshot',       header: '스냅샷',                      clickable: false },
@@ -539,14 +540,14 @@ const TableColumnsInfo = {
     { accessor: 'dateCreated',  header: Localization.kr.DATE_CREATED,  clickable: false },
   ],
   DISK_SNAPSHOT_FROM_STORAGE_DOMAIN: [
-    { accessor: 'actualSize',              header: Localization.kr.SIZE_ACTUAL,                clickable: false },
-    { accessor: 'creationDate',            header: Localization.kr.DATE_CREATED,               clickable: false },
     { accessor: 'vmSnapshotCreationDate',  header: `${Localization.kr.SNAPSHOT} 생성일`,        clickable: false },
     { accessor: 'alias',                   header: '디스크 별칭',                               clickable: false },
     { accessor: 'vmSnapshotDescription',   header: `${Localization.kr.SNAPSHOT} ${Localization.kr.DESCRIPTION}`, clickable: false },
+    { accessor: 'actualSize',              header: Localization.kr.SIZE_ACTUAL,                clickable: false },
     { accessor: 'vmNameConnected',         header: `${Localization.kr.CONNECTION} ${Localization.kr.TARGET}`, clickable: false },
     { accessor: 'status',                  header: Localization.kr.STATUS,                     clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'id',                      header: `${Localization.kr.DISK} ${Localization.kr.SNAPSHOT} ID`, clickable: false },
+    { accessor: 'creationDate',            header: Localization.kr.DATE_CREATED,               clickable: false },
   ],
   GET_VMS_TEMPLATES: [
     { accessor: 'name',          header: Localization.kr.NAME,         clickable: false, width: '10%' },

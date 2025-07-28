@@ -79,7 +79,9 @@ fun Bonding.toBondingVo(conn: Connection, hostId: String): BondingVo {
 fun BondingVo.toBondingBuilder(): BondingBuilder {
     return BondingBuilder()
         .options(this.optionVos.toOptions())
-		.slaves(this.slaveVos.map { HostNicBuilder().name(it.name).build() })
+		.slaves(this.slaveVos.map {
+			HostNicBuilder().name(it.name).build()
+		})
 }
 
 fun BondingVo.toDefaultOptions(): List<Option> {

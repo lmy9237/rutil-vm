@@ -138,7 +138,6 @@ class ItHostNicServiceImpl(
 			modifiedNetworkAttachments = hostNetworkVo.networkAttachments.toModifiedNetworkAttachments(),
 			removedNetworkAttachments = hostNetworkVo.networkAttachmentsToRemove.toRemoveNetworkAttachments()
 		)
-		//
 		return res.isSuccess
 	}
 

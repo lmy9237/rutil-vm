@@ -18,6 +18,7 @@ import {
   useEditVnicProfile,
   useAllNetworkFilters,
   useVnicProfile,
+  useAllNetworksFromDataCenter,
 } from "@/api/RQHook";
 import { 
   checkDuplicateName, 
@@ -70,7 +71,7 @@ const VnicProfileModal = ({
     data: networks = [], 
     isLoading: isNetworksLoading,
     isSuccess: isNetworksSuccess,
-  } = qpAllNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useAllNetworksFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
   const { 
     data: vms = [] 
   } = useAllVmsFromVnicProfiles(vnicProfileId);
@@ -79,7 +80,6 @@ const VnicProfileModal = ({
     isLoading: isNFiltersLoading,
     isSuccess: isNFiltersSuccess,
   } = useAllNetworkFilters((e) => ({ ...e }));
-
 
   useEffect(() => {
     if (!isOpen) {

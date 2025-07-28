@@ -146,7 +146,7 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		bridged { hostNic.bridged() }
 		macAddress { if(hostNic.macPresent()) hostNic.mac().address() else "" }
 		mtu { hostNic.mtuAsInteger() }
-		status { hostNic.status().toInterfaceStatus() }
+		status { hostNic.status()?.toInterfaceStatus() ?: InterfaceStatus.none }
 		speed { hostNic.speed() }
 		rxSpeed { hostNic.statistics().findSpeedDecimal("data.current.rx.bps") }
 		txSpeed { hostNic.statistics().findSpeedDecimal("data.current.tx.bps") }

@@ -14,6 +14,7 @@ import {
 import { checkZeroSizeToGiB } from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
+import { status2Icon } from "@/components/icons/RutilVmIcons";
 
 /**
  * @name DomainVms
@@ -63,7 +64,16 @@ const DomainVms = ({ domainId }) => {
       > {vm?.snapshotVos?.length} 
       </span>
     ),
-    creationTime: vm?.creationTime
+    creationTime: vm?.creationTime,
+    icon: (
+      <div className="f-center" style={{ gap: "4px" }}>
+        {status2Icon(vm?.status)}
+        {/* {vm?.isInitialized === true ? "" : "VW"} */}
+        {vm?.nextRun === true && status2Icon("NEXT_RUN")}
+        {vm?.runOnce === true && vm?.status==="up" ? "Run" : ""}
+        {(vm?.statusDetail === "noerr" || vm?.statusDetail === "none") ? "" : vm?.statusDetail}
+      </div>
+    ),
   })), [vms]);
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
