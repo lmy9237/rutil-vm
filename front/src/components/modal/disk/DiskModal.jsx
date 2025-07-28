@@ -280,13 +280,20 @@ const DiskModal = ({
               </div>
             );
           })()}
-          <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE}
+          <LabelSelectOptions id="sparse" label={Localization.kr.SPARSE} // 할당 정책
             value={String(formState.sparse)}
-            onChange={(e) => setFormState((prev) => ({...prev, sparse: e.target.value === "true"}))}
+            onChange={(e) => {
+              const sparseValue = e.target.value === "true";
+              setFormState((prev) => ({
+                ...prev,
+                sparse: sparseValue,
+                backup: sparseValue ? prev.backup : false, // sparse 끄면 backup도 false로 넘어감
+              }));
+            }}
             disabled={editMode}
             options={sparseList}
           />
-          <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE}
+          <LabelSelectOptionsID label={Localization.kr.DISK_PROFILE} 
             value={diskProfileVo.id}
             loading={isDiskProfilesLoading}
             options={diskProfiles}
@@ -313,6 +320,7 @@ const DiskModal = ({
             <LabelCheckbox label="증분 백업 사용"
               id="backup"
               checked={formState.backup}
+              disabled={!formState.sparse} // 사전할당일 때 비활성화
               onChange={handleInputCheck(setFormState, "backup", validationToast)}
             />
           </div>

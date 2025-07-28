@@ -33,7 +33,8 @@
 .disk-item span{
   margin-right: 25px;
   max-width: 352px;
-  white-space: nowrap;       
+  white-space: nowrap;
+  padding: 2px 0;       
   overflow: hidden;          
   text-overflow: ellipsis;  
 }

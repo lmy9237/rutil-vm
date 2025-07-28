@@ -72,7 +72,7 @@ const TemplateInfo = () => {
   const sectionHeaderButtons = useMemo(() => [
     { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE,  },
     { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE,  },
-    { type: "addVm",  onClick: () => setActiveModal("vm:create"),       label: `새 ${Localization.kr.VM}`, },
+    { type: "addVm",  onClick: () => setActiveModal("vm:create"), label: `새 ${Localization.kr.VM}`, disabled: true},
   ], [])
 
   const handleTabClick = useCallback((tab) => {

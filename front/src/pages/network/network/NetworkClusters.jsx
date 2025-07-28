@@ -87,6 +87,7 @@ const NetworkClusters = ({
           <ActionButton actionType="default"
             label={`${Localization.kr.NETWORK} 관리`}
             onClick={() => setActiveModal("network:manage")}
+            disabled
           />
         </div>
       </div>

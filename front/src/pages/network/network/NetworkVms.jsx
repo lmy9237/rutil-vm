@@ -85,12 +85,12 @@ const NetworkVms = ({
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <FilterButtons options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNics} />
-        <div className="header-right-btns">
+        {/* <div className="header-right-btns">
           <ActionButton label={Localization.kr.REMOVE}
             onClick={() => setActiveModal(null)}
             disabled={activeFilter !== "stopped" || !vmsSelected.length} 
           />
-        </div>
+        </div> */}
       </div>
 
       <TablesOuter target={"vm"}

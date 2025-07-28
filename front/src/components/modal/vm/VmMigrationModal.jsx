@@ -25,83 +25,85 @@ const VmMigrationModal = ({
   const clusterVo = vmsSelected[0]?.clusterVo;
 
   const [selectedModalTab, setSelectedModalTab] = useState("vm");
-  // const tabs = useMemo(() => {
-  //   const baseTabs = [
-  //     {
-  //       id: "vm",
-  //       label: (
-  //         <>
-  //           <input type="radio" id="vm" name="migrate"
-  //             checked={selectedModalTab === "vm"}
-  //             onChange={() => setSelectedModalTab("vm")}
-  //           />
-  //           <label htmlFor="vm">&nbsp;{Localization.kr.VM}</label>
-  //         </>
-  //       ),
-  //       onClick: () => setSelectedModalTab("vm")
-  //     }
-  //   ];
-
-  //   if (vmsSelected.length === 1) {
-  //     baseTabs.push(
-  //       {
-  //         id: "disk",
-  //         label: (
-  //           <>
-  //             <input type="radio" id="disk" name="migrate"
-  //               checked={selectedModalTab === "disk"}
-  //               onChange={() => setSelectedModalTab("disk")}
-  //             />
-  //             <label htmlFor="disk">&nbsp;{Localization.kr.DISK}</label>
-  //           </>
-  //         ),
-  //         onClick: () => setSelectedModalTab("disk")
-  //       },
-  //       // {
-  //       //   id: "all",
-  //       //   label: (
-  //       //     <>
-  //       //       <input type="radio" id="vmdisk" name="migrate"
-  //       //         checked={selectedModalTab === "all"}
-  //       //         onChange={() => setSelectedModalTab("all")}
-  //       //       />
-  //       //       <label htmlFor="vmdisk">{Localization.kr.VM} / {Localization.kr.DISK}</label>
-  //       //     </>
-  //       //   ),
-  //       //   onClick: () => setSelectedModalTab("all")
-  //       // }
-  //     );
-  //   }
-
-  //   return baseTabs;
-  // }, [vmsSelected, selectedModalTab]);
-
   const tabs = useMemo(() => {
     const baseTabs = [
       {
         id: "vm",
-        label: Localization.kr.VM,
-        onClick: () => setSelectedModalTab("vm"),
-      },
+        label: (
+          <>
+            <input type="radio" id="vm" name="migrate"
+              checked={selectedModalTab === "vm"}
+              className="mr-2"
+              onChange={() => setSelectedModalTab("vm")}
+            />
+            <label htmlFor="vm">&nbsp;{Localization.kr.VM}</label>
+          </>
+        ),
+        onClick: () => setSelectedModalTab("vm")
+      }
     ];
 
     if (vmsSelected.length === 1) {
-      baseTabs.push({
-        id: "disk",
-        label: Localization.kr.DISK,
-        onClick: () => setSelectedModalTab("disk"),
-      });
-
-    
-      // baseTabs.push({
-      //   id: "all",
-      //   label: `${Localization.kr.VM} / ${Localization.kr.DISK}`,
-      //   onClick: () => setSelectedModalTab("all"),
-      // });
+      baseTabs.push(
+        {
+          id: "disk",
+          label: (
+            <>
+              <input type="radio" id="disk" name="migrate"
+                checked={selectedModalTab === "disk"}
+                className="mr-2"
+                onChange={() => setSelectedModalTab("disk")}
+              />
+              <label htmlFor="disk">&nbsp;{Localization.kr.DISK}</label>
+            </>
+          ),
+          onClick: () => setSelectedModalTab("disk")
+        },
+        // {
+        //   id: "all",
+        //   label: (
+        //     <>
+        //       <input type="radio" id="vmdisk" name="migrate"
+        //         checked={selectedModalTab === "all"}
+        //         onChange={() => setSelectedModalTab("all")}
+        //       />
+        //       <label htmlFor="vmdisk">{Localization.kr.VM} / {Localization.kr.DISK}</label>
+        //     </>
+        //   ),
+        //   onClick: () => setSelectedModalTab("all")
+        // }
+      );
     }
 
     return baseTabs;
-  }, [vmsSelected]);
+  }, [vmsSelected, selectedModalTab]);
+
+  // const tabs = useMemo(() => {
+  //   const baseTabs = [
+  //     {
+  //       id: "vm",
+  //       label: Localization.kr.VM,
+  //       onClick: () => setSelectedModalTab("vm"),
+  //     },
+  //   ];
+
+  //   if (vmsSelected.length === 1) {
+  //     baseTabs.push({
+  //       id: "disk",
+  //       label: Localization.kr.DISK,
+  //       onClick: () => setSelectedModalTab("disk"),
+  //     });
+
+    
+  //     // baseTabs.push({
+  //     //   id: "all",
+  //     //   label: `${Localization.kr.VM} / ${Localization.kr.DISK}`,
+  //     //   onClick: () => setSelectedModalTab("all"),
+  //     // });
+  //   }
+
+  //   return baseTabs;
+  // }, [vmsSelected]);
 
 
   const {

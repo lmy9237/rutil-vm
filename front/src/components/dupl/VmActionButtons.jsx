@@ -115,10 +115,10 @@ const VmActionButtons = ({
 
   const manageActions = [
     { type: "import",     onClick: () => setActiveModal("vm:copy"),           label: Localization.kr.IMPORT, },
-    { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,  disabled:true   }, //   disabled: vmsSelected.length !== 1 || allPause 
-    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,       disabled: vmsSelected.length !== 1 || !isUp },
-    { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,             disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm  },
-    //{ type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
+    { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,    disabled:true   }, //   disabled: vmsSelected.length !== 1 || allPause 
+    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,   disabled: vmsSelected.length !== 1 || !isUp },
+    { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,         disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm  },
+    //{ type: "templates",  onClick: () => {},                                label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
     { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || !isDown },
     { type: "ova",        onClick: () => {},                                  label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length === 0 || isPause },
   ];

@@ -24,7 +24,7 @@ const TemplateActionButtons = ({
   const basicActions = [
     { type: "update", onClick: () => setActiveModal("template:update"), label: Localization.kr.UPDATE, disabled: templatesSelected.length !== 1, },
     { type: "remove", onClick: () => setActiveModal("template:remove"), label: Localization.kr.REMOVE, disabled: templatesSelected.length === 0 || hasDefaultTemplate, },
-    { type: "addVm",  onClick: () => setActiveModal("vm:create"),       label: `새 ${Localization.kr.VM}`,disabled: templatesSelected.length  !== 1, },
+    { type: "addVm",  onClick: () => setActiveModal("vm:create"),       label: `새 ${Localization.kr.VM}`, disabled: true},//disabled: templatesSelected.length  !== 1,
   ];
 
   return (

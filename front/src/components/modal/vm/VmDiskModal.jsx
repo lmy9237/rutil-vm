@@ -174,6 +174,7 @@ const VmDiskModal = ({
           description: formState.description,
           wipeAfterDelete: formState.wipeAfterDelete,
           backup: formState.backup,
+          //backup: formState.sparse ? formState.backup : false, 
           sparse: formState.sparse,
           storageDomainVo: { id: selectedDomain?.id },
           diskProfileVo: { id: selectedDiskProfile?.id },
@@ -264,7 +265,15 @@ const VmDiskModal = ({
           value={String(formState.sparse)} 
           disabled={editMode} 
           options={sparseList} 
-          onChange={(e) => setFormState((prev) => ({ ...prev, sparse: e.target.value === "true" }))} 
+          onChange={(e) => {
+            const sparseValue = e.target.value === "true";
+            setFormState((prev) => ({
+              ...prev,
+              sparse: sparseValue,
+              backup: sparseValue ? prev.backup : false, 
+            }));
+          }}
+          // onChange={(e) => setFormState((prev) => ({ ...prev, sparse: e.target.value === "true" }))} 
         />
         <div className="img-checkbox-outer f-end checkbox-outer">
           <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE} 
@@ -288,6 +297,7 @@ const VmDiskModal = ({
           />
           <LabelCheckbox id="backup" label="증분 백업 사용" 
             checked={formState.backup} 
+            disabled={!formState.sparse} 
             onChange={handleInputCheck(setFormState, "backup", validationToast)} 
           />
         </div>

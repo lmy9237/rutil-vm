@@ -50,7 +50,7 @@ const VmDupl = ({
     // engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
       <>
-      {hostedEngineStatus2Icon(vm?.hostedEngineVm)}
+      {/* {hostedEngineStatus2Icon(vm?.hostedEngineVm)} */}
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
       </TableRowClick>

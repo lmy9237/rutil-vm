@@ -57,6 +57,7 @@ const VmHost = ({
         <div className="form-checks">
           <div className="f-start">
             <input
+              className="mr-1.5"
               type="radio"
               name="hostSelection"
               id="clusterHost"
@@ -78,7 +79,7 @@ const VmHost = ({
           <div className="select-host" >
             <div className="f-center h-4">
               <input
-                className="form-check-input"
+                className="mr-1.5"
                 type="radio"
                 name="hostSelection"
                 id="specificHost"

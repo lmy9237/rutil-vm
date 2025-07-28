@@ -108,7 +108,7 @@ const VmDisk = ({
           return (
             <div key={index} className="disk-item f-btw mb-0.5 mb-3">
               <div className="f-start">
-                <span style={{ marginRight: "25px" }}>
+                <span >
                   {disk.deleted ? (
                     <del style={{ textDecorationColor: 'red' }}>
                       <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) <strong style={{ color: 'red' }}>[삭제]</strong>

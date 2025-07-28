@@ -7,15 +7,15 @@ const DEFAULT_WIDTH_ICON_COLUMN = 50;
  */
 const TableColumnsInfo = {
   DATACENTERS: [
-    { accessor: "icon",          clickable: false,  header: Localization.kr.STATUS, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: '_name',         clickable: true,   header: Localization.kr.NAME, },
-    { accessor: 'comment',       clickable: false,  header: Localization.kr.COMMENT,  },
-    { accessor: 'storageType',   clickable: false,  header: `${Localization.kr.STORAGE} ${Localization.kr.TYPE}`, width: DEFAULT_WIDTH_ICON_COLUMN },
-    { accessor: 'status',        clickable: false,  header: Localization.kr.STATUS, },
-    { accessor: 'hostCnt',       clickable: false,  header: `${Localization.kr.HOST} ${Localization.kr.COUNT}`,     width: '7%' ,align: "center" },
-    { accessor: 'clusterCnt',    clickable: false,  header: `${Localization.kr.CLUSTER} ${Localization.kr.COUNT}`,  width: '7%' , align: "center"  },
-    { accessor: 'version',       clickable: false,  header: Localization.kr.VERSION_COMPATIBLE,                     width: '7%' , align: "center"  },
-    { accessor: 'description',   clickable: false,  header: Localization.kr.DESCRIPTION,  },
+    { accessor: "icon",            clickable: false,  header: Localization.kr.STATUS, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: '_name',           clickable: true,   header: Localization.kr.NAME, },
+    { accessor: 'comment',         clickable: false,  header: Localization.kr.COMMENT,  },
+    { accessor: '_storageType',    clickable: false,  header: `${Localization.kr.STORAGE} ${Localization.kr.TYPE}`, width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: 'statusKr',        clickable: false,  header: Localization.kr.STATUS, },
+    { accessor: 'hostCnt',         clickable: false,  header: `${Localization.kr.HOST} ${Localization.kr.COUNT}`,     width: '7%' ,align: "center" },
+    { accessor: 'clusterCnt',      clickable: false,  header: `${Localization.kr.CLUSTER} ${Localization.kr.COUNT}`,  width: '7%' , align: "center"  },
+    { accessor: 'version',         clickable: false,  header: Localization.kr.VERSION_COMPATIBLE,                     width: '7%' , align: "center"  },
+    { accessor: 'description',     clickable: false,  header: Localization.kr.DESCRIPTION,  },
   ],
   CLUSTERS_FROM_DATACENTER: [
     { accessor: '_name',         clickable: true,   header: Localization.kr.NAME,               width: 150 },
@@ -839,7 +839,7 @@ GET_IMPORT_VMS: [
     { header: Localization.kr.NAME, accessor: 'name', clickable: false }
   ],
   JOB_HISTORY_COLUMNS : [
-    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }, width: 300 },
+    { header: '작업명', accessor: '_description', style: { paddingLeft: "20px" }, width: 700 },
     { header: '세부작업', accessor: 'numSteps',align: "center", width: DEFAULT_WIDTH_ICON_COLUMN },
     { header: `${Localization.kr.START} ${Localization.kr.TIME}`,  accessor: 'startTime'},
     { header: `${Localization.kr.END} ${Localization.kr.TIME}`,  accessor: 'endTime'},

@@ -29,11 +29,11 @@ const VmSnapshotActionButtons = ({
   const isPreviewLockMode = inPreview; 
 
   const basicActions = useMemo(() => ([
-    { type: "create",   onClick: () => setActiveModal("vmsnapshot:create"),  label: Localization.kr.CREATE,  disabled: isPreviewLockMode || hasLocked || ( isContextMenu && snapshotsSelected.length > 0 ), },
-    { type: "preview",  onClick: () => setActiveModal("vmsnapshot:preview"), label: Localization.kr.PREVIEW, disabled: isPreviewLockMode  || isVmRunning || hasLocked || inPreview || snapshotsSelected.length === 0, },
-    { type: "commit",   onClick: () => setActiveModal("vmsnapshot:commit"),  label: Localization.kr.COMMIT,  disabled:!isPreviewLockMode  || isVmRunning || hasLocked || snapshotsSelected.length === 0, },
-    { type: "undo",     onClick: () => setActiveModal("vmsnapshot:undo"),    label: Localization.kr.UNDO,    disabled:!isPreviewLockMode  || isVmRunning || hasLocked || snapshotsSelected.length === 0, },
-    { type: "remove",   onClick: () => setActiveModal("vmsnapshot:remove"),  label: Localization.kr.REMOVE,  disabled: isPreviewLockMode  || isVmRunning || hasLocked || inPreview || vmsSelected.length === 0 || snapshotsSelected.length === 0, },
+    { type: "create",   onClick: () => setActiveModal("vmsnapshot:create"),  label: Localization.kr.CREATE,  disabled: isPreviewLockMode || isVmPause || hasLocked || ( isContextMenu && snapshotsSelected.length > 0 ), },
+    { type: "preview",  onClick: () => setActiveModal("vmsnapshot:preview"), label: Localization.kr.PREVIEW, disabled: isPreviewLockMode  || isVmRunning || isVmPause || hasLocked || inPreview || snapshotsSelected.length === 0, },
+    { type: "commit",   onClick: () => setActiveModal("vmsnapshot:commit"),  label: Localization.kr.COMMIT,  disabled:!isPreviewLockMode  || isVmRunning || isVmPause || hasLocked || snapshotsSelected.length === 0, },
+    { type: "undo",     onClick: () => setActiveModal("vmsnapshot:undo"),    label: Localization.kr.UNDO,    disabled:!isPreviewLockMode  || isVmRunning || isVmPause || hasLocked || snapshotsSelected.length === 0, },
+    { type: "remove",   onClick: () => setActiveModal("vmsnapshot:remove"),  label: Localization.kr.REMOVE,  disabled: isPreviewLockMode  || isVmPause || hasLocked || inPreview || vmsSelected.length === 0 || snapshotsSelected.length === 0, },
   ]), [isPreviewLockMode, hasLocked, snapshotsSelected,vmsSelected,isVmUp,isVmPause,isContextMenu,]);
 
   return (
