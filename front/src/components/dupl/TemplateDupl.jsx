@@ -60,7 +60,6 @@ const TemplateDupl = ({
         columns={columns}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

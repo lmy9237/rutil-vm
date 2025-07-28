@@ -359,12 +359,6 @@ const DiskModal = ({
                 </select>
               </div>
             </div>
-            <div className="disk-new-img-right f-end">
-              <div>
-                <input type="checkbox" className="shareable" />
-                <label htmlFor="shareable">{Localization.kr.IS_SHARABLE}</label>
-              </div>
-            </div>
           </div>
         </div>
       )} */}

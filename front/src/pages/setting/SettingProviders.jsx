@@ -1,15 +1,17 @@
 import React, { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
 import SelectedIdView         from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
+import TableRowClick          from "@/components/table/TableRowClick";
 import TablesOuter            from "@/components/table/TablesOuter";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import { useAllProviders } from "@/api/RQHook";
-import Logger                 from "@/utils/Logger";
 import SettingProvidersActionButtons from "@/components/dupl/SettingProvidersActionButtons";
-import TableRowClick from "@/components/table/TableRowClick";
-import { useNavigate } from "react-router-dom";
+import { useAllProviders } from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name SettingProviders
@@ -45,7 +47,7 @@ const SettingProviders = () => {
     providerUrl: e?.url
   }))
 
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.PROVIDER);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   return (
     <>
@@ -57,13 +59,16 @@ const SettingProviders = () => {
         columns={TableColumnsInfo.PROVIDER}
         data={transformedData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-        multiSelect={true}
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => {setProvidersSelected(selectedRows)}}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isProvidersLoading} isRefetching={isProvidersRefetching} isError={isProvidersError} isSuccess={isProvidersSuccess}
       />
       <SelectedIdView items={providersSelected} />
+      <OVirtWebAdminHyperlink
+        name={`${Localization.kr.MANAGEMENT}>${Localization.kr.PROVIDER}`}
+        path={`providers`}
+      />
     </>
   );
 };

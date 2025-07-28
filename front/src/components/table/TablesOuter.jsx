@@ -1,5 +1,7 @@
-import Tables from "@/components/table/Tables";
-import useSearch from "@/hooks/useSearch"; // ✅ 검색 기능 추가
+import useSearch              from "@/hooks/useSearch";
+import useTabFilter           from "@/hooks/useTabFilter";
+import Tables                 from "@/components/table/Tables";
+import Logger                 from "@/utils/Logger";
 import "./Table.css";
 
 /**
@@ -10,29 +12,32 @@ import "./Table.css";
  * @returns {JSX.Element} 테이블+ 컴포넌트
  */
 const TablesOuter = ({
-  target,
+  target, columns = [], data = [],
+  filterAccessor="",
+  /*
+  searchQuery, setSearchQuery,
+  */
   isRefetching, isLoading, isError, isSuccess,
-  columns = [],
-  data = [],
-  showSearchBox = false,
   shouldHighlight1stCol = false,
   onRowClick,
   clickableColumnIndex,
   onClickableColumnClick,
 }) => {
-  const {
-    searchQuery, setSearchQuery, filteredData
-  } = useSearch(data, columns); // ✅ 검색 기능 추가
+  const { 
+    searchQuery, setSearchQuery, 
+    filterType, setFilterType,
+    filteredData
+  } = useSearch(data, filterAccessor);
 
-  // Logger.debug(`넘어오는 데이터: ${filteredData.length}개`);
   return (
     <>
       <div className="section-table-outer w-full">
-        <Tables target={target}
-          columns={columns}
+        <Tables target={target} 
+          columns={columns} 
           data={filteredData} // ✅ 검색 필터링된 데이터 전달
+          filterType={filterType} setFilterType={setFilterType}
+          /* filters={filters} filterAccessor={filterAccessor} filterSelected={filterSelected}*/
           searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-          showSearchBox={showSearchBox}
           onRowClick={onRowClick}
           clickableColumnIndex={clickableColumnIndex}
           shouldHighlight1stCol={shouldHighlight1stCol}

@@ -1,18 +1,21 @@
 import React, { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import useSearch               from "@/hooks/useSearch";
-import Loading                 from "@/components/common/Loading";
-import SelectedIdView          from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
-import { ActionButton }        from "@/components/button/ActionButtons";
-import SearchBox               from "@/components/button/SearchBox";
-import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
-import TablesOuter             from "@/components/table/TablesOuter";
-import TableRowClick           from "@/components/table/TableRowClick";
-import NetworkClusterModal     from "@/components/modal/network/NetworkClusterModal";
-import { clusterStatus2Icon, rvi16TriangleUp, status2Icon }  from "@/components/icons/RutilVmIcons";
+import useUIState                      from "@/hooks/useUIState";
+import useGlobal                       from "@/hooks/useGlobal";
+import useSearch                       from "@/hooks/useSearch";
+import { Checkbox }                    from "@/components/ui/checkbox"; 
+import Loading                         from "@/components/common/Loading";
+import SelectedIdView                  from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink          from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }                from "@/components/button/ActionButtons";
+import SearchBox                       from "@/components/button/SearchBox";
+import TableColumnsInfo                from "@/components/table/TableColumnsInfo";
+import TablesOuter                     from "@/components/table/TablesOuter";
+import TableRowClick                   from "@/components/table/TableRowClick";
+import NetworkClusterModal             from "@/components/modal/network/NetworkClusterModal";
+import { 
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
 import {
   useAllClustersFromNetwork
 } from "@/api/RQHook";
@@ -53,28 +56,30 @@ const NetworkClusters = ({
         {network?.clusterVo?.name}
       </TableRowClick>
     ),
-    //TODO: 연결
-    connect: network?.connected ? (
-      <input type="checkbox" checked disabled />
-    ) : (
-      <input type="checkbox" disabled />
-    ),
     status: status2Icon(network?.status),
-    required: network?.required ? (
-      <input type="checkbox" checked disabled />
+    _connected: network?.connected ? (
+      <Checkbox checked disabled />
     ) : (
-      <input type="checkbox" disabled />
+      <Checkbox disabled />
     ),
-    // networkRole: [
-    //   cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
-    //   cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
-    //   cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
-    //   cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
-    //   cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
-    // ].filter(Boolean).join(" / "),
+    _required: network?.required ? (
+      <Checkbox checked disabled />
+    ) : (
+      <Checkbox disabled />
+    ),
+    networkRole: network?.usage?.roleInKr,
+    /* 
+    networkRole: [
+      cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
+      cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
+      cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
+      cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
+      cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
+    ].filter(Boolean).join(" / "), 
+    */
   }));
   
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.CLUSTERS_FRON_NETWORK);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   const handleNameClick = useCallback((id) => {
     navigate(`/networks/${id}`);
   }, [navigate])
@@ -92,11 +97,10 @@ const NetworkClusters = ({
         </div>
       </div>
       <TablesOuter target={"cluster"}
-        columns={TableColumnsInfo.CLUSTERS_FRON_NETWORK}    
+        columns={TableColumnsInfo.CLUSTERS_FROM_NETWORK}    
         data={filteredData}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setClustersSelected(selectedRows)}
-        multiSelect={false}
         // TODO: 처리방식 변경
         onContextMenuItems={(row) => [
           <div className="right-click-menu-box">

@@ -44,7 +44,7 @@ const SettingUsers = () => {
     _isDisabled: e?.disabled ? 'DISABLED' : 'AVAILABLE',
   }))
 
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, TableColumnsInfo.SETTING_USER);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = useCallback((id) => {
     navigate(`/networks/${id}`);
@@ -59,9 +59,7 @@ const SettingUsers = () => {
       <TablesOuter target={"user"}
         columns={TableColumnsInfo.SETTING_USER}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => { setUsersSelected(selectedRows) } }
         onClickableColumnClick={(row) => handleNameClick(row.id)}

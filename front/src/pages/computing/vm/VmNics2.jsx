@@ -136,7 +136,6 @@ const VmNics2 = ({
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
-        multiSelect={true}
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         isLoading={isVmNicsLoading} isRefetching={isVmNicsRefetching} isError={isVmNicsError} isSuccess={isVmNicsSuccess}
       />

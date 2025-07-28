@@ -906,7 +906,7 @@ const ApiManager = {
    */
   findAllEventsFromHost: async (hostId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_EVENTS_FROM_HOST(hostId), 
+    url: ENDPOINTS.FIND_ALL_EVENTS_FROM_HOST(hostId), 
     // defaultValues: DEFAULT_VALUES.FIND_EVNET_FROM_HOST
   }),
 

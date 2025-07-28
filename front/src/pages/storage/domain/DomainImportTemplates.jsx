@@ -85,7 +85,6 @@ const DomainImportTemplates = ({
         data={filteredData}
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}

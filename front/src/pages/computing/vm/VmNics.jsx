@@ -155,7 +155,7 @@
 //                   style={{ display: (nicsSelected[0]?.id === nic.id) ? "flex" : "none" }}
 //                 >
 //                   <div className="network-content-detail-box">
-//                     <span className="fs-14 fw-700">일반</span>
+//                     <span className="fs-14 fw-700">{Localization.kr.GENERAL}</span>
 //                     <TablesRow
 //                       columns={TableColumnsInfo.NICS_FROM_VM} 
 //                       data={nic} 

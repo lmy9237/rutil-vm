@@ -96,6 +96,7 @@ export const Localization = {
     PREALLOCATED: "사전 할당",
 
     GENERAL: "일반",
+    USAGE: "용량 및 사용량",
     MANAGEMENT: "관리",
     TARGET: "대상",
     SYSTEM: "시스템",

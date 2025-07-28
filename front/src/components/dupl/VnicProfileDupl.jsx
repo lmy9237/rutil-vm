@@ -71,7 +71,6 @@ const VnicProfileDupl = ({
         data={filteredData} 
         searchQuery={searchQuery} 
         setSearchQuery={setSearchQuery} 
-        multiSelect={true}
         onRowClick={(selectedRows) => {
           setVnicProfilesSelected(selectedRows)
           setDatacentersSelected([...selectedRows].map((r) => ({

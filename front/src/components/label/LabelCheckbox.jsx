@@ -1,4 +1,5 @@
-
+import { Checkbox }           from "@/components/ui/checkbox"
+import { Label }              from "@/components/ui/label";
 /**
  * @name LabelCheckbox
  * @description 레이블 체크박스
@@ -14,26 +15,29 @@
  * @returns {JSX.Element} LabelInput
  */
 const LabelCheckbox = ({
-  className="",
   label,
-  id,
-  autoFocus = false,
+  autoFocus=false,
   checked,
   onChange,
   disabled,
   required,
+  ...props
 }) => (
-  <div className={`input-checkbox f-start ${className}`}>
-    <input
-      id={id}
-      type="checkbox"
+  <div className={`input-checkbox f-start gap-4 ${props.className || ''}`}>
+    <Checkbox variant="default" id={props.id}
       checked={checked}
-      onChange={onChange}
+      onCheckedChange={onChange}      
       disabled={disabled}
       required={required}
       autoFocus={autoFocus}
     />
-    <label htmlFor={id}>{label}</label>
+    {/* <input id={props.id} type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      disabled={disabled}
+      required={required}
+      autoFocus={autoFocus} /> */}
+    <Label htmlFor={props.id} className="ml-auto">{label}</Label>
   </div>
 );
 

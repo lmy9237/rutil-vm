@@ -34,9 +34,7 @@ const SettingProvidersToken = () => {
         target="vm"
         columns={TableColumnsInfo.SETTING_PROVIDER_TOKEN}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         isLoading={false}

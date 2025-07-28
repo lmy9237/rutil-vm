@@ -2,18 +2,18 @@ import React, { useState, useEffect, Suspense, useCallback, useMemo } from "reac
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
-import SectionLayout from "../../../components/SectionLayout";
-import TabNavButtonGroup from "../../../components/common/TabNavButtonGroup";
-import HeaderButton from "../../../components/button/HeaderButton";
-import Path from "../../../components/Header/Path";
-import DataCenterClusters from "./DataCenterClusters";
-import DataCenterHosts from "./DataCenterHosts";
-import DataCenterVms from "./DataCenterVms";
-import DataCenterDomains from "./DataCenterDomains";
-import DataCenterNetworks from "./DataCenterNetworks";
-import DataCenterEvents from "./DataCenterEvents";
-import DataCenterGeneral from "./DataCenterGeneral";
-import { rvi24Datacenter } from "../../../components/icons/RutilVmIcons";
+import { rvi24Datacenter }    from "@/components/icons/RutilVmIcons";
+import SectionLayout          from "@/components/SectionLayout";
+import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
+import HeaderButton           from "@/components/button/HeaderButton";
+import Path                   from "@/components/Header/Path";
+import DataCenterClusters     from "./DataCenterClusters";
+import DataCenterHosts        from "./DataCenterHosts";
+import DataCenterVms          from "./DataCenterVms";
+import DataCenterDomains      from "./DataCenterDomains";
+import DataCenterNetworks     from "./DataCenterNetworks";
+import DataCenterEvents       from "./DataCenterEvents";
+import DataCenterGeneral      from "./DataCenterGeneral";
 import {
   useDataCenter
 } from "@/api/RQHook";

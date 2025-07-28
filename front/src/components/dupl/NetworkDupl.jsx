@@ -60,7 +60,7 @@ const NetworkDupl = ({
   }));
 
   // ✅ 검색 기능 적용
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = useCallback((id) => {
     navigate(`/networks/${id}`);
@@ -76,7 +76,6 @@ const NetworkDupl = ({
         columns={columns}
         data={filteredData} 
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true} 
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => setNetworksSelected(selectedRows)} 
         onClickableColumnClick={(row) => handleNameClick(row.id)}

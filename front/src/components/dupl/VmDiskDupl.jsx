@@ -93,9 +93,7 @@ const VmDiskDupl = ({
       <TablesOuter target={"vmdisk"}
         columns={columns}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery} 
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         onRowClick={(selectedRows) => {
           setDisksSelected(selectedRows)
         }}

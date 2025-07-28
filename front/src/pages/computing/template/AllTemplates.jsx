@@ -34,8 +34,6 @@ const AllTemplates = () => {
       <div className="section-content v-start gap-8 w-full">
         <TemplateDupl columns={TableColumnsInfo.TEMPLATES}
           templates={templates}
-          showSearchBox={true}
-          refetch={refetchTemplates} isRefetching={isTemplatesRefetching}
           isLoading={isTemplatesLoading} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
         />
       </div>

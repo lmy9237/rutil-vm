@@ -62,9 +62,7 @@ const DomainDiskSnapshots = ({
       <TablesOuter target={"disksnapshot"}
         columns={TableColumnsInfo.DISK_SNAPSHOT_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setSnapshotsSelected(selectedRows)}
         isLoading={isDiskSnapshotsLoading} isRefetching={isDiskSnapshotsRefetching} isError={isDiskSnapshotsError} isSuccess={isDiskSnapshotsSuccess}
       />

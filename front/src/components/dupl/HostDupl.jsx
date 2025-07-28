@@ -69,7 +69,6 @@ const HostDupl = ({
         columns={columns}
         data={filteredData} 
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0 || activeModal().includes("vm:migration")) return
           setHostsSelected(selectedRows)

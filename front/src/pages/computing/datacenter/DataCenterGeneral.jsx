@@ -1,5 +1,10 @@
 import React, { useMemo } from "react";
-import useGlobal from "@/hooks/useGlobal";
+import useGlobal              from "@/hooks/useGlobal";
+import GeneralLayout          from "@/components/GeneralLayout";
+import GeneralBoxProps        from "@/components/common/GeneralBoxProps";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }          from "@/components/table/InfoTable";
+import GeneralBarChart        from "@/components/Chart/GeneralBarChart";
 import { 
   useAllDomainsFromDataCenter, 
   useAllNetworksFromDataCenter, 
@@ -9,12 +14,7 @@ import {
   useUsageDataCenter, 
   useVMsFromDataCenter 
 } from "@/api/RQHook";
-import { InfoTable } from "@/components/table/InfoTable";
-import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import GeneralLayout from "@/components/GeneralLayout";
-
-import Localization from "@/utils/Localization";
-import GeneralBarChart from "@/components/Chart/GeneralBarChart";
+import Localization           from "@/utils/Localization";
 
 /**
  * @name DataCenterGeneral
@@ -73,23 +73,30 @@ const usageItems = useMemo(() => {
   ];
 }, [datacenterId, usage]);
 
-  return (
+  return (<>
     <GeneralLayout
       top={
         <>
           <div className="grid-col-span-2 vm-box-default box-content">
-            <h3 className="box-title">일반</h3>
+            <h3 className="box-title">{Localization.kr.GENERAL}</h3>
             <hr className="w-full" />
             <InfoTable tableRows={tableRows} />
           </div>
-          <GeneralBoxProps title="용량 및 사용량" isLoading={isUsageLoading} isSuccess={isUsageSuccess}>
+          <GeneralBoxProps title={Localization.kr.USAGE}
+            isLoading={isUsageLoading} 
+            isSuccess={isUsageSuccess}
+          >
             <GeneralBarChart items={usageItems} />
           </GeneralBoxProps>
         </>
       }
       bottom={<></>}
     />
-  );
+    <OVirtWebAdminHyperlink
+      name={`${Localization.kr.GENERAL}>${Localization.kr.DATA_CENTER}`}
+      path={`dataCenters-storage;`}
+    />
+  </>);
 };
 
 export default DataCenterGeneral;

@@ -12,7 +12,6 @@ import com.itinfo.rutilvm.api.ovirt.business.LogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.MigrateOnErrorB
 import com.itinfo.rutilvm.api.ovirt.business.MigrationBandwidthLimitType
 import com.itinfo.rutilvm.api.ovirt.business.SwitchTypeB
-import com.itinfo.rutilvm.api.ovirt.business.VdsStatus
 import com.itinfo.rutilvm.api.ovirt.business.findMigrationBandwidthLimitType
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatable
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
@@ -25,7 +24,6 @@ import com.itinfo.rutilvm.api.ovirt.business.toFirewallTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toLogMaxMemoryUsedThresholdTypeB
 import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnError
 import com.itinfo.rutilvm.api.ovirt.business.toMigrateOnErrorB
-import com.itinfo.rutilvm.api.ovirt.business.toMigrationBandwidthLimitType
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.builders.ClusterBuilder
@@ -293,8 +291,8 @@ fun Cluster.toNetworkClusterVo(conn: Connection, networkId: String): ClusterVo{
 		networkVo { network?.toClusterNetworkMenu() }
 	}
 }
-fun Collection<Cluster>.toNetworkClusterVos(conn: Connection, networkId: String): List<ClusterVo> =
-	this@toNetworkClusterVos.map { it.toNetworkClusterVo(conn, networkId) }
+fun Collection<Cluster>.toClusterVos4Network(conn: Connection, networkId: String): List<ClusterVo> =
+	this@toClusterVos4Network.map { it.toNetworkClusterVo(conn, networkId) }
 
 
 // 클러스터가 가진 데이터센터를 구하기(데이터센터가 없는경우도 있긴함)

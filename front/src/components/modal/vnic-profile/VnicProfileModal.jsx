@@ -10,15 +10,14 @@ import {
   handleSelectIdChange,
 } from "@/components/label/HandleInput";
 import {
-  qpAllNetworksFromDataCenter,
   useAddVnicProfile,
   useAllDataCenters,
   useAllVmsFromVnicProfiles,
   useAllVnicProfiles,
   useEditVnicProfile,
   useAllNetworkFilters,
-  useVnicProfile,
   useAllNetworksFromDataCenter,
+  useVnicProfile,
 } from "@/api/RQHook";
 import { 
   checkDuplicateName, 
@@ -44,7 +43,10 @@ const VnicProfileModal = ({
   editMode = false,
 }) => {
   const { validationToast } = useValidationToast();
-  const vLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
+  const vLabel = editMode 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
+    
   const {
     networksSelected, vnicProfilesSelected, datacentersSelected 
   } = useGlobal();  

@@ -49,7 +49,7 @@ class DataCenterVo (
 	val versionMajor: Int = 0,
 	val versionMinor: Int = 0,
 	val quotaMode: QuotaEnforcementType? = QuotaEnforcementType.disabled,
-	val status: StoragePoolStatus? = StoragePoolStatus.not_operational,
+	val status: StoragePoolStatus? = StoragePoolStatus.non_responsive,
 	val domainStatus: StorageDomainStatusB? = StorageDomainStatusB.uninitialized,
 	val clusterCnt: Int = 0,
 	val hostCnt: Int = 0,
@@ -57,6 +57,19 @@ class DataCenterVo (
 	val networkVos: List<IdentifiedVo> = listOf(),
 	val storageDomainVos: List<StorageDomainVo> = listOf(),
 ): Serializable {
+	val statusCode: String				get() = status?.code ?: StoragePoolStatus.non_responsive.code
+	val statusEn: String				get() = status?.en ?: "N/A"
+	val statusKr: String				get() = status?.kr ?: "알 수 없음"
+	val quotaModeCode: String			get() = quotaMode?.code ?: QuotaEnforcementType.disabled.code
+	val quotaModeEn: String				get() = quotaMode?.en ?: "N/A"
+	val quotaModeKr: String				get() = quotaMode?.kr ?: "알 수 없음"
+	val domainStatusCode: String		get() = domainStatus?.code ?: StorageDomainStatusB.unknown.code
+	/*
+	// TODO: Localization 처리
+	val domainStatusEn: String			get() = domainStatus?.en ?: "N/A"
+	val domainStatusKr: String			get() = domainStatus?.kr ?: "알 수 없음"
+	*/
+
 	override fun toString(): String =
 		gson.toJson(this)
 

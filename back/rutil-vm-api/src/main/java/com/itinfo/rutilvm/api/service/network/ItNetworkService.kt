@@ -133,7 +133,7 @@ interface ItNetworkService {
 	 * @return List<[ClusterVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllClustersFromNetwork(networkId: String): List<NetworkVo>?
+	fun findAllClustersFromNetwork(networkId: String): List<NetworkVo>
 	/**
 	 * [ItNetworkService.findConnectedHostsFromNetwork]
 	 * 네트워크 호스트 연결 목록
@@ -326,14 +326,21 @@ class NetworkServiceImpl(
 
 
 	@Throws(Error::class)
-	override fun findAllClustersFromNetwork(networkId: String): List<NetworkVo>? {
+	override fun findAllClustersFromNetwork(networkId: String): List<NetworkVo> {
 		log.info("findAllClustersFromNetwork ... networkId: {}", networkId)
-		// val network = checkNetwork(networkId)
-		// val dcId = network.dataCenter().id()
-		// val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks").getOrDefault(emptyList())
-		// return res.toNetworkClusterVos(conn, networkId)
+		/*
+		val network = checkNetwork(networkId)
+		val dcId = network.dataCenter().id()
+		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks")
+			.getOrDefault(emptyList())
+		return res.toClusterVos4Network(conn, networkId)
+		*/
 		val res: List<NetworkClusterViewEntity>? = rNetworkClusters.findByNetworkId(networkId.toUUID())
-		return res?.toClusterVoFromNetworkClusterViewEntities()
+		return res?.toClusterVoFromNetworkClusterViewEntities() ?: emptyList()
+		/*
+		val networksFound: List<NetworkEntity> = rNetwork.findByNetworkId(networkId.toUUID()) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		return networkFound.toNetworkVoFromNetworkEntity()
+		*/
 	}
 
 	@Throws(Error::class)

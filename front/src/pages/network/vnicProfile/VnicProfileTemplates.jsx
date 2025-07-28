@@ -60,10 +60,8 @@ const VnicProfileTemplates = ({
       <TablesOuter target={"template"}
         columns={TableColumnsInfo.TEMPLATE_FROM_VNIC_PROFILE}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
-        multiSelect={true}
         isLoading={isTemplateLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />
       <SelectedIdView items={templatesSelected} />

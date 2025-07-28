@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import useSearch              from "@/hooks/useSearch";
+import useTabFilter           from "@/hooks/useTabFilter";
 import SelectedIdView         from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
@@ -32,40 +33,40 @@ const EventDupl = ({
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
   const { eventsSelected, setEventsSelected } = useGlobal()
-  const [activeSeverityType, setActiveSeverityType] = useState("all");
-  const transformedData = [...events].filter((e) => (
-    (activeSeverityType === "all") 
-      ? true
-      : e?.severity?.toUpperCase() === activeSeverityType.toUpperCase()
-  )).map((e) => ({
+ 
+  const transformedData = [...events].map((e) => ({
     ...e,
     _severity: severity2Icon(e?.severity),
-    searchText: `${e?.id} ${e?.severity || "normal"} ${e?.logType} ${e?.description}`.toLowerCase(),
+    searchText: `[${e?.severity || "normal"}] ${e?.id} ${e?.logType} ${e?.description}`.toLowerCase(),
   }))
   
-  // ✅ 검색 기능 적용
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-
   const eventFilters = [
     { key: "all",       label: "모두", },
     { key: "alert",     label: "알림", icon: rvi16SeverityAlert() },
     { key: "error",     label: "실패", icon: rvi16SeverityError() },
     { key: "warning",   label: "경고", icon: rvi16SeverityWarning() },    
   ];
+  const {
+    searchQuery, setSearchQuery, 
+    filterType, setFilterType,
+    filteredData
+  } = useSearch(transformedData, "severity");
+  // const { filterType, setFilterType, filteredDataByTab } = useTabFilter(filteredData, "severity")
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-        <FilterButtons options={eventFilters} activeOption={activeSeverityType} onClick={setActiveSeverityType} />
+        <FilterButtons options={eventFilters} activeOption={filterType} onClick={setFilterType} />
         <EventActionButtons />
       </div>
       <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
         data={filteredData}
-        multiSelect={true}
-        searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-        /*shouldHighlight1stCol={true}*/
+        filterAccessor={"severity"}
+        /*
+        shouldHighlight1stCol={true}  
+        */
         onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}

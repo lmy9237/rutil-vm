@@ -65,7 +65,6 @@ const ClusterDupl = ({
         columns={columns}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-        multiSelect={true}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return
           setClustersSelected(selectedRows)

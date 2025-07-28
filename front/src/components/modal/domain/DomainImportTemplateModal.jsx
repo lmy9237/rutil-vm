@@ -124,7 +124,6 @@ const DomainImportTemplateModal = ({
           data={transformedData}
           shouldHighlight1stCol={true}
           // onRowClick={{  }}
-          multiSelect={true}
         /> */}
         <table>
           <thead>
@@ -192,7 +191,6 @@ const DomainImportTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
           />
         )}
         {activeFilter === "network" && (
@@ -201,7 +199,6 @@ const DomainImportTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
           />
         )}
       </div>

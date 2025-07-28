@@ -87,7 +87,6 @@ const HostNetworkAdapter = ({
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
-        multiSelect={true}
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         isLoading={isHostNicsLoading} isRefetching={isHostNicsRefetching} isError={isHostNicsError} isSuccess={isHostNicsSuccess}
       />

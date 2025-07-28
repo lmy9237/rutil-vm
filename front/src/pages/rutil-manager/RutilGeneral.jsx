@@ -94,7 +94,7 @@ const RutilGeneral = () => {
           </div>
         </div>
         <div className="vm-box-default">
-          <h3 className="box-title ">용량 및 사용량</h3>
+          <h3 className="box-title">{Localization.kr.USAGE}</h3>
           <hr className="w-full" />
           <div className="box-content">
            <VmGeneralBarChart type="rutil" items={usageItems}/>

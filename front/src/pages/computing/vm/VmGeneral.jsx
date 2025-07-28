@@ -322,7 +322,7 @@ const VmGeneral = ({
             </div>
           </div>
 
-          <GeneralBoxProps title="용량 및 사용량">
+          <GeneralBoxProps title={Localization.kr.USAGE}>
             <VmGeneralBarChart />
           </GeneralBoxProps>
         </div>
@@ -377,7 +377,8 @@ const VmGeneral = ({
             </div>
           </div>
         
-          <GeneralBoxProps title="용량 및 사용량" className="vm-bar-chart-outer">
+          <GeneralBoxProps className="vm-bar-chart-outer" 
+            title={Localization.kr.USAGE} >
             <GeneralBarChart items={usageItems} />
           </GeneralBoxProps>
        

@@ -167,7 +167,6 @@ const DomainImportVmTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{  }}
-            multiSelect={true}
           />
         ): (
           <TablesOuter
@@ -175,81 +174,8 @@ const DomainImportVmTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{  }}
-            multiSelect={true}
           />
         )}
-        {/* <table>
-          <thead>
-            <tr>
-              {isVmMode ? (
-                <>
-                
-                  <th>{Localization.kr.NAME}</th>
-                  <th>{Localization.kr.MEMORY}</th>
-                  <th>CPU</th>
-                  <th>{Localization.kr.ARCH}</th>
-                  <th>{Localization.kr.DISK}</th>
-                  <th>불량 MAC 재배치</th>
-                  <th>부분 허용</th>
-                  <th>{Localization.kr.CLUSTER}</th>
-                </>
-              ): (
-                <>
-                  <th>{Localization.kr.ALIAS}</th>
-                  <th>{Localization.kr.MEMORY}</th>
-                  <th>CPU</th>
-                  <th>{Localization.kr.ARCH}</th>
-                  <th>{Localization.kr.DISK}</th>
-                  <th>{Localization.kr.CLUSTER}</th>
-                </>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {placeholderData.map((item, index) => (
-              <tr key={index}>
-                {isVmMode ? (
-                  // 가상머신 모드
-                  <>
-                    <td>{item.alias}</td>
-                    <td>{item.memory}</td>
-                    <td>{item.cpu }</td>
-                    <td>{item.architecture}</td> 
-                    <td>{item.disk}</td>
-                    <td>
-                      <div className="flex">
-                        <input type="checkbox" />  
-                        <label>재배치</label>
-                      </div>
-                    </td>
-                    <td>
-                      <input type="checkbox" /> 
-                    </td> 
-                    <td>
-                      <select>
-                        <option value="cluster-01">Cluster-01</option>
-                      </select>
-                    </td>
-                  </>
-                ) : (
-                  <>
-                    <td>{item.alias}</td>
-                    <td>4 GB</td>
-                    <td>4</td>
-                    <td>x86_64</td>
-                    <td>디스크 개수</td>
-                    <td>
-                      <select>
-                        <option value="cluster-01">Cluster-01</option>
-                      </select>
-                    </td>
-                  </>
-                )}
-              </tr>
-            ))}
-        </tbody>
-        </table> */}
-
       </div>
       <br/>
       <div className="filter-table">
@@ -276,7 +202,6 @@ const DomainImportVmTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
           />
         )}
         {activeFilter === "network" && (
@@ -285,7 +210,6 @@ const DomainImportVmTemplateModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
           />
         )}
       </div>

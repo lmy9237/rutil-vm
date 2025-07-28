@@ -34,7 +34,6 @@ const AllVm = () => {
       <div className="section-content v-start gap-8 w-full">
         <VmDupl columns={TableColumnsInfo.VMS}
           vms={vms}
-          showSearchBox={true}
           refetch={refetchVms} isRefetching={isVmsRefetching}
           isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
         />

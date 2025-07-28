@@ -75,7 +75,6 @@ const DomainImportDisks = ({
       <TablesOuter target={"disk"}
         columns={TableColumnsInfo.GET_DISKS}
         data={filteredData}
-        multiSelect={true}
         onRowClick={(selectedRows) => setDisksSelected(selectedRows)}
         shouldHighlight1stCol={true}
         isLoading={isDisksLoading} isRefetching={isDisksRefetching} isError={isDisksError} isSuccess={isDisksSuccess}

@@ -45,7 +45,6 @@ const HostDevices = ({
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
-        multiSelect={true}
         onRowClick={(selectedRows) => setHostDevicesSelected(selectedRows)}
         isLoading={isHostDevicesLoading} isRefetching={isHostDevicesRefetching} isError={isHostDevicesError} isSuccess={isHostDevicesSuccess}
       />

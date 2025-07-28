@@ -72,7 +72,6 @@ const DomainDatacenters = ({
         columns={TableColumnsInfo.DATACENTERS_FROM_STORAGE_DOMAIN}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return;
           setDatacentersSelected(selectedRows)

@@ -48,7 +48,7 @@ const DataCenterDupl = ({
     };
   });
   
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData, columns);
+  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   const handleNameClick = useCallback((id) => {
     navigate(`/computing/datacenters/${id}/clusters`);
@@ -64,7 +64,6 @@ const DataCenterDupl = ({
         columns={columns}
         data={filteredData} 
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         onRowClick={(selectedRows) => setDatacentersSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}

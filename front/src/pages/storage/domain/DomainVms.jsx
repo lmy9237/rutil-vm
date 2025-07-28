@@ -85,9 +85,7 @@ const DomainVms = ({ domainId }) => {
       <TablesOuter target={"vm"} 
         columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => {setVmsSelected(selectedRows)}}
         refetch={refetchVms} isRefetching={isVmsRefetching}
         isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}

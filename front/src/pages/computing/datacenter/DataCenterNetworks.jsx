@@ -1,10 +1,13 @@
 import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import NetworkDupl from "../../../components/dupl/NetworkDupl";
-import { qpAllNetworksFromDataCenter } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal              from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
+import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import NetworkDupl            from "@/components/dupl/NetworkDupl";
+import {
+  useAllNetworksFromDataCenter
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name DataCenterNetworks
@@ -25,7 +28,7 @@ const DataCenterNetworks = ({
     isSuccess: isNetworksSuccess,
     refetch: refetchNetworks,
     isRefetching: isNetworksRefetching,
-  } = qpAllNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
+  } = useAllNetworksFromDataCenter(datacenterId, (e) => ({ ...e }));
 
   return (
     <>

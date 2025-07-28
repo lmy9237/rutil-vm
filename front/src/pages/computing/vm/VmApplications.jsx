@@ -51,7 +51,6 @@ const VmApplications = ({
         columns={TableColumnsInfo.APPLICATIONS_FROM_VM}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         onRowClick={(selectedRows) => setApplicationsSelected(selectedRows)}
         /* onClickableColumnClick={(row) => handleNameClick(row.id)} */
         isLoading={isApplicationsLoading} isRefetching={isApplicationsRefetching} isError={isApplicationsError} isSuccess={isApplicationsSuccess}

@@ -87,7 +87,6 @@ const NetworkTemplates = ({
         columns={TableColumnsInfo.TEMPLATES_FROM_NETWORK}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setNicsSelected(selectedRows)}
         isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}

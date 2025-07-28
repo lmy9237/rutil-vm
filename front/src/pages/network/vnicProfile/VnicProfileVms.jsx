@@ -57,10 +57,8 @@ const VnicProfileVms = ({
       </div>
       <TablesOuter target={"vm"}
         columns={TableColumnsInfo.VMS_FROM_VNIC_PROFILE}
-        data={filteredData} // ✅ 검색 필터링된 데이터 사용
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        data={filteredData}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         shouldHighlight1stCol={true}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}

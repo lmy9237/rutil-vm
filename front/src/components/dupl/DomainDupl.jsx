@@ -92,7 +92,6 @@ DomainDupl = ({
       <TablesOuter target={sourceContext === "all" ? "domain" : "domaindatacenter"}
         columns={columns}
         data={filteredData} // ✅ 검색 필터링된 데이터 전달
-        multiSelect={true}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

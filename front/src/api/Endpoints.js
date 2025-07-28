@@ -96,7 +96,7 @@ const ENDPOINTS = {
   SYNCALL_NETWORKS_FROM_HOST: (hostId) =>                                  `${ENDPOINT_API_V1}/computing/hosts/${hostId}/syncallNetworks`, 
 
   FIND_HOSTDEVICES_FROM_HOST:(hostId) =>                                   `${ENDPOINT_API_V1}/computing/hosts/${hostId}/devices`, 
-  FIND_EVENTS_FROM_HOST:(hostId) =>                                        `${ENDPOINT_API_V1}/computing/hosts/${hostId}/events`, 
+  FIND_ALL_EVENTS_FROM_HOST:(hostId) =>                                        `${ENDPOINT_API_V1}/computing/hosts/${hostId}/events`, 
 
   FIND_STORAGES_FROM_HOST: (hostId) =>                                     `${ENDPOINT_API_V1}/computing/hosts/${hostId}/storages`,
   FIND_FIBRES_FROM_HOST: (hostId) =>                                       `${ENDPOINT_API_V1}/computing/hosts/${hostId}/fibres`,

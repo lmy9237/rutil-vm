@@ -72,7 +72,6 @@ const TemplateNics = ({
         columns={TableColumnsInfo.NICS_FROM_TEMPLATE}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return;

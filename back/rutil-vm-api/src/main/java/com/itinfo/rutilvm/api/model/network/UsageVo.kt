@@ -36,7 +36,7 @@ class UsageVo (
 		if (migration == true) "마이그레이션" else "",
 		if (gluster == true) "글러스터" else "",
 		if (defaultRoute == true) "기본라우팅" else "",
-	)
+	).filterNot { it.isEmpty() }
 
 	private val rolesEn: List<String>			get() = listOf(
 		if (management == true) "Management" else "",
@@ -44,7 +44,7 @@ class UsageVo (
 		if (migration == true) "Migration" else "",
 		if (gluster == true) "Gluster" else "",
 		if (defaultRoute == true) "Default Route" else "",
-	)
+	).filterNot { it.isEmpty() }
 
 	val roleInKr: String				get() = rolesKr.joinToString(" / ")
 	val roleInEn: String				get() = rolesEn.joinToString(" / ")

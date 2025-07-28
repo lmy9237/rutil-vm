@@ -30,11 +30,12 @@ import contextActionButtonMap from "@/context/contextActionButtonMap";
  */
 const Tables = ({
   target = "datacenter", columns = [], data = [],
+  filterType, setFilterType,
+  /* filters = [], filterAccessor="", filterSelected="", */
+  isRefetching=null, isLoading=null, isError=false, isSuccess,
   onRowClick = () => {},
   clickableColumnIndex = [],
   onClickableColumnClick = () => {},
-  isRefetching=null,
-  isLoading=null, isError=false, isSuccess,
   searchQuery="", setSearchQuery=()=>{},
 }) => {
   const {
@@ -154,6 +155,18 @@ const Tables = ({
         )
       );
     }
+
+    /*
+    if ([...filters].length > 0 && 
+      filterAccessor != "" && 
+      filterSelected != "" && filterSelected != "all"
+    ) {
+      setCurrentPage(1);
+      filteredData = [...filteredData].filter((row) => {
+        return row[filterAccessor] === filterSelected
+      })
+    }
+    */
   
     // 🔁 정렬 적용 (icon 포함)
     if (sortConfig.key) {
@@ -185,7 +198,6 @@ const Tables = ({
     }
   
     setSortedData(filteredData);
-    setCurrentPage(1);
   }, [data, searchQuery, sortConfig]);
   
 
@@ -284,6 +296,11 @@ const Tables = ({
       setSortedData(data);
     }
   }, [data, sortConfig]);
+
+  useEffect(() => {
+    Logger.debug(`PagingTable > useEffect ... setting currentPage 1 ... filterType: ${filterType}`);
+    setCurrentPage(1);
+  }, [data, filterType, setFilterType])
 
   // th드레그
   const [columnWidths, setColumnWidths] = useState({});

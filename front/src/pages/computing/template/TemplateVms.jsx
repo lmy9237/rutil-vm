@@ -62,7 +62,6 @@ const TemplateVms = ({
         columns={TableColumnsInfo.VMS_FROM_TEMPLATE}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}

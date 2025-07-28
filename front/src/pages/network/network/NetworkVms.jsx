@@ -51,7 +51,7 @@ const NetworkVms = ({
     ? [...vms].filter((nic) => nic?.vmVo?.status === "up")
     : [...vms].filter((nic) => nic?.vmVo?.status !== "up");
 
-  const transformedFilteredData = [...filteredVms].map((nic) => {
+  const transformedData = [...vms].map((nic) => {
     const vm = nic?.vmVo;
     return {
       ...nic,
@@ -73,19 +73,24 @@ const NetworkVms = ({
     };
   });
 
-  const statusFilters = [
-    { key: "running", label: "실행중" },
-    { key: "stopped", label: "정지중" },
+  const vmStatusFilters = [
+    { key: "up", label: "실행중", icon: status2Icon("up") },
+    { key: "down", label: "정지중", icon: status2Icon("down") },
   ];
-
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedFilteredData);
+  const {
+    searchQuery, setSearchQuery, 
+    filterType, setFilterType,
+    filteredData
+  } = useSearch(transformedData, "vmVo.status", "up");
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <FilterButtons options={statusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNics} />
-        {/* <div className="header-right-btns">
+        <FilterButtons options={vmStatusFilters} activeOption={filterType} onClick={setFilterType} />
+        {/* 
+        <FilterButtons options={vmStatusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+        <div className="header-right-btns">
           <ActionButton label={Localization.kr.REMOVE}
             onClick={() => setActiveModal(null)}
             disabled={activeFilter !== "stopped" || !vmsSelected.length} 

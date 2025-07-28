@@ -65,9 +65,8 @@ const DiskVms = ({
       </div>
       <TablesOuter target={"vm"}
         columns={TableColumnsInfo.VMS_FROM_DISK}
-        data={filteredData} // ✅ 검색 필터링된 데이터 사용
+        data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}

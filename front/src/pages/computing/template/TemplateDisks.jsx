@@ -74,7 +74,6 @@ const TemplateDisks = ({
         columns={TableColumnsInfo.DISKS_FROM_TEMPLATE}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(rows) => setDisksSelected(rows)}
         isLoading={isDisksLoading} isRefetching={isDisksRefetching} isError={isDisksError} isSuccess={isDisksSuccess}

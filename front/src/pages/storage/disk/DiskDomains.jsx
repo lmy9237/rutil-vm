@@ -74,9 +74,7 @@ const DiskDomains = ({
       <TablesOuter target={"domain"}
         columns={TableColumnsInfo.STORAGE_DOMAINS_FROM_DISK}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setDomainsSelected(selectedRows)}
         shouldHighlight1stCol={true}
         isLoading={isDomainsLoading} isRefetching={isDomainsRefetching} isError={isDomainsError} isSuccess={isDomainsSuccess}

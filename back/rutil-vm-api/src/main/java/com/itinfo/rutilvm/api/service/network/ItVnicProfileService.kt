@@ -110,11 +110,14 @@ class VnicProfileServiceImpl(
     @Throws(Error::class)
     override fun findAllFromNetwork(networkId: String): List<VnicProfileVo> {
         log.info("findAllFromNetwork ... networkId: {}", networkId)
+		/*
 		val vnicProfilesFound: List<VnicProfileEntity> = rVnicProfiles.findByNetworkId(networkId.toUUID())
 		return vnicProfilesFound.toVnicProfileVosFromVnicProfileEntities()
-        /*val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId, follow = "network.datacenter")
+		TODO: 한 클러스터 내 2개의 네트워크가 있을 때 생기는 쿼리오류문제 해소 (network_cluster -> usageVo)
+		*/
+        val res: List<VnicProfile> = conn.findAllVnicProfilesFromNetwork(networkId, follow = "network.datacenter")
 			.getOrDefault(emptyList())
-        return res.toVnicProfileMenus(conn)*/
+        return res.toVnicProfileMenus(conn)
     }
 
     @Throws(Error::class)

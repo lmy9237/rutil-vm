@@ -1,14 +1,18 @@
-import BaseModal from "../BaseModal";
-import TablesOuter from '../../table/TablesOuter';
-import TableColumnsInfo from '../../table/TableColumnsInfo';
-import { useAllClustersFromNetwork } from '../../../api/RQHook';
+import { Checkbox }                    from "@/components/ui/checkbox"; 
+import BaseModal                       from "../BaseModal";
+import TablesOuter                     from "@/components/table/TablesOuter";
+import TableColumnsInfo                from "@/components/table/TableColumnsInfo";
 import {
-  clusterStatus2Icon, 
   RVI16,
+  clusterStatus2Icon, 
   rvi16Install,
   rvi16VirtualMachine
-} from "../../icons/RutilVmIcons";
-import Localization from "../../../utils/Localization";
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllClustersFromNetwork
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const NetworkClusterModal = ({ 
   isOpen,
@@ -25,25 +29,24 @@ const NetworkClusterModal = ({
   } = useAllClustersFromNetwork(networkId);
 
   // 데이터 변환
-  const transformedData = [...clusters].map((c) => ({
-    name: c?.name,
-    connect: <input type="checkbox" checked={c?.connected} disabled />,
-    status: clusterStatus2Icon(c?.networkVo?.status, c?.connected),
-    required: <input type="checkbox" checked={c?.networkVo?.required} disabled />,
-    allAssigned: <input type="checkbox" checked={c?.connected} disabled />,
-    allRequired: <input type="checkbox" checked={c?.networkVo?.required} disabled />,
-    vmNetMgmt: c?.networkVo?.usage?.vm ? <RVI16 iconDef={rvi16VirtualMachine()} /> : null,
-    networkOutput: <input type="checkbox" checked={c?.networkVo?.usage?.display} disabled />,
-    migrationNetwork: <input type="checkbox" checked={c?.networkVo?.usage?.migration} disabled />,
-    glusterNetwork: <input type="checkbox" checked={c?.networkVo?.usage?.gluster} disabled />,
-    defaultRouting: <input type="checkbox" checked={c?.networkVo?.usage?.defaultRoute} disabled />,
+  const transformedData = [...clusters].map((n) => ({
+    ...n,
+    name: (n?.clusterVo?.name || n?.name),
+    status: clusterStatus2Icon(n?.status, n?.clusterVo?.connected || false),
+    allAssigned: <Checkbox checked={n?.clusterVo?.connected || false} disabled />,
+    allRequired: <Checkbox checked={n?.required} disabled />,
+    vmNetMgmt: n?.usage?.vm ? <RVI16 iconDef={rvi16VirtualMachine()} /> : null,
+    networkOutput: <Checkbox checked={n?.usage?.display} disabled />,
+    migrationNetwork: <Checkbox checked={n?.usage?.migration} disabled />,
+    glusterNetwork: <Checkbox checked={n?.usage?.gluster} disabled />,
+    defaultRouting: <Checkbox checked={n?.usage?.defaultRoute} disabled />,
     networkRole: [
-      c?.networkVo?.usage?.management && '관리',
-      c?.networkVo?.usage?.display && '출력',
-      c?.networkVo?.usage?.migration && Localization.kr.MIGRATION,
-      c?.networkVo?.usage?.gluster && '글러스터',
-      c?.networkVo?.usage?.defaultRoute && '기본라우팅',
-    ].filter(Boolean).join('/'),
+      n?.usage?.management && '관리',
+      n?.usage?.display && '출력',
+      n?.usage?.migration && Localization.kr.MIGRATION,
+      n?.usage?.gluster && '글러스터',
+      n?.usage?.defaultRoute && '기본라우팅',
+     ].filter(Boolean).join('/'),
   }));
   
 

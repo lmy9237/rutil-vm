@@ -143,7 +143,6 @@ const NetworkHosts = ({
         }
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         shouldHighlight1stCol={true}
         onRowClick={(row) => setHostsSelected(row)}
         isRefetching={activeFilter === "connected" ? isConnectedHostsRefetching : isDisconnectedHostsRefetching}

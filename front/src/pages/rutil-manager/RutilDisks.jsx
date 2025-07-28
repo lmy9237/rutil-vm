@@ -26,7 +26,7 @@ const RutilDisks = () => {
   
   useEffect(() => {
     return () => {
-      Logger.debug("Disks > useEffect ... CLEANING UP");
+      Logger.debug("RutilDisks > useEffect ... CLEANING UP");
       setDisksSelected([])
     }
   }, []);

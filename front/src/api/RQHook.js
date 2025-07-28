@@ -118,8 +118,8 @@ const QK = {
   ALL_EVENTS: "allEvents",
   EVENTS_FROM_DATA_CENTER: "eventsFromDataCenter",
   EVENTS_FROM_CLUSTER: "eventsFromCluster",
-  EVENTS_FROM_HOST: "eventsFromHost",
-  EVENTS_FROM_VM: "eventsFromVM",
+  ALL_EVENTS_FROM_HOST: "eventsFromHost",
+  EVENTS_FROM_VM: "allEventsFromVM",
   EVENTS_FROM_DOMAIN: "eventsFromDomain",
   EVENTS_FROM_TEMPLATE: "eventsFromTemplate",
   ALL_EVENTS_NORMAL: "allEventsNormal",
@@ -6393,6 +6393,7 @@ export const useAllEvents = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   ...QP_DEFAULT,
+  refetchInterval: DEFAULT_CACHE_TIME,
   queryKey: [QK.ALL_EVENTS, page],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents(page, size, minSeverity, startDate)
@@ -6479,7 +6480,7 @@ export const useAllEventsFromHost = ({
   mapPredicate = (e) => ({ ...e })
 }) => useQuery({
   ...QP_DEFAULT,
-  queryKey: [QK.EVENTS_FROM_HOST, hostId],
+  queryKey: [QK.ALL_EVENTS_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({ page, size, hostId });
     const _res = mapPredicate

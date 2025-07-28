@@ -42,7 +42,7 @@ const NetworkGeneral = ({
       top={
       <>
       <div className="grid-col-span-2 vm-box-default box-content">
-        <h3 className="box-title">일반</h3>
+        <h3 className="box-title">{Localization.kr.GENERAL}</h3>
         <hr className="w-full" />
         <InfoTable tableRows={tableRows}/>
       </div>

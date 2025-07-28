@@ -13,12 +13,12 @@ import "./FilterButtons.css";
  * @returns {JSX.Element} FilterButtons
  */
 const FilterButtons = ({
-  options,
+  options=[],
   activeOption,
   onClick=()=>{},
 }) => (
   <div className="host-filter-btns f-start">
-    {options.map(({ key, label, icon=null, }) => (
+    {[...options].map(({ key, label, icon=null, }) => (
       <FilterButton key={key} icon={icon}
         onClick={() => onClick(key)}
         label={label}

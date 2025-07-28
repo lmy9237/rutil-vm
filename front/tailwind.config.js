@@ -15,6 +15,7 @@ module.exports = {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+				hover: 'hsl(var(--hover))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -25,6 +26,7 @@ module.exports = {
   			},
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
+					inactive: 'hsl(var(--primary-inactive))',
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			secondary: {

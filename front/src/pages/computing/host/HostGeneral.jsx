@@ -118,10 +118,10 @@ const HostGeneral = ({
           <GeneralBoxProps title="시스템 정보">
             <InfoTable tableRows={systemTableRows} />
           </GeneralBoxProps>
-          <GeneralBoxProps title="하드웨어">
+          <GeneralBoxProps title={Localization.kr.HARDWARE}>
             <InfoTable tableRows={hardwareTableRows} />
           </GeneralBoxProps>
-          <GeneralBoxProps title="용량 및 사용량">
+          <GeneralBoxProps title={Localization.kr.USAGE}>
             <VmGeneralBarChart items={usageItems} />
           </GeneralBoxProps>
         </>
@@ -131,7 +131,7 @@ const HostGeneral = ({
           <div className="grid-col-span-2">
             <HostGeneralChart per={hostPer}/>
           </div>
-          <GeneralBoxProps title="소프트웨어">
+          <GeneralBoxProps title={Localization.kr.SOFTWARE}>
             <InfoTable tableRows={softwareTableRows} />
           </GeneralBoxProps>
         </>

@@ -236,7 +236,6 @@ const DomainImportVmModal = ({
           shouldHighlight1stCol={true}
           isSuccess={true}
           onRowClick={(selectedRows) => setSelectedVmId(selectedRows[0].id)}
-          multiSelect={false}
         />
       </div>
       <br/>
@@ -270,7 +269,6 @@ const DomainImportVmModal = ({
             isSuccess={true}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
           />
         )}
 
@@ -280,8 +278,6 @@ const DomainImportVmModal = ({
             data={mapNics(selectedVm?.nicVos || [])}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
-            isSuccess={true}
           />
         )}
         
@@ -291,7 +287,6 @@ const DomainImportVmModal = ({
             data={[]}
             shouldHighlight1stCol={true}
             onRowClick={{ console }}
-            multiSelect={true}
             isSuccess={true}
           />
         )}

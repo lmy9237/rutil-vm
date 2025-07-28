@@ -72,9 +72,7 @@ const DomainTemplates = ({
       <TablesOuter target={"template"} 
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}
         data={filteredData}
-        searchQuery={searchQuery} 
-        setSearchQuery={setSearchQuery}
-        multiSelect={true}
+        searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setTemplatesSelected(selectedRows)}
         isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} isError={isTemplatesError} isSuccess={isTemplatesSuccess}
       />

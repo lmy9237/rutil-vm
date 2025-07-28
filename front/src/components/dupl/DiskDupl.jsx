@@ -48,7 +48,6 @@ const DiskDupl = ({
     name: e?.kr
   }))
 
-  const [selectedContentType, setSelectedContentType] = useState("__all__");
 
   // 데이터 변환: 검색이 가능하도록 `searchText` 추가
   const transformedData = [...disks].map((d) => {
@@ -85,13 +84,18 @@ const DiskDupl = ({
   });
 
   // 검색 기능 적용
-  const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  
-  // selectoption
+  /* const [selectedContentType, setSelectedContentType] = useState("__all__");
   const contentTypeFilteredData = useMemo(() => {
     if (selectedContentType === "__all__") return filteredData;
     return filteredData.filter(disk => String(disk?.contentType) === selectedContentType);
-  }, [filteredData, selectedContentType]);
+  }, [filteredData, selectedContentType]); 
+  */
+
+  const {
+    searchQuery, setSearchQuery, 
+    filterType, setFilterType,
+    filteredData
+  } = useSearch(transformedData, "contentType");
 
   const handleNameClick = useCallback((id) => {
     navigate(`/storages/disks/${id}`)
@@ -110,15 +114,15 @@ const DiskDupl = ({
           <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
             <div className="h-full">
             <Select
-              value={selectedContentType}
-              onValueChange={setSelectedContentType}
+              value={filterType}
+              onValueChange={setFilterType}
               position="popper"
             >
               <SelectTrigger className="disk-select-box f-btw w-full text-left h-[28px]">
                 <SelectValue placeholder="디스크 유형 필터" />
               </SelectTrigger>
               <SelectContent className="z-[9999]">
-                <SelectItem className="select-item-custom" value="__all__">전체</SelectItem>
+                <SelectItem className="select-item-custom" value="all">전체</SelectItem>
                 {diskContentTypes.map(opt => (
                   <SelectItem key={opt.id} value={opt.id}>
                     {opt.name}
@@ -134,10 +138,8 @@ const DiskDupl = ({
         />
       </div>
       <TablesOuter target={"disk"} columns={columns}
-        data={contentTypeFilteredData}
-        // data={contentTypeFilteredData}
+        data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        multiSelect={true}
         /*shouldHighlight1stCol={true}*/
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return

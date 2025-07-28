@@ -1,23 +1,53 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name useSearch
  * @description 모든 데이터에서 검색 가능 (한글 포함, 공백 포함 검색 가능)
  *
  * @param {Array} data - 검색할 데이터 배열
+ * @param {string} filterAccessor (탭이 존재했을 때) 데이터에서 확인 할 key값
  * @returns {Object} { searchQuery, setSearchQuery, filteredData }
  */
 const useSearch = (
-  data = []
+  data = [],
+  filterAccessor="",
+  filterTypeInit="all",
 ) => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState(filterTypeInit)
+  const [shouldRefreshPage, setShouldRefreshPage] = useState(false);
+
+  useEffect(() => {
+    Logger.debug(`useSearch > useEffect ...`)
+    // 탭 변경 될 떄 마다 페이지 1로 전환하도록
+    setShouldRefreshPage(true)
+  }, [filterType, setFilterType])
 
   const filteredData = useMemo(() => {
-    if (!searchQuery.trim()) return data;
+    // if (!searchQuery.trim()) return data;
+    const _accessors = !filterAccessor.trim() 
+      ? []
+      : filterAccessor.split(".")
 
+    const filteredDataByTab = _accessors.length === 0
+      ? [...data]
+      : [...data].filter((e) => {
+        let filterValueFound = e[_accessors[0]]
+        switch (_accessors.length) {
+        case 2: filterValueFound = e[_accessors[0]][_accessors[1]];break;
+        case 3: filterValueFound = e[_accessors[0]][_accessors[1]][_accessors[2]];break;
+        default: break;
+        }
+        return (filterType === "all")
+          ? true
+          : filterValueFound.toLowerCase() === filterType.toLowerCase()
+      })
+
+    if (!searchQuery.trim()) return filteredDataByTab;
     const normalizedSearchQuery = searchQuery.toLowerCase();
 
-    return data.filter((row) => {
+    return [...filteredDataByTab].filter((row) => {
       return Object.values(row).some((value) => {
         if (value === null || value === undefined) return false;
 
@@ -39,9 +69,14 @@ const useSearch = (
         return stringValue.includes(normalizedSearchQuery);
       });
     });
-  }, [data, searchQuery]);
+  }, [data, searchQuery, setSearchQuery, filterType, setFilterType]);
 
-  return { searchQuery, setSearchQuery, filteredData };
+  return {
+    searchQuery, setSearchQuery, 
+    filterType, setFilterType,
+    shouldRefreshPage, setShouldRefreshPage,
+    filteredData
+  };
 };
 
 export default useSearch;

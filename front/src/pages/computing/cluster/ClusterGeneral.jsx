@@ -80,11 +80,11 @@ const ClusterGeneral = ({
         top={
           <>
             <div className="grid-col-span-2 vm-box-default box-content">
-              <h3 className="box-title">일반</h3>
+              <h3 className="box-title">{Localization.kr.GENERAL}</h3>
               <hr className="w-full" />
               <InfoTable tableRows={tableRows} />
             </div>
-            <GeneralBoxProps title="용량 및 사용량">
+            <GeneralBoxProps title={Localization.kr.USAGE}>
               <GeneralBarChart items={usageItems} />
             </GeneralBoxProps>
           </>
