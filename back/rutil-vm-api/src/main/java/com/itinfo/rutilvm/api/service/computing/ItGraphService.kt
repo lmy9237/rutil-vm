@@ -110,6 +110,15 @@ interface ItGraphService {
 	fun hostHourlyUsageLineData(hostId: String): List<UsageDto>
 
 	/**
+	 * [ItGraphService.vm3MinUsageLineData]
+	 * 가상머신 한개의 cpu, memory, network 사용량
+	 * 3분 별로 출력
+	 * 선그래프
+	 * @return List<[UsageDto]>
+	 */
+	fun vm3MinUsageLineData(vmId: String): List<UsageDto>
+
+	/**
 	 * [ItGraphService.vmCpuMetricData]
 	 * 전체 가상머신 cpu 사용량
 	 * 매트릭
@@ -241,6 +250,12 @@ class GraphServiceImpl(
 	override fun hostHourlyUsageLineData(hostId: String): List<UsageDto> {
 		log.info("hostHourlyUsageLineData ... hostId: {}", hostId)
 		val rawResult: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageWithNetwork(hostId.toUUID())
+		return rawResult.toUsageDtoList()
+	}
+
+	override fun vm3MinUsageLineData(vmId: String): List<UsageDto> {
+		log.info("vm3MinUsageLineData ... vmId: {}", vmId)
+		val rawResult: List<Array<Any>> = vmSamplesHistoryRepository.findVmUsageWithNetwork(vmId.toUUID())
 		return rawResult.toUsageDtoList()
 	}
 

@@ -157,28 +157,16 @@ const ApiManager = {
     url: ENDPOINTS.GET_PER_HOST(hostId),
   }),
   /**
-   * @name ApiManager.getVmCpu
-   * @description vmCpu 불러오는 값
+   * @name ApiManager.getVm
+   * @description vm cpu,memory 평균값 불러오는 값
    * 
    * @returns 
    * 
    * @see Dashboard.js (components)
    */
-  getVmCpu: async () => makeAPICall({
+  getVm: async (vmId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.GET_VM_CPU(),
-  }),
-  /**
-   * @name ApiManager.getVmMemory
-   * @description vmMemory 불러오는 값
-   * 
-   * @returns 
-   * 
-   * @see Dashboard.js (components)
-   */
-  getVmMemory: async () => makeAPICall({
-    method: "GET", 
-    url: ENDPOINTS.GET_VM_MEMORY()
+    url: ENDPOINTS.GET_PER_VM(vmId),
   }),
   /**
    * @name ApiManager.getStorageMemory

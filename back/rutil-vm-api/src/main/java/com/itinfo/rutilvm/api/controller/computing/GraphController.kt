@@ -192,37 +192,25 @@ class GraphController {
 		return ResponseEntity.ok(graph.hostUsageLineData())
 	}
 
-	/*@ApiOperation(
+	@ApiOperation(
 		httpMethod="GET",
-		value="VM cpu Per 그래프",
-		notes="VM의 cpu Per 그래프"
+		value="VM Per 그래프",
+		notes="VM 의 Per 그래프"
 	)
 	@ApiResponses(
 		ApiResponse(code = 200, message = "OK")
 	)
-	@GetMapping("/vmCpuPerList")
+	@GetMapping("/vms/{vmId}/usage")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun vmCpuPerChart(): ResponseEntity<List<LineDto>> {
-		log.info("----- vmCpuPerChart")
-		return ResponseEntity.ok(graph.vmCpuPerChart())
-	}*/
-
-	/*@ApiOperation(
-		httpMethod="GET",
-		value="VM memory Per 그래프",
-		notes="VM의 memory Per 그래프"
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/vmMemoryPerList")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun vmMemoryPerChart(): ResponseEntity<List<LineDto>> {
-		log.info("----- vmMemoryPerChart")
-		return ResponseEntity.ok(graph.vmMemoryPerChart())
-	}*/
+	fun vmPerChart(
+		@PathVariable vmId: String? = null
+	): ResponseEntity<List<UsageDto>> {
+		log.info("/dashboard/vms/{}/usage ... ", vmId)
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		return ResponseEntity.ok(graph.vm3MinUsageLineData(vmId))
+	}
 
 	@ApiOperation(
 		httpMethod="GET",

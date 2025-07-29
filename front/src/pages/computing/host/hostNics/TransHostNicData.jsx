@@ -145,7 +145,13 @@ export function getBondModalStateForEdit(bond) {
   return {
     name: bond.name,
     optionVos: bond.bondingVo?.optionVos ?? [],
-    editTarget: bond
+    editTarget: {
+      ...bond,
+      bondingVo: {
+        ...bond.bondingVo,
+        slaveVos: bond.bondingVo?.slaveVos ?? []
+      }
+    }
   };
 }
 

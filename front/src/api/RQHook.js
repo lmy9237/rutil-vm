@@ -1,6 +1,5 @@
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import useTmi                        from "@/hooks/useTmi";
 import { useApiToast }               from "@/hooks/useSimpleToast";
 import useAuth                       from "@/hooks/useAuth";
 import useUIState                    from "@/hooks/useUIState";
@@ -26,6 +25,7 @@ const QK = {
   DASHBOARD_HOST: "dashboardHost",
   DASHBOARD_VM_CPU: "dashboardVmCpu",
   DASHBOARD_VM_MEMORY: "dashboardVmMemory",
+  DASHBOARD_VM: "dashboardVm",
   DASHBOARD_STORAGE_MEMORY: "dashboardStorageMemory",
   DASHBOARD_PER_VM_CPU: "dashboardPerVmCpu",
   DASHBOARD_DATA_CENTER: "dashboardDataCenter",
@@ -339,6 +339,23 @@ export const useDashboardVmMemory = (
   },
 });
 
+export const useDashboardVm = (
+  vmId,
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
+  queryKey: [QK.DASHBOARD_VM],
+  queryFn: async () => {
+    const res = await ApiManager.getVm(vmId)
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
+    Logger.debug(`RQHook > useDashboardVm ... vmId: ${vmId}, res: `, _res);
+    return _res;
+  },
+});
+
+
 export const useDashboardStorageMemory = (
   mapPredicate = (e) => ({ ...e }),
 ) => useQuery({
@@ -355,36 +372,36 @@ export const useDashboardStorageMemory = (
   },
 });
 
-// export const useDashboardPerVmCpu = (
-//   mapPredicate = (e) => ({ ...e }),
-// ) => useQuery({
-//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-//   queryKey: [QK.DASHBOARD_PER_VM_CPU],
-//   queryFn: async () => {
-//     const res = await ApiManager.getPerVmCpu()
-//     const _res = mapPredicate
-//       ? validateAPI(res)?.map(mapPredicate) ?? []
-//       : validateAPI(res) ?? []
-//     Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
-//     return _res
-//   },
-// });
+export const useDashboardPerVmCpu = (
+  mapPredicate = (e) => ({ ...e }),
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: [QK.DASHBOARD_PER_VM_CPU],
+  queryFn: async () => {
+    const res = await ApiManager.getPerVmCpu()
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
+    Logger.debug(`RQHook > dashboardPerVmCpu ... res: `, _res);
+    return _res
+  },
+});
 
-// export const useDashboardPerVmMemory = (
-//   mapPredicate = (e) => ({ ...e })
-// ) => useQuery({
-//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-//   queryKey: ['dashboardPerVmMemory'],
-//   queryFn: async () => {
-//     const res = await ApiManager.getPerVmMemory()
-//     const _res = mapPredicate
-//       ? validateAPI(res)?.map(mapPredicate) ?? []
-//       : validateAPI(res) ?? []
-//     Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
-//     return _res
-//     // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
-//   }
-// });
+export const useDashboardPerVmMemory = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: ['dashboardPerVmMemory'],
+  queryFn: async () => {
+    const res = await ApiManager.getPerVmMemory()
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? []
+    Logger.debug(`RQHook > dashboardPerVmMemory ... res: `, _res);
+    return _res
+    // return validateAPI(res)?.map((e) => mapPredicate(e)) ?? []
+  }
+});
 // export const useDashboardPerVmNetwork = (
 //   mapPredicate = (e) => ({ ...e })
 // ) => useQuery({

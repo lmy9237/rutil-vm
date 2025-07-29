@@ -43,7 +43,7 @@ const HostGeneralChart = ({ per }) => {
           name: "네트워크",
           data: sortedData.map((item) => ({
             x: formatDate(item.time),
-            y: Math.floor(item.networkPercent),
+            y: item.networkPercent != null ? Math.floor(item.networkPercent) : 0,
           })),
         },
       ]);

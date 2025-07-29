@@ -59,12 +59,6 @@ const HostBondingModal = ({
     }
   }, [isOpen, editMode]);
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     setModeOrigin(null);
-  //   }
-  // }, [isOpen]);
-
   useEffect(() => {
     if (isOpen && editMode) {
       setBondModalState(prev => ({
@@ -89,23 +83,25 @@ const HostBondingModal = ({
       validationToast.fail(error);
       return;
     }
+    
     const currentMode = getModeValueFromOptions(bondModalState.optionVos);
+    const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
 
     if (editMode) {     
       const updatedBond = {
-        ...bondModalState.editTarget,
+        // ...bondModalState.editTarget,
+        name: bondModalState.name,
         bondingVo: {
-          ...bondModalState.editTarget.bondingVo,
-          optionVos: 
+          optionVos:
             currentMode === modeOrigin
               ? parseUserMode(bondModalState.userMode)
               : [{ name: "mode", value: currentMode }],
+          slaveVos: nicArr.map(nic => ({ name: nic.name })),
         }
       };
 
-      onBondingCreated(updatedBond, [bondModalState.editTarget]);
+      onBondingCreated(updatedBond, nicArr);
     }else {
-      const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
       Logger.debug(`HostBondingModal > handleOkClick ... nicArr: `, nicArr)
 
       const newBond = {
@@ -137,14 +133,6 @@ const HostBondingModal = ({
         onChange={handleInputChange(setBondModalState, "name", validationToast)}
         disabled={editMode}
       />
-      {import.meta.env.DEV && 
-        <>
-        <span>getModeValueFromOptions(bondModalState.optionVos) {getModeValueFromOptions(bondModalState.optionVos)}</span><br/>
-        <span>modeOrigin: {modeOrigin}</span><br/>
-        <span>defineUserMode: {defineUserMode}</span><br/>
-        <span>userMode: {bondModalState.userMode}</span>
-        </>
-      } 
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={getModeValueFromOptions(bondModalState.optionVos)}
         options={filteredOptionList}
@@ -163,6 +151,15 @@ const HostBondingModal = ({
         onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
       />
       <br/>
+      {import.meta.env.DEV && 
+        <>
+        <span>getModeValueFromOptions(bondModalState.optionVos) {getModeValueFromOptions(bondModalState.optionVos)}</span><br/>
+        <span>modeOrigin: {modeOrigin}</span><br/>
+        <span>defineUserMode: {defineUserMode}</span><br/>
+        <span>userMode: {bondModalState.userMode}</span>
+        {/* <span>userMode: {bondModalState.editTarget}</span> */}
+        </>
+      } 
     </BaseModal>
   );
 };

@@ -137,6 +137,7 @@ const HostNics = ({
     { key: 'required', label: '필수' },
     { key: 'optional', label: '필요하지 않음' }
   ];
+
   // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
   const [isBondingEditMode, setIsEditBondingMode] = useState(false); // 본딩 편집 모드
@@ -151,7 +152,7 @@ const HostNics = ({
   const [isNetworkEditPopup, setIsNetworkEditPopup] = useState(false);  // 네트워크 편집 모달 오픈
   const [networkAttachmentModalState, setNetworkAttachmentModalState] = useState({
     id: "",
-    inSync: false,
+    // inSync: false,
     // hostNicVo: emptyIdNameVo(),
     networkVo: emptyIdNameVo(),
     ipv4Values: { protocol: "none", address: "", gateway: "", netmask: "" },
@@ -180,7 +181,9 @@ const HostNics = ({
   // 본딩 편집 값
   const tossEditBondingData = (bond) => {
     setSelectedNic(bond);
-    setBondModalState(getBondModalStateForEdit(bond));
+    setBondModalState(
+      getBondModalStateForEdit(bond)
+    );
     setIsEditBondingMode(true);
     setIsBondingPopup(true);
   };
@@ -1125,7 +1128,7 @@ const HostNics = ({
       ...transferredNetworks  
     ]);
 
-    setSelectedNic(null);
+    // setSelectedNic(null);
     setDragItemFlag(true);
     setIsBondingPopup(false);
     // toast({ description: "본딩과 함께 네트워크가 이동되었습니다." });

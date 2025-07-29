@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.repository.history.entity.VmSamplesHistoryEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import java.util.*
 
@@ -37,7 +38,7 @@ AND NOT EXISTS (
 )
 AND NOT EXISTS (
   SELECT d.vm_id, max(d.history_id) as max FROM vm_configuration d WHERE 1=1 AND d.delete_date IS NOT NULL and v.vm_id = d.vm_id GROUP BY d.vm_id
-) -- 지워진 VM은 조회대상에서 제외
+)
 ORDER BY v.cpu_usage_percent DESC
 	""", nativeQuery = true
 	)
@@ -177,5 +178,56 @@ ORDER BY memory_usage_percent DESC
 	""", nativeQuery = true
 	)
 	fun findVmMemoryMetricListChart(): List<VmSamplesHistoryEntity>
+
+
+	@Query(
+		nativeQuery = true,
+		value = """
+    WITH net_usage AS (
+        SELECT
+            sh.history_datetime,
+            AVG(COALESCE(sh.receive_rate_percent, 0) + COALESCE(sh.transmit_rate_percent, 0)) AS total_network_usage_percent
+        FROM
+            vm_interface_samples_history sh
+        JOIN
+            vm_interface_configuration cfg
+            ON sh.vm_interface_id = cfg.vm_interface_id
+        WHERE
+            cfg.vm_id = :vmId
+			AND CAST(EXTRACT(MINUTE FROM sh.history_datetime) AS INTEGER) % 60 = 0
+        GROUP BY
+            sh.history_datetime
+    ),
+    vm_usage AS (
+        SELECT
+            history_datetime,
+            cpu_usage_percent,
+            memory_usage_percent
+        FROM
+            vm_samples_history
+        WHERE
+            vm_status = 1
+            AND vm_id = :vmId
+			AND CAST(EXTRACT(MINUTE FROM history_datetime) AS INTEGER) % 3 = 0
+    )
+    SELECT
+        h.history_datetime,
+        h.cpu_usage_percent,
+        h.memory_usage_percent,
+        n.total_network_usage_percent
+    FROM
+        vm_usage h
+    LEFT JOIN
+        net_usage n
+    ON
+        h.history_datetime = n.history_datetime
+    ORDER BY
+        h.history_datetime DESC
+    LIMIT 14
+    """
+	)
+	fun findVmUsageWithNetwork(@Param("vmId") vmId: UUID): List<Array<Any>>
+
+
 
 }

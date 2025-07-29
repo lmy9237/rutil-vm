@@ -22,6 +22,8 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./Vm.css";
+import { Monitor } from "lucide-react";
+import VmMonitor from "./VmMonitor";
 
 /**
  * @name VmInfo
@@ -74,16 +76,32 @@ const VmInfo = () => {
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
   
   const [activeTab, setActiveTab] = useState("general")
-  const tabs = useMemo(() => ([
-    { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-    // { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
-    { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
-    { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
-    { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
-    { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
-    { id: "hostDevices",  label: Localization.kr.HOST_DEVICE, onClick: () => handleTabClick("hostDevices") },
-    { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
-  ]), [vmId]);
+  const tabs = useMemo(() => {
+
+    if (vm?.status === "up"){
+      return [
+        { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+        { id: "monitor",      label: "모니터",                     onClick: () => handleTabClick("monitor") },
+        { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+        { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+        { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
+        { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
+        { id: "hostDevices",  label: Localization.kr.HOST_DEVICE, onClick: () => handleTabClick("hostDevices") },
+        { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
+      ];
+    } else {
+      return [
+        { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+        // { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+        { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
+        { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+        { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
+        { id: "applications", label: Localization.kr.APPLICATION, onClick: () => handleTabClick("applications") },
+        { id: "hostDevices",  label: Localization.kr.HOST_DEVICE, onClick: () => handleTabClick("hostDevices") },
+        { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
+      ]
+    } 
+  }, [vmId, vm?.status]);
 
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}`)
@@ -103,8 +121,10 @@ const VmInfo = () => {
   // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
+    
     const SectionComponent = {
       general: VmGeneral,
+      monitor: VmMonitor,
       // nics: VmNics,
       nics: VmNics2,
       disks: VmDisks,
