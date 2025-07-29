@@ -32,7 +32,7 @@ const DomainActionButtons = ({
   const isUp = domain1st?.status?.toUpperCase() === "UP";
   const isActive = domain1st?.status?.toUpperCase() === "ACTIVE";
   const isMaintenance = domain1st?.status?.toUpperCase() === "MAINTENANCE";
-  const isLocked = domain1st?.status?.toUpperCase() === "LOCKED";
+  const isLocked = domain1st?.status?.toUpperCase() === "LOCKED"; // 잠겨있을 떄 파괴는 가능
   const isUnknown = domain1st?.status?.toUpperCase() === "UNKNOWN";
   const isUnattached = domain1st?.status?.toUpperCase() === "UNATTACHED";
 
@@ -40,14 +40,14 @@ const DomainActionButtons = ({
     { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },
     { type: "import",  onClick: () => setActiveModal("domain:import"),  label: Localization.kr.IMPORT,  disabled: isContextMenu },
     { type: "update",  onClick: () => setActiveModal("domain:update"),  label: Localization.kr.UPDATE,  disabled: domainsSelected.length !== 1 },
-    { type: "remove",  onClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || !isUnknown },
-    { type: "destory", onClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || !isUnattached || !isMaintenance },
+    { type: "remove",  onClick: () => setActiveModal("domain:remove"),  label: Localization.kr.REMOVE,  disabled: domainsSelected.length !== 1 || isUnknown || !(isUnattached || isMaintenance) },
+    { type: "destory", onClick: () => setActiveModal("domain:destroy"), label: Localization.kr.DESTROY, disabled: domainsSelected.length === 0 || isUnknown || !(isUnattached || isMaintenance || isLocked) },
   ];
 
   return (
     <>
       <ActionButtons actionType={actionType}
-        actions={basicActions}
+        actions={isContextMenu ? basicActions.slice(2) : basicActions}
       >
         {!isContextMenu && (
           <ActionButton label={Localization.kr.DISK} onClick={() => navigate("/storages/disks")} actionType={actionType} />

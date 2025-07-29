@@ -33,11 +33,10 @@ const DomainImportFibre = ({
 
       return {
         able: 
-          <LabelCheckbox
-            checked={id === f.id}
-            onChange={() => 
-                setId(prev => prev === f.id ? "" : f.id)
-                // setVgId(prev => prev === f?.storageVo.volumeGroupVo?.id ? "" : f?.storageVo.volumeGroupVo?.id)
+          <LabelCheckbox checked={id === f.id}
+            onChange={(checked) => 
+              setId(prev => prev === f.id ? "" : f.id)
+              // setVgId(prev => prev === f?.storageVo.volumeGroupVo?.id ? "" : f?.storageVo.volumeGroupVo?.id)
             }
           />
         ,

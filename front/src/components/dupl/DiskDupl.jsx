@@ -16,7 +16,12 @@ import SearchBox                        from "@/components/button/SearchBox";
 import TablesOuter                      from "@/components/table/TablesOuter";
 import TableRowClick                    from "@/components/table/TableRowClick";
 import DiskActionButtons                from "@/components/dupl/DiskActionButtons";
-import { status2Icon }                  from "@/components/icons/RutilVmIcons";
+import { 
+  RVI16,
+  rvi16Template,
+  rvi16Desktop,
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
 import { 
   useAllDiskContentTypes
 } from "@/api/RQHook";
@@ -71,9 +76,16 @@ const DiskDupl = ({
       sparse: d?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
       storageType: d?.storageTypeKr ?? d?.storageType, 
       type: d?.type,
+      /*
       connect: [
         d?.connectVm?.name || d?.connectTemplate?.name,
-      ].filter(Boolean).join(", "),
+      ].filter(Boolean).join(", "), 
+      */
+      connect: d?.vmAttached 
+        ? <><RVI16 iconDef={rvi16Desktop()}/><p>{d?.connectVm?.name}</p></>
+        : d?.templateAttached
+          ? <><RVI16 iconDef={rvi16Template}/><p>{d?.connectTemplate?.name}</p></>
+          : <></>,
       virtualSizeToGB: checkZeroSizeToGiB(d?.virtualSize),
       actualSizeToGB: checkZeroSizeToGiB(d?.actualSize),
     };

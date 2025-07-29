@@ -35,12 +35,12 @@ const VmHa = ({
     <>
       <LabelCheckbox id="ha-mode" label={Localization.kr.HA}
         checked={formHaState.ha}
-        onChange={(e) => {
-          const isChecked = e.target.checked;
+        onChange={(checked) => {
+          // const isChecked = e.target.checked;
           setFormHaState((prev) => ({
             ...prev,
-            ha: isChecked,
-            storageDomainVo: isChecked
+            ha: checked,
+            storageDomainVo: checked
               ? (domains[0] ? { 
                 id: domains[0].id, 
                 name: domains[0].name 

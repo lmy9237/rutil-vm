@@ -5,7 +5,7 @@ import {
   useDashboardVmMemory,
   useDashboardStorageMemory,
 } from "@/api/RQHook";
-import Logger from "../utils/Logger";
+import Logger        from "@/utils/Logger";
 
 const GlobalContext = createContext();
 
@@ -216,6 +216,24 @@ export const GlobalProvider = ({ children }) => {
       _setCertsSelected([{...newV}]);
   }
 
+  const [fileUploadQueue, _setFileUploadQueue] = useState([]);
+  const newFileUploadQueue = () => {
+    _setFileUploadQueue((prev) => {
+      Logger.debug(`GlobalProvider > newFileUploadQueue ... newV: ${prev.length+1}`)
+      return [
+        ...prev, (prev.length+1)
+      ]
+    })
+  }
+  const popFileUploadQueue = () => {
+    _setFileUploadQueue((prev) => {
+      Logger.debug(`GlobalProvider > popFileUploadQueue ... newV: ${prev.length+1}`)
+      return [
+        ...prev,
+      ].slice(1)
+    })
+  }
+
   const [currentVncRfb, setCurrentVncRfb] = useState(null);
   const clearCurrentVncRfb = () => setCurrentVncRfb(null);
 
@@ -318,6 +336,7 @@ export const GlobalProvider = ({ children }) => {
       usersessionsSelected, setUsersessionsSelected,
       certsSelected, setCertsSelected,
       currentVncRfb, setCurrentVncRfb, clearCurrentVncRfb,
+      fileUploadQueue, newFileUploadQueue, popFileUploadQueue,
       top3VmsCpuUsed, /*setTop3VmsCpuUsed,*/
       top3VmsMemUsed, /*setTop3VmsMemUsed,*/
       top3StoragesUsed, /*setTop3StoragesUsed,*/

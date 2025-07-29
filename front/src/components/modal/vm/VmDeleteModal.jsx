@@ -120,8 +120,8 @@ const VmDeleteModal = ({
             <LabelCheckbox id={`diskDelete-${vmId}`} 
               label={`${Localization.kr.DISK} ${Localization.kr.REMOVE}`}               
               checked={detachOnlyList[vmId] || false}
-              onChange={() => handleCheckboxChange(vmId)}
               disabled={isDisabled}
+              onChange={() => handleCheckboxChange(vmId)}
             />
           </div>
         );

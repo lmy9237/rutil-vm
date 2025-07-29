@@ -3214,14 +3214,6 @@ const ApiManager = {
    * @param {FormData} diskData 
    * @returns {Promise<Object>}
    */
-  // uploadDisk: async (diskData) => {
-  //   return makeAPICall({
-  //     method: "POST",
-  //     url: ENDPOINTS.UPLOAD_DISK(),
-  //     data: diskData, 
-  //   });
-  // },
-
   uploadDisk: async (diskData, inProgress=null) => {
     const msg = `디스크 업로드 중 ...`    
     try {
@@ -3234,7 +3226,7 @@ const ApiManager = {
           onUploadProgress: (progressEvent) => {
             if (progressEvent.total) {
               const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-              if (progress > 0) inProgress && inProgress(progress)
+              if (progress > 0) inProgress && inProgress(progress, progressEvent.loaded, progressEvent.total)
             }
           },
           data: diskData
@@ -3250,6 +3242,39 @@ const ApiManager = {
       // toast.error(`Error fetching '\n${e.message}`)
     }
   },
+  /**
+   * @name ApiManager.cancelImageTransfer4Disk
+   * @description (디스크 업로드 중) 이미지 전송 취소
+   * 
+   * @param {string} diskId 디스크 ID
+   * @returns {Promise<Object>}
+   */
+  cancelImageTransfer4Disk: async (diskId) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.CANCEL_IMAGE_TRANSFER_FOR_DISK(diskId),
+  }),
+  /**
+   * @name ApiManager.pauseImageTransfer4Disk
+   * @description (디스크 업로드 중) 이미지 전송 일시정지
+   * 
+   * @param {string} diskId 디스크 ID
+   * @returns {Promise<Object>}
+   */
+  pauseImageTransfer4Disk: async (diskId) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.PAUSE_IMAGE_TRANSFER_FOR_DISK(diskId),
+  }),
+  /**
+   * @name ApiManager.resumeImageTransfer4Disk
+   * @description (디스크 업로드 중) 이미지 전송 재개
+   * 
+   * @param {string} diskId 디스크 ID
+   * @returns {Promise<Object>}
+   */
+  resumeImageTransfer4Disk: async (diskId) => makeAPICall({
+    method: "PUT", 
+    url: ENDPOINTS.RESUME_IMAGE_TRANSFER_FOR_DISK(diskId),
+  }),
   //#endregion: Disk
 
   //#region: event

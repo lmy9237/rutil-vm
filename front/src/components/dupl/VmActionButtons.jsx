@@ -70,7 +70,7 @@ const VmActionButtons = ({
     selected1st?.status?.toUpperCase() === "POWERING_UP" || 
     selected1st?.status?.toUpperCase() === "REBOOT_IN_PROGRESS"
   ) || false;
-  const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect ?? true;
+  const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect || false;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
 
   // const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
@@ -124,8 +124,8 @@ const VmActionButtons = ({
   ];
 
   const consoleActions = [
-    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "웹콘솔 (noVNC)",           disabled: !allUp }, 
-    { type: "remoteviewer",   onClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트",        disabled: !allUp },
+    { type: "novnc",          onClick: () => openNewTab("console", selected1st?.id), label: "웹콘솔 (noVNC)",          disabled: !isVmQualified4ConsoleConnect }, 
+    { type: "remoteviewer",   onClick: (e) => downloadRemoteViewerConnectionFile(e), label: "네이티브 클라이언트",        disabled: !isVmQualified4ConsoleConnect },
   ]
   
   const basicActions = [
@@ -176,7 +176,7 @@ const VmActionButtons = ({
   return (
     <ActionButtons 
       actionType={actionType}
-      actions={basicActions}
+      actions={isContextMenu ? basicActions.slice(1) : basicActions}
     >
       {isContextMenu ? (
         manageActions.map(({ type, label, disabled }) => (

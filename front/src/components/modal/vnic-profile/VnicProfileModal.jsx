@@ -209,26 +209,29 @@ const VnicProfileModal = ({
       {/* <LabelCheckbox id="passThrough" label="통과"
         checked={formState.passThrough === "ENABLED"}
         disabled={isVnicUsedByVm}
-        onChange={(e) => {
-          const isChecked = e.target.checked;
+        onChange={(checked) => {
           setFormState((prev) => ({
             ...prev,
-            passThrough: isChecked ? "ENABLED" : "DISABLED",
-            networkFilter: isChecked ? null : prev.networkFilter, // Passthrough 활성화 시 네트워크 필터 제거
-            portMirroring: isChecked ? false : prev.portMirroring, // Passthrough 활성화 시 포트 미러링 비활성화
-            migration: isChecked ? prev.migration : true,
+            passThrough: checked ? "ENABLED" : "DISABLED",
+            networkFilter: checked ? null : prev.networkFilter, // Passthrough 활성화 시 네트워크 필터 제거
+            portMirroring: checked ? false : prev.portMirroring, // Passthrough 활성화 시 포트 미러링 비활성화
+            migration: checked ? prev.migration : true,
           }));
         }}
       /> */}
-      <LabelCheckbox id="migration" 
-        label={`${Localization.kr.MIGRATION} 가능`}
+      <LabelCheckbox id="migration" label={`${Localization.kr.MIGRATION} 가능`}
         checked={formState.migration}
         disabled={true}
         // disabled={formState.passThrough === "DISABLED" || isVnicUsedByVm}
+        onChange={(checked) => {
+          setFormState((prev) => ({...prev, migration: checked }))
+        }}
+        /*
         onChange={(e) => {
           const isChecked = e.target.checked;
           setFormState((prev) => ({...prev, migration: isChecked }))
         }}
+        */
       />
       {/* 페일오버 vNIC 프로파일 */}
       {/* <div className="vnic-new-box">
@@ -250,7 +253,8 @@ const VnicProfileModal = ({
         checked={formState.portMirroring}
         disabled={vms.length > 0}
         // disabled={formState.passThrough === "ENABLED" || isVnicUsedByVm}
-        onChange={(e) => { setFormState((prev) => ({...prev, portMirroring: e.target.checked})) }}
+        onChange={(checked) => {setFormState((prev) => ({...prev, portMirroring: checked})) }}
+        // onChange={(e) => {setFormState((prev) => ({...prev, portMirroring: e.target.checked})) }}
       />
     </BaseModal>
   );

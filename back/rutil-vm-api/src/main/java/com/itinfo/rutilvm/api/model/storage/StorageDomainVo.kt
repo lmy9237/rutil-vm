@@ -1,6 +1,7 @@
 package com.itinfo.rutilvm.api.model.storage
 
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.common.TreeNavigatable
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromDiskProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
@@ -9,6 +10,7 @@ import com.itinfo.rutilvm.api.ovirt.business.StorageDomainStatusB.active
 import com.itinfo.rutilvm.api.ovirt.business.StorageDomainTypeB
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
 import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainStatusB
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainType
 import com.itinfo.rutilvm.api.ovirt.business.toStorageDomainTypeB
@@ -21,6 +23,7 @@ import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.types.DataCenter
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.StorageDomain
+import org.ovirt.engine.sdk4.types.StorageDomainStatus
 import org.ovirt.engine.sdk4.types.StorageDomainType.EXPORT
 import org.ovirt.engine.sdk4.types.StorageFormat
 import org.slf4j.LoggerFactory
@@ -56,11 +59,11 @@ private val log = LoggerFactory.getLogger(StorageDomainVo::class.java)
  * @property diskProfileVos List<[IdentifiedVo]>
  */
 class StorageDomainVo(
-	val id: String = "",
-	val name: String = "",
+	override val id: String = "",
+	override val name: String = "",
 	val description: String = "",
 	val comment: String = "",
-	val status: StorageDomainStatusB? = StorageDomainStatusB.unattached,
+	override val status: StorageDomainStatusB? = StorageDomainStatusB.unattached,
 	val storagePoolStatus: StoragePoolStatus = StoragePoolStatus.uninitialized,
 	val storageType: StorageTypeB = StorageTypeB.unknown,
 	val storageDomainType: StorageDomainTypeB = StorageDomainTypeB.unknown,
@@ -79,16 +82,12 @@ class StorageDomainVo(
 	val hostVo: IdentifiedVo = IdentifiedVo(),
 	val diskImageVos: List<IdentifiedVo> = listOf(),
 	val diskProfileVos: List<IdentifiedVo> = listOf(),
-): Serializable {
-
-	val isNotGlanceStorageType: Boolean
-		get() = this@StorageDomainVo.storageType != StorageTypeB.glance
-
-	val isValidActiveStorageDomain: Boolean
-		get() = isNotGlanceStorageType &&
-				this@StorageDomainVo.storageDomainType != StorageDomainTypeB.import_export &&
-				this@StorageDomainVo.status == active
-
+): TreeNavigatable<StorageDomainStatusB>, Serializable {
+	override val type: TreeNavigatableType?		get() = TreeNavigatableType.STORAGE_DOMAIN
+	val isNotGlanceStorageType: Boolean			get() = this@StorageDomainVo.storageType != StorageTypeB.glance
+	val isValidActiveStorageDomain: Boolean		get() = isNotGlanceStorageType &&
+														this@StorageDomainVo.storageDomainType != StorageDomainTypeB.import_export &&
+														this@StorageDomainVo.status == active
 
 	override fun toString(): String =
 		gson.toJson(this)
@@ -117,7 +116,6 @@ class StorageDomainVo(
 		private var bHostVo: IdentifiedVo = IdentifiedVo();fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
 		private var bDiskImageVos: List<IdentifiedVo> = listOf();fun diskImageVos(block: () -> List<IdentifiedVo>?) { bDiskImageVos = block() ?: listOf() }
 		private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
-
 		fun build(): StorageDomainVo = StorageDomainVo(bId, bName, bDescription, bComment, bStatus, bStoragePoolStatus, bStorageType, bStorageDomainType, bStorageFormat, bMaster, bHostedEngine, bSize, bAvailableSize, bUsedSize, bCommitedSize, bOverCommit, bWarning, bSpaceBlocker, bStorageVo, bDataCenterVo, bHostVo, bDiskImageVos, bDiskProfileVos, )
 	}
 

@@ -11,7 +11,8 @@ import DiskGeneral            from "./DiskGeneral";
 import DiskVms                from "./DiskVms";
 import DiskDomains            from "./DiskDomains";
 import {
-  useDisk
+  useStorageDomain,
+  useDisk,
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -28,7 +29,10 @@ const DiskInfo = () => {
     activeModal, setActiveModal,
     tabInPage, setTabInPage,
   } = useUIState()
-  const { setDisksSelected } = useGlobal()
+  const { 
+    domainsSelected,
+    setDisksSelected,
+  } = useGlobal()
   const { id: diskId, section } = useParams();
   const {
     data: disk,
@@ -62,9 +66,16 @@ const DiskInfo = () => {
     return SectionComponent ? <SectionComponent diskId={diskId} /> : null;
   }, [activeTab, diskId]);
 
+  
+  const domainId = domainsSelected[0]?.id;
+  const { data: domain } = useStorageDomain(domainId);
+  const domainNotActive = domain?.status?.toLowerCase() !== "active";
+  const hasVmAtttached = disk?.vmAttached || !!disk?.connectVm?.name || false
+  const hasTemplateAtttached = disk?.templateAttached || !!disk?.connectTemplate?.name || false
+
   const sectionHeaderButtons = [
-    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update") },
-    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove") },
+    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update"), disabled: hasTemplateAtttached },
+    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove"), disabled: domainNotActive || hasVmAtttached || hasTemplateAtttached },
     { type: "move",   label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
     { type: "copy",   label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
     // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },

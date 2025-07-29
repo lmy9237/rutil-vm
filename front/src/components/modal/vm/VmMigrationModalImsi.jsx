@@ -128,7 +128,7 @@ const VmMigrationModalImsi = ({
           <LabelCheckbox id={`affinity`}
             label={`선택한 ${Localization.kr.VM}을 사용하여 양극 강제 연결 그룹의 모든 가상 시스템을 ${Localization.kr.MIGRATION}합니다.`}
             value=""
-            onChange={(e) => setAffinityClosure(e.target.checked)}
+            onChange={(checked) => setAffinityClosure(checked)}
           />
           {/* {import.meta.env.DEV && <span>{affinityClosure === true ? "T" : "F"}</span>} */}
 

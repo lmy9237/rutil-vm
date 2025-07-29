@@ -44,7 +44,11 @@ const DomainCheckModal = ({
       <div className="domain-check-modal py-3">
         <LabelCheckbox id="approve" label="작업 승인"
           checked={approved}
-          onChange={(e) => setApproved(e.target.checked)}
+          // onChange={(e) => setApproved(e.target.checked)}
+          onChange={(checked) => {
+            import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+            setApproved(checked);
+          }}
         />
         <div className="modal-info-text mt-4 ">
           <div className="text-red-600 font-bold">다음 LUN이 이미 사용 중입니다:</div>

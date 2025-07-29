@@ -90,6 +90,7 @@
   "scripts": {
     "dev": "vite",
     "dev:b70": "vite --mode b70",
+    "dev:b60": "vite --mode b60",
     "dev:b20": "vite --mode b20",
     "dev:b180": "vite --mode b180",
     "build:tmp": "vite build",

@@ -94,18 +94,18 @@ class NetworkEntity(
 		nullable=true
 	)
 	var dnsConfiguration: DnsResolverConfigurationEntity? = null,
-	@OneToOne(
+	@OneToMany(
+		mappedBy="network",
 		fetch=FetchType.LAZY,
 		cascade=[CascadeType.ALL],
-		mappedBy="network",
 		orphanRemoval=true
 	)
-	var networkCluster: NetworkClusterEntity? = null,
+	var networkClusters: MutableSet<NetworkClusterEntity>? = mutableSetOf(),
 	@OneToMany(
+		mappedBy="network",
 		fetch=FetchType.LAZY,
 		cascade=[CascadeType.ALL],
 		orphanRemoval=true,
-		mappedBy="network"
 	)
 	/*@JoinColumn(
 		name="id",
@@ -116,13 +116,13 @@ class NetworkEntity(
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
-	val status: NetworkStatusB? 		get() = networkCluster?.status ?: NetworkStatusB.non_operational
-	val isDisplay: Boolean			get() = networkCluster?.isDisplay ?: false
-	val required: Boolean				get() = networkCluster?.required ?: false
-	val migration: Boolean			get() = networkCluster?.migration ?: false
-	val management: Boolean			get() = networkCluster?.management ?: false
-	val isGluster: Boolean			get() = networkCluster?.isGluster ?: false
-	val defaultRoute: Boolean			get() = networkCluster?.defaultRoute ?: false
+	val status: NetworkStatusB? 		get() = networkClusters?.firstOrNull()?.status ?: NetworkStatusB.non_operational
+	val isDisplay: Boolean			get() = networkClusters?.any { it.isDisplay } == true
+	val required: Boolean				get() = networkClusters?.any { it.required } == true
+	val migration: Boolean			get() = networkClusters?.any { it.migration } == true
+	val management: Boolean			get() = networkClusters?.any { it.management } == true
+	val isGluster: Boolean			get() = networkClusters?.any { it.isGluster } == true
+	val defaultRoute: Boolean			get() = networkClusters?.any { it.defaultRoute } == true
 
 	class Builder {
 		private var bId: UUID? = null;fun id(block: () -> UUID?) { bId = block() }
@@ -145,9 +145,9 @@ class NetworkEntity(
 		private var bStoragePool: StoragePoolEntity? = null;fun storagePool(block: () -> StoragePoolEntity?) { bStoragePool = block() }
 		private var bProvider: ProvidersEntity? = null;fun provider(block: () -> ProvidersEntity?) { bProvider = block() }
 		private var bDnsConfiguration: DnsResolverConfigurationEntity? = null;fun dnsConfiguration(block: () -> DnsResolverConfigurationEntity?) { bDnsConfiguration = block() }
-		private var bNetworkCluster: NetworkClusterEntity? = null;fun networkCluster(block: () -> NetworkClusterEntity?) { bNetworkCluster = block() }
+		private var bNetworkClusters: MutableSet<NetworkClusterEntity> = mutableSetOf(); fun networkClusters(block: () -> MutableSet<NetworkClusterEntity>?) { bNetworkClusters = block() ?: mutableSetOf() } // ADD THIS
 		private var bVnicProfiles: MutableSet<VnicProfileEntity>? = mutableSetOf();fun vnicProfiles(block: () -> MutableSet<VnicProfileEntity>?) { bVnicProfiles = block() ?: mutableSetOf() }
-		fun build(): NetworkEntity = NetworkEntity(bId, bName, bDescription, bType, bAddr, bSubnet, bGateway, bStp, bVlanId, bMtu, bVmNetwork, bProviderNetworkExternalId, bFreeTextComment, bLabel, bVdsmName, bProviderPhysicalNetworkId, bPortIsolation, bStoragePool, bProvider, bDnsConfiguration, bNetworkCluster, bVnicProfiles)
+		fun build(): NetworkEntity = NetworkEntity(bId, bName, bDescription, bType, bAddr, bSubnet, bGateway, bStp, bVlanId, bMtu, bVmNetwork, bProviderNetworkExternalId, bFreeTextComment, bLabel, bVdsmName, bProviderPhysicalNetworkId, bPortIsolation, bStoragePool, bProvider, bDnsConfiguration, bNetworkClusters, bVnicProfiles)
 	}
 
 	companion object {

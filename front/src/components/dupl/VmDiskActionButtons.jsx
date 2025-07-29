@@ -39,7 +39,7 @@ const VmDiskActionButtons = ({
   ];
   return (
     <ActionButtons actionType={actionType}
-      actions={basicActions}
+      actions={isContextMenu ? basicActions.slice(2) : basicActions}
     />
   );
 };

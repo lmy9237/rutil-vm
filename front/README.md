@@ -1,6 +1,6 @@
 # rutil-vm-front
 
-![favicon](favicon.ico)
+![favicon](favicon.svg)
   
 Rutil VM 프론트앤드
 

@@ -25,7 +25,7 @@ const NetworkActionButtons = ({
   return (
     <>
       <ActionButtons actionType={actionType} 
-        actions={basicActions}
+        actions={isContextMenu ? basicActions.slice(2) : basicActions}
       >
         {!isContextMenu && (
           <ActionButton label={Localization.kr.VNIC_PROFILE}

@@ -24,7 +24,7 @@ class TreeNavigationalDataCenter (
 	status: DataCenterStatus? = null,
     val clusters: List<TreeNavigational<Unit>> = emptyList(),
     val networks: List<TreeNavigational<NetworkStatus>> = emptyList(),
-    val storageDomains: List<TreeNavigational<StorageDomainStatus>> = emptyList(),
+    val storageDomains: List<TreeNavigatable<StorageDomainStatus>> = emptyList(),
 ): TreeNavigational<DataCenterStatus>(TreeNavigatableType.DATACENTER, id, name, status), Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -35,7 +35,7 @@ class TreeNavigationalDataCenter (
 		private var bStatus: DataCenterStatus? = null;fun status(block: () -> DataCenterStatus?) { bStatus = block() }
         private var bClusters: List<TreeNavigational<Unit>> = emptyList(); fun clusters(block: () -> List<TreeNavigational<Unit>>?) { bClusters = block() ?: emptyList() }
         private var bNetworks: List<TreeNavigational<NetworkStatus>> = emptyList(); fun networks(block: () -> List<TreeNavigational<NetworkStatus>>?) { bNetworks = block() ?: emptyList() }
-        private var bStorageDomains: List<TreeNavigational<StorageDomainStatus>> = emptyList(); fun storageDomains(block: () -> List<TreeNavigational<StorageDomainStatus>>?) { bStorageDomains = block() ?: emptyList() }
+        private var bStorageDomains: List<TreeNavigatable<StorageDomainStatus>> = emptyList(); fun storageDomains(block: () -> List<TreeNavigatable<StorageDomainStatus>>?) { bStorageDomains = block() ?: emptyList() }
         fun build(): TreeNavigationalDataCenter = TreeNavigationalDataCenter(bId, bName, bStatus, bClusters, bNetworks, bStorageDomains)
     }
     companion object {
@@ -43,7 +43,10 @@ class TreeNavigationalDataCenter (
     }
 }
 
-fun DataCenter.toNavigationalFromDataCenter4Clusters(conn: Connection?, rVm: VmRepository?=null): TreeNavigationalDataCenter {
+fun DataCenter.toNavigationalFromDataCenter4Clusters(
+	conn: Connection?=null,
+	rVm: VmRepository?=null
+): TreeNavigationalDataCenter {
     val clusters: List<Cluster> = conn?.findAllClustersFromDataCenter(this.id())
 		?.getOrDefault(emptyList())
 		?: emptyList()
@@ -55,8 +58,12 @@ fun DataCenter.toNavigationalFromDataCenter4Clusters(conn: Connection?, rVm: VmR
         clusters { clusters.toNavigationalsFromClusters(conn, rVm) }
     }
 }
-fun List<DataCenter>.toNavigationalsFromDataCenter4Clusters(conn: Connection?, rVm: VmRepository?=null): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsFromDataCenter4Clusters.map { it.toNavigationalFromDataCenter4Clusters(conn, rVm) }
+fun List<DataCenter>.toNavigationalsFromDataCenter4Clusters(
+	conn: Connection?=null,
+	rVm: VmRepository?=null
+): List<TreeNavigationalDataCenter> = this@toNavigationalsFromDataCenter4Clusters.map {
+	it.toNavigationalFromDataCenter4Clusters(conn, rVm)
+}
 
 fun DataCenter.toNavigationalFromNetwork(conn: Connection?): TreeNavigationalDataCenter {
     val networks: List<Network> =
@@ -73,16 +80,23 @@ fun DataCenter.toNavigationalFromNetwork(conn: Connection?): TreeNavigationalDat
 
 fun List<DataCenter>.toNavigationalsFromNetworks(
 	conn: Connection?,
-): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsFromNetworks.map { it.toNavigationalFromNetwork(conn) }
+): List<TreeNavigationalDataCenter> = this@toNavigationalsFromNetworks.map {
+	it.toNavigationalFromNetwork(conn)
+}
 
 fun DataCenter.toNavigationalFromDataCenter4StorageDomains(
 	conn: Connection?=null,
+	// rStorageDomains: StorageDomainRepository?=null,
 	rAllDisks: AllDisksRepository?=null,
 ): TreeNavigationalDataCenter {
-    val storageDomains: List<StorageDomain> =
-        conn?.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalFromDataCenter4StorageDomains.id(), follow = "disks")
-            ?.getOrDefault(emptyList())
+	/*
+	val storageDomainsFound: List<StorageDomainEntity> = rStorageDomains?.findAllByOrderByStorageNameAsc() ?: emptyList()
+	return storageDomainsFound.toStorageDomainVosFromStorageDomainEntities()
+	*/
+
+	val storageDomains: List<StorageDomain> =
+		conn?.findAllAttachedStorageDomainsFromDataCenter(this@toNavigationalFromDataCenter4StorageDomains.id(), follow = "disks")
+			?.getOrDefault(emptyList())
 			?: emptyList()
 
     return TreeNavigationalDataCenter.builder {
@@ -95,6 +109,7 @@ fun DataCenter.toNavigationalFromDataCenter4StorageDomains(
 fun List<DataCenter>.toNavigationalsFromDataCenters4StorageDomains(
 	conn: Connection?,
 	rAllDisks: AllDisksRepository?=null,
-): List<TreeNavigationalDataCenter> =
-    this@toNavigationalsFromDataCenters4StorageDomains.map { it.toNavigationalFromDataCenter4StorageDomains(conn, rAllDisks) }
+): List<TreeNavigationalDataCenter> = this@toNavigationalsFromDataCenters4StorageDomains.map {
+	it.toNavigationalFromDataCenter4StorageDomains(conn, rAllDisks)
+}
 

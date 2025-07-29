@@ -26,11 +26,10 @@ const VmMigrationTabVM = ({
         setIsCluster(selected?.id === clusterVo.id);
       }}
     />
-    <LabelCheckbox
-      id={`affinity`}
+    <LabelCheckbox id={`affinity`}
       label={`선택한 가상머신을 사용하여 양극 강제 연결 그룹의 모든 가상 시스템을 마이그레이션합니다.`}
       value=""
-      onChange={(e) => setAffinityClosure(e.target.checked)}
+      onChange={(checked) => setAffinityClosure(checked)}
       checked={affinityClosure}
     />
     <div className="mt-4">

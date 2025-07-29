@@ -12,8 +12,8 @@ import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
-import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainVosFromStorageDomainEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -227,7 +227,7 @@ class StorageServiceImpl(
 		// return res.toStorageDomainsMenu(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByOrderByStorageNameAsc()
 		return res
-			.toStorageDomainEntities()
+			.toStorageDomainVosFromStorageDomainEntities()
 			.filter { it.isNotGlanceStorageType }
 	}
 
@@ -338,7 +338,7 @@ class StorageServiceImpl(
 		// 	.getOrDefault(emptyList())
 		// return res.toDomainDiskMenus(conn)
 		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(storageDomainId)
-		return res?.toDiskImageVoFromAllDiskEntities()
+		return res?.toDiskImageVosFromAllDiskEntities()
 	}
 
 	@Autowired private lateinit var rImage: ImageRepository

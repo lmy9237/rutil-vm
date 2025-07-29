@@ -10,9 +10,10 @@ import Localization                  from "@/utils/Localization";
 import Logger                        from "@/utils/Logger";
 
 export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1 분
-export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; 5 // 5분
+export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; // 5분
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 30 * 1000; // 15초
+export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_LONG = 1 * 60 * 1000; // 15초
 
 //#region: 쿼리Key
 const QK = {
@@ -167,6 +168,12 @@ const QK = {
 
 export const QP_DEFAULT = {
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT,
+  refetchInactive: true,
+  staleTime: DEFAULT_STALE_TIME,
+  cacheTime: DEFAULT_CACHE_TIME,
+}
+export const QP_DEFAULT_ = {
+  refetchInterval: DEFAULT_CACHE_TIME,
   refetchInactive: true,
   staleTime: DEFAULT_STALE_TIME,
   cacheTime: DEFAULT_CACHE_TIME,
@@ -851,7 +858,7 @@ export const useAllAttachedDisksFromDataCenter = (
 });
 
 /**
- * @name useCDFromDataCenter
+ * @name useCdromFromDataCenter
  * @description 가상머신 생성창 - CD/DVD 연결할 ISO 목록 useQuery훅
  * 
  * @param {string} dataCenterId 데이터센터ID
@@ -860,21 +867,23 @@ export const useAllAttachedDisksFromDataCenter = (
  * 
  * @see ApiManager.findAllISOFromDataCenter
  */
-export const useCDFromDataCenter = (
+export const useCdromFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate = (e) => ({ ...e }),
+  allowedToFetch=false,
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  ...QP_DEFAULT,
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_LONG,
   queryKey: [QK.CD_FROM_DATA_CENTER, dataCenterId],
   queryFn: async () => {
     const res = await ApiManager.findAllISOFromDataCenter(dataCenterId);
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useCDFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+    Logger.debug(`RQHook > useCdromFromDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
     return _res
   },
-  enabled: !!dataCenterId,
+  enabled: !!dataCenterId && allowedToFetch,
 });
 /**
  * @name useAddDataCenter
@@ -2507,6 +2516,25 @@ export const useAllVMs = (
   },
   staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
+export const qpVm = (
+  vmId,
+  variant="default",
+) => {
+  const qpDefault = (variant === "default" ? QP_DEFAULT : {})
+  Logger.debug(`RQHook > qpVm ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.VM, vmId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findVM(vmId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpVm ... vmId: ${vmId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!vmId
+  }
+  
+}
 /**  
  * @name useVm
  * @description 가상머신 상세조회 useQuery 훅
@@ -2518,17 +2546,21 @@ export const useAllVMs = (
 export const useVm = (
   vmId
 ) => useQuery({
-  ...QP_DEFAULT,
-  queryKey: [QK.VM, vmId],
-  queryFn: async () => {
-    const res = await ApiManager.findVM(vmId);
-    const _res = validateAPI(res) ?? {};
-    Logger.debug(`RQHook > useVm ... vmId: ${vmId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!vmId
+  ...qpVm(vmId),  
 });
-
+/**  
+ * @name useVm4Edit
+ * @description 가상머신 상세조회 useQuery 훅 (편집 중일 때)
+ * 
+ * @param {string} vmId 가상머신 ID
+ * @returns useQuery 훅
+ * @see ApiManager.findVM
+ */
+export const useVm4Edit = (
+  vmId
+) => useQuery({
+  ...qpVm(vmId, "edit"),  
+});
 /**
  * @name useDisksFromVM
  * @description 가상머신 내 디스크 목록조회 useQuery훅
@@ -6009,7 +6041,7 @@ export const useMaintenanceDomain = (
 export const useAllDisks = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS],
   queryFn: async () => {
     const res = await ApiManager.findAllDisks()
@@ -6023,20 +6055,20 @@ export const useAllDisks = (
 })
 export const useCdromsDisks = (
   diskIds = []
-) =>
-  useQuery({
-    queryKey: [QK.CDROMS_FOR_DISKS, diskIds],
-    queryFn: async () => {
-      const res = await Promise.all(
-        diskIds.map((id) => ApiManager.findCdromsDisk(id))
-      );
-      return res.map((r, idx) => ({
-        diskId: diskIds[idx],
-        cdroms: validateAPI(r) ?? [],
-      }));
-    },
-    enabled: diskIds.length > 0,
-  });
+) => useQuery({
+  ...QP_DEFAULT,
+  queryKey: [QK.CDROMS_FOR_DISKS, diskIds],
+  queryFn: async () => {
+    const res = await Promise.all(
+      diskIds.map((id) => ApiManager.findCdromsDisk(id))
+    );
+    return res.map((r, idx) => ({
+      diskId: diskIds[idx],
+      cdroms: validateAPI(r) ?? [],
+    }));
+  },
+  enabled: diskIds.length > 0,
+});
 
 /**
  * @name useDisk
@@ -6100,7 +6132,7 @@ export const useAllStorageDomainsFromDisk = (
   diskId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId],
   queryFn: async () => {
     const res = await ApiManager.findAllStorageDomainsFromDisk(diskId);
@@ -6276,6 +6308,7 @@ export const useDeleteDisk = (
       apiToast.ok(`${Localization.kr.DISK} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
       queryClient.removeQueries(QK.DISK, diskId);
+      queryClient.removeQueries(QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId);
       const domainId = domainsSelected[0]?.id
       domainId && navigate(`/storage/domains/${domainId}/disks`);
       postSuccess(res);
@@ -6319,6 +6352,111 @@ export const useUploadDisk = (
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
       queryClient.invalidateQueries(QK.DISK, diskData.id); 
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useCancelImageTransfer4Disk
+ * @description 이미지 전송 취소 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useCancelImageTransfer4Disk = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (diskId) => {
+      closeModal();
+      const res = await ApiManager.cancelImageTransfer4Disk(diskId);
+      Logger.debug(`RQHook > useCancelImageTransfer4Disk ... diskId: ${diskId}`);
+      return res;
+    },
+    onSuccess: (res, { diskId }) => {
+      Logger.debug(`RQHook > useCancelImageTransfer4Disk ... res: `, res);
+      apiToast.ok(`${Localization.kr.IMAGE_TRANSFER} ${Localization.kr.CANCEL} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
+      postSuccess(res);
+    },
+    onError: (error, { diskId }) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name usePauseImageTransfer4Disk
+ * @description 이미지 전송 일시정지 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const usePauseImageTransfer4Disk = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (diskId) => {
+      closeModal();
+      const res = await ApiManager.pauseImageTransfer4Disk(diskId);
+      Logger.debug(`RQHook > usePauseImageTransfer4Disk ... diskId: ${diskId}`);
+      return res;
+    },
+    onSuccess: (res, { diskId }) => {
+      Logger.debug(`RQHook > usePauseImageTransfer4Disk ... res: `, res);
+      apiToast.ok(`${Localization.kr.IMAGE_TRANSFER} ${Localization.kr.PAUSE} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
+      postSuccess(res);
+    },
+    onError: (error, { diskId }) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
+      postError && postError(error);
+    },
+  });
+};
+/**
+ * @name useResumeImageTransfer4Disk
+ * @description 이미지 전송 재개 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ */
+export const useResumeImageTransfer4Disk = (
+  postSuccess=()=>{},postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async (diskId) => {
+      closeModal();
+      const res = await ApiManager.resumeImageTransfer4Disk(diskId);
+      Logger.debug(`RQHook > useResumeImageTransfer4Disk ... diskId: ${diskId}`);
+      return res;
+    },
+    onSuccess: (res, { diskId }) => {
+      Logger.debug(`RQHook > useResumeImageTransfer4Disk ... res: `, res);
+      apiToast.ok(`${Localization.kr.IMAGE_TRANSFER} ${Localization.kr.RESUME} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
+      postSuccess(res);
+    },
+    onError: (error, { diskId }) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_DISKS]);
+      queryClient.invalidateQueries(QK.DISK, diskId); 
       postError && postError(error);
     },
   });
@@ -7431,27 +7569,23 @@ export async function invalidateQueriesWithDefault(
   queryClient = null,
   qks=[],
 ) {
-  for (qk of qks) {
+  for (let qk of qks) {
     await queryClient.invalidateQueries(qk);
   }
   await queryClient.invalidateQueries({
     queryKey: [QK.ALL_JOBS],
-    exact,
     refetchType: 'active',
   });
   await queryClient.invalidateQueries({
     queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "cluster" }],
-    exact,
     refetchType: 'active'
   });
   await queryClient.invalidateQueries({
     queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "network" }],
-    exact,
     refetchType: 'active'
   });
   await queryClient.invalidateQueries({
     queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "storage" }],
-    exact,
     refetchType: 'active'
   });
 }

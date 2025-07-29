@@ -90,9 +90,9 @@ const NetworkClusters = ({
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNetworks} />
         <div className="header-right-btns">
           <ActionButton actionType="default"
-            label={`${Localization.kr.NETWORK} 관리`}
+            label={`${Localization.kr.NETWORK} ${Localization.kr.MANAGEMENT}`}
             onClick={() => setActiveModal("network:manage")}
-            disabled
+            // disabled
           />
         </div>
       </div>

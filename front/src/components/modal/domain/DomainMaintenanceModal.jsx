@@ -52,7 +52,11 @@ const DomainMaintenanceModal = ({
       
       <LabelCheckbox id="ignoreOvf" label="OVF 업데이트 실패 무시"
         checked={ignoreOVF}
-        onChange={(e) => setIgnoreOVF(e.target.checked)}
+        // onChange={(e) => setIgnoreOVF(e.target.checked)}
+        onChange={(checked) => {
+          import.meta.env.DEV && validationToast.debug(`ignoreOVF: ${checked}`);
+          setIgnoreOVF(checked)
+        }}
       /> 
       {/* <span>{ignoreOVF === true ? "t" : "F"}</span> */}
       <br/>

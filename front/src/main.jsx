@@ -12,7 +12,9 @@ import { BoxStateProvider } from './context/BoxStateProvider'
 import { ContextMenuStateProvider } from "./context/ContextMenuStateProvider";
 import { TMIStateProvider } from "./context/TMIStateProvider";
 import { UIStateProvider } from "./context/UIStateProvider";
-import { DEFAULT_REFETCH_INTERVAL_IN_MILLI, QP_DEFAULT } from "@/api/RQHook"
+import { 
+  QP_DEFAULT
+} from "@/api/RQHook"
 import reportWebVitals from "./reportWebVitals";
 import App from "./App";
 

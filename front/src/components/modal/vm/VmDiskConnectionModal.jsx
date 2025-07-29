@@ -162,7 +162,7 @@ const VmDiskConnectionModal = ({
                       <td>
                         <LabelCheckbox id={`select-${id}`}
                           checked={!!selected} 
-                          onChange={() => toggleDisk(disk)} 
+                          onChange={(checked) => toggleDisk(disk)} 
                         />
                       </td>
                       <td>{disk.alias}</td>
@@ -181,18 +181,18 @@ const VmDiskConnectionModal = ({
                       </td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <LabelCheckbox id={`readonly-${id}`}
-                          checked={selected?.readOnly || false}
-                          disabled={!selected}
-                          onChange={() => handleUpdateDisk(id, "readOnly", !selected?.readOnly)} 
-                        />
+                          <LabelCheckbox id={`readonly-${id}`}
+                            checked={selected?.readOnly || false}
+                            disabled={!selected}
+                            onChange={(checked) => handleUpdateDisk(id, "readOnly", !selected?.readOnly)} 
+                          />
                         </div>
                       </td>
                       <td>
                         <LabelCheckbox id={`bootable-${id}`} 
                           checked={selected?.bootable || false}
                           disabled={hasBootableDisk || !selected}
-                          onChange={() => handleUpdateDisk(id, "bootable", !selected?.bootable)} 
+                          onChange={(checked) => handleUpdateDisk(id, "bootable", !selected?.bootable)} 
                         />
                       </td>
                       <td style={{ textAlign: 'center' }}>{disk?.sharable ? "O" : "X"}</td>

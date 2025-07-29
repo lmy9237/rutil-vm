@@ -315,6 +315,9 @@ const ENDPOINTS = {
   MOVE_DISK: (diskId, storageDomainId) =>                                  `${ENDPOINT_API_V1}/storages/disks/${diskId}/move/${storageDomainId}`,
   REFRESH_LUN_DISK: (diskId) =>                                            `${ENDPOINT_API_V1}/storages/disks/${diskId}/refreshLun`,
   UPLOAD_DISK: () =>                                                       `${ENDPOINT_API_V1}/storages/disks/upload`,
+  CANCEL_IMAGE_TRANSFER_FOR_DISK: (diskId) =>                              `${ENDPOINT_API_V1}/storages/disks/${diskId}/cancel`,
+  PAUSE_IMAGE_TRANSFER_FOR_DISK: (diskId) =>                               `${ENDPOINT_API_V1}/storages/disks/${diskId}/pause`,
+  RESUME_IMAGE_TRANSFER_FOR_DISK: (diskId) =>                              `${ENDPOINT_API_V1}/storages/disks/${diskId}/resume`,
   //#endregion: Disk
   
   //#region: Event

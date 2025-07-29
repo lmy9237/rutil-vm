@@ -1,6 +1,6 @@
 # rutil-vm
 
-![favicon](front/favicon.ico)
+![favicon](front/favicon.svg)
   
 Rutil VM
 

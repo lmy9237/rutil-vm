@@ -11,8 +11,10 @@ import {
   useAllStorageDomainsToMoveFromDisk4EachDisk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
 import "../domain/MDomain.css";
-import { checkZeroSizeToGiB } from "@/util";
 
 const DiskActionModal = ({ 
   isOpen,

@@ -11,7 +11,7 @@ import {
   useAddVm,
   useEditVm,
   useAllUpClusters,
-  useCDFromDataCenter,
+  useCdromFromDataCenter,
   useHostsFromCluster,
   useAllActiveDomainsFromDataCenter,
   useAllOpearatingSystemsFromCluster,
@@ -20,7 +20,7 @@ import {
   useFindTemplatesFromDataCenter,
   useAllVnicsFromCluster,
   useAllNicsFromTemplate,
-  useVm,
+  useVm4Edit,
   useDisksFromVM,
   useNetworkInterfacesFromVM,
   useAllVMs, 
@@ -157,6 +157,7 @@ const VmModal = ({
   const [templateVo, setTemplateVo] = useState(emptyIdNameVo());
   const [diskListState, setDiskListState] = useState([]);
   const [nicListState, setNicListState] = useState([ defaultNic ]);
+  const [fetchIsosOnce, setFetchIsosOnce] = useState(false);
   
   const { mutate: addVM } = useAddVm(
     (result) => {
@@ -175,7 +176,13 @@ const VmModal = ({
   const { mutate: editVM } = useEditVm(onClose, onClose);
 
   // 가상머신 상세데이터 가져오기
-  const { data: vm } = useVm(vmId);
+  const {
+    data: vm,
+    isLoading: isVmLoading,
+    isSuccess: isVmSuccess,
+    isError: isVmError,
+  } = useVm4Edit(vmId);
+
   const { data: vms } = useAllVMs();
 
   // 클러스터 목록 가져오기
@@ -266,12 +273,13 @@ const VmModal = ({
   // 부트 옵션 - cd/dvd 연결
   const { 
     data: isos = [], 
-    isLoading: isIsoLoading 
-  } = useCDFromDataCenter(dataCenterVo.id, (e) => ({ ...e }));
+    isLoading: isIsoLoading,
+  } = useCdromFromDataCenter(dataCenterVo.id, (e) => ({ ...e }), fetchIsosOnce);
 
 
   // 초기값 설정
   useEffect(() => {
+    setFetchIsosOnce(true)
     if (!isOpen) {
       setSelectedModalTab("common"); // 탭 상태 초기화
       setFormInfoState(infoform);
@@ -727,11 +735,11 @@ const VmModal = ({
             />
           )}
           {selectedModalTab === "boot" && (
-            <VmBoot
-              isos={isos}
+            <VmBoot isos={isos}
               isIsoLoading={isIsoLoading}
               formBootState={formBootState}
               setFormBootState={setFormBootState}
+              setFetchIsosOnce={setFetchIsosOnce}
             />
           )}
         </div>

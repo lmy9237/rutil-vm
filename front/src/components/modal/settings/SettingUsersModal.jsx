@@ -138,8 +138,8 @@ const SettingUsersModal = ({
         )}
         {!changePassword && (
           <LabelCheckbox id="disabled" label="비활성화 여부"
-            onChange={handleInputCheck(setFormState, "disabled")}
             checked={formState.disabled}
+            onChange={handleInputCheck(setFormState, "disabled")}
           />
         )}
         {editMode && (

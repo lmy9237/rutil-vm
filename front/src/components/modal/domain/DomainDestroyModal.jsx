@@ -54,7 +54,11 @@ const DomainDestroyModal = ({
       <div className="mt-4">
         <LabelCheckbox id="approveOperation" label="작업 승인"
           checked={approved}
-          onChange={(e) => setApproved(e.target.checked)}
+          // onChange={(e) => setApproved(e.target.checked)}
+          onChange={(checked) => {
+            import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+            setApproved(checked);
+          }}
         />
       </div>
       <br/>

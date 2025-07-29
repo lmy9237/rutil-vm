@@ -16,7 +16,7 @@ LEFT JOIN FETCH n.provider p
 LEFT JOIN FETCH n.dnsConfiguration dc
 LEFT JOIN FETCH dc.nameServers ns
 LEFT JOIN FETCH ns.dnsResolverConfiguration drc
-LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH n.networkClusters nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
 LEFT JOIN FETCH n.vnicProfiles vp
@@ -32,7 +32,7 @@ LEFT JOIN FETCH n.provider p
 LEFT JOIN FETCH n.dnsConfiguration dc
 LEFT JOIN FETCH dc.nameServers ns
 LEFT JOIN FETCH ns.dnsResolverConfiguration drc
-LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH n.networkClusters nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
 LEFT JOIN FETCH n.vnicProfiles vp
@@ -51,7 +51,7 @@ LEFT JOIN FETCH n.provider p
 LEFT JOIN FETCH n.dnsConfiguration dc
 LEFT JOIN FETCH dc.nameServers ns
 LEFT JOIN FETCH ns.dnsResolverConfiguration drc
-LEFT JOIN FETCH n.networkCluster nc
+LEFT JOIN FETCH n.networkClusters nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network nn
 LEFT JOIN FETCH n.vnicProfiles vp

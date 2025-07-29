@@ -18,8 +18,8 @@ import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StoragePoolEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toDataCenterVos
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
-import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainVosFromStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
@@ -299,7 +299,7 @@ class DataCenterServiceImpl(
 		// return res.toDcDomainMenus(conn)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.toStorageDomainEntities()
+			.toStorageDomainVosFromStorageDomainEntities()
 			.filter { it.isNotGlanceStorageType }
 
 	}
@@ -309,7 +309,7 @@ class DataCenterServiceImpl(
 		log.info("findAllFromDataCenter ... dataCenterId: {}", dataCenterId)
 		val res: List<StorageDomainEntity> = rStorageDomains.findAllByStoragePoolIdOrderByStorageNameAsc(dataCenterId.toUUID())
 		return res
-			.toStorageDomainEntities()
+			.toStorageDomainVosFromStorageDomainEntities()
 			.filter { it.isValidActiveStorageDomain }
 	}
 
@@ -319,7 +319,7 @@ class DataCenterServiceImpl(
 		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		// return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
 		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(dataCenterId)
-		return res?.toDiskImageVoFromAllDiskEntities()
+		return res?.toDiskImageVosFromAllDiskEntities()
 	}
 
 	@Throws(Error::class)
@@ -357,7 +357,7 @@ class DataCenterServiceImpl(
 				it.diskContentType == DiskContentTypeB.data/* || it.diskContentType == DiskContentTypeB.iso*/
 			)
 		}
-		return res?.toDiskImageVoFromAllDiskEntities()
+		return res?.toDiskImageVosFromAllDiskEntities()
 		// val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
 		// 	.getOrDefault(emptyList())
 		// // 디스크 포맷 필터링

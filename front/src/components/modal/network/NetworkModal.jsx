@@ -231,6 +231,14 @@ const NetworkModal = ({
         <div id="vlan-enabled-group" className="f-btw">
          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
             checked={formState.vlanEnabled} 
+            onChange={(checked) => //TODO 토스트 추가예정
+              setFormState((prev) => ({
+                ...prev,
+                vlanEnabled: checked,
+                vlan: checked ? prev.vlan : "", // 해제 시 vlan 값도 초기화
+              }))
+            }
+            /*
             onChange={(e) => //TODO 토스트 추가예정
               setFormState((prev) => ({
                 ...prev,
@@ -238,6 +246,7 @@ const NetworkModal = ({
                 vlan: e.target.checked ? prev.vlan : "", // 해제 시 vlan 값도 초기화
               }))
             }
+            */
           />
           <div style={{width:"55%"}} className="checkbox-number">
             <LabelInputNum id="vlan"
@@ -252,6 +261,14 @@ const NetworkModal = ({
         <LabelCheckbox id="usageVm" label={`${Localization.kr.VM} ${Localization.kr.NETWORK}`}
           checked={formState.usageVm}
           disabled={editMode && formState.portIsolation} // 포트 분리 활성 상태에선 편집모드일 때 비활성화
+          onChange={(checked) => {
+            setFormState((prev) => ({
+              ...prev,
+              usageVm: checked,
+              portIsolation: checked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
+            }));
+          }}
+          /* 
           onChange={(e) => {
             const isChecked = e.target.checked;
             setFormState((prev) => ({
@@ -260,6 +277,7 @@ const NetworkModal = ({
               portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
             }));
           }}
+          */
         />
         <LabelCheckbox id="portIsolation" label={`포트 ${Localization.kr.DETACH}`}
           checked={formState.portIsolation}
@@ -267,7 +285,6 @@ const NetworkModal = ({
           disabled={editMode || !formState.usageVm} // 가상 머신 네트워크가 비활성화되면 비활성화(??)
           onChange={handleInputCheck(setFormState, "portIsolation")}
         />
-          
         <div className="mtu-input-outer flex items-center gap-3">
           <ToggleSwitchButton id="mtuToggle" label="MTU 설정" minimizeWidth={
             true}
@@ -302,11 +319,17 @@ const NetworkModal = ({
         <div id="dns-settings-group" class="f-start">
           <LabelCheckbox id="dns-settings" label="DNS 설정"
             checked={dnsServers.length > 0}
+            onChange={(checked) => {
+              setDnsServers(checked ? [""] : []);
+              if (!checked) setDnsHiddenBoxVisible(false);
+            }}
+            /* 
             onChange={(e) => {
               const isChecked = e.target.checked;
               setDnsServers(isChecked ? [""] : []);
               if (!isChecked) setDnsHiddenBoxVisible(false);
             }}
+            */
           />
         </div>
 

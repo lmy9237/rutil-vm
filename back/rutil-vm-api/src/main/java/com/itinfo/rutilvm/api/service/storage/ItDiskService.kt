@@ -13,7 +13,7 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.BaseDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
@@ -233,7 +233,7 @@ class DiskServiceImpl(
         log.info("findAll ... ")
 
 		val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
-		return res.toDiskImageVoFromAllDiskEntities()
+		return res.toDiskImageVosFromAllDiskEntities()
 			.filter { it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso }
     }
 

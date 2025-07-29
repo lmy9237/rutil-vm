@@ -8,7 +8,7 @@ import {
 } from "@/components/label/HandleInput"
 import {
   useCdromFromVm,
-  useCDFromDataCenter,
+  useCdromFromDataCenter,
   useUpdateCdromFromVM,
   useVm,
 } from "@/api/RQHook";
@@ -34,7 +34,7 @@ const VmUpdateCdromModal = ({
   const {
     data: cdroms = [],
     isLoading: isCdromsLoading,
-  } = useCDFromDataCenter(dataCenterVo.id || undefined, (e) => ({ 
+  } = useCdromFromDataCenter(dataCenterVo.id || undefined, (e) => ({ 
     ...e
   }));
 

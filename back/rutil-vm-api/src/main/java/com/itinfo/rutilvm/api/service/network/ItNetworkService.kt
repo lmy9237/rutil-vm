@@ -11,6 +11,7 @@ import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.repository.engine.DnsResolverConfigurationRepository
 import com.itinfo.rutilvm.api.repository.engine.NameServerRepository
+import com.itinfo.rutilvm.api.repository.engine.NetworkClusterRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkClusterViewRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkFilterRepository
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
@@ -18,13 +19,13 @@ import com.itinfo.rutilvm.api.repository.engine.VmInterfaceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.VmStaticRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterViewEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkFilterEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmInterfaceEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toClusterVoFromNetworkClusterViewEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkFilterVosFromNetworkFilterEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVoFromNetworkEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkClusters
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toNicVosFromVmInterfaceEntities
 import com.itinfo.rutilvm.api.service.BaseService
@@ -193,7 +194,8 @@ class NetworkServiceImpl(
 ): BaseService(), ItNetworkService {
 
 	@Autowired private lateinit var rNetwork: NetworkRepository
-	@Autowired private lateinit var rNetworkClusters: NetworkClusterViewRepository
+	@Autowired private lateinit var rNetworkClusterViews: NetworkClusterViewRepository
+	@Autowired private lateinit var rNetworkClusters: NetworkClusterRepository
 	@Autowired	private lateinit var rVmInterfaces: VmInterfaceRepository
 	@Autowired private lateinit var rDnsConfigs: DnsResolverConfigurationRepository
 	@Autowired private lateinit var rNameServers: NameServerRepository
@@ -334,13 +336,13 @@ class NetworkServiceImpl(
 		val res: List<Cluster> = conn.findAllClustersFromDataCenter(dcId, follow = "networks")
 			.getOrDefault(emptyList())
 		return res.toClusterVos4Network(conn, networkId)
-		*/
+
 		val res: List<NetworkClusterViewEntity>? = rNetworkClusters.findByNetworkId(networkId.toUUID())
 		return res?.toClusterVoFromNetworkClusterViewEntities() ?: emptyList()
-		/*
-		val networksFound: List<NetworkEntity> = rNetwork.findByNetworkId(networkId.toUUID()) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-		return networkFound.toNetworkVoFromNetworkEntity()
 		*/
+		val networksFound: List<NetworkClusterEntity> = rNetworkClusters.findByNetworkId(networkId.toUUID())
+		return networksFound.toNetworkVosFromNetworkClusters()
+
 	}
 
 	@Throws(Error::class)

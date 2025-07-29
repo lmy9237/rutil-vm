@@ -139,7 +139,7 @@ const StorageTree = ({}) => {
                         <div key={disk?.id} className="tmi-g" id="tmi-disk">
                           <TreeMenuItem level={4}
                             title={disk?.name}
-                            iconDef={status2TreeIcon("disk", disk?.status)}
+                            iconDef={status2TreeIcon("disk", disk?.status, { attached: disk?.vmAttached || disk?.templateAttached })}
                             isSelected={() => location.pathname.includes(disk?.id)}
                             isContextSelected={contextMenuType() === "disk" && contextMenu()?.item?.id === disk?.id}
                             isNextLevelVisible={isDomainOpen}

@@ -11,8 +11,12 @@
 .box-content.snapshots > .snapshot-add:hover{
   background: var(--color-white-2);
 }
-.snapshots .snapshot-entry{
+.snapshots .snapshot-entry {
   padding:3px 0;
+}
+.snapshot-entry-name {
+  max-width:274px;
+  white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 }
 /* 반응형 */
 @media (max-width: 1424px) {

@@ -60,8 +60,12 @@ const DiskUploadModal = ({
   const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   const [hostVo, setHostVo] = useState(emptyIdNameVo());
 
-  const { mutate: uploadDisk } = useUploadDisk((progress) => {
-    progressToast.in(`${Localization.kr.DISK} ${Localization.kr.UPLOAD} 준비중 ... `, progress)
+  const {
+    mutate: uploadDisk
+  } = useUploadDisk((progress, loaded, total) => {
+    const loadedInMB = (loaded / (1024 * 1024)).toFixed(2)
+    const totalInMB = (total / (1024 * 1024)).toFixed(2)
+    progressToast.in(`${Localization.kr.DISK} ${Localization.kr.UPLOAD} 준비중 ... `, progress, loadedInMB, totalInMB)
   });
 
   // 전체 데이터센터 가져오기
@@ -276,8 +280,7 @@ const DiskUploadModal = ({
           
             <div className="disk-new-img-right f-end">
               <div className='img-checkbox-outer'>
-                <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
-                  id="wipeAfterDelete"
+                <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
                   checked={formState.wipeAfterDelete}
                   onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
                 />

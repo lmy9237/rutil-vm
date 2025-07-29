@@ -41,7 +41,7 @@ DomainDupl = ({
     ...domain,
     _name: (
       <>
-      {hostedEngineStatus2Icon(domain?.hostedEngine)}
+      {/* {hostedEngineStatus2Icon(domain?.hostedEngine)} */}
       <TableRowClick type="domain" id={domain?.id}>
         {domain?.name}
       </TableRowClick>

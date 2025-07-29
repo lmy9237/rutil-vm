@@ -1,7 +1,7 @@
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import BaseModal                        from "@/components/modal/BaseModal";
 import {
-  useCDFromDataCenter,
+  useCdromFromDataCenter,
   useStartOnceVM,
   useVm
 } from "@/api/RQHook";
@@ -40,7 +40,7 @@ const VmStartOnceModal = ({
   const { 
     data: isos = [], 
     isLoading: isIsoLoading 
-  } = useCDFromDataCenter(vm?.dataCenterVo.id, (e) => ({ ...e }));
+  } = useCdromFromDataCenter(vm?.dataCenterVo.id, (e) => ({ ...e }));
   
   useEffect(() => {
     if (formState.isCdDvdChecked && isos.length > 0 && formState.cdRomVo.id === "") {
@@ -88,6 +88,16 @@ const VmStartOnceModal = ({
       <div className="f-btw">
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formState.isCdDvdChecked}
+          onChange={(checked) => {
+            const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : emptyIdNameVo();
+            setFormState((prev) => ({
+              ...prev,
+              isCdDvdChecked: checked,
+              cdRomVo: checked ? firstIso : emptyIdNameVo(),
+              windowGuestTool: checked ? prev.windowGuestTool : false,
+            }));
+          }}
+          /* 
           onChange={(e) => {
             const isChecked = e.target.checked;
             const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : emptyIdNameVo();
@@ -98,6 +108,7 @@ const VmStartOnceModal = ({
               windowGuestTool: isChecked ? prev.windowGuestTool : false,
             }));
           }}
+          */
         />
         <span>{formState.isCdDvdChecked === true ? "T":"F"}</span>
         <div style={{width:"55%"}}>

@@ -99,18 +99,30 @@ const DomainImportVmModal = ({
     cpuArc: vm.cpuArc,
     diskCnt: vm?.diskAttachmentVos?.length ?? 0,
     mac: 
-      <LabelCheckbox id={`relocation-${vm.id}`}
-        label={""}
+      <LabelCheckbox id={`relocation-${vm.id}`} label={""}
         checked={!!relocation[vm.id]}
+        onChange={(checked) => {
+          import.meta.env.DEV && validationToast.debug(`relocation[${vm.id}]: ${checked}`);
+          setRelocation(prev => ({ ...prev, [vm.id]: checked }));
+        }}
+        /*
         onChange={e => {
           setRelocation(prev => ({ ...prev, [vm.id]: e.target.checked }));
         }}
+        */
       />,
     allow:
-      <LabelCheckbox id={`allow-${vm.id}`}
-        label={""}
+      <LabelCheckbox id={`allow-${vm.id}`} label={""}
         checked={!!partialAllow[vm.id]}
-        onChange={e => {setPartialAllow(prev => ({ ...prev, [vm.id]: e.target.checked }));}}
+        onChange={(checked) => {
+          import.meta.env.DEV && validationToast.debug(`partialAllow[${vm.id}]: ${checked}`);
+          setPartialAllow(prev => ({ ...prev, [vm.id]: checked }));
+        }}
+        /*
+        onChange={e => {
+          setPartialAllow(prev => ({ ...prev, [vm.id]: e.target.checked }));
+        }}
+        */
       />,
     cluster: 
       <LabelSelectOptionsID className="w-[280px]"

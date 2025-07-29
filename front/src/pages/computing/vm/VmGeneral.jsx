@@ -250,14 +250,12 @@ const VmGeneral = ({
   } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const snapshotList = useMemo(() =>
-    (snapshots || [])
-      .filter(s => !/(Active\sVM|before\sthe\spreview)/gi.test(s.description))
+    (snapshots || []).filter(s => !/(Active\sVM|before\sthe\spreview)/gi.test(s.description))
       .map(s => ({
-        id: s.id,
-        description: s.description,
-        date: s.date?.replace("T", " ").slice(0, 16),
-        icon: s.persistMemory ? rvi16DesktopFlag(CONSTANT.color.blue1) : rvi16Desktop(),
-        statusIcon: status2Icon(s.status),
+        ...s,
+        date: s?.date?.replace("T", " ").slice(0, 16),
+        icon: s?.persistMemory ? rvi16DesktopFlag(CONSTANT.color.blue1) : rvi16Desktop(),
+        statusIcon: status2Icon(s?.status),
       }))
   , [snapshots]);
 
@@ -406,10 +404,12 @@ const VmGeneral = ({
                 + 스냅샷 추가
               </div>
               {snapshotList.map((snap) => (
-                <div key={snap.id} className="snapshot-entry f-start">
-                  {snap.statusIcon && <RVI16 iconDef={snap.statusIcon} className="mr-1" />}
-                  <RVI16 iconDef={snap.icon} className="ml-1 mr-1" />
-                  <span>{snap.description}_{snap.date}</span>
+                <div key={snap.id} className="snapshot-entry f-start w-full gap-2">
+                  {snap.statusIcon && <RVI16 iconDef={snap.statusIcon} className="w-[16px] h-[16px]" />}
+                  <RVI16 iconDef={snap.icon} className="w-[16px] h-[16px]" />
+                  <span className="snapshot-entry-name">
+                    {snap.description}_{snap.date}
+                  </span>
                 </div>
               ))}
             </div>

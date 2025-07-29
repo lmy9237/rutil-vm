@@ -128,7 +128,6 @@ const VmDisk = ({
                         label="완전삭제"
                         checked={disk.detachOnly || false}
                         onChange={(e) => {
-                          const checked = e.target.checked;
                           setDiskListState(prev =>
                             prev.map((d, i) =>
                               i === index ? { ...d, detachOnly: checked } : d

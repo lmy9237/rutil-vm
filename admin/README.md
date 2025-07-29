@@ -1,6 +1,6 @@
 # rutil-vm-admin
 
-![favicon](../front/favicon.ico)
+![favicon](../front/favicon.svg)
   
 Rutil VM 관리 및 필수 확인사항
 

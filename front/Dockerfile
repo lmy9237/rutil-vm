@@ -17,7 +17,7 @@ COPY postcss.config.js /home/node/
 COPY vite.config.js /home/node/
 COPY index.html /home/node/
 COPY logo*.png /home/node/
-COPY favicon.ico /home/node/
+COPY favicon.svg /home/node/
 COPY manifest.json /home/node/
 COPY robots.txt /home/node/
 

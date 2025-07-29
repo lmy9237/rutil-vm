@@ -51,7 +51,7 @@ const VmDiskDupl = ({
         status: (diskImage?.imageTransferRunning) ? `잠김 (${diskImage?.imageTransferPercent.toFixed(2)}%)`: diskImage?.status.toUpperCase(),
         active: d?.active,
         interface: d?.interface_,
-        storageType: diskImage?.storageType,
+        storageType: diskImage?.storageTypeKr,
         sparse: diskImage?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
         virtualSize: checkZeroSizeToGiB(diskImage?.virtualSize),
         actualSize: checkZeroSizeToGiB(diskImage?.actualSize),

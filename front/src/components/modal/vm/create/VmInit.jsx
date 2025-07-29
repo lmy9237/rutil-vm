@@ -16,14 +16,13 @@ const VmInit = ({ formCloudState, setFormCloudState }) => {
         <div className="flex mb-1.5">
         <LabelCheckbox id="enableBootMenu" label="Cloud-lnit"
           checked={formCloudState.cloudInit} // cloudInit 상태를 checked 속성에 바인딩
-          onChange={(e) => {
-            const isChecked = e.target.checked;
+          onChange={(checked) => {
             setFormCloudState((prev) => ({
               ...prev,
-              cloudInit: isChecked, // cloudInit 상태 업데이트
-              script: isChecked ? prev.script : "", // 체크 해제 시 script 초기화
+              cloudInit: checked, // cloudInit 상태 업데이트
+              script: checked ? prev.script : "", // 체크 해제 시 script 초기화
             }));
-            if (!isChecked) {
+            if (!checked) {
               setDomainHiddenBoxVisible(false); // 체크 해제 시 숨김 박스도 닫기
             }
           }}

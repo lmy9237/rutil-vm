@@ -5,9 +5,8 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
-import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVoFromAllDiskEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
 import com.itinfo.rutilvm.common.gson
-import com.itinfo.rutilvm.common.toUUID
 
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.StorageDomain
@@ -18,7 +17,7 @@ class TreeNavigationalStorageDomain (
     id: String = "",
     name: String = "",
 	status: StorageDomainStatus? = null,
-    val disks: List<TreeNavigational<DiskStatusB>> = listOf()
+    val disks: List<TreeNavigatable<DiskStatusB>> = listOf()
 ): TreeNavigational<StorageDomainStatus>(TreeNavigatableType.STORAGE_DOMAIN, id, name, status), Serializable {
     override fun toString(): String =
         gson.toJson(this)
@@ -27,7 +26,7 @@ class TreeNavigationalStorageDomain (
         private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
         private var bName: String = "";fun name(block: () -> String?) { bName = block() ?: "" }
 		private var bStatus: StorageDomainStatus? = null;fun status(block: () -> StorageDomainStatus?) { bStatus = block() }
-        private var bDisks: List<TreeNavigational<DiskStatusB>> = listOf(); fun disks(block: () -> List<TreeNavigational<DiskStatusB>>?) { bDisks = block() ?: listOf() }
+        private var bDisks: List<TreeNavigatable<DiskStatusB>> = listOf(); fun disks(block: () -> List<TreeNavigatable<DiskStatusB>>?) { bDisks = block() ?: listOf() }
         fun build(): TreeNavigationalStorageDomain = TreeNavigationalStorageDomain(bId, bName, bStatus, bDisks)
     }
     companion object {
@@ -43,14 +42,15 @@ fun StorageDomain.toNavigationalWithStorageDomains(
 	val allDisks: List<DiskImageVo> = (rAllDisks?.findAllByStorageDomainIdOrderByDiskAliasAsc(
 		this@toNavigationalWithStorageDomains.id()
 	) ?: emptyList())
-		.toDiskImageVoFromAllDiskEntities().filter {
+		.toDiskImageVosFromAllDiskEntities().filter {
 		it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso
 	}
 	return TreeNavigationalStorageDomain.builder {
 		id { this@toNavigationalWithStorageDomains.id() }
 		name { this@toNavigationalWithStorageDomains.name() }
 		status { this@toNavigationalWithStorageDomains.status() }
-		disks { allDisks.toNavigationalsFromDiskImageVos() }
+		disks { allDisks }
+		// disks { allDisks.toNavigationalsFromDiskImageVos() }
 	}
 	/*
     val disks: List<Disk> =

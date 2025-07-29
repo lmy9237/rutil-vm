@@ -11,28 +11,37 @@ import java.util.*
 @Repository
 interface NetworkClusterRepository : JpaRepository<NetworkClusterEntity, UUID> {
 	@Query("""
-SELECT nc FROM NetworkClusterEntity nc
+SELECT DISTINCT nc FROM NetworkClusterEntity nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH n.networkClusters ncs
 WHERE 1=1
 """)
 	override fun findAll(): List<NetworkClusterEntity>
 	@Query("""
-SELECT nc FROM NetworkClusterEntity nc
+SELECT DISTINCT nc FROM NetworkClusterEntity nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH n.networkClusters ncs
 WHERE 1=1
 AND nc.id.clusterId = :clusterId
 """)
 	fun findByClusterId(clusterId: UUID): List<NetworkClusterEntity>?
 	@Query("""
-SELECT nc FROM NetworkClusterEntity nc
+SELECT DISTINCT nc FROM NetworkClusterEntity nc
 LEFT JOIN FETCH nc.cluster c
 LEFT JOIN FETCH nc.network n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH n.networkClusters ncs
 WHERE 1=1
 AND nc.id.networkId = :networkId
 """)
-	fun findByNetworkId(networkId: UUID): List<NetworkClusterEntity>?
+	fun findByNetworkId(networkId: UUID): List<NetworkClusterEntity>
 
 // @Query("""
 // SELECT *,

@@ -1,6 +1,6 @@
 # rutil-vm-back
 
-![favicon](../front/favicon.ico)
+![favicon](../front/favicon.svg)
   
 Rutil VM 백앤드
 

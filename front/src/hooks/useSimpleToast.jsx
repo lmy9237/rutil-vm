@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { useToast }  from "@/hooks/use-toast";
+import useGlobal     from "@/hooks/useGlobal";
 import Localization  from "@/utils/Localization";
 import Logger        from "@/utils/Logger";
 
@@ -67,20 +69,48 @@ export const useApiToast = () => {
 
 export const useProgressToast = () => {
   const { toast, dismiss } = useToast();
+  const {
+    fileUploadQueue, 
+    newFileUploadQueue,
+    popFileUploadQueue
+  } = useGlobal()
 
   const progressToast = {
-    in: (title, progress=0) => { 
+    in: (title, progress=0, loaded=0, total=0) => {
+      /* if ([...fileUploadQueue].length == 0)
+        newFileUploadQueue()
+      for (let id of fileUploadQueue) {
+        Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}, id: ${id}`);
+        toast({
+          id: id,
+          title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
+          description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%`,
+          update: () => ({
+            duration: (progress === 100) ? 1 : Infinity
+          }),
+          duration: Infinity,
+        });
+        if (progress == 100) {
+          popFileUploadQueue()
+          dismiss()
+        }
+      } */
+      
       Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}`);
+      const ratio = `(${loaded} MB / ${total} MB)`
       toast({
         id: 1,
         title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
-        description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%`,
+        description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%\n\n${ratio}`,
         update: () => ({
           duration: (progress === 100) ? 1 : Infinity
         }),
         duration: Infinity,
       });
-      if (progress == 100) dismiss()
+      if (progress == 100) {
+        popFileUploadQueue()
+        dismiss()
+      }
     }
   }
 

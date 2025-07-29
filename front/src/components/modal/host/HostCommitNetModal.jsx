@@ -72,7 +72,11 @@ const HostCommitNetModal = ({
       <div className="py-2">
         <LabelCheckbox id="approveOperation" label="동작 확인"
           checked={approved}
-          onChange={(e) => setApproved(e.target.checked)}
+          // onChange={(e) => setApproved(e.target.checked)}
+          onChange={(checked) => {
+            import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+            setApproved(checked)
+          }}
         />
       </div>
     </BaseModal>

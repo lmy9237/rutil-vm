@@ -33,8 +33,6 @@ import com.itinfo.rutilvm.api.model.setting.toProviderPropertyVo
 import com.itinfo.rutilvm.api.model.storage.DiskAttachmentVo
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.model.storage.StorageDomainVo
-import com.itinfo.rutilvm.api.model.storage.toVmDisk
-import com.itinfo.rutilvm.api.model.toIdentifiedVoFromVm
 
 import com.itinfo.rutilvm.api.ovirt.business.SnapshotType
 import com.itinfo.rutilvm.api.ovirt.business.StoragePoolStatus
@@ -42,20 +40,16 @@ import com.itinfo.rutilvm.api.ovirt.business.VmStatusB
 import com.itinfo.rutilvm.api.ovirt.business.VolumeType
 import com.itinfo.rutilvm.api.ovirt.business.findArchitectureType
 import com.itinfo.rutilvm.api.ovirt.business.toBootDevices
-import com.itinfo.rutilvm.api.ovirt.business.toDiskInterfaceB
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.xml.OvfCompositeDisk
 import com.itinfo.rutilvm.api.xml.RasdItemType10
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.util.ovirt.findCluster
-import com.itinfo.rutilvm.util.ovirt.findDisk
-import com.itinfo.rutilvm.util.ovirt.findVm
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.builders.PropertyBuilder
-import org.ovirt.engine.sdk4.types.DiskAttachment
 import org.ovirt.engine.sdk4.types.JobStatus
 import org.ovirt.engine.sdk4.types.Property
 import org.ovirt.engine.sdk4.types.VnicPassThroughMode
@@ -135,13 +129,13 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 				name { entity.storageName }
 			}
 		}
-		type { entity.entityType }
+		entityType { entity.entityType }
 		imageTransferPhase { entity.imageTransferPhase }
 		imageTransferType { entity.imageTransferType }
 		imageTransferBytesSent { entity.imageTransferBytesSent }
 		imageTransferBytesTotal { entity.imageTransferBytesTotal }
 		connectVm {
-			if(entity.entityType == "VM") {
+			if (entity.entityType == "VM") {
 				IdentifiedVo.builder {
 					name { entity.vmNames }
 				}
@@ -149,7 +143,7 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 			else null
 		}
 		connectTemplate {
-			if(entity.entityType == "TEMPLATE") {
+			if (entity.entityType == "TEMPLATE") {
 				IdentifiedVo.builder {
 					name { entity.vmNames }
 				}
@@ -158,8 +152,8 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 		}
 	}
 }
-fun List<AllDiskEntity>.toDiskImageVoFromAllDiskEntities(): List<DiskImageVo> =
-	this@toDiskImageVoFromAllDiskEntities.map { it.toDiskImageVoFromAllDiskEntity() }
+fun List<AllDiskEntity>.toDiskImageVosFromAllDiskEntities(): List<DiskImageVo> =
+	this@toDiskImageVosFromAllDiskEntities.map { it.toDiskImageVoFromAllDiskEntity() }
 
 //endregion: AllDiskEntity
 
@@ -188,7 +182,9 @@ fun AllDisksForVmsEntity.toDiskAttachmentVoFromAllDisksForVmsEntity(): DiskAttac
 //endregion: AllDisksForVmsEntity
 
 //region: StorageDomainEntity
-fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
+fun StorageDomainEntity.toStorageDomainVoFromStorageDomainEntity(
+	disks: List<AllDiskEntity> = listOf(),
+): StorageDomainVo {
 	return StorageDomainVo.builder {
 		id { id.toString() }
 		name { storageName }
@@ -213,8 +209,8 @@ fun StorageDomainEntity.toStorageDomainEntity(): StorageDomainVo {
 		}
 	}
 }
-fun List<StorageDomainEntity>.toStorageDomainEntities(): List<StorageDomainVo> =
-	this@toStorageDomainEntities.map { it.toStorageDomainEntity() }
+fun List<StorageDomainEntity>.toStorageDomainVosFromStorageDomainEntities(): List<StorageDomainVo> =
+	this@toStorageDomainVosFromStorageDomainEntities.map { it.toStorageDomainVoFromStorageDomainEntity() }
 //endregion: StorageDomainEntity
 
 
@@ -318,19 +314,28 @@ fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder 
 	mtu { this@toNetworkVoFromNetworkEntity.mtu }
 	portIsolation { this@toNetworkVoFromNetworkEntity.portIsolation }
 	stp { this@toNetworkVoFromNetworkEntity.stp }
-	usage { this@toNetworkVoFromNetworkEntity.networkCluster?.toUsageVo(this@toNetworkVoFromNetworkEntity.vmNetwork) }
+	usage {
+		this@toNetworkVoFromNetworkEntity.networkClusters
+			?.firstOrNull()
+			?.toUsageVo(this@toNetworkVoFromNetworkEntity.vmNetwork)
+	}
 	vlan { this@toNetworkVoFromNetworkEntity.vlanId }
 	status { this@toNetworkVoFromNetworkEntity.status }
 	vdsmName { this@toNetworkVoFromNetworkEntity.vdsmName }
 	dataCenterVo { this@toNetworkVoFromNetworkEntity.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
-	clusterVo { this@toNetworkVoFromNetworkEntity.networkCluster?.cluster?.toIdentifiedVoFromClusterViewEntity() }
+	clusterVo {
+		this@toNetworkVoFromNetworkEntity.networkClusters
+			?.firstOrNull()
+			?.cluster
+			?.toIdentifiedVoFromClusterViewEntity()
+	}
 	openStackNetworkVo {
 		OpenStackNetworkVo.builder {
 			id { this@toNetworkVoFromNetworkEntity.providerNetworkExternalId }
 
 		}
 	}
-	required { this@toNetworkVoFromNetworkEntity.networkCluster?.required }
+	required { this@toNetworkVoFromNetworkEntity.required }
 	dnsNameServers { this@toNetworkVoFromNetworkEntity.dnsConfiguration?.nameServers?.toDnsVosFromNameServerEntities() }
 	vnicProfileVos { this@toNetworkVoFromNetworkEntity.vnicProfiles.toIdentifiedVosFromVnicProfileEntities() }
 }
@@ -351,6 +356,34 @@ fun NetworkClusterEntity.toUsageVo(vm: Boolean?=false): UsageVo = UsageVo.builde
 	defaultRoute { this@toUsageVo.defaultRoute }
 	gluster { this@toUsageVo.isGluster }
 }
+fun NetworkClusterEntity.toNetworkVoFromNetworkCluster(): NetworkVo = NetworkVo.builder {
+	id { this@toNetworkVoFromNetworkCluster.network?.id.toString() }
+	name { this@toNetworkVoFromNetworkCluster.network?.name }
+	description { this@toNetworkVoFromNetworkCluster.network?.description }
+	comment { this@toNetworkVoFromNetworkCluster.network?.freeTextComment }
+	mtu { this@toNetworkVoFromNetworkCluster.network?.mtu }
+	portIsolation { this@toNetworkVoFromNetworkCluster.network?.portIsolation }
+	stp { this@toNetworkVoFromNetworkCluster.network?.stp }
+	usage {
+		this@toNetworkVoFromNetworkCluster.toUsageVo(this@toNetworkVoFromNetworkCluster.network?.vmNetwork)
+	}
+	vlan { this@toNetworkVoFromNetworkCluster.network?.vlanId }
+	status { this@toNetworkVoFromNetworkCluster.network?.status }
+	vdsmName { this@toNetworkVoFromNetworkCluster.network?.vdsmName }
+	dataCenterVo { this@toNetworkVoFromNetworkCluster.network?.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
+	clusterVo { this@toNetworkVoFromNetworkCluster.cluster?.toIdentifiedVoFromClusterViewEntity() }
+	openStackNetworkVo {
+		OpenStackNetworkVo.builder {
+			id { this@toNetworkVoFromNetworkCluster.network?.providerNetworkExternalId }
+
+		}
+	}
+	required { this@toNetworkVoFromNetworkCluster.required }
+	vnicProfileVos { this@toNetworkVoFromNetworkCluster.network?.vnicProfiles.toIdentifiedVosFromVnicProfileEntities() }
+}
+fun List<NetworkClusterEntity>.toNetworkVosFromNetworkClusters(): List<NetworkVo> =
+	this@toNetworkVosFromNetworkClusters.map { it.toNetworkVoFromNetworkCluster() }
+
 //endregion: NetworkClusterEntity
 
 //region: NetworkClusterViewEntity

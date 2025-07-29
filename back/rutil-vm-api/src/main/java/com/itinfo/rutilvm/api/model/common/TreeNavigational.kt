@@ -19,12 +19,19 @@ import org.ovirt.engine.sdk4.types.Template
 import org.ovirt.engine.sdk4.types.Vm
 import java.io.Serializable
 
+interface TreeNavigatable<out T: Any?> {
+	val type: TreeNavigatableType?
+	val id: String?
+	val name: String?
+	val status: T?
+}
+
 open class TreeNavigational<out T: Any?>(
-	val type: TreeNavigatableType? = TreeNavigatableType.UNKNOWN,
-	val id: String? = "",
-	val name: String? = "",
-	val status: T? = null,
-): Serializable {
+	override val type: TreeNavigatableType? = TreeNavigatableType.UNKNOWN,
+	override val id: String? = "",
+	override val name: String? = "",
+	override val status: T? = null,
+): TreeNavigatable<T>, Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
 
@@ -52,14 +59,14 @@ fun List<Disk>.toNavigationalsFromDisks(): List<TreeNavigational<DiskStatus>> =
 //endregion
 
 //region: DiskImageVo
-fun DiskImageVo.toNavigationalFromDiskImageVo(): TreeNavigational<DiskStatusB> = TreeNavigational.builder {
+fun DiskImageVo.toNavigationalFromDiskImageVo(): TreeNavigatable<DiskStatusB> = TreeNavigational.builder {
 	type { TreeNavigatableType.DISK }
 	id { this@toNavigationalFromDiskImageVo.id }
 	name { this@toNavigationalFromDiskImageVo.alias }
 	status { this@toNavigationalFromDiskImageVo.status }
 }
 
-fun List<DiskImageVo>.toNavigationalsFromDiskImageVos(): List<TreeNavigational<DiskStatusB>> =
+fun List<DiskImageVo>.toNavigationalsFromDiskImageVos(): List<TreeNavigatable<DiskStatusB>> =
 	this@toNavigationalsFromDiskImageVos.map { it.toNavigationalFromDiskImageVo() }
 //region: Vm
 fun Vm.toNavigationalFromVms(): TreeNavigational<VmStatusB> = TreeNavigational.builder {

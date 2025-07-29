@@ -54,7 +54,11 @@ const DomainDeleteModal = ({
       <div style={{ display: "flex" }}>
         <LabelCheckbox id="format" label="포맷 하시겠습니까?"
           checked={format}
-          onChange={(e) => setFormat(e.target.checked)}
+          // onChange={(e) => setFormat(e.target.checked)}
+          onChange={(checked) => {
+            import.meta.env.DEV && validationToast.debug(`format: ${checked}`);
+            setFormat(checked)
+          }}
         />
       </div>
       <LabelSelectOptionsID id="host" label={Localization.kr.HOST}

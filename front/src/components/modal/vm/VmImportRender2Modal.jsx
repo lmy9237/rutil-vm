@@ -12,7 +12,7 @@ import {
   useCpuProfilesFromCluster,
   useVmFromVMWare,
   qpAllActiveDomainsFromDataCenter,
-  useCDFromDataCenter,
+  useCdromFromDataCenter,
   useAllVnicsFromCluster,
 } from "@/api/RQHook";
 import {
@@ -79,7 +79,7 @@ const VmImportRender2Modal = ({
   const { 
     data: isos = [], 
     isLoading: isIsoLoading 
-  } = useCDFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
+  } = useCdromFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   const { 
     data: osList = [], 
@@ -242,10 +242,9 @@ const VmImportRender2Modal = ({
             <div className="f-start items-center gap-2">
               <LabelCheckbox id="virtio" label="VirtIO 드라이버 연결"
                 checked={virtioChecked}
-                onChange={(e) => setVirtioChecked(e.target.checked)}
+                onChange={(checked) => setVirtioChecked(checked)}
               />
-              <LabelSelectOptionsID label="" 
-                value={virtioVo.id}
+              <LabelSelectOptionsID label="" value={virtioVo.id}
                 options={isos}
                 disabled={!virtioChecked} 
                 onChange={handleSelectIdChange(setVirtioVo, isos, validationToast)}

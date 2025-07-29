@@ -62,7 +62,7 @@ const HostActionButtons = ({
   
   return (
     <ActionButtons actionType={actionType} 
-      actions={basicActions}
+      actions={isContextMenu ? basicActions.slice(1) : basicActions}
     >
       {isContextMenu ? (
         manageActions.map(({ type, onClick, label, disabled }) => (

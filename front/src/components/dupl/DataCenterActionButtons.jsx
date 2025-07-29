@@ -34,7 +34,7 @@ const DataCenterActionButtons = ({
 
   return (
     <ActionButtons actionType={actionType}
-      actions={basicActions}
+      actions={isContextMenu ? basicActions.slice(1) : basicActions}
     />
   );
 }; 

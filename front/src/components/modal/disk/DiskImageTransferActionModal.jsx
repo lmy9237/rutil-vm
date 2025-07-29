@@ -1,55 +1,50 @@
-import { useMemo } from "react";
+import React from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import {
-  useStartVM,
-  usePauseVM,
-  usePowerOffVM,
-  useShutdownVm,
-  useRebootVM,
-  useResetVM,
+  useCancelImageTransfer4Disk,
+  usePauseImageTransfer4Disk,
+  useResumeImageTransfer4Disk,
 } from "@/api/RQHook";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
 const ACTIONS = {
-  "vm:start":    { label: Localization.kr.START,       hook: useStartVM },
-  "vm:pause":    { label: Localization.kr.PAUSE,       hook: usePauseVM },
-  "vm:reboot":   { label: Localization.kr.REBOOT,      hook: useRebootVM },
-  "vm:reset":    { label: Localization.kr.RESET,       hook: useResetVM },
-  "vm:shutdown": { label: Localization.kr.END,         hook: useShutdownVm },
-  "vm:powerOff": { label: Localization.kr.POWER_OFF,   hook: usePowerOffVM },
+  "disk:cancelit":   { label: Localization.kr.CANCEL,      hook: useCancelImageTransfer4Disk },
+  "disk:pauseit":    { label: Localization.kr.PAUSE,       hook: usePauseImageTransfer4Disk },
+  "disk:resumeit":   { label: Localization.kr.RESUME,      hook: useResumeImageTransfer4Disk },
 };
 
 /**
- * @name VmActionModal
- * 가상머신 전송
+ * @name DiskImageTransferActionModal
+ * 디스크 이미지 전송
  * 
  * @param {boolean} isOpen
  * @param {function} onClose
- * @returns 
+ * 
+ * @returns {JSX.Element} DiskImageTransferActionModal
  */
-const VmActionModal = ({
+const DiskImageTransferActionModal = ({
   isOpen,
   onClose,
-  data,
-}) => {  
+}) => {
   const { validationToast } = useValidationToast();
-  const { activeModal, closeModal } = useUIState()
+  const { activeModal, closeModal } = useUIState();
+  const { disksSelected } = useGlobal();
   const { label = "", hook } = ACTIONS[activeModal()] || {};
   const { mutate } = hook ? hook(closeModal, closeModal) : { mutate: null };
 
   const { ids, names } = useMemo(() => {
-    const list = [...data];
     return {
-      ids: list.map((item) => item.id),
-      names: list.map((item) => item.name || "undefined"),
+      ids: [...disksSelected].map((item) => item.id),
+      names: [...disksSelected].map((item) => item.name || "undefined"),
     };
-  }, [data]);
+  }, [disksSelected]);
 
   const validateForm = () => {
-    Logger.debug(`VmActionModal > validateForm ... `)
+    Logger.debug(`DiskImageTransferActionModal > validateForm ... `)
     if (!mutate) return `알 수 없는 액션: ${activeModal()}`;
     if (!ids.length) return "ID가 없습니다.";
     return null
@@ -61,12 +56,12 @@ const VmActionModal = ({
       validationToast.fail(error);
       return;
     }
-    Logger.debug(`VmActionModal > handleSubmit ... `)
+    Logger.debug(`DiskImageTransferActionModal > handleSubmit ... `)
     ids.forEach((id) => mutate(id));
   };
 
   return (
-    <BaseModal targetName={Localization.kr.VM} submitTitle={label}
+    <BaseModal targetName={Localization.kr.IMAGE_TRANSFER} submitTitle={label}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
       promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
@@ -76,4 +71,4 @@ const VmActionModal = ({
   );
 };
 
-export default VmActionModal;
+export default DiskImageTransferActionModal;

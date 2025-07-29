@@ -212,10 +212,12 @@ const SettingProviderModal = ({
         onChange={handleInputChange(setFormState, "cluster", validationToast)}
       />
       {/* ssl인증서가 false여야 값이 나옴 */}
-      {/* <LabelCheckbox id="serverSsl" label={"서버 SSL 인증서 확인"}
+      {/* 
+      <LabelCheckbox id="serverSsl" label={"서버 SSL 인증서 확인"}
         checked={formState.wipeAfterDelete}
         onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
-      /> */}
+      />
+      */}
       <LabelSelectOptionsID label={`프록시 ${Localization.kr.HOST}`}
         value={hostVo.id}
         loading={isHostsLoading}

@@ -4,7 +4,6 @@ import { Route, Routes } from "react-router-dom";
 import { scan } from "react-scan";
 import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import "pretendard/dist/web/static/pretendard.css";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import useUIState       from "@/hooks/useUIState";
 import useBoxState      from "@/hooks/useBoxState";
 import useTmi           from "@/hooks/useTmi";
@@ -36,8 +35,8 @@ import AllDisk          from "@/pages/storage/disk/AllDisk";
 import DiskInfo         from "@/pages/storage/disk/DiskInfo";
 import Event            from "@/pages/event/Event";
 import SettingInfo      from "@/pages/setting/SettingInfo";
+import SettingProvidersInfo from "@/pages/setting/providers/SettingProvidersInfo";
 import "./App.css";
-import SettingProvidersInfo from "./pages/setting/providers/SettingProvidersInfo";
 // import "./App-debug.css";
 
 const App = () => {

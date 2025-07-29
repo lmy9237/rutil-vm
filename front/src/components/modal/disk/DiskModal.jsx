@@ -284,6 +284,7 @@ const DiskModal = ({
             value={String(formState.sparse)}
             onChange={(e) => {
               const sparseValue = e.target.value === "true";
+              import.meta.env.DEV && validationToast.debug(`field: sparse: value: ${sparseValue}`)
               setFormState((prev) => ({
                 ...prev,
                 sparse: sparseValue,
@@ -302,23 +303,20 @@ const DiskModal = ({
         </div>
         <div className="disk-new-img-right f-end">
           <div className="img-checkbox-outer">
-            <LabelCheckbox label={Localization.kr.WIPE_AFTER_DELETE}
-              id="wipeAfterDelete"
+            <LabelCheckbox id="wipeAfterDelete" label={Localization.kr.WIPE_AFTER_DELETE}
               checked={formState.wipeAfterDelete}
               onChange={handleInputCheck(setFormState, "wipeAfterDelete", validationToast)}
             />
           </div>
           {/* <div className="img-checkbox-outer">
-            <LabelCheckbox label={Localization.kr.IS_SHARABLE}
-              id="sharable"
+            <LabelCheckbox id="sharable" label={Localization.kr.IS_SHARABLE}
               checked={formState.sharable}
-              onChange={handleInputChangeCheck("sharable")}
               disabled={editMode}
+              onChange={handleInputChangeCheck("sharable")}
             />
           </div> */}
           <div className="img-checkbox-outer">
-            <LabelCheckbox label="증분 백업 사용"
-              id="backup"
+            <LabelCheckbox id="backup" label="증분 백업 사용"
               checked={formState.backup}
               disabled={!formState.sparse} // 사전할당일 때 비활성화
               onChange={handleInputCheck(setFormState, "backup", validationToast)}

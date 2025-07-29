@@ -4,12 +4,14 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.*
+import com.itinfo.rutilvm.api.model.common.TreeNavigatable
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
 import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toDiskContentType
 import com.itinfo.rutilvm.api.ovirt.business.toDiskFormat
 import com.itinfo.rutilvm.api.repository.engine.entity.UnregisteredDiskEntity
@@ -36,7 +38,6 @@ import java.io.Serializable
 import java.math.BigInteger
 import java.time.LocalDateTime
 import java.util.UUID
-import kotlin.math.pow
 
 /**
  * [DiskImageVo]
@@ -68,7 +69,7 @@ import kotlin.math.pow
  // * @property diskProfileVos List<[IdentifiedVo]> 디스크 프로파일 목록
  */
 class DiskImageVo(
-	val id: String = "",
+	override val id: String = "",
 	val size: BigInteger = BigInteger.ZERO,
 	val appendSize: BigInteger = BigInteger.ZERO,
 	val alias: String = "",
@@ -81,11 +82,11 @@ class DiskImageVo(
 	val imageId: String = "",
 	val virtualSize: BigInteger = BigInteger.ZERO,
 	val actualSize: BigInteger = BigInteger.ZERO,
-	val status: DiskStatusB? = DiskStatusB.locked,
+	override val status: DiskStatusB? = DiskStatusB.locked,
 	val contentType: DiskContentTypeB? = DiskContentTypeB.data, // unknown
 	val storageType: DiskStorageType? = DiskStorageType.image,
 	private val _dateCreated: LocalDateTime? = null,
-	val type: String = "",
+	val entityType: String = "",
 	val imageTransferPhase: ImageTransferPhaseB? = null,	// 실제 전송 중인 상태일 때만 값이 표출
 	val imageTransferType: ImageTransferType? = null,		// 실제 전송 중인 상태일 때만 값이 표출
 	val imageTransferBytesSent: BigInteger? = null,			// 실제 전송 중인 상태일 때만 값이 표출
@@ -96,7 +97,11 @@ class DiskImageVo(
 	val storageDomainVo: IdentifiedVo = IdentifiedVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
 	// val diskProfileVos: List<IdentifiedVo> = listOf()
-): Serializable {
+): TreeNavigatable<DiskStatusB>, Serializable {
+	override val type: TreeNavigatableType 	get() = TreeNavigatableType.DISK
+	override val name: String?				get() = alias
+	val vmAttached: Boolean?				get() = !connectVm.name.isEmpty() || !connectVm.id.isEmpty()
+	val templateAttached: Boolean?			get() = !connectTemplate.name.isEmpty()	|| !connectTemplate.id.isEmpty()
 	val dateCreated: String?				get() = ovirtDf.formatEnhancedFromLDT(_dateCreated)
 	val statusCode: String?					get() = status?.code
 	// val statusEn: String?				get() = status?.en ?: "N/A"
@@ -155,7 +160,7 @@ class DiskImageVo(
 		private var bContentType: DiskContentTypeB? = DiskContentTypeB.data;fun contentType(block: () -> DiskContentTypeB?) { bContentType = block() ?: DiskContentTypeB.data }
 		private var bStorageType: DiskStorageType? = DiskStorageType.image;fun storageType(block: () -> DiskStorageType?) { bStorageType = block() ?: DiskStorageType.image }
 		private var bDateCreated: LocalDateTime? = null;fun dateCreated(block: () -> LocalDateTime?) { bDateCreated = block() }
-		private var bType: String = "";fun type(block: () -> String?) { bType = block() ?: "" }
+		private var bEntityType: String = "";fun entityType(block: () -> String?) { bEntityType = block() ?: "" }
 		private var bImageTransferPhase: ImageTransferPhaseB? = null; fun imageTransferPhase(block: () -> ImageTransferPhaseB?) { bImageTransferPhase = block() }
 		private var bImageTransferType: ImageTransferType? = null; fun imageTransferType(block: () -> ImageTransferType?) { bImageTransferType = block() }
 		private var bImageTransferBytesSent: BigInteger? = null; fun imageTransferBytesSent(block: () -> BigInteger?) { bImageTransferBytesSent = block() }
@@ -167,7 +172,7 @@ class DiskImageVo(
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bType, bImageTransferPhase, bImageTransferType, bImageTransferBytesSent, bImageTransferBytesTotal, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo)
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bEntityType, bImageTransferPhase, bImageTransferType, bImageTransferBytesSent, bImageTransferBytesTotal, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo)
 	}
 	companion  object {
 		private val log by LoggerDelegate()
@@ -624,7 +629,10 @@ fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 		 	VolumeFormat.cow -> this@toUploadDisk.virtualSize.toLong()
 			else -> fileSize
 		})
-		.sparse(storageType == StorageType.NFS)// storage가 nfs 면 씬, iscsi면 사전할당
+		.sparse(
+			// storageType == StorageType.NFS
+			this@toUploadDisk.contentType != DiskContentTypeB.iso
+		)// 업로드할 디스크 유형이 iso 이 아닐 때 무조건 씬 프로비져닝
 		.alias(this@toUploadDisk.alias)
 		.description(this@toUploadDisk.description)
 		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))

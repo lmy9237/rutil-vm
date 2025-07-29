@@ -255,7 +255,8 @@ const HostNetworkEditModal = ({
               <>
                 <LabelCheckbox label={`${Localization.kr.NETWORK} 동기화`}
                   checked={networkModalState.inSync} 
-                  onChange={e => handleChangeInSync("inSync", !networkModalState.inSync) }
+                  // onChange={e => handleChangeInSync("inSync", !networkModalState.inSync) }
+                  onChange={(checked) => handleChangeInSync("inSync", !networkModalState.inSync) }
                 />
               </>
             )}

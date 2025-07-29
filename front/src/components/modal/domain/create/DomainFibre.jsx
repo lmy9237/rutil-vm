@@ -1,11 +1,14 @@
 import React, { useMemo } from "react";
-import useGlobal from "../../../../hooks/useGlobal";
-import SelectedIdView from "../../../common/SelectedIdView";
-import LabelCheckbox from "../../../label/LabelCheckbox";
-import TableColumnsInfo from "../../../table/TableColumnsInfo";
-import Tables from "../../../table/Tables";
-import { checkZeroSizeToGiB } from "../../../../util";
-import Logger from "../../../../utils/Logger";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "../../../../hooks/useGlobal";
+import SelectedIdView                   from "../../../common/SelectedIdView";
+import LabelCheckbox                    from "../../../label/LabelCheckbox";
+import TableColumnsInfo                 from "../../../table/TableColumnsInfo";
+import Tables                           from "../../../table/Tables";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainFibre
@@ -23,6 +26,7 @@ const DomainFibre = ({
   lunId, setLunId,
   isFibresLoading, isFibresError, isFibresSuccess
 }) => {
+  const { validationToast } = useValidationToast();
   const {
     hostsSelected, 
     lunsSelected, setLunsSelected
@@ -63,7 +67,11 @@ const DomainFibre = ({
         able: isSelectable ? (
           <LabelCheckbox
             checked={lunId === fc.id}
-            onChange={() => setLunId(prev => prev === fc.id ? "" : fc.id)}
+            // onChange={() => setLunId(prev => prev === fc.id ? "" : fc.id)}
+            onChange={(checked) => {
+              import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+              setLunId(prev => prev === fc.id ? "" : fc.id)
+            }}
           />
         ) : (
           <LabelCheckbox checked disabled />

@@ -186,22 +186,21 @@ const TemplateEditModal = ({
               <LabelCheckbox id="stateless"
                 label={Localization.kr.STATELESS}
                 checked={stateless}
-                onChange={(e) => setStateless(e.target.checked)}
+                onChange={(checked) => setStateless(checked)}
               />
-              
               <LabelCheckbox
                 id="start_in_pause_mode"
                 label="일시정지 모드에서 시작"
                 checked={startPaused}
-                onChange={(e) => setStartPaused(e.target.checked)}
+                onChange={(checked) => setStartPaused(checked)}
               />
-
               <LabelCheckbox
                 id="prevent_deletion"
                 label="삭제 방지"
                 checked={deleteProtected}
-                onChange={(e) => setDeleteProtected(e.target.checked)}
-              /> */}
+                onChange={(checked) => setDeleteProtected(checked)}
+              />
+              */}
             </>
           )}
           {activeTab  === "console" && (

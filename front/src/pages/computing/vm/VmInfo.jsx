@@ -73,7 +73,7 @@ const VmInfo = () => {
   const isMaintenance = vm?.status?.toUpperCase() === "MAINTENANCE";
   const allOkay2PowerDown = vm?.qualified4PowerDown;
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
-  const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
+  const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect || false;
   
   const [activeTab, setActiveTab] = useState("general")
   const tabs = useMemo(() => {
@@ -146,7 +146,7 @@ const VmInfo = () => {
     // { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
     { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: isDown, },
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: isDown  },
-    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isDown || !isPause },
+    { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isVmQualified4ConsoleConnect },
     { type: "snapshots", onClick: () => setActiveModal("vm:snapshot"),      label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`,                  disabled: !(isUp || isDown) || hasLockedSnapshot  },
     { type: "migration", onClick: () => setActiveModal("vm:migration"),     label: Localization.kr.MIGRATION, disabled: !isVmQualified2Migrate },
   ]), [vm, vmId, isUp, isDown, hasLockedSnapshot]);

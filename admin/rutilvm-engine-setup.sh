@@ -253,7 +253,7 @@ OVIRT_ENGINE_PRIVATE_KEY
       __RUTIL_VM_LOGGING_ENABLED__: true
       __RUTIL_VM_ITEMS_PER_PAGE__: 25
       __RUTIL_VM_IS_LICENCE_VERIFIED__: false
-      __RUTIL_VM_WATERMARK_TEXT__: 무단배포금지
+      __RUTIL_VM_WATERMARK_TEXT__: RV_WATERMARK_TEXT
     volumes:
       - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro
@@ -292,6 +292,7 @@ COMPOSE_FILE_EOF
 ENGINE_FQDN=$(grep '^ENGINE_FQDN=' /etc/ovirt-engine/engine.conf.d/10-setup-protocols.conf | cut -d'=' -f2)
 # /etc/hosts 파일에서 ENGINE_FQDN에 대응하는 IP 주소 추출
 ENGINE_IP=$(awk -v fqdn="$ENGINE_FQDN" '$0 !~ /^#/ && fqdn && index($0, fqdn) {print $1; exit}' /etc/hosts)
+RV_WATERMARK_TEXT=무단배포금지
 
 # 도커 컴포즈 파일이 존재하는지 확인
 if [ ! -f "$COMPOSE_FILE" ]; then
@@ -303,6 +304,7 @@ fi
 # 도커 컴포즈 파일 내에 ENGINE_IP와 ENGINE_FQDN placeholder 대체
 sed -i "s/ENGINE_IP/$ENGINE_IP/g" "$COMPOSE_FILE"
 sed -i "s/ENGINE_FQDN/$ENGINE_FQDN/g" "$COMPOSE_FILE"
+sed -i "s/RV_WATERMARK_TEXT/$RV_WATERMARK_TEXT/g" "$COMPOSE_FILE"
 
 # 임시 파일 생성 (도커 컴포즈 파일을 수정하기 위한 임시파일)
 TMP_FILE=$(mktemp)

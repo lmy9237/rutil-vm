@@ -63,7 +63,7 @@ const DomainInfo = () => {
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
   const isACTIVE = domain?.status?.toUpperCase() === "ACTIVE";
-  const isUNKNOWN = domain?.status?.toUpperCase() === "UNKNOWN";
+  const isUnknown = domain?.status?.toUpperCase() === "UNKNOWN";
   const isMaintenance = domain?.status?.toUpperCase() === "MAINTENANCE";
   const isUnattached = domain?.status?.toUpperCase() === "UNATTACHED";
 
@@ -92,7 +92,7 @@ const DomainInfo = () => {
       { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
 
-    if (!isUNKNOWN) {
+    if (!(isUnknown || isUnattached)) {
       if (importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0) {
         baseSections.splice(3, 0, { id: "importVms", label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importVms") });
         baseSections.splice(5, 0, { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") });

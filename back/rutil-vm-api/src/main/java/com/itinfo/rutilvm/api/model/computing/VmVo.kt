@@ -206,7 +206,7 @@ private val log = LoggerFactory.getLogger(VmVo::class.java)
  * @property diskAttachmentVos List<[DiskAttachmentVo]>
  * @property usageDto [UsageDto]
  */
-class VmVo (
+class VmVo(
 	override val id: String = "",
 	override val name: String = "",
 	val description: String = "",

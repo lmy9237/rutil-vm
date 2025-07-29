@@ -1,46 +1,57 @@
 import { useEffect } from "react";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import { 
   handleInputCheck,
+  handleInputChange,
   handleSelectIdChange
 } from "@/components/label/HandleInput";
 import { emptyIdNameVo }                from "@/util";
+import Logger                           from "@/utils/Logger";
 
 
 const VmBoot = ({
   isos, 
   isIsoLoading,
   formBootState,
-  setFormBootState
+  setFormBootState,
+  setFetchIsosOnce
 }) => {
-  const handleInputChange = (field) => (e) => {
+  const { validationToast } = useValidationToast();
+  
+  /* const handleInputChange = (field) => (e) => {
+    Logger.debug(`VmBoot > handleInputChange ... field: ${field}, value: ${e.target.value}`)
+    import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${e.target.value}`)
     setFormBootState((prev) => ({ ...prev, [field]: e.target.value }));
-  };
+  }; */
     
   // cd 체크가안되는문제로 변경
   useEffect(() => {
+    Logger.debug(`VmBoot > useEffect ... cdRomVo: `, formBootState.cdRomVo)
     setFormBootState((prev) => ({
       ...prev,
       isCdDvdChecked: !!formBootState.cdRomVo?.id, // id가 있으면 true, 없으면 false
     }));
-  }, [formBootState.cdRomVo?.id]);
+    setFetchIsosOnce(false)
+    // 한번만 실행
+  }, []);
 
   return (
     <div className="host-second-content">
       <div className="cpu-res">
         <div className="py-2 font-bold">부트순서</div>
 
-        <LabelSelectOptions label="첫 번째 장치"
+        <LabelSelectOptions id="firstDevice" label="첫 번째 장치"
           value={formBootState.firstDevice} 
           options={firstDeviceOptionList} 
-          onChange={handleInputChange("firstDevice")} 
+          onChange={handleInputChange(setFormBootState, "firstDevice", validationToast)} 
         />
-        <LabelSelectOptions label="두 번째 장치" 
-          value={formBootState.secDevice} 
+        <LabelSelectOptions id="secDevice" label="두 번째 장치" 
+          value={formBootState.secDevice}
           options={secDeviceOptionList}
-          onChange={handleInputChange("secDevice")} 
+          onChange={handleInputChange(setFormBootState, "secDevice", validationToast)} 
           placeholderLabel="없음"
           placeholderValue="none"
         />
@@ -50,6 +61,19 @@ const VmBoot = ({
         <LabelCheckbox id="connectCdDvd" label="CD/DVD 연결"
           checked={formBootState.isCdDvdChecked}
           disabled={isos.length === 0}
+          onChange={(checked) => {
+            const firstIso = isos[0]?.id 
+              ? { id: isos[0].id, name: isos[0].name }
+              : emptyIdNameVo();
+            const _cdRomVo = checked ? firstIso : emptyIdNameVo()
+            import.meta.env.DEV && validationToast.debug(`field: isCdDvdChecked, value: ${checked}\nfield: cdRomVo: value: ${JSON.stringify(_cdRomVo, 2, null)}`)
+            setFormBootState((prev) => ({
+              ...prev,
+              isCdDvdChecked: checked,
+              cdRomVo: _cdRomVo,
+            }));
+          }}
+          /* 
           onChange={(e) => {
             const isChecked = e.target.checked;
             const firstIso = isos[0]?.id ? { id: isos[0].id, name: isos[0].name } : emptyIdNameVo();
@@ -60,6 +84,7 @@ const VmBoot = ({
               cdRomVo: isChecked ? firstIso : emptyIdNameVo(),
             }));
           }}
+          */
         />
         <div style={{width:"55%"}}>
           <LabelSelectOptionsID
@@ -69,8 +94,14 @@ const VmBoot = ({
             options={isos}
             onChange={(e) => {
               const selected = isos.find(i => i.id === (e?.target?.value ?? e?.id))
-              if (selected) setFormBootState((prev) => ({ ...prev, cdRomVo: { id: selected.id, name: selected.name }}))
-              // TODO:handleSelectIdChange를 쓰려면 특정 prop에 값 변경하는 처리가 있어야함
+              if (selected) {
+                const _cdRomVo = {
+                  id: selected.id, 
+                  name: selected.name,
+                }
+                import.meta.env.DEV && validationToast.debug(`field: cdRomVo, value: ${JSON.stringify(_cdRomVo, 2, null)}`)
+                setFormBootState((prev) => ({ ...prev, cdRomVo: { ..._cdRomVo }}))
+              }
             }}
           />
         </div>

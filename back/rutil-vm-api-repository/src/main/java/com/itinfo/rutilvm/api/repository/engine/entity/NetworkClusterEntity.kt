@@ -40,7 +40,7 @@ class NetworkClusterEntity(
 	val defaultRoute: Boolean = false,
 
 	// --- Relationships ---
-	@ManyToOne(fetch=FetchType.LAZY,)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@MapsId("networkId")
 	@JoinColumn(name="network_id")
 	val network: NetworkEntity? = null,
