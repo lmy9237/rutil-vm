@@ -37,9 +37,7 @@ const VmMonitor = ({
   return (
     <>
       <div className="dupl-header-group f-start align-start gap-2 w-full">
-        <div style={{width:"1000px"}}>
-          <HostGeneralChart per={vmPer}/>
-        </div>
+        <HostGeneralChart per={vmPer}/>
       </div>
     </>
   );

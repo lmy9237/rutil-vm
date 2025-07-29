@@ -101,7 +101,7 @@ export const useProgressToast = () => {
       toast({
         id: 1,
         title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
-        description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}%\n\n${ratio}`,
+        description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}% (창을 새로고침 하지 마세요.)\n\n${ratio}`,
         update: () => ({
           duration: (progress === 100) ? 1 : Infinity
         }),

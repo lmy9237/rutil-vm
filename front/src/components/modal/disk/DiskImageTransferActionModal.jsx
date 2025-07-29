@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
@@ -64,7 +64,7 @@ const DiskImageTransferActionModal = ({
     <BaseModal targetName={Localization.kr.IMAGE_TRANSFER} submitTitle={label}
       isOpen={isOpen} onClose={onClose}
       onSubmit={handleSubmit}
-      promptText={`${names.join(", ")} 를(을) ${label} 하시겠습니까?`}
+      promptText={`${names.join(", ")} ${Localization.kr.IMAGE_TRANSFER}을 ${label} 하시겠습니까?`}
       contentStyle={{ width: "650px" }}
       shouldWarn={true}
     />

@@ -36,28 +36,33 @@ const DiskActionButtons = ({
   const { data: domain } = useStorageDomain(domainId);
   const domainNotActive = domain?.status?.toLowerCase() !== "active";
   
-  const { 
-    data: vms = [],
-    isLoading: isVmsLoading,
-    isError: isVmsError,
-    isSuccess: isVmsSuccess,
-    refetch: refetchVms,
-    isRefetching: isVmsRefetching,
-  } = useAllVmsFromDisk(selected1st?.id, (e) => ({  ...e }));
   const hasVmAtttached = disksSelected.every((e) => 
     e?.vmAttached || !!e?.connectVm?.name || false
-  ) || [...vms].length !== 0
+  )
 
   const hasTemplateAtttached = disksSelected.every((e) => 
     e?.templateAttached || !!e?.connectTemplate?.name || false
-  ) || [...vms].length !== 0
+  )
+  const isInTransfer = disksSelected.every((e) => (
+    !!e?.imageTransferType && (e?.imageTransferType || "").toUpperCase() == "upload".toUpperCase()
+  ))
+  const isTransferPaused = disksSelected.every((e) => (
+    (e?.imageTransferPhase || "").toUpperCase() == "paused_system".toUpperCase()
+  ))
+  const isTransferInProgress = disksSelected.every((e) => (
+    (e?.imageTransferPhase || "").toUpperCase() == "resuming".toUpperCase() || 
+    (e?.imageTransferPhase || "").toUpperCase() == "transferring".toUpperCase()
+  ))
+  const isLocked = disksSelected.every((e) => (
+    e?.statusCode.toUpperCase() == "LOCKED".toUpperCase()
+  ))
 
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("disk:create"),      label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0 },
     { type: "upload",  onClick: () => setActiveModal("disk:upload"),      label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0 },
-    { type: "update",  onClick: () => setActiveModal("disk:update"),      label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1 || hasConnectTemplate || hasTemplateAtttached },
+    { type: "update",  onClick: () => setActiveModal("disk:update"),      label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1 || hasConnectTemplate || hasTemplateAtttached || isInTransfer || isLocked },
     
-    { type: "remove",   onClick: () => setActiveModal("disk:remove"),     label: Localization.kr.REMOVE, disabled: disksSelected.length === 0 || domainNotActive || hasConnectTemplate || hasVmAtttached || hasTemplateAtttached },
+    { type: "remove",   onClick: () => setActiveModal("disk:remove"),     label: Localization.kr.REMOVE, disabled: disksSelected.length === 0 || domainNotActive || hasConnectTemplate || hasVmAtttached || hasTemplateAtttached || isInTransfer || isLocked },
     { type: "move",     onClick: () => setActiveModal("disk:move"),       label: Localization.kr.MOVE,   
       disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate  || domainNotActive },
     { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   
@@ -65,17 +70,19 @@ const DiskActionButtons = ({
   ];
 
   const uploadActions = [
-    { type: "cancelit", onClick: () => setActiveModal("disk:cancelit"),   lbael: `${Localization.kr.UPDATE} ${Localization.kr.CANCEL}`,
-      disabled: disksSelected.length !== 1 },
-    { type: "pauseit", onClick: () => setActiveModal("disk:pauseit"),     lbael: `${Localization.kr.UPDATE} ${Localization.kr.PAUSE}`,
-      disabled: disksSelected.length !== 1 },
-    { type: "resumeit", onClick: () => setActiveModal("disk:resumeit"),   lbael: `${Localization.kr.UPDATE} ${Localization.kr.RESUME}`,
-      disabled: disksSelected.length !== 1 },
+    { type: "cancelit", onClick: () => setActiveModal("disk:cancelit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.CANCEL}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer },
+    { type: "pauseit", onClick: () => setActiveModal("disk:pauseit"),     label: `${Localization.kr.UPLOAD} ${Localization.kr.PAUSE}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferPaused },
+    { type: "resumeit", onClick: () => setActiveModal("disk:resumeit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.RESUME}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress },
   ];
 
   return (
     <ActionButtons actionType={actionType}
-      actions={isContextMenu ? basicActions.slice(2) : basicActions}
+      actions={isContextMenu 
+          ? [...basicActions, ...uploadActions].slice(2)
+          : [...basicActions, ...uploadActions]}
     />
   );
 };

@@ -6,7 +6,10 @@ import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
-import { rvi24HardDrive }     from "@/components/icons/RutilVmIcons";
+import { 
+  rvi24HardDrive,
+  rvi24HardDriveDot,
+} from "@/components/icons/RutilVmIcons";
 import DiskGeneral            from "./DiskGeneral";
 import DiskVms                from "./DiskVms";
 import DiskDomains            from "./DiskDomains";
@@ -106,7 +109,11 @@ const DiskInfo = () => {
   return (
     <SectionLayout>
       <HeaderButton title={disk?.alias}
-        titleIcon={rvi24HardDrive()}
+        titleIcon={
+          disk?.vmAttached || disk?.templateAttached 
+            ? rvi24HardDriveDot()
+            : rvi24HardDrive()
+        }
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

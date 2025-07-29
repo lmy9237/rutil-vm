@@ -82,7 +82,7 @@ export const Localization = {
     UNDO: "되돌리기",
     STARTED: "시작됨",
     FINISHED: "완료",
-    RESUME: "재개",
+    RESUME: "다시 시작",
     APPLICATION: "애플리케이션",
     CPU: "CPU",
     MEMORY: "메모리",
