@@ -160,7 +160,7 @@ const VmDiskConnectionModal = ({
                   return (
                     <tr key={id || idx}>
                       <td>
-                        <LabelCheckbox id={`select-${id}`} 
+                        <LabelCheckbox id={`select-${id}`}
                           checked={!!selected} 
                           onChange={() => toggleDisk(disk)} 
                         />
@@ -176,19 +176,24 @@ const VmDiskConnectionModal = ({
                           value={selected?.interface_ || "virtio_scsi"}
                           options={interfaceOption}
                           disabled={!selected}
-                          onChange={(e) => handleUpdateDisk(id, "interface_", e.target.value)} />
+                          onChange={(e) => handleUpdateDisk(id, "interface_", e.target.value)}
+                        />                       
                       </td>
                       <td>
-                        <LabelCheckbox id={`readonly-${id}`} 
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <LabelCheckbox id={`readonly-${id}`}
                           checked={selected?.readOnly || false}
                           disabled={!selected}
-                          onChange={() => handleUpdateDisk(id, "readOnly", !selected?.readOnly)} />
+                          onChange={() => handleUpdateDisk(id, "readOnly", !selected?.readOnly)} 
+                        />
+                        </div>
                       </td>
                       <td>
                         <LabelCheckbox id={`bootable-${id}`} 
-                          checked={selected?.bootable || false} 
+                          checked={selected?.bootable || false}
                           disabled={hasBootableDisk || !selected}
-                          onChange={() => handleUpdateDisk(id, "bootable", !selected?.bootable)} />
+                          onChange={() => handleUpdateDisk(id, "bootable", !selected?.bootable)} 
+                        />
                       </td>
                       <td style={{ textAlign: 'center' }}>{disk?.sharable ? "O" : "X"}</td>
                     </tr>

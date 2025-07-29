@@ -37,7 +37,9 @@ const LabelCheckbox = ({
       disabled={disabled}
       required={required}
       autoFocus={autoFocus} /> */}
-    <Label htmlFor={props.id} className="ml-auto">{label}</Label>
+      {label &&
+        <Label htmlFor={props.id} className="ml-auto">{label}</Label>
+      }
   </div>
 );
 
