@@ -530,7 +530,7 @@ fun Connection.setupNetworksFromHost(
 		if(modifiedBonds.isNotEmpty()) modifiedBonds(modifiedBonds)
 		if(synchronizedNetworkAttachments.isNotEmpty()) synchronizedNetworkAttachments(synchronizedNetworkAttachments)
 		if(modifiedNetworkAttachments.isNotEmpty()) modifiedNetworkAttachments(modifiedNetworkAttachments)
-	}.commitOnSuccess(true).send()
+	}.checkConnectivity(true).commitOnSuccess(true).send()
 
 	// this.srvHost(hostId).commitNetConfig().send()
 	true

@@ -115,12 +115,7 @@ const HostNics = ({
 
   // 초기화면
   useEffect(() => {
-    if (
-      !dragItemFlag &&                    // 최초 1회만
-      hostNics.length > 0 && 
-      networkAttachments.length >= 0 &&
-      networks.length >= 0
-    ) {
+    if (!dragItemFlag && hostNics.length > 0 && networkAttachments.length >= 0 && networks.length >= 0) {
       resetState();
     }
   }, [hostId, hostNics, networkAttachments, networks]);
@@ -148,7 +143,7 @@ const HostNics = ({
   // 본딩 모달에 넘길 정보
   const [bondModalState, setBondModalState] = useState({
     name: "", 
-    optionVos: [ { name: "mode", value: 1 } ],
+    optionVos: [ { name: "mode", value: 1 } ], // 선택 옵션. 모드같은게 들어감
     editTarget: null
   }); 
 
@@ -210,27 +205,27 @@ const HostNics = ({
     setIsNetworkEditPopup(true);
   };
 
-  const handleNetworkEdit = ({ synchronizedNetworkAttachments = [], modifiedNetworkAttachments = [] }) => {
-    setModifiedNAs(prev => {
-      const updated = [...prev];
-      modifiedNetworkAttachments.forEach(mod => {
-        const idx = updated.findIndex(p => p.id === mod.id);
-        if (idx >= 0) updated[idx] = mod;
-        else updated.push(mod);
-      });
-      return updated;
-    });
+  // const handleNetworkEdit = ({ synchronizedNetworkAttachments = [], modifiedNetworkAttachments = [] }) => {
+  //   setModifiedNAs(prev => {
+  //     const updated = [...prev];
+  //     modifiedNetworkAttachments.forEach(mod => {
+  //       const idx = updated.findIndex(p => p.id === mod.id);
+  //       if (idx >= 0) updated[idx] = mod;
+  //       else updated.push(mod);
+  //     });
+  //     return updated;
+  //   });
 
-    setSyncNAs(prev => {
-      const updated = [...prev];
-      synchronizedNetworkAttachments.forEach(sync => {
-        const idx = updated.findIndex(p => p.id === sync.id);
-        if (idx >= 0) updated[idx] = sync;
-        else updated.push(sync);
-      });
-      return updated;
-    });
-  };
+  //   setSyncNAs(prev => {
+  //     const updated = [...prev];
+  //     synchronizedNetworkAttachments.forEach(sync => {
+  //       const idx = updated.findIndex(p => p.id === sync.id);
+  //       if (idx >= 0) updated[idx] = sync;
+  //       else updated.push(sync);
+  //     });
+  //     return updated;
+  //   });
+  // };
 
 
   // 전송
@@ -270,13 +265,13 @@ const HostNics = ({
         ipAddressAssignments: na.ipAddressAssignments || [],
         nameServerList: na.dnsServers || [], // HostNetworkEditModal에서 dnsServers로 관리하고 있으면 nameServerList로 이름 맞춰주기
       })),
-      networkAttachmentsToSync: syncNAs.map(na => ({
-        hostNicVo: na.hostNicVo,
-        networkVo: na.networkVo,
-        inSync: na.inSync ?? true,
-        ipAddressAssignments: na.ipAddressAssignments || [],
-        nameServerList: na.dnsServers || [],
-      })), 
+      // networkAttachmentsToSync: syncNAs.map(na => ({
+      //   hostNicVo: na.hostNicVo,
+      //   networkVo: na.networkVo,
+      //   inSync: na.inSync ?? true,
+      //   ipAddressAssignments: na.ipAddressAssignments || [],
+      //   nameServerList: na.dnsServers || [],
+      // })), 
       networkAttachmentsToRemove: filteredRemoveNAs.map(na => ({ 
         id: na.id 
       }))
@@ -286,7 +281,6 @@ const HostNics = ({
       { hostId, hostNetworkVo },
       {
         onSuccess: async () => {
-          // toast({ description: "네트워크 변경이 저장되었습니다." });
           await Promise.all([
             refetchNics(),
             refetchNAs(),
@@ -333,6 +327,8 @@ const HostNics = ({
     // 본딩 변경 검사 (slave 변경과 option 변경 모두 검사)
     currentBonds.forEach(currentBond => {
       const initialBond = initialBonds.find(nic => nic.name === currentBond.name);
+      const stringifyOptionVos = (optionVos = []) =>
+        optionVos.map(o => `${o.name}=${o.value}`).join(" ");
 
       if (!initialBond) {
         // 새로 생성
@@ -346,11 +342,9 @@ const HostNics = ({
           [...currentSlaveNames].some(name => !initialSlaveNames.has(name));
 
         // 옵션(optionVos) 비교 (여기서만 true일 때만 추가)
-        const initialOption = initialBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value;
-        const currentOption =
-          (currentBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value)
-          ?? (initialBond.bondingVo?.optionVos?.find(opt => opt.name === "mode")?.value);
-        const hasOptionChange = initialOption !== currentOption;
+        const initialOptionsStr = stringifyOptionVos(initialBond.bondingVo?.optionVos || []);
+        const currentOptionsStr = stringifyOptionVos(currentBond.bondingVo?.optionVos || []);
+        const hasOptionChange = initialOptionsStr !== currentOptionsStr;
 
         if (hasSlaveChanges || hasOptionChange) {
           newModifiedBonds.push(currentBond);
@@ -428,6 +422,7 @@ const HostNics = ({
 
       setModifiedBonds(changes.modifiedBonds);
       setRemoveBonds(changes.removeBonds);
+      // setSyncNAs();
       setModifiedNAs(changes.modifiedNAs);
       setRemoveNAs(changes.removeNAs);
 
@@ -435,6 +430,7 @@ const HostNics = ({
       if (
         (!changes.modifiedBonds || changes.modifiedBonds.length === 0) &&
         (!changes.removeBonds || changes.removeBonds.length === 0) &&
+        // (!changes.newSyncNAs || changes.newSyncNAs.length === 0) &&
         (!changes.modifiedNAs || changes.modifiedNAs.length === 0) &&
         (!changes.removeNAs || changes.removeNAs.length === 0)
       ) {
@@ -769,7 +765,7 @@ const HostNics = ({
     });
 
     tossCreateBondingData(sourceNic, targetNic);
-    toast({ description: "handleDropNicForBonding" });
+    // toast({ description: "handleDropNicForBonding" });
   };
 
 
@@ -1129,10 +1125,10 @@ const HostNics = ({
       ...transferredNetworks  
     ]);
 
-    
+    setSelectedNic(null);
     setDragItemFlag(true);
     setIsBondingPopup(false);
-    toast({ description: "본딩과 함께 네트워크가 이동되었습니다." });
+    // toast({ description: "본딩과 함께 네트워크가 이동되었습니다." });
   }, [baseItems.nic, baseItems.networkAttachment]);
 
 
@@ -1322,7 +1318,11 @@ const HostNics = ({
         <HostBondingModal
           editMode={isBondingEditMode}
           isOpen={isBondingPopup}
-          onClose={() => {setIsBondingPopup(false)}}
+          onClose={() => {
+            setIsBondingPopup(false);
+            setSelectedNic(null);
+            setIsEditBondingMode(false);
+          }}
           bondModalState={bondModalState}
           setBondModalState={setBondModalState}
           onBondingCreated={createBondingData}

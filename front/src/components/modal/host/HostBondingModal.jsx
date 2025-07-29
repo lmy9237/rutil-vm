@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -17,19 +17,27 @@ const HostBondingModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const bLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-  
+  const origBondingVo = bondModalState.editTarget?.bondingVo;
+
+  const [modeOrigin, setModeOrigin] = useState(null);
+
   // 본딩 이름 중복 체크 함수
   const isBondNameDuplicated = (name) => {
     if (editMode && bondModalState.editTarget?.name === name) return false;
     return existingBondNames.includes(name);
   };
 
-  const origBondingVo = bondModalState.editTarget?.bondingVo
+  // option list 텍스트로 출력
+  const defineUserMode = (origBondingVo?.optionVos || [])
+    .map(opt => `${opt.name}=${opt.value}`)
+    .join(" ");
 
+  // 본딩모드 선택옵션을 지정하기 위해 필요한 값
   const getModeValueFromOptions = (options = []) => {
     return options.find(opt => opt.name === "mode")?.value?.toString() || "";
   };
 
+  // option 객체화을 위한 코드
   const parseUserMode = (str = "") => {
     return str
       .split(" ")
@@ -41,26 +49,36 @@ const HostBondingModal = ({
       });
   };
 
-  const origModeRef = useRef(null);
-  const userModeBackupRef = useRef(""); // 사용자 정의 모드 백업용
-  useEffect(() => {
-    if (origModeRef.current === null) {
-      origModeRef.current = getModeValueFromOptions(bondModalState.optionVos);
-    }
-  }, []);
+  const filteredOptionList = editMode
+  ? optionList.filter(opt => ["1", "2", "3", "4"].includes(opt.value))
+  : optionList;
 
-  const stringifyOptionVos = (optionVos = []) => {
-    return optionVos.map(o => `${o.name}=${o.value}`).join(" ");
-  };
+  useEffect(() => {
+    if (isOpen && editMode) {
+      setModeOrigin(getModeValueFromOptions(bondModalState.optionVos));
+    }
+  }, [isOpen, editMode]);
+
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     setModeOrigin(null);
+  //   }
+  // }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen && editMode) {
+      setBondModalState(prev => ({
+        ...prev,
+        userMode: defineUserMode,
+      }));
+    }
+  }, [isOpen, editMode]);
+
 
   const validateForm = () => {
     const nameError = checkName(bondModalState.name);
     if (nameError) return nameError;
-
-    // 본딩 이름 중복 검사 추가!
-    if (!editMode && isBondNameDuplicated(bondModalState.name)) {
-      return "이미 존재하는 본딩 이름입니다.";
-    }
+    if (!editMode && isBondNameDuplicated(bondModalState.name)) return "이미 존재하는 본딩 이름입니다.";
 
     return null;
   };
@@ -71,32 +89,35 @@ const HostBondingModal = ({
       validationToast.fail(error);
       return;
     }
+    const currentMode = getModeValueFromOptions(bondModalState.optionVos);
 
-    Logger.debug(`HostBondingModal > handleOkClick ... editMode: ${editMode}`)
-
-    if (editMode) {
+    if (editMode) {     
       const updatedBond = {
         ...bondModalState.editTarget,
         bondingVo: {
           ...bondModalState.editTarget.bondingVo,
-          optionVos: parseUserMode(bondModalState.userMode),
+          optionVos: 
+            currentMode === modeOrigin
+              ? parseUserMode(bondModalState.userMode)
+              : [{ name: "mode", value: currentMode }],
         }
       };
+
       onBondingCreated(updatedBond, [bondModalState.editTarget]);
-    } else {
+    }else {
       const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
       Logger.debug(`HostBondingModal > handleOkClick ... nicArr: `, nicArr)
 
       const newBond = {
         name: bondModalState.name,
         bondingVo: {
-          optionVos: parseUserMode(bondModalState.userMode),
+          optionVos: [{ name: "mode", value: currentMode }],
           slaveVos: nicArr.map(nic => ({ name: nic.name })),
         }
       };
+
       onBondingCreated(newBond, nicArr);
     }
-
     onClose();
   };
 
@@ -104,11 +125,10 @@ const HostBondingModal = ({
   return (
     <BaseModal targetName={`본딩 ${editMode ? bondModalState?.name : ""} ${bLabel}`} submitTitle={""}
       isOpen={isOpen} onClose={onClose}
-      // isReady={
-      //   bondModalState &&
-      //   typeof bondModalState.name === "string" &&
-      //   typeof bondModalState.optionMode === "string"
-      // }
+      isReady={
+        bondModalState &&
+        typeof bondModalState.name === "string"
+      }
       onSubmit={handleOkClick}
       contentStyle={{ width: "500px" }}
     >
@@ -120,52 +140,28 @@ const HostBondingModal = ({
       {import.meta.env.DEV && 
         <>
         <span>getModeValueFromOptions(bondModalState.optionVos) {getModeValueFromOptions(bondModalState.optionVos)}</span><br/>
-        <span>origMode: {origModeRef.current}</span><br/>
+        <span>modeOrigin: {modeOrigin}</span><br/>
+        <span>defineUserMode: {defineUserMode}</span><br/>
         <span>userMode: {bondModalState.userMode}</span>
         </>
       } 
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={getModeValueFromOptions(bondModalState.optionVos)}
-        options={optionList}
+        options={filteredOptionList}
         onChange={(e) => {
           const val = e.target.value;
-
-          // 현재 userMode 값 백업 (바뀌기 전에)
-          const currentMode = getModeValueFromOptions(bondModalState.optionVos);
-          if (
-            editMode &&
-            userModeBackupRef.current === "" &&
-            val !== currentMode &&
-            currentMode === origModeRef.current
-          ) {
-            userModeBackupRef.current = bondModalState.userMode;
-          }
-
           const updatedOptionVos = [{ name: "mode", value: val }];
           setBondModalState(prev => ({
             ...prev,
             optionVos: updatedOptionVos,
-            userMode:
-              val === origModeRef.current
-                ? userModeBackupRef.current || stringifyOptionVos(updatedOptionVos)
-                : stringifyOptionVos(updatedOptionVos)
           }));
         }}
       />
-
       <LabelInput id="user_mode" label="사용자 정의 모드"
         value={bondModalState.userMode}
-        disabled={getModeValueFromOptions(bondModalState.optionVos) !== origModeRef.current}
+        disabled={!editMode || (getModeValueFromOptions(bondModalState.optionVos) !== modeOrigin)}
         onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
       />
-
-      {origBondingVo?.optionVos?.length > 0 && (
-        origBondingVo.optionVos.map((opt, index) => (
-          <div key={index}>
-            <span>{opt.name}: {opt.value}</span>
-          </div>
-        ))
-      )}
       <br/>
     </BaseModal>
   );

@@ -76,11 +76,11 @@ const HostDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
-      <SelectedIdView items={hostsSelected}/>
+      {/* <SelectedIdView items={hostsSelected}/>
       <OVirtWebAdminHyperlink 
         name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}`} 
         path="hosts"
-      />
+      /> */}
     </>
   );
 };
