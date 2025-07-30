@@ -187,13 +187,21 @@ fun Connection.detachVm(vmId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException(Term.VM, "분리", vmId) else it
 }
 
-fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
+fun Connection.addVm(vm: Vm, cdromFileId: String?): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 
 	val vmAdded: Vm =
 		this.srvVms().add().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
+
+	if (!cdromFileId.isNullOrEmpty()){
+		this.srvVmCdromsFromVm(vmAdded.id())
+			.add()
+			.cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
+			.send()
+			.cdrom()
+	}
 
 	vmAdded
 }.onSuccess {

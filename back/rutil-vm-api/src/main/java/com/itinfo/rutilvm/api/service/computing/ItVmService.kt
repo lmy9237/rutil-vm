@@ -164,7 +164,7 @@ class VmServiceImpl(
 
 		// 가상머신 생성
 		val res: Vm? = conn.addVm(
-			vmVo.toAddVm()
+			vmVo.toAddVm(), vmVo.cdRomVo.id
 		).getOrNull()
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 변경실패 에러유형 필요
@@ -195,9 +195,9 @@ class VmServiceImpl(
 				}
 			}
 			// 부트옵션
-			if(vmVo.cdRomVo.id.isNotEmpty()){
-				conn.addCdromFromVm(res.id(), vmVo.cdRomVo.id)
-			}
+			// if(vmVo.cdRomVo.id.isNotEmpty()){
+			// 	conn.addCdromFromVm(res.id(), vmVo.cdRomVo.id)
+			// }
 			// 그래픽/비디오 유형
 			log.debug("add ... vmVo.displayType: {}", vmVo.displayType)
 			vmStaticFound.defaultDisplayType = vmVo.displayType

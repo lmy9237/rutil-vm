@@ -6310,7 +6310,7 @@ export const useDeleteDisk = (
       queryClient.removeQueries(QK.DISK, diskId);
       queryClient.removeQueries(QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId);
       const domainId = domainsSelected[0]?.id
-      domainId && navigate(`/storage/domains/${domainId}/disks`);
+      domainId && navigate(`/storages/domains/${domainId}/disks`);
       postSuccess(res);
     },
     onError: (error) => {
