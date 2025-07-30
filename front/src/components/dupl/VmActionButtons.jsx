@@ -95,7 +95,7 @@ const VmActionButtons = ({
   const allSameHost = vmsSelected.length > 0 && vmsSelected.every(vm => 
     vm?.hostVo?.id && vm?.hostVo?.id === vmsSelected[0]?.hostVo?.id
   );
-  const isMigrateEnabled = vmsSelected.length > 0 && allUp && allSameHost;
+  // const isMigrateEnabled = vmsSelected.length > 0 && allUp && allSameHost;
 
   const { mutate: downloadRemoteViewerConnectionFileFromVm } = useRemoteViewerConnectionFileFromVm()
   const downloadRemoteViewerConnectionFile = (e) => {
@@ -161,7 +161,7 @@ const VmActionButtons = ({
       type: "migration",  
       onClick: () => setActiveModal("vm:migration"),   
       label: Localization.kr.MIGRATION,                               
-      disabled: !isMigrateEnabled
+      disabled: isDown || vmsSelected.length !== 1
     },
     // { 
     //   type: "migration2",  

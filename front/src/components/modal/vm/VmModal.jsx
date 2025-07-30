@@ -498,18 +498,18 @@ const VmModal = ({
     }
   }, [editMode, vnics]);
 
+  
   useEffect(() => {
-    Logger.debug(`VmModal > useEffect ... hostsSelected CHECK`)
-    if (!editMode) {
+    if (!editMode && hostsSelected.length > 0) {
       setFormHostState((prev) => ({
         ...prev,
         hostVos: (hostsSelected || []).map((h) => ({
           id: h?.id,
           name: h?.name
         }))
-      }))
+      }));
     }
-  }, [editMode], hostsSelected)
+  }, [editMode, hostsSelected]);
 
 
   useEffect(() => {

@@ -1364,7 +1364,7 @@ export const useDeleteCluster = (
       setClustersSelected([])
       const datacenterId = datacentersSelected[0]?.id
       datacenterId && clearTabInPage("/computing/datacenters");
-      navigate(datacenterId ? `/computing/datacenters/${datacenterId}/clusters` : `/computing/rutil-manager/datacenters`)
+      navigate(datacenterId ? `/computing/datacenters/${datacenterId}/clusters` : `/computing/rutil-manager/clusters`)
       postSuccess(res);
     },
     onError: (error) => {
@@ -2156,7 +2156,13 @@ export const useDeleteHost = (
       invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       queryClient.invalidateQueries(QK.HOST, hostId)
       const clusterId = clustersSelected[0]?.id
-      navigate(clusterId ? `/computing/clusters/${clusterId}/hosts` : `/computing/rutil-manager/clusters`)
+      navigate(
+        hostId
+        ? `/computing/rutil-manager/hosts`
+        : clusterId 
+          ? `/computing/clusters/${clusterId}/hosts` 
+          : `/computing/rutil-manager/hosts`
+      )
       postSuccess(res);
     },
     onError: (error) => {
@@ -2512,10 +2518,10 @@ export const useAllVMs = (
       : validateAPI(res) ?? [];
     Logger.debug(`RQHook > useAllVMs ... res: `, _res);
     return _res;
-
   },
-  staleTime: 2000, // 2초 동안 데이터 재요청 방지
+  // staleTime: 2000, // 2초 동안 데이터 재요청 방지
 })
+
 export const qpVm = (
   vmId,
   variant="default",
@@ -2533,7 +2539,6 @@ export const qpVm = (
     },
     enabled: !!vmId
   }
-  
 }
 /**  
  * @name useVm
@@ -2586,6 +2591,7 @@ export const useDisksFromVM = (
     return _res;
   },
   enabled: !!vmId,
+  retry: false,
 });
 /**
  * @name useAllSnapshotsFromVm
@@ -2612,6 +2618,7 @@ export const useAllSnapshotsFromVm = (
     return _res
   },
   enabled: !!vmId,
+  retry: false,
 });
 
 /**
@@ -2640,7 +2647,8 @@ export const useSnapshotDetailFromVM = (
     Logger.debug(`RQHook > useSnapshotDetailFromVM ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
-  enabled: !!vmId && !!snapshotId
+  enabled: !!vmId && !!snapshotId,
+  retry: false,
 });
 
 
@@ -3066,7 +3074,7 @@ export const useDeleteVm = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-  const { hostsSelected } = useGlobal();
+  const { vmsSelected, setVmsSelected, hostsSelected } = useGlobal();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: async ({ vmId, detachOnly }) => {
@@ -3076,13 +3084,33 @@ export const useDeleteVm = (
       Logger.debug(`RQHook > useDeleteVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
       return _res;
     },
+    // onSuccess: (res, { vmId }) => {
+    //   Logger.debug(`RQHook > useDeleteVm ... res: `, res);
+    //   apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
+    //   invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+    //   queryClient.invalidateQueries([QK.VM, vmId]);
+    //   setVmsSelected([]);
+    //   const hostId = hostsSelected[0]?.id
+    //   navigate(hostId ? `/computing/hosts/${hostId}/vms` : `/computing/rutil-manager/vms`)
+    //   postSuccess(res);
+    // },
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useDeleteVm ... res: `, res);
-      apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
-      queryClient.invalidateQueries([QK.VM, vmId]);
+      setVmsSelected([]);
+      apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
+      queryClient.removeQueries([QK.VM, vmId]);
+      queryClient.invalidateQueries([QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.SNAPSHOTS_FROM_VM, vmId]);
+
+      // 라우팅
       const hostId = hostsSelected[0]?.id
-      navigate(hostId ? `/computing/hosts/${hostId}/vms` : `/computing/rutil-manager/vms`)
+      // navigate(!!hostId && hostId !== "null" 
+      //   ? `/computing/hosts/${hostId}/vms`
+      //   : `/computing/vms`
+      // )
+      navigate(`/computing/vms`)
+
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
@@ -3365,7 +3393,7 @@ export const useAllMigratableHostsFromVM = (
   mapPredicate
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.ALL_MIGRATABLE_HOSTS_FROM_VM, ...vmId],
+  queryKey: [QK.ALL_MIGRATABLE_HOSTS_FROM_VM, vmId],
   queryFn: async () => {
     const res = await ApiManager.findAllMigratableHostsFromVM(vmId);
     const _res = mapPredicate
@@ -6310,7 +6338,7 @@ export const useDeleteDisk = (
       queryClient.removeQueries(QK.DISK, diskId);
       queryClient.removeQueries(QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId);
       const domainId = domainsSelected[0]?.id
-      domainId && navigate(`/storages/domains/${domainId}/disks`);
+      navigate(domainId ? `/storages/domains/${domainId}/disks` : `/storages/disks`)
       postSuccess(res);
     },
     onError: (error) => {

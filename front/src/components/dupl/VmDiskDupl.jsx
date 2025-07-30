@@ -32,7 +32,7 @@ const VmDiskDupl = ({
   } = useGlobal(); // 다중 선택된 디스크
 
   const transformedData = [...vmDisks]
-  .sort((a, b) => { return (a?.diskImageVo?.alias?.toLowerCase()).localeCompare(b?.diskImageVo?.alias?.toLowerCase()) })
+    .sort((a, b) => { return (a?.diskImageVo?.alias?.toLowerCase()).localeCompare(b?.diskImageVo?.alias?.toLowerCase()) })
     .map((d) => {
       const diskImage = d?.diskImageVo;
       return {

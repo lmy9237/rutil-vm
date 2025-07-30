@@ -4,6 +4,7 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.VmExportVo
 import com.itinfo.rutilvm.api.model.computing.VmVo
+import com.itinfo.rutilvm.api.model.computing.isHostedEngineVm
 import com.itinfo.rutilvm.api.model.computing.toStartOnceVm
 import com.itinfo.rutilvm.api.model.computing.toVmVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
@@ -19,7 +20,9 @@ import com.itinfo.rutilvm.util.ovirt.exportVm
 import com.itinfo.rutilvm.util.ovirt.findAllHosts
 import com.itinfo.rutilvm.util.ovirt.findAllHostsFromCluster
 import com.itinfo.rutilvm.util.ovirt.findAllNetworkAttachmentsFromHost
+import com.itinfo.rutilvm.util.ovirt.findAllNicsFromVm
 import com.itinfo.rutilvm.util.ovirt.findAllVms
+import com.itinfo.rutilvm.util.ovirt.findAllVnicProfiles
 import com.itinfo.rutilvm.util.ovirt.findVm
 import com.itinfo.rutilvm.util.ovirt.isHostedEngineVm
 import com.itinfo.rutilvm.util.ovirt.migrationVm
@@ -37,8 +40,10 @@ import org.ovirt.engine.sdk4.types.Cluster
 import org.ovirt.engine.sdk4.types.Host
 import org.ovirt.engine.sdk4.types.HostStatus.UP
 import org.ovirt.engine.sdk4.types.Network
+import org.ovirt.engine.sdk4.types.Nic
 import org.ovirt.engine.sdk4.types.Vm
 import org.ovirt.engine.sdk4.types.VmStatus
+import org.ovirt.engine.sdk4.types.VnicProfile
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -280,31 +285,36 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		val vm: Vm? = conn.findVm(vmId).getOrNull()
 		log.info("vm!!.cluster().id()={} vm.host().id()={} ", vm!!.cluster().id(), vm.host().id())
 
-		val hosts: List<Host> = conn.findAllHostsFromCluster(vm!!.cluster().id())
+		val hosts: List<Host> = conn.findAllHostsFromCluster(vm.cluster().id())
 			.getOrDefault(listOf())
-			.filter { it.status() == UP && it.id() != vm.host().id() }
+			.filter { it.status() == UP && it.hostedEnginePresent() && it.hostedEngine().active() && it.id() != vm.host().id() }
+		// TODO: hostedEngine의 경우에는 위의 hostedEnginePresent가 필요한데 그게 아니면 다른 host로 마이그레이션 가능
 
-		// VM이 현재 실행 중인 호스트의 네트워크 목록 (id로 set 변환)
-		val myNetworks = findAllNetworksFromHost(vm.host().id())
-		myNetworks.forEach { println(it.name) }
-		val myNetworkIds = myNetworks.map { it.id }.toSet()
+		val vnicProfileIds: Set<String> = conn.findAllNicsFromVm(vmId)
+			.getOrDefault(emptyList())
+			.mapNotNull { it.vnicProfile()?.id() }
+			.toSet()
 
-		// 최종 결과 담을 리스트
+		val vnicProfileMap: Map<String, VnicProfile> = conn.findAllVnicProfiles()
+			.getOrDefault(emptyList())
+			.filter { vnicProfileIds.contains(it.id()) }
+			.associateBy { it.id() }
+
+		val requiredNetworkIds: Set<String> = vnicProfileMap.values
+			.mapNotNull { it.network()?.id() }
+			.toSet()
+
 		val migratableHosts = mutableListOf<IdentifiedVo>()
 
-
-		// 각 host별로 비교
 		hosts.forEach { host ->
-			val hostNetworks = findAllNetworksFromHost(host.id())
+			val hostNetworks = findAllNetworksFromHost(host.id()) // 이건 너가 정의한 함수
 			val hostNetworkIds = hostNetworks.map { it.id }.toSet()
 
-			// myNetworkIds가 hostNetworkIds에 모두 포함되는지 확인 (subset)
-			if (hostNetworkIds.containsAll(myNetworkIds)) {
-				// 조건 만족시 추가
+			// 마이그레이션 조건: host가 VM이 요구하는 모든 네트워크를 포함해야 함
+			if (hostNetworkIds.containsAll(requiredNetworkIds)) {
 				migratableHosts.add(IdentifiedVo(host.id(), host.name()))
 			}
 		}
-		migratableHosts.forEach { println(it.name) }
 
 		return migratableHosts
 	}

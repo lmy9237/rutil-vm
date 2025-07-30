@@ -25,14 +25,8 @@ const VmHost = ({
     value: e?.id,
     label: e?.kr
   }))
-  // 마이그레이션 모드
-  /*
-  const migrationModeOptionList = [
-    { value: "migratable", label: `수동 및 자동 ${Localization.kr.MIGRATION} 허용` },
-    { value: "user_migratable", label: `수동 마이그레이션만 허용` },
-    { value: "pinned", label: `${Localization.kr.MIGRATION} 불가` },
-  ];
-  */
+
+
 
   // hostVos 값이 있으면 hostInCluster를 false로 설정, 없으면 true
   useEffect(() => {

@@ -3,6 +3,7 @@ import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import {
+  useAllMigratableHostsFromVM,
   useAllStorageDomainsToMoveFromDisk4EachDisk,
   useDisksFromVM,
   useHostsFromCluster,
@@ -13,7 +14,6 @@ import Localization                     from "@/utils/Localization";
 import TabNavButtonGroup from "@/components/common/TabNavButtonGroup";
 import VmMigrationTabVM from "./migrate/VmMigrationTabVM";
 import VmMigrationTabDisk from "./migrate/VmMigrationTabDisk";
-import VmMigrationTabAll from "./migrate/VmMigrationTabAll";
 
 const VmMigrationModal = ({ 
   isOpen, 
@@ -40,76 +40,36 @@ const VmMigrationModal = ({
           </>
         ),
         onClick: () => setSelectedModalTab("vm")
-      }
+      },
+      {
+        id: "disk",
+        label: (
+          <>
+            <input type="radio" id="disk" name="migrate"
+              checked={selectedModalTab === "disk"}
+              className="mr-2"
+              onChange={() => setSelectedModalTab("disk")}
+            />
+            <label htmlFor="disk">&nbsp;{Localization.kr.DISK}</label>
+          </>
+        ),
+        onClick: () => setSelectedModalTab("disk")
+      },
     ];
-
-    if (vmsSelected.length === 1) {
-      baseTabs.push(
-        {
-          id: "disk",
-          label: (
-            <>
-              <input type="radio" id="disk" name="migrate"
-                checked={selectedModalTab === "disk"}
-                className="mr-2"
-                onChange={() => setSelectedModalTab("disk")}
-              />
-              <label htmlFor="disk">&nbsp;{Localization.kr.DISK}</label>
-            </>
-          ),
-          onClick: () => setSelectedModalTab("disk")
-        },
-        // {
-        //   id: "all",
-        //   label: (
-        //     <>
-        //       <input type="radio" id="vmdisk" name="migrate"
-        //         checked={selectedModalTab === "all"}
-        //         onChange={() => setSelectedModalTab("all")}
-        //       />
-        //       <label htmlFor="vmdisk">{Localization.kr.VM} / {Localization.kr.DISK}</label>
-        //     </>
-        //   ),
-        //   onClick: () => setSelectedModalTab("all")
-        // }
-      );
-    }
 
     return baseTabs;
   }, [vmsSelected, selectedModalTab]);
 
-  // const tabs = useMemo(() => {
-  //   const baseTabs = [
-  //     {
-  //       id: "vm",
-  //       label: Localization.kr.VM,
-  //       onClick: () => setSelectedModalTab("vm"),
-  //     },
-  //   ];
 
-  //   if (vmsSelected.length === 1) {
-  //     baseTabs.push({
-  //       id: "disk",
-  //       label: Localization.kr.DISK,
-  //       onClick: () => setSelectedModalTab("disk"),
-  //     });
-
-    
-  //     // baseTabs.push({
-  //     //   id: "all",
-  //     //   label: `${Localization.kr.VM} / ${Localization.kr.DISK}`,
-  //     //   onClick: () => setSelectedModalTab("all"),
-  //     // });
-  //   }
-
-  //   return baseTabs;
-  // }, [vmsSelected]);
-
+  // const {
+  //   data: hosts=[],
+  //   isSuccess: isHostSuccess,
+  // } = useHostsFromCluster(clusterVo?.id ?? "");
 
   const {
     data: hosts=[],
-    isSuccess: isHostSuccess,
-  } = useHostsFromCluster(clusterVo?.id ?? "");
+    isSuccess: isHostSuccess
+  } = useAllMigratableHostsFromVM(vmId, (e) => ({ ...e }));
 
   const {
     data: disks = [],
@@ -196,50 +156,20 @@ const VmMigrationModal = ({
     }
   }, [isOpen]);
 
-  const hostsWithClusterOption = useMemo(() => {
-    if (!clusterVo) return [];
-
-    const currentHostId = vmsSelected[0]?.hostVo?.id;
-
-    // 내부 함수: 현재 VM이 실행 중인 호스트 제외
-    const getFilteredHosts = (hosts, currentHostId) => {
-      if (!currentHostId) return hosts;
-      return hosts.filter((host) => host.id !== currentHostId);
-    };
-
-    const filteredHosts = getFilteredHosts(hosts, currentHostId);
-
-    if (!filteredHosts || filteredHosts.length === 0) {
-      return [{
-        id: "none",
-        name: `${Localization.kr.MIGRATION} 가능한 ${Localization.kr.HOST} 없음`
-      }];
-    }
-
-    const clusterHostOption = {
-      id: clusterVo.id ?? "",
-      name: `${Localization.kr.CLUSTER} ${clusterVo?.name} 내의 ${Localization.kr.HOST} 자동선택`,
-    };
-
-    return [clusterHostOption, ...filteredHosts];
-  }, [hosts, clusterVo, vmsSelected]);
-
-
-  // const validateForm = () => {    
-  //   if(targetHostId ==="none") 
-  //     return `${Localization.kr.HOST}가 지정되지 않았습니다.`;
-  //   return null;
-  // };
+  const validateForm = () => {    
+    if(targetHostId ==="") 
+      return `${Localization.kr.HOST}가 지정되지 않았습니다.`;
+    return null;
+  };
 
   const handleFormSubmit = async () => {
-    // const error = validateForm();
-    // if (error) {
-    //   validationToast.fail(error);
-    //   return;
-    // }
+    const error = validateForm();
+    if (error) {
+      validationToast.fail(error);
+      return;
+    }
 
     if (selectedModalTab === "vm") {
-      // VM Migration만 실행
       vmList?.forEach((vm) => {
         migration({
           vmId: vm.id,
@@ -272,8 +202,10 @@ const VmMigrationModal = ({
             <VmMigrationTabVM
               vmsSelected={vmsSelected}
               vmList={vmList}
+              hosts={hosts}
               targetHostId={targetHostId}
-              hostsWithClusterOption={hostsWithClusterOption}
+
+              
               setTargetHostId={setTargetHostId}
               clusterVo={clusterVo}
               setIsCluster={setIsCluster}

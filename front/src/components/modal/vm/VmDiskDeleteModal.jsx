@@ -85,14 +85,6 @@ const VmDiskDeleteModal = ({
                   [diskId]: !prev[diskId],
                 }))
               }
-              /*
-              onChange={() =>
-                setDetachOnlyList(prev => ({
-                  ...prev,
-                  [diskId]: !prev[diskId],
-                }))
-              }
-              */
             />
           </div>
         );

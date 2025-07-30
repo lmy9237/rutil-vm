@@ -35,7 +35,7 @@ const VmDupl = ({
     vmsSelected, setVmsSelected
   } = useGlobal();
 
-  const transformedData = [...vms].map((vm) => ({
+  const transformedData = [...vms].filter(vm => !!vm?.id).map((vm) => ({
     ...vm,
     checkbox: (
       <input
@@ -54,29 +54,19 @@ const VmDupl = ({
     icon: (
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
-        {/* {vm?.isInitialized === true ? "" : "VW"} */}
         {vm?.nextRun === true && status2Icon("NEXT_RUN")}
-        {vm?.runOnce === true && vm?.status==="up" ? "Run" : ""}
         {(vm?.statusDetail === "noerr" || vm?.statusDetail === "none") ? "" : vm?.statusDetail}
       </div>
     ),
     iconSortKey: getStatusSortKey(vm?.status), 
-    // engine: hostedEngineStatus2Icon(vm?.hostedEngineVm),
     _name: (
       <>
-      {/* {hostedEngineStatus2Icon(vm?.hostedEngineVm)} */}
+      {/* {hostedEngineStatus2Icon(vm?.hostedEngineVm)} */} 
       <TableRowClick type="vm" id={vm?.id}>
         {vm?.name}
       </TableRowClick>
       </>
     ),
-    // _name: ( // 아이콘대신 배경색바꾸기
-    //   <TableRowClick type="vm" id={vm?.id}>
-    //     <span style={{ backgroundColor: vm?.hostedEngineVm ? '#eef119' : 'transparent' }}>
-    //       {vm?.name}
-    //     </span>
-    //   </TableRowClick>
-    // ),
     host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}
