@@ -394,14 +394,6 @@ svg.btn { cursor: pointer; }
   padding-bottom: 12px;
   flex-direction: column;
 }
-
-.box-content.overflowing {
-  max-height: 221px; 
-  min-height: 221px; 
-  overflow: hidden;
-  position: relative;
-}
-
 .half-box {
   padding: 0 20px;
   display: flex;

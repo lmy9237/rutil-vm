@@ -36,10 +36,11 @@ const MatchNetwork = ({
           <RVI16 className="mr-1.5"
             iconDef={networkAttach.networkVo?.status?.toUpperCase() === "OPERATIONAL" ? rvi16TriangleUp(): rvi16TriangleDown()}
           />
-          {networkAttach.inSync === false
-            ? status2Icon("async")
-            : ""
-          } 
+          {networkAttach.inSync === false && (
+            <span className="mr-1">
+              {status2Icon("async")}
+            </span>
+          )}
           {networkAttach.networkVo?.name}
           {networkAttach.networkVo?.vlan === 0 ? "" : (
             <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {networkAttach.networkVo.vlan})</span>

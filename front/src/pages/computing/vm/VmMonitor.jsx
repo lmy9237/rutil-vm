@@ -4,6 +4,7 @@ import {
 } from "@/api/RQHook";
 import HostGeneralChart from "../host/HostGeneralChart";
 import { useEffect } from "react";
+import VmMonitorChart from "./VmMonitorChart";
 
 /**
  * @name VmApplications
@@ -27,6 +28,8 @@ const VmMonitor = ({
     isLoading: isVmPerLoading,
   } = useDashboardVm(vmId);
 
+  const usageDto = vmsSelected?.[0]?.usageDto ?? {};
+
   useEffect(() => {
     if (vmId) {
       vmPerRefetch();
@@ -36,8 +39,14 @@ const VmMonitor = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-2 w-full">
-        <HostGeneralChart per={vmPer}/>
+    {/*TODO 디자인 검토 필요 */}
+      <div className="dupl-header-group align-start gap-2 w-full ">
+        <div className="f-start vm-monitor-outer">
+          <div className="f-center">cpu사용률</div>
+          <div className="w-full"><VmMonitorChart per={vmPer} usageValue={usageDto?.cpuPercent} metricKey="cpuPercent" metricName="CPU" color="#F0643B" /></div>
+        </div>
+        <VmMonitorChart per={vmPer} usageValue={usageDto?.memoryPercent} metricKey="memoryPercent" metricName="메모리" color="#30A9DE" />
+        <VmMonitorChart per={vmPer} usageValue={usageDto?.networkPercent} metricKey="networkPercent" metricName="네트워크" color="#9BC53D" />
       </div>
     </>
   );

@@ -262,10 +262,40 @@ const Tables = ({
     }
   };
   
+  //삭제예정
+  // const handleRowClick = (rowIndex, e) => {
+  //   Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
+  //   const clickedRow = sortedData[rowIndex];
+  //   if (!clickedRow) return;
+
+  //   if (e.shiftKey && lastClickedRowIndex !== null) {
+  //     const start = Math.min(lastClickedRowIndex, rowIndex);
+  //     const end = Math.max(lastClickedRowIndex, rowIndex);
+  //     const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  //     setSelectedRows(range);
+  //     onRowClick(range.map(index => sortedData[index]));
+  //   } else if (e.ctrlKey || e.metaKey) {
+  //     setSelectedRows((prev) => {
+  //       const updated = prev.includes(rowIndex)
+  //         ? prev.filter((i) => i !== rowIndex)
+  //         : [...prev, rowIndex];
+  //       onRowClick(updated.map(i => sortedData[i]));
+  //       return updated;
+  //     });
+  //     setLastClickedRowIndex(rowIndex);
+  //   } else {
+  //     setSelectedRows([rowIndex]);
+  //     onRowClick([clickedRow]);
+  //     setLastClickedRowIndex(rowIndex);
+  //   }
+  // };
+  
   const handleRowClick = (rowIndex, e) => {
     Logger.debug(`PagingTable > handleRowClick ... rowIndex: ${rowIndex}, e: `, e);
     const clickedRow = sortedData[rowIndex];
     if (!clickedRow) return;
+
+    const isCheckboxClick = e.target?.type === "checkbox";
 
     if (e.shiftKey && lastClickedRowIndex !== null) {
       const start = Math.min(lastClickedRowIndex, rowIndex);
@@ -273,7 +303,8 @@ const Tables = ({
       const range = Array.from({ length: end - start + 1 }, (_, i) => start + i);
       setSelectedRows(range);
       onRowClick(range.map(index => sortedData[index]));
-    } else if (e.ctrlKey || e.metaKey) {
+    } else if (e.ctrlKey || e.metaKey || isCheckboxClick) {
+      // 체크박스 클릭이면 Ctrl 없이도 다중 선택
       setSelectedRows((prev) => {
         const updated = prev.includes(rowIndex)
           ? prev.filter((i) => i !== rowIndex)

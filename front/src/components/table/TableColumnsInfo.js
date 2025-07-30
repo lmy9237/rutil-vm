@@ -138,6 +138,7 @@ const TableColumnsInfo = {
     { accessor: '_name',    clickable: true,    header: Localization.kr.NAME,   width: '20%' },
   ],
   VMS: [
+    { accessor: "checkbox", header: "", clickable: false, width: 30 },
     // { header: Localization.kr.RESET, accessor: "nextRun",   clickable: false /* width: DEFAULT_WIDTH_ICON_COLUMN */, },
     { accessor: "icon",          header: Localization.kr.STATUS,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
     // { accessor: "engine",        header: Localization.kr.ENGINE,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },

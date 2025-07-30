@@ -159,7 +159,7 @@ const VmGeneral = ({
             const network = nic?.networkVo?.name || "-";
             const mac = nic?.macAddress || "-";
             return (
-              <div key={nic.id}>
+              <div className="info-value-wrap"  key={nic.id}>
                 {`${name} (${network}) | ${mac}`}
               </div>
             );
@@ -184,7 +184,7 @@ const VmGeneral = ({
             const boot = disk.bootable ? "| 부팅" : "";
 
             return (
-              <div key={disk.id}>
+              <div className="info-value-wrap" key={disk.id}>
                 {`${Math.round(sizeGiB)} GiB | ${storageName} | ${thin} ${boot}`}
               </div>
             );

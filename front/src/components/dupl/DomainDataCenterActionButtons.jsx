@@ -55,7 +55,7 @@ const DomainDataCenterActionButtons = ({
     { type: "attach",      onClick: () => setActiveModal("domaindatacenter:attach"),      label: Localization.kr.ATTACH,      disabled: isActive}, // 연결 disabled 조건 구하기 disabled: domainsSelected.length === 0 데이터센터가 없을때
     { type: "detach",      onClick: () => setActiveModal("domaindatacenter:detach"),      label: Localization.kr.DETACH,      disabled: !selectedDomain1st || isLocked || isActive || !isMaintenance || isPreparingForMaintenance, },
     { type: "activate",    onClick: () => setActiveModal("domaindatacenter:activate"),    label: Localization.kr.ACTIVATE,    disabled: !selectedDomain1st || isLocked || isActive || (!isMaintenance && !isPreparingForMaintenance), },
-    { type: "maintenance", onClick: () => setActiveModal("domaindatacenter:maintenance"), label: Localization.kr.MAINTENANCE, disabled: domainsSelected.length !== 1 || isLocked || isMaintenance || isPreparingForMaintenance, },
+    { type: "maintenance", onClick: () => setActiveModal("domaindatacenter:maintenance"), label: Localization.kr.MAINTENANCE, disabled: !selectedDc1st || isLocked || isMaintenance || isPreparingForMaintenance, },
   ];
  
   return (

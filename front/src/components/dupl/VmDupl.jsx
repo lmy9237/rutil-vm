@@ -37,6 +37,20 @@ const VmDupl = ({
 
   const transformedData = [...vms].map((vm) => ({
     ...vm,
+    checkbox: (
+      <input
+        type="checkbox"
+        checked={vmsSelected.some((selected) => selected.id === vm.id)}
+        onClick={(e) => e.stopPropagation()} 
+        onChange={() => {
+          const isSelected = vmsSelected.some((v) => v.id === vm.id);
+          const updated = isSelected
+            ? vmsSelected.filter((v) => v.id !== vm.id)
+            : [...vmsSelected, vm];
+          setVmsSelected(updated);
+        }}
+      />
+    ),
     icon: (
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}

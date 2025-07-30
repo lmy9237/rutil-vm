@@ -284,19 +284,26 @@ const HostNics = ({
       { hostId, hostNetworkVo },
       {
         onSuccess: async () => {
-          await Promise.all([
-            refetchNics(),
-            refetchNAs(),
-            refetchNetworks()
-          ]);
-          resetState(); 
+          try {
+            await Promise.allSettled([
+              refetchNics(), 
+              refetchNAs(),
+              refetchNetworks(),
+            ]);
+            resetState(); // refetch가 모두 끝난 후 상태 초기화
+          } catch (e) {
+
+          } finally {
+            setIsSubmitting(false); // 로딩 상태 제거
+          }
         },
         onError: (e) => {
           toast({ variant: "destructive", description: "네트워크 변경 실패: " + e?.message });
+          setIsSubmitting(false); 
         }
       }
     );
-    resetState(); // 초기화
+    // resetState(); // 초기화
   };
 
   // 변경 감지를 위한 유틸리티 함수들
@@ -1259,8 +1266,7 @@ const HostNics = ({
               </div>
             );
           })}
-          <div className="header-right-btns">
-          {/* 변경항목이 있다면 활성화 */}
+          {/* <div className="header-right-btns">
           {!cancelFlag && dragItemFlag && (
             <>
               <ActionButton
@@ -1282,7 +1288,37 @@ const HostNics = ({
               onClick={() => resetState()}
             />
           )}
+          </div> */}
+           <div className="header-right-btns">
+            <>
+              {!cancelFlag && dragItemFlag && ( // 변경사항 있을 때 
+                <>
+                  <ActionButton
+                    actionType="default"
+                    className="custom-ok-button mr-3"
+                    onClick={handleFormSubmit}
+                    label={isSubmitting ? "저장 중입니다..." : Localization.kr.OK}
+                    disabled={isSubmitting}
+                  />
+                  <ActionButton
+                    actionType="default"
+                    label={Localization.kr.CANCEL}
+                    className="custom-ok-button"
+                    onClick={() => resetState()}
+                  />
+                </>
+              )}
+
+              {cancelFlag && ( // 취소 상태일 때는 CANCEL만
+                <ActionButton
+                  actionType="default"
+                  label={Localization.kr.CANCEL}
+                  onClick={() => resetState()}
+                />
+              )}
+            </>
           </div>
+
         </div>
 
         {/* 할당되지않은 네트워크 */}

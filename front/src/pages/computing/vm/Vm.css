@@ -18,6 +18,11 @@
   max-width:274px;
   white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 }
+.info-value-wrap {
+  word-break: break-word;  
+  white-space: normal;     
+  max-width: 100%;         
+}
 /* 반응형 */
 @media (max-width: 1424px) {
   .half-box {
@@ -29,7 +34,16 @@
     margin: 20px 0;
   }
 }
-
+/*모니터*/
+.vm-monitor-outer{
+  padding: 20px 0;
+  padding-right: 80px;
+}
+.vm-monitor-outer>div:first-child{
+  font-size: var(--fs-24);
+  font-weight: 600;
+  width: 300px;
+}
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;

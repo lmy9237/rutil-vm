@@ -69,48 +69,64 @@ const DomainDetachModal = ({
       // isReady={isVmsSuccess && isTemplatesSuccess && isDisksSnapshotsSuccess}
       shouldWarn={true}
     >
-      <div className="p-1.5 font-bold flex f-start">
+      <div className=" font-bold flex f-start">
         <RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/>
         {label ? datacentersSelected[0]?.name : domainsSelected[0]?.name}
       </div><br/>
-      <div>분리 작업은 등록되지 않은 상태로 {Localization.kr.DOMAIN}에 들어 있는 엔티티를 이동시킵니다.</div><br/>
-      
-      <div className="flex py-2 associated-resource-lists">
+     
+      <hr/>
+      <div className="flex py-4 associated-resource-lists">
         {transformedVmData.length > 0 && (
           <div>
-            <div><b>{Localization.kr.VM} 목록:</b></div>
-            <ul>
+            <div className="mb-2"><b>{Localization.kr.VM} 목록</b></div>
+              
               {transformedVmData.map((vm, idx) => (
-                <li key={`vm-${idx}`}>{vm.name}</li>
+                <>
+                <div className="mb-0.5">
+                  <span className="mr-2 font-bold">-</span>
+                  <span key={`vm-${idx}`}>{vm.name}</span>
+                </div>
+                </>
               ))}
-            </ul>
+           
           </div>
         )}
 
         {transformedTmpData.length > 0 && (
           <div>
-            <div><b>{Localization.kr.TEMPLATE} 목록:</b></div>
-            <ul>
+            <div className="mb-2"><b>{Localization.kr.TEMPLATE} 목록</b></div>
+            
               {transformedTmpData.map((tmp, idx) => (
-                <li key={`tmp-${idx}`}>{tmp.name}</li>
+                <>
+                <div className="mb-0.5">
+                  <span className="mr-2 font-bold">-</span>
+                  <span key={`tmp-${idx}`}>{tmp.name}</span>
+                </div>
+                </>
               ))}
-            </ul>
+            
           </div>
         )}
 
         {transformedSnapshotData.length > 0 && (
           <div>
-            <div><b>{Localization.kr.DISK} {Localization.kr.SNAPSHOT} 목록:</b></div>
-            <ul>
+            <div className="mb-2"><b>{Localization.kr.DISK} {Localization.kr.SNAPSHOT} 목록</b></div>
+           
               {transformedSnapshotData.map((snap, idx) => (
-                <li key={`snap-${idx}`}>{snap.name}</li>
+                <>
+                <div className="mb-0.5">
+                  <span className="mr-2 font-bold">-</span>
+                  <span key={`snap-${idx}`}>{snap.name}</span>
+                </div>
+                </>
               ))}
-            </ul>
+           
           </div>
         )}
       </div>
       <br/>
       
+      <div>분리 작업은 등록되지 않은 상태로 {Localization.kr.DOMAIN}에 들어 있는 엔티티를 이동시킵니다.</div><br/>
       {/* TODO: 가상머신과 템플릿, 스냅샷이 있으면 경고문구를 보여줘야하는데 기준을 잡던가 해야됨요 */}
       <div className="destroy-text"> 
         {Localization.kr.DOMAIN}에는 다른 {Localization.kr.DOMAIN}에 {Localization.kr.DISK}가 있는 다음 {Localization.kr.VM}/{Localization.kr.TEMPLATE}에 대한 리스가 포함되어 있습니다.<br/>
