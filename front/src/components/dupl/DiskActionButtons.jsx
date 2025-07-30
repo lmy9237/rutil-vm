@@ -53,6 +53,14 @@ const DiskActionButtons = ({
     (e?.imageTransferPhase || "").toUpperCase() == "resuming".toUpperCase() || 
     (e?.imageTransferPhase || "").toUpperCase() == "transferring".toUpperCase()
   ))
+  const isTransferInFinalizing = disksSelected.every((e) => (
+    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_success".toUpperCase() || 
+    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_failure".toUpperCase() ||
+    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_cleanup".toUpperCase() ||
+    (e?.imageTransferPhase || "").toUpperCase() == "finished_success".toUpperCase() || 
+    (e?.imageTransferPhase || "").toUpperCase() == "finished_failure".toUpperCase() ||
+    (e?.imageTransferPhase || "").toUpperCase() == "finished_cleanup".toUpperCase()
+  ))
   const isLocked = disksSelected.every((e) => (
     e?.statusCode.toUpperCase() == "LOCKED".toUpperCase()
   ))
@@ -71,11 +79,11 @@ const DiskActionButtons = ({
 
   const uploadActions = [
     { type: "cancelit", onClick: () => setActiveModal("disk:cancelit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.CANCEL}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer },
+      disabled: disksSelected.length !== 1 || !isInTransfer || !isTransferPaused },
     { type: "pauseit", onClick: () => setActiveModal("disk:pauseit"),     label: `${Localization.kr.UPLOAD} ${Localization.kr.PAUSE}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferPaused },
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || (isTransferPaused || isTransferInFinalizing) },
     { type: "resumeit", onClick: () => setActiveModal("disk:resumeit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.RESUME}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress },
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || !(isTransferPaused || isTransferInFinalizing) },
   ];
 
   return (

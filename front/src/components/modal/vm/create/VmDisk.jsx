@@ -4,8 +4,8 @@ import { ActionButton }      from "@/components/button/ActionButtons";
 import { RVI36, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
-import VmDiskModal from "../VmDiskModal";
-import VmDiskConnectionModal from "../VmDiskConnectionModal";
+import VmDiskModal           from "@/components/modal/vm/VmDiskModal";
+import VmDiskConnectionModal from "@/components/modal/vm/VmDiskConnectionModal";
 
 const VmDisk = ({
   vm, vmName,

@@ -207,6 +207,7 @@ dependencies {
     implementation(Dependencies.swagger3)
 	implementation(Dependencies.jsch)
 	implementation(Dependencies.retrofit2)
+	implementation(Dependencies.imageioPnm)
     implementation(Dependencies.qemu)
     implementation(Dependencies.tiles)
     implementation(Dependencies.mybatis)

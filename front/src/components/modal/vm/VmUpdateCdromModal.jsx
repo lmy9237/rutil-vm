@@ -30,13 +30,14 @@ const VmUpdateCdromModal = ({
   const { vmsSelected, datacentersSelected } = useGlobal()
   const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
   const [updateCdromVo, setUpdateCdromVo] = useState(emptyIdNameVo());
+  const [fetchIsosOnce, setFetchIsosOnce] = useState(false);
 
   const {
     data: cdroms = [],
     isLoading: isCdromsLoading,
-  } = useCdromFromDataCenter(dataCenterVo.id || undefined, (e) => ({ 
+  } = useCdromFromDataCenter((dataCenterVo.id || undefined), (e) => ({ 
     ...e
-  }));
+  }), fetchIsosOnce, setFetchIsosOnce);
 
   const { 
     data: vm = {}
@@ -45,7 +46,7 @@ const VmUpdateCdromModal = ({
   const {
     data: cdrom,
     isLoading: isCdromLoading,
-  } = useCdromFromVm(vmsSelected[0]?.id || undefined, true);
+  } = useCdromFromVm((vmsSelected[0]?.id || undefined), true);
 
   const {
     mutate: updateCdromFromVm,
@@ -56,6 +57,7 @@ const VmUpdateCdromModal = ({
     if (vm && vm?.id) {
       setDataCenterVo(vm?.dataCenterVo)
     }
+    setFetchIsosOnce(true)
   }, [vm, vmsSelected])
 
   useEffect(() => {

@@ -257,7 +257,7 @@ const Tables = ({
 
   // 페이지 변경 핸들러 수정
   const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= Math.ceil(sortedData.length / itemsPerPage)) {
+    if (newPage >= 1 &&  newPage <= Math.ceil(sortedData.length / itemsPerPage)) {
       setCurrentPage(newPage);
     }
   };
@@ -330,7 +330,8 @@ const Tables = ({
 
   useEffect(() => {
     Logger.debug(`PagingTable > useEffect ... setting currentPage 1 ... filterType: ${filterType}`);
-    setCurrentPage(1);
+    // setCurrentPage(1);
+    // TODO: 탭 기능 임시 비활성화
   }, [data, filterType, setFilterType])
 
   // th드레그

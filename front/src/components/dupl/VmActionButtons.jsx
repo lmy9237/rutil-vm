@@ -83,7 +83,7 @@ const VmActionButtons = ({
       status === "REBOOT_IN_PROGRESS"
     );
   });
-  const ollOkay2Migrate = vmsSelected.every(vm => 
+  const allOkay2Migrate = vmsSelected.every(vm => 
     vm?.qualified2Migrate || (
       vm?.status?.toUpperCase() === "UP" || 
       vm?.status?.toUpperCase() === "POWERING_UP" || 
@@ -115,7 +115,7 @@ const VmActionButtons = ({
   const manageActions = [
     { type: "import",     onClick: () => setActiveModal("vm:copy"),           label: Localization.kr.IMPORT, },
     { type: "copy",       onClick: () => setActiveModal("vm:copy"),           label: `${Localization.kr.VM} 복제`,    disabled:true   }, //   disabled: vmsSelected.length !== 1 || allPause 
-    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,   disabled: vmsSelected.length !== 1 || !isUp },
+    { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,   disabled: vmsSelected.length !== 1 || !isUp || !allOkay2Migrate },
     { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,         disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm  },
     //{ type: "templates",  onClick: () => {},                                label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
     { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || !isDown },
@@ -155,7 +155,7 @@ const VmActionButtons = ({
     { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                      disabled: vmsSelected.length === 0 || isDown},
     { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                disabled: vmsSelected.length === 0 || isDown},
     //{ type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
-    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isConsoleEnabled},
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect},
     { 
       type: "migration",  
       onClick: () => setActiveModal("vm:migration"),   

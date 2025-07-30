@@ -104,6 +104,7 @@ object Dependencies {
 		"com.squareup.retrofit2:converter-scalars:${Versions.retrofit2}",
 		"com.squareup.retrofit2:converter-gson:${Versions.retrofit2}",
 	) + okhttp3
+	val imageioPnm = "com.twelvemonkeys.imageio:imageio-pnm:3.10.1"
     val qemu = listOf(
         "org.anarres.qemu:qemu-examples:${Versions.qemu}",
         "org.anarres.qemu:qemu-exec:${Versions.qemu}",

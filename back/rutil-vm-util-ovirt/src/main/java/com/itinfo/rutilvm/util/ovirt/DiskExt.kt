@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.util.ovirt
 
+import com.itinfo.rutilvm.api.ovirt.business.TimeoutPolicyType
 import com.itinfo.rutilvm.api.ovirt.business.model.Term
 import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
 import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
@@ -245,6 +246,8 @@ private fun Connection.preparedImageTransfer(
 			}
 			else -> ImageTransferContainer().apply {
 				direction(direction)
+				timeoutPolicy(ImageTransferTimeoutPolicy.CANCEL)
+				inactivityTimeout(180L.toBigInteger())
 				image(ImageContainer().apply { id(diskId) })
 			}
 	}

@@ -274,7 +274,9 @@ const VmModal = ({
   const { 
     data: isos = [], 
     isLoading: isIsoLoading,
-  } = useCdromFromDataCenter(dataCenterVo.id, (e) => ({ ...e }), fetchIsosOnce);
+  } = useCdromFromDataCenter(dataCenterVo.id, (e) => ({ 
+    ...e
+  }), fetchIsosOnce, setFetchIsosOnce);
 
 
   // 초기값 설정

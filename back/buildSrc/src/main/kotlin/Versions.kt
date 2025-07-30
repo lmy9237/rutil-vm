@@ -24,6 +24,7 @@ object Versions {
 	const val jsch = "0.2.23"
 	const val okhttp3 = "4.9.1"
 	const val retrofit2 = "2.9.0"
+	const val imageioPnm = "3.10.1" // pnm이미지 변환
     const val qemu = "1.0.6"
     const val tiles = "3.0.5"
     const val mybatis = "3.2.8"

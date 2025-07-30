@@ -224,9 +224,8 @@ class VmServiceImpl(
 
 		// VM 정보 업데이트 (메인 정보만)
 		val updatedVm: Vm = conn.updateVm(
-			vmVo.toEditVm()
-		).getOrNull()
-			?: throw ErrorPattern.VM_NOT_FOUND.toException()
+			vmVo.toEditVm(), vmVo.cdRomVo.id
+		).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
 			// TODO: 변경실패 에러유형 필요
 
 		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(vmVo.id.toUUID())
@@ -252,8 +251,8 @@ class VmServiceImpl(
 		log.debug("update ... vmStaticSaved.device: {}", vmDeviceSaved.device)
 
 		// 상태가 UP 될 때까지 대기
-		Thread.sleep(2000)
-		// updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
+		Thread.sleep(1200)
+		updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
 		return updatedVm.toVmVo(conn).apply {
 			this@apply.displayType = vmStaticFound.defaultDisplayType
 		}
@@ -302,7 +301,9 @@ class VmServiceImpl(
 					val cdromAdded = conn.addCdromFromVm(vmId, cdromFileId).getOrElse {
 						throw RuntimeException("CDROM 추가 실패: isoId=$cdromFileId", it)
 					}
-					return cdromAdded?.idPresent() == true
+					return cdromAdded?.idPresent() == true &&
+						cdromAdded.filePresent() &&
+						cdromAdded.file().id() == cdromFileId
 				}
 				cdrom.filePresent() && cdromFileId?.isEmpty() == false && cdrom.file().id() != cdromFileId -> {
 					log.info("updateCdrom ... CD-ROM 변경 {} -> {}", cdrom.file().id(), cdromFileId)

@@ -10,6 +10,7 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
+import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toDiskContentType
@@ -615,34 +616,45 @@ fun DiskImageVo.toAddTemplateDisk(): Disk {
 fun DiskImageVo.toUploadDisk(conn: Connection, fileSize: Long): Disk {
 	val storageDomain: StorageDomain = conn.findStorageDomain(this.storageDomainVo.id)
 		.getOrNull() ?: throw ErrorPattern.STORAGE_DOMAIN_NOT_FOUND.toException()
-
 	val storageType: StorageType = storageDomain.storage().type()
+	// 업로드할 디스크 유형이 씬 프로비져닝 (true) / 사전할당 (false) 조건 (sparse == true)
+	//
+	// 1. qcow 이거나
+	// 2. nfs에서 업로드 한 iso일 때
+	val isSparse: Boolean = this@toUploadDisk.contentType != DiskContentTypeB.iso ||
+		(storageType == StorageType.NFS && this@toUploadDisk.format == VolumeFormat.raw)
+	// 증분백업 조건
+	// 1. 업로드할 디스크가 iso 일 때 무조건
+	val backup: DiskBackup =
+		if (this@toUploadDisk.contentType == DiskContentTypeB.data && storageType == StorageType.NFS)
+			DiskBackup.INCREMENTAL
+		else if (this@toUploadDisk.contentType == DiskContentTypeB.iso)
+			DiskBackup.NONE
+		else
+			DiskBackup.NONE
+
+	log.info("toUploadDisk ... storageType: {}, contentType: {}, sparse: {} backup: {}", storageType, this@toUploadDisk.contentType, isSparse, backup)
 	return DiskBuilder()
 		.contentType( this@toUploadDisk.contentType.toDiskContentType())
+		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.storageType(
-			when(storageType) {
+			/* when(storageType) {
 				StorageType.FCP -> org.ovirt.engine.sdk4.types.DiskStorageType.LUN
 				else -> org.ovirt.engine.sdk4.types.DiskStorageType.IMAGE
-			}
+			}*/
+			org.ovirt.engine.sdk4.types.DiskStorageType.IMAGE
 		)
+		.backup(backup)
+		.sparse(isSparse)
+		.shareable(this.sharable)
 		.provisionedSize(when(this@toUploadDisk.format) {
 		 	VolumeFormat.cow -> this@toUploadDisk.virtualSize.toLong()
 			else -> fileSize
 		})
-		.sparse(
-			// storageType == StorageType.NFS
-			this@toUploadDisk.contentType != DiskContentTypeB.iso
-		)// 업로드할 디스크 유형이 iso 이 아닐 때 무조건 씬 프로비져닝
 		.alias(this@toUploadDisk.alias)
 		.description(this@toUploadDisk.description)
 		.storageDomains(*arrayOf(StorageDomainBuilder().id(this.storageDomainVo.id).build()))
 		.diskProfile(DiskProfileBuilder().id(this.diskProfileVo.id).build())
-		.shareable(this.sharable)
 		.wipeAfterDelete(this.wipeAfterDelete)
-		.backup(when(storageType) {
-			StorageType.FCP ->	DiskBackup.INCREMENTAL
-			else -> 			DiskBackup.NONE
-		}) // 증분백업 되지 않음
-		.format(this@toUploadDisk.format.toDiskFormat()) // 이미지 업로드는 raw 형식만 가능 +front 처리?
 		.build()
 }

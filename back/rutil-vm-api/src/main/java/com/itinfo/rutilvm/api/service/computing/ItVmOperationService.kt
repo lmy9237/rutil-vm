@@ -12,6 +12,8 @@ import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.api.service.setting.ItSystemPropertiesService
 import com.itinfo.rutilvm.common.LoggerDelegate
+import com.itinfo.rutilvm.common.isPng
+import com.itinfo.rutilvm.common.startsWith
 import com.itinfo.rutilvm.util.model.SystemPropertiesVo
 import com.itinfo.rutilvm.util.ovirt.detachVm
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
@@ -52,7 +54,10 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestTemplate
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.util.*
+import javax.imageio.ImageIO
 
 interface ItVmOperationService {
 	/**
@@ -395,19 +400,60 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 			log.error("something went wrong ... reason: {}", e.localizedMessage)
 			throw e
 		}
-		val imageBytes: ByteArray = response.body
-			?: throw IllegalStateException("Response body was null")
-		val contentType: String = response.headers.contentType?.toString()
-			?: "image/png" // Default if not provided
+
+		val resBody: ByteArray = response.body ?: throw IllegalStateException("Response body was null")
+
+		val contentType: MediaType? = response.headers.contentType
+		var finalImageBytes: ByteArray
+		val finalMimeType: String = "image/png"
+
+		// 응답결과 값을 분별해서 어떤 MediaType 유형으로 반환됐는지 판단 후 모두 png로 변환
+		if (contentType == MediaType.IMAGE_PNG || resBody.isPng()) {
+			log.info("Received PNG format for vmId: {}.", vmId)
+			finalImageBytes = resBody
+		} else if (contentType?.toString()?.contains("pnm") == true || resBody.startsWith("P6".toByteArray())) {
+			log.warn("Received PPM format for vmId: {}. Converting to PNG...", vmId)
+			try {
+				// Convert PPM bytes to PNG bytes
+				val inputStream = ByteArrayInputStream(resBody)
+				val bufferedImage = ImageIO.read(inputStream)
+					?: throw IllegalStateException("Failed to read PPM image from byte stream. The data may be corrupt.")
+
+				val outputStream = ByteArrayOutputStream()
+				ImageIO.write(bufferedImage, "png", outputStream) // Write as PNG
+				finalImageBytes = outputStream.toByteArray()
+				log.info("Successfully converted PPM to PNG for vmId: {}.", vmId)
+			} catch (e: Exception) {
+				log.error("Error converting PPM to PNG for vmId: {}", vmId, e)
+				throw IllegalStateException("Failed to process PPM image data.", e)
+			}
+		} else {
+			// Handle JPEG or other unexpected formats
+			log.warn("Received an unexpected or unhandled image format: {}. Attempting to convert to PNG.", contentType)
+			// You could add JPEG -> PNG conversion here if needed, or just block it.
+			// For now, we attempt a generic conversion.
+			try {
+				val inputStream = ByteArrayInputStream(resBody)
+				val bufferedImage = ImageIO.read(inputStream)
+					?: throw IllegalStateException("Failed to read unknown image format.")
+				val outputStream = ByteArrayOutputStream()
+				ImageIO.write(bufferedImage, "png", outputStream)
+				finalImageBytes = outputStream.toByteArray()
+			} catch (e: Exception) {
+				log.error("Could not convert unknown image format to PNG for vmId: {}", vmId, e)
+				throw IllegalStateException("Received unsupported image format: $contentType", e)
+			}
+		}
 
 		// 7. Encode the raw bytes into a Base64 string.
-		val base64EncodedData = Base64.getEncoder().encodeToString(imageBytes)
+		val base64EncodedData = Base64.getEncoder().encodeToString(finalImageBytes)
 
 		// 8. Construct and return the final data URI string.
-		return "data:image/png;base64,$base64EncodedData"
+		return "data:$finalMimeType;base64,$base64EncodedData"
 	}
 
 	companion object {
 		private val log by LoggerDelegate()
 	}
 }
+

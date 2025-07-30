@@ -1,0 +1,42 @@
+# 1. Base Image
+# We need a base image that has a C compiler or where we can easily install one.
+# Debian is a great choice. 'build-essential' includes gcc, make, etc.
+# We select Debian 10 "Buster". This is the key change.
+# Debian 10 uses glibc 2.28, which is a direct match for CentOS 8 and RHEL 8.
+FROM debian:10-slim AS builder
+LABEL maintainer="Chan Hee Lee <chlee@ititinfo.com>"
+LABEL build-stage="sh-enc"
+
+# 2. Install Dependencies
+# Update package lists and install the C compiler toolchain.
+# shc requires 'gcc' to compile the generated C code.
+RUN sed -i 's/deb.debian.org/archive.debian.org/g' /etc/apt/sources.list && \
+    sed -i 's|security.debian.org/debian-security|archive.debian.org/debian-security|g' /etc/apt/sources.list && \
+    sed -i '/buster-updates/d' /etc/apt/sources.list && \
+    apt-get update && \
+    apt-get install -y build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+# 3. Set up the working directory
+WORKDIR /app
+
+# 4. Copy your project files into the image
+# This copies everything from your local project folder (the build context)
+# into the /app directory inside the image.
+COPY . .
+
+RUN touch /app/version_ldd
+RUN ldd --version >> /app/version_ldd
+
+# 5. Make scripts executable
+# Ensure that both your runner script and the shc tool itself have execute permissions.
+RUN chmod +x run.sh shc-3.8.9b/shc
+# 6. run.sh EOL 처리: DOS (CRLF) -> UNIX (LF)
+RUN sed -i -e 's/\r$//' /app/run.sh
+# 7. Run the compilation process
+# This executes your 'run.sh' script, which in turn calls shc.
+# The compiled files (rutilvm-*.sh.x and rutilvm-*.sh.x.c) will be generated inside the image.
+RUN ./run.sh
+
+# This Dockerfile is a "builder". The final artifact (the compiled script)
+# will be inside this image. The next section shows you how to get it out.

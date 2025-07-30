@@ -187,7 +187,7 @@ fun Connection.detachVm(vmId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException(Term.VM, "분리", vmId) else it
 }
 
-fun Connection.addVm(vm: Vm, cdromFileId: String?): Result<Vm?> = runCatching {
+fun Connection.addVm(vm: Vm, cdromFileId: String?=""): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
@@ -211,12 +211,21 @@ fun Connection.addVm(vm: Vm, cdromFileId: String?): Result<Vm?> = runCatching {
 	throw if (it is Error) it.toItCloudException(Term.VM, "생성") else it
 }
 
-fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
+fun Connection.updateVm(vm: Vm, cdromFileId: String?=""): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 	val vmUpdated: Vm =
 		this.srvVm(vm.id()).update().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
+
+
+	if (!cdromFileId.isNullOrEmpty()){
+		this.srvVmCdromsFromVm(vmUpdated.id())
+			.add()
+			.cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
+			.send()
+			.cdrom()
+	}
 
 	vmUpdated
 }.onSuccess {
@@ -365,7 +374,10 @@ fun Connection.findAllCdromsFromVm(vmId: String?=""): Result<List<Cdrom>> = runC
 private fun Connection.srvVmCdromFromVm(vmId: String?=""): VmCdromService =
 	this.srvVmCdromsFromVm(vmId).cdromService(DEFAULT_ID_CDROM)
 
-fun Connection.findCdromFromVm(vmId: String?="", current: Boolean?=false): Result<Cdrom?> = runCatching {
+fun Connection.findCdromFromVm(
+	vmId: String?="",
+	current: Boolean?=false
+): Result<Cdrom?> = runCatching {
 	val vm = checkVm(vmId)
 	this.srvVmCdromFromVm(vmId)
 		.get()
@@ -382,7 +394,10 @@ fun Connection.findCdromFromVm(vmId: String?="", current: Boolean?=false): Resul
 fun Connection.addCdromFromVm(vmId: String?="", cdromFileId: String?=""): Result<Cdrom?> = runCatching {
 	checkVmExists(vmId)
 	this.srvVmCdromsFromVm(vmId).add().apply {
-		cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
+		cdrom(
+			CdromBuilder()
+				.file(FileBuilder().id(cdromFileId))
+		)
 	}.send().cdrom()
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "생성", vmId)

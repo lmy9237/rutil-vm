@@ -75,10 +75,12 @@ const DiskInfo = () => {
   const domainNotActive = domain?.status?.toLowerCase() !== "active";
   const hasVmAtttached = disk?.vmAttached || !!disk?.connectVm?.name || false
   const hasTemplateAtttached = disk?.templateAttached || !!disk?.connectTemplate?.name || false
+  const isLocked = disk?.statusCode.toUpperCase() == "LOCKED".toUpperCase()
+  const isInTransfer = !!disk?.imageTransferType && (disk?.imageTransferType || "").toUpperCase() == "upload".toUpperCase()
 
   const sectionHeaderButtons = [
-    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update"), disabled: hasTemplateAtttached },
-    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove"), disabled: domainNotActive || hasVmAtttached || hasTemplateAtttached },
+    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update"), disabled: hasTemplateAtttached || isInTransfer || isLocked },
+    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove"), disabled: domainNotActive || hasVmAtttached || hasTemplateAtttached || isInTransfer || isLocked },
     { type: "move",   label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
     { type: "copy",   label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
     // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },
