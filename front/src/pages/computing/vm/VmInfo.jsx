@@ -81,7 +81,7 @@ const VmInfo = () => {
     if (vm?.status === "up"){
       return [
         { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-        { id: "monitor",      label: "모니터",                     onClick: () => handleTabClick("monitor") },
+        { id: "monitor",      label: Localization.kr.MONITOR,     onClick: () => handleTabClick("monitor") },
         { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
         { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
         { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
@@ -92,7 +92,6 @@ const VmInfo = () => {
     } else {
       return [
         { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-        // { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
         { id: "nics",         label: Localization.kr.NICS,        onClick: () => handleTabClick("nics") },
         { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
         { id: "snapshots",    label: Localization.kr.SNAPSHOT,    onClick: () => handleTabClick("snapshots") },
@@ -142,8 +141,6 @@ const VmInfo = () => {
     { type: "pause",     onClick: () => setActiveModal("vm:pause"),         label: Localization.kr.PAUSE,       disabled: !isUp },
     { type: "reboot",    onClick: () => setActiveModal("vm:reboot"),        label: Localization.kr.REBOOT,      disabled: !isRebootable },
     { type: "reset",     onClick: () => setActiveModal("vm:reset"),         label: Localization.kr.RESET,       disabled: !isRebootable },
-    // { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: !allOkay2PowerDown, },
-    // { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: !allOkay2PowerDown  },
     { type: "shutdown",  onClick: () => setActiveModal("vm:shutdown"),      label: Localization.kr.END,         disabled: isDown, },
     { type: "powerOff",  onClick: () => setActiveModal("vm:powerOff"),      label: Localization.kr.POWER_OFF,   disabled: isDown  },
     { type: "console",   onClick: () => openNewTab("console", vmId),        label: Localization.kr.CONSOLE,     disabled: !isVmQualified4ConsoleConnect },

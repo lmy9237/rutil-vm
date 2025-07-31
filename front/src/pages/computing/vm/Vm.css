@@ -34,16 +34,6 @@
     margin: 20px 0;
   }
 }
-/*모니터*/
-.vm-monitor-outer{
-  padding: 20px 0;
-  padding-right: 80px;
-}
-.vm-monitor-outer>div:first-child{
-  font-size: var(--fs-24);
-  font-weight: 600;
-  width: 300px;
-}
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;

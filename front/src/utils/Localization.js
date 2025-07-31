@@ -40,6 +40,7 @@ export const Localization = {
     NETWORK: "네트워크",
     NETWORK_FILTER: `네트워크 필터`,
     NICS: `네트워크 인터페이스`,
+    MONITOR:`모니터`,
     VNIC: "vNIC",
     VNIC_PROFILE: "vNIC 프로파일",
     CPU_PROFILE: "CPU 프로파일",

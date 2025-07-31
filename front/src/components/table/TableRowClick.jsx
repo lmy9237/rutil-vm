@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
@@ -12,8 +12,11 @@ const TableRowClick = ({
   ...props
 }) => {
   const navigate = useNavigate();
+  const location = useLocation(); 
   const spanRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  
+  const basePath = `/${location.pathname.split("/")[1]}`;  
 
   useEffect(() => {
     const el = spanRef.current;
@@ -27,7 +30,7 @@ const TableRowClick = ({
     e.stopPropagation();
 
     const paths = {
-      datacenter: `/computing/datacenters/${id}`,
+      datacenter: `${basePath}/datacenters/${id}`,
       cluster: `/computing/clusters/${id}`,
       host: `/computing/hosts/${id}`,
       vm: `/computing/vms/${id}`,

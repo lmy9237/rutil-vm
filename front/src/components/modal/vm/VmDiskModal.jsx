@@ -116,7 +116,8 @@ const VmDiskModal = ({
       setFormState(() => ({
         ...initialFormState,
         alias: vmName || "", 
-        bootable: hasBootableDisk ? false : initialFormState.bootable
+        bootable: hasBootableDisk ? false : initialFormState.bootable,
+          backup: true 
       }));
       setStorageDomainVo(emptyIdNameVo());
       setDiskProfileVo(emptyIdNameVo());
@@ -270,7 +271,7 @@ const VmDiskModal = ({
             setFormState((prev) => ({
               ...prev,
               sparse: sparseValue,
-              backup: sparseValue ? prev.backup : false, 
+              backup: sparseValue ? true : false, 
             }));
           }}
           // onChange={(e) => setFormState((prev) => ({ ...prev, sparse: e.target.value === "true" }))} 

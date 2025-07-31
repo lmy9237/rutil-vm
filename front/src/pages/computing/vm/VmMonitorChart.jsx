@@ -63,10 +63,10 @@ const VmMonitorChart = ({ per = [],  usageValue = null, metricKey, metricName, c
   };
 
   return (
-    <div className="vm-box-default show-yaxis" style={{  padding: "16px"}}>
+    <div className="vm-box-default show-yaxis pt-2 mb-5">
       <div className="flex">
         <h3 className="box-title mr-3">{metricName} 사용률 </h3> 
-        현재 사용량: <b>{usageValue}%</b>
+        현재 사용량: <b className="ml-1">{usageValue}%</b>
       </div>
       <hr className="w-full" />
       <div className="box-content" style={{ padding: "12px 0" }}>

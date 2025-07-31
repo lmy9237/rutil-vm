@@ -31,7 +31,7 @@
   border: var(--border-default);
   padding: 8px 10px;
   width: 39%;
-  background: white;
+  background: var(--color-white);
   border-radius: 1px;
 }
 .host-network-outer {

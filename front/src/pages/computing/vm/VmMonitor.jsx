@@ -40,13 +40,10 @@ const VmMonitor = ({
   return (
     <>
     {/*TODO 디자인 검토 필요 */}
-      <div className="dupl-header-group align-start gap-2 w-full ">
-        <div className="f-start vm-monitor-outer">
-          <div className="f-center">cpu사용률</div>
-          <div className="w-full"><VmMonitorChart per={vmPer} usageValue={usageDto?.cpuPercent} metricKey="cpuPercent" metricName="CPU" color="#F0643B" /></div>
-        </div>
-        <VmMonitorChart per={vmPer} usageValue={usageDto?.memoryPercent} metricKey="memoryPercent" metricName="메모리" color="#30A9DE" />
-        <VmMonitorChart per={vmPer} usageValue={usageDto?.networkPercent} metricKey="networkPercent" metricName="네트워크" color="#9BC53D" />
+      <div className="dupl-header-group align-start gap-2 w-full monitor-outer">
+        <div className="w-full px-10"><VmMonitorChart per={vmPer} usageValue={usageDto?.cpuPercent} metricKey="cpuPercent" metricName="CPU" color="#F0643B" /></div>
+        <div className="w-full px-10"><VmMonitorChart per={vmPer} usageValue={usageDto?.memoryPercent} metricKey="memoryPercent" metricName="메모리" color="#30A9DE" /></div>
+        <div className="w-full px-10"><VmMonitorChart per={vmPer} usageValue={usageDto?.networkPercent} metricKey="networkPercent" metricName="네트워크" color="#9BC53D" /></div>
       </div>
     </>
   );

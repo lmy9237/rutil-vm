@@ -51,7 +51,7 @@ const useSearch = (
       return Object.values(row).some((value) => {
         if (value === null || value === undefined) return false;
 
-        // ✅ JSX 요소에서 텍스트 추출
+        // JSX 요소에서 텍스트 추출
         if (typeof value === "object" && value?.props?.children) {
           let childrenText = value.props.children;
 
@@ -63,7 +63,7 @@ const useSearch = (
           value = String(childrenText);
         }
 
-        // ✅ 모든 필드를 소문자로 변환 후 검색
+        // 모든 필드를 소문자로 변환 후 검색
         const stringValue = String(value).toLowerCase();
 
         return stringValue.includes(normalizedSearchQuery);
