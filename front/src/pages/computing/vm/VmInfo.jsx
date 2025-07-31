@@ -160,12 +160,20 @@ const VmInfo = () => {
     setActiveTab(section || "general");
   }, [section]);
 
+  useEffect(() => {  // 만약 up인상태의 가상머신의 monitor탭에서 tree메뉴의 꺼진가상머신을 누르면 일반페이지로 가도록 설정
+    if (!vm || !activeTab) return;
+    if (activeTab === "monitor" && vm.status?.toUpperCase() !== "UP") {
+      handleTabClick("general");
+    }
+  }, [vm?.status, activeTab]);
+
   useEffect(() => {
     if (isVmError || (!isVmLoading && !vm)) {
       navigate("/computing/vms");
     }
     const currentTabInPage = tabInPage("/computing/vms")
-    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage);
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    // setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage);
     setVmsSelected(vm)
   }, [vm]);
 

@@ -385,7 +385,7 @@ const NetworkModal = ({
                           );
                         }}
                       />
-                      <label htmlFor="connect_all"> 모두 연결</label>
+                      <label htmlFor="connect_all" className="ml-1"> 모두 연결</label>
                     </div>
                   ),
                   accessor: "connect",
@@ -410,7 +410,7 @@ const NetworkModal = ({
                           );
                         }}
                       />
-                      <label htmlFor="require_all"> 모두 필요</label>
+                      <label htmlFor="require_all" className="ml-1"> 모두 필요</label>
                     </div>
                   ),
                   accessor: "require",
@@ -441,7 +441,7 @@ const NetworkModal = ({
                         );
                       }}
                     />
-                    <label htmlFor={`connect_${cluster.id}`}> 연결</label>
+                    <label htmlFor={`connect_${cluster.id}`} className="ml-1"> 연결</label>
                   </div>
                 ),
                 require: (
@@ -460,7 +460,7 @@ const NetworkModal = ({
                         );
                       }}
                     />
-                    <label htmlFor={`require_${cluster.id}`}> 필수</label>
+                    <label htmlFor={`require_${cluster.id}`} className="ml-1"> 필수</label>
                   </div>
                 ),
               }))}

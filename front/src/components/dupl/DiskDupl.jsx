@@ -82,9 +82,9 @@ const DiskDupl = ({
       ].filter(Boolean).join(", "), 
       */
       connect: d?.vmAttached 
-        ? <><RVI16 iconDef={rvi16Desktop()}/><p>{d?.connectVm?.name}</p></>
+        ? <><RVI16 iconDef={rvi16Desktop()}/><p className="ml-1">{d?.connectVm?.name}</p></>
         : d?.templateAttached
-          ? <><RVI16 iconDef={rvi16Template()}/><p>{d?.connectTemplate?.name}</p></>
+          ? <><RVI16 iconDef={rvi16Template()}/><p className="ml-1">{d?.connectTemplate?.name}</p></>
           : <></>,
       virtualSizeToGB: checkZeroSizeToGiB(d?.virtualSize),
       actualSizeToGB: checkZeroSizeToGiB(d?.actualSize),

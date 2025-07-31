@@ -128,7 +128,8 @@ const HostInfo = () => {
       navigate("/computing/rutil-manager/hosts");
     }
     const currentTabInPage = tabInPage("/computing/hosts")
-    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    // setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setHostsSelected(host)
   }, [host]);
 

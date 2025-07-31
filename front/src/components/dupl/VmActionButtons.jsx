@@ -48,8 +48,7 @@ const VmActionButtons = ({
 
   const selected1st = [...vmsSelected][0] ?? null
 
-  // const isUp = selected1st?.running ?? false;
-  // const isDown = selected1st?.notRunning ?? false;
+
   const isUp = selected1st?.status?.toUpperCase() === "UP";
   const isDown = selected1st?.status?.toUpperCase() === "DOWN";
   const isMaintenance = selected1st?.status?.toUpperCase() === "MAINTENANCE";
@@ -71,8 +70,8 @@ const VmActionButtons = ({
   ) || false;
   const isVmQualified4ConsoleConnect = selected1st?.qualified4ConsoleConnect || false;
   const hasDeleteProtectedVm = vmsSelected.some(vm => vm?.deleteProtected === true); // 삭제방지 조건
-
-  // const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm.running ?? false);
+  const hasUpVm = vmsSelected.some(vm => vm?.status?.toUpperCase() === "UP");  // 하나라도 up일 경우 / down일경우
+  const hasDown = vmsSelected.some(vm => vm?.status?.toUpperCase() === "DOWN");
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.status?.toUpperCase() === "UP");
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
     const status = vm.status?.toLowerCase();
@@ -118,7 +117,7 @@ const VmActionButtons = ({
     { type: "updateCdrom",   onClick: () => setActiveModal("vm:updateCdrom"), label: Localization.kr.UPDATE_CDROM,   disabled: vmsSelected.length !== 1 || !isUp || !allOkay2Migrate },
     { type: "remove",     onClick: () => setActiveModal("vm:remove"),         label: Localization.kr.REMOVE,         disabled: vmsSelected.length === 0 || !isDown || hasDeleteProtectedVm  },
     //{ type: "templates",  onClick: () => {},                                label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: isUp || vmsSelected.length !== 1 || isTemplate },
-    { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || !isDown },
+    { type: "templates",  onClick: () => {},                                  label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasUpVm },
     { type: "ova",        onClick: () => {},                                  label: `ova로 ${Localization.kr.EXPORT}`,  disabled: vmsSelected.length === 0 || isPause },
   ];
 
@@ -144,18 +143,16 @@ const VmActionButtons = ({
         setActiveModal("vm:start");
       }, 
       label: Localization.kr.START, 
-      disabled: !(isDown || isPause || isMaintenance) 
+      disabled: hasUpVm || !(isDown || isPause || isMaintenance) 
     },
     /* { type: "startOnce",  onClick: () => setActiveModal("vm:startOnce"),   label: `한번 ${Localization.kr.START}`,                          disabled: vmsSelected.length !== 1 || !(isDown || isPause || isMaintenance)  }, */
     { type: "pause",      onClick: () => setActiveModal("vm:pause"),       label: Localization.kr.PAUSE,                                   disabled: !allUp },
-    { type: "reboot", onClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: vmsSelected.length === 0  || !isRebootable },
-    { type: "reset",  onClick: () => setActiveModal("vm:reset"),  label: Localization.kr.RESET,  disabled: vmsSelected.length === 0  ||!isRebootable },
-    // { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                                     disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
-    // { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                               disabled: vmsSelected.length === 0 || !allOkay2PowerDown},
+    { type: "reboot",     onClick: () => setActiveModal("vm:reboot"), label: Localization.kr.REBOOT, disabled: vmsSelected.length === 0  || !isRebootable },
+    { type: "reset",      onClick: () => setActiveModal("vm:reset"),  label: Localization.kr.RESET,  disabled: vmsSelected.length === 0  ||!isRebootable },
     { type: "shutdown",   onClick: () => setActiveModal("vm:shutdown"),    label: Localization.kr.END,                      disabled: vmsSelected.length === 0 || isDown},
     { type: "powerOff",   onClick: () => setActiveModal("vm:powerOff"),    label: Localization.kr.POWER_OFF,                disabled: vmsSelected.length === 0 || isDown},
-    //{ type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
-    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect},
+    //{ type: "console",  onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || !isVmQualified4ConsoleConnect, subactions: consoleActions},
+    { type: "console",    onClick: () => openNewTab("console", selected1st?.id), label: Localization.kr.CONSOLE,            disabled: vmsSelected.length === 0 || isDown}, 
     { 
       type: "migration",  
       onClick: () => setActiveModal("vm:migration"),   
@@ -168,7 +165,7 @@ const VmActionButtons = ({
     //   label: `${Localization.kr.MIGRATION}2`,                               
     //   disabled: !isMigrateEnabled
     // },
-    { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length === 0 || hasLockedSnapshot },
+    { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length !==1 || hasLockedSnapshot },
     { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
   ].filter(action => !(isContextMenu && action.type === "template"));
 
@@ -194,18 +191,13 @@ const VmActionButtons = ({
             className="dropdown-container"
           >
             <ActionButton
-              // iconDef={
-              //   consoleDropdownActive 
-              //     ? rvi16ChevronUp(isVmQualified4ConsoleConnect ? CONSTANT.color.black : CONSTANT.color.down)
-              //     : rvi16ChevronDown(isVmQualified4ConsoleConnect ? CONSTANT.color.black : CONSTANT.color.down)
-              // }
               iconDef={
                 consoleDropdownActive 
                   ? rvi16ChevronUp(allUp ? CONSTANT.color.black : CONSTANT.color.down)
                   : rvi16ChevronDown(allUp ? CONSTANT.color.black : CONSTANT.color.down)
               }
               label={Localization.kr.CONSOLE}
-              disabled={!allUp}
+              disabled={vmsSelected.length === 0} // || !isVmQualified4ConsoleConnect
               onClick={toggleConsoleDropdown}
             />
             {consoleDropdownActive && (

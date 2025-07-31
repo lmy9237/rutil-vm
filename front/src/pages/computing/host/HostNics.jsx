@@ -1185,7 +1185,7 @@ const HostNics = ({
     <>
     <div className="w-full">
       <SnapshotHostBackground className="split-outer f-btw w-full">
-        <div className="split-item split-item-two-thirds"
+        <div className="split-item"
           onDragOver={e => {
             if (dragItem && dragItem.type === "nic" && dragItem.list === "slave") {
               e.preventDefault();
@@ -1321,11 +1321,11 @@ const HostNics = ({
         </div>
 
         {/* 할당되지않은 네트워크 */}
-        <div className="split-item split-item-one-third detachNetworkArea"
+        <div className="split-item detachNetworkArea"
           onDragOver={(e) => handleDragOver(e, "network", "attach")}
           onDrop={(e) => handleDrop(e, "attach")}
         >
-          <div className="unassigned-network text-center mb-4">
+          <div className="unassigned-network text-center mb-4 p-1">
             <span className="fs-16">할당되지 않은 논리 {Localization.kr.NETWORK}</span>
           </div>
           <FilterButtons

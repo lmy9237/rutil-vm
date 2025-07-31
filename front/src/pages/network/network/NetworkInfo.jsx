@@ -95,7 +95,8 @@ const NetworkInfo = () => {
       navigate("/networks");
     }
     const currentTabInPage = tabInPage("/networks")
-    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)
     setNetworksSelected(network)
   }, [network, navigate]);
   

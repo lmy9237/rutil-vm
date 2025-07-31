@@ -82,7 +82,8 @@ const VnicProfileInfo = () => {
     const currentTabInPage = tabInPage("/vnicPrfiles") == "general" 
       ? "vms"
       : tabInPage("/vnicPrfiles");
-    setActiveTab(currentTabInPage);
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage);
     setVnicProfilesSelected(vnicProfile);
   }, [isVnicProfileError, isVnicProfileLoading, vnicProfile]);
 

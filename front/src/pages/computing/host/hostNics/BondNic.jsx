@@ -33,9 +33,9 @@ const BondNic = ({
           onClick={() => editBondingData && editBondingData(nic)}
         />
       </div>
-      <div className="w-full interface-container-outer2" onDragOver={e => e.preventDefault()}>
+      <div className="w-full" onDragOver={e => e.preventDefault()}>
         {nic.bondingVo?.slaveVos.map((slave) => (
-          <div className="interface-container container"
+          <div className="interface-container container mb-2"
             key={slave.id}
             // data-tooltip-id={`nic-tooltip-${slave.id}`}
             // data-tooltip-html={NicToolTip(slave)}

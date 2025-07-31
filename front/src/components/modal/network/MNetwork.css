@@ -1,12 +1,8 @@
 
 /*네트워크(가져오기)*/
-.network-bring-table-outer h1 {
-  font-weight: 700;
-  padding: 10px 0;
-}
 .network-bring-table-outer > div {
   border:var(--border-default);
-  height: 27vh;
+  height: 220px;
   overflow-y: auto;
   overflow-x: hidden;
 }

@@ -45,7 +45,8 @@ const SettingProvidersInfo = () => {
         ? `/settings/provider/${providerId}`
         : `/settings/provider/${providerId}/${tab}`;
       navigate(path);
-      setActiveTab(tab);
+      handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+      //setActiveTab(tab);
   }, [navigate, providerId]);
 
   const tabs = useMemo(() => [

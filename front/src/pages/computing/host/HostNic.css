@@ -1,10 +1,9 @@
-/* 0507 추가 */
 .network-item {
   padding: 15px;
   margin-bottom: 10px;
   border: var(--border-default);
   border-radius: 1px;
-  background-color: white;
+  background-color: var(--color-white);
   text-align: center;
   cursor: pointer;
   padding: 8px 16px;
@@ -13,26 +12,6 @@
 .network-item:hover {
   border: 1.7px dashed #002a4f;
   transform: scale(1); 
-}
-.network-separation-left > div:first-child > div {
-  width: 37%;
-  padding: 0.2rem;
-  text-align: center;
-}
-.separation-left-content {
-  border-bottom: 1px solid #a3a3a3;
-  padding: 16px 0;
-  margin-bottom: 7px;
-}
-.separation-left-content:last-child {
-  margin-bottom: 1rem;
-}
-.interface {
-  border: var(--border-default);
-  padding: 8px 10px;
-  width: 39%;
-  background: var(--color-white);
-  border-radius: 1px;
 }
 .host-network-outer {
   padding: 0.2rem;
@@ -48,21 +27,7 @@
   padding: 8px 16px;
   border-radius: 1px;
 }
-.interface-outer .container{
-  margin-bottom: 6px;
-}
-.interface-header {
-  letter-spacing: -0.36px;
-  padding: 5px 0;
-}
-.unassigned-network {
-  text-align: center;
-  padding: 0.2rem;
-  margin-bottom: 15px;
-}
-.interface-content-outer2{
-  width: 39%;
-}
+
 .interface-content-outer{
   width: 39%;
 }
@@ -71,17 +36,11 @@
   justify-content: space-between;
   width: 100%;
 }
-
 .network-stack {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-
-.assigned-network-outer {
-  border: var(--border-default);
-} 
-
 .assigned-network-content {
   display: flex;
   justify-content: space-between;
@@ -89,11 +48,6 @@
   padding: 0 12px;
   min-height: 38px; 
   background-color: var(--color-primary-white);
-}
-
-.empty-network-content{
-  border: var(--border-default);
-  background-color: rgb(255, 255, 255);
 }
 
 .interface-outer{
@@ -109,34 +63,14 @@
   justify-content: space-between;
   align-items: center;
 }
-
-.assigned-network-outer,
-.empty-network-content{
-  border: var(--border-default);
-  background-color: rgb(255, 255, 255);
-}
-.assigned-network-content{
-  display: flex;justify-content: space-between;
-  width: 100%;
-}
-
 .group-span>div{
   width: 50%;
   text-align: center;
 }
-
-.split-item-two-thirds {
-  width: 70%;
-  padding: 16px; 
-  border-radius: 6px; 
+.assigned-network-outer{
+  border: var(--border-default);
 }
 
-.split-item-one-third {
-  width: 30%;
-  padding: 16px; 
-  height: 100%;
-  border-radius: 6px; 
-}
 .custom-ok-button {
   background-color: var(--color-primary-hover);
   color: var(--color-white-2);
@@ -144,9 +78,9 @@
   padding: 7px 10px;
 }
 .custom-ok-button:last-child{
-    background-color: var(--color-white-1);
-    border: var(--border-btn);
-      color: black;
+  background-color: var(--color-white-1);
+  border: var(--border-btn);
+  color: var(--color-black) !important;
 }
 .col-40 {
   flex: 0 0 45%;

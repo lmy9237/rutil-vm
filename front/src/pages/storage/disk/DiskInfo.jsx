@@ -104,7 +104,8 @@ const DiskInfo = () => {
       navigate("/storages/disks");
     }
     const currentTabInPage = tabInPage("/storages/disks")
-    setActiveTab(currentTabInPage)
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    // setActiveTab(currentTabInPage)
     setDisksSelected(disk)
   }, [disk]);
 

@@ -4897,20 +4897,35 @@ export const useDeleteNetwork = (
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-export const useAllNetworkProviders = (
-  mapPredicate = (e) => ({ ...e })
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.ALL_NETWORK_PROVIDERS],
-  queryFn: async () => {
-    const res = await ApiManager.findAllNetworkProviders();
-    const _res = mapPredicate
-      ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
-      : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
-    return _res;
-  }
-});
+// export const useAllNetworkProviders = (
+//   mapPredicate = (e) => ({ ...e })
+// ) => useQuery({
+//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+//   queryKey: [QK.ALL_NETWORK_PROVIDERS],
+//   queryFn: async () => {
+//     const res = await ApiManager.findAllNetworkProviders(); 
+//     const _res = mapPredicate
+//       ? validateAPI(res)?.map(mapPredicate) ?? []  //  validateAPI(res)?이 null -> .map실행안됨 출력x
+//       : validateAPI(res) ?? [];
+//     Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
+//     return _res;
+//   }
+// });
+// TODO: 네트워크공급자가 일단 한건만 오는 API로 만들었는데 백엔드 설명에는 목록을 주는 걸로 돼있음.  왜 단일건으로 조회되게 만들었는지 확인필요
+  export const useAllNetworkProviders = (
+    mapPredicate = (e) => ({ ...e })
+  ) => useQuery({
+    refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+    queryKey: [QK.ALL_NETWORK_PROVIDERS],
+    queryFn: async () => {
+      const res = await ApiManager.findAllNetworkProviders();
+      const validated = validateAPI(res);  // 항상 배열로 변환됨 validateAPI(res)가 단일 객체여도 .map() 동작
+      const parsed = (Array.isArray(validated) ? validated : [validated]).map(mapPredicate);
+      return parsed;
+    }
+  });
+
+
 
 //#region: VnicProfiles (vNic 프로파일)
 /**

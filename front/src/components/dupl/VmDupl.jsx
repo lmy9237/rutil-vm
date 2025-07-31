@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback,useMemo } from "react"
 import { useNavigate } from "react-router-dom";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
@@ -103,18 +103,47 @@ const VmDupl = ({
   }));
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
+
+  // 컬럼에 체크박스추가
+  const updatedColumns = useMemo(() => {
+  return columns.map(col => {
+    if (col.accessor === "checkbox") { 
+      return {
+        ...col,
+        header: (
+          <input
+            type="checkbox"
+            checked={filteredData.length > 0 && filteredData.every(vm => vmsSelected.some(v => v.id === vm.id))}
+            onChange={(e) => {
+              if (e.target.checked) {
+                const toAdd = filteredData.filter(vm => !vmsSelected.some(v => v.id === vm.id));
+                setVmsSelected([...vmsSelected, ...toAdd]);
+              } else {
+                const remaining = vmsSelected.filter(v => !filteredData.some(vm => vm.id === v.id));
+                setVmsSelected(remaining);
+              }
+            }}
+            onClick={(e) => e.stopPropagation()}
+          />
+        )
+      };
+    }
+    return col;
+  });
+}, [columns, filteredData, vmsSelected]);
+
   const handleNameClick = useCallback((id) => {
     navigate(`/computing/vms/${id}`);
   }, [navigate])
 
   return (
-    <>{/* v-start w-full으로 묶어짐*/}
+    <>
       <div className="dupl-header-group f-start align-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
         <VmActionButtons />
       </div>
       <TablesOuter target={"vm"}
-        columns={columns}
+        columns={updatedColumns}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => {

@@ -89,7 +89,8 @@ const ClusterInfo = () => {
       navigate("/computing/rutil-manager/clusters");
     }
     const currentTabInPage = tabInPage("/computing/clusters")
-    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setClustersSelected(cluster)
   }, [cluster, navigate]);
 

@@ -94,7 +94,8 @@ const TemplateInfo = () => {
       navigate("/computing/templates");
     }
     const currentTabInPage = tabInPage("/computing/templates")
-    setActiveTab(currentTabInPage)
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage)
     setTemplatesSelected(template)
   }, [template]);
 

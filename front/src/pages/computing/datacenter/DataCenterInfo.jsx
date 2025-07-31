@@ -117,8 +117,9 @@ const DataCenterInfo = () => {
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
       navigate("/computing/rutil-manager/datacenters");
     }
-    const currentTabInPage = tabInPage(`/${_baseHomePath}/datacenters`)
-    setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
+    const currentTabInPage = tabInPage(`/${_baseHomePath}/datacenters`);
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setDatacentersSelected(dataCenter)
     setSourceContext("fromDatacenter")
   }, [dataCenter, navigate]);
