@@ -47,9 +47,10 @@ const DiskModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const dLabel = editMode ? Localization.kr.UPDATE : Localization.kr.CREATE;
-
   const { 
-    disksSelected, domainsSelected, datacentersSelected,
+    disksSelected, 
+    domainsSelected, 
+    datacentersSelected,
    } = useGlobal();
   const diskId = useMemo(() => [...disksSelected][0]?.id, [disksSelected]);
   const domainId = useMemo(() => [...domainsSelected][0]?.id, [domainsSelected]);
@@ -60,10 +61,9 @@ const DiskModal = ({
   const [domainVo, setDomainVo] = useState(emptyIdNameVo());
   const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   
+  const { data: disk } = useDisk(diskId);
   const { mutate: addDisk } = useAddDisk(onClose, onClose);
   const { mutate: editDisk } = useEditDisk(onClose, onClose);
-
-  const { data: disk } = useDisk(diskId);
 
   const { 
     data: datacenters = [], 
@@ -87,7 +87,6 @@ const DiskModal = ({
 
   useEffect(() => {
     Logger.debug(`DiskModal > useEffect ... domainsSelected: `, domainsSelected[0]);
-   
     if (!isOpen) {
       setFormState(initialFormState);
       setDataCenterVo(emptyIdNameVo());
@@ -144,20 +143,19 @@ const DiskModal = ({
   // 도메인 지정
   useSelectItemEffect(domainId, editMode, domains, setDomainVo);
 
-  // useEffect(() => {
-  //   if (domainsSelected && domainsSelected.length > 0) {
-  //     setDomainVo({
-  //       id: domainsSelected[0]?.id, 
-  //       name: domainsSelected[0]?.name 
-  //     });
-  //   } else if (!editMode && domains && domains.length > 0) {
-  //     const firstDomain = domains[0];
-  //     setDomainVo({id: 
-  //       firstDomain.id, 
-  //       name: firstDomain.name
-  //     });
-  //   }
-  // }, [domainsSelected, domains, editMode]);
+  useEffect(() => {
+    if (domainsSelected.length > 0) {
+      setDomainVo({
+        id: domainsSelected[0]?.id || "", 
+        name: domainsSelected[0]?.name || "",
+      });
+    } else if (!editMode && domains.length > 0) {
+      setDomainVo({
+        id: domains[0]?.id || "",
+        name: domains[0]?.name || "",
+      });
+    }
+  }, [domainsSelected, domains, editMode]);
 
   // domainVo가 변경될 때 diskProfile 초기화 및 재선택
   useEffect(() => {

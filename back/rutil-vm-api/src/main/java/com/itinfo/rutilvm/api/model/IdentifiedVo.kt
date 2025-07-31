@@ -134,12 +134,12 @@ fun List<CpuProfile>.fromCpuProfilesToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromCpuProfilesToIdentifiedVos.map { it.fromCpuProfileToIdentifiedVo() }
 
 
-fun StorageDomain.fromStorageDomainToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun StorageDomain.toIdentifiedVoFromStorageDomain(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
 fun List<StorageDomain>.fromStorageDomainsToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromStorageDomainsToIdentifiedVos.map { it.fromStorageDomainToIdentifiedVo() }
+	this@fromStorageDomainsToIdentifiedVos.map { it.toIdentifiedVoFromStorageDomain() }
 
 fun Disk.fromDiskToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
@@ -158,12 +158,12 @@ fun DiskAttachment.fromDiskAttachmentToIdentifiedVo(): IdentifiedVo {
 fun List<DiskAttachment>.fromDiskAttachmentsToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromDiskAttachmentsToIdentifiedVos.map { it.fromDiskAttachmentToIdentifiedVo() }
 
-fun DiskProfile.fromDiskProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun DiskProfile.toIdentifiedVoFromDiskProfile(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
 fun List<DiskProfile>.fromDiskProfilesToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromDiskProfilesToIdentifiedVos.map { it.fromDiskProfileToIdentifiedVo() }
+	this@fromDiskProfilesToIdentifiedVos.map { it.toIdentifiedVoFromDiskProfile() }
 
 
 fun Domain.fromDomainToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {

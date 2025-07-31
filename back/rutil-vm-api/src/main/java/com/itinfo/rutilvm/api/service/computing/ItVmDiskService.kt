@@ -171,8 +171,8 @@ class VmDiskService(
 		// val vm = conn.findVm(vmId).getOrNull()
 		// val res: List<AllDiskEntity> = rAllDisks.findAllByOrderByDiskAliasAsc()
 		// return res.toDiskEntities()
-
-		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId).getOrDefault(emptyList())
+		val res: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId)
+			.getOrDefault(emptyList())
 		return res.toDiskAttachmentVos(conn)
 
 		// val res: List<AllDisksForVmsEntity>? = rAllDiskVm.findAllDiskByVmId(vmId.toUUID())

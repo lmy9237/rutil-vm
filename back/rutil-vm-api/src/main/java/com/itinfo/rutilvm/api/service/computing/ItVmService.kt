@@ -18,6 +18,8 @@ import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
+import com.itinfo.rutilvm.util.ovirt.error.ItCloudException
+import kotlinx.coroutines.delay
 
 import org.ovirt.engine.sdk4.types.*
 import org.postgresql.util.PSQLException
@@ -64,7 +66,7 @@ interface ItVmService {
 	 * @return [VmVo]
 	 */
 	@Throws(Error::class)
-	fun update(vmVo: VmVo): VmVo?
+	suspend fun update(vmVo: VmVo): VmVo?
 	/**
 	 * [ItVmService.remove]
 	 * 가상머신 삭제
@@ -214,7 +216,7 @@ class VmServiceImpl(
 
 	@Throws(PSQLException::class, Error::class)
 	@Transactional("engineTransactionManager")
-	override fun update(vmVo: VmVo): VmVo? {
+	override suspend fun update(vmVo: VmVo): VmVo? {
 		log.info("update ... vmVo: {}", vmVo)
 
 		// 디스크 부팅옵션 검사
@@ -237,10 +239,18 @@ class VmServiceImpl(
 
 		log.info("현재 VM 상태: ${updatedVm.status()}")
 
-		// nic 편집
-		updateNics(vmVo)
-		// 디스크 편집
-		updateDisks(vmVo)
+		try {
+			updateNics(vmVo)	// nic 편집
+		} catch (e: ItCloudException) {
+			log.error("nic 편집 문제발생 ... {}", e.localizedMessage)
+		}
+		try {
+
+			updateDisks(vmVo)	// 디스크 편집
+		} catch (e: ItCloudException) {
+			log.error("디스크 편집 문제발생 ... {}", e.localizedMessage)
+		}
+
 		// 그래픽/비디오 유형
 		log.debug("update ... vmVo.displayType: {}", vmVo.displayType)
 		vmStaticFound.defaultDisplayType = vmVo.displayType
@@ -251,7 +261,8 @@ class VmServiceImpl(
 		log.debug("update ... vmStaticSaved.device: {}", vmDeviceSaved.device)
 
 		// 상태가 UP 될 때까지 대기
-		Thread.sleep(1200)
+		delay(1200L)
+		// Thread.sleep(1200)
 		updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
 		return updatedVm.toVmVo(conn).apply {
 			this@apply.displayType = vmStaticFound.defaultDisplayType
@@ -389,6 +400,7 @@ class VmServiceImpl(
 				conn.addDiskAttachmentToVm(vmVo.id, it.toAttachDisk())
 			}
 		}
+
 		disksToUpdate.forEach {
 			log.info("disksToUpdate: {}", it.diskImageVo.alias)
 			conn.updateDiskAttachmentToVm(vmVo.id, it.toEditDiskAttachment())

@@ -2,7 +2,7 @@ import useGlobal              from "@/hooks/useGlobal";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl             from "@/components/dupl/VmDiskDupl";
 import {
-  useDisksFromVM,
+  useAllDiskAttachmentsFromVm,
   useAllSnapshotsFromVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
@@ -28,7 +28,7 @@ const VmDisks = ({
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
     isRefetching: isDisksRefetching,
-  } = useDisksFromVM(vmId, (e) => ({ ...e }));
+  } = useAllDiskAttachmentsFromVm(vmId, (e) => ({ ...e }));
   
   // 스냅샷에서 미리보기(in_preview) 상태 확인
   const {

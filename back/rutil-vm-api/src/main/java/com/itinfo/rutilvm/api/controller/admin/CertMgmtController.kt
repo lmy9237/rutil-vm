@@ -41,7 +41,7 @@ class CertMgmtController : BaseController() {
 		ApiResponse(code = 404, message = "찾을 수 없는 요청")
 	)
 	@GetMapping
-	fun findAll(): ResponseEntity<List<CertManager>> {
+	suspend fun findAll(): ResponseEntity<List<CertManager>> {
 		log.debug("findAll ... ")
 		val certs: List<CertManager> = cert.findAll()
 		return ResponseEntity.ok(certs)

@@ -10,6 +10,8 @@ echo "--- Starting shc compilation ---"
 # The -r flag makes it redistributable
 # The -f flag specifies the input file
 ./shc-3.8.9b/shc -r -f ./rutilvm-engine-setup.sh
+./shc-3.8.9b/shc -r -f ./rutilvm-engine-patch.sh
+./shc-3.8.9b/shc -r -f ./rutilvm-host-patch.sh
 ./shc-3.8.9b/shc -r -f ./test.sh
 
 echo "--- Compilation finished ---"

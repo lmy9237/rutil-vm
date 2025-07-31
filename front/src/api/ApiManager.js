@@ -1145,21 +1145,21 @@ const ApiManager = {
   }),
   
   /**
-   * @name ApiManager.findDisksFromVM
-   * @description 디스크 목록
+   * @name ApiManager.findAllDiskAttachmentsFromVm
+   * @description 결합 디스크 목록
    *
    * @param {string} vmId
    * @returns 
    * 
    * @see
    */
-  findDisksFromVM : async (vmId) => makeAPICall({
+  findAllDiskAttachmentsFromVm : async (vmId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_DISKS_FROM_VM(vmId), 
-    // defaultValues: DEFAULT_VALUES.FIND_DISKS_FROM_VM
+    url: ENDPOINTS.FIND_ALL_DISK_ATTACHMENTS_FROM_VM(vmId), 
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_DISK_ATTACHMENTS_FROM_VM
   }),
   /**
-   * @name ApiManager.findDiskattachmentFromVM
+   * @name ApiManager.findDiskAttachmentFromVm
    * @description 디스크
    *
    * @param {string} vmId
@@ -1168,10 +1168,10 @@ const ApiManager = {
    * 
    * @see
    */
-  findDiskattachmentFromVM : async (vmId, diskAttachmentId) => makeAPICall({
+  findDiskAttachmentFromVm : async (vmId, diskAttachmentId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_DISK_FROM_VM(vmId, diskAttachmentId), 
-    // defaultValues: DEFAULT_VALUES.FIND_DISK_FROM_VM
+    url: ENDPOINTS.FIND_DISK_ATTACHMENT_FROM_VM(vmId, diskAttachmentId), 
+    // defaultValues: DEFAULT_VALUES.FIND_DISK_ATTACHMENT_FROM_VM
   }),
   /**
    * @name ApiManager.addDiskFromVM

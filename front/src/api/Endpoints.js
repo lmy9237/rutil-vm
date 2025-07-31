@@ -126,8 +126,8 @@ const ENDPOINTS = {
   FIND_ALL_VMS: () =>                                                      `${ENDPOINT_API_V1}/computing/vms`,
   FIND_VM: (vmId) =>                                                       `${ENDPOINT_API_V1}/computing/vms/${vmId}`, 
   
-  FIND_DISKS_FROM_VM: (vmId) =>                                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks`, 
-  FIND_DISK_FROM_VM: (vmId, diskAttachmentId) =>                           `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}`,
+  FIND_ALL_DISK_ATTACHMENTS_FROM_VM: (vmId) =>                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks`, 
+  FIND_DISK_ATTACHMENT_FROM_VM: (vmId, diskAttachmentId) =>                `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}`,
   ADD_DISK_FROM_VM: (vmId) =>                                              `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks`, 
   EDIT_DISK_FROM_VM: (vmId, diskAttachmentId) =>                           `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}`,
   DELETE_DISK_FROM_VM:(vmId, diskAttachmentId, detachOnly) =>              `${ENDPOINT_API_V1}/computing/vms/${vmId}/disks/${diskAttachmentId}?detachOnly=${detachOnly}`,
@@ -143,7 +143,7 @@ const ENDPOINTS = {
   FIND_ALL_SNAPSHOTS_FROM_VM: (vmId) =>                                    `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
   FIND_SNAPSHOT_FROM_VM: (vmId, snapshotId) =>                             `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/${snapshotId}`, 
   ADD_SNAPSHOT_FROM_VM: (vmId) =>                                          `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, 
-  DELETE_ALL_SNAPSHOTS_FROM_VM: (vmId) =>                                      `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, // 스냅샷 여러개
+  DELETE_ALL_SNAPSHOTS_FROM_VM: (vmId) =>                                  `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots`, // 스냅샷 여러개
   DELETE_SNAPSHOT_FROM_VM: (vmId,snapshotId) =>                            `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/${snapshotId}`, 
   PREVIEW_SNAPSHOT_FROM_VM: (vmId, snapshotId) =>                          `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/${snapshotId}/preview`,
   CLONE_SNAPSHOTS_FROM_VM: (vmId) =>                                       `${ENDPOINT_API_V1}/computing/vms/${vmId}/snapshots/clone`, 

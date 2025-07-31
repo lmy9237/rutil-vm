@@ -15,7 +15,7 @@ import {
   useAllTemplates,
   useClustersFromDataCenter,
   useCpuProfilesFromCluster,
-  useDisksFromVM,
+  useAllDiskAttachmentsFromVm,
   useAllActiveDomainsFromDataCenter,
   useAllDiskProfilesFromDomain4EachDomain,
 } from "@/api/RQHook";
@@ -73,7 +73,7 @@ const TemplateModal = ({
 
   const { 
     data: disks = [],
-  } = useDisksFromVM(vmSelected?.id, (e) => ({ ...e }));
+  } = useAllDiskAttachmentsFromVm(vmSelected?.id, (e) => ({ ...e }));
 
   
   const { /* 데이터센터 별 스토리지 도메인 목록 */

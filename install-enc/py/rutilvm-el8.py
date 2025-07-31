@@ -46,6 +46,9 @@ RutilVM Assistor - Improved for faster loading by parallelizing API calls
 # =============================================================================
 # Section 1: Imports and Common Utility Functions
 # =============================================================================
+import warnings         # 경고 메시지를 제어하기 위한 warnings 모듈을 임포트
+from cryptography.utils import CryptographyDeprecationWarning  # cryptography 모듈에서 사용 중단 경고 클래스 임포트
+warnings.filterwarnings("ignore", category=CryptographyDeprecationWarning)  # CryptographyDeprecationWarning 경고를 무시하도록 설정
 import os               # 운영체제와 상호작용하는 함수 제공 (파일 경로, 환경 변수 등)
 import sys              # 시스템 관련 기능 제공 (프로그램 종료, 명령행 인수 등)
 #import getpass          # 사용자로부터 비밀번호 입력 시 에코 없이 입력받기 위한 모듈
@@ -10392,56 +10395,56 @@ function task_ntp() {
 # rutilvm 계정 생성 및 공개키 생성
 function task_user_add() {
     # rutilvm 계정 생성 및 SSH 키 자동 생성 스크립트
-	# - 계정이 존재하지 않으면 생성
-	# - SSH 디렉토리 및 키 파일 자동 생성 및 권한 설정
-	# - 기존 키 백업 처리
-	USERNAME="rutilvm"
-	GROUPNAME="rutilvm"
-	PASSWORD="adminRoot!@#"
-	USER_HOME="/home/$USERNAME"
-	SSH_DIR="$USER_HOME/.ssh"
-	KEY_PATH="$SSH_DIR/id_rsa"
-	
+    # - 계정이 존재하지 않으면 생성
+    # - SSH 디렉토리 및 키 파일 자동 생성 및 권한 설정
+    # - 기존 키 백업 처리
+    USERNAME="rutilvm"
+    GROUPNAME="rutilvm"
+    PASSWORD="adminRoot!@#"
+    USER_HOME="/home/$USERNAME"
+    SSH_DIR="$USER_HOME/.ssh"
+    KEY_PATH="$SSH_DIR/id_rsa"
+    
     # 그룹 존재 확인 및 생성
     if ! getent group "$GROUPNAME" >/dev/null; then
         groupadd "$GROUPNAME"
     fi
     
-	# 계정 존재 확인 및 생성
-	if ! id "$USERNAME" &>/dev/null; then
-	# 유저가 존재하지 않으면 홈 디렉토리를 포함하여 계정 생성
-	useradd -m -d "$USER_HOME" "$USERNAME" >/dev/null 2>&1
-	# 비밀번호 설정
-	echo "$USERNAME:$PASSWORD" | chpasswd
-	# root, wheel 그룹에 유저 추가 (관리 권한 부여)
-	usermod -aG wheel,kvm "$USERNAME" >/dev/null 2>&1
-	fi
-	
-	# .ssh 디렉토리 생성
-	if [ ! -d "$SSH_DIR" ]; then
-	mkdir -p "$SSH_DIR"
-	# 해당 디렉토리의 소유자를 새로 만든 사용자로 설정
-	chown "$USERNAME:$GROUPNAME" "$SSH_DIR"
-	chmod 700 "$SSH_DIR"
-	fi
-	
-	# 기존 SSH 키 백업
-	if [ -f "$KEY_PATH" ]; then
-	# 기존 개인 키가 존재할 경우 백업
-	TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-	mv "$KEY_PATH" "${KEY_PATH}.bak_$TIMESTAMP"
-	mv "${KEY_PATH}.pub" "${KEY_PATH}.pub.bak_$TIMESTAMP"
-	fi
-	
-	# SSH 키 생성 (4096bit RSA, 비밀번호 X)
-#	sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" >/dev/null 2>&1
+    # 계정 존재 확인 및 생성
+    if ! id "$USERNAME" &>/dev/null; then
+    # 유저가 존재하지 않으면 홈 디렉토리를 포함하여 계정 생성
+    useradd -m -d "$USER_HOME" "$USERNAME" >/dev/null 2>&1
+    # 비밀번호 설정
+    echo "$USERNAME:$PASSWORD" | chpasswd
+    # root, wheel 그룹에 유저 추가 (관리 권한 부여)
+    usermod -aG wheel,kvm "$USERNAME" >/dev/null 2>&1
+    fi
+    
+    # .ssh 디렉토리 생성
+    if [ ! -d "$SSH_DIR" ]; then
+    mkdir -p "$SSH_DIR"
+    # 해당 디렉토리의 소유자를 새로 만든 사용자로 설정
+    chown "$USERNAME:$GROUPNAME" "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+    fi
+    
+    # 기존 SSH 키 백업
+    if [ -f "$KEY_PATH" ]; then
+    # 기존 개인 키가 존재할 경우 백업
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    mv "$KEY_PATH" "${KEY_PATH}.bak_$TIMESTAMP"
+    mv "${KEY_PATH}.pub" "${KEY_PATH}.pub.bak_$TIMESTAMP"
+    fi
+    
+    # SSH 키 생성 (4096bit RSA, 비밀번호 X)
+#   sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" >/dev/null 2>&1
     sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" -q </dev/null
 #   runuser -l "$USERNAME" -c "ssh-keygen -t rsa -b 4096 -f '$KEY_PATH' -N ''" >/dev/null 2>&1
-	cat $KEY_PATH.pub >> $SSH_DIR/authorized_keys
-	chown $USERNAME:$GROUPNAME $SSH_DIR/authorized_keys
-	chmod 600 $SSH_DIR/authorized_keys
-	
-	# SSH 키 파일 권한 및 소유자 설정
+    cat $KEY_PATH.pub >> $SSH_DIR/authorized_keys
+    chown $USERNAME:$GROUPNAME $SSH_DIR/authorized_keys
+    chmod 600 $SSH_DIR/authorized_keys
+    
+    # SSH 키 파일 권한 및 소유자 설정
     chown "$USERNAME:$GROUPNAME" "$KEY_PATH" "$KEY_PATH.pub"
 }
 
@@ -10612,7 +10615,7 @@ task_lun_scan() {
 
 # 초기 answers.conf.setup 파일을 생성하며 기본 설정 값을 작성
 task_answers.conf() {
-	cat << ANSWERS.CONF_EOF > /etc/ovirt-hosted-engine/answers.conf.setup
+    cat << ANSWERS.CONF_EOF > /etc/ovirt-hosted-engine/answers.conf.setup
 [environment:default]
 OVEHOSTED_CORE/HE_OFFLINE_DEPLOYMENT=bool:True
 OVEHOSTED_CORE/deployProceed=bool:True
@@ -10671,29 +10674,29 @@ ANSWERS.CONF_EOF
 # answers.conf.setup 파일에 추가 설정 값을 업데이트하고, 사용자 입력을 통해 네트워크, 호스트, IP, 브릿지 등 값을 수정
 task_answers.conf_nfs_fc_iscsi() {
     # Python 스크립트를 이용해 무작위 MAC 주소 생성
-	MAC_ADDR=$(python3 -c "from ovirt_hosted_engine_setup import util as ohostedutil; print(ohostedutil.randomMAC())")
-	# 생성된 MAC 주소를 설정 파일에 추가
-	echo "OVEHOSTED_VM/vmMACAddr=str:$MAC_ADDR" | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    MAC_ADDR=$(python3 -c "from ovirt_hosted_engine_setup import util as ohostedutil; print(ohostedutil.randomMAC())")
+    # 생성된 MAC 주소를 설정 파일에 추가
+    echo "OVEHOSTED_VM/vmMACAddr=str:$MAC_ADDR" | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
 
-	# 현재 시스템의 호스트 이름을 가져와 설정 파일 내 기본값 대체
-	current_hostname=$(hostname)
-	sed -i "s/OVEHOSTED_NETWORK\/host_name=str:hostname_value/OVEHOSTED_NETWORK\/host_name=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	sed -i "s/OVEHOSTED_VM\/cloudinitInstanceHostName=str:cloudinitInstanceHostName_value/OVEHOSTED_VM\/cloudinitInstanceHostName=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	echo
+    # 현재 시스템의 호스트 이름을 가져와 설정 파일 내 기본값 대체
+    current_hostname=$(hostname)
+    sed -i "s/OVEHOSTED_NETWORK\/host_name=str:hostname_value/OVEHOSTED_NETWORK\/host_name=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    sed -i "s/OVEHOSTED_VM\/cloudinitInstanceHostName=str:cloudinitInstanceHostName_value/OVEHOSTED_VM\/cloudinitInstanceHostName=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    echo
     echo "- Engine Settings"
-	# 사용자에게 엔진 VM 호스트 이름(fqdn)을 입력받음
-	while true; do
-	    echo -n "> Engine VM Hostname: "
-	    read fqdn
-	    if [ -n "$fqdn" ]; then
-	        sed -i "s/OVEHOSTED_NETWORK\/fqdn=str:fqdn_value/OVEHOSTED_NETWORK\/fqdn=str:${fqdn}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	        break
-	    else
-	        echo "[WARNING] The hostname cannot be empty. Enter a valid hostname."
-	    fi
-	done
+    # 사용자에게 엔진 VM 호스트 이름(fqdn)을 입력받음
+    while true; do
+        echo -n "> Engine VM Hostname: "
+        read fqdn
+        if [ -n "$fqdn" ]; then
+            sed -i "s/OVEHOSTED_NETWORK\/fqdn=str:fqdn_value/OVEHOSTED_NETWORK\/fqdn=str:${fqdn}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+            break
+        else
+            echo "[WARNING] The hostname cannot be empty. Enter a valid hostname."
+        fi
+    done
     
-	# 사용자에게 엔진 VM IP 주소 입력받음; 올바른 IP 형식인지 확인
+    # 사용자에게 엔진 VM IP 주소 입력받음; 올바른 IP 형식인지 확인
     # 1. 현재 호스트 이름 추출
     hostname=$(hostname)
     
@@ -10723,14 +10726,14 @@ task_answers.conf_nfs_fc_iscsi() {
     sed -i "s|OVEHOSTED_VM/cloudinitInstanceDomainName=str:cloudinitInstanceDomainName_value|OVEHOSTED_VM/cloudinitInstanceDomainName=str:${cloudinitVMStaticCIDR}|g" /etc/ovirt-hosted-engine/answers.conf.setup \
     | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
 
-	# 6. /etc/hosts 파일에서 해당 IP 또는 호스트 이름 항목이 존재하면 삭제 후 새롭게 추가
-	if grep -q "^$cloudinitVMStaticCIDR" /etc/hosts; then
-	    sed -i "/^$cloudinitVMStaticCIDR /d" /etc/hosts
-	fi
-	if grep -q " $fqdn$" /etc/hosts; then
-	    sed -i "/ $fqdn$/d" /etc/hosts
-	fi
-	echo "$cloudinitVMStaticCIDR    $fqdn" | tee -a /etc/hosts > /dev/null
+    # 6. /etc/hosts 파일에서 해당 IP 또는 호스트 이름 항목이 존재하면 삭제 후 새롭게 추가
+    if grep -q "^$cloudinitVMStaticCIDR" /etc/hosts; then
+        sed -i "/^$cloudinitVMStaticCIDR /d" /etc/hosts
+    fi
+    if grep -q " $fqdn$" /etc/hosts; then
+        sed -i "/ $fqdn$/d" /etc/hosts
+    fi
+    echo "$cloudinitVMStaticCIDR    $fqdn" | tee -a /etc/hosts > /dev/null
 
     # 1) bond 장치가 하나인지 검사하여, 하나일 땐 자동 설정만 수행
     mapfile -t bond_devs < <(nmcli -t -f DEVICE device | grep -E '^bond')
@@ -10817,7 +10820,7 @@ task_answers.conf_nfs_fc_iscsi() {
         done
     fi
 
-	# 게이트웨이 자동 조회 및 사용자 입력 처리
+    # 게이트웨이 자동 조회 및 사용자 입력 처리
     while true; do
         # 1) 자동 조회
         gateway=$(ip route | grep default | awk '{print $3}' || true)
@@ -10851,14 +10854,14 @@ task_answers.conf_nfs_fc_iscsi() {
 # 필요한 설정을 추가하고, 추가 입력을 받아 적절한 LUN 또는 NFS/iscsi 설정을 적용하는 함수임
 task_answers.conf_storage_type() {
     echo "- Storage"
-	# 무한 루프: 사용자가 올바른 스토리지 타입을 입력할 때까지 반복
-	while true; do
-		# 사용자에게 사용할 스토리지 타입을 입력 받음
-		echo -n "> Storage Type (fc, nfs, iscsi): "
-		read -r engine_storage
-		# 입력된 스토리지 타입에 따른 처리
-		case $engine_storage in
-			# 1) fc (Fibre Channel) 선택 시
+    # 무한 루프: 사용자가 올바른 스토리지 타입을 입력할 때까지 반복
+    while true; do
+        # 사용자에게 사용할 스토리지 타입을 입력 받음
+        echo -n "> Storage Type (fc, nfs, iscsi): "
+        read -r engine_storage
+        # 입력된 스토리지 타입에 따른 처리
+        case $engine_storage in
+            # 1) fc (Fibre Channel) 선택 시
             fc)
                 # ──────────────────────────────────────────────
                 # fc(파이버 채널) 스토리지용 기본 설정을 answers.conf.setup 파일에 추가
@@ -11014,10 +11017,10 @@ ANSWERS.CONF_FC_EOF
                 break
                 ;;
 
-			# 2) nfs 선택 시
-			nfs)
-				# nfs용 기본 설정을 answers.conf.setup 파일 끝에 추가
-				cat << ANSWERS.CONF_NFS_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
+            # 2) nfs 선택 시
+            nfs)
+                # nfs용 기본 설정을 answers.conf.setup 파일 끝에 추가
+                cat << ANSWERS.CONF_NFS_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
 OVEHOSTED_STORAGE/LunID=none:None
 OVEHOSTED_STORAGE/domainType=str:nfs
 OVEHOSTED_STORAGE/iSCSIDiscoverUser=none:None
@@ -11030,40 +11033,40 @@ OVEHOSTED_STORAGE/nfsVersion=str:auto
 OVEHOSTED_STORAGE/storageDomainConnection=str:nfs_ip:nfs_storage_path
 ANSWERS.CONF_NFS_EOF
 
-				# 무한 루프: 올바른 NFS 서버 IP와 마운트 경로를 입력받을 때까지 반복
-				while true; do
-					echo -n "> NFS server IP Address: "
-					read nfs_server_ip
-					# IP 유효성 검사를 위한 함수 호출(valid_ip)
-					if valid_ip "$nfs_server_ip"; then
-						# showmount 명령으로 NFS 서버의 내보내기(export) 목록을 가져옴(첫 번째 라인 제외)
-						output=$(showmount -e "$nfs_server_ip" | sed 1d)
-						# 출력 결과가 없으면 NFS 서버로부터 응답이 없음을 알림
-						if [ -z "$output" ]; then
+                # 무한 루프: 올바른 NFS 서버 IP와 마운트 경로를 입력받을 때까지 반복
+                while true; do
+                    echo -n "> NFS server IP Address: "
+                    read nfs_server_ip
+                    # IP 유효성 검사를 위한 함수 호출(valid_ip)
+                    if valid_ip "$nfs_server_ip"; then
+                        # showmount 명령으로 NFS 서버의 내보내기(export) 목록을 가져옴(첫 번째 라인 제외)
+                        output=$(showmount -e "$nfs_server_ip" | sed 1d)
+                        # 출력 결과가 없으면 NFS 서버로부터 응답이 없음을 알림
+                        if [ -z "$output" ]; then
                             echo
-							echo "No response from NFS server. Check your IP or try again."
-							# 재시도 또는 종료 옵션 제공
-							while true; do
-								echo "1) Retry"
-								echo "2) Exit"
-								read -p "Select (1 or 2): " retry_choice
-								case $retry_choice in
-									1)
-										break
-										;;
-									2)
+                            echo "No response from NFS server. Check your IP or try again."
+                            # 재시도 또는 종료 옵션 제공
+                            while true; do
+                                echo "1) Retry"
+                                echo "2) Exit"
+                                read -p "Select (1 or 2): " retry_choice
+                                case $retry_choice in
+                                    1)
+                                        break
+                                        ;;
+                                    2)
                                         echo "Aborts installation."
-										exit 0
-										;;
-									*)
+                                        exit 0
+                                        ;;
+                                    *)
                                         echo
-										echo "Invalid input. Try 1 or 2."
-										;;
-								esac
-							done
-							[[ $retry_choice -eq 1 ]] || break
-							continue
-						fi
+                                        echo "Invalid input. Try 1 or 2."
+                                        ;;
+                                esac
+                            done
+                            [[ $retry_choice -eq 1 ]] || break
+                            continue
+                        fi
 
                         # 내보내기 목록을 배열로 저장
                         IFS=$'\n' mounts=($output)
@@ -11091,20 +11094,20 @@ ANSWERS.CONF_NFS_EOF
                         
                             echo "[WARNING] Invalid input. Enter a number between 1 and ${#mounts[@]}, or 'n' to exit."
                         done
-						# answers.conf.setup 파일 내 nfs_ip와 nfs_storage_path 기본값을 실제 값으로 치환
-						sed -i "s|nfs_ip|$nfs_server_ip|; s|nfs_storage_path|$nfs_storage_path|" /etc/ovirt-hosted-engine/answers.conf.setup
-						break
-					else
-						echo "[WARNING] Invalid IP address. Check the IP address and try again."
-					fi
-				done
-				# nfs 선택 처리 완료 시 무한 루프 종료
-				break
-				;;
-			# 3) iscsi 선택 시
-			iscsi)
-				# iscsi용 기본 설정을 answers.conf.setup 파일 끝에 추가
-				cat << ANSWERS.CONF_iSCSI_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
+                        # answers.conf.setup 파일 내 nfs_ip와 nfs_storage_path 기본값을 실제 값으로 치환
+                        sed -i "s|nfs_ip|$nfs_server_ip|; s|nfs_storage_path|$nfs_storage_path|" /etc/ovirt-hosted-engine/answers.conf.setup
+                        break
+                    else
+                        echo "[WARNING] Invalid IP address. Check the IP address and try again."
+                    fi
+                done
+                # nfs 선택 처리 완료 시 무한 루프 종료
+                break
+                ;;
+            # 3) iscsi 선택 시
+            iscsi)
+                # iscsi용 기본 설정을 answers.conf.setup 파일 끝에 추가
+                cat << ANSWERS.CONF_iSCSI_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
 OVEHOSTED_STORAGE/connectionTimeout=int:180
 OVEHOSTED_STORAGE/multipathSupport=bool:true
 OVEHOSTED_STORAGE/pathPolicy=str:multibus
@@ -11124,16 +11127,16 @@ OVEHOSTED_STORAGE/hostedEngineLUNID=str:LunID_value
 OVEHOSTED_STORAGE/LunID=str:LunID_value
 ANSWERS.CONF_iSCSI_EOF
 
-				# iSCSI의 추가 정보 입력: discover user 및 password
-				echo
-				echo -n "> iSCSI discover user: "
-				read iSCSIDiscoverUser
-				sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:iSCSIDiscoverUser_value/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:${iSCSIDiscoverUser}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-				echo
-				echo -n "> iSCSI discover password: "
-				read iSCSIDiscoverPassword
-				sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:iSCSIDiscoverPassword_value/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:${iSCSIDiscoverPassword}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-				echo
+                # iSCSI의 추가 정보 입력: discover user 및 password
+                echo
+                echo -n "> iSCSI discover user: "
+                read iSCSIDiscoverUser
+                sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:iSCSIDiscoverUser_value/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:${iSCSIDiscoverUser}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+                echo
+                echo -n "> iSCSI discover password: "
+                read iSCSIDiscoverPassword
+                sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:iSCSIDiscoverPassword_value/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:${iSCSIDiscoverPassword}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+                echo
 
                 # ──────────────────────────────────────────────
                 # iSCSI Portal IP 주소 입력받고, 유효성 검사
@@ -11310,59 +11313,59 @@ ANSWERS.CONF_iSCSI_EOF
             *)
                 echo "[WARNING] Invalid storage type. Enter fc, nfs, or iscsi."
                 ;;
-		esac
-	done
+        esac
+    done
 }
 
 # 현재까지 구성된 설치 설정을 미리 보여주고, 사용자가 최종 설치 여부를 확인
 task_configuration_preview() {
-	while true; do
-		# 미리보기 헤더 출력
+    while true; do
+        # 미리보기 헤더 출력
         echo "─────────────────────────────────── CONFIGURATION PREVIEW ───────────────────────────────────"
-		# 각 설정 항목을 출력 (fqdn, cloudinitVMStaticCIDR, gateway, bridge interface, 스토리지 연결 정보 등)
-		echo "Engine VM Hostname                 : "$fqdn
-		echo "Engine VM IP                       : "$cloudinitVMStaticCIDR
-		echo "Gateway address                    : "$gateway
-		echo "Bridge interface                   : "$bridgeIf "($MAC_ADDR)"
-		echo "Storage connection                 : "$engine_storage
-		# 스토리지 타입에 따라 추가 정보를 출력
-		case $engine_storage in
-			fc)
-				echo "                                     $LunID_value"
-				echo "                                     $size"
-				;;
-			iscsi)
-				echo "                                     $TARGETS"
-				echo "                                     $LunID_value"
-				echo "                                     $size"
-				;;
-			nfs)
-				echo "                                     $nfs_server_ip"
-				echo "                                     $nfs_storage_path"
-				;;
-			*)
-				;;
-		esac
+        # 각 설정 항목을 출력 (fqdn, cloudinitVMStaticCIDR, gateway, bridge interface, 스토리지 연결 정보 등)
+        echo "Engine VM Hostname                 : "$fqdn
+        echo "Engine VM IP                       : "$cloudinitVMStaticCIDR
+        echo "Gateway address                    : "$gateway
+        echo "Bridge interface                   : "$bridgeIf "($MAC_ADDR)"
+        echo "Storage connection                 : "$engine_storage
+        # 스토리지 타입에 따라 추가 정보를 출력
+        case $engine_storage in
+            fc)
+                echo "                                     $LunID_value"
+                echo "                                     $size"
+                ;;
+            iscsi)
+                echo "                                     $TARGETS"
+                echo "                                     $LunID_value"
+                echo "                                     $size"
+                ;;
+            nfs)
+                echo "                                     $nfs_server_ip"
+                echo "                                     $nfs_storage_path"
+                ;;
+            *)
+                ;;
+        esac
         echo "─────────────────────────────────────────────────────────────────────────────────────────────"
-		echo
-		# 사용자에게 최종 설치 설정 확인 입력 받음
-		read -p "> Please confirm installation settings (Yes, No): " confirm_installation_yn
-		# 사용자 입력에 따라 처리: yes면 루프 종료, no면 함수 종료(반환 값 1)
-		case $confirm_installation_yn in
-			yes|YES|y|Y|Yes)
-				break
-				;;
-			no|NO|n|N|No)
+        echo
+        # 사용자에게 최종 설치 설정 확인 입력 받음
+        read -p "> Please confirm installation settings (Yes, No): " confirm_installation_yn
+        # 사용자 입력에 따라 처리: yes면 루프 종료, no면 함수 종료(반환 값 1)
+        case $confirm_installation_yn in
+            yes|YES|y|Y|Yes)
+                break
+                ;;
+            no|NO|n|N|No)
                 echo "[ INFO  ] Stage: Termination"
                 echo "Aborts installation."
-				exit 0
-				;;
-			*)
-				echo "[WARNING] Invalid input. Enter 'y' for yes or 'n' for no."
+                exit 0
+                ;;
+            *)
+                echo "[WARNING] Invalid input. Enter 'y' for yes or 'n' for no."
                 echo
-				;;
-		esac
-	done
+                ;;
+        esac
+    done
 }
 
 clear
@@ -11402,7 +11405,7 @@ task_configuration_preview
 
 # 만약 task_configuration_preview 명령어의 종료 상태가 1이면 반복문이나 스크립트를 종료
 if [[ $? -eq 1 ]]; then
-	exit 1
+    exit 1
 fi
 
 echo
@@ -11437,21 +11440,21 @@ timestamp=$(date +%Y%m%d%H%M%S)
 
 # 기존의 answers.conf 파일이 존재하면 백업 처리
 if [ -f /etc/ovirt-hosted-engine/answers.conf ]; then
-	# 기존 파일을 타임스탬프가 포함된 이름으로 이동(백업)
-	mv /etc/ovirt-hosted-engine/answers.conf /etc/ovirt-hosted-engine/answers.conf.$timestamp
-	# 백업 실패 시 경고 메시지 출력 후 종료
-	if [ $? -ne 0 ]; then
-		echo "[WARNING] Failed to create backup of answers.conf" >&2
-		exit 1
-	fi
+    # 기존 파일을 타임스탬프가 포함된 이름으로 이동(백업)
+    mv /etc/ovirt-hosted-engine/answers.conf /etc/ovirt-hosted-engine/answers.conf.$timestamp
+    # 백업 실패 시 경고 메시지 출력 후 종료
+    if [ $? -ne 0 ]; then
+        echo "[WARNING] Failed to create backup of answers.conf" >&2
+        exit 1
+    fi
 fi
 
 # 새 설정 파일을 원본 파일 위치에 복사
 cp /etc/ovirt-hosted-engine/answers.conf.setup /etc/ovirt-hosted-engine/answers.conf
 # 복사 실패 시 경고 메시지 출력 후 종료
 if [ $? -ne 0 ]; then
-	echo "[WARNING] Failed to copy answers.conf" >&2
-	exit 1
+    echo "[WARNING] Failed to copy answers.conf" >&2
+    exit 1
 fi
 
 # 날짜 및 시간을 포함한 로그 파일 이름 생성
@@ -11541,63 +11544,63 @@ echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Checking connection to engin
 
 # 엔진에 연결할 수 있는지 TIMEOUT 시간 내에 반복하여 확인
 while [ $elapsed_time -lt $TIMEOUT ]; do
-	# 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
-	if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
-		echo "[ INFO  ] ok: [localhost]"
-		sleep 2
+    # 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
+    if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
+        echo "[ INFO  ] ok: [localhost]"
+        sleep 2
         
-		# 파일 시스템 조정 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
-		
+        # 파일 시스템 조정 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
+        
         # ssh 통신 전 root 계정 known_hosts 목록 삭제 (재설치 시 변경된 엔진의 호스트 키 초기화)
         cat /dev/null > /root/.ssh/known_hosts
         
-		# 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
-		
-		# 물리 볼륨 리사이즈 수행
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (루트 파티션에 +40G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (var 파티션에 +45G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (log 파티션에 +30G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
-		
-		# 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
-		
-		# /var 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
-		
-		# /var/log 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
+        # 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
+        
+        # 물리 볼륨 리사이즈 수행
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (루트 파티션에 +40G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (var 파티션에 +45G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (log 파티션에 +30G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
+        
+        # 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
+        
+        # /var 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
+        
+        # /var/log 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
 
-		echo "[ INFO  ] changed: [localhost]"
-		
-		# 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
-		
-		# 엔진 재조정 준비 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
-		
-		# 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
+        echo "[ INFO  ] changed: [localhost]"
+        
+        # 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
+        
+        # 엔진 재조정 준비 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
+        
+        # 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
         sshpass -p $cloudinitRootPwd scp -o StrictHostKeyChecking=no /var/share/pkg/repositories/engine.zip root@$cloudinitVMStaticCIDR:/var/share/pkg/rutilvm/ >/dev/null 2>&1
-	
-		# 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
-	
-		# 준비 완료 메시지 출력
-		echo "[ INFO  ] ok: [localhost]"
-		
+    
+        # 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
+    
+        # 준비 완료 메시지 출력
+        echo "[ INFO  ] ok: [localhost]"
+        
         # 스크립트 파일 허가권 부여
-		sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
-			
-		# 원격지에서 RutilVM 설치 스크립트 실행
-		sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
+        sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
+            
+        # 원격지에서 RutilVM 설치 스크립트 실행
+        sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
         
         # 원격지에서 RutilVM engine의 NTP 주소 변경
         if [ -z "$ntp_address" ]; then
@@ -11607,11 +11610,11 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "ntp_address='$ntp_address'; sed -i \"s|^\s*server\s\+[0-9.]\+\s\+iburst\b|server \$ntp_address iburst|\" /etc/chrony.conf" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "systemctl restart chronyd" || true
                 
-		# 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} +
+        # 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} +
 
         # 현재 호스트의 rutilvm 계정 공개키를 Engine VM의 rutilvm 계정 authorized_keys에 등록
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
         USERNAME="rutilvm"
         PASSWORD="adminRoot!@#"
         USER_HOME="/home/$USERNAME"
@@ -11625,15 +11628,15 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@"$cloudinitVMStaticCIDR" chmod 660 /etc/ovirt-engine/aaa/internal.properties
         echo "[ INFO  ] ok: [localhost]"
 
-		# 최종 배포 성공 메시지 출력
-		echo "RutilVM Hosted Engine successfully deployed"
-		# 스크립트를 성공적으로 종료
-		exit 0
-	fi
-	# ping 테스트 실패 시 지정된 인터벌만큼 대기
-	sleep $INTERVAL
-	# 경과 시간을 인터벌만큼 증가
-	elapsed_time=$((elapsed_time + INTERVAL))
+        # 최종 배포 성공 메시지 출력
+        echo "RutilVM Hosted Engine successfully deployed"
+        # 스크립트를 성공적으로 종료
+        exit 0
+    fi
+    # ping 테스트 실패 시 지정된 인터벌만큼 대기
+    sleep $INTERVAL
+    # 경과 시간을 인터벌만큼 증가
+    elapsed_time=$((elapsed_time + INTERVAL))
 done
 
 # TIMEOUT 시간 내에 엔진 연결에 실패하면 오류 메시지 출력 후 실패 종료
@@ -12117,56 +12120,56 @@ function task_ntp() {
 # rutilvm 계정 생성 및 공개키 생성
 function task_user_add() {
     # rutilvm 계정 생성 및 SSH 키 자동 생성 스크립트
-	# - 계정이 존재하지 않으면 생성
-	# - SSH 디렉토리 및 키 파일 자동 생성 및 권한 설정
-	# - 기존 키 백업 처리
-	USERNAME="rutilvm"
-	GROUPNAME="rutilvm"
-	PASSWORD="adminRoot!@#"
-	USER_HOME="/home/$USERNAME"
-	SSH_DIR="$USER_HOME/.ssh"
-	KEY_PATH="$SSH_DIR/id_rsa"
-	
+    # - 계정이 존재하지 않으면 생성
+    # - SSH 디렉토리 및 키 파일 자동 생성 및 권한 설정
+    # - 기존 키 백업 처리
+    USERNAME="rutilvm"
+    GROUPNAME="rutilvm"
+    PASSWORD="adminRoot!@#"
+    USER_HOME="/home/$USERNAME"
+    SSH_DIR="$USER_HOME/.ssh"
+    KEY_PATH="$SSH_DIR/id_rsa"
+    
     # 그룹 존재 확인 및 생성
     if ! getent group "$GROUPNAME" >/dev/null; then
         groupadd "$GROUPNAME"
     fi
     
-	# 계정 존재 확인 및 생성
-	if ! id "$USERNAME" &>/dev/null; then
-	# 유저가 존재하지 않으면 홈 디렉토리를 포함하여 계정 생성
-	useradd -m -d "$USER_HOME" "$USERNAME" >/dev/null 2>&1
-	# 비밀번호 설정
-	echo "$USERNAME:$PASSWORD" | chpasswd
-	# root, wheel 그룹에 유저 추가 (관리 권한 부여)
-	usermod -aG wheel,kvm "$USERNAME" >/dev/null 2>&1
-	fi
-	
-	# .ssh 디렉토리 생성
-	if [ ! -d "$SSH_DIR" ]; then
-	mkdir -p "$SSH_DIR"
-	# 해당 디렉토리의 소유자를 새로 만든 사용자로 설정
-	chown "$USERNAME:$GROUPNAME" "$SSH_DIR"
-	chmod 700 "$SSH_DIR"
-	fi
-	
-	# 기존 SSH 키 백업
-	if [ -f "$KEY_PATH" ]; then
-	# 기존 개인 키가 존재할 경우 백업
-	TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-	mv "$KEY_PATH" "${KEY_PATH}.bak_$TIMESTAMP"
-	mv "${KEY_PATH}.pub" "${KEY_PATH}.pub.bak_$TIMESTAMP"
-	fi
-	
-	# SSH 키 생성 (4096bit RSA, 비밀번호 X)
-#	sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" >/dev/null 2>&1
+    # 계정 존재 확인 및 생성
+    if ! id "$USERNAME" &>/dev/null; then
+    # 유저가 존재하지 않으면 홈 디렉토리를 포함하여 계정 생성
+    useradd -m -d "$USER_HOME" "$USERNAME" >/dev/null 2>&1
+    # 비밀번호 설정
+    echo "$USERNAME:$PASSWORD" | chpasswd
+    # root, wheel 그룹에 유저 추가 (관리 권한 부여)
+    usermod -aG wheel,kvm "$USERNAME" >/dev/null 2>&1
+    fi
+    
+    # .ssh 디렉토리 생성
+    if [ ! -d "$SSH_DIR" ]; then
+    mkdir -p "$SSH_DIR"
+    # 해당 디렉토리의 소유자를 새로 만든 사용자로 설정
+    chown "$USERNAME:$GROUPNAME" "$SSH_DIR"
+    chmod 700 "$SSH_DIR"
+    fi
+    
+    # 기존 SSH 키 백업
+    if [ -f "$KEY_PATH" ]; then
+    # 기존 개인 키가 존재할 경우 백업
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    mv "$KEY_PATH" "${KEY_PATH}.bak_$TIMESTAMP"
+    mv "${KEY_PATH}.pub" "${KEY_PATH}.pub.bak_$TIMESTAMP"
+    fi
+    
+    # SSH 키 생성 (4096bit RSA, 비밀번호 X)
+#   sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" >/dev/null 2>&1
     sudo -u "$USERNAME" ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N "" -q </dev/null
 #   runuser -l "$USERNAME" -c "ssh-keygen -t rsa -b 4096 -f '$KEY_PATH' -N ''" >/dev/null 2>&1
-	cat $KEY_PATH.pub >> $SSH_DIR/authorized_keys
-	chown $USERNAME:$GROUPNAME $SSH_DIR/authorized_keys
-	chmod 600 $SSH_DIR/authorized_keys
-	
-	# SSH 키 파일 권한 및 소유자 설정
+    cat $KEY_PATH.pub >> $SSH_DIR/authorized_keys
+    chown $USERNAME:$GROUPNAME $SSH_DIR/authorized_keys
+    chmod 600 $SSH_DIR/authorized_keys
+    
+    # SSH 키 파일 권한 및 소유자 설정
     chown "$USERNAME:$GROUPNAME" "$KEY_PATH" "$KEY_PATH.pub"
 }
 
@@ -12310,7 +12313,7 @@ task_lun_scan() {
 
 # 초기 answers.conf.setup 파일을 생성하며 기본 설정 값을 작성
 task_answers.conf() {
-	cat << ANSWERS.CONF_EOF > /etc/ovirt-hosted-engine/answers.conf.setup
+    cat << ANSWERS.CONF_EOF > /etc/ovirt-hosted-engine/answers.conf.setup
 [environment:default]
 OVEHOSTED_CORE/HE_OFFLINE_DEPLOYMENT=bool:True
 OVEHOSTED_CORE/deployProceed=bool:True
@@ -12369,29 +12372,29 @@ ANSWERS.CONF_EOF
 # answers.conf.setup 파일에 추가 설정 값을 업데이트하고, 사용자 입력을 통해 네트워크, 호스트, IP, 브릿지 등 값을 수정
 task_answers.conf_nfs_fc_iscsi() {
     # Python 스크립트를 이용해 무작위 MAC 주소 생성
-	MAC_ADDR=$(python3 -c "from ovirt_hosted_engine_setup import util as ohostedutil; print(ohostedutil.randomMAC())")
-	# 생성된 MAC 주소를 설정 파일에 추가
-	echo "OVEHOSTED_VM/vmMACAddr=str:$MAC_ADDR" | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    MAC_ADDR=$(python3 -c "from ovirt_hosted_engine_setup import util as ohostedutil; print(ohostedutil.randomMAC())")
+    # 생성된 MAC 주소를 설정 파일에 추가
+    echo "OVEHOSTED_VM/vmMACAddr=str:$MAC_ADDR" | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
 
-	# 현재 시스템의 호스트 이름을 가져와 설정 파일 내 기본값 대체
-	current_hostname=$(hostname)
-	sed -i "s/OVEHOSTED_NETWORK\/host_name=str:hostname_value/OVEHOSTED_NETWORK\/host_name=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	sed -i "s/OVEHOSTED_VM\/cloudinitInstanceHostName=str:cloudinitInstanceHostName_value/OVEHOSTED_VM\/cloudinitInstanceHostName=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	echo
+    # 현재 시스템의 호스트 이름을 가져와 설정 파일 내 기본값 대체
+    current_hostname=$(hostname)
+    sed -i "s/OVEHOSTED_NETWORK\/host_name=str:hostname_value/OVEHOSTED_NETWORK\/host_name=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    sed -i "s/OVEHOSTED_VM\/cloudinitInstanceHostName=str:cloudinitInstanceHostName_value/OVEHOSTED_VM\/cloudinitInstanceHostName=str:${current_hostname}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+    echo
     echo "- Engine Settings"
-	# 사용자에게 엔진 VM 호스트 이름(fqdn)을 입력받음
-	while true; do
-	    echo -n "> Engine VM Hostname: "
-	    read fqdn
-	    if [ -n "$fqdn" ]; then
-	        sed -i "s/OVEHOSTED_NETWORK\/fqdn=str:fqdn_value/OVEHOSTED_NETWORK\/fqdn=str:${fqdn}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-	        break
-	    else
-	        echo "[WARNING] The hostname cannot be empty. Enter a valid hostname."
-	    fi
-	done
+    # 사용자에게 엔진 VM 호스트 이름(fqdn)을 입력받음
+    while true; do
+        echo -n "> Engine VM Hostname: "
+        read fqdn
+        if [ -n "$fqdn" ]; then
+            sed -i "s/OVEHOSTED_NETWORK\/fqdn=str:fqdn_value/OVEHOSTED_NETWORK\/fqdn=str:${fqdn}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+            break
+        else
+            echo "[WARNING] The hostname cannot be empty. Enter a valid hostname."
+        fi
+    done
     
-	# 사용자에게 엔진 VM IP 주소 입력받음; 올바른 IP 형식인지 확인
+    # 사용자에게 엔진 VM IP 주소 입력받음; 올바른 IP 형식인지 확인
     # 1. 현재 호스트 이름 추출
     hostname=$(hostname)
     
@@ -12421,14 +12424,14 @@ task_answers.conf_nfs_fc_iscsi() {
     sed -i "s|OVEHOSTED_VM/cloudinitInstanceDomainName=str:cloudinitInstanceDomainName_value|OVEHOSTED_VM/cloudinitInstanceDomainName=str:${cloudinitVMStaticCIDR}|g" /etc/ovirt-hosted-engine/answers.conf.setup \
     | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
 
-	# 6. /etc/hosts 파일에서 해당 IP 또는 호스트 이름 항목이 존재하면 삭제 후 새롭게 추가
-	if grep -q "^$cloudinitVMStaticCIDR" /etc/hosts; then
-	    sed -i "/^$cloudinitVMStaticCIDR /d" /etc/hosts
-	fi
-	if grep -q " $fqdn$" /etc/hosts; then
-	    sed -i "/ $fqdn$/d" /etc/hosts
-	fi
-	echo "$cloudinitVMStaticCIDR    $fqdn" | tee -a /etc/hosts > /dev/null
+    # 6. /etc/hosts 파일에서 해당 IP 또는 호스트 이름 항목이 존재하면 삭제 후 새롭게 추가
+    if grep -q "^$cloudinitVMStaticCIDR" /etc/hosts; then
+        sed -i "/^$cloudinitVMStaticCIDR /d" /etc/hosts
+    fi
+    if grep -q " $fqdn$" /etc/hosts; then
+        sed -i "/ $fqdn$/d" /etc/hosts
+    fi
+    echo "$cloudinitVMStaticCIDR    $fqdn" | tee -a /etc/hosts > /dev/null
   
     # 1) bond 장치가 하나인지 검사하여, 하나일 땐 자동 설정만 수행
     mapfile -t bond_devs < <(nmcli -t -f DEVICE device | grep -E '^bond')
@@ -12515,7 +12518,7 @@ task_answers.conf_nfs_fc_iscsi() {
         done
     fi
 
-	# 게이트웨이 자동 조회 및 사용자 입력 처리
+    # 게이트웨이 자동 조회 및 사용자 입력 처리
     while true; do
         # 1) 자동 조회
         gateway=$(ip route | grep default | awk '{print $3}' || true)
@@ -12549,14 +12552,14 @@ task_answers.conf_nfs_fc_iscsi() {
 # 필요한 설정을 추가하고, 추가 입력을 받아 적절한 LUN 또는 NFS/iscsi 설정을 적용하는 함수임
 task_answers.conf_storage_type() {
     echo "- Storage"
-	# 무한 루프: 사용자가 올바른 스토리지 타입을 입력할 때까지 반복
-	while true; do
-		# 사용자에게 사용할 스토리지 타입을 입력 받음
-		echo -n "> Storage Type (fc, nfs, iscsi): "
-		read -r engine_storage
-		# 입력된 스토리지 타입에 따른 처리
-		case $engine_storage in
-			# 1) fc (Fibre Channel) 선택 시
+    # 무한 루프: 사용자가 올바른 스토리지 타입을 입력할 때까지 반복
+    while true; do
+        # 사용자에게 사용할 스토리지 타입을 입력 받음
+        echo -n "> Storage Type (fc, nfs, iscsi): "
+        read -r engine_storage
+        # 입력된 스토리지 타입에 따른 처리
+        case $engine_storage in
+            # 1) fc (Fibre Channel) 선택 시
             fc)
                 # ──────────────────────────────────────────────
                 # fc(파이버 채널) 스토리지용 기본 설정을 answers.conf.setup 파일에 추가
@@ -12712,10 +12715,10 @@ ANSWERS.CONF_FC_EOF
                 break
                 ;;
 
-			# 2) nfs 선택 시
-			nfs)
-				# nfs용 기본 설정을 answers.conf.setup 파일 끝에 추가
-				cat << ANSWERS.CONF_NFS_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
+            # 2) nfs 선택 시
+            nfs)
+                # nfs용 기본 설정을 answers.conf.setup 파일 끝에 추가
+                cat << ANSWERS.CONF_NFS_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
 OVEHOSTED_STORAGE/LunID=none:None
 OVEHOSTED_STORAGE/domainType=str:nfs
 OVEHOSTED_STORAGE/iSCSIDiscoverUser=none:None
@@ -12728,40 +12731,40 @@ OVEHOSTED_STORAGE/nfsVersion=str:auto
 OVEHOSTED_STORAGE/storageDomainConnection=str:nfs_ip:nfs_storage_path
 ANSWERS.CONF_NFS_EOF
 
-				# 무한 루프: 올바른 NFS 서버 IP와 마운트 경로를 입력받을 때까지 반복
-				while true; do
-					echo -n "> NFS server IP Address: "
-					read nfs_server_ip
-					# IP 유효성 검사를 위한 함수 호출(valid_ip)
-					if valid_ip "$nfs_server_ip"; then
-						# showmount 명령으로 NFS 서버의 내보내기(export) 목록을 가져옴(첫 번째 라인 제외)
-						output=$(showmount -e "$nfs_server_ip" | sed 1d)
-						# 출력 결과가 없으면 NFS 서버로부터 응답이 없음을 알림
-						if [ -z "$output" ]; then
+                # 무한 루프: 올바른 NFS 서버 IP와 마운트 경로를 입력받을 때까지 반복
+                while true; do
+                    echo -n "> NFS server IP Address: "
+                    read nfs_server_ip
+                    # IP 유효성 검사를 위한 함수 호출(valid_ip)
+                    if valid_ip "$nfs_server_ip"; then
+                        # showmount 명령으로 NFS 서버의 내보내기(export) 목록을 가져옴(첫 번째 라인 제외)
+                        output=$(showmount -e "$nfs_server_ip" | sed 1d)
+                        # 출력 결과가 없으면 NFS 서버로부터 응답이 없음을 알림
+                        if [ -z "$output" ]; then
                             echo
-							echo "No response from NFS server. Check your IP or try again."
-							# 재시도 또는 종료 옵션 제공
-							while true; do
-								echo "1) Retry"
-								echo "2) Exit"
-								read -p "Select (1 or 2): " retry_choice
-								case $retry_choice in
-									1)
-										break
-										;;
-									2)
+                            echo "No response from NFS server. Check your IP or try again."
+                            # 재시도 또는 종료 옵션 제공
+                            while true; do
+                                echo "1) Retry"
+                                echo "2) Exit"
+                                read -p "Select (1 or 2): " retry_choice
+                                case $retry_choice in
+                                    1)
+                                        break
+                                        ;;
+                                    2)
                                         echo "Aborts installation."
-										exit 0
-										;;
-									*)
+                                        exit 0
+                                        ;;
+                                    *)
                                         echo
-										echo "Invalid input. Try 1 or 2."
-										;;
-								esac
-							done
-							[[ $retry_choice -eq 1 ]] || break
-							continue
-						fi
+                                        echo "Invalid input. Try 1 or 2."
+                                        ;;
+                                esac
+                            done
+                            [[ $retry_choice -eq 1 ]] || break
+                            continue
+                        fi
 
                         # 내보내기 목록을 배열로 저장
                         IFS=$'\n' mounts=($output)
@@ -12789,20 +12792,20 @@ ANSWERS.CONF_NFS_EOF
                         
                             echo "[WARNING] Invalid input. Enter a number between 1 and ${#mounts[@]}, or 'n' to exit."
                         done
-						# answers.conf.setup 파일 내 nfs_ip와 nfs_storage_path 기본값을 실제 값으로 치환
-						sed -i "s|nfs_ip|$nfs_server_ip|; s|nfs_storage_path|$nfs_storage_path|" /etc/ovirt-hosted-engine/answers.conf.setup
-						break
-					else
-						echo "[WARNING] Invalid IP address. Check the IP address and try again."
-					fi
-				done
-				# nfs 선택 처리 완료 시 무한 루프 종료
-				break
-				;;
-			# 3) iscsi 선택 시
-			iscsi)
-				# iscsi용 기본 설정을 answers.conf.setup 파일 끝에 추가
-				cat << ANSWERS.CONF_iSCSI_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
+                        # answers.conf.setup 파일 내 nfs_ip와 nfs_storage_path 기본값을 실제 값으로 치환
+                        sed -i "s|nfs_ip|$nfs_server_ip|; s|nfs_storage_path|$nfs_storage_path|" /etc/ovirt-hosted-engine/answers.conf.setup
+                        break
+                    else
+                        echo "[WARNING] Invalid IP address. Check the IP address and try again."
+                    fi
+                done
+                # nfs 선택 처리 완료 시 무한 루프 종료
+                break
+                ;;
+            # 3) iscsi 선택 시
+            iscsi)
+                # iscsi용 기본 설정을 answers.conf.setup 파일 끝에 추가
+                cat << ANSWERS.CONF_iSCSI_EOF >> /etc/ovirt-hosted-engine/answers.conf.setup
 OVEHOSTED_STORAGE/connectionTimeout=int:180
 OVEHOSTED_STORAGE/multipathSupport=bool:true
 OVEHOSTED_STORAGE/pathPolicy=str:multibus
@@ -12822,16 +12825,16 @@ OVEHOSTED_STORAGE/hostedEngineLUNID=str:LunID_value
 OVEHOSTED_STORAGE/LunID=str:LunID_value
 ANSWERS.CONF_iSCSI_EOF
 
-				# iSCSI의 추가 정보 입력: discover user 및 password
-				echo
-				echo -n "> iSCSI discover user: "
-				read iSCSIDiscoverUser
-				sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:iSCSIDiscoverUser_value/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:${iSCSIDiscoverUser}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-				echo
-				echo -n "> iSCSI discover password: "
-				read iSCSIDiscoverPassword
-				sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:iSCSIDiscoverPassword_value/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:${iSCSIDiscoverPassword}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
-				echo
+                # iSCSI의 추가 정보 입력: discover user 및 password
+                echo
+                echo -n "> iSCSI discover user: "
+                read iSCSIDiscoverUser
+                sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:iSCSIDiscoverUser_value/OVEHOSTED_STORAGE\/iSCSIDiscoverUser=str:${iSCSIDiscoverUser}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+                echo
+                echo -n "> iSCSI discover password: "
+                read iSCSIDiscoverPassword
+                sed -i "s/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:iSCSIDiscoverPassword_value/OVEHOSTED_STORAGE\/iSCSIDiscoverPassword=str:${iSCSIDiscoverPassword}/g" /etc/ovirt-hosted-engine/answers.conf.setup | tee -a /etc/ovirt-hosted-engine/answers.conf.setup > /dev/null
+                echo
 
                 # ──────────────────────────────────────────────
                 # iSCSI Portal IP 주소 입력받고, 유효성 검사
@@ -13008,59 +13011,59 @@ ANSWERS.CONF_iSCSI_EOF
             *)
                 echo "[WARNING] Invalid storage type. Enter fc, nfs, or iscsi."
                 ;;
-		esac
-	done
+        esac
+    done
 }
 
 # 현재까지 구성된 설치 설정을 미리 보여주고, 사용자가 최종 설치 여부를 확인
 task_configuration_preview() {
-	while true; do
-		# 미리보기 헤더 출력
+    while true; do
+        # 미리보기 헤더 출력
         echo "─────────────────────────────────── CONFIGURATION PREVIEW ───────────────────────────────────"
-		# 각 설정 항목을 출력 (fqdn, cloudinitVMStaticCIDR, gateway, bridge interface, 스토리지 연결 정보 등)
-		echo "Engine VM Hostname                 : "$fqdn
-		echo "Engine VM IP                       : "$cloudinitVMStaticCIDR
-		echo "Gateway address                    : "$gateway
-		echo "Bridge interface                   : "$bridgeIf "($MAC_ADDR)"
-		echo "Storage connection                 : "$engine_storage
-		# 스토리지 타입에 따라 추가 정보를 출력
-		case $engine_storage in
-			fc)
-				echo "                                     $LunID_value"
-				echo "                                     $size"
-				;;
-			iscsi)
-				echo "                                     $TARGETS"
-				echo "                                     $LunID_value"
-				echo "                                     $size"
-				;;
-			nfs)
-				echo "                                     $nfs_server_ip"
-				echo "                                     $nfs_storage_path"
-				;;
-			*)
-				;;
-		esac
+        # 각 설정 항목을 출력 (fqdn, cloudinitVMStaticCIDR, gateway, bridge interface, 스토리지 연결 정보 등)
+        echo "Engine VM Hostname                 : "$fqdn
+        echo "Engine VM IP                       : "$cloudinitVMStaticCIDR
+        echo "Gateway address                    : "$gateway
+        echo "Bridge interface                   : "$bridgeIf "($MAC_ADDR)"
+        echo "Storage connection                 : "$engine_storage
+        # 스토리지 타입에 따라 추가 정보를 출력
+        case $engine_storage in
+            fc)
+                echo "                                     $LunID_value"
+                echo "                                     $size"
+                ;;
+            iscsi)
+                echo "                                     $TARGETS"
+                echo "                                     $LunID_value"
+                echo "                                     $size"
+                ;;
+            nfs)
+                echo "                                     $nfs_server_ip"
+                echo "                                     $nfs_storage_path"
+                ;;
+            *)
+                ;;
+        esac
         echo "─────────────────────────────────────────────────────────────────────────────────────────────"
-		echo
-		# 사용자에게 최종 설치 설정 확인 입력 받음
-		read -p "> Please confirm installation settings (Yes, No): " confirm_installation_yn
-		# 사용자 입력에 따라 처리: yes면 루프 종료, no면 함수 종료(반환 값 1)
-		case $confirm_installation_yn in
-			yes|YES|y|Y|Yes)
-				break
-				;;
-			no|NO|n|N|No)
+        echo
+        # 사용자에게 최종 설치 설정 확인 입력 받음
+        read -p "> Please confirm installation settings (Yes, No): " confirm_installation_yn
+        # 사용자 입력에 따라 처리: yes면 루프 종료, no면 함수 종료(반환 값 1)
+        case $confirm_installation_yn in
+            yes|YES|y|Y|Yes)
+                break
+                ;;
+            no|NO|n|N|No)
                 echo "[ INFO  ] Stage: Termination"
                 echo "Aborts installation."
-				exit 0
-				;;
-			*)
-				echo "[WARNING] Invalid input. Enter 'y' for yes or 'n' for no."
+                exit 0
+                ;;
+            *)
+                echo "[WARNING] Invalid input. Enter 'y' for yes or 'n' for no."
                 echo
-				;;
-		esac
-	done
+                ;;
+        esac
+    done
 }
 
 # ───────────────────────────────────────────────────────────────────
@@ -13075,7 +13078,7 @@ task_configuration_preview
 
 # 만약 task_configuration_preview 명령어의 종료 상태가 1이면 반복문이나 스크립트를 종료
 if [[ $? -eq 1 ]]; then
-	exit 1
+    exit 1
 fi
 
 # ovirt-engine-appliance 패키지가 설치되어 있는지 확인
@@ -13107,21 +13110,21 @@ timestamp=$(date +%Y%m%d%H%M%S)
 
 # 기존의 answers.conf 파일이 존재하면 백업 처리
 if [ -f /etc/ovirt-hosted-engine/answers.conf ]; then
-	# 기존 파일을 타임스탬프가 포함된 이름으로 이동(백업)
-	mv /etc/ovirt-hosted-engine/answers.conf /etc/ovirt-hosted-engine/answers.conf.$timestamp
-	# 백업 실패 시 경고 메시지 출력 후 종료
-	if [ $? -ne 0 ]; then
-		echo "[WARNING] Failed to create backup of answers.conf" >&2
-		exit 1
-	fi
+    # 기존 파일을 타임스탬프가 포함된 이름으로 이동(백업)
+    mv /etc/ovirt-hosted-engine/answers.conf /etc/ovirt-hosted-engine/answers.conf.$timestamp
+    # 백업 실패 시 경고 메시지 출력 후 종료
+    if [ $? -ne 0 ]; then
+        echo "[WARNING] Failed to create backup of answers.conf" >&2
+        exit 1
+    fi
 fi
 
 # 새 설정 파일을 원본 파일 위치에 복사
 cp /etc/ovirt-hosted-engine/answers.conf.setup /etc/ovirt-hosted-engine/answers.conf
 # 복사 실패 시 경고 메시지 출력 후 종료
 if [ $? -ne 0 ]; then
-	echo "[WARNING] Failed to copy answers.conf" >&2
-	exit 1
+    echo "[WARNING] Failed to copy answers.conf" >&2
+    exit 1
 fi
 
 # 날짜 및 시간을 포함한 로그 파일 이름 생성
@@ -13212,63 +13215,63 @@ echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Checking connection to engin
 
 # 엔진에 연결할 수 있는지 TIMEOUT 시간 내에 반복하여 확인
 while [ $elapsed_time -lt $TIMEOUT ]; do
-	# 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
-	if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
-		echo "[ INFO  ] ok: [localhost]"
-		sleep 2
+    # 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
+    if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
+        echo "[ INFO  ] ok: [localhost]"
+        sleep 2
         
-		# 파일 시스템 조정 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
-		
+        # 파일 시스템 조정 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
+        
         # ssh 통신 전 root 계정 known_hosts 목록 삭제 (재설치 시 변경된 엔진의 호스트 키 초기화)
         cat /dev/null > /root/.ssh/known_hosts
         
-		# 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
-		
-		# 물리 볼륨 리사이즈 수행
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (루트 파티션에 +40G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (var 파티션에 +45G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (log 파티션에 +30G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
-		
-		# 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
-		
-		# /var 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
-		
-		# /var/log 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
+        # 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
+        
+        # 물리 볼륨 리사이즈 수행
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (루트 파티션에 +40G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (var 파티션에 +45G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (log 파티션에 +30G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
+        
+        # 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
+        
+        # /var 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
+        
+        # /var/log 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
 
-		echo "[ INFO  ] changed: [localhost]"
-		
-		# 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
-		
-		# 엔진 재조정 준비 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
-		
-		# 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
+        echo "[ INFO  ] changed: [localhost]"
+        
+        # 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
+        
+        # 엔진 재조정 준비 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
+        
+        # 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
         sshpass -p $cloudinitRootPwd scp -o StrictHostKeyChecking=no /var/share/pkg/repositories/engine.zip root@$cloudinitVMStaticCIDR:/var/share/pkg/rutilvm/ >/dev/null 2>&1
-	
-		# 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
-	
-		# 준비 완료 메시지 출력
-		echo "[ INFO  ] ok: [localhost]"
-		
+    
+        # 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
+    
+        # 준비 완료 메시지 출력
+        echo "[ INFO  ] ok: [localhost]"
+        
         # 스크립트 파일 허가권 부여
-		sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
-			
-		# 원격지에서 RutilVM 설치 스크립트 실행
-		sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
+        sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
+            
+        # 원격지에서 RutilVM 설치 스크립트 실행
+        sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
         
         # 원격지에서 RutilVM engine의 NTP 주소 변경
         if [ -z "$ntp_address" ]; then
@@ -13278,11 +13281,11 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "ntp_address='$ntp_address'; sed -i \"s|^\s*server\s\+[0-9.]\+\s\+iburst\b|server \$ntp_address iburst|\" /etc/chrony.conf" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "systemctl restart chronyd" || true
         
-		# 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} + || true
+        # 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} + || true
 
         # 현재 호스트의 rutilvm 계정 공개키를 Engine VM의 rutilvm 계정 authorized_keys에 등록
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
         USERNAME="rutilvm"
         PASSWORD="adminRoot!@#"
         USER_HOME="/home/$USERNAME"
@@ -13296,15 +13299,15 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@"$cloudinitVMStaticCIDR" chmod 660 /etc/ovirt-engine/aaa/internal.properties || true
         echo "[ INFO  ] ok: [localhost]"
 
-		# 최종 배포 성공 메시지 출력
-		echo "RutilVM Hosted Engine successfully deployed"
-		# 스크립트를 성공적으로 종료
-		exit 0
-	fi
-	# ping 테스트 실패 시 지정된 인터벌만큼 대기
-	sleep $INTERVAL
-	# 경과 시간을 인터벌만큼 증가
-	elapsed_time=$((elapsed_time + INTERVAL))
+        # 최종 배포 성공 메시지 출력
+        echo "RutilVM Hosted Engine successfully deployed"
+        # 스크립트를 성공적으로 종료
+        exit 0
+    fi
+    # ping 테스트 실패 시 지정된 인터벌만큼 대기
+    sleep $INTERVAL
+    # 경과 시간을 인터벌만큼 증가
+    elapsed_time=$((elapsed_time + INTERVAL))
 done
 
 # TIMEOUT 시간 내에 엔진 연결에 실패하면 오류 메시지 출력 후 실패 종료
@@ -13463,63 +13466,63 @@ echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Checking connection to engin
 
 # 엔진에 연결할 수 있는지 TIMEOUT 시간 내에 반복하여 확인
 while [ $elapsed_time -lt $TIMEOUT ]; do
-	# 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
-	if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
-		echo "[ INFO  ] ok: [localhost]"
-		sleep 2
+    # 지정된 IP(cloudinitVMStaticCIDR)에 ping 테스트 수행하여 연결 확인
+    if ping -c 1 $cloudinitVMStaticCIDR &> /dev/null; then
+        echo "[ INFO  ] ok: [localhost]"
+        sleep 2
         
-		# 파일 시스템 조정 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
-		
+        # 파일 시스템 조정 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : File system adjustment start]"
+        
         # ssh 통신 전 root 계정 known_hosts 목록 삭제 (재설치 시 변경된 엔진의 호스트 키 초기화)
         cat /dev/null > /root/.ssh/known_hosts
         
-		# 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
-		
-		# 물리 볼륨 리사이즈 수행
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (루트 파티션에 +40G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (var 파티션에 +45G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
-		
-		# 논리 볼륨 확장 (log 파티션에 +30G 추가)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
-		
-		# 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
-		
-		# /var 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
-		
-		# /var/log 파티션 XFS 파일 시스템 확장
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
+        # 파티션 크기 조정: 파티션 2를 전체 디스크로 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/parted -s /dev/vda resizepart 2 100% >/dev/null 2>&1
+        
+        # 물리 볼륨 리사이즈 수행
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/pvresize /dev/vda2 >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (루트 파티션에 +40G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +40G /dev/ovirt/root >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (var 파티션에 +45G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +45G /dev/ovirt/var >/dev/null 2>&1
+        
+        # 논리 볼륨 확장 (log 파티션에 +30G 추가)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/lvextend -L +30G /dev/ovirt/log >/dev/null 2>&1
+        
+        # 파일 시스템 확장: 루트 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs / >/dev/null 2>&1
+        
+        # /var 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var >/dev/null 2>&1
+        
+        # /var/log 파티션 XFS 파일 시스템 확장
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/sbin/xfs_growfs /var/log >/dev/null 2>&1
 
-		echo "[ INFO  ] changed: [localhost]"
-		
-		# 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
-		
-		# 엔진 재조정 준비 작업 시작 메시지 출력
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
-		
-		# 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
+        echo "[ INFO  ] changed: [localhost]"
+        
+        # 엔진 재조정 관련 작업 준비: 원격지에 디렉터리 생성
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/mkdir -p /var/share/pkg/rutilvm >/dev/null 2>&1
+        
+        # 엔진 재조정 준비 작업 시작 메시지 출력
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Preparing for engine rebalancing]"
+        
+        # 로컬에 있는 engine.zip 파일을 원격지의 /var/share/pkg/rutilvm/로 복사
         sshpass -p $cloudinitRootPwd scp -o StrictHostKeyChecking=no /var/share/pkg/repositories/engine.zip root@$cloudinitVMStaticCIDR:/var/share/pkg/rutilvm/ >/dev/null 2>&1
-	
-		# 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
-	
-		# 준비 완료 메시지 출력
-		echo "[ INFO  ] ok: [localhost]"
-		
+    
+        # 원격지에서 암호를 이용해 압축 해제 (압축 해제 시 zipbomb 검출 비활성화)
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "export UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE; /usr/bin/unzip -q -P $cloudinitEnginePwd -o /var/share/pkg/rutilvm/engine.zip -d /var/share/pkg/rutilvm/" >/dev/null 2>&1
+    
+        # 준비 완료 메시지 출력
+        echo "[ INFO  ] ok: [localhost]"
+        
         # 스크립트 파일 허가권 부여
-		sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
-			
-		# 원격지에서 RutilVM 설치 스크립트 실행
-		sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
+        sshpass -p $cloudinitRootPwd ssh -tt -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "chmod 755 /var/share/pkg/rutilvm/engine/*.sh" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
+            
+        # 원격지에서 RutilVM 설치 스크립트 실행
+        sshpass -p $cloudinitRootPwd ssh -n -T -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /var/share/pkg/rutilvm/engine/rutilvm-engine-setup.sh 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed."
         
         # 원격지에서 RutilVM engine의 NTP 주소 변경
         if [ -z "$ntp_address" ]; then
@@ -13529,11 +13532,11 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "ntp_address='$ntp_address'; sed -i \"s|^\s*server\s\+[0-9.]\+\s\+iburst\b|server \$ntp_address iburst|\" /etc/chrony.conf" 2>&1 | grep -v "Connection to $cloudinitVMStaticCIDR closed." || true
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR "systemctl restart chronyd" || true
                 
-		# 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
-		sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} +
+        # 원격지에서 /var/share/pkg/rutilvm 내의 *.zip 파일을 제외한 나머지 파일 및 디렉터리를 삭제
+        sshpass -p $cloudinitRootPwd ssh -o StrictHostKeyChecking=no root@$cloudinitVMStaticCIDR /usr/bin/find /var/share/pkg/rutilvm/ -mindepth 1 ! -name '*.zip' -exec rm -rf {} +
 
         # 현재 호스트의 rutilvm 계정 공개키를 Engine VM의 rutilvm 계정 authorized_keys에 등록
-		echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
+        echo "[ INFO  ] TASK [rutilvm.hosted_engine_setup : Registering current host's public key to engine]"
         USERNAME="rutilvm"
         PASSWORD="adminRoot!@#"
         USER_HOME="/home/$USERNAME"
@@ -13547,15 +13550,15 @@ while [ $elapsed_time -lt $TIMEOUT ]; do
         sshpass -p "$cloudinitRootPwd" ssh -o StrictHostKeyChecking=no root@"$cloudinitVMStaticCIDR" chmod 660 /etc/ovirt-engine/aaa/internal.properties
         echo "[ INFO  ] ok: [localhost]"
 
-		# 최종 배포 성공 메시지 출력
-		echo "RutilVM Hosted Engine successfully deployed"
-		# 스크립트를 성공적으로 종료
-		exit 0
-	fi
-	# ping 테스트 실패 시 지정된 인터벌만큼 대기
-	sleep $INTERVAL
-	# 경과 시간을 인터벌만큼 증가
-	elapsed_time=$((elapsed_time + INTERVAL))
+        # 최종 배포 성공 메시지 출력
+        echo "RutilVM Hosted Engine successfully deployed"
+        # 스크립트를 성공적으로 종료
+        exit 0
+    fi
+    # ping 테스트 실패 시 지정된 인터벌만큼 대기
+    sleep $INTERVAL
+    # 경과 시간을 인터벌만큼 증가
+    elapsed_time=$((elapsed_time + INTERVAL))
 done
 
 # TIMEOUT 시간 내에 엔진 연결에 실패하면 오류 메시지 출력 후 실패 종료

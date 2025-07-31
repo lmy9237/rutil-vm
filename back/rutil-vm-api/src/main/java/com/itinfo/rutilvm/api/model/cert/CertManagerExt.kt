@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 
 private val log = LoggerFactory.getLogger("com.itinfo.rutilvm.api.model.cert.CertManagerExtKt")
 
-fun List<HostVo>.toCertManagers(
+suspend fun List<HostVo>.toCertManagers(
 	prvKey: String? = null,
 	tempDest: String = "",
 	connectionTimeout: Int = RemoteConnMgmt.DEFAULT_CONNECTION_TIMEOUT,

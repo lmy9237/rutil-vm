@@ -24,7 +24,7 @@ import {
   useAllOpearatingSystemsFromCluster,
   useAllBiosTypes,
   useAllSnapshotsFromVm,
-  useDisksFromVM,
+  useAllDiskAttachmentsFromVm,
   useNetworkInterfacesFromVM,
 } from "@/api/RQHook";
 import { convertBytesToMB }       from "@/util";
@@ -71,7 +71,7 @@ const VmGeneral = ({
     isSuccess: isDisksSuccess,
     refetch: refetchDisks,
     isRefetching: isDisksRefetching,
-  } = useDisksFromVM(vmId, (e) => ({ ...e }));
+  } = useAllDiskAttachmentsFromVm(vmId, (e) => ({ ...e }));
 
   // 네트워크 어뎁터
   const {

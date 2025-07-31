@@ -188,7 +188,8 @@ dependencies {
 	implementation(project(":rutil-vm-util-ssh"))
     implementation(Dependencies.springBootTomcat)
     implementation(Dependencies.tomcatEmbedded)
-    api(Dependencies.kotlinStdlib)
+	api(Dependencies.kotlinStdlib)
+	api(Dependencies.kotlinCoroutine)
     implementation(Dependencies.ovirt)
     implementation(Dependencies.springBoot)
     implementation(Dependencies.springBootWeb) {
@@ -231,6 +232,7 @@ dependencies {
 	implementation(Dependencies.xml)
     compileOnly(Dependencies.lombok)
     annotationProcessor(Dependencies.lombok)
+	testApi(Dependencies.kotlinCoroutineTest)
     testImplementation(Dependencies.springTest)
     testImplementation(Dependencies.springBootTest)
     testImplementation(Dependencies.hamcrest)

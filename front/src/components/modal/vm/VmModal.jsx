@@ -21,7 +21,7 @@ import {
   useAllVnicsFromCluster,
   useAllNicsFromTemplate,
   useVm4Edit,
-  useDisksFromVM,
+  useAllDiskAttachmentsFromVm,
   useNetworkInterfacesFromVM,
   useAllVMs, 
 } from '@/api/RQHook';
@@ -213,7 +213,7 @@ const VmModal = ({
   // 편집: 가상머신이 가지고 있는 디스크 목록 가져오기
   const { 
     data: diskAttachments = [] 
-  } = useDisksFromVM(vm?.id);
+  } = useAllDiskAttachmentsFromVm(vm?.id);
 
   const {
     data: vnics = [],
@@ -233,7 +233,7 @@ const VmModal = ({
     isSuccess: isOsListSuccess
   } = useAllOpearatingSystemsFromCluster(clusterVo.id, (e) => ({ ...e }));
 
-  // 불가능한 운영체제(보류)
+  // 불가능한 운영체제 (보류)
   const unsupportedOSList = [
     "Red Hat Enterprise Linux 3",
     "Red Hat Enterprise Linux 4",
@@ -463,7 +463,7 @@ const VmModal = ({
   }, [isOpen, templates, editMode, templateId]);
 
   useEffect(() => {
-    if (editMode && diskAttachments.length > 0) {
+    if (editMode && [...diskAttachments].length > 0) {
       setDiskListState([...diskAttachments].map((d) => ({
         id: d?.id,
         alias: d?.diskImageVo?.alias,
@@ -685,15 +685,14 @@ const VmModal = ({
                 setFormInfoState={setFormInfoState}
               />
               {/* {!copyMode && ( */}
-                <VmDisk
-                  editMode={editMode}
-                  vm={vm}
-                  vmName={formInfoState.name}
-                  dataCenterId={dataCenterVo.id}
-                  diskListState={diskListState}
-                  setDiskListState={setDiskListState}
-                  disabled={templateVo.id !== CONSTANT.templateIdDefault} // 기본템플릿이 아닐때는 버튼 disabled처리
-                />
+              <VmDisk
+                editMode={editMode}
+                vm={vm}
+                vmName={formInfoState.name}
+                dataCenterId={dataCenterVo.id}
+                diskListState={diskListState} setDiskListState={setDiskListState}
+                disabled={templateVo.id !== CONSTANT.templateIdDefault} // 기본템플릿이 아닐때는 버튼 disabled처리
+              />
               {/* )} */}
               <VmNic
                 editMode={editMode}

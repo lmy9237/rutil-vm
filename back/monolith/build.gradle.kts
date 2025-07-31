@@ -33,6 +33,7 @@ dependencies {
     implementation(Dependencies.springBootTomcat)
     implementation(Dependencies.tomcatEmbedded)
     api(Dependencies.kotlinStdlib)
+	api(Dependencies.kotlinCoroutine)
     implementation(Dependencies.ovirt)
     implementation(Dependencies.springBoot)
     implementation(Dependencies.springBootWeb) {

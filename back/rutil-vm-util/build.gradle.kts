@@ -7,6 +7,7 @@ jar.enabled = true
 
 dependencies {
     compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
 }

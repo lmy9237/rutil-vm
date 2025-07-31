@@ -8,11 +8,13 @@ dependencies {
 	compileOnly(project(":rutil-vm-common"))
 	compileOnly(project(":rutil-vm-api-ovirt-business"))
     compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
     compileOnly(Dependencies.ovirt)
 	compileOnly(Dependencies.retrofit2)
 	compileOnly(Dependencies.jsch)
 
+	testImplementation(Dependencies.kotlinCoroutineTest)
 	testImplementation(Dependencies.retrofit2)
 }

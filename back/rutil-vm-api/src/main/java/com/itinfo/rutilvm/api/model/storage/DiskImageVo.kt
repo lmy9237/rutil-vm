@@ -10,7 +10,6 @@ import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferPhaseB
 import com.itinfo.rutilvm.api.ovirt.business.ImageTransferType
-import com.itinfo.rutilvm.api.ovirt.business.StorageTypeB
 import com.itinfo.rutilvm.api.ovirt.business.VolumeFormat
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toDiskContentType
@@ -270,7 +269,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
@@ -303,7 +302,7 @@ fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
 		status { DiskStatusB.forCode(disk.status().value()) }
@@ -336,7 +335,7 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
-		storageDomainVo { disk.storageDomain().fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { disk.storageDomain().toIdentifiedVoFromStorageDomain() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
 		status { DiskStatusB.forCode(disk.status().value()) }
@@ -375,9 +374,9 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		sparse { disk.sparse() } // 할당정책
 		if (storageDomain != null) {
 			dataCenterVo { storageDomain.dataCenters().first()?.fromDataCenterToIdentifiedVo() }
-			storageDomainVo { storageDomain.fromStorageDomainToIdentifiedVo() }
+			storageDomainVo { storageDomain.toIdentifiedVoFromStorageDomain() }
 		}
-		diskProfileVo { profile?.fromDiskProfileToIdentifiedVo() }
+		diskProfileVo { profile?.toIdentifiedVoFromDiskProfile() }
 		contentType { DiskContentTypeB.forStorageValue(disk.contentType().toString()) }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
@@ -394,7 +393,9 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 	val storageDomain: StorageDomain? = conn.findStorageDomain(this.storageDomains().first().id()).getOrNull()
 	val dataCenter = storageDomain?.dataCenters()?.firstOrNull()?.id()?.let { conn.findDataCenter(it).getOrNull() }
 	val diskProfile: DiskProfile? =
-		if(disk.diskProfilePresent()) conn.findDiskProfile(disk.diskProfile().id()).getOrNull()
+		if (disk.diskProfilePresent())
+			conn.findDiskProfile(disk.diskProfile().id())
+				.getOrNull()
 		else null
 
 	return DiskImageVo.builder {
@@ -409,8 +410,8 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
+		diskProfileVo { diskProfile?.toIdentifiedVoFromDiskProfile() }
 	}
 }
 fun List<Disk>.toVmDisks(conn: Connection): List<DiskImageVo> =
@@ -437,9 +438,9 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 		description { this@toDiskImageVo.description() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		// storageDomainVo { storageDomain?.toStorageDomainIdName() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		sparse { this@toDiskImageVo.sparse() }
-		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
+		diskProfileVo { diskProfile?.toIdentifiedVoFromDiskProfile() }
 		wipeAfterDelete { this@toDiskImageVo.wipeAfterDelete() }
 		sharable { this@toDiskImageVo.shareable() }
 		backup { this@toDiskImageVo.backup() == DiskBackup.INCREMENTAL }
@@ -472,9 +473,9 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 		description { this@toDiskVo.description() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		// storageDomainVo { storageDomain?.toStorageDomainIdName() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		sparse { this@toDiskVo.sparse() }
-		diskProfileVo { diskProfile?.fromDiskProfileToIdentifiedVo() }
+		diskProfileVo { diskProfile?.toIdentifiedVoFromDiskProfile() }
 		wipeAfterDelete { this@toDiskVo.wipeAfterDelete() }
 		sharable { this@toDiskVo.shareable() }
 		backup { this@toDiskVo.backup() == DiskBackup.INCREMENTAL }
@@ -510,8 +511,8 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		status { DiskStatusB.forCode(disk.status().value()) }
 		sparse { disk.sparse() } // 할당정책
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
-		diskProfileVo { disk.diskProfile().fromDiskProfileToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
+		diskProfileVo { disk.diskProfile().toIdentifiedVoFromDiskProfile() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
@@ -579,7 +580,6 @@ fun DiskImageVo.toEditDisk(): Disk =
 		.id(this.id)
 		.provisionedSize(this.size.add(this.appendSize))
 		.build()
-
 
 // 가상머신 스냅샷에서 디스크 포함할때 사용
 fun DiskImageVo.toAddSnapshotDisk(): Disk {

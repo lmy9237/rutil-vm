@@ -5,6 +5,7 @@ import com.itinfo.rutilvm.api.ovirt.business.model.logSuccess
 import com.itinfo.rutilvm.api.ovirt.business.model.logSuccessWithin
 import com.itinfo.rutilvm.api.ovirt.business.model.logFail
 import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
+import com.itinfo.rutilvm.common.suspendRunCatching
 
 import com.itinfo.rutilvm.util.ovirt.error.*
 
@@ -33,7 +34,7 @@ fun Connection.findAllVms(searchQuery: String?="", follow: String?=""): Result<L
 fun Connection.srvVm(vmId: String?=""): VmService =
 	this.srvVms().vmService(vmId)
 
-fun Connection.findVm(vmId: String?="", follow: String?=""): Result<Vm?> = runCatching {
+fun Connection.findVm(vmId: String?="", follow: String?=""): Result<Vm?> = suspendRunCatching {
 	this.srvVm(vmId).get().apply {
 		follow(follow)
 	}.send().vm()
@@ -701,11 +702,15 @@ fun Connection.updateDiskAttachmentToVm(
 ): Result<DiskAttachment> = runCatching {
 	checkVmExists(vmId)
 
-	if(this.findDiskAttachmentFromVm(vmId, diskAttachment.id()).isFailure){
+	if (this.findDiskAttachmentFromVm(vmId, diskAttachment.id()).isFailure) {
 		throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
 	}
-	val diskAttachUpdated: DiskAttachment? =
-		this.srvDiskAttachmentFromVm(vmId, diskAttachment.id()).update().diskAttachment(diskAttachment).send().diskAttachment()
+
+	val diskAttachUpdated: DiskAttachment? = this.srvDiskAttachmentFromVm(vmId, diskAttachment.id())
+			.update()
+			.diskAttachment(diskAttachment)
+			.send()
+			.diskAttachment()
 
 	diskAttachUpdated ?: throw ErrorPattern.DISK_ATTACHMENT_NOT_FOUND.toError()
 }.onSuccess {

@@ -118,7 +118,7 @@ class VmController: BaseController() {
 	@PutMapping("/{vmId}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.CREATED)
-	fun update(
+	suspend fun update(
 		@PathVariable vmId: String?,
 		@RequestBody vmVo: VmVo?
 	): ResponseEntity<VmVo?> {

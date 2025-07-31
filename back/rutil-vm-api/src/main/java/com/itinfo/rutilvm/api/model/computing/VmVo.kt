@@ -8,7 +8,7 @@ import com.itinfo.rutilvm.api.model.fromDiskToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostsToIdentifiedVos
 import com.itinfo.rutilvm.api.model.fromSnapshotsToIdentifiedVos
-import com.itinfo.rutilvm.api.model.fromStorageDomainToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromStorageDomain
 import com.itinfo.rutilvm.api.model.fromTemplateToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.NicVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
@@ -562,7 +562,7 @@ fun Vm.toVmVo(conn: Connection): VmVo {
 		}
 		hostInCluster { !vm.placementPolicy().hostsPresent() }
 		hostVos { hosts.fromHostsToIdentifiedVos() }
-		storageDomainVo { storageDomain?.fromStorageDomainToIdentifiedVo() }
+		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		if (vm.guestOperatingSystemPresent()){
 			guestArc { vm.guestOperatingSystem().architecture() }
 			guestOsType { vm.guestOperatingSystem().family() }

@@ -1,16 +1,14 @@
 import React, { useEffect, useMemo, useState } from "react";
-import useUIState from "@/hooks/useUIState";
-import useGlobal from "@/hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import { 
   ActionButtons,
   ActionButton,
 } from "@/components/button/ActionButtons";
 import { 
   useStorageDomain,
-  useAllVmsFromDisk
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 
 
 /**
@@ -66,24 +64,37 @@ const DiskActionButtons = ({
   ))
 
   const basicActions = [
-    { type: "create",  onClick: () => setActiveModal("disk:create"),      label: Localization.kr.CREATE, disabled: isContextMenu && disksSelected.length > 0 },
-    { type: "upload",  onClick: () => setActiveModal("disk:upload"),      label: Localization.kr.UPLOAD, disabled: isContextMenu && disksSelected.length > 0 },
-    { type: "update",  onClick: () => setActiveModal("disk:update"),      label: Localization.kr.UPDATE, disabled: disksSelected.length !== 1 || hasConnectTemplate || hasTemplateAtttached || isInTransfer || isLocked },
-    
-    { type: "remove",   onClick: () => setActiveModal("disk:remove"),     label: Localization.kr.REMOVE, disabled: disksSelected.length === 0 || domainNotActive || hasConnectTemplate || hasVmAtttached || hasTemplateAtttached || isInTransfer || isLocked },
-    { type: "move",     onClick: () => setActiveModal("disk:move"),       label: Localization.kr.MOVE,   
-      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate  || domainNotActive },
-    { type: "copy",    onClick: () => setActiveModal("disk:copy"),   label: Localization.kr.COPY,   
-      disabled: disksSelected.length === 0 || selected1st?.sharable || domainNotActive }, 
+    { 
+      type: "create",  onClick: () => setActiveModal("disk:create"),      label: Localization.kr.CREATE,
+      disabled: isContextMenu && disksSelected.length > 0 
+    }, { 
+      type: "upload",  onClick: () => setActiveModal("disk:upload"),      label: Localization.kr.UPLOAD, 
+      disabled: isContextMenu && disksSelected.length > 0 
+    }, {
+      type: "update",  onClick: () => setActiveModal("disk:update"),      label: Localization.kr.UPDATE, 
+      disabled: disksSelected.length !== 1 || hasConnectTemplate || hasTemplateAtttached || isInTransfer || isLocked
+    }, { 
+      type: "remove",   onClick: () => setActiveModal("disk:remove"),     label: Localization.kr.REMOVE,
+      disabled: disksSelected.length === 0 || domainNotActive || hasConnectTemplate || hasVmAtttached || hasTemplateAtttached || isInTransfer || isLocked 
+    }, { type: "move",     onClick: () => setActiveModal("disk:move"),       label: Localization.kr.MOVE,
+      disabled: disksSelected.length === 0 || selected1st?.sharable || hasConnectTemplate  || domainNotActive 
+    }, {
+      type: "copy",    onClick: () => setActiveModal("disk:copy"),        label: Localization.kr.COPY,   
+      disabled: disksSelected.length === 0 || selected1st?.sharable || domainNotActive 
+    }, 
   ];
 
   const uploadActions = [
-    { type: "cancelit", onClick: () => setActiveModal("disk:cancelit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.CANCEL}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer || !isTransferPaused },
-    { type: "pauseit", onClick: () => setActiveModal("disk:pauseit"),     label: `${Localization.kr.UPLOAD} ${Localization.kr.PAUSE}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || (isTransferPaused || isTransferInFinalizing) },
-    { type: "resumeit", onClick: () => setActiveModal("disk:resumeit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.RESUME}`,
-      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || !(isTransferPaused || isTransferInFinalizing) },
+    { 
+      type: "cancelit", onClick: () => setActiveModal("disk:cancelit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.CANCEL}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer || !(isTransferPaused || isTransferInFinalizing)
+    }, {
+      type: "pauseit", onClick: () => setActiveModal("disk:pauseit"),     label: `${Localization.kr.UPLOAD} ${Localization.kr.PAUSE}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || (isTransferPaused || isTransferInFinalizing)
+    }, {
+      type: "resumeit", onClick: () => setActiveModal("disk:resumeit"),   label: `${Localization.kr.UPLOAD} ${Localization.kr.RESUME}`,
+      disabled: disksSelected.length !== 1 || !isInTransfer || isTransferInProgress || !(isTransferPaused || isTransferInFinalizing)
+    },
   ];
 
   return (

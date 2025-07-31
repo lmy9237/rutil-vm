@@ -8,6 +8,7 @@ dependencies {
 	compileOnly(project(":rutil-vm-common"))
 	compileOnly(Dependencies.springBootWeb)
 	compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
 	compileOnly(Dependencies.log4j)
 	compileOnly(Dependencies.gson)
 }

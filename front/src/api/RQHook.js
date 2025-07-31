@@ -2572,27 +2572,27 @@ export const useVm4Edit = (
   ...qpVm(vmId, "edit"),  
 });
 /**
- * @name useDisksFromVM
+ * @name useAllDiskAttachmentsFromVm
  * @description 가상머신 내 디스크 목록조회 useQuery훅
  * 
  * @param {string} vmId 가상머신ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
- * @see ApiManager.findDisksFromVM
+ * @see ApiManager.findAllDiskAttachmentsFromVm
  */
-export const useDisksFromVM = (
+export const useAllDiskAttachmentsFromVm = (
   vmId,
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS_FROM_VM, vmId],
   queryFn: async () => {
-    const res = await ApiManager.findDisksFromVM(vmId);
+    const res = await ApiManager.findAllDiskAttachmentsFromVm(vmId);
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useDisksFromVM ... vmId: ${vmId}, res: `, _res);
+    Logger.debug(`RQHook > useAllDiskAttachmentsFromVm ... vmId: ${vmId}, res: `, _res);
     return _res;
   },
   enabled: !!vmId,
@@ -3700,7 +3700,7 @@ export const useDeleteNetworkInterface = (
  * @param {string} diskAttachmentId diskAtachment ID
  * @returns useQuery 훅
  * 
- * @see ApiManager.findDiskattachmentFromVM
+ * @see ApiManager.findDiskAttachmentFromVm
  */
 export const useDiskAttachmentFromVm = (
   vmId, diskAttachmentId
@@ -3708,7 +3708,7 @@ export const useDiskAttachmentFromVm = (
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DISK_ATTACHMENT_FROM_VM, vmId, diskAttachmentId],
   queryFn: async () => {
-    const res = await ApiManager.findDiskattachmentFromVM(vmId, diskAttachmentId);
+    const res = await ApiManager.findDiskAttachmentFromVm(vmId, diskAttachmentId);
     const _res = validateAPI(res) ?? {};
     Logger.debug(`RQHook > useDiskAttachmentFromVm ... vmId: ${vmId}, diskAttachmentId: ${diskAttachmentId}, res: `, _res);
     return _res;

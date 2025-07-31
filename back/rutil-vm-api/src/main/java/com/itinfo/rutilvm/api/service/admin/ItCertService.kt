@@ -23,14 +23,14 @@ interface ItCertService {
 	 * oVirt 관련 인증서 전체 조회
 	 * @return List<[CertManager]> 인증서 정보
 	 */
-	fun findAll(): List<CertManager>
+	suspend fun findAll(): List<CertManager>
 	/**
 	 * [ItCertService.findOne]
 	 * oVirt 관련 인증서 상세 조회
 	 *
 	 * @return [CertManager] 인증서 정보
 	 */
-	fun findOne(alias: String, address: String): CertManager?
+	suspend fun findOne(alias: String, address: String): CertManager?
 	/**
 	 * [ItCertService.attach]
 	 * oVirt 관련 인증서 연결
@@ -56,7 +56,7 @@ class CertServiceImpl(
 	@Autowired private lateinit var certConfig: CertConfig
 	@Autowired private lateinit var pkiServiceClient: OvirtPkiResourceServiceClient
 
-	override fun findAll(): List<CertManager> {
+	override suspend fun findAll(): List<CertManager> {
 		log.info("findAll ...")
 		val hosts: List<HostVo> = iHost.findAll()
 		val certs: List<CertManager> = hosts.toCertManagers(
@@ -67,7 +67,7 @@ class CertServiceImpl(
 		return certs
 	}
 
-	override fun findOne(alias: String, address: String): CertManager? {
+	override suspend fun findOne(alias: String, address: String): CertManager? {
 		log.info("findOne ... alias: {}, address: {}", alias, address)
 		val cert: CertManager? = findAll().firstOrNull { it.alias == alias && it.address == address }
 		/*

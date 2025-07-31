@@ -39,7 +39,7 @@ const VmDeleteModal = ({
       queryKey: ['DisksFromVM', vmId],
       queryFn: async () => {
         try {
-          const disks = await ApiManager.findDisksFromVM(vmId);
+          const disks = await ApiManager.findAllDiskAttachmentsFromVm(vmId);
           console.info(`disks *** ${vmId}`, disks);
           return disks.body || [];
         } catch (error) {

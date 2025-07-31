@@ -5,7 +5,7 @@ import VmDiskConnectionModal from "./VmDiskConnectionModal";
 import VmDiskModal from "./VmDiskModal";
 import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
-import { useDisksFromVM, useVm } from "../../../api/RQHook";
+import { useAllDiskAttachmentsFromVm, useVm } from "../../../api/RQHook";
 import VmDiskMoveModal from "./VmDiskMoveModal";
 
 
@@ -27,7 +27,7 @@ const VmDiskModals = ({
     vmsSelected[0]?.id ?? ""
   , [vmsSelected])
   const { data: vm }  = useVm(vmId);
-  const { data: diskAttachments = [] } = useDisksFromVM(vmId);
+  const { data: diskAttachments = [] } = useAllDiskAttachmentsFromVm(vmId);
 
   // 부팅가능한 디스크 있는지 검색
   const hasBootableDisk = diskAttachments?.some((diskAttachment) => diskAttachment?.bootable === true);

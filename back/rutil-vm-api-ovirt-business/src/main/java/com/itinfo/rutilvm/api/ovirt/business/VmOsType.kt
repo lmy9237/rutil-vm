@@ -22,12 +22,12 @@ enum class VmOsType(
 	rhel_5(7, "Red Hat Enterprise Linux 5.x"),
 	rhel_4(8, "Red Hat Enterprise Linux 4.x"),
 	rhel_3(9, "Red Hat Enterprise Linux 3.x"),
-	windows_2003x64(10, "Windows 2003 x64"),
+	windows_2003x64(10, "Windows 2003 x64"), // Q35칩셋에서는 지원 안됨
 	windows_7(11, "Windows 7"),
-	windows_7x64(12, "Windows 7 x64"),
-	rhel_5x64(13, "Red Hat Enterprise Linux 5.x x64"),
-	rhel_4x64(14, "Red Hat Enterprise Linux 4.x x64"),
-	rhel_3x64(15, "Red Hat Enterprise Linux 3.x x64"),
+	windows_7x64(12, "Windows 7 x64"), // Q35칩셋에서는 지원 안됨
+	rhel_5x64(13, "Red Hat Enterprise Linux 5.x x64"), // Q35칩셋에서는 지원 안됨
+	rhel_4x64(14, "Red Hat Enterprise Linux 4.x x64"), // Q35칩셋에서는 지원 안됨
+	rhel_3x64(15, "Red Hat Enterprise Linux 3.x x64"), // Q35칩셋에서는 지원 안됨
 	windows_2008x64(16, "Windows 2008 x64"),
 	windows_2008r2x64(16, "Windows 2008 x64"),
 	rhel_6(18, "Red Hat Enterprise Linux 6.x"),

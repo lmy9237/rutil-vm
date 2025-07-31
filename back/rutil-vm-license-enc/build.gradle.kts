@@ -9,10 +9,12 @@ dependencies {
     compileOnly(project(":rutil-vm-common"))
     compileOnly(project(":rutil-vm-license-common"))
     compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
 
     testImplementation(project(":rutil-vm-common"))
+	testImplementation(Dependencies.kotlinCoroutineTest)
     testImplementation(Dependencies.log4j)
     testImplementation(Dependencies.junit)
     testImplementation(Dependencies.hamcrest)

@@ -10,6 +10,7 @@ dependencies {
     compileOnly(Dependencies.springBootWebsocket)
     compileOnly(Dependencies.springBootWeb)
     compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
 }

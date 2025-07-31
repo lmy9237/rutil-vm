@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import {
   useValidationToast, useProgressToast,
 } from "@/hooks/useSimpleToast";
+import { Input }                        from "@/components/ui/input"
 import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
@@ -10,7 +12,6 @@ import LabelSelectOptionsID             from "@/components/label/LabelSelectOpti
 import { 
   handleInputChange, handleInputCheck, handleSelectIdChange,
 } from "@/components/label/HandleInput";
-import { Input }                        from "@/components/ui/input"
 import {
   useAllActiveDataCenters,
   useAllActiveDomainsFromDataCenter,
@@ -50,7 +51,10 @@ const DiskUploadModal = ({
   onClose,
 }) => {
   const { validationToast } = useValidationToast();
-  const { progressToast } = useProgressToast()
+  const { progressToast } = useProgressToast();
+  const {
+    domainsSelected,
+  } = useGlobal()
   // const { closeModal } = useUIState()
   const [formState, setFormState] = useState(initialFormState);
   const [file, setFile] = useState(null);
@@ -70,7 +74,7 @@ const DiskUploadModal = ({
 
   // 전체 데이터센터 가져오기
   const {
-    data: datacenters = [],
+    data: datacenters=[],
     isLoading: isDatacentersLoading,
     isSuccess: isDatacentersSuccess,
   } = useAllActiveDataCenters((e) => ({ ...e }));
@@ -79,14 +83,14 @@ const DiskUploadModal = ({
 
   // 선택한 데이터센터가 가진 도메인 가져오기
   const {
-    data: domains = [],
+    data: domains=[],
     isLoading: isDomainsLoading,
     isSuccess: isDomainsSuccess,
   } = useAllActiveDomainsFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
 
   // 선택한 도메인이 가진 디스크 프로파일 가져오기
   const {
-    data: diskProfiles = [],
+    data: diskProfiles=[],
     isLoading: isDiskProfilesLoading,
     isSuccess: isDiskProfilesSuccess,
   } = useAllDiskProfilesFromDomain(domainVo.id || undefined, (e) => ({...e}));
@@ -119,10 +123,12 @@ const DiskUploadModal = ({
   }, [datacenters]);
 
   useEffect(() => {
-    if (domains.length > 0) {
-      setDomainVo({id: domains[0].id});
+    if (domainsSelected.length > 0) {
+      setDomainVo({ id: domainsSelected[0]?.id || "" });
+    } else {
+      setDomainVo({ id: domains[0].id || "" });
     }
-  }, [domains]);
+  }, [domains, domainsSelected]);
 
   useEffect(() => {
     if (diskProfiles.length > 0) {
@@ -235,20 +241,15 @@ const DiskUploadModal = ({
                 value={formState.alias}
                 onChange={handleInputChange(setFormState, "alias", validationToast)}
               />
-              <LabelInput label={Localization.kr.DESCRIPTION}
-                value={formState.description}
+              <LabelInput label={Localization.kr.DESCRIPTION} value={formState.description}
                 onChange={handleInputChange(setFormState, "description", validationToast)}
               />
-              <LabelSelectOptionsID
-                label={Localization.kr.DATA_CENTER}
-                value={dataCenterVo.id}
+              <LabelSelectOptionsID label={Localization.kr.DATA_CENTER} value={dataCenterVo.id}
                 loading={isDatacentersLoading}
                 options={datacenters}
                 onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
               />
-              <LabelSelectOptionsID
-                label={Localization.kr.DOMAIN}
-                value={domainVo.id}
+              <LabelSelectOptionsID label={Localization.kr.DOMAIN} value={domainVo.id}
                 loading={isDomainsLoading}
                 options={domains}
                 onChange={handleSelectIdChange(setDomainVo, domains, validationToast)}

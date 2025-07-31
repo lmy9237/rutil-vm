@@ -90,7 +90,6 @@ fun List<DiskAttachment>.toDiskAttachmentIdNames(conn: Connection): List<DiskAtt
 fun DiskAttachment.toDiskAttachmentVo(conn: Connection): DiskAttachmentVo {
 	val disk: Disk? = conn.findDisk(this@toDiskAttachmentVo.disk().id()).getOrNull()
 	val vm: Vm? = conn.findVm(this@toDiskAttachmentVo.vm().id()).getOrNull()
-
 	return DiskAttachmentVo.builder {
 		id { this@toDiskAttachmentVo.id() }
 		name { this@toDiskAttachmentVo.name() }

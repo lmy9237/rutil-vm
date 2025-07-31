@@ -8,6 +8,7 @@ dependencies {
 	compileOnly(project(":rutil-vm-common"))
 	compileOnly(project(":rutil-vm-util"))
     compileOnly(Dependencies.kotlinStdlib)
+	compileOnly(Dependencies.kotlinCoroutine)
     compileOnly(Dependencies.log4j)
     compileOnly(Dependencies.gson)
 	compileOnly(Dependencies.jsch)

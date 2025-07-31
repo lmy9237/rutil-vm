@@ -86,7 +86,7 @@ open class CertConfig(
 		}
 		return certs.onEach {
 			// 반환 전에 한번 임시저장
-			val res: Boolean = it.save2Tmp().getOrNull() ?: false
+			val res: Boolean = it.save2Tmp().isSuccess
 			if (res) log.info("engineCertManagers ... SUCCESS") else log.warn("downloadEngineCerts ... FAILURE for {}", it.alias)
 		}
 	}

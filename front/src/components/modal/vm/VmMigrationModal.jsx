@@ -5,7 +5,7 @@ import BaseModal                        from "../BaseModal";
 import {
   useAllMigratableHostsFromVM,
   useAllStorageDomainsToMoveFromDisk4EachDisk,
-  useDisksFromVM,
+  useAllDiskAttachmentsFromVm,
   useHostsFromCluster,
   useMigration,
   useMoveDisk
@@ -75,7 +75,7 @@ const VmMigrationModal = ({
     data: disks = [],
     isLoading: isDisksLoading,
     isSuccess: isDisksSuccess,
-  } = useDisksFromVM(vmId, (e) => ({ ...e }));
+  } = useAllDiskAttachmentsFromVm(vmId, (e) => ({ ...e }));
 
   const { mutate: migration } = useMigration(onClose, onClose);
   const { mutate: moveDisk } = useMoveDisk(onClose, onClose);

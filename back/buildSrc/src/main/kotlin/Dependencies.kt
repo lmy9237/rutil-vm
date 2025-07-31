@@ -104,7 +104,7 @@ object Dependencies {
 		"com.squareup.retrofit2:converter-scalars:${Versions.retrofit2}",
 		"com.squareup.retrofit2:converter-gson:${Versions.retrofit2}",
 	) + okhttp3
-	val imageioPnm = "com.twelvemonkeys.imageio:imageio-pnm:3.10.1"
+	val imageioPnm = "com.twelvemonkeys.imageio:imageio-pnm:${Versions.imageioPnm}"
     val qemu = listOf(
         "org.anarres.qemu:qemu-examples:${Versions.qemu}",
         "org.anarres.qemu:qemu-exec:${Versions.qemu}",
@@ -180,6 +180,11 @@ object Dependencies {
         "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}",
         "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}",
     )
+	val kotlinCoroutine = listOf(
+		"org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.kotlinCoroutine}",
+		"org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${Versions.kotlinCoroutine}",
+	)
+	val kotlinCoroutineTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.kotlinCoroutine}"
     val junit = listOf(
         "org.junit.jupiter:junit-jupiter:${Versions.junit}",
         "org.junit.jupiter:junit-jupiter-api:${Versions.junit}",

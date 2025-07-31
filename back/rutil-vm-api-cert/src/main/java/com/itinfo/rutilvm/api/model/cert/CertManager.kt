@@ -1,12 +1,14 @@
 package com.itinfo.rutilvm.api.model.cert
 
 import com.itinfo.rutilvm.common.gson
+import com.itinfo.rutilvm.common.suspendRunCatching
 import com.itinfo.rutilvm.util.cert.model.CertType
 import com.itinfo.rutilvm.util.cert.util.CertParser
 import com.itinfo.rutilvm.util.ssh.model.RemoteConnMgmt
 import com.itinfo.rutilvm.util.ssh.model.toInsecureSession
 import com.itinfo.rutilvm.util.ssh.util.fetchFile
 import com.jcraft.jsch.JSchException
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
 import java.io.File
@@ -53,11 +55,13 @@ open class CertManager(
 		null
 	}
 
-	fun certFileDataSSH(): ByteArray? = try {
+	fun certFileDataSSH(): Result<ByteArray?> = suspendRunCatching {
 		log.info("certFileDataSSH ... path: {}", path)
 		connInfo?.toInsecureSession()?.fetchFile(path)
-	} catch (e: JSchException) {
-		log.error("something went WRONG ... reason: {}", e.localizedMessage)
+	}.onSuccess {
+		log.info("certFileDataSSH SUCCESS!")
+	}.onFailure {
+		log.error("certFileDataSSH FAILED ... reason: {}", it.localizedMessage)
 		null
 	}
 
@@ -65,7 +69,7 @@ open class CertManager(
 		get() {
 			val cLocal: ByteArray? = certFileLocal()
 			return certP.parseCertificate(
-				if (tempDest.isEmpty() || cLocal == null) certFileDataSSH()
+				if (tempDest.isEmpty() || cLocal == null) certFileDataSSH().getOrNull()
 				else cLocal
 			)
 		}
@@ -85,7 +89,7 @@ open class CertManager(
 	open val daysRemaining: String
 		get() = "${_daysRemaining ?: "N/A"}"
 
-	fun save2Tmp(): Result<Boolean> = runCatching {
+	fun save2Tmp(): Result<Boolean> = suspendRunCatching {
 		val filenameExt: String = path.split("/").last().split(".").last()
 		val filename =
 			if (alias.contains("VDSM")) // 호스트 인증서
@@ -98,7 +102,7 @@ open class CertManager(
 		if (!fTmpDest.exists()) {
 			fTmpDest.mkdir()
 		}
-		certFileDataSSH()?.let { fd ->
+		certFileDataSSH().getOrNull()?.let { fd ->
 			log.debug("save2Tmp ... fileData FOUND!!!")
 			// Files.write(tgtPath, fd)
 			val fTmp = File("$tempDest${File.separator}${filename}")
@@ -106,7 +110,7 @@ open class CertManager(
 				fTmp.createNewFile()
 			fTmp.writeBytes(fd)
 			log.debug("save2Tmp ... File downloaded and saved to ${tgtPath.toAbsolutePath()}")
-			return@runCatching true
+			return@suspendRunCatching true
 		}
 		false
 	}.onSuccess {
