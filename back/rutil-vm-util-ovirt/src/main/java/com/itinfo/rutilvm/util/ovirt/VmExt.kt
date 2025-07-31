@@ -215,7 +215,6 @@ fun Connection.updateVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
-
 	val vmUpdated: Vm =
 		this.srvVm(vm.id()).update().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
 

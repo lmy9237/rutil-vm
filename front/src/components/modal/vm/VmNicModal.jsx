@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useValidationToast }  from "@/hooks/useSimpleToast";
-import useUIState              from "@/hooks/useUIState";
 import useGlobal               from "@/hooks/useGlobal";
 import BaseModal               from "@/components/modal/BaseModal";
 import ToggleSwitchButton      from "@/components/button/ToggleSwitchButton";
@@ -15,10 +14,13 @@ import {
   useEditNicFromVM,
   useNetworkAttachmentsFromHost,
   useNetworkInterfaceFromVM,
+  useNetworkInterfacesFromVM,
   useVm,
 } from "@/api/RQHook";
 import {
+  checkDuplicateName,
   emptyIdNameVo,
+  useSelectFirstNameItemEffect,
 } from "@/util";
 import Localization               from "@/utils/Localization";
 import Logger                     from "@/utils/Logger";
@@ -36,6 +38,7 @@ const VmNicModal = ({
   isOpen,
   onClose,
   editMode=false,
+  nicName
 }) => {
   const { validationToast } = useValidationToast();
   const nLabel = editMode 
@@ -45,7 +48,7 @@ const VmNicModal = ({
   const { vmsSelected, nicsSelected } = useGlobal();
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const nicId = useMemo(() => [...nicsSelected][0]?.id, [nicsSelected]);
-  const hostId = useMemo(() => [...vmsSelected][0]?.hostVo?.id, [vmsSelected]?.hostVo);
+  // const hostId = useMemo(() => [...vmsSelected][0]?.hostVo?.id, [vmsSelected]?.hostVo);
 
   const [formInfoState, setFormInfoState] = useState(initialFormState);
   const [vnicProfileVo, setVnicProfileVo] = useState(emptyIdNameVo());
@@ -54,10 +57,15 @@ const VmNicModal = ({
   const [isProfileOriginallySet, setIsProfileOriginallySet] = useState(false);
   const isInterfaceDisabled = editMode && isProfileOriginallySet;
 
-  const { 
-    data: networkAttachments = [] 
-  } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
   const { data: vm } = useVm(vmId);
+  
+  // 해당 가상머신이 up인상태에서는 호스트에 내 nic 네트워크와 호스트 네트워크에 잇는게 같아야함
+  // 즉 없는 네트워크로 편집/추가 불가능
+  // const { 
+  //   data: networkAttachments = [] 
+  // } = useNetworkAttachmentsFromHost(hostId, (e) => ({ ...e }));
+
+  const { data: nics = [] } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
   const { data: nicsdetail } = useNetworkInterfaceFromVM(vmId, nicId);
   const { 
     data: vnics=[],
@@ -65,9 +73,9 @@ const VmNicModal = ({
     isSuccess: isAllVnicsSuccess,
   } = useAllVnicsFromCluster(vm?.clusterVo?.id, (e) => ({ ...e }));
 
-  useEffect(()=>{
-    Logger.debug(`NicModal > useEffect ... networkAttachments: `, networkAttachments)
-  }, [networkAttachments])
+  // useEffect(()=>{
+  //   Logger.debug(`NicModal > useEffect ... networkAttachments: `, networkAttachments)
+  // }, [networkAttachments])
 
   const { mutate: addNicFromVM } = useAddNicFromVM(onClose, onClose);
   const { mutate: editNicFromVM } = useEditNicFromVM(onClose, onClose);
@@ -85,6 +93,17 @@ const VmNicModal = ({
     setFormInfoState((prev) => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    if (!editMode && isOpen) {
+      setFormInfoState((prev) => ({
+        ...prev,
+        name: nicName || "nic",
+      }));
+    }
+  }, [editMode, isOpen]);
+  
+  useSelectFirstNameItemEffect(vnics, setVnicProfileVo, "ovirtmgmt");
+  
   useEffect(() => {
     if (!isOpen) {
       setFormInfoState(initialFormState);
@@ -109,16 +128,6 @@ const VmNicModal = ({
     }
   }, [isOpen, editMode, nicsdetail]);
 
-  useEffect(() => {
-    if (!editMode && vnics && vnics.length > 0) {
-      const defaultVnic = vnics.find(n => n.name === "ovirtmgmt");
-      const firstN = defaultVnic || vnics[0];
-      setVnicProfileVo({ 
-        id: firstN.id, 
-        name: firstN.name 
-      });
-    }
-  }, [vnics, editMode]);
 
   useEffect(() => {
     const selectedVnicProfile = vnics.find((v) => v.id === vnicProfileVo.id);
@@ -131,13 +140,15 @@ const VmNicModal = ({
 
   
   const validateForm = () => {
-    Logger.debug(`VmNicModal > validateForm ... `)
     if (!formInfoState.name) return `${Localization.kr.NAME}을 입력해주세요.`;
+    
+    const duplicateError = checkDuplicateName(nics, formInfoState.name, formInfoState.id);
+    if (duplicateError) return duplicateError;
+    
     return null;
   };
 
   const handleFormSubmit = () => {
-    Logger.debug(`VmNicModal > handleFormSubmit ... `)
     const error = validateForm();
     if (error) {
       validationToast.fail(error);
@@ -166,7 +177,7 @@ const VmNicModal = ({
         typeof formInfoState.name === "string"
       }
       onSubmit={handleFormSubmit}
-      contentStyle={{ width: "600px" }}
+      contentStyle={{ width: "550px" }}
     >
       <LabelInput id="name" label={Localization.kr.NAME}
         value={formInfoState.name}
@@ -178,19 +189,18 @@ const VmNicModal = ({
         onChange={(e) => setVnicProfileVo({id: e.target.value})}
         options={vnics.map(opt => ({
           value: opt.id,
-          label: `${opt.name} [네트워크: ${opt.networkVo?.name || ""}]`
+          label: `${opt.name} [${Localization.kr.NETWORK}: ${opt.networkVo?.name || ""}]`
         }))}
       />
       <LabelSelectOptions label="유형"
         value={formInfoState.interface_}
         onChange={handleInputChange(setFormInfoState, "interface_")}
         options={filteredInterfaceOptions}
-        // disabled={!!vnicProfileVo?.id}
         disabled={isInterfaceDisabled}
       />
       {/* <LabelInput
         id="macAddress"
-        label="MAC 주소"
+        label="사용자 지정 MAC 주소"
         placeholder="00:1A:4B:16:01:59"
         value={formInfoState.macAddress}
         onChange={handleInputChange(setFormInfoState, "macAddress")}
@@ -209,30 +219,6 @@ const VmNicModal = ({
           tType="연결됨" fType={Localization.kr.DETACH}
         />
       </div>
-      {/* <div>
-            <input
-              type="radio"
-              name="status"
-              id="status_up"
-              checked={formInfoState.linked === true} // linked가 true일 때 체크
-              onChange={() => handleRadioChange("linked", true)}
-            />
-            <RVI16 iconDef={rvi16Connected} />
-            <label htmlFor="status_up">Up</label>
-          </div>
-          <div>
-            <input
-              id="status_down"
-              type="radio"
-              name="status"
-              checked={formInfoState.linked === false} // linked가 false일 때 체크
-              onChange={() => handleRadioChange("linked", false)}
-            />
-            <RVI16 iconDef={rvi16Disconnected} />
-            <label htmlFor="status_down">Down</label>
-          </div>
-        */}
-
 
     </BaseModal>
   );

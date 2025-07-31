@@ -247,16 +247,6 @@ export const GlobalProvider = ({ children }) => {
     isLoading: isVmCpuLoading,
   } = useDashboardVmCpu();
   
-  /*
-  const [top3VmsCpuUsed, _setTop3VmsCpuUsed] = useState([]);
-  const setTop3VmsCpuUsed = (newV) => {
-    Logger.debug(`GlobalProvider > setTop3VmsCpuUsed ... newV: `, newV)
-    if (Array.isArray(newV))
-      _setTop3VmsCpuUsed([...newV]);
-    else if (!Array.isArray(newV) && typeof newV === "object")
-      _setTop3VmsCpuUsed([{...newV}]);
-  }
-  */
 
   const {
     data: top3VmsMemUsed = [],
@@ -268,6 +258,17 @@ export const GlobalProvider = ({ children }) => {
     isLoading: isVmMemoryLoading,
   } = useDashboardVmMemory();
 
+  /* 
+  const [top3VmsCpuUsed, _setTop3VmsCpuUsed] = useState([]);
+  const setTop3VmsCpuUsed = (newV) => {
+    Logger.debug(`GlobalProvider > setTop3VmsCpuUsed ... newV: `, newV)
+    if (Array.isArray(newV))
+      _setTop3VmsCpuUsed([...newV]);
+    else if (!Array.isArray(newV) && typeof newV === "object")
+      _setTop3VmsCpuUsed([{...newV}]);
+  }
+  */
+  
   const {
     data: top3StoragesUsed = [],
     status: storageMemoryStatus,

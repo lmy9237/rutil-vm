@@ -47,6 +47,9 @@ const HostNics = ({
   const { data: networks = [] } = useNetworkFromCluster(host?.clusterVo?.id, (e) => ({ ...e }));  // 할당되지 않은 논리 네트워크 조회
   const { mutate: setupNetwork } = useSetupNetworksFromHost();
 
+  // 저장버튼 누르면 로딩중 표시
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // 변경 정보
   const [modifiedBonds, setModifiedBonds] = useState([]); // 생성/수정 본딩
   const [removeBonds, setRemoveBonds] = useState([]);     // 삭제 본딩
@@ -60,6 +63,9 @@ const HostNics = ({
   // 선택된 항목
   const [selectedNic, setSelectedNic] = useState(null);
   const [selectedNetwork, setSelectedNetwork] = useState(null);
+
+  // 네트워크 필수,필요하지않음 분리버튼
+  const [networkFilter, setNetworkFilter] = useState('all');
   
   // 드래그
   const [dragItemFlag, setDragItemFlag] = useState(false);    // 변경항목 있는지 확인
@@ -120,8 +126,6 @@ const HostNics = ({
     }
   }, [hostId, hostNics, networkAttachments, networks]);
   
-  // 저장버튼 누르면 로딩중 표시
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 드래그 항목에 대한 cancelFlag 처리
   // 원래 있던 할당된 네트워크 목록 && 변경된 네트워크 목록의 값이 === 0 이면, 취소버튼만
@@ -129,14 +133,6 @@ const HostNics = ({
     setCancelFlag(baseItems.networkAttachment.length === 0 && movedItems.networkAttachment.length === 0);
   }, [baseItems, movedItems]);
 
-
-  // 네트워크 필수,필요하지않음 분리버튼
-  const [networkFilter, setNetworkFilter] = useState('all');
-  const filterOptions = [
-    { key: 'all', label: '전체' },
-    { key: 'required', label: '필수' },
-    { key: 'optional', label: '필요하지 않음' }
-  ];
 
   // 본딩 모달 관리
   const [isBondingPopup, setIsBondingPopup] = useState(false);       // 본딩 모달 오픈
@@ -160,9 +156,11 @@ const HostNics = ({
     // dnsServers: []
   });
 
+
   // 본딩되어 있는지 검사
   const isAlreadyBonded = (nic) => {
-    return nic.name.startsWith("bond") || (nic.bondingVo?.slaveVos?.length > 1)
+    return nic.bondingVo?.slaveVos?.length > 1
+    // return nic.name.startsWith("bond") || (nic.bondingVo?.slaveVos?.length > 1)
   };
 
   // 본딩 생성 값
@@ -292,18 +290,19 @@ const HostNics = ({
             ]);
             resetState(); // refetch가 모두 끝난 후 상태 초기화
           } catch (e) {
-
+            
           } finally {
             setIsSubmitting(false); // 로딩 상태 제거
+            resetState();
           }
         },
         onError: (e) => {
           toast({ variant: "destructive", description: "네트워크 변경 실패: " + e?.message });
           setIsSubmitting(false); 
+          resetState();
         }
       }
     );
-    // resetState(); // 초기화
   };
 
   // 변경 감지를 위한 유틸리티 함수들
@@ -1381,4 +1380,10 @@ const HostNics = ({
   );
 }
 
-export default HostNics;
+export default HostNics;  
+
+const filterOptions = [
+  { key: 'all', label: '전체' },
+  { key: 'required', label: '필수' },
+  { key: 'optional', label: '필요하지 않음' }
+];

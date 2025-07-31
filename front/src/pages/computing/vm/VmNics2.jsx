@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useRef } from "react";
+import React from "react";
 import Tippy from "@tippyjs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
@@ -8,17 +8,11 @@ import useContextMenu         from "@/hooks/useContextMenu";
 import SelectedIdView         from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox              from "@/components/button/SearchBox";
-import TablesRow              from "@/components/table/TablesRow";
 import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
 import NicActionButtons       from "@/components/dupl/VmNicActionButtons";
 import {
   useNetworkInterfacesFromVM
 } from "@/api/RQHook";
-import {
-  RVI24,
-  rvi24ChevronDown,
-  rvi24ChevronRight,
-} from "@/components/icons/RutilVmIcons";
 import "./Vm.css"
 import VmNicModals from "@/components/modal/vm/VmNicModals";
 import TablesOuter from "@/components/table/TablesOuter";
@@ -26,7 +20,6 @@ import useSearch from "@/hooks/useSearch";
 import TableRowClick from "@/components/table/TableRowClick";
 import { checkZeroSizeToMbps } from "@/util";
 import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
 /**
  * @name VmNics2
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -38,10 +31,6 @@ import Logger                 from "@/utils/Logger";
 const VmNics2 = ({ 
   vmId
 }) => {
-  const { activeModal, closeModal, } = useUIState()
-  const {
-    contextMenu, setContextMenu
-  } = useContextMenu()
   const {
     vmsSelected,
     nicsSelected, setNicsSelected

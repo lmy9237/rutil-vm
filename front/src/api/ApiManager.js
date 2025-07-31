@@ -108,6 +108,33 @@ const ApiManager = {
     url: ENDPOINTS.GET_STORAGE(), 
     // defaultValues: DEFAULT_VALUES.GET_STORAGE
   }),
+
+  /**
+   * @name ApiManager.getVmCpu
+   * @description storage 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getVmCpu: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_VM_CPU(), 
+  }),
+  /**
+   * @name ApiManager.getVmMemory
+   * @description storage 불러오는 값
+   * 
+   * @returns 
+   * 
+   * @see Dashboard.js (components)
+   */
+  getVmMemory: async () => makeAPICall({
+    method: "GET", 
+    url: ENDPOINTS.GET_VM_MEMORY(), 
+  }),
+
+
   /**
    * @name ApiManager.getHosts
    * @description host 전체 cpu,memory 평균값 불러오는 값
@@ -168,6 +195,8 @@ const ApiManager = {
     method: "GET", 
     url: ENDPOINTS.GET_PER_VM(vmId),
   }),
+
+
   /**
    * @name ApiManager.getStorageMemory
    * @description storageMemory 불러오는 값

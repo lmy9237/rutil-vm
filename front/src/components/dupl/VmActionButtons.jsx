@@ -1,7 +1,6 @@
 import { useRef, useState, useMemo } from "react";
 import { useNavigate }          from "react-router-dom";
 import CONSTANT                 from "@/Constants";
-import { useValidationToast }   from "@/hooks/useSimpleToast";
 import useUIState               from "@/hooks/useUIState";
 import useGlobal                from "@/hooks/useGlobal";
 import useClickOutside          from "@/hooks/useClickOutside";

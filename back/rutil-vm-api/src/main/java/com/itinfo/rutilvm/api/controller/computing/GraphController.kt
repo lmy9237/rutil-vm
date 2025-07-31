@@ -214,6 +214,38 @@ class GraphController {
 
 	@ApiOperation(
 		httpMethod="GET",
+		value="VM cpu Per 그래프",
+		notes="VM의 cpu Per 그래프"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vmCpuPerList")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun vmCpuPerChart(): ResponseEntity<List<LineDto>> {
+		log.info("----- vmCpuPerChart")
+		return ResponseEntity.ok(graph.vmCpuPerChart())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
+		value="VM memory Per 그래프",
+		notes="VM의 memory Per 그래프"
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@GetMapping("/vmMemoryPerList")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun vmMemoryPerChart(): ResponseEntity<List<LineDto>> {
+		log.info("----- vmMemoryPerChart")
+		return ResponseEntity.ok(graph.vmMemoryPerChart())
+	}
+
+	@ApiOperation(
+		httpMethod="GET",
 		value="VM의 CPU Metric 그래프",
 		notes="VM의 CPU Metric 그래프"
 	)

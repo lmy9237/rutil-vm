@@ -464,8 +464,12 @@ const BarChartWrapper = ({
           : []
   }, [type, top3VmsCpuUsed, top3VmsMemUsed, top3StoragesUsed])
 
-  const names = useMemo(() => _data.map((e) => e[keyName]), [_data, keyName]);
-  const percentages = useMemo(() => _data.map((e) => e[keyPercent]), [_data, keyPercent]);
+  const names = useMemo(() => _data.map((e) => 
+    e[keyName]
+  ), [_data, keyName]);
+  const percentages = useMemo(() => _data.map((e) => 
+    e[keyPercent]
+  ), [_data, keyPercent]);
   const ids = () => {
     const originalIds = _data.map((e) => e.id); 
     const padded = [...originalIds];

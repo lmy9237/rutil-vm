@@ -283,12 +283,15 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 	override fun findAllMigratableHostsFromVm(vmId: String): List<IdentifiedVo> {
 		log.info("findAllMigratableHostsFromVm ... vmId: {}", vmId)
 		val vm: Vm? = conn.findVm(vmId).getOrNull()
+
 		log.info("vm!!.cluster().id()={} vm.host().id()={} ", vm!!.cluster().id(), vm.host().id())
 
 		val hosts: List<Host> = conn.findAllHostsFromCluster(vm.cluster().id())
 			.getOrDefault(listOf())
-			.filter { it.status() == UP && it.hostedEnginePresent() && it.hostedEngine().active() && it.id() != vm.host().id() }
-		// TODO: hostedEngine의 경우에는 위의 hostedEnginePresent가 필요한데 그게 아니면 다른 host로 마이그레이션 가능
+			.filter {
+				it.status() == UP && it.id() != vm.host().id()
+				&& (!vm.isHostedEngineVm || (it.hostedEnginePresent()) && it.hostedEngine().active())
+			}
 
 		val vnicProfileIds: Set<String> = conn.findAllNicsFromVm(vmId)
 			.getOrDefault(emptyList())
@@ -307,7 +310,7 @@ class VmOperationServiceImpl: BaseService(), ItVmOperationService {
 		val migratableHosts = mutableListOf<IdentifiedVo>()
 
 		hosts.forEach { host ->
-			val hostNetworks = findAllNetworksFromHost(host.id()) // 이건 너가 정의한 함수
+			val hostNetworks = findAllNetworksFromHost(host.id())
 			val hostNetworkIds = hostNetworks.map { it.id }.toSet()
 
 			// 마이그레이션 조건: host가 VM이 요구하는 모든 네트워크를 포함해야 함

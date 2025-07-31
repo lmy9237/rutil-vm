@@ -118,6 +118,9 @@ interface ItGraphService {
 	 */
 	fun vm3MinUsageLineData(vmId: String): List<UsageDto>
 
+	fun vmCpuPerChart(): List<LineDto>
+	fun vmMemoryPerChart(): List<LineDto>
+
 	/**
 	 * [ItGraphService.vmCpuMetricData]
 	 * 전체 가상머신 cpu 사용량
@@ -274,7 +277,7 @@ class GraphServiceImpl(
 	// 	}
 	// }
 
-	/*override fun vmCpuPerChart(): List<LineDto> {
+	override fun vmCpuPerChart(): List<LineDto> {
 		log.info("vmCpuPerChart ... ")
 		val vmSampleHistoryEntities: List<VmSamplesHistoryEntity> = vmSamplesHistoryRepository.findVmUsageListChart()
 		return vmSampleHistoryEntities.toVmCpuLineDtos(conn)
@@ -286,11 +289,11 @@ class GraphServiceImpl(
 		return vmSampleHistoryEntities.toVmMemoryLineDtos(conn)
 	}
 
-	override fun vmNetworkPerChart(): List<LineDto> {
-		log.info("vmNetworkPerChart ... ")
-		val vmInterfaceSampleHistoryEntities: List<VmInterfaceSamplesHistoryEntity> = vmInterfaceSamplesHistoryRepository.findVmNetworkMetricListChart()
-		return vmInterfaceSampleHistoryEntities.toVmNetworkLineDtos(conn)
-	}*/
+	// override fun vmNetworkPerChart(): List<LineDto> {
+	// 	log.info("vmNetworkPerChart ... ")
+	// 	val vmInterfaceSampleHistoryEntities: List<VmInterfaceSamplesHistoryEntity> = vmInterfaceSamplesHistoryRepository.findVmNetworkMetricListChart()
+	// 	return vmInterfaceSampleHistoryEntities.toVmNetworkLineDtos(conn)
+	// }
 
 	override fun vmCpuMetricData(): List<UsageDto> {
 		log.info("vmCpuMetricChart ... ")

@@ -253,7 +253,7 @@ class VmServiceImpl(
 
 		// 상태가 UP 될 때까지 대기
 		Thread.sleep(2000)
-		updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
+		// updateCdrom(updatedVm.id(), vmVo.cdRomVo.id, false)
 		return updatedVm.toVmVo(conn).apply {
 			this@apply.displayType = vmStaticFound.defaultDisplayType
 		}

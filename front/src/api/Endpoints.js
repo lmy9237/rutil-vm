@@ -15,8 +15,9 @@ const ENDPOINTS = {
   GET_PER_HOSTS: () =>                                                     `${ENDPOINT_API_V1}/dashboard/hosts/usage/avg`,
   GET_PER_DOMAIN: () =>                                                    `${ENDPOINT_API_V1}/dashboard/storages/usage/avg`,
   GET_HOSTS: () =>                                                         `${ENDPOINT_API_V1}/dashboard/hosts`,
-  // GET_PER_VM_CPU: () =>                                                    `${ENDPOINT_API_V1}/dashboard/vmCpuPerList`,
-  // GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
+
+  GET_PER_VM_CPU: () =>                                                    `${ENDPOINT_API_V1}/dashboard/vmCpuPerList`,
+  GET_PER_VM_MEMORY: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vmMemoryPerList`,
   // GET_PER_VM_NETWORK: () =>                                                `${ENDPOINT_API_V1}/dashboard/vmNetworkPerList`,
          
   GET_METRIC_VM_CPU: () =>                                                 `${ENDPOINT_API_V1}/dashboard/vms/metric/cpu`,

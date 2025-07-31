@@ -594,7 +594,6 @@ class VmController: BaseController() {
 			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
 		if (vmVo == null)
 			throw ErrorPattern.VM_VO_INVALID.toException()
-		log.info("receive affinty={}", affinityClosure)
 		log.info("/computing/vms/{}/migrate ... 가상머신 마이그레이션", vmId)
 		return ResponseEntity.ok(iVmOp.migrate(vmId, vmVo, affinityClosure))
 	}

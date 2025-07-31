@@ -117,26 +117,6 @@ const Dashboard = () => {
     isLoading: isStorageMemoryeLoading,
   } = useDashboardStorageMemory();
 
-  // const {
-  //   data: vmCpuPer,
-  //   status: vmCpuPerStatus,
-  //   isRefetching: isVmCpuPerRefetching,
-  //   refetch: vmCpuPerRefetch,
-  //   isError: isVmCpuPerError,
-  //   error: vmCpuPerError,
-  //   isLoading: isVmCpuPeroading,
-  // } = useDashboardPerVmCpu();
-
-  // const {
-  //   data: vmMemoryPer,
-  //   status: vmMemoryPerStatus,
-  //   isRefetching: isVmMemoryPerRefetching,
-  //   refetch: vmMemoryPerRefetch,
-  //   isError: isVmMemoryPerError,
-  //   error: vmMemoryPerError,
-  //   isLoading: isVmMemoryPeroading,
-  // } = useDashboardPerVmMemory();
-
   const {
     data: vmMetricCpu,
     status: vmMetricCpuStatus,

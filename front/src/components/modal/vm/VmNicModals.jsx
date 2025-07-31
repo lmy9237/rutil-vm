@@ -3,7 +3,7 @@ import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmNicModal from "./VmNicModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteNetworkInterface } from "../../../api/RQHook";
+import { useDeleteNetworkInterface, useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 
 /**
@@ -23,8 +23,13 @@ const VmNicModals = ({
   } = useGlobal()
 
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
+  const { data: nics = [] } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
   const { mutate: deleteNetworkInterface } = useDeleteNetworkInterface();
 
+  const nicCount = nics.filter((n) => {
+    return n && n?.name?.includes(`nic1`)
+  })?.length+1 || 1;
+  
   const wrappedApi = {
     mutate: (nicId, options) => {
       if (!vmId || !nicId) {
@@ -38,6 +43,7 @@ const VmNicModals = ({
     create: (
       <VmNicModal key={"nic:create"}  isOpen={activeModal().includes("nic:create")}
         onClose={() => closeModal("nic:create")}
+        nicName={`nic${nicCount}`}
       />
     ), update: (
       <VmNicModal key={"nic:update"} isOpen={activeModal().includes("nic:update")} editMode
