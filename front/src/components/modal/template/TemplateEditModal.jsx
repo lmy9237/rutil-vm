@@ -54,16 +54,16 @@ const TemplateEditModal = ({
   } = useTemplate(templateId); // 바꾸면 id가 undefined 상태로변함
 
   useEffect(() => {
-  console.log("templateㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ:", template);//undefined
+  console.log("templateㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ:", template);
 }, [template]);
-useEffect(() => {
-  console.log("useTemplate :", {
-    templateId,
-    isTemplateLoading,
-    isTemplateSuccess, //false
-    template 
-  });
-}, [templateId, isTemplateLoading, isTemplateSuccess, template]);
+  useEffect(() => {
+    console.log("useTemplate :", {
+      templateId,
+      isTemplateLoading,
+      isTemplateSuccess, //false
+      template 
+    });
+  }, [templateId, isTemplateLoading, isTemplateSuccess, template]);
   const {
     data: templates=[],
     isLoading: isTemplatesLoading,

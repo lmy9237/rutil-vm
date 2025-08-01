@@ -157,7 +157,7 @@ const VmDiskConnectionModal = ({
                 attDisks.map((disk, idx) => {
                   const id = getDiskId(disk);
                   const selected = selectedDiskMap.get(id);
-                  return (
+                   return (
                     <tr key={id || idx}>
                       <td>
                         <LabelCheckbox id={`select-${id}`}
@@ -198,6 +198,49 @@ const VmDiskConnectionModal = ({
                       <td style={{ textAlign: 'center' }}>{disk?.sharable ? "O" : "X"}</td>
                     </tr>
                   );
+                  // return (
+                  //   <tr key={id || idx} onClick={() => toggleDisk(disk)} style={{ cursor: "pointer" }}>
+                  //     <td>
+                  //       <LabelCheckbox id={`select-${id}`}
+                  //         checked={!!selected} 
+                  //         onClick={(e) => e.stopPropagation()}
+                  //         onChange={(checked) => toggleDisk(disk)} 
+                  //       />
+                  //     </td>
+                  //     <td>{disk.alias}</td>
+                  //     <td>{disk.description}</td>
+                  //     <td>{disk.id}</td>
+                  //     <td>{checkZeroSizeToGiB(disk.virtualSize)}</td>
+                  //     <td>{checkZeroSizeToGiB(disk.actualSize)}</td>
+                  //     <td>{disk.storageDomainVo?.name || ""}</td>
+                  //     <td>
+                  //       <LabelSelectOptions id={`interface-${id}`} 
+                  //         value={selected?.interface_ || "virtio_scsi"}
+                  //         options={interfaceOption}
+                  //         disabled={!selected}
+                  //         onChange={(e) => handleUpdateDisk(id, "interface_", e.target.value)}
+                  //       />                       
+                  //     </td>
+                  //     <td>
+                  //       {/* 오류 */}
+                  //       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  //         <LabelCheckbox id={`readonly-${id}`}
+                  //           checked={selected?.readOnly || false}
+                  //           disabled={!selected}
+                  //           onChange={(checked) => handleUpdateDisk(id, "readOnly", !selected?.readOnly)} 
+                  //         />
+                  //       </div>
+                  //     </td>
+                  //     <td>
+                  //       <LabelCheckbox id={`bootable-${id}`} 
+                  //         checked={selected?.bootable || false}
+                  //         disabled={hasBootableDisk || !selected}
+                  //         onChange={(checked) => handleUpdateDisk(id, "bootable", !selected?.bootable)} 
+                  //       />
+                  //     </td>
+                  //     <td style={{ textAlign: 'center' }}>{disk?.sharable ? "O" : "X"}</td>
+                  //   </tr>
+                  // );
                 })
               ) : (
                 <tr><td colSpan="11" style={{ textAlign: "center" }}>데이터가 없습니다.</td></tr>

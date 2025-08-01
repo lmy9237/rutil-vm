@@ -165,8 +165,20 @@ const DomainInfo = () => {
     if (isDomainError || (!isDomainLoading && !domain)) {
       navigate("/computing/vms");
     }
+    const currentTabInPage = tabInPage("/storages/domains");
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
     setDomainsSelected(domain)
   }, [domain]);
+
+  // 탭 유효성 체크(템플릿 가져오기 등등 없으면 일반페이지로 이동)
+  useEffect(() => {
+    if (!tabs || tabs.length === 0 || !activeTab) return;
+    const isTabValid = tabs.some((t) => t.id === activeTab);
+    if (!isTabValid) {
+      Logger.warn(`DomainInfo > Invalid activeTab "${activeTab}" → fallback to "general"`);
+      handleTabClick("general");
+    }
+  }, [tabs, activeTab]);
 
   useEffect(() => {
     Logger.debug(`DomainInfo > useEffect ... domain: `, domain)

@@ -75,7 +75,7 @@ const VmInfo = () => {
   const isVmQualified2Migrate = vm?.qualified2Migrate ?? false;
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect || false;
   
-  const [activeTab, setActiveTab] = useState("general")
+  const [activeTab, setActiveTab] = useState("general");
   const tabs = useMemo(() => {
 
     if (vm?.status === "up"){
@@ -160,7 +160,8 @@ const VmInfo = () => {
     setActiveTab(section || "general");
   }, [section]);
 
-  useEffect(() => {  // 만약 up인상태의 가상머신의 monitor탭에서 tree메뉴의 꺼진가상머신을 누르면 일반페이지로 가도록 설정
+  //탭 유효성 체크(만약 up인상태의 가상머신의 monitor탭에서 tree메뉴의 꺼진가상머신을 누르면 일반페이지로 가도록 설정)
+  useEffect(() => {  
     if (!vm || !activeTab) return;
     if (activeTab === "monitor" && vm.status?.toUpperCase() !== "UP") {
       handleTabClick("general");

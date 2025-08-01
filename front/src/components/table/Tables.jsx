@@ -328,11 +328,16 @@ const Tables = ({
     }
   }, [data, sortConfig]);
 
+  // 삭제예정 -> 이유 -> data가 변경될 때는 꼭 페이지를 초기화할 필요가 없음 / 필터 선택(filterType)만 바뀔 때만 페이지를 1로 초기화하면 됨
+  // useEffect(() => {
+  //   Logger.debug(`PagingTable > useEffect ... setting currentPage 1 ... filterType: ${filterType}`);
+  //   // setCurrentPage(1);
+  // }, [data, filterType, setFilterType]) 
+
   useEffect(() => {
-    Logger.debug(`PagingTable > useEffect ... setting currentPage 1 ... filterType: ${filterType}`);
-    // setCurrentPage(1);
-    // TODO: 탭 기능 임시 비활성화
-  }, [data, filterType, setFilterType])
+    Logger.debug(`Tables > useEffect (filterType changed) ... setting currentPage = 1`);
+    setCurrentPage(1); // 페이지 초기화
+  }, [filterType]); // 필터만 의존
 
   // th드레그
   const [columnWidths, setColumnWidths] = useState({});

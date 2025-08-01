@@ -60,15 +60,25 @@ const EventDupl = ({
         <FilterButtons options={eventFilters} activeOption={filterType} onClick={setFilterType} />
         <EventActionButtons />
       </div>
+      {/* 삭제예정
       <TablesOuter target={"event"}
         columns={TableColumnsInfo.EVENTS}
-        data={filteredData}
-        filterAccessor={"severity"}
-        /*
-        shouldHighlight1stCol={true}  
-        */
+         data={events}                 
+        filterAccessor={"severity"}  
         onRowClick={(selectedRows) => {setEventsSelected(selectedRows)}}
-        /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
+        isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
+      /> 
+      */}
+      <TablesOuter
+        target={"event"}
+        columns={TableColumnsInfo.EVENTS}
+        data={transformedData}
+        filterAccessor={"severity"}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        filterType={filterType}
+        setFilterType={setFilterType}
+        onRowClick={(selectedRows) => setEventsSelected(selectedRows)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
       <SelectedIdView items={eventsSelected} />
