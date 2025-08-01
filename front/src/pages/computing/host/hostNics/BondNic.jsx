@@ -29,16 +29,16 @@ const BondNic = ({
     >
       <div className="interface-content">
         <div className="f-start  fs-14">{nic.name}</div>
+        
         <RVI36 className="icon cursor-pointer" iconDef={rvi36Edit()}
           onClick={() => editBondingData && editBondingData(nic)}
         />
+
       </div>
       <div className="w-full" onDragOver={e => e.preventDefault()}>
         {nic.bondingVo?.slaveVos.map((slave) => (
           <div className="interface-container container mb-2"
             key={slave.id}
-            // data-tooltip-id={`nic-tooltip-${slave.id}`}
-            // data-tooltip-html={NicToolTip(slave)}
             draggable
             onDragStart={e => handleDragStart(e, slave, "nic", "slave", nic)}
           >
@@ -49,6 +49,7 @@ const BondNic = ({
             <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" />
           </div>
         ))}
+        { import.meta.env.DEV && <pre>size:{nic.bondingVo?.slaveVos.length} {nic?.id}</pre> }
       </div>
       <Tooltip
         anchorSelect={`[data-tooltip-id="nic-tooltip-${nic.id}"]`}

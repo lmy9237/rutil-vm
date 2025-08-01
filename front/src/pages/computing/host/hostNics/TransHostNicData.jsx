@@ -126,6 +126,7 @@ export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = 
   };
 
   return {
+    id: "",
     name: "",
     optionVos: [{ name: "mode", value: 1 }], // 기본값
     editTarget: [
@@ -143,6 +144,7 @@ export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = 
  */
 export function getBondModalStateForEdit(bond) {
   return {
+    id: bond.id,
     name: bond.name,
     optionVos: bond.bondingVo?.optionVos ?? [],
     editTarget: {

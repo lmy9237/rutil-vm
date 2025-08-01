@@ -3,7 +3,6 @@ import {
   RVI16, 
   rvi16TriangleDown, 
   rvi16TriangleUp, 
-  rvi16TryRefresh, 
   RVI36, 
   rvi36Edit,
   status2Icon

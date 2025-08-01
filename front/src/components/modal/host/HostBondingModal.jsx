@@ -50,20 +50,20 @@ const HostBondingModal = ({
   };
 
   const filteredOptionList = editMode
-  ? optionList.filter(opt => ["1", "2", "3", "4"].includes(opt.value))
-  : optionList;
+    ? optionList.filter(opt => ["1", "2", "3", "4"].includes(opt.value))
+    : optionList;
 
   useEffect(() => {
     if (isOpen && editMode) {
+      const currentUserMode = (bondModalState.editTarget?.bondingVo?.optionVos || [])
+        .map(opt => `${opt.name}=${opt.value}`)
+        .join(" ");
+
       setModeOrigin(getModeValueFromOptions(bondModalState.optionVos));
-    }
-  }, [isOpen, editMode]);
-
-  useEffect(() => {
-    if (isOpen && editMode) {
       setBondModalState(prev => ({
         ...prev,
-        userMode: defineUserMode,
+        userMode: currentUserMode,
+        id: prev.id ?? bondModalState.editTarget?.id, // 누락 방지
       }));
     }
   }, [isOpen, editMode]);
@@ -83,25 +83,24 @@ const HostBondingModal = ({
       validationToast.fail(error);
       return;
     }
-    
     const currentMode = getModeValueFromOptions(bondModalState.optionVos);
-    const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
 
-    if (editMode) {     
+    if (editMode) {
       const updatedBond = {
-        // ...bondModalState.editTarget,
-        name: bondModalState.name,
+        ...bondModalState.editTarget,
         bondingVo: {
+          ...bondModalState.editTarget.bondingVo,
           optionVos:
             currentMode === modeOrigin
               ? parseUserMode(bondModalState.userMode)
               : [{ name: "mode", value: currentMode }],
-          slaveVos: nicArr.map(nic => ({ name: nic.name })),
         }
       };
 
-      onBondingCreated(updatedBond, nicArr);
-    }else {
+      onBondingCreated(updatedBond, [bondModalState.editTarget]);
+    }
+    else {
+      const nicArr = Array.isArray(bondModalState.editTarget) ? bondModalState.editTarget : [];
       Logger.debug(`HostBondingModal > handleOkClick ... nicArr: `, nicArr)
 
       const newBond = {
@@ -114,6 +113,9 @@ const HostBondingModal = ({
 
       onBondingCreated(newBond, nicArr);
     }
+      console.log("$nic ", bondModalState.id)
+      console.log("$slaveVos ", bondModalState.editTarget)
+      
     onClose();
   };
 
@@ -133,6 +135,16 @@ const HostBondingModal = ({
         onChange={handleInputChange(setBondModalState, "name", validationToast)}
         disabled={editMode}
       />
+      {import.meta.env.DEV && 
+        <>
+        <pre>id: {bondModalState.id}</pre>
+        <pre>getModeValueFromOptions(bondModalState.optionVos) {getModeValueFromOptions(bondModalState.optionVos)}</pre>
+        <pre>modeOrigin: {modeOrigin}</pre>
+        <pre>defineUserMode: {defineUserMode}</pre>
+        <pre>userMode: {bondModalState.userMode}</pre>
+        <pre>iued: {bondModalState.editTarget?.id}</pre>
+        </>
+      } 
       <LabelSelectOptions id="bonding_mode" label="본딩모드"
         value={getModeValueFromOptions(bondModalState.optionVos)}
         options={filteredOptionList}
@@ -151,15 +163,6 @@ const HostBondingModal = ({
         onChange={handleInputChange(setBondModalState, "userMode", validationToast)}
       />
       <br/>
-      {import.meta.env.DEV && 
-        <>
-        <span>getModeValueFromOptions(bondModalState.optionVos) {getModeValueFromOptions(bondModalState.optionVos)}</span><br/>
-        <span>modeOrigin: {modeOrigin}</span><br/>
-        <span>defineUserMode: {defineUserMode}</span><br/>
-        <span>userMode: {bondModalState.userMode}</span>
-        {/* <span>userMode: {bondModalState.editTarget}</span> */}
-        </>
-      } 
     </BaseModal>
   );
 };
