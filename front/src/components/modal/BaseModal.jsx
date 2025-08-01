@@ -83,7 +83,7 @@ const BaseModal = ({
             </>
           ) : (
             <>
-              <button className="action" onClick={onSubmit}>{Localization.kr.OK}</button>
+              <button className="action" onClick={onSubmit} disabled={!isReady}>{Localization.kr.OK}</button>
               <button className="cancel" onClick={onClose}>{Localization.kr.CANCEL}</button>
             </>
           )}

@@ -191,7 +191,7 @@ const JobFooter = ({
             </div> */}
             <TablesOuter target={"job"}
               columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
-              style={{ paddingLeft:'30px' }}
+              style={{ paddingLeft: '30px' }}
               data={filteredData}
               searchQuery={searchQuery} setSearchQuery={setSearchQuery}
               onRowClick={(row) => setJobsSelected(row)}

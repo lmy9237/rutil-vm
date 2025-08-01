@@ -1,6 +1,9 @@
 import { useQuery, useQueries, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { useApiToast }               from "@/hooks/useSimpleToast";
+import {
+  useApiToast,
+  useProgressToast,
+} from "@/hooks/useSimpleToast";
 import useAuth                       from "@/hooks/useAuth";
 import useUIState                    from "@/hooks/useUIState";
 import useGlobal                     from "@/hooks/useGlobal";
@@ -8,6 +11,8 @@ import ApiManager                    from "@/api/ApiManager";
 import { triggerDownload }           from "@/util";
 import Localization                  from "@/utils/Localization";
 import Logger                        from "@/utils/Logger";
+import { useState } from "react";
+import { set } from "react-hook-form";
 
 export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1 분
 export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; // 5분
@@ -103,6 +108,7 @@ const QK = {
   TEMPLATE_FROM_NETWORK: "templateFromNetwork",
   VNIC_PROFILES_FROM_NETWORK: "vnicProfilesFromNetwork",
   ALL_NETWORK_PROVIDERS: "allNetworkProviders",
+  ALL_NETWORKS_FROM_NETWORK_PROVIDER: "allNetworksFromNetworkProvider",
 
   ALL_VNICPROFILES: "allVnicProfiles",
   VNIC_ID: "vnicId",
@@ -2072,12 +2078,16 @@ export const useAddHost = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
+  const { progressToast } = useProgressToast();
+  const [isFinished, setIsFinished] = useState(false);
     return useMutation({
     mutationFn: async ({ hostData, deployHostedEngine }) => {
       closeModal();
+      progressToast.indefinite(`${Localization.kr.HOST} ${Localization.kr.CREATE} ${Localization.kr.IN_PROGRESS}`, isFinished)
       const res = await ApiManager.addHost(hostData, deployHostedEngine);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useLoginIscsiFromHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
+      Logger.debug(`RQHook > useAddHost ... deployHostedEngine: ${deployHostedEngine}, hostData: `, hostData);
+      setIsFinished(true); // 삭제완료 응답처리가 삭제됐음에도 불구하고 늦게 옴... 이건 좀 이상하긴한데
       return _res;
     },
     onSuccess: (res) => {
@@ -2142,10 +2152,13 @@ export const useDeleteHost = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-  const { clustersSelected } = useGlobal()
+  const { clustersSelected } = useGlobal();
+  const { progressToast } = useProgressToast();
+  const [isFinished, setIsFinished] = useState(false);
   return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
+      progressToast.indefinite(`${Localization.kr.HOST} ${Localization.kr.REMOVE} ${Localization.kr.IN_PROGRESS}`, isFinished)
       const res = await ApiManager.deleteHost(hostId)
       const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useDeleteHost ... hostId: ${hostId}`)
@@ -2154,6 +2167,7 @@ export const useDeleteHost = (
     onSuccess: (res, { hostId }) => {
       Logger.debug(`RQHook > useDeleteHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
+      setIsFinished(true); // 삭제완료 응답처리가 삭제됐음에도 불구하고 늦게 옴... 이건 좀 이상하긴한데
       invalidateQueriesWithDefault(queryClient, [QK.ISCSI_FROM_HOST, QK.ALL_HOSTS]);
       queryClient.invalidateQueries(QK.HOST, hostId)
       const clusterId = clustersSelected[0]?.id
@@ -3042,12 +3056,16 @@ export const useEditVm = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    return useMutation({
+  const { progressToast } = useProgressToast();
+  const [isFinished, setIsFinished] = useState(false);
+  return useMutation({
     mutationFn: async ({ vmId, vmData }) => {
       closeModal();
+      progressToast.indefinite(`${Localization.kr.VM} ${Localization.kr.UPDATE} ${Localization.kr.IN_PROGRESS}`, isFinished)
       const res = await ApiManager.editVM(vmId, vmData);
       const _res = validateAPI(res) ?? {}
       Logger.debug(`RQHook > useEditVm ... vmData: `, vmData);
+      setIsFinished(true)
       return _res;
     },
     onSuccess: (res, { vmId }) => {
@@ -4897,34 +4915,53 @@ export const useDeleteNetwork = (
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  */
-// export const useAllNetworkProviders = (
-//   mapPredicate = (e) => ({ ...e })
-// ) => useQuery({
-//   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-//   queryKey: [QK.ALL_NETWORK_PROVIDERS],
-//   queryFn: async () => {
-//     const res = await ApiManager.findAllNetworkProviders(); 
-//     const _res = mapPredicate
-//       ? validateAPI(res)?.map(mapPredicate) ?? []  //  validateAPI(res)?이 null -> .map실행안됨 출력x
-//       : validateAPI(res) ?? [];
-//     Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
-//     return _res;
-//   }
-// });
+export const useAllNetworkProviders = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  ...QP_DEFAULT,
+  queryKey: [QK.ALL_NETWORK_PROVIDERS],
+  queryFn: async () => {
+    const res = await ApiManager.findAllNetworkProviders(); 
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > useAllNetworkProviders ... res: `, _res);
+    return _res;
+  }
+});
+export const useAllNetworksFromNetworkProvider = (
+  providerId,
+  mapPredicate = (e) => ({ ...e }),
+  onError = (err)=> {},
+) => useQuery({
+  ...QP_DEFAULT,
+  queryKey: [QK.ALL_NETWORKS_FROM_NETWORK_PROVIDER],
+  queryFn: async () => {
+    const res = await ApiManager.findAllNetworksFromNetworkProvider(providerId); 
+    const _res = mapPredicate
+      ? validateAPI(res)?.map(mapPredicate) ?? []
+      : validateAPI(res) ?? [];
+    Logger.debug(`RQHook > useAllNetworksFromNetworkProvider ... res: `, _res);
+    return _res;
+  },
+  onError: onError,
+  enabled: !!providerId,
+});
 // TODO: 네트워크공급자가 일단 한건만 오는 API로 만들었는데 백엔드 설명에는 목록을 주는 걸로 돼있음.  왜 단일건으로 조회되게 만들었는지 확인필요
-  export const useAllNetworkProviders = (
-    mapPredicate = (e) => ({ ...e })
-  ) => useQuery({
-    refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-    queryKey: [QK.ALL_NETWORK_PROVIDERS],
-    queryFn: async () => {
-      const res = await ApiManager.findAllNetworkProviders();
-      const validated = validateAPI(res);  // 항상 배열로 변환됨 validateAPI(res)가 단일 객체여도 .map() 동작
-      const parsed = (Array.isArray(validated) ? validated : [validated]).map(mapPredicate);
-      return parsed;
-    }
-  });
-
+/* 
+export const useAllNetworkProviders = (
+  mapPredicate = (e) => ({ ...e })
+) => useQuery({
+  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  queryKey: [QK.ALL_NETWORK_PROVIDERS],
+  queryFn: async () => {
+    const res = await ApiManager.findAllNetworkProviders();
+    const validated = validateAPI(res);  // 항상 배열로 변환됨 validateAPI(res)가 단일 객체여도 .map() 동작
+    const parsed = (Array.isArray(validated) ? validated : [validated]).map(mapPredicate);
+    return parsed;
+  }
+});
+*/
 
 
 //#region: VnicProfiles (vNic 프로파일)
@@ -6344,12 +6381,14 @@ export const useDeleteDisk = (
   const { closeModal } = useUIState();
   const { domainsSelected } = useGlobal();
   const { apiToast } = useApiToast();
+  const { progressToast } = useProgressToast();
   const navigate = useNavigate();
   return useMutation({
     mutationFn: async (diskId) => {
       closeModal();
       const res = await ApiManager.deleteDisk(diskId);
       const _res = validateAPI(res) ?? {};
+      progressToast.indefinite(`${Localization.kr.DISK} ${Localization.kr.REMOVE} ${Localization.kr.IN_PROGRESS}`, !!_res)
       Logger.debug(`RQHook > useDeleteDisk ... diskId: ${diskId}`);
       return _res;
     },
@@ -7641,8 +7680,11 @@ export async function invalidateQueriesWithDefault(
 }
 
 export const validateAPI = (res) => {
-  if (res?.head?.code !== 200) {
-    throw new Error(`[${res?.head?.code ?? 500}] ${res?.head?.message ?? '알 수 없는 오류'}`);
+  if (
+    (res.status !== 200 && !!res.error && !!res?.message) ||
+    res?.head?.code !== 200
+  ) {
+    throw new Error(`[${res.status || res?.head?.code || 500}] ${res?.head?.message || res?.message || '알 수 없는 오류'}`);
   }
   return res?.body;
 }

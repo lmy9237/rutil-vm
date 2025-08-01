@@ -144,7 +144,7 @@ function toast({ ...props }: Toast & { id?: string }): {
       toast: { ...props, id },
     })
   
-const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
   const existingToast = memoryState.toasts.find(t => t.id === id);
   

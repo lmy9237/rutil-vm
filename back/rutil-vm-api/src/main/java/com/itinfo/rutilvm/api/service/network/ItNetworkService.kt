@@ -6,8 +6,8 @@ import com.itinfo.rutilvm.api.error.ItemNotFoundException
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromOpenStackNetworkProviderToIdentifiedVo
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.model.toIdentifiedVosFromOpenStackNetworkProviders
 import com.itinfo.rutilvm.api.ovirt.business.BondModeVo
 import com.itinfo.rutilvm.api.repository.engine.DnsResolverConfigurationRepository
 import com.itinfo.rutilvm.api.repository.engine.NameServerRepository
@@ -88,24 +88,23 @@ interface ItNetworkService {
 	 */
 	@Throws(Error::class)
 	fun remove(networkId: String): Boolean
-
 	/**
-	 * [ItNetworkService.findNetworkProviderFromNetwork]
+	 * [ItNetworkService.findAllNetworkProviders]
 	 * 네트워크 가져오기 - 네트워크 공급자 목록
 	 *
-	 * @return [IdentifiedVo]
+	 * @return List<[IdentifiedVo]>
 	 */
 	@Throws(Error::class)
-	fun findNetworkProviderFromNetwork(): IdentifiedVo
+	fun findAllNetworkProviders(): List<IdentifiedVo>
 	/**
-	 * [ItNetworkService.findAllOpenStackNetworkFromNetworkProvider]
+	 * [ItNetworkService.findAllOpenStackNetworksFromNetworkProvider]
 	 * 네트워크 가져오기 창 - 네트워크 공급자가 가지고있는 네트워크
 	 *
 	 * @param providerId [String] 공급자 Id
 	 * @return List<[OpenStackNetworkVo]>
 	 */
 	@Throws(Error::class)
-	fun findAllOpenStackNetworkFromNetworkProvider(providerId: String): List<OpenStackNetworkVo>
+	fun findAllOpenStackNetworksFromNetworkProvider(providerId: String): List<OpenStackNetworkVo>
 	/**
 	 * [ItNetworkService.findAllDataCentersFromNetwork]
 	 * 네트워크 가져올 때 사용될 데이터센터 목록
@@ -286,16 +285,20 @@ class NetworkServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun findNetworkProviderFromNetwork(): IdentifiedVo {
-		log.info("findNetworkProviderFromNetwork ... ")
-		val res: OpenStackNetworkProvider = conn.findAllOpenStackNetworkProviders().getOrDefault(emptyList()).first()
-		return res.fromOpenStackNetworkProviderToIdentifiedVo()
+	override fun findAllNetworkProviders(): List<IdentifiedVo> {
+		log.info("findAllNetworkProviders ... ")
+		val res: List<OpenStackNetworkProvider> =
+			conn.findAllOpenStackNetworkProviders()
+				.getOrDefault(emptyList())
+		return res.toIdentifiedVosFromOpenStackNetworkProviders()
 	}
 
 	@Throws(Error::class)
-	override fun findAllOpenStackNetworkFromNetworkProvider(providerId: String): List<OpenStackNetworkVo> {
+	override fun findAllOpenStackNetworksFromNetworkProvider(providerId: String): List<OpenStackNetworkVo> {
 		log.info("findAllOpenStackNetworkFromNetworkProvider ... providerId: {}", providerId)
-		val res: List<OpenStackNetwork> = conn.findAllOpenStackNetworksFromNetworkProvider(providerId).getOrDefault(emptyList())
+		val res: List<OpenStackNetwork> =
+			conn.findAllOpenStackNetworksFromNetworkProvider(providerId)
+				.getOrDefault(emptyList())
 		return res.toOpenStackNetworkVosIdName()
 	}
 

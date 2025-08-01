@@ -1,16 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import useClickOutside from "../../hooks/useClickOutside";
-import useContextMenu from "../../hooks/useContextMenu";
-import TableRowLoading from "./TableRowLoading";
-import TableRowNoData from "./TableRowNoData";
-import PagingButton from "./PagingButton";
-import Logger from "../../utils/Logger";
-import CONSTANT from "../../Constants";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import "./Table.css";
-import TableHeaderRow from "./TableHeaderRow";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -19,6 +10,19 @@ import {
   ContextMenuSeparator
 } from "@radix-ui/react-context-menu"; // 또는 커스텀 래퍼
 import contextActionButtonMap from "@/context/contextActionButtonMap";
+import CONSTANT                         from "@/Constants";
+import useClickOutside                  from "@/hooks/useClickOutside";
+import useContextMenu                   from "@/hooks/useContextMenu";
+import useGlobal                        from "@/hooks/useGlobal";
+import TableHeaderRow                   from "./TableHeaderRow";
+import {
+  TableRowLoading, 
+  TableRowNoData,
+  TableRowError
+} from "./TableRow";
+import PagingButton                     from "./PagingButton";
+import Logger                           from "@/utils/Logger";
+import "./Table.css";
 
 /**
  * @name Tables
@@ -378,7 +382,9 @@ const Tables = ({
     } else if (isRefetching || isLoading) {
       // 최초가 아닌 refetch 상황이면 로딩 띄우지 않음(이상함 수정필요)
       return <TableRowLoading colLen={columns.length} />;
-    }else if (!isLoading && isSuccess) {
+    } else if (!!isError) { 
+      return <TableRowError colLen={columns.length} />
+    } else if (!!isSuccess) {
       // 데이터 가져오기 성공 후
       // Logger.debug(`Tables > renderTableBody ... isLoading: ${isLoading}, isSuccess: ${isSuccess}`)
       return sortedData.length === 0 ? (

@@ -192,7 +192,7 @@ const ClusterModal = ({
         value={dataCenterVo.id}
         disabled={editMode && !!dataCenterVo.id}
         loading={isDatacentersLoading}
-        options={datacenters}
+        options={[...datacenters]}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />
       <LabelInput id="name" label={Localization.kr.NAME}

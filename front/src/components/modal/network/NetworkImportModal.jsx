@@ -1,26 +1,59 @@
 import React, { useEffect, useState } from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import BaseModal from "../BaseModal";
-import Localization from "../../../utils/Localization";
-import TablesOuter from "../../table/TablesOuter";
-import { RVI24, rvi24ChevronDown, rvi24ChevronUp, rvi24DownArrow } from "../../icons/RutilVmIcons";
-import { useAllNetworkProviders } from "../../../api/RQHook";
+import { useValidationToast }           from "@/hooks/useSimpleToast";
+import useGlobal                        from "@/hooks/useGlobal";
+import BaseModal                        from "@/components/modal/BaseModal";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
+import {
+  handleInputChange, 
+  handleSelectIdChange,
+} from "@/components/label/HandleInput";
+import { 
+  RVI24, 
+  rvi24ChevronDown, 
+  rvi24ChevronUp, 
+  rvi24DownArrow
+} from "@/components/icons/RutilVmIcons";
+import {
+  useAllNetworkProviders,
+  useAllNetworksFromNetworkProvider,
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 import "./MNetwork.css";
-import LabelSelectOptionsID from "@/components/label/LabelSelectOptionsID";
 
 const NetworkImportModal = ({
   isOpen,
   onClose,
   onSubmit 
 }) => {
+  const { validationToast } = useValidationToast();
   const {
     networkProvidersSelected, setNetworkProvidersSelected
   } = useGlobal()
+  const [networkProviderVo, setNetworkProviderVo] = useState({ id: "", name: "" })
+
   const {
-    data: networkProvider = [] ,
-    isLoading: isDatacentersLoading,
-    isSuccess: isDatacentersSuccess
-  } = useAllNetworkProviders();
+    data: networkProviders = [] ,
+    isLoading: isNetworkProvidersLoading,
+    isSuccess: isNetworkProvidersSuccess
+  } = useAllNetworkProviders((e) => ({ ...e }));
+
+  const transformedNetworkProviders = [...networkProviders].filter(np => !!np?.id).map((np) => ({
+    ...np
+  }));
+
+  const {
+    data: providerNetworks = [],
+    isLoading: isProviderNetworksLoading,
+    isSuccess: isProviderNetworksSuccess,
+    isRefetching: isProviderNetworksRefetching,
+    isError: isProviderNetworksError,
+  } = useAllNetworksFromNetworkProvider(networkProviderVo?.id, (e) => ({ 
+    ...e
+  }), (err) => {
+    Logger.err(`NetworkImportModal > useAllNetworksFromNetworkProvider ... Error Fetching!`)
+    throw err
+  });
 
   // 임시 컬럼
   const providerNetworkColumns = [
@@ -128,59 +161,68 @@ const NetworkImportModal = ({
       ),
     },
   ];
-  // 임시 데이터(적용x)
-  const [providerNetworks, setProviderNetworks] = useState([
-    { id: "provider_1", name: "공급자 네트워크 A", networkId: "PROV-NET-001", selected: false },
-  ]);
+
   const [networkList, setNetworkList] = useState([
-    {
+    /* {
       id: "network_1",
       name: "서울 VM 네트워크",
       networkId: "IM-NET-101",
       dataCenter: "DC-Seoul",
       allowAll: false,
       selected: false,
-    },
-    {
+    }, {
       id: "network_2",
       name: "부산 DB 네트워크",
       networkId: "IM-NET-102",
       dataCenter: "DC-Busan",
       allowAll: true,
       selected: true,
-    },
-    {
+    }, {
       id: "network_3",
       name: "테스트 백업망",
       networkId: "IM-NET-103",
       dataCenter: "DC-Test",
       allowAll: false,
       selected: false,
-    },
+    }, */
   ]);
 
+  useEffect(() => {
+    if (networkProviders.length > 0) {
+      setNetworkProvidersSelected(networkProviders[0])
+      setNetworkProviderVo((prev) => ({ 
+        ...prev, 
+        id: networkProviders[0]?.id || "",
+        name: networkProviders[0]?.name || "",
+      }))
+    }
+  }, [networkProviders])
+  
   return (
     <BaseModal targetName={Localization.kr.NETWORK} submitTitle={Localization.kr.IMPORT}
       isOpen={isOpen} onClose={onClose}
       onSubmit={onSubmit}
-      isReady={import.meta.env.DEV || (!isDatacentersLoading && isDatacentersSuccess)}
+      isReady={!isNetworkProvidersLoading && isNetworkProvidersSuccess}
       contentStyle={{ width: "880px" }} 
     >
       {/* 네트워크 공급자 목록 */}
-      <LabelSelectOptionsID
-        label={Localization.kr.NETWORK_PROVIDER}
-        value={networkProvider?.[0]?.id}
-        disabled={isDatacentersLoading}
-        loading={isDatacentersLoading}
-        options={Array.isArray(networkProvider) ? networkProvider : [networkProvider]}
+      <LabelSelectOptionsID label={Localization.kr.NETWORK_PROVIDER} value={networkProviderVo.id}
+        disabled={isNetworkProvidersLoading}
+        loading={isNetworkProvidersLoading}
+        options={[...transformedNetworkProviders]}
+        onChange={handleSelectIdChange(setNetworkProviderVo, networkProviders, validationToast)}
       />
       {/* 공급자 네트워크 테이블 */}
       <div className="network-bring-table-outer">
         <h1 className="font-bold fs-14 mb-3">공급자 네트워크</h1>
-        <TablesOuter
-          target={"providerNetwork"}
+        <TablesOuter target={"providerNetwork"}
           columns={providerNetworkColumns}
           data={providerNetworks}
+          onRowClick={(selectedRows) => {
+            /* if (activeModal().length > 0 || activeModal().includes("vm:migration")) return
+            setVmsSelected(selectedRows) */
+          }}
+          isRefetching={isProviderNetworksRefetching} isLoading={isProviderNetworksLoading} isError={isProviderNetworksError} isSuccess={isProviderNetworksSuccess}
         />
       </div>
 

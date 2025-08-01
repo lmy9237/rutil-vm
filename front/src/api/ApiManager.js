@@ -2364,22 +2364,22 @@ const ApiManager = {
    */
   findAllNetworkProviders : async () => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_NETWORK_PROVIDERS(),
-    // defaultValues: DEFAULT_VALUES.FIND_NETWORK_PROVIDERS
+    url: ENDPOINTS.FIND_ALL_NETWORK_PROVIDERS(),
+    // defaultValues: DEFAULT_VALUES.FIND_ALL_NETWORK_PROVIDERS
   }),
   /**
-   * @name ApiManager.findAllNetworkFromProvider
-   * @description 네트워크 목록
+   * @name ApiManager.findAllNetworksFromNetworkProvider
+   * @description 네트워크 공급자의 네트워크 목록
    *
    * @param {string} providerId
    * @returns 
    * 
    * @see
    */
-  findAllNetworkFromProvider : async (providerId) => makeAPICall({
+  findAllNetworksFromNetworkProvider : async (providerId) => makeAPICall({
     method: "GET", 
-    url: ENDPOINTS.FIND_NETWORKS_FROM_PROVIDERS(providerId),
-    // defaultValues: DEFAULT_VALUES.FIND_NETWORKS_FROM_PROVIDERS
+    url: ENDPOINTS.FIND_NETWORKS_FROM_NETWORK_PROVIDER(providerId),
+    // defaultValues: DEFAULT_VALUES.FIND_NETWORKS_FROM_NETWORK_PROVIDER
   }),
   /**
    * @name ApiManager.findAllDatacentersFromNetwork

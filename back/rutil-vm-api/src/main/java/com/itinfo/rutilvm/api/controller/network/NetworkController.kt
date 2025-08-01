@@ -165,46 +165,6 @@ class NetworkController: BaseController() {
 //		return ResponseEntity.ok(iNetwork.removeMultiple(networkIdList))
 //	}
 
-
-	@ApiOperation(
-		httpMethod="GET",
-		value="네트워크 가져오기 창",
-		notes="네트워크 가져오기 창 - 네트워크 공급자 목록을 가져온다"
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/import/settings")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun importProviders(): ResponseEntity<IdentifiedVo?> {
-		log.info("/networks/import/settings ... 네트워크 가져오기 창")
-		return ResponseEntity.ok(iNetwork.findNetworkProviderFromNetwork())
-	}
-
-	@ApiOperation(
-		httpMethod="GET",
-		value="네트워크 가져오기 창",
-		notes="네트워크 가져오기 창 - 네트워크 공급자가 가지고 있는 네트워크 목록을 가져온다"
-	)
-	@ApiImplicitParams(
-		ApiImplicitParam(name="providerId", value="공급자 ID", dataTypeClass=String::class, required=true, paramType="path"),
-	)
-	@ApiResponses(
-		ApiResponse(code = 200, message = "OK")
-	)
-	@GetMapping("/import/settings/{providerId}")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	fun providers(
-		@PathVariable providerId: String? = null
-	): ResponseEntity<List<OpenStackNetworkVo?>> {
-		if (providerId.isNullOrEmpty())
-			throw ErrorPattern.NETWORK_NOT_FOUND.toException()
-		log.info("/networks/import/setting/{} ... 네트워크 가져오기 창", providerId)
-		return ResponseEntity.ok(iNetwork.findAllOpenStackNetworkFromNetworkProvider(providerId))
-	}
-
 	@ApiOperation(
 		httpMethod="GET",
 		value="네트워크 가져오기 창",
@@ -483,5 +443,4 @@ class NetworkController: BaseController() {
 	companion object {
 		private val log by LoggerDelegate()
 	}
-
 }

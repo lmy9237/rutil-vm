@@ -40,10 +40,6 @@ const DiskDupl = ({
     diskProfilesSelected, setDiskProfilesSelected,
   } = useGlobal()
     
-  const diskIds = useMemo(() => (
-    [...disks].map((d) => d.id)
-  ), [disks]);
-
   const {
     data: diskContentTypes = [],
     isLoading: isDiskContentTypesLoading
@@ -106,7 +102,6 @@ const DiskDupl = ({
   const {
     searchQuery, setSearchQuery, 
     filterType, setFilterType,
-    filteredData
   } = useSearch(transformedData, "contentType");
 
   const handleNameClick = useCallback((id) => {
@@ -150,9 +145,9 @@ const DiskDupl = ({
         />
       </div>
       <TablesOuter target={"disk"} columns={columns}
-        data={filteredData}
+        data={transformedData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        /*shouldHighlight1stCol={true}*/
+        filterType={filterType} setFilterType={setFilterType}
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return
           setDisksSelected(selectedRows)

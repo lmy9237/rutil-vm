@@ -103,7 +103,7 @@ const ClusterInfo = () => {
     navigate(path);
     setTabInPage("/computing/clusters", tab);
     setActiveTab(tab);
-  }, []);
+  }, [clusterId]);
 
   return (
     <SectionLayout>

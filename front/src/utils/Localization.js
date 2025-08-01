@@ -181,7 +181,8 @@ export const Localization = {
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
     PLACEHOLDER_USERNAME: "사용자명",
     PLACEHOLDER_PASSWORD: "암호",
-    NO_INFO: "🤷‍♂️ 내용이 없습니다",
+    NO_INFO: "🤷‍♂️ 조회 결과가 없습니다.",
+    UNABLE_TO_FETCH: "💔 조회에 실패하였습니다. 이유 API 오류",
     
     TITLE_API_FETCH: "API 조회",
     REFETCH_IN_PROGRESS: "다시 조회 중 ...",

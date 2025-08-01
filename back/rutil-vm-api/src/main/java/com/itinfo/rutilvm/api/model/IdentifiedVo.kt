@@ -118,13 +118,13 @@ fun VnicProfile.fromVnicProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.bui
 fun List<VnicProfile>.fromVnicProfilesToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromVnicProfilesToIdentifiedVos.map { it.fromVnicProfileToIdentifiedVo() }
 
-fun OpenStackNetworkProvider.fromOpenStackNetworkProviderToIdentifiedVo() = IdentifiedVo.builder {
+fun OpenStackNetworkProvider.toIdentifiedVoFromOpenStackNetworkProvider() = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
 
-fun List<OpenStackNetworkProvider>.fromOpenStackNetworkProviderToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromOpenStackNetworkProviderToIdentifiedVos.map { it.fromOpenStackNetworkProviderToIdentifiedVo() }
+fun List<OpenStackNetworkProvider>.toIdentifiedVosFromOpenStackNetworkProviders(): List<IdentifiedVo> =
+	this@toIdentifiedVosFromOpenStackNetworkProviders.map { it.toIdentifiedVoFromOpenStackNetworkProvider() }
 
 fun CpuProfile.fromCpuProfileToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }

@@ -45,11 +45,11 @@ fun Connection.findOpenStackNetworkProviderFirst(): Result<OpenStackNetworkProvi
 	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "상세조회") else it
 }
 
-fun Connection.findOpenStackProviderFirstId(): String =
+fun Connection.findOpenStackNetworkProviderFirstId(): String =
 	systemService.openstackNetworkProvidersService().list().send().providers().first().id()
 
 fun Connection.srvOpenStackNetwork(openstackNetworkId: String): OpenstackNetworkService =
-	systemService.openstackNetworkProvidersService().providerService(this.findOpenStackProviderFirstId()).networksService().networkService(openstackNetworkId)
+	systemService.openstackNetworkProvidersService().providerService(this.findOpenStackNetworkProviderFirstId()).networksService().networkService(openstackNetworkId)
 
 fun Connection.importOpenStackNetwork(openstackNetworkId: String, dataCenterId: String): Result<Boolean> = runCatching {
 	this.srvOpenStackNetwork(openstackNetworkId).import_().dataCenter(DataCenterBuilder().id(dataCenterId).build()).send()
@@ -61,7 +61,6 @@ fun Connection.importOpenStackNetwork(openstackNetworkId: String, dataCenterId: 
 	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "가져오기", openstackNetworkId) else it
 }
 
-
 fun Connection.findOpenStackNetworkProvider(networkProviderId: String): Result<OpenStackNetworkProvider> = runCatching {
 	this.srvOpenStackNetworkProvider(networkProviderId).get().send().provider()
 }.onSuccess {
@@ -71,24 +70,30 @@ fun Connection.findOpenStackNetworkProvider(networkProviderId: String): Result<O
 	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "상세조회", networkProviderId) else it
 }
 
-
 fun Connection.findAllOpenStackNetworksFromNetworkProvider(networkProviderId: String): Result<List<OpenStackNetwork>> = runCatching {
 	if (this.findOpenStackNetworkProvider(networkProviderId).isFailure) {
-		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
+		throw ErrorPattern.NETWORK_PROVIDER_NOT_FOUND.toError()
 	}
-	this.srvOpenStackNetworkProvider(networkProviderId).networksService().list().send().networks()
+	this.srvOpenStackNetworkProvider(networkProviderId).networksService()
+		.list()
+		.send()
+		.networks()
 }.onSuccess {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccessWithin(Term.EXTERNAL_NETWORK_PROVIDER, "목록조회")
+	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccessWithin(Term.NETWORK, "목록조회")
 }.onFailure {
-	Term.OPEN_STACK_NETWORK_PROVIDER.logFailWithin(Term.EXTERNAL_NETWORK_PROVIDER, "목록조회", it)
-	throw if (it is Error) it.toItCloudException(Term.OPEN_STACK_NETWORK_PROVIDER, "목록조회", networkProviderId) else it
+	Term.OPEN_STACK_NETWORK_PROVIDER.logFailWithin(Term.NETWORK, "목록조회", it)
+	throw if (it is Error) it.toItCloudExceptionWithin(Term.OPEN_STACK_NETWORK_PROVIDER, Term.NETWORK, "목록조회", networkProviderId) else it
+	// NOTE: 아직 네트워크 목록을 가져오는 사례를 보지 못함.
 }
 
 fun Connection.findOpenStackNetworkFromNetworkProvider(networkProviderId: String, openstackNetworkId: String): Result<OpenStackNetwork> = runCatching {
-	if(this.findOpenStackNetworkProvider(networkProviderId).isFailure){
+	if (this.findOpenStackNetworkProvider(networkProviderId).isFailure) {
 		throw ErrorPattern.NETWORK_NOT_FOUND.toError()
 	}
-	this.srvOpenStackNetworkProvider(networkProviderId).networksService().networkService(openstackNetworkId).get().send().network()
+	this.srvOpenStackNetworkProvider(networkProviderId).networksService().networkService(openstackNetworkId)
+		.get()
+		.send()
+		.network()
 }.onSuccess {
 	Term.OPEN_STACK_NETWORK_PROVIDER.logSuccess("상세조회")
 }.onFailure {

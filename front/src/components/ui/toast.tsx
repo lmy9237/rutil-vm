@@ -1,8 +1,20 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
+import { CheckCircle2, AlertCircle, AlertTriangle, XCircle } from "lucide-react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import Spinner                from "@/components/common/Spinner";
+
+type ToastVariant = VariantProps<typeof toastVariants>["variant"];
+
+const ToastContext = React.createContext<{ variant: ToastVariant }>({
+  variant: "default",
+});
+
+const useToastVariant = () => {
+  return React.useContext(ToastContext);
+};
 
 const ToastProvider = ToastPrimitives.Provider
 
@@ -51,11 +63,14 @@ const Toast = React.forwardRef<
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
   return (
-    <ToastPrimitives.Root
-      ref={ref}
-      className={cn(toastVariants({ variant }), className)}
-      {...props}
-    />
+    
+    <ToastContext.Provider value={{ variant: variant || "default" }}>
+      <ToastPrimitives.Root
+        ref={ref}
+        className={cn(toastVariants({ variant }), className)}
+        {...props}
+      />
+    </ToastContext.Provider>
   )
 })
 Toast.displayName = ToastPrimitives.Root.displayName
@@ -114,13 +129,38 @@ ToastClose.displayName = ToastPrimitives.Close.displayName
 const ToastTitle = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Title>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Title>
->(({ className, ...props }, ref) => (
-  <ToastPrimitives.Title
-    ref={ref}
-    className={cn("text-sm font-semibold", className)} // Removed [&+div]:text-xs to give more control to description
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const { variant } = useToastVariant(); // MODIFIED: Consuming context
+
+  // Define the icons for each variant.
+  // We use a typed object for better autocompletion and type-safety.
+  const variantIcons: { [key in NonNullable<VariantProps<typeof toastVariants>['variant']>]: React.ElementType } = {
+    default: Spinner,
+    success: CheckCircle2,
+    info: AlertCircle,
+    warning: AlertTriangle,
+    destructive: XCircle,
+  };
+
+  // Look up the icon component based on the variant prop.
+  const IconComponent = variant ? variantIcons[variant] : null;
+
+  return (
+    <div className="flex items-center gap-x-2">
+      {IconComponent && <IconComponent className="h-5 w-5 shrink-0" />}
+      <ToastPrimitives.Title
+        ref={ref}
+        className={cn("text-sm font-semibold", className)}
+        {...props}
+      />
+      {/* <ToastPrimitives.Title
+      ref={ref}
+      className={cn("text-sm font-semibold", className)} // Removed [&+div]:text-xs to give more control to description
+      {...props}
+    /> */}
+    </div>
+  )
+})
 ToastTitle.displayName = ToastPrimitives.Title.displayName
 
 const ToastDescription = React.forwardRef<

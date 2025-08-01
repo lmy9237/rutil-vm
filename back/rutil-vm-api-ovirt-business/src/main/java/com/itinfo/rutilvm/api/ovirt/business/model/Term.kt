@@ -17,6 +17,7 @@ enum class Term(
 	DISK_SNAPSHOT("디스크 스냅샷"),
 	IMAGE_TRANSFER("이미지 업로드"),
 	NETWORK("네트워크"),
+	NETWORK_PROVIDER("네트워크 공급자"),
 	NETWORK_LABEL("네트워크 레이블"),
 	NETWORK_ATTACHMENT("네트워크 결합"),
 	NETWORK_FILTER("네트워크 필터"),
@@ -83,7 +84,7 @@ enum class Term(
 	fun toStrongMessageWithin(withinTerm: Term, action: String, t: Throwable?=null, targetId: String?="", withinTarget: String?=""): String {
 		var target: String = if (targetId?.isEmpty() == false) " ($targetId" else ""
 		target += if (withinTarget?.isEmpty() == false) ":$withinTarget) " else ") "
-		return "${withinTerm.description} 내 ${this@Term.description} $action$target${if (t == null) "성공!" else "실패 ... 이유: "}${t?.stackTraceToString()}"
+		return "${this@Term.description} 내 ${withinTerm.description} $action$target${if (t == null) "성공!" else "실패 ... 이유: "}${t?.stackTraceToString()}"
 	}
 
 }

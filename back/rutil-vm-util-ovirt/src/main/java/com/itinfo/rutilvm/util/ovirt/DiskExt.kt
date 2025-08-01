@@ -246,7 +246,7 @@ private fun Connection.preparedImageTransfer(
 			}
 			else -> ImageTransferContainer().apply {
 				direction(direction)
-				timeoutPolicy(ImageTransferTimeoutPolicy.CANCEL)
+				timeoutPolicy(ImageTransferTimeoutPolicy.LEGACY)
 				inactivityTimeout(180L.toBigInteger())
 				image(ImageContainer().apply { id(diskId) })
 			}

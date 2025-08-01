@@ -28,7 +28,8 @@ export const useApiToast = () => {
       Logger.debug(`useApiToast > apiToast.refetch ... description: ${description}`);
       toast({
         title: Localization.kr.TITLE_API_FETCH,
-        description: description || "..."
+        description: description || "...",
+        duration: 1200,
       })
     },
     /**
@@ -40,11 +41,12 @@ export const useApiToast = () => {
     ok: (
       description=""
     ) => {
-      Logger.debug(`useApiToast > apiToast.ok ... description: ${description}`);
-      import.meta.env.DEV && toast({ // 개발 모드일 때만 이 Toast가 활성화
+      Logger.debug(`useApiToast > apiToast.ok . .. description: ${description}`);
+      toast({ // 개발 모드일 때만 이 Toast가 활성화
         variant: "success",
         title: Localization.kr.TITLE_API_SUCCESS,
-        description: description || "..."
+        description: description || "...",
+        duration: 2000,
       })
     },
     /**
@@ -60,7 +62,8 @@ export const useApiToast = () => {
       import.meta.env.DEV && toast({ // 개발 모드일 때만 이 Toast가 활성화
         variant: "destructive",
         title: Localization.kr.TITLE_API_ERROR,
-        description: message || "..."
+        description: message || "...",
+        duration: 2000,
       })
     }
   }
@@ -76,6 +79,17 @@ export const useProgressToast = () => {
   } = useGlobal()
 
   const progressToast = {
+    indefinite: (title, shouldEnd) => {
+      Logger.debug(`useProgressToast > progressToast.indeifinite ... ${title}`);
+      toast({
+        title: title,
+        description: "기다리는 중 ...", 
+        // duration: shouldEnd ? 300 : Infinity,
+        update: () => ({
+          duration: shouldEnd ? 300 : Infinity,
+        })
+      })
+    },
     in: (title, progress=0, loaded=0, total=0) => {
       /* if ([...fileUploadQueue].length == 0)
         newFileUploadQueue()
@@ -96,18 +110,18 @@ export const useProgressToast = () => {
         }
       } */
       
-      Logger.debug(`useProgressToast > validationToast.in ... progress: ${progress}`);
+      Logger.debug(`useProgressToast > progressToast.in ... progress: ${progress}`);
       const ratio = `(${loaded} MB / ${total} MB)`
       toast({
         id: 1,
-        title: title || `파일 ${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS}`,
-        description: `${Localization.kr.UPLOAD} ${Localization.kr.IN_PROGRESS} ${progress}% (창을 새로고침 하지 마세요.)\n\n${ratio}`,
+        title: title || `디스크이미지 ${Localization.kr.UPLOAD} 준비 ${Localization.kr.IN_PROGRESS}`,
+        description: `${progress}% 완료 (${ratio})\n\n 창을 새로고침 하지 마세요.`,
         update: () => ({
-          duration: (progress === 100) ? 1 : Infinity
+          duration: (progress >= 99) ? 1 : Infinity
         }),
         duration: Infinity,
       });
-      if (progress == 100) {
+      if (progress >= 99) {
         popFileUploadQueue()
         dismiss()
       }

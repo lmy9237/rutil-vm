@@ -69,7 +69,7 @@ const DiskUploadModal = ({
   } = useUploadDisk((progress, loaded, total) => {
     const loadedInMB = (loaded / (1024 * 1024)).toFixed(2)
     const totalInMB = (total / (1024 * 1024)).toFixed(2)
-    progressToast.in(`${Localization.kr.DISK} ${Localization.kr.UPLOAD} 준비중 ... `, progress, loadedInMB, totalInMB)
+    progressToast.in(`디스크이미지 ${Localization.kr.UPLOAD} 준비 ${Localization.kr.IN_PROGRESS}`, progress, loadedInMB, totalInMB)
   });
 
   // 전체 데이터센터 가져오기
@@ -125,7 +125,7 @@ const DiskUploadModal = ({
   useEffect(() => {
     if (domainsSelected.length > 0) {
       setDomainVo({ id: domainsSelected[0]?.id || "" });
-    } else {
+    } else if ([...domains].length > 0) {
       setDomainVo({ id: domains[0].id || "" });
     }
   }, [domains, domainsSelected]);

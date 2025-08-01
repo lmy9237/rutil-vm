@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import useGlobal              from "@/hooks/useGlobal";
 import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
 import VmDiskDupl             from "@/components/dupl/VmDiskDupl";
@@ -6,7 +7,6 @@ import {
   useAllSnapshotsFromVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import { useMemo } from "react";
 import Loading from "@/components/common/Loading";
 
 /**

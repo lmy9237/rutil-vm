@@ -231,14 +231,17 @@ const ENDPOINTS = {
   ADD_NETWORK: () =>                                                       `${ENDPOINT_API_V1}/networks`,
   EDIT_NETWORK: (networkId) =>                                             `${ENDPOINT_API_V1}/networks/${networkId}`,
   DELETE_NETWORK: (networkId) =>                                           `${ENDPOINT_API_V1}/networks/${networkId}`,
-  FIND_NETWORK_PROVIDERS: () =>                                            `${ENDPOINT_API_V1}/networks/import/settings`,
-  FIND_NETWORKS_FROM_PROVIDERS: (providerId) =>                            `${ENDPOINT_API_V1}/networks/import/settings/${providerId}`,
   FIND_DATA_CENTERS_FROM_NETWORK: (openstackNetworkId) =>                  `${ENDPOINT_API_V1}/networks/import/datacenters/${openstackNetworkId}`,
   IMPORT_NETWORK: () =>                                                    `${ENDPOINT_API_V1}/networks/import`,
   
   FIND_VNIC_PROFILES_FROM_NETWORK: (networkId) =>                          `${ENDPOINT_API_V1}/networks/${networkId}/vnicProfiles`,
   FIND_ALL_NETWORK_FILTERS: () =>                                          `${ENDPOINT_API_V1}/networks/networkFilters`,
   //#endregion: Network
+
+  //#region: Network Provider
+  FIND_ALL_NETWORK_PROVIDERS: () =>                                        `${ENDPOINT_API_V1}/networkproviders/`,
+  FIND_NETWORKS_FROM_NETWORK_PROVIDER: (providerId) =>                     `${ENDPOINT_API_V1}/networkproviders/${providerId}`,
+  //#endregion: Network Provider
 
   //#region: VnicProfile
   FIND_ALL_VNIC_PROFILES: () =>                                            `${ENDPOINT_API_V1}/vnicProfiles`,
