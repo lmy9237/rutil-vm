@@ -92,5 +92,6 @@ AND v.vmGuid = :vmId
 """)
 	fun findByIdWithSnapshots(vmId: UUID?): VmEntity?
 
+	fun findByVmGuid(vmId: UUID?): VmEntity?
 }
 

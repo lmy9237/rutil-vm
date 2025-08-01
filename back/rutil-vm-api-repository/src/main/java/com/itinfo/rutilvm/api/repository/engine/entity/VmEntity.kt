@@ -329,8 +329,8 @@ class VmEntity(
 		updatable=false
 	)
 	val largeIcon: VmIconEntity? = null,
-	val lastStartTime: LocalDateTime? = LocalDateTime.now(),
-	val lastStopTime: LocalDateTime? = LocalDateTime.now(),
+	val lastStartTime: LocalDateTime?,
+	val lastStopTime: LocalDateTime?,
 	val lastWatchdogAction: String = "",
 	val lastWatchdogEvent: BigInteger? = BigInteger.ZERO,
 	val leaseInfo: String = "",
@@ -623,8 +623,8 @@ class VmEntity(
 		private var bKernelParams: String = ""; fun kernelParams(block: () -> String?) { bKernelParams = block() ?: "" }
 		private var bKernelUrl: String = ""; fun kernelUrl(block: () -> String?) { bKernelUrl = block() ?: "" }
 		private var bLargeIcon: VmIconEntity? = null; fun largeIcon(block: () -> VmIconEntity?) { bLargeIcon = block() }
-		private var bLastStartTime: LocalDateTime = LocalDateTime.MIN; fun lastStartTime(block: () -> LocalDateTime?) { bLastStartTime = block() ?: LocalDateTime.MIN }
-		private var bLastStopTime: LocalDateTime = LocalDateTime.MIN; fun lastStopTime(block: () -> LocalDateTime?) { bLastStopTime = block() ?: LocalDateTime.MIN }
+		private var bLastStartTime: LocalDateTime? = null; fun lastStartTime(block: () -> LocalDateTime?) { bLastStartTime = block() }
+		private var bLastStopTime: LocalDateTime? = null; fun lastStopTime(block: () -> LocalDateTime?) { bLastStopTime = block() }
 		private var bLastWatchdogAction: String = ""; fun lastWatchdogAction(block: () -> String?) { bLastWatchdogAction = block() ?: "" }
 		private var bLastWatchdogEvent: BigInteger = BigInteger.ZERO; fun lastWatchdogEvent(block: () -> BigInteger?) { bLastWatchdogEvent = block() ?: BigInteger.ZERO }
 		private var bLeaseInfo: String = ""; fun leaseInfo(block: () -> String?) { bLeaseInfo = block() ?: "" }

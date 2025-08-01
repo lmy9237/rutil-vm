@@ -17,7 +17,7 @@ import com.itinfo.rutilvm.api.repository.engine.entity.AllDiskEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StorageDomainEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.StoragePoolEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
-import com.itinfo.rutilvm.api.repository.engine.entity.toDataCenterVos
+import com.itinfo.rutilvm.api.repository.engine.entity.toDataCenterVo
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toStorageDomainVosFromStorageDomainEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
@@ -224,7 +224,11 @@ class DataCenterServiceImpl(
 		log.info("findAll ... ")
 		// val res: List<DataCenter> = conn.findAllDataCenters(follow = "clusters").getOrDefault(emptyList())
 		val storagePools: List<StoragePoolEntity> = rStoragePools.findAllWithClusters()
-		return storagePools.toDataCenterVos()
+
+		return storagePools.map { sp ->
+			val hostSize = conn.findAllHostsFromDataCenter(sp.id.toString()).getOrDefault(listOf()).size
+			sp.toDataCenterVo(hostSize)
+		}
 	}
 
 	@Throws(Error::class)

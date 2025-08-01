@@ -76,7 +76,7 @@ const DomainModal = ({
   } = useAllDataCentersWithHosts((e) => ({ ...e }));
 
   const {
-    data: hosts = [],
+    data: hostsRaw = [],
     isLoading: isHostsLoading 
   } = useHostsFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
@@ -104,6 +104,10 @@ const DomainModal = ({
     ];
   }, [domains]);
 
+  const hosts = useMemo(
+    () => hostsRaw.filter(h => h.status === "up"),
+    [hostsRaw]
+  );
   
   useEffect(() => {
     if (!editMode && isOpen) {

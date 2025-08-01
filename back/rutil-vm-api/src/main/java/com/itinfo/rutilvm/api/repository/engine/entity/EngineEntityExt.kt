@@ -233,7 +233,7 @@ fun List<EngineSessionsEntity>.toUserSessionVos(): List<UserSessionVo> =
 
 
 //region: StoragePoolEntity
-fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
+fun StoragePoolEntity.toDataCenterVo(hostSize: Int): DataCenterVo = DataCenterVo.builder {
 	id { this@toDataCenterVo.id.toString() }
 	name { this@toDataCenterVo.name }
 	comment { this@toDataCenterVo.freeTextComment }
@@ -245,12 +245,13 @@ fun StoragePoolEntity.toDataCenterVo(): DataCenterVo = DataCenterVo.builder {
 	status { this@toDataCenterVo.status }
 	// domainStatus {  }
 	// storageDomainVos {  }
+	hostCnt { hostSize }
 	clusterCnt { this@toDataCenterVo.clusters?.size ?: 0 }
 	clusterVos { this@toDataCenterVo.clusters?.toClusterVosFromClusterViewEntities() }
 	quotaMode { this@toDataCenterVo.quotaEnforcementType }
 }
-fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =
-	this@toDataCenterVos.map { it.toDataCenterVo() }
+// fun Collection<StoragePoolEntity>.toDataCenterVos(): List<DataCenterVo> =
+// 	this@toDataCenterVos.map { it.toDataCenterVo() }
 
 fun StoragePoolEntity.toIdentifiedVoFromStoragePoolEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromStoragePoolEntity.id.toString() }

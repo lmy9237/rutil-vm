@@ -8,6 +8,7 @@ import { openNewTab }           from "@/navigation";
 import { 
   useRemoteViewerConnectionFileFromVm, 
   useAllSnapshotsFromVm,
+  useVm,
 } from "@/api/RQHook";
 import {
   ActionButtons, 
@@ -36,6 +37,10 @@ const VmActionButtons = ({
   const { vmsSelected } = useGlobal()
   const isContextMenu = actionType === "context";
   
+  const selected1st = [...vmsSelected][0] ?? null
+
+  const { data: vm } = useVm(selected1st?.id);
+
   const [mgmtDropdownActive, setMgmtDropdownActive] = useState(false);
   const toggleMgmtDropdown = () => setMgmtDropdownActive((prev) => !prev);
   const [consoleDropdownActive, setConsoleDropdownActive] = useState(false);
@@ -45,8 +50,6 @@ const VmActionButtons = ({
   useClickOutside(mgmtDropdownRef, (e) => setMgmtDropdownActive(false))
   const consoleDropdownRef = useRef(null);
   useClickOutside(consoleDropdownRef, (e) => setConsoleDropdownActive(false))
-
-  const selected1st = [...vmsSelected][0] ?? null
 
 
   const isUp = selected1st?.status?.toUpperCase() === "UP";

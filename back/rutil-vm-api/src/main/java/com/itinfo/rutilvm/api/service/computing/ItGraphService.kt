@@ -7,8 +7,10 @@ import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsInterfaceStatisticsRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsRepository
 import com.itinfo.rutilvm.api.repository.engine.VdsStatisticsRepository
+import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VdsStatisticsEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
 import com.itinfo.rutilvm.api.repository.history.*
 import com.itinfo.rutilvm.api.repository.history.dto.*
 import com.itinfo.rutilvm.api.repository.history.entity.*
@@ -23,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import java.util.*
 import kotlin.jvm.Throws
 
@@ -166,6 +169,7 @@ class GraphServiceImpl(
 	@Autowired private lateinit var propConfig: PropertiesConfig
 	@Autowired private lateinit var hostSamplesHistoryRepository: HostSamplesHistoryRepository
 	@Autowired private lateinit var vmSamplesHistoryRepository: VmSamplesHistoryRepository
+	@Autowired private lateinit var vmRepository: VmRepository
 	@Autowired private lateinit var storageDomainSamplesHistoryRepository: StorageDomainSamplesHistoryRepository
 	@Autowired private lateinit var storageDomainRepository: StorageDomainRepository
 	@Autowired private lateinit var vdsStatisticsRepository: VdsStatisticsRepository
@@ -258,24 +262,12 @@ class GraphServiceImpl(
 
 	override fun vm3MinUsageLineData(vmId: String): List<UsageDto> {
 		log.info("vm3MinUsageLineData ... vmId: {}", vmId)
-		val rawResult: List<Array<Any>> = vmSamplesHistoryRepository.findVmUsageWithNetwork(vmId.toUUID())
+		val vm: VmEntity? = vmRepository.findByVmGuid(vmId.toUUID())
+		val lastStopTime = Timestamp.valueOf(vm?.lastStopTime).toString()
+
+		val rawResult = vmSamplesHistoryRepository.findVmUsageWithNetwork(vmId.toUUID(), lastStopTime)
 		return rawResult.toUsageDtoList()
 	}
-
-	//
-	// override fun hostHourlyUsageLineData(hostId: String): List<HostUsageDto> {
-	// 	log.info("hostHourlyUsageLineData ... hostId: {}", hostId)
-	//
-	// 	val rawData: List<Array<Any>> = hostSamplesHistoryRepository.findHostUsageById(UUID.fromString(hostId))
-	//
-	// 	return rawData.map {
-	// 		HostUsageDto(
-	// 			historyDatetime = (it[0] as java.sql.Timestamp).toLocalDateTime(),
-	// 			avgCpuUsage = (it[1] as Number).toDouble(),
-	// 			avgMemoryUsage = (it[2] as Number).toDouble()
-	// 		)
-	// 	}
-	// }
 
 	override fun vmCpuPerChart(): List<LineDto> {
 		log.info("vmCpuPerChart ... ")

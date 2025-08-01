@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.sql.Timestamp
 import java.util.*
 
 private const val QUERY_FIND_VM_CPU_CHART = "a"
@@ -183,7 +184,7 @@ ORDER BY memory_usage_percent DESC
 	@Query(
 		nativeQuery = true,
 		value = """
-    WITH net_usage AS (
+WITH net_usage AS (
         SELECT
             sh.history_datetime,
             AVG(COALESCE(sh.receive_rate_percent, 0) + COALESCE(sh.transmit_rate_percent, 0)) AS total_network_usage_percent
@@ -221,12 +222,14 @@ ORDER BY memory_usage_percent DESC
         net_usage n
     ON
         h.history_datetime = n.history_datetime
+	where
+		(:lastStopTime IS NULL OR h.history_datetime >= CAST(:lastStopTime AS timestamp))
     ORDER BY
         h.history_datetime DESC
     LIMIT 14
     """
 	)
-	fun findVmUsageWithNetwork(@Param("vmId") vmId: UUID): List<Array<Any>>
+	fun findVmUsageWithNetwork(@Param("vmId") vmId: UUID,  @Param("lastStopTime") lastStopTime: String?): List<Array<Any>>
 
 
 

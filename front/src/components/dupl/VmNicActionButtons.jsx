@@ -27,7 +27,7 @@ const VmNicActionButtons = ({
   const basicActions = useMemo(() => ([
     { type: "create", onClick: () => setActiveModal("nic:create"), label: Localization.kr.CREATE, disabled: isContextMenu && nicsSelected.length > 0, },
     { type: "update", onClick: () => setActiveModal("nic:update"), label: Localization.kr.UPDATE, disabled: nicsSelected.length !== 1, },
-    { type: "remove", onClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0 || nicPlugged, },
+    { type: "remove", onClick: () => setActiveModal("nic:remove"), label: Localization.kr.REMOVE, disabled: nicsSelected.length === 0 || (vmStatus === "up" && nicPlugged === true) },
   ]), [actionType, nicsSelected]);
 
   return (
