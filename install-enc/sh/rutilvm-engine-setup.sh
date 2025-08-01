@@ -275,7 +275,7 @@ OVIRT_ENGINE_PRIVATE_KEY
       __RUTIL_VM_LOGGING_ENABLED__: true
       __RUTIL_VM_ITEMS_PER_PAGE__: 20
       __RUTIL_VM_IS_LICENCE_VERIFIED__: false
-      __RUTIL_VM_WATERMARK_TEXT__: v4.0.0-2
+      __RUTIL_VM_WATERMARK_TEXT__: v4.0.0-3
     volumes:
       - /opt/rutilvm/rutil-vm/certs/fullchain.pem:/etc/nginx/certs/fullchain.pem:ro
       - /etc/pki/ovirt-engine/keys:/etc/pki/ovirt-engine/keys:ro

@@ -83,8 +83,8 @@ Rutil VM 프론트앤드
 > 🛠Build
 > 
 > ```sh
-> docker build -t ititcloud/rutil-vm:4.0.0-2 .
-> docker tag ititcloud/rutil-vm:4.0.0-2 ititcloud/rutil-vm:latest
+> docker build -t ititcloud/rutil-vm:4.0.0-3 .
+> docker tag ititcloud/rutil-vm:4.0.0-3 ititcloud/rutil-vm:latest
 > ```
 > 
 > ▶️Run

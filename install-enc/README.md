@@ -74,8 +74,8 @@ out/
 > 🛠Build
 > 
 > ```sh
-> docker build -t ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-2 .
-> docker tag ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-2 ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:latest
+> docker build -t ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-3 .
+> docker tag ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-3 ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:latest
 > ```
 > 
 > ▶️Run
@@ -83,7 +83,7 @@ out/
 > ```sh
 > # rutil-vm-sh-enc
 > docker rm -f rutil-vm-sh-enc
-> docker create --name rutil-vm-sh-enc ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-2
+> docker create --name rutil-vm-sh-enc ititinfo.synology.me:50951/ititcloud/rutil-vm-sh-enc:4.0.0-3
 > # docker cp rutil-vm-sh-enc:/out/sh/test.sh ./
 > docker cp rutil-vm-sh-enc:/out/sh/rutilvm-engine-setup.sh ./
 > docker cp rutil-vm-sh-enc:/out/sh/version.txt ./
