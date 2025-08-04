@@ -163,6 +163,32 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 fun List<Network>.toNetworkVos(conn: Connection): List<NetworkVo> =
 	this@toNetworkVos.map { it.toNetworkVo(conn) }
 
+
+fun Network.toHostNetworkVo(usage: UsageVo): NetworkVo {
+	val network = this@toHostNetworkVo
+	return NetworkVo.builder {
+		id { network.id() }
+		name { network.name() }
+		description { network.description() }
+		comment { network.comment() }
+		mtu { network.mtu().toInt() }
+		portIsolation { network.portIsolation() }
+		stp { network.stp() }
+		usage { usage }
+		vdsmName { network.vdsmName() }
+		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
+		dnsNameServers {
+			if (network.dnsResolverConfigurationPresent()){
+				network.dnsResolverConfiguration().nameServers().toDnsVos()
+			} else emptyList()
+		}
+		vlan { if (network.vlanPresent()) network.vlan().idAsInteger() else 0}
+		vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
+	}
+}
+
+
+
 fun Network.toDcNetworkMenu(): NetworkVo {
 	val network = this@toDcNetworkMenu
 	return NetworkVo.builder {

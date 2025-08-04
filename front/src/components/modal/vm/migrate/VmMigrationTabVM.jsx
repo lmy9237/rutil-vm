@@ -7,13 +7,14 @@ import Localization from "@/utils/Localization";
 
 const VmMigrationTabVM = ({ 
   vmsSelected, 
-  vmList, 
+  // vmList, 
   hosts,
   targetHostId, 
   setTargetHostId, 
   clusterVo, setIsCluster, 
   affinityClosure, setAffinityClosure 
 }) => {
+  const vm = useMemo(() => [...vmsSelected][0], [vmsSelected]);
   const hostsWithClusterOption = useMemo(() => {
     if (!clusterVo) return [];
 
@@ -52,16 +53,23 @@ const VmMigrationTabVM = ({
         checked={affinityClosure}
       />
       <div className="mt-4">
-        {vmList.map((vm) => (
-          <div key={vm.id} className="font-bold f
-          
-          lex f-start fs-13 mb-2">
+        {/* 복수의 가상머신이였을 때 */}
+        {/* {vmList.map((vm) => (
+          <div key={vm.id} className="font-bold flex f-start fs-13 mb-2">
             <div><RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/></div>
             {vm.name}
           </div>
-        ))}
+        ))} */}
+        <div key={vm.id} className="font-bold flex f-start fs-13 mb-2">
+          <div><RVI16 iconDef={rvi16ChevronRight("black")} className="mr-2"/></div>
+          {vm.name}
+        </div>
       </div>
       <br/><br/>
+      {/* <div>
+        {vm.name} 를 "   " 로 {Localization.kr.MIGRATION} 합니다
+      </div>      
+      <br/><br/> */}
     </>
   )
 };

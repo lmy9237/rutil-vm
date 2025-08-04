@@ -45,6 +45,7 @@ import com.itinfo.rutilvm.api.xml.OvfCompositeDisk
 import com.itinfo.rutilvm.api.xml.RasdItemType10
 import com.itinfo.rutilvm.common.toDate
 import com.itinfo.rutilvm.util.ovirt.findCluster
+import org.jboss.jandex.TypeTarget.Usage
 import org.ovirt.engine.sdk4.Connection
 import org.ovirt.engine.sdk4.types.Disk
 import org.ovirt.engine.sdk4.types.Template
@@ -342,10 +343,23 @@ fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder 
 }
 fun List<NetworkEntity>.toNetworkVosFromNetworkEntities(): List<NetworkVo> =
 	this@toNetworkVosFromNetworkEntities.map { it.toNetworkVoFromNetworkEntity() }
+
 fun NetworkEntity.toIdentifiedVoFromNetworkEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromNetworkEntity.id.toString() }
 	name { this@toIdentifiedVoFromNetworkEntity.name }
 }
+
+// fun NetworkEntity.toUsageVoFromNetworkEntity(): NetworkVo = NetworkVo.builder {
+// 	usage {
+// 		this@toUsageVoFromNetworkEntity.networkClusters
+// 			?.firstOrNull()
+// 			?.toUsageVo(this@toUsageVoFromNetworkEntity.vmNetwork)
+// 	}
+// }
+// fun List<NetworkEntity>.toUsageVosFromNetworkEntities(): List<NetworkVo> =
+// 	this@toUsageVosFromNetworkEntities.map { it.toUsageVoFromNetworkEntity() }
+
+
 //endregion: NetworkEntity
 
 //region: NetworkClusterEntity

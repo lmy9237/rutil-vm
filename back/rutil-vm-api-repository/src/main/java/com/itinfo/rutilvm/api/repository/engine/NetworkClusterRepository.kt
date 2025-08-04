@@ -43,6 +43,19 @@ AND nc.id.networkId = :networkId
 """)
 	fun findByNetworkId(networkId: UUID): List<NetworkClusterEntity>
 
+
+	@Query("""
+SELECT DISTINCT nc FROM NetworkClusterEntity nc
+LEFT JOIN FETCH nc.cluster c
+LEFT JOIN FETCH nc.network n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH n.networkClusters ncs
+WHERE nc.id.networkId = :networkId AND nc.id.clusterId = :clusterId
+""")
+	fun findOneByNetworkIdAndClusterId(@Param("networkId") networkId: UUID, @Param("clusterId") clusterId: UUID): NetworkClusterEntity
+
+
 // @Query("""
 // SELECT *,
 // EXISTS (

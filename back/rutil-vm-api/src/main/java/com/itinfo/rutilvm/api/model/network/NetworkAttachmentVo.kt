@@ -33,7 +33,8 @@ class NetworkAttachmentVo (
     val ipAddressAssignments: List<IpAddressAssignmentVo> = listOf(),
     val hostVo: IdentifiedVo = IdentifiedVo(),
     val hostNicVo: IdentifiedVo = IdentifiedVo(),
-    val networkVo: IdentifiedVo = IdentifiedVo(),
+    val networkVo: NetworkVo = NetworkVo(),
+    // val networkVo: IdentifiedVo = IdentifiedVo(),
 	val nameServerList: List<String> = listOf()
     // reported_configurations
 ) : Serializable {
@@ -46,7 +47,8 @@ class NetworkAttachmentVo (
         private var bIpAddressAssignments: List<IpAddressAssignmentVo> = listOf(); fun ipAddressAssignments(block: () -> List<IpAddressAssignmentVo>?) { bIpAddressAssignments = block() ?: listOf() }
         private var bHostVo: IdentifiedVo = IdentifiedVo(); fun hostVo(block: () -> IdentifiedVo?) { bHostVo = block() ?: IdentifiedVo() }
         private var bHostNicVo: IdentifiedVo = IdentifiedVo(); fun hostNicVo(block: () -> IdentifiedVo?) { bHostNicVo = block() ?: IdentifiedVo() }
-        private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
+        private var bNetworkVo: NetworkVo = NetworkVo(); fun networkVo(block: () -> NetworkVo?) { bNetworkVo = block() ?: NetworkVo() }
+        // private var bNetworkVo: IdentifiedVo = IdentifiedVo(); fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
 		private var bNameServerList: List<String> = listOf(); fun nameServerList(block: () -> List<String>?) { bNameServerList = block() ?: listOf() }
 
         fun build(): NetworkAttachmentVo = NetworkAttachmentVo(bId, bInSync, bIpAddressAssignments, bHostVo, bHostNicVo, bNetworkVo, bNameServerList)
@@ -59,6 +61,7 @@ class NetworkAttachmentVo (
 
 fun NetworkAttachment.toNetworkAttachmentVo(): NetworkAttachmentVo {
 	val nAtt = this@toNetworkAttachmentVo
+
 	val ip =
 		if (nAtt.ipAddressAssignmentsPresent()) {
 			nAtt.ipAddressAssignments().map { it.toIpAddressAssignmentVo() }
@@ -74,12 +77,39 @@ fun NetworkAttachment.toNetworkAttachmentVo(): NetworkAttachmentVo {
 		ipAddressAssignments { ip }
 		hostVo { nAtt.host().fromHostToIdentifiedVo() }
 		hostNicVo { nAtt.hostNic().fromHostNicToIdentifiedVo() }
-		networkVo { nAtt.network().fromNetworkToIdentifiedVo() }
+		networkVo { nAtt.network().toNetworkIdName() }
+		// networkVo { nAtt.network().fromNetworkToIdentifiedVo() }
 		nameServerList { dns }
 	}
 }
 fun Collection<NetworkAttachment>?.toNetworkAttachmentVos(): List<NetworkAttachmentVo> =
 	this@toNetworkAttachmentVos?.map { it.toNetworkAttachmentVo() } ?: emptyList()
+
+
+fun NetworkAttachment.toHostNetworkAttachmentVo(usage: UsageVo): NetworkAttachmentVo {
+	val hostNetwork = this@toHostNetworkAttachmentVo
+
+	val ip =
+		if (hostNetwork.ipAddressAssignmentsPresent()) {
+			hostNetwork.ipAddressAssignments().map { it.toIpAddressAssignmentVo() }
+		} else { emptyList() }
+	val dns =
+		if (hostNetwork.dnsResolverConfigurationPresent()){
+			hostNetwork.dnsResolverConfiguration().nameServers() }
+		else { emptyList() }
+
+	return NetworkAttachmentVo.builder {
+		id { hostNetwork.id() }
+		inSync { hostNetwork.inSync() }
+		ipAddressAssignments { ip }
+		hostVo { hostNetwork.host().fromHostToIdentifiedVo() }
+		hostNicVo { hostNetwork.hostNic().fromHostNicToIdentifiedVo() }
+		networkVo { hostNetwork.network().toHostNetworkVo(usage) }
+		nameServerList { dns }
+	}
+}
+// fun Collection<NetworkAttachment>?.toHostNetworkAttachmentVos(): List<NetworkAttachmentVo> =
+// 	this@toHostNetworkAttachmentVos?.map { it.toHostNetworkAttachmentVo() } ?: emptyList()
 
 /**
  * [NetworkAttachmentVo.toModifiedNetworkAttachment]

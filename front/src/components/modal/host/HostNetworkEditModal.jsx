@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import BaseModal                        from "@/components/modal/BaseModal";
@@ -25,9 +25,12 @@ const HostNetworkEditModal = ({
   ], []);
   const [initialInSync, setInitialInSync] = useState(true);
 
+  const [initialNetwork] = useState(networkModalState);
+
   useEffect(() => {
     if (isOpen) {
       setInitialInSync(networkModalState.inSync);
+      
     }
   }, [isOpen]);
 
@@ -191,28 +194,8 @@ const HostNetworkEditModal = ({
       });
     }
 
-    // NetworkAttachmentVo 형식 맞추기 (id는 기존 networkAttachment id)
-    // const networkEditData = {
-    //   id: networkModalState.id,
-    //   networkVo: networkModalState.networkVo,
-    //   hostNicVo: networkModalState.hostNicVo,
-    //   ipAddressAssignments: ipAssignments,
-    //   dnsServers: networkModalState.dnsServers.filter(Boolean),
-    //   // inSync: initialInSync === false && networkModalState.inSync === true
-    // };
-
-    // Logger.debug("HostNetworkEditModal > handleOkClick ... networkEditData:", networkEditData);
-    // // 부모로 넘김
-    // onNetworkEdit(networkEditData);
-    // onClose();
     const attachmentsToSync = (initialInSync === false && networkModalState.inSync === true)
-      ? [{
-          id: networkModalState.id,
-          networkVo: networkModalState.networkVo,
-          hostNicVo: networkModalState.hostNicVo,
-          ipAddressAssignments: ipAssignments,
-          dnsServers: networkModalState.dnsServers.filter(Boolean)
-        }]
+      ? [{ ...networkModalState }]
       : [];
 
     const attachmentsToModify = [{
@@ -258,16 +241,18 @@ const HostNetworkEditModal = ({
                   // onChange={e => handleChangeInSync("inSync", !networkModalState.inSync) }
                   onChange={(checked) => handleChangeInSync("inSync", !networkModalState.inSync) }
                 />
+                {import.meta.env.DEV && 
+                  <>
+                    <span>{initialInSync === true ? "T" : "F"}</span><br/>
+                    <span>{networkModalState.inSync === true ? "T" : "F"}</span>
+                    <hr/>
+                  </>
+                }
               </>
             )}
+            
           </>
-          {import.meta.env.DEV && 
-            <>
-              <span>{initialInSync === true ? "T" : "F"}</span><br/>
-              <span>{networkModalState.inSync === true ? "T" : "F"}</span>
-          <hr/>
-            </>
-          }
+          
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
               <LabelSelectOptions id="ipv4_mtu" label="부트 프로토콜"                  
@@ -278,6 +263,9 @@ const HostNetworkEditModal = ({
               />
               {import.meta.env.DEV && 
                 <>
+                  <pre>af {initialNetwork.ipv4Values.protocol}</pre><br/>
+                  <pre>af {initialNetwork.ipv4Values.address}</pre><br/><br/>
+
                   <span>{networkModalState.ipv4Values.protocol}</span><br/>
                   <span>{networkModalState.ipv4Values.address}</span><br/>
                   <span>{networkModalState.ipv4Values.netmask}</span><br/>

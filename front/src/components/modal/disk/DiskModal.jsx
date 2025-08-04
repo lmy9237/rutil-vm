@@ -120,42 +120,11 @@ const DiskModal = ({
     }
   }, [isOpen, editMode, disk, domainsSelected]);
 
-  useEffect(() => {
-    if (datacenterId) {
-      const selected = datacenters.find(dc => dc.id === datacenterId);
-      setDataCenterVo({ 
-        id: selected?.id, 
-        name: selected?.name 
-      });
-      setDomainVo(emptyIdNameVo());
-    } else if (!editMode && datacenters.length > 0) {
-      const defaultDc = datacenters.find(dc => dc.name === "Default");
-      const firstDc = defaultDc || datacenters[0];
-      setDataCenterVo({ 
-        id: firstDc.id, 
-        name: firstDc.name 
-      });
-      setDomainVo(emptyIdNameVo());
-      setDiskProfileVo(emptyIdNameVo());
-    }
-  }, [datacenterId, datacenters, editMode]);
+  // 데이터센터 지정
+  useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default")
 
   // 도메인 지정
   useSelectItemEffect(domainId, editMode, domains, setDomainVo);
-
-  useEffect(() => {
-    if (domainsSelected.length > 0) {
-      setDomainVo({
-        id: domainsSelected[0]?.id || "", 
-        name: domainsSelected[0]?.name || "",
-      });
-    } else if (!editMode && domains.length > 0) {
-      setDomainVo({
-        id: domains[0]?.id || "",
-        name: domains[0]?.name || "",
-      });
-    }
-  }, [domainsSelected, domains, editMode]);
 
   // domainVo가 변경될 때 diskProfile 초기화 및 재선택
   useEffect(() => {

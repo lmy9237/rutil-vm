@@ -345,7 +345,6 @@ class NetworkServiceImpl(
 		*/
 		val networksFound: List<NetworkClusterEntity> = rNetworkClusters.findByNetworkId(networkId.toUUID())
 		return networksFound.toNetworkVosFromNetworkClusters()
-
 	}
 
 	@Throws(Error::class)

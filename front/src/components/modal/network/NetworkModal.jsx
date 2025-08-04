@@ -81,7 +81,7 @@ const NetworkModal = ({
     isError: isClustersError,
     isSuccess: isClustersSuccess,
     isRefetching: isClustersRefetching,
-  } = useClustersFromDataCenter(dataCenterVo?.id || undefined, (e) => ({ ...e }));
+  } = useClustersFromDataCenter(dataCenterVo?.id, (e) => ({ ...e }));
 
   useEffect(() => {
     if (!isOpen) {
@@ -116,24 +116,6 @@ const NetworkModal = ({
 
   // 데이터센터 지정
   useSelectItemOrDefaultEffect(datacenterId, editMode, datacenters, setDataCenterVo, "Default");
-
-  // useEffect(() => {
-  //   if (datacenterId) {
-  //     const selected = datacenters.find(dc => dc.id === datacenterId);
-  //     setDataCenterVo({ 
-  //       id: selected?.id, 
-  //       name: selected?.name 
-  //     });
-  //   } else if (!editMode && datacenters.length > 0) {
-  //     const defaultDc = datacenters.find(dc => dc.name === "Default");
-  //     const firstDc = defaultDc || datacenters[0];
-  //     setDataCenterVo({ 
-  //       id: firstDc.id, 
-  //       name: firstDc.name 
-  //     });
-  //   }
-  // }, [datacenterId, datacenters, editMode]);
-
 
   useEffect(() => {
     setClusterVoList([]);
@@ -238,15 +220,6 @@ const NetworkModal = ({
                 vlan: checked ? prev.vlan : "", // 해제 시 vlan 값도 초기화
               }))
             }
-            /*
-            onChange={(e) => //TODO 토스트 추가예정
-              setFormState((prev) => ({
-                ...prev,
-                vlanEnabled: e.target.checked,
-                vlan: e.target.checked ? prev.vlan : "", // 해제 시 vlan 값도 초기화
-              }))
-            }
-            */
           />
           <div style={{width:"55%"}} className="checkbox-number">
             <LabelInputNum id="vlan"
@@ -268,16 +241,6 @@ const NetworkModal = ({
               portIsolation: checked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
             }));
           }}
-          /* 
-          onChange={(e) => {
-            const isChecked = e.target.checked;
-            setFormState((prev) => ({
-              ...prev,
-              usageVm: isChecked,
-              portIsolation: isChecked ? prev.portIsolation : false, // 꺼질 땐 포트 분리도 같이 false
-            }));
-          }}
-          */
         />
         <LabelCheckbox id="portIsolation" label={`포트 ${Localization.kr.DETACH}`}
           checked={formState.portIsolation}
@@ -323,13 +286,6 @@ const NetworkModal = ({
               setDnsServers(checked ? [""] : []);
               if (!checked) setDnsHiddenBoxVisible(false);
             }}
-            /* 
-            onChange={(e) => {
-              const isChecked = e.target.checked;
-              setDnsServers(isChecked ? [""] : []);
-              if (!isChecked) setDnsHiddenBoxVisible(false);
-            }}
-            */
           />
         </div>
 
@@ -363,16 +319,15 @@ const NetworkModal = ({
         {!editMode && (
           <div className=" py-3">
             <hr />
-            <span className="my-3 block font-bold">클러스터에서 네트워크를 연결/분리</span>
+            <span className="my-3 block font-bold">{Localization.kr.CLUSTER}에서 {Localization.kr.NETWORK}를 연결/분리</span>
             <TablesOuter
               columns={[
                 { header: Localization.kr.NAME, accessor: 'name', clickable: false },
                 {
                   header: (
                     <div className="flex">
-                      <input
-                        type="checkbox"
-                        id="connect_all"
+                      {/* <LabelCheckbox id="dns-connect_all" label="모두 연결" */}
+                      <input type="checkbox" id="connect_all"
                         checked={clusterVoList.every((cluster) => cluster.isConnected)}
                         onChange={(e) => {
                           const isChecked = e.target.checked;
@@ -385,7 +340,7 @@ const NetworkModal = ({
                           );
                         }}
                       />
-                      <label htmlFor="connect_all" className="ml-1"> 모두 연결</label>
+                    <label htmlFor="connect_all" className="ml-1"> 모두 연결</label>
                     </div>
                   ),
                   accessor: "connect",
@@ -394,12 +349,8 @@ const NetworkModal = ({
                 {
                   header: (
                     <div className="flex">
-                      <input
-                        type="checkbox"
-                        id="require_all"
-                        checked={
-                          clusterVoList.every((c) => c.isRequired) && clusterVoList.every((c) => c.isConnected)
-                        }
+                      <input type="checkbox" id="require_all"
+                        checked={clusterVoList.every((c) => c.isRequired) && clusterVoList.every((c) => c.isConnected) }
                         disabled={!clusterVoList.every((c) => c.isConnected)}
                         onChange={(e) => {
                           const isChecked = e.target.checked;
@@ -422,21 +373,18 @@ const NetworkModal = ({
                 name: `${cluster.name}`,
                 connect: (
                   <div className="flex">
-                    <input
-                      type="checkbox"
-                      id={`connect_${cluster.id}`}
+                    <input type="checkbox" id={`connect_${cluster.id}`}
                       checked={cluster.isConnected}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
                         setClusterVoList((prevState) =>
-                          prevState.map((c, i) =>
-                            i === index
-                              ? {
-                                  ...c,
-                                  isConnected: isChecked,
-                                  isRequired: isChecked ? c.isRequired : false,
-                                }
-                              : c
+                          prevState.map((c, i) => i === index
+                            ? {
+                                ...c,
+                                isConnected: isChecked,
+                                isRequired: isChecked ? c.isRequired : false,
+                              }
+                            : c
                           )
                         );
                       }}
@@ -446,16 +394,15 @@ const NetworkModal = ({
                 ),
                 require: (
                   <div className="flex">
-                    <input
-                      type="checkbox"
-                      id={`require_${cluster.id}`}
+                    <input type="checkbox" id={`require_${cluster.id}`}
                       checked={cluster.isRequired}
                       disabled={!cluster.isConnected}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
                         setClusterVoList((prevState) =>
-                          prevState.map((c, i) =>
-                            i === index ? { ...c, isRequired: isChecked } : c
+                          prevState.map((c, i) => i === index 
+                            ? { ...c, isRequired: isChecked } 
+                            : c
                           )
                         );
                       }}
@@ -464,7 +411,7 @@ const NetworkModal = ({
                   </div>
                 ),
               }))}
-              isLoading={isClustersLoading} isRefetching={isClustersRefetching} isError={isClustersError} isSuccess={isClustersSuccess}
+              isLoading={isClustersLoading} isError={isClustersError} isSuccess={isClustersSuccess}
             />
           </div>
         )}

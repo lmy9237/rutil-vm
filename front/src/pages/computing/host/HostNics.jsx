@@ -232,26 +232,46 @@ const HostNics = ({
   /**
    * 네트워크 편집 데이터
   */
-  const editNetworkData = useCallback((networkEditData) => {
-    setBaseItems(prev => ({
-      ...prev,
-      networkAttachment: prev.networkAttachment.map(na =>
-        na.id === networkEditData.id ? { ...na, ...networkEditData } : na
-      ),
-    }));
+  const editNetworkData = useCallback(({ synchronizedNetworkAttachments = [], modifiedNetworkAttachments = [] }) => {
+    // 동기화 대상
+    if (synchronizedNetworkAttachments.length > 0) {
+      setSyncNAs(prev => [
+        ...prev.filter(
+          na => !synchronizedNetworkAttachments.some(
+            syncNa => syncNa.id === na.id
+          )
+        ),
+        ...synchronizedNetworkAttachments
+      ]);
+    }
 
-    setModifiedNAs(prev => [
-      ...prev.filter(na => 
-        !(
-          na.networkVo?.id === networkEditData.networkVo?.id &&
-          na.hostNicVo?.name === networkEditData.hostNicVo?.name
-        )
-      ),
-      networkEditData
-    ]);
+    // 수정 대상
+    if (modifiedNetworkAttachments.length > 0) {
+      setModifiedNAs(prev => [
+        ...prev.filter(
+          na => !modifiedNetworkAttachments.some(
+            modNa => modNa.networkVo?.id === na.networkVo?.id &&
+                    modNa.hostNicVo?.name === na.hostNicVo?.name
+          )
+        ),
+        ...modifiedNetworkAttachments
+      ]);
+      // baseItems.networkAttachment 실시간 반영
+      setBaseItems(prev => ({
+        ...prev,
+        networkAttachment: prev.networkAttachment.map(na => {
+          const found = modifiedNetworkAttachments.find(
+            modNa => modNa.id === na.id
+          );
+          return found ? { ...na, ...found } : na;
+        }),
+      }));
+    }
+
     setDragItemFlag(true);
   }, []);
 
+//TODO:
 
   /**
    * 본딩 시도시 열릴 모달에 들어갈 값
@@ -698,6 +718,7 @@ const HostNics = ({
             name: originalNetwork.name,
             status: originalNetwork.status || "UNKNOWN",
             vlan: originalNetwork.vlan,
+            usageVm: originalNetwork?.usage?.vm || false,
           },
           ipAddressAssignments: [],
           dnsServers: [],
@@ -824,7 +845,14 @@ const HostNics = ({
       status: originalNetworkData?.status || "NON_OPERATIONAL",
       vlan: originalNetworkData?.vlan,
       required: originalNetworkData?.required,
-      usageVm: originalNetworkData?.usage?.vm || false,
+      usage: {
+        vm: originalNetworkData?.usage?.vm,
+        management: originalNetworkData?.usage?.management,
+        display: originalNetworkData?.usage?.display,
+        migration: originalNetworkData?.usage?.migration,
+        gluster: originalNetworkData?.usage?.gluster,
+        defaultRoute: originalNetworkData?.usage?.defaultRoute,
+      }
     };
     Logger.debug("HostNics > handleDropAssignedNetworkToUnassigned ... restoredNetwork", restoredNetwork);
 

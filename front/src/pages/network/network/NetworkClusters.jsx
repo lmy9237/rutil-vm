@@ -57,7 +57,8 @@ const NetworkClusters = ({
       </TableRowClick>
     ),
     status: status2Icon(network?.status),
-    _connected: network?.connected ? (
+    // _connected: network?.connected ? (
+    _connected: true ? (
       <Checkbox checked disabled />
     ) : (
       <Checkbox disabled />
@@ -68,21 +69,9 @@ const NetworkClusters = ({
       <Checkbox disabled />
     ),
     networkRole: network?.usage?.roleInKr,
-    /* 
-    networkRole: [
-      cluster?.networkVo?.usage?.management ? Localization.kr.MANAGEMENT : null,
-      cluster?.networkVo?.usage?.display ? Localization.kr.PRINT : null,
-      cluster?.networkVo?.usage?.migration ? Localization.kr.MIGRATION : null,
-      cluster?.networkVo?.usage?.gluster ? "글러스터" : null,
-      cluster?.networkVo?.usage?.defaultRoute ? "기본라우팅" : null,
-    ].filter(Boolean).join(" / "), 
-    */
   }));
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
-  const handleNameClick = useCallback((id) => {
-    navigate(`/networks/${id}`);
-  }, [navigate])
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}

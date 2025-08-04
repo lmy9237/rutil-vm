@@ -1,19 +1,20 @@
 package com.itinfo.rutilvm.api.service.computing
 
-import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.*
-import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromNetworksToIdentifiedVos
 import com.itinfo.rutilvm.api.model.network.*
+import com.itinfo.rutilvm.api.repository.engine.NetworkClusterRepository
+import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkClusters
+import com.itinfo.rutilvm.api.repository.engine.entity.toUsageVo
 import com.itinfo.rutilvm.api.service.BaseService
-import com.itinfo.rutilvm.api.service.computing.HostOperationServiceImpl.Companion
+import com.itinfo.rutilvm.common.toUUID
 import com.itinfo.rutilvm.util.ovirt.*
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.HostNic
-import org.ovirt.engine.sdk4.types.Network
 import org.ovirt.engine.sdk4.types.NetworkAttachment
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 interface ItHostNicService {
@@ -93,6 +94,7 @@ interface ItHostNicService {
 @Service
 class ItHostNicServiceImpl(
 ): BaseService(), ItHostNicService {
+	@Autowired private lateinit var rNetworkCluster: NetworkClusterRepository
 
     @Throws(Error::class)
     override fun findAllFromHost(hostId: String): List<HostNicVo> {
@@ -112,8 +114,16 @@ class ItHostNicServiceImpl(
 	@Throws(Error::class)
 	override fun findAllNetworkAttachmentsFromHost(hostId: String): List<NetworkAttachmentVo> {
 		log.info("findAllNetworkAttachmentFromHost... hostId: {}", hostId)
-		val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network").getOrDefault(emptyList())
-		return res.toNetworkAttachmentVos()
+		val host = conn.findHost(hostId).getOrNull()
+		val clusterId = host?.cluster()?.id()?.toUUID()!!
+
+		val res: List<NetworkAttachment> = conn.findAllNetworkAttachmentsFromHost(hostId, follow = "host,host_nic,network")
+			.getOrDefault(emptyList())
+
+		return res.map { networkAttachment ->
+			val networksFound: NetworkClusterEntity = rNetworkCluster.findOneByNetworkIdAndClusterId(networkAttachment.network().id().toUUID(), clusterId)
+			networkAttachment.toHostNetworkAttachmentVo(networksFound.toUsageVo())
+		}
 	}
 
 	@Throws(Error::class)

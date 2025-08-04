@@ -61,11 +61,6 @@ const VmMigrationModal = ({
   }, [vmsSelected, selectedModalTab]);
 
 
-  // const {
-  //   data: hosts=[],
-  //   isSuccess: isHostSuccess,
-  // } = useHostsFromCluster(clusterVo?.id ?? "");
-
   const {
     data: hosts=[],
     isSuccess: isHostSuccess
@@ -201,11 +196,9 @@ const VmMigrationModal = ({
           {selectedModalTab === "vm" && (
             <VmMigrationTabVM
               vmsSelected={vmsSelected}
-              vmList={vmList}
+              // vmList={vmList}
               hosts={hosts}
-              targetHostId={targetHostId}
-
-              
+              targetHostId={targetHostId}              
               setTargetHostId={setTargetHostId}
               clusterVo={clusterVo}
               setIsCluster={setIsCluster}

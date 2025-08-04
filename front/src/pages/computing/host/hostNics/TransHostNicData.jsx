@@ -53,6 +53,14 @@ export function transNic(hostNics = [], nicMap = {}) {
       network: {
         id: e?.networkVo?.id,
         name: e?.networkVo?.name,
+        usage: {
+          vm: e?.networkVo?.usage?.vm,
+          management: e?.networkVo?.usage?.management,
+          display: e?.networkVo?.usage?.display,
+          migration: e?.networkVo?.usage?.migration,
+          gluster: e?.networkVo?.usage?.gluster,
+          defaultRoute: e?.networkVo?.usage?.defaultRoute,
+        }
       },
       speed: checkZeroSizeToMbps(e?.speed),
       rxSpeed: checkZeroSizeToMbps(e?.rxSpeed),
@@ -80,6 +88,14 @@ export function transNA(networkAttachments = [], networks = []) {
         name: e?.networkVo?.name,
         status: networkFromCluster?.status || "UNKNOWN",
         vlan: networkFromCluster?.vlan,
+        usage: {
+          vm: networkFromCluster?.usage?.vm,
+          management: networkFromCluster?.usage?.management,
+          display: networkFromCluster?.usage?.display,
+          migration: networkFromCluster?.usage?.migration,
+          gluster: networkFromCluster?.usage?.gluster,
+          defaultRoute: networkFromCluster?.usage?.defaultRoute,
+        }
       },
       nameServerList: e?.nameServerList || [],
     };
@@ -103,6 +119,14 @@ export function transDetachNA(networks = [], networkAttachments = []) {
       vlan: e?.vlan,
       required: e?.required,
       usageVm: !!e?.usage?.vm,
+      usage: {
+        vm: e?.usage?.vm,
+        management: e?.usage?.management,
+        display: e?.usage?.display,
+        migration: e?.usage?.migration,
+        gluster: e?.usage?.gluster,
+        defaultRoute: e?.usage?.defaultRoute,
+      }
     }));
 }
 
