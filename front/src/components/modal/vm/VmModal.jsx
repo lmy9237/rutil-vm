@@ -617,7 +617,6 @@ const VmModal = ({
       validationToast.fail(error);
       return;
     }
-    console.log("$vmmodal", dataToSubmit)
     Logger.debug(`VmModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
     editMode
       ? editVM({ vmId: vmId, vmData: dataToSubmit })
@@ -694,8 +693,7 @@ const VmModal = ({
                 disabled={templateVo.id !== CONSTANT.templateIdDefault} // 기본템플릿이 아닐때는 버튼 disabled처리
               />
               {/* )} */}
-              <VmNic
-                editMode={editMode}
+              <VmNic editMode={editMode}
                 nics={nics}
                 nicsState={nicListState}
                 setNicsState={setNicListState}

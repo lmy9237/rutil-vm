@@ -113,9 +113,8 @@ const HostBondingModal = ({
 
       onBondingCreated(newBond, nicArr);
     }
-      console.log("$nic ", bondModalState.id)
-      console.log("$slaveVos ", bondModalState.editTarget)
-      
+    Logger.debug("HostBondingModal > nic ", bondModalState.id)
+    Logger.debug("HostBondingModal > slaveVos ", bondModalState.editTarget)
     onClose();
   };
 

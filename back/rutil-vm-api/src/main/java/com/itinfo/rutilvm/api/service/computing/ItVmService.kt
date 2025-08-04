@@ -6,6 +6,7 @@ import com.itinfo.rutilvm.api.model.*
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.toNicInterface
 import com.itinfo.rutilvm.api.repository.engine.VmDeviceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.VmStaticRepository
@@ -228,7 +229,7 @@ class VmServiceImpl(
 		val updatedVm: Vm = conn.updateVm(
 			vmVo.toEditVm(), vmVo.cdRomVo.id
 		).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toException()
-			// TODO: 변경실패 에러유형 필요
+		// TODO: 변경실패 에러유형 필요
 
 		val vmStaticFound: VmStaticEntity = rVmStatics.findByVmGuid(vmVo.id.toUUID())
 			?: throw ErrorPattern.VM_NOT_FOUND.toException()
@@ -239,13 +240,9 @@ class VmServiceImpl(
 
 		log.info("현재 VM 상태: ${updatedVm.status()}")
 
+		updateNics(vmVo)	// nic 편집
+		try { } catch (e: ItCloudException) { log.error("nic 편집 문제발생 ... {}", e.localizedMessage) }
 		try {
-			updateNics(vmVo)	// nic 편집
-		} catch (e: ItCloudException) {
-			log.error("nic 편집 문제발생 ... {}", e.localizedMessage)
-		}
-		try {
-
 			updateDisks(vmVo)	// 디스크 편집
 		} catch (e: ItCloudException) {
 			log.error("디스크 편집 문제발생 ... {}", e.localizedMessage)
@@ -341,28 +338,88 @@ class VmServiceImpl(
 		}
 	}
 
+	@Throws(Error::class)
 	private fun updateNics(vmVo: VmVo) {
-		val existNics = conn.findAllNicsFromVm(vmVo.id).getOrElse {
+		log.info("updateNics ... vmVo.id: {}", vmVo.id)
+		val existingNics = conn.findAllNicsFromVm(vmVo.id).getOrElse {
 			throw RuntimeException("NIC 목록 조회 실패", it)
 		}
+		val existingNicsMap = existingNics.associateBy { it.id() }
 
-		val changeNics = vmVo.nicVos
-		val changeNicsMap = changeNics.associateBy { it.id }
-
-		val nicsToDelete = existNics.filter { !changeNicsMap.containsKey(it.id()) }
-		val nicsToAdd = changeNics.filter { it.id?.isEmpty() == true }
-
-		nicsToDelete.forEach {
-			conn.removeNicFromVm(vmVo.id, it.id()).getOrElse {
-				throw RuntimeException("NIC 삭제 실패 ${it.message}", it)
+		// Step 2: Categorize 변경사항
+		val desiredNicIds = vmVo.nicVos.mapNotNull { it.id }.toSet()
+		val nics2Remove = existingNics.filter {
+			it.id() !in desiredNicIds
+		}
+		val nics2Add = mutableListOf<NicVo>()
+		val nics2Update = mutableListOf<Pair<Nic, NicVo>>()
+		for (desiredNic in vmVo.nicVos) {
+			if (desiredNic.id.isNullOrBlank()) {
+				log.debug("updateNics .... de")
+				nics2Add.add(desiredNic) // 신규 NIC 추가
+			} else {
+				// It has an ID, so it's a potential update.
+				val existingNic = existingNicsMap[desiredNic.id]
+				if (existingNic != null) {
+					// We found a matching NIC. Now check if its properties have changed.
+					if (areNicsDifferent(existingNic, desiredNic)) {
+						nics2Update.add(existingNic to desiredNic)
+					}
+				} else {
+					// This is an inconsistent state: a desired NIC has an ID but doesn't exist on the VM.
+					log.warn("Desired NIC with ID {} not found on VM {}. It will be ignored.", desiredNic.id, vmVo.id)
+				}
 			}
 		}
 
-		nicsToAdd.forEach {
-			conn.addNicFromVm(vmVo.id, it.toAddVmNic()).getOrElse {
+		log.info("NIC Reconciliation Plan: {} to add, {} to update, {} to remove.", nics2Add.size, nics2Update.size, nics2Remove.size)
+
+		// Step 3: Execute Operations in a safe order
+		// 3-1: 제거
+		for (nic in nics2Remove) {
+			log.info("updateNics ... removing NIC ... id: {}, name: {}", nic.id(), nic.name())
+			conn.removeNicFromVm(vmVo.id, nic.id())
+		}
+
+		// 3-2: 편집
+		for ((existing, desired) in nics2Update) {
+			log.info("updateNics ... updating NIC: id={}, name='{}' -> '{}'", existing.id(), existing.name(), desired.name)
+			conn.updateNicFromVm( // Assuming you have a method like this
+				vmVo.id,
+				desired.toEditNic() // Convert your DTO to the SDK object for update
+			).getOrElse {
+				throw RuntimeException("Failed to update NIC ${existing.id()}: ${it.message}", it)
+			}
+		}
+
+		// 3-3: 생성
+		for (nic in nics2Add) {
+			log.info("updateNics ... Adding nic: name={}", nic.name)
+			conn.addNicFromVm(
+				vmVo.id,
+				nic.toAddVmNic()
+			).getOrElse {
 				throw RuntimeException("NIC 추가 실패 ${it.message}", it)
 			}
 		}
+	}
+
+	/**
+	 * Compares an existing oVirt Nic with a desired NicVo to see if an update is needed.
+	 * Returns true if they are different, false otherwise.
+	 */
+	fun areNicsDifferent(existingNic: Nic, desiredNic: NicVo): Boolean {
+		// Compare each relevant property. Add more as needed.
+		if (existingNic.name() != desiredNic.name) return true
+		if (existingNic.vnicProfile()?.id() != desiredNic.vnicProfileVo.id) return true
+		if (existingNic.interface_() != desiredNic.interface_.toNicInterface()) return true
+
+		// Example for other properties:
+		// if (existingNic.mac()?.address() != desiredNic.macAddress) return true
+		// if (existingNic.isPlugged != desiredNic.isPlugged) return true
+
+		// If all properties match, no update is needed.
+		return false
 	}
 
 

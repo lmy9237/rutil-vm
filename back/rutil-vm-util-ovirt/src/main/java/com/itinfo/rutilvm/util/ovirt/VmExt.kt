@@ -8,6 +8,12 @@ import com.itinfo.rutilvm.api.ovirt.business.model.logFailWithin
 import com.itinfo.rutilvm.common.suspendRunCatching
 
 import com.itinfo.rutilvm.util.ovirt.error.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.Connection
@@ -15,6 +21,7 @@ import org.ovirt.engine.sdk4.builders.*
 import org.ovirt.engine.sdk4.services.*
 import org.ovirt.engine.sdk4.types.*
 import java.math.BigInteger
+import java.util.concurrent.TimeoutException
 
 fun Connection.srvVms(): VmsService =
 	this.systemService.vmsService()
@@ -479,7 +486,10 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 		// return FailureType.DUPLICATE.toResult(Term.NIC.desc)
 	}
 
-	if (nic.macPresent() && nic.mac().addressPresent() && nic.mac().address().isNotEmpty()) {
+	if (nic.macPresent() &&
+		nic.mac().addressPresent() &&
+		nic.mac().address().isNotEmpty()
+	) {
 		if (existingNics.any { it.mac().address() == nic.mac().address() })
 			return FailureType.DUPLICATE.toResult("mac 주소")
 		// TODO
@@ -513,13 +523,65 @@ fun Connection.addMultipleNicsToVm(vmId: String, nics: List<Nic>): Result<Boolea
 	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.NIC, "여러건 생성", vmId) else it
 }
 
-fun Connection.updateNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching {
-	if (this.findAllNicsFromVm(vmId).getOrDefault(listOf())
+fun Connection.updateNicFromVm(
+	vmId: String,
+	nic: Nic
+): Result<Nic?> = runCatching {
+	/*
+	runBlocking {
+		srv.deactivate().send()
+		delay(3000)
+		srv.update()
+			.nic(nic)
+			.send().nic()
+		delay(3000)
+		srv.activate().send()
+	}
+	*/
+	if (this@updateNicFromVm.findAllNicsFromVm(vmId)
+			.getOrDefault(listOf())
 			.nameDuplicateVmNic(nic.name(), nic.id())) {
 		throw ErrorPattern.NIC_DUPLICATE.toError()
 	}
 
-	srvNicFromVm(vmId, nic.id()).update().nic(nic).send().nic()
+	val srv = this@updateNicFromVm.srvNicFromVm(vmId, nic.id())
+	// --- 2. Check VM Status
+	val vm = findVm(vmId ,"host").getOrNull()
+		?: throw ErrorPattern.VM_NOT_FOUND.toError()
+	// TODO: 변경 할 NIC가 현재 가상머신이 있는 호스트의 네트워크에도 존재하는지 확인필요
+	// 이 조건에 부합하지 않을 결우, 이 문구가 발생
+	//
+	// "Failed to deactivate VM Network Interface"
+	if (vm.status() != VmStatus.DOWN) {
+		// --- PATH A: VM is OFF - Simple Update ---
+		log.warn("vm NOT DOWN! {}.", nic.id())
+		throw ErrorPattern.VM_STATUS_ERROR.toError()
+		// TODO: 더 정확하고 나은 에러 유형 생성
+	}
+	srv.update().nic(nic).send().nic()
+
+	/*else {
+		// --- PATH B: VM is RUNNING - Full Deactivate/Update/Activate Dance ---
+		log.info("VM is running. Performing hot-update for NIC {}.", nic.id())
+		// Step 2.1: Deactivate
+		log.info("updateNicFromVm ... deactivate NIC {}, plugged: {}", nic.id(), nic.plugged())
+		if (nic.plugged())
+			srv.deactivate().async(true).send()
+
+		pollNicStatus(vm.id(), nic.id(), false)
+
+		// Step 2.2: Update
+		log.info("updateNicFromVm ... updateNic NIC {}", nic.id())
+		val updatedNic = srv.update().nic(nic).send().nic()
+
+		// Step 2.3: Activate
+		log.info("updateNicFromVm ... activate NIC {}", updatedNic.id())
+		srv.activate().send()
+		pollNicStatus(vm.id(), nic.id(), true)
+
+		// Return the final state of the NIC after all operations
+		srv.get().send().nic()
+	}*/
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "편집", vmId)
 }.onFailure {
@@ -531,7 +593,9 @@ fun Connection.updateMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<B
 	val validNics = nics.filter { it.vnicProfile().id().isNotEmpty() }
 	if (validNics.isEmpty()) return@runCatching true
 
-	val results = nics.map { updateNicFromVm(vmId, it) }
+	val results = nics.map {
+		updateNicFromVm(vmId, it)
+	}
 	val allSuccessful = results.all { it.isSuccess }
 
 	if (!allSuccessful) {
@@ -552,11 +616,13 @@ fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = r
 	val nic = this@removeNicFromVm.findNicFromVm(vmId, nicId)
 		.getOrNull() ?: throw ErrorPattern.NIC_NOT_FOUND.toError()
 
-	// if (vm.status() == VmStatus.UP && nic.linked())
-	// 	throw ErrorPattern.NIC_UNLINKED_REQUIRED.apply {
-	// 		this.additional = "NIC 연결분리 필요"
-	// 	}.toError()
-	srvNicFromVm(vmId, nic.id()).remove().send()
+	if (vm?.status() != VmStatus.DOWN && nic.linked())
+		throw ErrorPattern.NIC_UNLINKED_REQUIRED.toError()
+
+	srvNicFromVm(vmId, nic.id())
+		.remove()
+		.async(true)
+		.send()
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "제거", vmId)
@@ -587,7 +653,6 @@ fun Connection.removeMultipleNicsFromVm(vmId: String, nics: List<Nic>): Result<B
 fun List<Nic>.nameDuplicateVmNic(name: String, id: String? = null): Boolean =
 	this.filter { it.id() != id }.any { it.name() == name }
 
-
 fun Connection.srvReportedDevicesFromVm(vmId: String): VmReportedDevicesService =
 	this.srvVm(vmId).reportedDevicesService()
 
@@ -599,7 +664,6 @@ fun Connection.findAllReportedDevicesFromVm(vmId: String): Result<List<ReportedD
 	Term.VM.logFailWithin(Term.REPORTED_DEVICE, "목록조회", it, vmId)
 	throw if (it is Error) it.toItCloudExceptionWithin(Term.VM, Term.REPORTED_DEVICE, "목록조회", vmId) else it
 }
-
 
 fun Connection.srvReportedDevicesFromVmNics(vmId: String, nicId: String): VmReportedDevicesService =
 	this.srvNicFromVm(vmId, nicId).reportedDevicesService()
@@ -1032,7 +1096,7 @@ fun List<Vm>.nameDuplicateVm(name: String, id: String? = null): Boolean =
  * @throws InterruptedException
  */
 @Throws(InterruptedException::class)
-fun Connection.expectVmStatus(vmId: String, expectStatus: VmStatus, interval: Long = 1000L, timeout: Long = 90000L): Boolean {
+fun Connection.pollVmStatus(vmId: String, expectStatus: VmStatus, interval: Long = 1000L, timeout: Long = 90000L): Boolean {
 	val startTime = System.currentTimeMillis()
 	while (true) {
 		val currentVm: Vm? = this.findVm(vmId).getOrNull()
@@ -1045,6 +1109,28 @@ fun Connection.expectVmStatus(vmId: String, expectStatus: VmStatus, interval: Lo
 			return false
 		}
 		log.info("가상머신 상태: {}", status)
+		Thread.sleep(interval)
+	}
+}
+
+@Throws(InterruptedException::class)
+fun Connection.pollNicStatus(
+	vmId: String, nicId: String,
+	expectPlugged: Boolean,
+	interval: Long = 1000L, timeout: Long = 90000L
+): Boolean {
+	val startTime = System.currentTimeMillis()
+	while (true) {
+		val currentNic: Nic? = this.findNicFromVm(vmId, nicId).getOrNull()
+		val status = currentNic?.plugged() ?: false
+		if (status == expectPlugged) {
+			log.info("NIC {} 완료...", expectPlugged)
+			return true
+		} else if (System.currentTimeMillis() - startTime > timeout) {
+			log.error("NIC {} 전환 시간 초과", expectPlugged)
+			return false
+		}
+		log.info("NIC 상태: {}", if (status) "PLUGGED" else "UNPLUGGED")
 		Thread.sleep(interval)
 	}
 }

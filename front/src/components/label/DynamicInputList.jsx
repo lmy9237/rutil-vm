@@ -9,9 +9,9 @@
 //  */
 // const DynamicInputList = ({
 //   values = [],
-//   onChange = () => {},
-//   onAdd = () => {},
-//   onRemove = () => {},
+//   onChange=()=>{},
+//   onAdd=()=>{},
+//   onRemove=()=>{},
 //   options = [],
 //   showLabel = true,
 //   inputType = "select",
@@ -61,10 +61,10 @@
 
 // export default DynamicInputList;
 import React from "react";
-import DynamicButton from "@/components/label/DynamicButton";
-import LabelSelectOptions from "@/components/label/LabelSelectOptions";
+import DynamicButton                    from "@/components/label/DynamicButton";
+import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
+import Localization                     from "@/utils/Localization";
 import "./DynamicInputList.css";
-import Localization from "@/utils/Localization";
 
 /**
  * @name DynamicInputList
@@ -72,9 +72,9 @@ import Localization from "@/utils/Localization";
  */
 const DynamicInputList = ({
   values = [],
-  onChange = () => {},
-  onAdd = () => {},
-  onRemove = () => {},
+  onChange=()=>{},
+  onAdd=()=>{},
+  onRemove=()=>{},
   options = [],
   showLabel = true,
   inputType = "select",
@@ -89,7 +89,7 @@ const DynamicInputList = ({
           <div key={index} className="dynamic-input f-start w-full">
             {showLabel && (
               // <div className="nic-label">{`${item.name || ""}`}</div>
-              <div className="nic-label">{`nic${index + 1}`}</div>
+              <div className="nic-label">{item?.name || `nic${index+1}`}</div>
             )}
 
             <div className="dynamic-select-outer f-end w-full">
@@ -104,8 +104,7 @@ const DynamicInputList = ({
                   }))}
                 />
               ) : (
-                <input
-                  type="text"
+                <input type="text"
                   className="dynamic-text-input"
                   value={item.value || ""}
                   onChange={(e) => onChange(index, e.target.value)}
@@ -114,15 +113,13 @@ const DynamicInputList = ({
 
               <div className="dynamic-btns f-end">
                 {isLastItem && (
-                  <DynamicButton
-                    type="add"
+                  <DynamicButton type="add"
                     onClick={onAdd}
                     disabled={inputType === "select" && !isProfileSelected}
                   />
                 )}
                 {values.length > 1 && (
-                  <DynamicButton
-                    type="remove"
+                  <DynamicButton type="remove"
                     onClick={() => onRemove(index)}
                     disabled={inputType === "select" && !isProfileSelected}
                   />

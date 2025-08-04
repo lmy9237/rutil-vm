@@ -100,7 +100,6 @@ const VmImportRender2Modal = ({
   }, [vmDetailsMap]);
   
   const selectedVm = vmMapById[selectedId];
-  console.log("$ vmDetailsMap", vmDetailsMap); // TODO: 필요없으면 제거
 
   // 첫번째 항목으로 지정
   useSelectFirstItemEffect(domains, setDomainVo);

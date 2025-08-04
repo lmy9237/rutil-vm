@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 // import toast from "react-hot-toast";
-import { useToast }           from "@/hooks/use-toast";
+// import { useToast }           from "@/hooks/use-toast";
+import { useApiToast }       from "@/hooks/useSimpleToast"
 import useUIState         from "@/hooks/useUIState";
 import useContextMenu     from "@/hooks/useContextMenu";
 import useGlobal          from "@/hooks/useGlobal";
@@ -22,7 +23,7 @@ const EventActionButtons = ({
   actionType="default"
 }) => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { apiToast } = useApiToast();
   const { clearAllContextMenu } = useContextMenu()
   const { setActiveModal } = useUIState()
   const { eventsSelected } = useGlobal()
@@ -36,11 +37,7 @@ const EventActionButtons = ({
     Logger.debug(`EventActionButtons > handleMsgCopy ... }`)
     clearAllContextMenu()
     copy()
-    toast({ 
-      title: `작업완료`,
-      description:`메시지복사 완료 \n${descriptions}` ,
-      variant: 'default'
-    })
+    apiToast.ok(`메시지복사 완료 \n${descriptions}`)
   }, [eventsSelected])
   
   const basicActions = [

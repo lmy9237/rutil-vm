@@ -3,16 +3,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
+import Loading                from "@/components/common/Loading";
 import {
   rvi16Globe,
   rvi16DataCenter,
   rvi16Network,
 } from "@/components/icons/RutilVmIcons";
+import TreeMenuItem           from "./TreeMenuItem";
 import {
   useAllTreeNavigations
 } from "@/api/RQHook";
 import Logger                 from "@/utils/Logger";
-import TreeMenuItem           from "./TreeMenuItem";
 
 const NetworkTree = ({}) => {
   const navigate = useNavigate();
@@ -22,38 +23,25 @@ const NetworkTree = ({}) => {
     secondVisibleNetwork, toggleSecondVisibleNetwork,
     openDataCentersNetwork, toggleOpenDataCentersNetwork
   } = useTmi();
-  const { setDatacentersSelected, setNetworksSelected, } = useGlobal();
+  const { 
+    setDatacentersSelected,
+    setNetworksSelected
+  } = useGlobal();
 
   // ✅ API 호출 (네트워크 트리 데이터)
-  const { data: navNetworks = [] } = useAllTreeNavigations("network");
-
-  Logger.debug(`NetworkTree ...`)
-  return (
-    <div id="tmi-network" className="tmi-g">
-      {/* 레벨 1: Rutil Manager */}
-      <TreeMenuItem level={1}
-        title="Rutil Manager"
-        iconDef={rvi16Globe("currentColor")}
-        isSelected={() => location.pathname.includes("rutil")}
-        isContextSelected={contextMenuType() === "rutil-manager"}
-        isNextLevelVisible={secondVisibleNetwork()}
-        onChevronClick={() => toggleSecondVisibleNetwork()}
-        isChevronVisible={true}
-        onClick={() => navigate("/networks/rutil-manager")}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          setContextMenu({
-            mouseX: e.clientX,
-            mouseY: e.clientY,
-            item: {
-            },
-            treeType: "networks"
-          }, "rutil-manager");
-        }}
-      />
-
-      {/* 레벨 2: 데이터 센터 */}
-      {secondVisibleNetwork() && [...navNetworks].map((dc) => {
+  const {
+    data: navNetworks=[],
+    isLoading: isNavNetworksLoading,
+    isSuccess: isNavNetworksSuccess,
+    isError: isNavNetworksError,
+  } = useAllTreeNavigations("network");
+  
+  const renderTree = () => {
+    Logger.debug(`NetworkTree > renderTree ... `)
+    {/* 레벨 2: 데이터 센터 */}
+    return !!isNavNetworksLoading 
+      ? (<Loading />)
+      : (secondVisibleNetwork() && [...navNetworks].map((dc) => {
         const isDataCenterOpen = openDataCentersNetwork(dc?.id) || false;
         const hasNetworks = [...dc?.networks]?.length > 0;
         return (
@@ -121,7 +109,34 @@ const NetworkTree = ({}) => {
             ))}
           </div>
         );
-      })}
+      })
+    )}
+  
+
+  return (
+    <div id="tmi-network" className="tmi-g">
+      {/* 레벨 1: Rutil Manager */}
+      <TreeMenuItem level={1}
+        title="Rutil Manager"
+        iconDef={rvi16Globe("currentColor")}
+        isSelected={() => location.pathname.includes("rutil")}
+        isContextSelected={contextMenuType() === "rutil-manager"}
+        isNextLevelVisible={secondVisibleNetwork()}
+        onChevronClick={() => toggleSecondVisibleNetwork()}
+        isChevronVisible={true}
+        onClick={() => navigate("/networks/rutil-manager")}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+            item: {
+            },
+            treeType: "networks"
+          }, "rutil-manager");
+        }}
+      />
+      {renderTree()}
     </div>
   );
 };

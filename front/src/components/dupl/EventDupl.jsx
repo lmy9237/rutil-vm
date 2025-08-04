@@ -32,7 +32,10 @@ const EventDupl = ({
   events = [],
   refetch, isRefetching, isLoading, isError, isSuccess,
 }) => {
-  const { eventsSelected, setEventsSelected } = useGlobal()
+  const { 
+    eventsSelected, 
+    setEventsSelected
+  } = useGlobal();
  
   const transformedData = [...events].map((e) => ({
     ...e,

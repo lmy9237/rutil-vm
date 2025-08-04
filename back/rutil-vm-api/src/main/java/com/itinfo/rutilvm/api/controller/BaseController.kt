@@ -60,7 +60,7 @@ open class BaseController(
 	}
 
 	@ExceptionHandler(ConflictException::class)
-	@ResponseStatus(HttpStatus.LOCKED)
+	@ResponseStatus(HttpStatus.CONFLICT)
 	fun handleConflict(e: Throwable): ResponseEntity<Res<Any?>>  {
 		log.error("handleConflict ... e: {}", e::class.simpleName)
 		iJob.addQuick(JobVo.rutilvmFail(e.localizedMessage))
@@ -71,10 +71,16 @@ open class BaseController(
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	fun handleOvirtError(e: Throwable): ResponseEntity<Res<Any?>> {
 		log.error("handleOvirtError ... e::class.simpleName: {}, e.message: {}", e::class.simpleName, e.message)
-		val rawMessage = e.message ?: ""
-		val refinedMessage = Regex("""Fault detail is ['"]\[(.*?)]['"]""").find(rawMessage)?.groupValues?.get(1)
+		// TODO: 메시지를 효과적으로 출력하는 방법에 대한 기술 조사 필요 (e.message 의 글자량이 가끔 너무 많아서 최근작업에서 출력이 안됨)
+		val rawMessage = e.localizedMessage ?: ""
+		val refinedMessage =
+			Regex("""Fault detail is ['"]\[(.*?)]['"]""")
+				.find(rawMessage)
+				?.groupValues
+				?.get(1)
 			?: rawMessage
-		val resultMessage = "실패: 알수없는 이, 이유: $refinedMessage"
+
+		val resultMessage = "실패이유: $refinedMessage"
 
 		if (e.message?.contains("${FailureType.NOT_FOUND.code}".toRegex()) == false)
 			iJob.addQuick(JobVo.rutilvmFail(refinedMessage))

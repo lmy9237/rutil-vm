@@ -197,7 +197,7 @@ const VmDiskModal = ({
       if (editMode) {
         editDiskVm({ vmId, diskAttachmentId: formState.id, diskAttachment: diskData });
       } else if (onCreateDisk) {
-        console.log("$ diskDAta", newDisk);
+        Logger.debug("VmDiskModal > diskData ...", newDisk);
         onCreateDisk(newDisk);
         onClose();
       } else {

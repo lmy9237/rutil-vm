@@ -742,7 +742,7 @@ class VmController: BaseController() {
 	@PutMapping("/{vmId}/nics/{nicId}")
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	fun updateNic(
+	suspend fun updateNic(
 		@PathVariable vmId: String? = null,
 		@PathVariable nicId: String? = null,
 		@RequestBody nic: NicVo? = null,

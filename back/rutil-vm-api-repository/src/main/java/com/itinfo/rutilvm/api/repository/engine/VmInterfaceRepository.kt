@@ -64,5 +64,5 @@ LEFT JOIN FETCH ide.largeIcon
 WHERE 1=1
 AND v.vmGuid = :vmGuid
 """)
-	fun findByVmGuid(vmGuid: UUID?): VmInterfaceEntity?
+	fun findAllByVmGuid(vmGuid: UUID?): List<VmInterfaceEntity>
 }

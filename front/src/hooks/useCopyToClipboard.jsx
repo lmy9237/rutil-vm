@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import Logger from "../utils/Logger";
+import Logger                 from "@/utils/Logger";
 
 const useCopyToClipboard = (txt) => {
   const copyToClipboard = useCallback(async (txt) => {

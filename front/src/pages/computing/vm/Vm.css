@@ -67,11 +67,13 @@
     flex-direction: column;
   }
 }
-.btn-vnc {
+.btn-vnc-icon, .btn-vnc {
   background-color: var(--color-primary);
   color: var(--color-white);
-  padding: 11px;
+  
 }
+.btn-vnc { padding: 11px; }
+.btn-vnc-icon { padding: 6px; }
 .vm-info-vnc {
   width: 210px;
 }

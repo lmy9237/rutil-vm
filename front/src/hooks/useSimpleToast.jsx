@@ -15,6 +15,8 @@ import Logger        from "@/utils/Logger";
 export const useApiToast = () => {
   const { toast } = useToast();
 
+  const DEFAULT_DURATION = 1200;
+
   const apiToast = {
     /**
      * @name apiToast.refetch(...)
@@ -29,7 +31,7 @@ export const useApiToast = () => {
       toast({
         title: Localization.kr.TITLE_API_FETCH,
         description: description || "...",
-        duration: 1200,
+        duration: DEFAULT_DURATION,
       })
     },
     /**
@@ -39,14 +41,15 @@ export const useApiToast = () => {
      * @param {string} description 내용
      */
     ok: (
-      description=""
+      description="",
+      title="",
     ) => {
       Logger.debug(`useApiToast > apiToast.ok . .. description: ${description}`);
       toast({ // 개발 모드일 때만 이 Toast가 활성화
         variant: "success",
-        title: Localization.kr.TITLE_API_SUCCESS,
+        title: title || Localization.kr.TITLE_SUCCESS_DEFAULT,
         description: description || "...",
-        duration: 2000,
+        duration: 1600,
       })
     },
     /**
@@ -86,7 +89,7 @@ export const useProgressToast = () => {
         description: "기다리는 중 ...", 
         // duration: shouldEnd ? 300 : Infinity,
         update: () => ({
-          duration: shouldEnd ? 300 : Infinity,
+          duration: shouldEnd ? 100 : Infinity,
         })
       })
     },
@@ -117,7 +120,7 @@ export const useProgressToast = () => {
         title: title || `디스크이미지 ${Localization.kr.UPLOAD} 준비 ${Localization.kr.IN_PROGRESS}`,
         description: `${progress}% 완료 (${ratio})\n\n 창을 새로고침 하지 마세요.`,
         update: () => ({
-          duration: (progress >= 99) ? 1 : Infinity
+          duration: (progress >= 99) ? 10 : Infinity
         }),
         duration: Infinity,
       });

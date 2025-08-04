@@ -16,7 +16,9 @@ fun Error.toItCloudException(msg: String = ""): ItCloudException = when {
 fun Error.toItCloudException(
 	term: Term,
 	action: String,
-	targetId: String?=""): ItCloudException = toItCloudException(term.toStrongMessage(action, this@toItCloudException, targetId))
+	targetId: String?=""
+): ItCloudException = toItCloudException(term.toStrongMessage(action, this@toItCloudException, targetId))
+
 fun Error.toItCloudExceptionWithin(
 	term: Term,
 	withinTerm: Term,

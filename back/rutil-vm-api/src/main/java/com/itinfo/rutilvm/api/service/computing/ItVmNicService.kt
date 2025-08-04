@@ -56,7 +56,7 @@ interface ItVmNicService {
 	 * @return [NicVo]?
 	 */
 	@Throws(Error::class)
-	fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo?
+	suspend fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo?
 	/**
 	 * [ItVmNicService.removeFromVm]
 	 * 네트워크 인터페이스 삭제
@@ -102,7 +102,7 @@ class VmNicServiceImpl(
 	}
 
 	@Throws(Error::class)
-	override fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo? {
+	override suspend fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo? {
 		log.info("updateFromVm ... vmId: {}, nicVo: {}", vmId, nicVo)
 		val res: Nic? = conn.updateNicFromVm(
 			vmId,

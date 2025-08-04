@@ -3,14 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
+import Loading                from "@/components/common/Loading";
 import {
   rvi16Globe,
   rvi16DataCenter,
-  rvi16Wrench,
-  rvi16Refresh,
-  rvi16Storage,
-  rvi16QuestionMark,
-  rvi16Lock,
   status2TreeIcon,
 } from "@/components/icons/RutilVmIcons";
 import {
@@ -22,7 +18,11 @@ import TreeMenuItem           from "./TreeMenuItem";
 const StorageTree = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { contextMenu, setContextMenu, contextMenuType } = useContextMenu();
+  const { 
+    contextMenu, 
+    setContextMenu, 
+    contextMenuType
+  } = useContextMenu();
 
   const { 
     secondVisibleStorage, toggleSecondVisibleStorage,
@@ -32,36 +32,19 @@ const StorageTree = ({}) => {
   const { setDatacentersSelected, setDomainsSelected, setDisksSelected } = useGlobal();
 
   // ✅ API 호출 (스토리지 트리 데이터)
-  const { data: navStorageDomains = [] } = useAllTreeNavigations("storagedomain");
+  const { 
+    data: navStorageDomains=[],
+    isLoading: isNavStorageDomainsLoading,
+    isSuccess: isNavStorageDomainsSuccess,
+    isError: isNavStorageDomainsError,
+  } = useAllTreeNavigations("storagedomain");
 
-  Logger.debug(`StorageTree ... `)
-  return (
-    <div id="tmi-storage" className="tmi-g">
-      {/* 첫 번째 레벨 (Rutil Manager) */}
-      <TreeMenuItem level={1}
-        title="Rutil Manager"
-        iconDef={rvi16Globe("currentColor")}
-        // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
-        isSelected={() => location.pathname.includes("rutil")}
-        isContextSelected={contextMenuType() === "rutil-manager"}
-        isNextLevelVisible={secondVisibleStorage()}
-        isChevronVisible={true}
-        onChevronClick={() => toggleSecondVisibleStorage()}
-        onClick={() => navigate("/storages/rutil-manager")}
-        onContextMenu={(e) => {
-          e.preventDefault();
-          setContextMenu({
-            mouseX: e.clientX,
-            mouseY: e.clientY,
-            item: {
-            },
-            treeType: "domains"
-          }, "rutil-manager");
-        }}
-      />
-
-      {/* 두 번째 레벨 (Data Center) */}
-      {secondVisibleStorage() && navStorageDomains && [...navStorageDomains].map((dc) => {
+  const renderTree = () => {
+    Logger.debug(`StorageTree > renderTree ... `)
+    {/* 두 번째 레벨 (Data Center) */}
+    return !!isNavStorageDomainsLoading 
+      ? (<Loading />)
+      : (secondVisibleStorage() && navStorageDomains && [...navStorageDomains].map((dc) => {
         const isDataCentersOpen = openDataCentersStorage(dc?.id);
         const hasDomains = [...dc?.storageDomains]?.length > 0;
 
@@ -185,7 +168,34 @@ const StorageTree = ({}) => {
             })}
           </div>
         );
-      })}
+      })
+    )}
+
+  return (
+    <div id="tmi-storage" className="tmi-g">
+      {/* 첫 번째 레벨 (Rutil Manager) */}
+      <TreeMenuItem level={1}
+        title="Rutil Manager"
+        iconDef={rvi16Globe("currentColor")}
+        // isSelected={() => /\/rutil-manager$/g.test(location.pathname)}
+        isSelected={() => location.pathname.includes("rutil")}
+        isContextSelected={contextMenuType() === "rutil-manager"}
+        isNextLevelVisible={secondVisibleStorage()}
+        isChevronVisible={true}
+        onChevronClick={() => toggleSecondVisibleStorage()}
+        onClick={() => navigate("/storages/rutil-manager")}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          setContextMenu({
+            mouseX: e.clientX,
+            mouseY: e.clientY,
+            item: {
+            },
+            treeType: "domains"
+          }, "rutil-manager");
+        }}
+      />
+      {renderTree()}
     </div>
   );
 };

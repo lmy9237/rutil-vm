@@ -9,13 +9,19 @@ import { InfoTable }              from "@/components/table/InfoTable";
 import GeneralLayout              from "@/components/GeneralLayout";
 import GeneralBoxProps            from "@/components/common/GeneralBoxProps";
 import TableRowClick              from "@/components/table/TableRowClick";
-import { VmOsIcon, VmOsScreenshot }               from "@/components/icons/VmOs";
+import { 
+  VmOsIcon, 
+  VmOsScreenshot
+} from "@/components/icons/VmOs";
 import {
   RVI16,
   rvi16Desktop,
   rvi16DesktopFlag,
+  RVI24,
+  rvi24ExclamationCircle,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
+import GeneralBarChart            from "@/components/Chart/GeneralBarChart";
 import VmGeneralBarChart          from "@/components/Chart/GeneralBarChart";
 import {
   useVm,
@@ -31,7 +37,6 @@ import { convertBytesToMB }       from "@/util";
 import Localization               from "@/utils/Localization";
 import Logger                     from "@/utils/Logger";
 import "./Vm.css"
-import GeneralBarChart from "@/components/Chart/GeneralBarChart";
 
 /**
  * @name VmGeneral
@@ -44,12 +49,12 @@ import GeneralBarChart from "@/components/Chart/GeneralBarChart";
 const VmGeneral = ({ 
   vmId
 }) => {
+  const { validationToast } = useValidationToast();
   const {
     vncScreenshotDataUrl, 
     setVncScreenshotDataUrl,
     clearVncScreenshotDataUrl
   } = useUIState();
-  const { validationToast } = useValidationToast();
 
   const {
     vmsSelected, setVmsSelected, 
@@ -391,11 +396,14 @@ const VmGeneral = ({
             <InfoTable tableRows={hardwareTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="관련 개체"   enableOverflowCheck={true} >
+          <GeneralBoxProps title="관련 개체" enableOverflowCheck={true} >
             <InfoTable tableRows={relatedTableRows} />
           </GeneralBoxProps>
 
-          <GeneralBoxProps title="스냅샷"   enableOverflowCheck={true} count={snapshotList.length}  moreLink={`/computing/vms/${vmId}/snapshots`} >
+          <GeneralBoxProps title={Localization.kr.SNAPSHOT} enableOverflowCheck={true} 
+            count={snapshotList.length}  
+            moreLink={`/computing/vms/${vmId}/snapshots`}
+          >
             <div className="box-content snapshots">
               <div
                 className="snapshot-add py-3 fs-13"
@@ -430,6 +438,16 @@ const VmVncMonitor = ({
   onWebConsole=()=>{},
   onRemoteViewer=()=>{},
 }) => {
+  const { validationToast } = useValidationToast()
+
+  const onExclamationClick = (e) =>  {
+    Logger.debug(`VmVncMonitor > onExclamationClick ... `)
+    validationToast.debug(`아이콘 버튼 클릭!`)
+    // TODO: virt viewer를 받을 수 있는 페이지를 보여주기
+    //
+    // https://virt-manager.org/download.html
+  }
+
   return (
     <div className="vm-info-vnc v-center gap-8">
       {
@@ -445,18 +463,25 @@ const VmVncMonitor = ({
       <div className="v-center w-full gap-4">
         <button 
           onClick={onWebConsole}
-          className="btn-vnc w-full fs-14"
+          className="btn-vnc w-full fs-12"
           disabled={!vm?.qualified4ConsoleConnect}
         >
           웹 콘솔
         </button>
-        <button 
-          onClick={onRemoteViewer}
-          className="btn-vnc w-full fs-14"
-          disabled={!vm?.qualified4ConsoleConnect}
-        >
-          원격뷰어 접속파일 다운로드
-        </button>
+        <div className="f-center w-full gap-4">
+          <button className="btn-vnc w-full fs-12"
+            onClick={onRemoteViewer}
+            disabled={!vm?.qualified4ConsoleConnect}
+          >
+            원격뷰어 접속파일 다운로드
+          </button>
+          <button className="btn-vnc-icon ml-auto w-[38px] h-[38px] fs-12"
+            onClick={onExclamationClick}
+            disabled={!vm?.qualified4ConsoleConnect}>
+            <RVI24 iconDef={rvi24ExclamationCircle(CONSTANT.color.white)}/>
+          </button>
+        </div>
+        
       </div>
     </div>
   )

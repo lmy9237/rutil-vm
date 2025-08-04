@@ -6,7 +6,7 @@ import Loading                from "@/components/common/Loading";
 import { 
   RVI24, 
   rvi24Close, 
-  rvi24ErrorRed,
+  rvi24ExclamationCircle,
 } from "@/components/icons/RutilVmIcons";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
@@ -64,7 +64,7 @@ const BaseModal = ({
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
             <div className="popup-contents-prompt f-start fs-16">
-              {shouldWarn && (<RVI24 iconDef={rvi24ErrorRed()} className="error-icon mr-2" />)}
+              {shouldWarn && (<RVI24 iconDef={rvi24ExclamationCircle()} className="error-icon mr-2" />)}
               {promptText}
             </div>
           )}

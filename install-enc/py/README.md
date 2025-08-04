@@ -111,4 +111,6 @@ rutilvm-beta-20250404-01.py
 ## 참조
 
 - https://nuitka.net/
+  - https://nuitka.net/user-documentation/common-issue-solutions.html
 - https://github.com/Nuitka/Nuitka
+
