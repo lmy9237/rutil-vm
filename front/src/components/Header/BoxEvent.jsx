@@ -148,7 +148,7 @@ const BoxEvent = ({
               >
                 모두 삭제
               </div>
-            <div className="f-center fs-14">모두 출력</div>
+            {/* <div className="f-center fs-14">모두 출력</div> */}
           </div>
         </>
       )}
@@ -192,7 +192,7 @@ const BoxEvent = ({
             >
               모두 삭제
             </div>
-            <div className="f-center fs-14">모두 출력</div>
+            {/* <div className="f-center fs-14">모두 출력</div> */}
           </div>
         </>
       )}

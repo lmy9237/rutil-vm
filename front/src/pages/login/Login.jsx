@@ -62,23 +62,36 @@ const Login = () => {
         <div className="login-form-outer v-center">
           <div className="login-form-box v-center">
             <RutilVmLogo className="bigger" />
-            <form id="form-login" className="v-center w-full" 
+            <form id="form-login" className="v-center w-full h-[225px] mt-2" 
               onSubmit={handleSubmit(doLogin)}
             >
               <IconInput className="login-input" type="text"
                 iconDef={rvi16User()}
-                placeholder={Localization.kr.PLACEHOLDER_USERNAME}
+                placeholder={Localization.kr.PLACEHOLDER_ID}
                 register={register} target={"username"} options={{ required: true, maxLength: 30 }}
                 // value={username ?? ""}
                 // onChange={(e) => setUsername(e.target.value)}
               />
               <IconInput className="login-input" required type="password"
                 iconDef={rvi16Lock(CONSTANT.color.down)}
-                placeholder={Localization.kr.PLACEHOLDER_PASSWORD}
+                placeholder={Localization.kr.PLACEHOLDER_PW}
                 register={register} target={"password"} options={{ required: true, maxLength: 30 }}
                 // value={password ?? ""}
                 // onChange={(e) => setPassword(e.target.value)}
               />
+
+              <div className="f-start gap-4 w-full py-7">
+                <input
+                  type="checkbox"
+                  id="rememberId"
+                  // checked={rememberId}
+                  // onChange={(e) => setRememberId(e.target.checked)}
+                />
+                <label htmlFor="rememberId" className="fs-13 save-id">
+                  아이디 저장
+                </label>
+              </div>
+
               <button type="submit"
                 className="login-button f-center fs-14 bgcolor-primary"
               >

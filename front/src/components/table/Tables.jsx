@@ -41,6 +41,7 @@ const Tables = ({
   clickableColumnIndex = [],
   onClickableColumnClick = () => {},
   searchQuery="", setSearchQuery=()=>{},
+    selectedRowIds = [], 
 }) => {
   const {
     contextMenu, setContextMenu
@@ -375,6 +376,16 @@ const Tables = ({
     document.addEventListener("mousemove", onMouseMove);
     document.addEventListener("mouseup", onMouseUp);
   };
+  
+  // 가상머신 체크박스로 selected-row 선택,해지 고려
+  useEffect(() => {
+    if (target === "vm" && Array.isArray(selectedRowIds)) {
+      const newSelected = paginatedData
+        .map((row, i) => selectedRowIds.includes(row.id) ? indexOfFirstItem + i : null)
+        .filter(i => i !== null);
+      setSelectedRows(newSelected);
+    }
+  }, [selectedRowIds, paginatedData, target, indexOfFirstItem]);
 
   const renderTableBody = useCallback(() => {
     if (isFirstLoading) { // 재접속 or 첫로딩딩
@@ -405,10 +416,12 @@ const Tables = ({
               }}
               onContextMenu={(e) => handleContextMenu(e, globalIndex)}
               className={
-                selectedRows.includes(globalIndex) || contextRowIndex === globalIndex
+                selectedRows.includes(globalIndex) || 
+                contextRowIndex === globalIndex ||
+                (target === "vm" && selectedRowIds?.includes?.(row.id)) // 가상머신 체크박스로 selected-row 선택,해지 고려
                   ? "selected-row"
                   : ""
-              }
+}
             >
               {columns.map((column, colIndex) => {
                 const cellValue = row[column.accessor];

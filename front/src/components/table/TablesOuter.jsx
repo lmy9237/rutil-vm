@@ -18,6 +18,7 @@ const TablesOuter = ({
   shouldHighlight1stCol = false,
   onRowClick,
   clickableColumnIndex,
+ selectedRowIds = [], 
   onClickableColumnClick,
 }) => {
 
@@ -47,6 +48,7 @@ const TablesOuter = ({
           shouldHighlight1stCol={shouldHighlight1stCol}
           // onContextMenuItems={onContextMenuItems}
           onClickableColumnClick={onClickableColumnClick}
+          selectedRowIds={selectedRowIds} 
           isRefetching={isRefetching} isLoading={isLoading} isError={isError} isSuccess={isSuccess}
         />
       </div>

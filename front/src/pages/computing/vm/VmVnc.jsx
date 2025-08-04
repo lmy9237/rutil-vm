@@ -9,7 +9,9 @@ import RightClickMenu                   from "@/components/common/RightClickMenu
 import HeaderButton                     from "@/components/button/HeaderButton";
 import Vnc                              from "@/components/Vnc";
 import {
-  rvi24Desktop
+  RVI24,
+  rvi24Desktop,
+  rvi24Refresh
 } from "@/components/icons/RutilVmIcons";
 import {
   useVm,
@@ -59,6 +61,14 @@ const VmVnc = ({
   });
 
   const sectionHeaderButtons = [
+    {
+      type: "refetch",
+      onClick: (e) => {
+        e.stopPropagation();
+        window.location.reload();
+      },
+      label: <RVI24 iconDef={rvi24Refresh( "#1D56BC")} /> 
+    },
     { 
       type: "start", 
       onClick: () => {

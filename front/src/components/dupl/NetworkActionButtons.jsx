@@ -17,7 +17,7 @@ const NetworkActionButtons = ({
 
   const basicActions = [
     { type: "create", onClick: () => setActiveModal("network:create"), label: Localization.kr.CREATE, disabled: isContextMenu && networksSelected.length > 0, },
-    { type: "import", onClick: () => setActiveModal("network:import"), label: Localization.kr.IMPORT, disabled: false, },
+    { type: "import", onClick: () => setActiveModal("network:import"), label: Localization.kr.IMPORT, disabled: true, },
     { type: "update", onClick: () => setActiveModal("network:update"), label: Localization.kr.UPDATE, disabled: networksSelected.length !== 1, },
     { type: "remove", onClick: () => setActiveModal("network:remove"), label: Localization.kr.REMOVE, disabled: networksSelected.length === 0, },
   ];

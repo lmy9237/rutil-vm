@@ -23,17 +23,17 @@ const IconInput = ({
     <div 
       className="icon-input-container" 
     >
+      <input 
+        type={isPassword ? (showPassword ? "text" : "password") : type}
+        className="icon-input pl-8"
+        // placeholder={placeholder}
+        {...register(target, options)}
+      />
       {iconDef && (
-        <span className="icon-container">
+        <span className="input-icon-left">
           <RVI16 iconDef={iconDef} />
         </span>
       )}
-      <input 
-        type={isPassword ? (showPassword ? "text" : "password") : type}
-        className="icon-input"
-        placeholder={placeholder}
-        {...register(target, options)}
-      />
       {isPassword && (
         <RVI16 iconDef={showPassword ? rvi16EyeSlash() : rvi16Eye()}
           onClick={handleTogglePassword}

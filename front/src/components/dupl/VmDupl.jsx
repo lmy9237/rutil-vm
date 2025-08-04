@@ -152,6 +152,7 @@ const VmDupl = ({
         }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
+         selectedRowIds={vmsSelected.map(vm => vm.id)}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

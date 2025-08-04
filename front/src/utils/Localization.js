@@ -180,6 +180,8 @@ export const Localization = {
     PLACEHOLDER_SELECT: "선택하세요.",
     PLACEHOLDER_SEARCH: "검색어를 입력하세요.",
     PLACEHOLDER_USERNAME: "사용자명",
+    PLACEHOLDER_ID:"ID",
+    PLACEHOLDER_PW:"Password",
     PLACEHOLDER_PASSWORD: "암호",
     NO_INFO: "🤷‍♂️ 조회 결과가 없습니다.",
     UNABLE_TO_FETCH: "💔 조회에 실패하였습니다. 이유 API 오류",
