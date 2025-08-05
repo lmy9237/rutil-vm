@@ -90,6 +90,7 @@ const HostBondingModal = ({
         ...bondModalState.editTarget,
         bondingVo: {
           ...bondModalState.editTarget.bondingVo,
+          slaveVos: [...(bondModalState.editTarget?.bondingVo?.slaveVos || [])],
           optionVos:
             currentMode === modeOrigin
               ? parseUserMode(bondModalState.userMode)

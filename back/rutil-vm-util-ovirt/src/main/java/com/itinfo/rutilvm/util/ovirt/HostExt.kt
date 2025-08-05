@@ -516,6 +516,19 @@ fun Connection.findNetworkAttachmentFromHost(hostId: String, networkAttachmentId
 }
 
 
+fun Connection.syncallNetworksHost2(hostId: String): Result<Boolean> = runCatching {
+	checkHostExists(hostId)
+	this.srvHost(hostId).syncAllNetworks().send()
+
+	true
+}.onSuccess {
+	Term.HOST.logSuccess("네트워크 동기화", hostId)
+}.onFailure {
+	Term.HOST.logFail("네트워크 동기화", it, hostId)
+	throw if (it is Error) it.toItCloudException(Term.HOST, "네트워크 동기화", hostId) else it
+}
+
+
 fun Connection.setupNetworksFromHost(
 	hostId: String,
 	modifiedBonds: List<HostNic> = listOf(),

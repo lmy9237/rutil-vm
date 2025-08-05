@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import BaseModal                        from "@/components/modal/BaseModal";
@@ -10,6 +10,16 @@ import {
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import LabelCheckbox from "@/components/label/LabelCheckbox";
+
+const DnsInputRow = ({ value, onChange, onAdd, onRemove, isLast }) => (
+  <div className="f-btw" style={{ width: "100%", padding: 0 }}>
+    <LabelInput value={value} onChange={onChange} />
+    <RVI36 className="btn-icon" currentColor="transparent"
+      iconDef={rvi36Add(false)} onClick={onAdd} />
+    <RVI36 className="btn-icon" currentColor="transparent"
+      iconDef={rvi36Remove()} onClick={onRemove} />
+  </div>
+);
 
 const HostNetworkEditModal = ({ 
   isOpen, onClose,
@@ -25,97 +35,57 @@ const HostNetworkEditModal = ({
   ], []);
   const [initialInSync, setInitialInSync] = useState(true);
 
-  const [initialNetwork] = useState(networkModalState);
-
   useEffect(() => {
-    if (isOpen) {
+    if(isOpen){
       setInitialInSync(networkModalState.inSync);
-      
+      setSelectedModalTab("ipv4");
+      Logger.debug(`HostNetworkEditModal > useEffect ... networkModalState: `, networkModalState)
     }
   }, [isOpen]);
 
-  useEffect(() =>{
-    setSelectedModalTab("ipv4");
-  },[isOpen])
-
-  useEffect(() =>{
-    Logger.debug(`HostNetworkEditModal > useEffect ... networkModalState: `, networkModalState)
-  },[isOpen])
-
-  const handleChangeInSync = (field, value) => {
-    Logger.debug(`HostNetworkEditModal > handleChangeInSync ... field: ${field}, value: ${value}`)
-    setNetworkModalState((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleIpv4Change = (field, value) => {
-    Logger.debug(`HostNetworkEditModal > handleIpv4Change ... field: ${field}, value: ${value}`)
-    setNetworkModalState(prev => {
-      import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${value}`)
-      if (field === "protocol" && value !== "static") {
-        return {
-          ...prev,
-          ipv4Values: {
-            ...prev.ipv4Values,
-            protocol: value,
-            // address: "",
-            // gateway: "",
-            // netmask: "",
-          }
-        }
-      }
-      return {
+  const handleChange = useCallback((section, field, value) => {
+    if (section === "inSync") {
+      setNetworkModalState(prev => ({ ...prev, inSync: value }));
+    } else {
+      setNetworkModalState(prev => ({
         ...prev,
-        ipv4Values: { ...prev.ipv4Values, [field]: value }
-      };
+        [`${section}Values`]: { ...prev[`${section}Values`], [field]: value },
+      }));
+    }
+  }, [setNetworkModalState]);
+
+  const handleDnsChange = (idx, value) => {
+    setNetworkModalState(prev => {
+      const updated = [...prev.dnsServers];
+      updated[idx] = value;
+      return { ...prev, dnsServers: updated };
     });
   };
-
-  const handleIpv6Change = (field, value) => {
-    Logger.debug(`HostNetworkEditModal > handleIpv6Change ... field: ${field}, value: ${value}`)
+  const handleDnsAdd = () => {
+    setNetworkModalState(prev => ({ ...prev, dnsServers: [...prev.dnsServers, ""] }));
+  };
+  const handleDnsRemove = (idx) => {
     setNetworkModalState(prev => {
-      import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${value}`)
-      if (field === "protocol" && value !== "static") {
-        return {
-          ...prev,
-          ipv6Values: {
-            ...prev.ipv6Values,
-            protocol: value,
-            // address: "",
-            // gateway: "",
-            // netmask: "",
-          }
-        }
-      }
-      return {
-        ...prev,
-        ipv6Values: { ...prev.ipv6Values, [field]: value }
-      };
+      const updated = [...prev.dnsServers];
+      updated.splice(idx, 1);
+      return { ...prev, dnsServers: updated };
     });
   };
-
   
   const validateForm = () => {
-    Logger.debug(`HostNetworkEditModal > validateForm ... `)
-    if (networkModalState.ipv4Values.protocol === "static") {
-      if(networkModalState.ipv4Values.address === "") {
-        return "ipv4의 IP를 입력해주세요"
-      }
-      if(networkModalState.ipv4Values.netmask === "") {
-        return "ipv4의 넷마스크를 입력해주세요"
-      }
+    const { ipv4Values, ipv6Values } = networkModalState;
+    if (ipv4Values.protocol === "static") {
+      if (!ipv4Values.address) return "ipv4의 IP를 입력하세요";
+      if (!ipv4Values.netmask) return "ipv4의 넷마스크를 입력하세요";
     }
-    if (networkModalState.ipv6Values.protocol === "static") {
-      if(networkModalState.ipv6Values.address === "") {
-        return "ipv6의 IP를 입력해주세요"
-      }
-      if(networkModalState.ipv6Values.netmask === "") {
-        return "ipv6의 넷마스크를 입력해주세요"
-      }
+    if (ipv6Values.protocol === "static") {
+      if (!ipv6Values.address) return "ipv6의 IP를 입력하세요";
+      if (!ipv6Values.netmask) return "ipv6의 넷마스크를 입력하세요";
     }
     return null;
   };
 
-
+/*
   const handleOkClick = () => {
     Logger.debug(`HostNetworkEditModal > handleOkClick ... `)
     const error = validateForm();
@@ -123,42 +93,42 @@ const HostNetworkEditModal = ({
       validationToast.fail(error);
       return;
     }
-
     // IpAssignments 배열 만들기
-    Logger.debug(`HostNetworkEditModal > handleOkClick ... `)
     const ipAssignments = [];
-    // if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
-    //   ipAssignments.push({
-    //     assignmentMethod: networkModalState.ipv4Values.protocol,
-    //     ipVo: {
-    //       version: "V4",
-    //       ...(networkModalState.ipv4Values.protocol === "static"
-    //         ? {
-    //             address: networkModalState.ipv4Values.address,
-    //             gateway: networkModalState.ipv4Values.gateway,
-    //             netmask: networkModalState.ipv4Values.netmask,
-    //           }
-    //         : {} // static이 아니면 아예 값 없음
-    //       ),
-    //     },
-    //   });
-    // }
-    // if (networkModalState.ipv6Values.protocol && networkModalState.ipv6Values.protocol !== "none") {
-    //   ipAssignments.push({
-    //     assignmentMethod: networkModalState.ipv6Values.protocol,
-    //     ipVo: {
-    //       version: "V6",
-    //       ...(networkModalState.ipv6Values.protocol === "static"
-    //         ? {
-    //             address: networkModalState.ipv6Values.address,
-    //             gateway: networkModalState.ipv6Values.gateway,
-    //             netmask: networkModalState.ipv6Values.netmask,
-    //           }
-    //         : {} // static이 아니면 아예 값 없음
-    //       ),
-    //     },
-    //   });
-    // }
+    
+      // if (networkModalState.ipv4Values.protocol && networkModalState.ipv4Values.protocol !== "none") {
+      //   ipAssignments.push({
+      //     assignmentMethod: networkModalState.ipv4Values.protocol,
+      //     ipVo: {
+      //       version: "V4",
+      //       ...(networkModalState.ipv4Values.protocol === "static"
+      //         ? {
+      //             address: networkModalState.ipv4Values.address,
+      //             gateway: networkModalState.ipv4Values.gateway,
+      //             netmask: networkModalState.ipv4Values.netmask,
+      //           }
+      //         : {} // static이 아니면 아예 값 없음
+      //       ),
+      //     },
+      //   });
+      // }
+      // if (networkModalState.ipv6Values.protocol && networkModalState.ipv6Values.protocol !== "none") {
+      //   ipAssignments.push({
+      //     assignmentMethod: networkModalState.ipv6Values.protocol,
+      //     ipVo: {
+      //       version: "V6",
+      //       ...(networkModalState.ipv6Values.protocol === "static"
+      //         ? {
+      //             address: networkModalState.ipv6Values.address,
+      //             gateway: networkModalState.ipv6Values.gateway,
+      //             netmask: networkModalState.ipv6Values.netmask,
+      //           }
+      //         : {} // static이 아니면 아예 값 없음
+      //       ),
+      //     },
+      //   });
+      // }
+      
 
     if (networkModalState.ipv4Values.protocol) {
       ipAssignments.push({
@@ -212,81 +182,102 @@ const HostNetworkEditModal = ({
     });
     onClose();
   };
+  */
+
+  const handleOkClick = () => {
+    const error = validateForm();
+    if (error) {
+      validationToast.fail(error);
+      return;
+    }
+
+    const ipAssignments = [];
+    ["ipv4", "ipv6"].forEach(version => {
+      const val = networkModalState[`${version}Values`];
+      if (val.protocol) {
+        ipAssignments.push({
+          assignmentMethod: val.protocol,
+          ipVo: {
+            version: version.toUpperCase().replace("IPV", "V"),
+            ...(val.protocol === "static"
+              ? { 
+                  address: val.address, 
+                  gateway: val.gateway, 
+                  netmask: val.netmask 
+                }
+              : {}
+            ),
+          }
+        });
+      }
+    });
+
+    // const attachmentsToSync = (!initialInSync && networkModalState.inSync)
+    //   ? [{ ...networkModalState }]
+    //   : [];
+    const attachmentsToModify = [{
+      id: networkModalState.id,
+      networkVo: networkModalState.networkVo,
+      hostNicVo: networkModalState.hostNicVo,
+      ipAddressAssignments: ipAssignments,
+      dnsServers: networkModalState.dnsServers.filter(Boolean)
+    }];
+    onNetworkEdit(attachmentsToModify);
+    onClose();
+  };
 
 
   return (
     <BaseModal targetName={`${Localization.kr.NETWORK} ${networkModalState?.networkVo?.name}`} submitTitle={Localization.kr.UPDATE}
       isOpen={isOpen} onClose={onClose}
-      isReady={
-        networkModalState &&
-        networkModalState.networkVo &&
-        networkModalState.hostNicVo &&
-        typeof networkModalState.inSync === "boolean"
-      }
+      isReady={ networkModalState && networkModalState.networkVo && networkModalState.hostNicVo }
       onSubmit={handleOkClick}
       contentStyle={{ width: "800px" , height: "430px" }} 
     >
       <div className="popup-content-outer flex">
-        <TabNavButtonGroup
-          tabs={tabs}
-          tabActive={selectedModalTab}
-        />
-
+        <TabNavButtonGroup tabs={tabs} tabActive={selectedModalTab} />
         <div className="w-full px-4">
           <>
             {initialInSync === false && ( 
               <>
                 <LabelCheckbox label={`${Localization.kr.NETWORK} 동기화`}
                   checked={networkModalState.inSync} 
-                  // onChange={e => handleChangeInSync("inSync", !networkModalState.inSync) }
-                  onChange={(checked) => handleChangeInSync("inSync", !networkModalState.inSync) }
+                  onChange={checked => handleChange("inSync", null, !networkModalState.inSync)}
                 />
-                {import.meta.env.DEV && 
-                  <>
-                    <span>{initialInSync === true ? "T" : "F"}</span><br/>
-                    <span>{networkModalState.inSync === true ? "T" : "F"}</span>
-                    <hr/>
-                  </>
-                }
+                <hr/>
+                {import.meta.env.DEV && <pre>initialInSync: {initialInSync === true ? "T" : "F"} networkModalState: {networkModalState.inSync === true ? "T" : "F"}</pre>}
               </>
             )}
-            
           </>
           
           {selectedModalTab === "ipv4" && (
             <div className="select-box-outer">
+  {import.meta.env.DEV && 
+  <>
+    <pre>protocol: {networkModalState.ipv4Values.protocol}</pre>
+    <pre>address:{networkModalState.ipv4Values.address}, netmask: {networkModalState.ipv4Values.netmask}, gateway:{networkModalState.ipv4Values.gateway}</pre>
+  </>
+  }
               <LabelSelectOptions id="ipv4_mtu" label="부트 프로토콜"                  
                 value={networkModalState.ipv4Values.protocol}
                 options={ipv4Options}
                 disabled={!networkModalState.inSync}
-                onChange={e => handleIpv4Change('protocol', e.target.value)}
+                onChange={e => handleChange("ipv4", "protocol", e.target.value)}
               />
-              {import.meta.env.DEV && 
-                <>
-                  <pre>af {initialNetwork.ipv4Values.protocol}</pre><br/>
-                  <pre>af {initialNetwork.ipv4Values.address}</pre><br/><br/>
-
-                  <span>{networkModalState.ipv4Values.protocol}</span><br/>
-                  <span>{networkModalState.ipv4Values.address}</span><br/>
-                  <span>{networkModalState.ipv4Values.netmask}</span><br/>
-                  <span>{networkModalState.ipv4Values.gateway}</span><br/>
-                </>
-              }
-
               <LabelInput id="ip_address" label="IP"
                 value={networkModalState.ipv4Values.address}
-                onChange={e => handleIpv4Change('address', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
+                onChange={e => handleChange("ipv4", "address", e.target.value)}
               />
               <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
                 value={networkModalState.ipv4Values.netmask}
-                onChange={e => handleIpv4Change('netmask', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
+                onChange={e => handleChange("ipv4", "netmask", e.target.value)}
               />
               <LabelInput id="gateway" label="게이트웨이"
                 value={networkModalState.ipv4Values.gateway}
-                onChange={e => handleIpv4Change('gateway', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv4Values.protocol !== "static"}
+                onChange={e => handleChange("ipv4", "gateway", e.target.value)}
               />
             </div>
           )}
@@ -297,59 +288,37 @@ const HostNetworkEditModal = ({
                 value={networkModalState.ipv6Values.protocol}
                 options={ipv6Options}
                 disabled={!networkModalState.inSync}
-                onChange={e => handleIpv6Change('protocol', e.target.value)}
+                onChange={e => handleChange("ipv6", "protocol", e.target.value)}
               />
               <LabelInput id="ip_address" label="IP"
                 value={networkModalState.ipv6Values.address}
-                onChange={e => handleIpv6Change('address', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
+                onChange={e => handleChange("ipv6", "address", e.target.value)}
               />
               <LabelInput id="netmask" label="넷마스크 / 라우팅 접두사"
                 value={networkModalState.ipv6Values.netmask}
-                onChange={e => handleIpv6Change('netmask', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
+                onChange={e => handleChange("ipv6", "netmask", e.target.value)}
               />
               <LabelInput id="gateway" label="게이트웨이"
                 value={networkModalState.ipv6Values.gateway}
-                onChange={e => handleIpv6Change('gateway', e.target.value)}
                 disabled={!networkModalState.inSync || networkModalState.ipv6Values.protocol !== "static"}
+                onChange={e => handleChange("ipv6", "gateway", e.target.value)}
               />
             </div>
           )}
 
           {selectedModalTab === "dns" && (
             <>
-              <div className="font-bold"> DNS 서버 </div>
-                {networkModalState.dnsServers.length !== 0 ?
-                  (networkModalState.dnsServers.map((dns, index) => (
-                  <div key={index} className="f-btw" style={{ width: "100%", padding: 0 }}>
-                    <LabelInput
-                      value={dns}
-                      onChange={(e) => {
-                        const updated = [...networkModalState.dnsServers];
-                        updated[index] = e.target.value;
-                        setNetworkModalState(prev => ({ ...prev, dnsServers: updated }));
-                      }}
-                    />
-                    <RVI36 className="btn-icon" currentColor="transparent"
-                      iconDef={rvi36Add(false)}                     
-                      onClick={() =>
-                        setNetworkModalState(prev => ({ ...prev, dnsServers: [...prev.dnsServers, ""] }))
-                      }
-                    />
-                    <RVI36 className="btn-icon" currentColor="transparent"
-                      iconDef={rvi36Remove()}
-                      onClick={() => {
-                        const updated = [...networkModalState.dnsServers];
-                        updated.splice(index, 1);
-                        setNetworkModalState(prev => ({ ...prev, dnsServers: updated }));
-                      }}
-                    />
-                  </div> 
-                ))) :(
-                  <span></span>
-                )
-              }
+              <div className="font-bold">DNS 서버</div>
+              {networkModalState.dnsServers.length > 0 ?
+                networkModalState.dnsServers.map((dns, idx) => (
+                  <DnsInputRow key={idx} value={dns}
+                    onChange={e => handleDnsChange(idx, e.target.value)}
+                    onAdd={handleDnsAdd}
+                    onRemove={() => handleDnsRemove(idx)}
+                  />
+                )) : <span />}
             </>
           )}
         </div>

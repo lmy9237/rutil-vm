@@ -1,17 +1,16 @@
 import { checkZeroSizeToMbps, emptyIdNameVo } from "@/util";
 
 /**
- * NIC 데이터를 변환합니다.
+ * 본딩 및 nic 반환
  * @param {Array} hostNics
  * @param {Object} nicMap
  * @returns {Array}
  */
 export function transNic(hostNics = [], nicMap = {}) {
-  
   return (hostNics || [])
-    .sort((a, b) => a?.name.localeCompare(b?.name))
+    .sort((a, b) => a?.name.localeCompare(b?.name)) // 이름으로
     .filter((nic) => 
-      !(hostNics || []).some((parent) =>
+      !hostNics.some((parent) =>
         Array.isArray(parent.bondingVo?.slaveVos)
           ? parent.bondingVo.slaveVos.some((slave) => slave.name === nic.name)
           : false
@@ -20,10 +19,7 @@ export function transNic(hostNics = [], nicMap = {}) {
     .map((e) => ({
       ...e,
       bondingVo: {
-        activeSlaveVo: {
-          id: e?.bondingVo?.activeSlaveVo?.id,
-          name: e?.bondingVo?.activeSlaveVo?.name,
-        },
+        activeSlaveVo: e?.bondingVo?.activeSlaveVo,
         slaveVos: Array.isArray(e?.bondingVo?.slaveVos)
           ? e.bondingVo.slaveVos.map((slave) => ({
               id: slave.id,
@@ -38,18 +34,8 @@ export function transNic(hostNics = [], nicMap = {}) {
             }))
           : [],
       },
-      ip4: {
-        address: e?.ip?.address,
-        gateway: e?.ip?.gateway,
-        netmask: e?.ip?.netmask,
-        version: e?.ip?.version,
-      },
-      ip6: {
-        address: e?.ipv6?.address,
-        gateway: e?.ipv6?.gateway,
-        netmask: e?.ipv6?.netmask,
-        version: e?.ipv6?.version,
-      },
+      ip4: e?.ip,
+      ip6: e?.ipv6,
       network: {
         id: e?.networkVo?.id,
         name: e?.networkVo?.name,
@@ -71,8 +57,9 @@ export function transNic(hostNics = [], nicMap = {}) {
     }));
 }
 
+
 /**
- * 네트워크 어태치먼트와 클러스터 네트워크 정보 병합
+ * 할당된 네트워크 반환 (클러스터 네트워크 정보 병합)
  * @param {Array} networkAttachments
  * @param {Array} networks
  * @returns {Array}
@@ -82,20 +69,14 @@ export function transNA(networkAttachments = [], networks = []) {
     const networkFromCluster = (networks || []).find((net) => net.id === e?.networkVo?.id);
     return {
       ...e,
+      id: e?.id,
       inSync: e?.inSync,
       networkVo: {
         id: e?.networkVo?.id,
         name: e?.networkVo?.name,
         status: networkFromCluster?.status || "UNKNOWN",
         vlan: networkFromCluster?.vlan,
-        usage: {
-          vm: networkFromCluster?.usage?.vm,
-          management: networkFromCluster?.usage?.management,
-          display: networkFromCluster?.usage?.display,
-          migration: networkFromCluster?.usage?.migration,
-          gluster: networkFromCluster?.usage?.gluster,
-          defaultRoute: networkFromCluster?.usage?.defaultRoute,
-        }
+        usage: networkFromCluster?.usage,
       },
       nameServerList: e?.nameServerList || [],
     };
@@ -103,7 +84,7 @@ export function transNA(networkAttachments = [], networks = []) {
 }
 
 /**
- * 할당되지 않은 네트워크 목록 반환
+ * 할당되지 않은 네트워크 반환
  * @param {Array} networks
  * @param {Array} networkAttachments
  * @returns {Array}
@@ -118,17 +99,10 @@ export function transDetachNA(networks = [], networkAttachments = []) {
       status: e?.status || "NON_OPERATIONAL",
       vlan: e?.vlan,
       required: e?.required,
-      usageVm: !!e?.usage?.vm,
-      usage: {
-        vm: e?.usage?.vm,
-        management: e?.usage?.management,
-        display: e?.usage?.display,
-        migration: e?.usage?.migration,
-        gluster: e?.usage?.gluster,
-        defaultRoute: e?.usage?.defaultRoute,
-      }
+      usage: e?.usage
     }));
 }
+
 
 
 
@@ -140,8 +114,12 @@ export function transDetachNA(networks = [], networkAttachments = []) {
  * @param {*} movedNetworkAttachments 
  * @returns 
  */
-export function getBondModalStateForCreate(nic1, nic2, baseNetworkAttachments = [], movedNetworkAttachments = []) {
+export function getBondModalStateForCreate(
+  nic1, nic2, 
+  baseNetworkAttachments = [], movedNetworkAttachments = []
+) {
   // NIC가 가지고 있는 네트워크 찾기 함수
+  // 네트워크 연결을 위해 필요 (이름을 비교해서 출력)  
   const getNetworksFromNic = (nic) => {
     const arr = [...baseNetworkAttachments, ...movedNetworkAttachments].filter(
       na => na.hostNicVo?.name === nic.name
@@ -183,7 +161,7 @@ export function getBondModalStateForEdit(bond) {
 
 
 /**
- * 네트워크 어태치먼트 상태 변환 함수
+ * 할당된 네트워크 편집 시 상태 변환 함수
  * @param {*} networkAttachment 
  * @param {*} baseNetworkAttachments 
  * @param {*} movedNetworkAttachments 
@@ -196,7 +174,7 @@ export function getNetworkAttachmentModalState(
   baseNetworkAttachments = [], 
   movedNetworkAttachments = [],
   modifiedNAs = [],
-  recentlyUnassignedNAs = {}
+  tempUnassignedNAs = {}
 ) {
   // 1. 최신 편집값 우선
   let targetNA = modifiedNAs.find(na =>
@@ -217,10 +195,10 @@ export function getNetworkAttachmentModalState(
     );
   }
 
-  // **4. recentlyUnassignedNAs에서 찾기**
+  // **4. tempUnassignedNAs 찾기**
   if (!targetNA) {
     // (1) 우선 networkVo.id+hostNicVo.name으로 매칭
-    const foundCache = Object.values(recentlyUnassignedNAs).find(
+    const foundCache = Object.values(tempUnassignedNAs).find(
       cache =>
         cache.networkVo?.id === networkAttachment.networkVo?.id
         // && cache.hostNicVo?.name === networkAttachment.hostNicVo?.name  // 주석: NIC가 바뀌었으니 name까지 비교하지 않는다!

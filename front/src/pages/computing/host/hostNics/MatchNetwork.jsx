@@ -60,6 +60,9 @@ const MatchNetwork = ({
           {networkVo?.usage?.vm === true ? <RVI16 iconDef={rvi16VmNetwork("#555555")} />:""}
           <br/>
         </div>
+        <div>
+          { import.meta.env.DEV && <>&nbsp;<span style={{ fontSize: "5px"}}>{networkAttach?.id}</span></>}
+          </div>
         <div className="right-section">
           <RVI36 className="icon cursor-pointer"
             iconDef={rvi36Edit()}
