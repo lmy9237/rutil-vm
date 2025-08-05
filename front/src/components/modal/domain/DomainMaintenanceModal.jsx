@@ -54,7 +54,7 @@ const DomainMaintenanceModal = ({
         checked={ignoreOVF}
         // onChange={(e) => setIgnoreOVF(e.target.checked)}
         onChange={(checked) => {
-          import.meta.env.DEV && validationToast.debug(`ignoreOVF: ${checked}`);
+          validationToast.debug(`ignoreOVF: ${checked}`);
           setIgnoreOVF(checked)
         }}
       /> 

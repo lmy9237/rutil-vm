@@ -251,7 +251,7 @@ const DiskModal = ({
             value={String(formState.sparse)}
             onChange={(e) => {
               const sparseValue = e.target.value === "true";
-              import.meta.env.DEV && validationToast.debug(`field: sparse: value: ${sparseValue}`)
+              validationToast.debug(`field: sparse: value: ${sparseValue}`)
               setFormState((prev) => ({
                 ...prev,
                 sparse: sparseValue,

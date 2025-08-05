@@ -1,21 +1,26 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal                     from "@/hooks/useGlobal";
-import useSearch                     from "@/hooks/useSearch";
-import SelectedIdView                from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink        from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox                     from "@/components/button/SearchBox";
-import TablesOuter                   from "@/components/table/TablesOuter";
-import TableRowClick                 from "@/components/table/TableRowClick";
-import DomainActionButtons           from "@/components/dupl/DomainActionButtons";
-import DomainDataCenterActionButtons from "@/components/dupl/DomainDataCenterActionButtons";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import DomainActionButtons              from "@/components/dupl/DomainActionButtons";
+import DomainDataCenterActionButtons    from "@/components/dupl/DomainDataCenterActionButtons";
 import { 
   hostedEngineStatus2Icon,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
-import { getStatusSortKey }          from "@/components/icons/GetStatusSortkey";
-import Localization                  from "@/utils/Localization";
-import { checkZeroSizeToGiB } from "@/util";
+import {
+  getStatusSortKey 
+} from "@/components/icons/GetStatusSortkey";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
 /**
  * @name DomainDupl
  * @description 도메인 목록을 표시하는 컴포넌트 (검색 및 테이블 포함)
@@ -42,7 +47,7 @@ DomainDupl = ({
     _name: (
       <>
       {/* {hostedEngineStatus2Icon(domain?.hostedEngine)} */}
-      <TableRowClick type="domain" id={domain?.id}>
+      <TableRowClick type="domain" id={domain?.id} hideIcon>
         {domain?.name}
       </TableRowClick>
       </>
@@ -82,8 +87,11 @@ DomainDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         {sourceContext === "all" 
           ? <DomainActionButtons actionType={actionType} />
           : <DomainDataCenterActionButtons actionType={actionType} />

@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import Modal from "react-modal";
-import useUIState             from "@/hooks/useUIState";
-import useContextMenu         from "@/hooks/useContextMenu";
-import Loading                from "@/components/common/Loading";
+import useContextMenu                  from "@/hooks/useContextMenu";
+import { Separator }                   from "@/components/ui/separator"
+import { Loading }                         from "@/components/common/Loading";
 import { 
   RVI24, 
   rvi24Close, 
   rvi24ExclamationCircle,
 } from "@/components/icons/RutilVmIcons";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                    from "@/utils/Localization";
+import Logger                          from "@/utils/Logger";
 import "./BaseModal.css";
 
 /**
@@ -60,7 +60,7 @@ const BaseModal = ({
         </>
         ) : (
         <>
-        <hr/>
+        <Separator />
         <div className="popup-contents">
           {(shouldWarn || promptText) && (
             <div className="popup-contents-prompt f-start fs-16">
@@ -74,7 +74,7 @@ const BaseModal = ({
         </>
         )}
         {/* 하단 버튼 */}
-        <hr/>
+        <Separator />
         <div className="edit-footer f-end fs-14">
           {extraFooter ? (
             <>

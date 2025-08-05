@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
-import useClickOutside from "@/hooks/useClickOutside";
+import CONSTANT                         from "@/Constants";
+import { useApiToast }                  from "@/hooks/useSimpleToast";
+import useClickOutside                  from "@/hooks/useClickOutside";
 import {
-  RVI16, RVI24,
-  rvi16DotsVertical,
+  RVI16, rvi16DotsVertical,
+  RVI24, rvi24Refresh
 } from "@/components/icons/RutilVmIcons";
-import IconButton             from "@/components/Input/IconButton";
-import { BadgeStatus }        from "@/components/common/Badges";
-import PopupBox               from "@/components/common/PopupBox";
-import Localization           from "@/utils/Localization";
+import { LoadingFetch }                      from "@/components/common/Loading";
+import { BadgeStatus }                  from "@/components/common/Badges";
+import PopupBox                         from "@/components/common/PopupBox";
+import IconButton                       from "@/components/Input/IconButton";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./HeaderButton.css";
 
 /**
@@ -21,11 +25,14 @@ import "./HeaderButton.css";
 const HeaderButton = ({
   title,
   status,
+  isLoading, isRefetching, refetch,
   buttons = [],
   popupItems = [],
   titleIcon,
   inverseColor = false,
 }) => {
+  const { apiToast } = useApiToast();
+  
   const popupBoxRef = useRef(null)
   const [isPopupBoxVisible, setIsPopupBoxVisible] = useState(false);
   const togglePopupBox = () => setIsPopupBoxVisible(!isPopupBoxVisible);
@@ -61,18 +68,32 @@ const HeaderButton = ({
       <div className="section-header-left f-btw h-full">
         {titleIcon && <RVI24 iconDef={titleIcon} />}
         <h1 className={`section-header-title fs-24 fw-700 ${inverseColor ? " inverse" : ""}`}>{title}</h1>
-        {status && (
+        {status && (<>
           <BadgeStatus
-            status={
-              [Localization.kr.UP, Localization.kr.ACTIVATE].includes(status) 
+            status={[
+              Localization.kr.UP, 
+              Localization.kr.ACTIVATE,
+              Localization.kr.OPERATIONAL
+            ].includes(status) 
                 ? "running" 
-                : status === Localization.kr.DOWN 
+                : [Localization.kr.DOWN, Localization.kr.NON_OPERATIONAL].includes(status) 
                   ? "stopped"
                   : "default"
             }
             text={status}
           />
-        )}
+        </>)}
+        {(refetch && !isLoading)&& (<div className={`rvi rvi-nav ${isLoading || isRefetching ? "inactive " : ""}${inverseColor ? "inverse " : ""}f-center`}>
+          <RVI24 iconDef={rvi24Refresh(inverseColor ? CONSTANT.color.white : "")} 
+            disabled={isLoading || isRefetching}
+            onClick={(e) => {
+              Logger.debug(`HeaderButton > refetch ... `)
+              refetch();
+              import.meta.env.DEV && apiToast.refetch();
+            }}
+          />
+        </div>)}
+        {<LoadingFetch isLoading={isLoading} isRefetching={isRefetching}/>}
       </div>
 
       <div className="section-header-right f-btw">

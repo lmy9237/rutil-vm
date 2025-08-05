@@ -42,6 +42,8 @@ const DiskInfo = () => {
     isLoading: isDiskLoading,
     isError: isDiskError,
     isSuccess: isDiskSuccess,
+    isRefetching: isDiskRefetching,
+    refetch: refetchDisk,
   } = useDisk(diskId);
 
   const [activeTab, setActiveTab] = useState("general");
@@ -117,6 +119,7 @@ const DiskInfo = () => {
             ? rvi24HardDriveDot()
             : rvi24HardDrive()
         }
+        isLoading={isDiskLoading} isRefetching={isDiskRefetching} refetch={refetchDisk}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

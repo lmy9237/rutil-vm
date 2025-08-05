@@ -546,7 +546,9 @@ fun Connection.updateNicFromVm(
 
 	val srv = this@updateNicFromVm.srvNicFromVm(vmId, nic.id())
 	// --- 2. Check VM Status
-	val vm = findVm(vmId ,"host").getOrNull()
+	val vm = findVm(vmId
+		// ,"host" // TODO: follow 값이 실행 중일 때거나 또다른 상태일때만 이 조회가 유효하게 나옴
+	).getOrNull()
 		?: throw ErrorPattern.VM_NOT_FOUND.toError()
 	// TODO: 변경 할 NIC가 현재 가상머신이 있는 호스트의 네트워크에도 존재하는지 확인필요
 	// 이 조건에 부합하지 않을 결우, 이 문구가 발생

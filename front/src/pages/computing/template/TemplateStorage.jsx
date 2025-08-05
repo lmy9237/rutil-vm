@@ -1,7 +1,7 @@
 // import React, { useEffect, useRef, useState } from "react";
 // import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import Loading from "../../../components/common/Loading";
+// import { Loading } from "../../../components/common/Loading";
 // import { useAllStoragesFromTemplate } from "../../../api/RQHook";
 
 // /**

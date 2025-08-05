@@ -214,7 +214,8 @@ class NetworkServiceImpl(
 	override fun findOne(networkId: String): NetworkVo? {
 		log.info("findOne ... networkId: {}", networkId)
 		// val res: Network? = conn.findNetwork(networkId, "datacenter,vnicprofiles,networklabels").getOrNull()
-		val networkFound: NetworkEntity = rNetwork.findByNetworkId(networkId.toUUID()) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+		val networkFound: NetworkEntity =
+			rNetwork.findByNetworkId(networkId.toUUID()) ?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
 		return networkFound.toNetworkVoFromNetworkEntity()
 	}
 

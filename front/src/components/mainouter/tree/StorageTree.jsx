@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
-import Loading                from "@/components/common/Loading";
+import { Loading }                from "@/components/common/Loading";
 import {
   rvi16Globe,
   rvi16DataCenter,

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "@/components/common/Loading";
+import { Loading } from "@/components/common/Loading";
 import "./GeneralBoxProps.css";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 

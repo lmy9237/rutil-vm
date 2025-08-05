@@ -130,7 +130,7 @@ const QK = {
   EVENTS_FROM_DOMAIN: "eventsFromDomain",
   EVENTS_FROM_TEMPLATE: "eventsFromTemplate",
   ALL_EVENTS_NORMAL: "allEventsNormal",
-  ALL_NOTI_EVENTS: "allNotiEvents",
+  ALL_EVENTS_ALERT: "allNotiEvents",
 
   ALL_JOBS: "allJobs",
   JOB: "job",
@@ -6851,7 +6851,7 @@ export const useAllEventsAlert = (
   mapPredicate = (e) => ({ ...e })
 ) => useQuery({
   ...QP_DEFAULT,
-  queryKey: [QK.ALL_NOTI_EVENTS],
+  queryKey: [QK.ALL_EVENTS_ALERT],
   queryFn: async () => {
     const res = await ApiManager.findAllEvents({
       page: 0, size: 20, minSeverity: "alert", startDate: "recent",
@@ -6881,7 +6881,7 @@ export const useRemoveEvent = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvent ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_NOTI_EVENTS , QK.ALL_EVENTS_NORMAL]);
+      invalidateQueriesWithDefault(queryClient, [QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_EVENTS_ALERT , QK.ALL_EVENTS_NORMAL]);
       closeModal();
       postSuccess(res);
     },
@@ -6911,7 +6911,7 @@ export const useRemoveEvents = (
     onSuccess: (res) => {
       Logger.debug(`RQHook > useRemoveEvents ... res: `, res);
       apiToast.ok(`${Localization.kr.EVENT} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-      queryClient.invalidateQueries([QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_NOTI_EVENTS , QK.ALL_EVENTS_NORMAL]);
+      invalidateQueriesWithDefault(queryClient, [QK.DASHBOARD, QK.ALL_EVENTS, QK.ALL_EVENTS_ALERT, QK.ALL_EVENTS_NORMAL]);
       closeModal();
       postSuccess(res);
     },

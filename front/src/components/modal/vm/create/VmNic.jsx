@@ -1,7 +1,15 @@
 import React, { useEffect, useMemo } from "react";
+import { AlertTriangle } from "lucide-react"
+import CONSTANT                         from "@/Constants";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import DynamicInputList                 from "../../../label/DynamicInputList.jsx";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert";
+import { Separator }                    from "@/components/ui/separator"
+import DynamicInputList                 from "@/components/label/DynamicInputList";
 import { emptyIdNameVo }                from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
@@ -9,15 +17,16 @@ import Logger                           from "@/utils/Logger";
 const VmNic = ({
   editMode,
   nics,
-  nicsState,
-  setNicsState,
+  nicsState, setNicsState,
 }) => {
   const { validationToast } = useValidationToast()
   const { vmsSelected } = useGlobal();
-
   const nicValues = nicsState.map((nic) => ({
     ...nic,
-    vnicProfileVo: { id: nic?.vnicProfileVo?.id, name: nic?.vnicProfileVo?.name }
+    vnicProfileVo: { 
+      id: nic?.vnicProfileVo?.id || "", 
+      name: nic?.vnicProfileVo?.name || "",
+    }
   }));
 
   Logger.debug(`VmNic.nicsState: `, nicsState);
@@ -33,7 +42,7 @@ const VmNic = ({
           },
         } : nic
     );
-    import.meta.env.DEV && validationToast.debug(`field: nicsState, value: ${JSON.stringify(nicsState, 2, 0)}`, )
+    validationToast.debug(`field: nicsState, value: \n${JSON.stringify(nicsState, 2, 0)}`)
     setNicsState(updated);
   };
 
@@ -41,12 +50,13 @@ const VmNic = ({
     Logger.debug(`VmNic > handleAdd ... `);
     const lastIndex = Math.max(
       0,
-      ...nicsState
-        .map(nic => parseInt(nic.name?.replace("nic", ""), 10))
-        .filter(n => !isNaN(n))
+      ...nicsState.map((nic) => 
+        parseInt(nic.name?.replace("nic", ""), 10)
+      ).filter((n) => 
+        !isNaN(n)
+      )
     );
-    const nextName = `nic${lastIndex + 1}`;
-
+    const nextName = `nic${lastIndex+1}`;
     const newNic = {
       id: "",
       name: nextName,
@@ -78,7 +88,6 @@ const VmNic = ({
 
     if (editMode) {
       Logger.debug(`VmNic > useEffect ... 2 `);
-
     }
   }, [editMode, nicsState, setNicsState]);
 
@@ -88,11 +97,11 @@ const VmNic = ({
 
   return (
     <>
-    <hr/>
+    <Separator />
     <div className="host-second-content py-3">
       <p className="mb-0.5">
         {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} {Localization.kr.NICS}를 설정하세요.
-        {editMode && isVmUp && <><br/><br/><b>주의:</b> 가상머신이 실행 중인 경우, {Localization.kr.NICS}를 편집/제거 할 수 없습니다. <br/>종료 후 작업하시기 바랍니다.</>} 
+        <VmNicWarning active={editMode && isVmUp}/> 
       </p>
       <DynamicInputList values={nicsState}
         onChange={handleChange} onAdd={handleAdd} onRemove={handleRemove}
@@ -102,7 +111,35 @@ const VmNic = ({
     </div>
     </>
   );
-  
 };
+
+const VmNicWarning = ({
+  active,
+}) => (
+  active && <><br/><br/>
+    <div className="f-start">
+    <AlertTriangle color={CONSTANT.color.warn}/>
+    <Alert variant="warning" className="items-start gap-4">
+      <AlertTitle><b>주의</b></AlertTitle> 
+      <AlertDescription>
+        {Localization.kr.VM}이 {Localization.kr.RUNNING}인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 경우
+        <br/> 실패 할 수 있으므로 권고하지 않습니다.
+        <br/>이 화면에서는 각 {Localization.kr.NICS}의 연결 상태를 확인 할 수 없습니다. 
+        <br/>안전하게 처리하기 위해서 {Localization.kr.VM}을 종료 후 작업하시기 바랍니다.
+      </AlertDescription>
+    </Alert>
+    </div>
+    {/* 
+    <p className="f-start">
+      <AlertTriangle color={CONSTANT.color.orange}/><b>주의</b>
+    </p>
+    <p>
+      {Localization.kr.VM}이 {Localization.kr.RUNNING}인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 수 없습니다. 
+      <br/>이 화면에서는 각 {Localization.kr.NICS}의 연결 상태를 확인 할 수 없습니다. 
+      <br/>안전하게 처리하기 위해서 {Localization.kr.VM}을 종료 후 작업하시기 바랍니다.
+    </p>
+    */}
+  </>
+)
 
 export default VmNic;

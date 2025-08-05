@@ -1,6 +1,6 @@
 /* TableRowClick.css */
 .tr-clickable {
-  color: var(--color-primary);
+  /* color: var(--color-primary);*/
   cursor: pointer;
   height: 14px;
 }

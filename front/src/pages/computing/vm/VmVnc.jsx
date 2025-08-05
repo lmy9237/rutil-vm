@@ -37,7 +37,14 @@ const VmVnc = ({
     setCurrentVncRfb,
   } = useGlobal()
   const { id: vmId, } = useParams();
-  const { data: vm } = useVm(vmId);
+  const { 
+    data: vm,
+    isLoading: isVmLoading,
+    isError: isVmError,
+    isSuccess: isVmSuccess,
+    isRefetching: isVmRefetching,
+    refetch: refetchVm,
+  } = useVm(vmId);
 
   const screenRef = useRef(null);
   const [dataUrl, setDataUrl] = useState("")
@@ -61,14 +68,6 @@ const VmVnc = ({
   });
 
   const sectionHeaderButtons = [
-    {
-      type: "refetch",
-      onClick: (e) => {
-        e.stopPropagation();
-        window.location.reload();
-      },
-      label: <RVI24 iconDef={rvi24Refresh( "#1D56BC")} /> 
-    },
     { 
       type: "start", 
       onClick: () => {
@@ -181,7 +180,7 @@ const VmVnc = ({
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        import.meta.env.DEV && validationToast.debug(`${Localization.kr.SCREENSHOT} 클립보드로 복사 완료`);
+        validationToast.debug(`${Localization.kr.SCREENSHOT} 클립보드로 복사 완료`);
         setDataUrl(_dataUrl);
         setVncScreenshotDataUrl(vmId, _dataUrl);
       } catch(error) {
@@ -193,16 +192,17 @@ const VmVnc = ({
   const doSendCtrlAltDel = (rfb) => {
     Logger.debug(`VmVnc > doSendCtrlAltDel ... `)
     rfb.sendCtrlAltDel()
-    import.meta.env.DEV && validationToast.debug(`Ctrl+Alt+Del 입력 완료`);
+    validationToast.debug(`Ctrl+Alt+Del 입력 완료`);
   }
 
   return (<>
     <div ref={vncContainerRef}
       className="section-vnc w-full h-full v-center"
     >
-      <HeaderButton titleIcon={rvi24Desktop(CONSTANT.color.white)}
-        title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
+      <HeaderButton title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
+        titleIcon={rvi24Desktop(CONSTANT.color.white)}
         status={Localization.kr.renderStatus(vm?.status)}
+        isLoading={isVmLoading} isRefetching={isVmRefetching} refetch={refetchVm}
         buttons={sectionHeaderButtons}
         inverseColor
       />

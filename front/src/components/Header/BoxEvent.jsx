@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import useBoxState            from "@/hooks/useBoxState";
-import useClickOutside        from "@/hooks/useClickOutside";
-import useFooterState         from "@/hooks/useFooterState";
-import { BadgeNumber }        from "@/components/common/Badges";
+import useBoxState                  from "@/hooks/useBoxState";
+import { Loading, LoadingFetch }    from "@/components/common/Loading";
+import useClickOutside              from "@/hooks/useClickOutside";
+import useFooterState               from "@/hooks/useFooterState";
+import { BadgeNumber }              from "@/components/common/Badges";
 import {
   RVI24,
   RVI16,
@@ -20,9 +21,9 @@ import {
   useRemoveEvent,
   useRemoveEvents
 } from "@/api/RQHook";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./BoxEvent.css";
-import Localization from "@/utils/Localization";
 
 /**
  * @name BoxEvent
@@ -47,22 +48,24 @@ const BoxEvent = ({
     isLoading: isEventsNormalLoading,
     isError: isEventsNormalError,
     isSuccess: isEventsNormalSuccess,
-    refetch: refetchEvents
+    isRefetching: isEventsNormalRefetching,
+    refetch: refetchEventsNormal
   } = useAllEventsNormal((e) => ({ ...e, }));
 
   const {
-    data: eventAlerts = [],
-    isLoading: isEventAlertsLoading,
-    isError: isEventAlertsError,
-    isSuccess: isEventAlertsSuccess,
-    refetch: refetchEventAlerts
+    data: eventsAlert = [],
+    isLoading: isEventsAlertLoading,
+    isError: isEventsAlertError,
+    isSuccess: isEventsAlertSuccess,
+    isRefetching: isEventsAlertRefetching,
+    refetch: refetchEventsAlert
   } = useAllEventsAlert((e) => ({ ...e, }));
 
   useEffect(() => {
-    const badgeNum = [...eventAlerts]?.length ?? 0;
+    const badgeNum = [...eventsAlert]?.length ?? 0;
     Logger.debug(`BoxEvent > useEffect ... eventBadgeNum: ${badgeNum}`)
     setEventBadgeNum(badgeNum);
-  }, [eventAlerts])
+  }, [eventsAlert])
 
   const bellBoxRef = useRef(null);
   useClickOutside(bellBoxRef, (e) => {
@@ -80,10 +83,15 @@ const BoxEvent = ({
   const currentEventBoxHeightInPx = useMemo(() => {
     Logger.debug(`BoxEvent > currentEventBoxHeightInPx ... window.innerHeight: ${window.innerHeight}, footerHeightInPx: ${footerHeightInPx()}`)
     return window.innerHeight - footerHeightInPx() - headerHeight;
-}, [footerHeightInPx])
-  
-  // 모두 삭제
-  const { mutate: removeEvents } = useRemoveEvents(() => {}, () => {});
+  }, [footerHeightInPx])
+
+  useEffect(() => {
+    Logger.debug(`BoxEvent > useEffect ... eventBoxVisible: ${eventBoxVisible}`)
+    if (eventBoxVisible) {
+      !isEventsNormalLoading && refetchEventsNormal()
+      !isEventsAlertLoading && refetchEventsAlert();
+    }
+  }, [eventBoxVisible, setEventBoxVisible,])
 
   return (
     <div ref={bellBoxRef}
@@ -123,6 +131,7 @@ const BoxEvent = ({
           <BadgeNumber status={"alert"} text={eventBadgeNum()} />
         }
         <span className="bell-section-title fs-16 ml-1.5">{Localization.kr.ALERT}</span>
+        <LoadingFetch isLoading={isEventsAlertLoading} isRefetching={isEventsAlertRefetching} />
       </div>
 
       {/* 알림 내용 */}
@@ -134,22 +143,11 @@ const BoxEvent = ({
               height: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
-            <BoxEventItems events={eventAlerts} />
+            {isEventsAlertLoading && <Loading />}
+            {isEventsAlertSuccess && <BoxEventItems events={eventsAlert} />}
           </div>
 
-          <div className="bell-btns f-center">
-            <div
-                className="f-center fs-14"
-                onClick={() => {
-                  const ids = [...eventAlerts].map(e => e.id);
-                  if (ids.length === 0) return;
-                  removeEvents(ids); 
-                }}
-              >
-                모두 삭제
-              </div>
-            {/* <div className="f-center fs-14">모두 출력</div> */}
-          </div>
+          <RemoveAllEventsButton events={eventsAlert} />
         </>
       )}
 
@@ -166,7 +164,7 @@ const BoxEvent = ({
           />
         </span>
         <span className="bell-section-title fs-16 ml-1">이벤트</span>
-        
+        <LoadingFetch isLoading={isEventsNormalLoading} isRefetching={isEventsNormalRefetching} />
       </div>
 
       {/* 이벤트 내용 (알림 아래로 깔리도록 설정) */}
@@ -178,27 +176,47 @@ const BoxEvent = ({
               height: currentEventBoxHeightInPx - bellHeaderHeights,
             }}
           >
-            <BoxEventItems events={eventsNormal} />
+            {isEventsNormalLoading && <Loading />}
+            {isEventsNormalSuccess && <BoxEventItems events={eventsNormal} />}
           </div>
-
-          <div className="bell-btns f-center">
-            <div
-              className="f-center fs-14"
-              onClick={() => {
-                const ids = [...eventsNormal].map(e => e.id);
-                if (ids.length === 0) return;
-                removeEvents(ids);
-              }}
-            >
-              모두 삭제
-            </div>
-            {/* <div className="f-center fs-14">모두 출력</div> */}
-          </div>
+          <RemoveAllEventsButton events={eventsNormal} />
         </>
       )}
     </div>
   )
 };
+
+const RemoveAllEventsButton = ({
+  events=[],
+}) => {
+  // 모두 삭제
+  const { 
+    mutate: removeEvents,
+  } = useRemoveEvents();
+
+  const handleClick = (e) => {
+    Logger.debug(`RemoveAllEventsButton > handleClick ... `)
+    e.stopPropagation();
+    e.preventDefault();
+    const ids = [...events].map(e => e.id);  
+    if (ids.length === 0) {
+      return;
+    }
+    removeEvents && removeEvents(ids); 
+  }
+
+  return (
+    <div className="bell-btns f-center">
+      <div className="f-center fs-14"
+          onClick={handleClick}
+        >
+          <RVI16 iconDef={rvi16Trash("currentColor")} />
+          <span>모두 삭제</span>
+        </div>
+      {/* <div className="f-center fs-14">모두 출력</div> */}
+    </div>
+  )
+}
 
 const BoxEventTab = () => {
 

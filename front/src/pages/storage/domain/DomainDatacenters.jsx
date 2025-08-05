@@ -1,21 +1,22 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import { status2Icon }        from "@/components/icons/RutilVmIcons";
-import DomainDataCenterActionButtons from "@/components/dupl/DomainDataCenterActionButtons";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import DomainDataCenterActionButtons    from "@/components/dupl/DomainDataCenterActionButtons";
 import {
   useAllDataCentersFromDomain
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainDatacenters
@@ -64,8 +65,11 @@ const DomainDatacenters = ({
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDataCenters}/>
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isDataCentersLoading} isRefetching={isDataCentersRefetching} refetch={refetchDataCenters}
+        />
+        <LoadingFetch isLoading={isDataCentersLoading} isRefetching={isDataCentersRefetching} />
         <DomainDataCenterActionButtons actionType="default" />
       </div>
       <TablesOuter target={"domaindatacenter"}

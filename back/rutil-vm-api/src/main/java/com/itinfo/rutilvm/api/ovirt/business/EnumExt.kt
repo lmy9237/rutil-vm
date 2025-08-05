@@ -200,8 +200,8 @@ fun MigrationSupport.toVmAffinity(): VmAffinity = VmAffinity.fromValue(this@toVm
 fun MigrateOnError.toMigrateOnErrorB(): MigrateOnErrorB = MigrateOnErrorB.forCode(this@toMigrateOnErrorB.value())
 fun MigrateOnErrorB.toMigrateOnError(): MigrateOnError = MigrateOnError.fromValue(this@toMigrateOnError.code)
 
-fun NetworkStatus.toNetworkStatusB(): NetworkStatusB = NetworkStatusB.forCode(this@toNetworkStatusB.value())
-fun NetworkStatusB.toNetworkStatus(): NetworkStatus = NetworkStatus.fromValue(this@toNetworkStatus.code)
+fun NetworkStatus?.toNetworkStatusB(): NetworkStatusB = NetworkStatusB.forCode(this@toNetworkStatusB?.value())
+fun NetworkStatusB?.toNetworkStatus(): NetworkStatus = NetworkStatus.fromValue(this@toNetworkStatus?.code)
 
 fun OperatingSystemInfo.toVmOsType(): VmOsType = VmOsType.forCode(this@toVmOsType.id())
 fun List<OperatingSystemInfo>.toVmOsTypes(): List<VmOsType> = this@toVmOsTypes.map { it.toVmOsType() }

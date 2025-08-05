@@ -69,7 +69,7 @@ const DomainFibre = ({
             checked={lunId === fc.id}
             // onChange={() => setLunId(prev => prev === fc.id ? "" : fc.id)}
             onChange={(checked) => {
-              import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+              validationToast.debug(`approved: ${checked}`);
               setLunId(prev => prev === fc.id ? "" : fc.id)
             }}
           />

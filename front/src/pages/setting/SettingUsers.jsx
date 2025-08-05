@@ -1,20 +1,23 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import SettingUsersActionButtons from "@/components/dupl/SettingUsersActionButtons";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
 import {
   RVI16,
   rvi16Superuser,
 } from "@/components/icons/RutilVmIcons";
-import { useAllUsers } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import SearchBox                        from "@/components/button/SearchBox";
+import SettingUsersActionButtons        from "@/components/dupl/SettingUsersActionButtons";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import {
+  useAllUsers
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name SettingUsers
@@ -52,8 +55,11 @@ const SettingUsers = () => {
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchUsers} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          isLoading={isUsersLoading} isRefetching={isUsersRefetching} refetch={refetchUsers}
+        />
+        <LoadingFetch isLoading={isUsersLoading} isRefetching={isUsersRefetching} />
         <SettingUsersActionButtons />
       </div>
       <TablesOuter target={"user"}

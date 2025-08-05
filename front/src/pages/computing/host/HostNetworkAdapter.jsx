@@ -1,14 +1,23 @@
 import React from "react";
-import useGlobal               from "@/hooks/useGlobal";
-import useSearch               from "@/hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import SearchBox from "../../../components/button/SearchBox";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import TableRowClick from "../../../components/table/TableRowClick";
-import { checkZeroSizeToMbps } from "../../../util";
-import { useNetworkInterfacesFromHost } from "../../../api/RQHook";
-import { RVI16, rvi16TriangleDown, rvi16TriangleUp } from "@/components/icons/RutilVmIcons";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import {
+  RVI16,
+  rvi16TriangleDown,
+  rvi16TriangleUp
+} from "@/components/icons/RutilVmIcons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import {
+  useNetworkInterfacesFromHost
+} from "@/api/RQHook";
+import {
+  checkZeroSizeToMbps
+} from "@/util";
 
 const HostNetworkAdapter = ({
   hostId
@@ -59,7 +68,11 @@ const HostNetworkAdapter = ({
         macAddress: e?.macAddress,
         mtu: e?.mtu,
         autoNegotiation: "자동 협상",
-        icon: <RVI16 iconDef={e?.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />,
+        icon: <RVI16 iconDef={e?.status?.toUpperCase() === "UP".toUpperCase() 
+            ? rvi16TriangleUp()
+            : rvi16TriangleDown()
+          } className="mr-0.5" 
+        />,
         network: (
           <TableRowClick type="network" id={e?.networkVo?.id}>
             {e?.networkVo?.name}
@@ -78,9 +91,11 @@ const HostNetworkAdapter = ({
   
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-2 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchHostNics}/>
-        {/*  */}
+      <div className="dupl-header-group f-start gap-2 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isHostNicsLoading} isRefetching={isHostNicsRefetching} refetch={refetchHostNics}
+        />
+        <LoadingFetch isLoading={isHostNicsLoading} isRefetching={isHostNicsRefetching} />        
       </div>
       <TablesOuter target={"hostnic"}
         columns={TableColumnsInfo.NETWORK_ADAPTER_FROM_HOST}

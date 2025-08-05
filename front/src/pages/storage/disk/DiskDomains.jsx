@@ -1,18 +1,19 @@
 import { useMemo } from "react";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
 import {
   useAllStorageDomainsFromDisk
 } from "@/api/RQHook";
-import { convertBytesToGB }   from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { convertBytesToGB }             from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DiskDomains
@@ -47,9 +48,13 @@ const DiskDomains = ({
   const transformedData = useMemo(() => 
     [...domains].map((domain) => ({
       ...domain,
-      status: domain?.status?.toUpperCase() === 'ACTIVE' ? '활성화' : '비활성화',
+      status: domain?.status?.toUpperCase() === 'ACTIVE'.toUpperCase() ? '활성화' : '비활성화',
       icon: status2Icon(domain.status),
-      storageDomain: (<TableRowClick type="domain" id={domain?.id}>{domain?.name}</TableRowClick>),
+      storageDomain: (
+        <TableRowClick type="domain" id={domain?.id}>
+          {domain?.name}
+        </TableRowClick>
+      ),
       domainType: 
         domain?.storageDomainType === "master"
           ? `데이터 (마스터)`
@@ -68,8 +73,11 @@ const DiskDomains = ({
  
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDomains} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isDomainsLoading} isRefetching={isDomainsRefetching} refetch={refetchDomains}
+        />
+        <LoadingFetch isLoading={isDomainsLoading} isRefetching={isDomainsRefetching} />
       </div>
       <TablesOuter target={"domain"}
         columns={TableColumnsInfo.STORAGE_DOMAINS_FROM_DISK}

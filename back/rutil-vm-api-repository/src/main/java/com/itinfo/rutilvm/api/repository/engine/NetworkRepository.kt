@@ -24,6 +24,24 @@ LEFT JOIN FETCH vp.networkFilter nf
 WHERE 1=1
 """)
 	override fun findAll(): List<NetworkEntity>
+	@Query("""
+SELECT DISTINCT n FROM NetworkEntity n
+LEFT JOIN FETCH n.storagePool sp
+LEFT JOIN FETCH n.provider p
+LEFT JOIN FETCH n.dnsConfiguration dc
+LEFT JOIN FETCH dc.nameServers ns
+LEFT JOIN FETCH ns.dnsResolverConfiguration drc
+LEFT JOIN FETCH n.networkClusters nc
+LEFT JOIN FETCH nc.cluster c
+LEFT JOIN FETCH nc.network nn
+LEFT JOIN FETCH n.vnicProfiles vp
+LEFT JOIN FETCH vp.networkFilter nf
+WHERE 1=1
+AND sp.id = :datacenterId
+""")
+	fun findAllByDatacenterId(
+		@Param("datacenterId") datacenterId: UUID?
+	): List<NetworkEntity>
 
 	@Query("""
 SELECT DISTINCT n FROM NetworkEntity n

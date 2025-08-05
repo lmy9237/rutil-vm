@@ -3,7 +3,7 @@ import CONSTANT                        from "@/Constants";
 import useUIState                      from "@/hooks/useUIState";
 import useGlobal                       from "@/hooks/useGlobal";
 import useClickOutside                 from "@/hooks/useClickOutside";
-import Loading                         from "@/components/common/Loading";
+import { Loading }                         from "@/components/common/Loading";
 import SelectedIdView                  from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink          from "@/components/common/OVirtWebAdminHyperlink";
 import SnapshotHostBackground          from "@/components/common/SnapshotHostBackground";

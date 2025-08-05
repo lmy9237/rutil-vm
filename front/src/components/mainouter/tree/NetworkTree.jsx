@@ -3,11 +3,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useGlobal              from "@/hooks/useGlobal";
 import useTmi                 from "@/hooks/useTmi";
 import useContextMenu         from "@/hooks/useContextMenu";
-import Loading                from "@/components/common/Loading";
+import { Loading }                from "@/components/common/Loading";
 import {
   rvi16Globe,
   rvi16DataCenter,
   rvi16Network,
+  status2TreeIcon,
 } from "@/components/icons/RutilVmIcons";
 import TreeMenuItem           from "./TreeMenuItem";
 import {
@@ -79,7 +80,8 @@ const NetworkTree = ({}) => {
               <div key={network.id} style={{ position: "relative" }}>
                 <TreeMenuItem level={3}
                   title={network.name}
-                  iconDef={rvi16Network("currentColor")}
+                  // iconDef={rvi16Network("currentColor")}
+                  iconDef={status2TreeIcon("network", network?.status, {})}
                   isSelected={() => location.pathname.includes(network.id)}
                   isContextSelected={contextMenuType() === "network" && contextMenu()?.item?.id === network?.id}
                   isNextLevelVisible={false}

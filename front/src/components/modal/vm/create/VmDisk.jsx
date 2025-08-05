@@ -1,5 +1,5 @@
 import { Suspense, useCallback, useMemo, useState } from "react";
-import Loading               from "@/components/common/Loading";
+import { Loading }               from "@/components/common/Loading";
 import { ActionButton }      from "@/components/button/ActionButtons";
 import { RVI36, rvi36TrashHover } from "@/components/icons/RutilVmIcons";
 import Localization          from "@/utils/Localization";

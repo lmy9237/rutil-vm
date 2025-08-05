@@ -1,4 +1,4 @@
-import Loading                          from "@/components/common/Loading";
+import { Loading }                          from "@/components/common/Loading";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -9,8 +9,9 @@ import Logger                           from "@/utils/Logger";
  * @param {number} colLen (점유할) col 숫자
  * @returns
  */
-export const TableRowLoading = ({ colLen }) => {
-  Logger.debug("TableRowLoading ...");
+export const TableRowLoading = ({ 
+  colLen=1
+}) => {
   return (
     <tr className="h-[10vh]">
       <td colSpan={colLen} className="table-loading-outer"> 

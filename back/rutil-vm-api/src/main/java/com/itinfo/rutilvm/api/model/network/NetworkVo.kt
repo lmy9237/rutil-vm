@@ -2,10 +2,12 @@ package com.itinfo.rutilvm.api.model.network
 
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
+import com.itinfo.rutilvm.api.model.common.TreeNavigatable
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.fromDataCenterToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromVnicProfilesToIdentifiedVos
 import com.itinfo.rutilvm.api.ovirt.business.NetworkStatusB
+import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.ovirt.business.toNetworkStatusB
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.util.ovirt.*
@@ -50,8 +52,8 @@ private val log = LoggerFactory.getLogger(NetworkVo::class.java)
  *
  */
 class NetworkVo (
-	val id: String = "",
-	val name: String = "",
+	override val id: String = "",
+	override val name: String = "",
 	val description: String = "",
 	val comment: String = "",
 	val mtu: Int = 1500,
@@ -59,7 +61,7 @@ class NetworkVo (
 	val stp: Boolean = false,
 	val vdsmName: String = "",
 	val vlan: Int = 0,
-	val status: NetworkStatusB? = NetworkStatusB.non_operational,
+	override val status: NetworkStatusB? = NetworkStatusB.non_operational,
 	val display: Boolean? = false,
 	val networkLabel: String = "",
 	val dnsNameServers: List<DnsVo> = emptyList(),
@@ -71,8 +73,14 @@ class NetworkVo (
 	val clusterVos: List<ClusterVo> = emptyList(),
 	val required: Boolean = false,
 	val isConnected: Boolean? = false,
-):Serializable {
-	override fun toString(): String = gson.toJson(this)
+): TreeNavigatable<NetworkStatusB>, Serializable {
+	override val type: TreeNavigatableType		get() = TreeNavigatableType.NETWORK
+	val statusCode: String				get() = status?.code ?: NetworkStatusB.non_operational.code
+	val statusEn: String				get() = status?.en ?: "N/A"
+	val statusKr: String				get() = status?.kr ?: "알 수 없음"
+
+	override fun toString(): String =
+		gson.toJson(this)
 
 	class Builder{
 		private var bId: String = "";fun id(block: () -> String?) { bId = block() ?: "" }
@@ -130,7 +138,7 @@ fun List<Network>.toNetworkMenus(): List<NetworkVo> =
 	this@toNetworkMenus.map { it.toNetworkMenu() }
 
 
-fun Network.toNetworkVo(conn: Connection): NetworkVo {
+fun Network.toNetworkVo(conn: Connection?=null): NetworkVo {
 	val network = this@toNetworkVo
 	// val usages: MutableList<NetworkUsage>? = conn.findNetwork(network.id()).getOrNull()?.usages()
 	// val dataCenter: DataCenter? = conn.findDataCenter(network.dataCenter().id()).getOrNull()
@@ -139,6 +147,7 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 		name { network.name() }
 		description { network.description() }
 		comment { network.comment() }
+		status { network.status().toNetworkStatusB() }
 		mtu { network.mtu().toInt() }
 		portIsolation { network.portIsolation() }
 		stp { network.stp() }
@@ -146,9 +155,9 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 		vdsmName { network.vdsmName() }
 		dataCenterVo { network.dataCenter().fromDataCenterToIdentifiedVo() }
 		openStackNetworkVo {
-			if(network.externalProviderPresent())
-				conn.findOpenStackNetworkProvider(network.externalProvider().id())
-					.getOrNull()?.toOpenStackNetworkVo()
+			if (network.externalProviderPresent())
+				conn?.findOpenStackNetworkProvider(network.externalProvider().id())
+					?.getOrNull()?.toOpenStackNetworkVo()
 			else null
 		}
 		dnsNameServers {
@@ -160,9 +169,8 @@ fun Network.toNetworkVo(conn: Connection): NetworkVo {
 		vnicProfileVos { network.vnicProfiles().fromVnicProfilesToIdentifiedVos() }
 	}
 }
-fun List<Network>.toNetworkVos(conn: Connection): List<NetworkVo> =
+fun List<Network>.toNetworkVos(conn: Connection?=null): List<NetworkVo> =
 	this@toNetworkVos.map { it.toNetworkVo(conn) }
-
 
 fun Network.toHostNetworkVo(usage: UsageVo): NetworkVo {
 	val network = this@toHostNetworkVo

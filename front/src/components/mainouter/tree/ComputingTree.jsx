@@ -1,9 +1,9 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useTmi                 from "@/hooks/useTmi";
-import useContextMenu         from "@/hooks/useContextMenu";
-import Loading                from "@/components/common/Loading";
+import useGlobal                        from "@/hooks/useGlobal";
+import useTmi                           from "@/hooks/useTmi";
+import useContextMenu                   from "@/hooks/useContextMenu";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
 import {
   rvi16Globe,
   rvi16Wrench, rvi16Refresh, rvi16QuestionMark,
@@ -14,11 +14,12 @@ import {
   rvi16Pause,
   status2TreeIcon,
 } from "@/components/icons/RutilVmIcons";
-import TreeMenuItem           from "./TreeMenuItem";
+import TreeMenuItem                     from "./TreeMenuItem";
 import {
   useAllTreeNavigations
 } from "@/api/RQHook";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name ComputingTree
@@ -59,7 +60,7 @@ const ComputingTree = ({}) => {
     Logger.debug(`ComputingTree > renderTree ... `)
     {/* 두 번째 레벨 (Data Center) */}
 
-    return !!isNavClustersLoading 
+    return !!isNavClustersLoading
       ? (<Loading />)
       : (secondVisibleComputing() && [...navClusters].map((dc) => {
       const isDataCenterOpen = openDataCentersComputing(dc?.id) || false;

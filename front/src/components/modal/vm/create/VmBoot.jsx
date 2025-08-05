@@ -23,7 +23,7 @@ const VmBoot = ({
   
   /* const handleInputChange = (field) => (e) => {
     Logger.debug(`VmBoot > handleInputChange ... field: ${field}, value: ${e.target.value}`)
-    import.meta.env.DEV && validationToast.debug(`field: ${field}, value: ${e.target.value}`)
+    validationToast.debug(`field: ${field}, value: ${e.target.value}`)
     setFormBootState((prev) => ({ ...prev, [field]: e.target.value }));
   }; */
     
@@ -66,7 +66,7 @@ const VmBoot = ({
               ? { id: isos[0].id, name: isos[0].name }
               : emptyIdNameVo();
             const _cdRomVo = checked ? firstIso : emptyIdNameVo()
-            import.meta.env.DEV && validationToast.debug(`field: isCdDvdChecked, value: ${checked}\nfield: cdRomVo: value: ${JSON.stringify(_cdRomVo, 2, null)}`)
+            validationToast.debug(`field: isCdDvdChecked, value: ${checked}\nfield: cdRomVo: value: ${JSON.stringify(_cdRomVo, 2, null)}`)
             setFormBootState((prev) => ({
               ...prev,
               isCdDvdChecked: checked,
@@ -99,7 +99,7 @@ const VmBoot = ({
                   id: selected.id, 
                   name: selected.name,
                 }
-                import.meta.env.DEV && validationToast.debug(`field: cdRomVo, value: ${JSON.stringify(_cdRomVo, 2, null)}`)
+                validationToast.debug(`field: cdRomVo, value: ${JSON.stringify(_cdRomVo, 2, null)}`)
                 setFormBootState((prev) => ({ ...prev, cdRomVo: { ..._cdRomVo }}))
               }
             }}

@@ -33,8 +33,11 @@ const TemplateInfo = () => {
   const { id: templateId, section } = useParams();
   const {
     data: template,
-    isError: isTemplateError,
     isLoading: isTemplateLoading,
+    isError: isTemplateError,
+    isSuccess: isTemplateSuccess,
+    isRefetching: isTemplateRefetching,
+    refetch: refetchTemplate,
   } = useTemplate(templateId);
   const { templatesSelected, setTemplatesSelected } = useGlobal()
 
@@ -101,8 +104,8 @@ const TemplateInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title={template?.name}
-        titleIcon={rvi24Template()}
+      <HeaderButton title={template?.name} titleIcon={rvi24Template()}
+        isLoading={isTemplateLoading} isRefetching={isTemplateRefetching} refetch={refetchTemplate}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

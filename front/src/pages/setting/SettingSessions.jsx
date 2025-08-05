@@ -1,18 +1,19 @@
 import React, { useCallback } from "react";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import SettingUserSessionsActionButtons from "./SettingUserSessionsActionButtons";
 import {
   useAllUserSessions
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name SettingSessions
@@ -42,8 +43,11 @@ const SettingSessions = () => {
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchUserSessios} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isUserSessionsLoading} isRefetching={isUserSessionsRefetching} refetch={refetchUserSessios}
+        />
+        <LoadingFetch isLoading={isUserSessionsLoading} isRefetching={isUserSessionsRefetching} />
         <SettingUserSessionsActionButtons />
       </div>
       <TablesOuter target={"usersession"}
@@ -52,7 +56,7 @@ const SettingSessions = () => {
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(row) => setUsersessionsSelected(row)}
         /*onClickableColumnClick={(row) => handleNameClick(row.id)}*/
-        isLoading={isUserSessionsLoading} isRefetching={isUserSessionsRefetching}  isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
+        isLoading={isUserSessionsLoading} isRefetching={isUserSessionsRefetching} isError={isUserSessionsError} isSuccess={isUserSessionsSuccess}
       />
       <SelectedIdView items={usersessionsSelected} />
       <OVirtWebAdminHyperlink

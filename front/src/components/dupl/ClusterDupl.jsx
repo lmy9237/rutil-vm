@@ -1,15 +1,16 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import ClusterActionButtons   from "@/components/dupl/ClusterActionButtons";
-import Localization           from "@/utils/Localization";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import ClusterActionButtons             from "@/components/dupl/ClusterActionButtons";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name ClusterDupl
@@ -34,7 +35,7 @@ const ClusterDupl = ({
   const transformedData = [...clusters].map((cluster) => ({
     ...cluster,
     _name: (
-      <TableRowClick type="cluster" id={cluster?.id}>
+      <TableRowClick type="cluster" id={cluster?.id} hideIcon>
         {cluster?.name}
       </TableRowClick>
     ),
@@ -57,8 +58,11 @@ const ClusterDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <ClusterActionButtons />
       </div>
       <TablesOuter target={"cluster"}

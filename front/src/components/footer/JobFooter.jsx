@@ -1,25 +1,29 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import CONSTANT               from "@/Constants";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import useFooterState         from "@/hooks/useFooterState";
+import CONSTANT                         from "@/Constants";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import useFooterState                   from "@/hooks/useFooterState";
+import { useApiToast }                  from "@/hooks/useSimpleToast";
 import {
   RVI24,
   rvi24Refresh,
   rvi24ChevronUp,
   rvi24DownArrow
 } from "@/components/icons/RutilVmIcons";
-import Spinner                from "@/components/common/Spinner";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import { BadgeStatus, BadgeNumber } from "@/components/common/Badges";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import Spinner                          from "@/components/common/Spinner";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import {
+  BadgeStatus, BadgeNumber
+} from "@/components/common/Badges";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
   useAllJobs
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 import "./JobFooter.css";
 
 /**
@@ -31,6 +35,7 @@ import "./JobFooter.css";
 const JobFooter = ({
   ...props
 }) => {
+  const { apiToast } = useApiToast()
   const {
     footerVisible, toggleFooterVisible,
     footerHeightInPx, setFooterHeightInPx,
@@ -52,7 +57,9 @@ const JobFooter = ({
     ...e,
     isFinished: e?.status?.toUpperCase() === "FINISHED" || e?.status?.toUpperCase() === "FAILED" ,
     _description: [...e?.steps]?.length > 1 ? (
-      <TableRowClick type="job" id={e?.id} onClick={() => handleDescriptionClick(e)}>
+      <TableRowClick type="job" id={e?.id} 
+        onClick={() => handleDescriptionClick(e)}
+      >
         {e?.description}
       </TableRowClick>
     ) : e?.description,
@@ -72,8 +79,8 @@ const JobFooter = ({
       : <Spinner />,
     */
     status: (e?.status?.toUpperCase() === "FINISHED" || e?.status?.toUpperCase() === "FAILED")
-    ? (e?.status?.toUpperCase() === "FINISHED" ? "성공" : "실패")
-    : <Spinner />,
+      ? (e?.status?.toUpperCase() === "FINISHED" ? "성공" : "실패")
+      : <Spinner />,
     startTime: e?.startTime,
     endTime: e?.endTime === "" 
       ? Localization.kr.NOT_ASSOCIATED
@@ -163,19 +170,26 @@ const JobFooter = ({
               toggleFooterVisible()
             }}
           >
-            최근 작업
+            최근 작업&nbsp;&nbsp;
+            <LoadingFetch isLoading={isJobsLoading} isRefetching={isJobsRefetching} />
           </span>
+          
           <RVI24 className="footer-ico footer-ico-refresh ml-auto" 
             iconDef={rvi24Refresh(CONSTANT.color.black)} 
             onClick={(e) => {
               e.stopPropagation()
-              if (footerVisible()) refetchJobs()
+              if (footerVisible()) {
+                refetchJobs()
+                import.meta.env.DEV && apiToast.refetch()
+              }
             }}
           />
-          {/* <IconButton iconDef={rvi16Refresh("#717171")} 
+          {/*
+          <IconButton iconDef={rvi16Refresh("#717171")} 
                 onClick={handleRefresh}
                  onClick={() =>  window.location.reload()}
-          /> */}
+          />
+          */}
         </div>
 
         {/* 테이블 */}
@@ -184,11 +198,11 @@ const JobFooter = ({
           style={{ height: `${footerHeight - 40}px` }}
         >
           <div className="footer-nav v-start gap-8 w-full h-full">
-            {/* <div className="dupl-header-group f-start align-start gap-4 w-full">
-              {transformedData.length > 0 && 
+            <div className="dupl-header-group f-start gap-4 w-full">
+              {/* {transformedData.length > 0 && 
                 <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchJobs} />
-              }
-            </div> */}
+              } */}
+            </div>
             <TablesOuter target={"job"}
               columns={TableColumnsInfo.JOB_HISTORY_COLUMNS}
               style={{ paddingLeft: '30px' }}

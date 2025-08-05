@@ -32,9 +32,11 @@ const VnicProfileInfo = () => {
   const { setVnicProfilesSelected } = useGlobal()
   const {
     data: vnicProfile, 
-    refetch: refetchVnicProfile,
-    isError: isVnicProfileError,
     isLoading: isVnicProfileLoading,
+    isError: isVnicProfileError,
+    isSuccess: isVnicProfileSuccess,
+    isRefetching: isVnicProfileRefetching,
+    refetch: refetchVnicProfile,
   } = useVnicProfile(vnicProfileId, (e) => ({...e,}));
   
   const [activeTab, setActiveTab] = useState('vms');
@@ -89,8 +91,8 @@ const VnicProfileInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title={vnicProfile?.name}
-        titleIcon={rvi24Lan()}
+      <HeaderButton title={vnicProfile?.name} titleIcon={rvi24Lan()}
+        isLoading={isVnicProfileLoading} isRefetching={isVnicProfileRefetching} refetch={refetchVnicProfile}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

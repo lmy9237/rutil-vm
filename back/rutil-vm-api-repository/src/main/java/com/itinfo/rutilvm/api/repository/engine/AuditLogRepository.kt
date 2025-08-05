@@ -1,7 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine
 
 import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
-import com.itinfo.rutilvm.api.ovirt.business.AuditLogType
 import com.itinfo.rutilvm.api.repository.engine.entity.AuditLogEntity
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.common.toUUID

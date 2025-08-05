@@ -10,6 +10,7 @@ import {
   SelectContent,
   SelectItem
 } from "@/components/ui/select";
+import { LoadingFetch }                 from "@/components/common/Loading";
 import SelectedIdView                   from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
 import SearchBox                        from "@/components/button/SearchBox";
@@ -55,7 +56,7 @@ const DiskDupl = ({
     let diskData = {
       ...d,
       _alias: (
-        <TableRowClick type="disk" id={d?.id}>
+        <TableRowClick type="disk" id={d?.id} hideIcon>
           {d?.alias || d?.diskImageVo?.alias}
         </TableRowClick>
       ),
@@ -116,10 +117,12 @@ const DiskDupl = ({
 
   return (
     <>{/* v-start으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
+      <div className="dupl-header-group f-start gap-4 w-full">
         <div className="f-start disk-filter-option gap-4">
-          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-            <div className="h-full">
+          <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+            isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+          />
+          <div className="h-full">
             <Select
               value={filterType}
               onValueChange={setFilterType}
@@ -137,7 +140,8 @@ const DiskDupl = ({
                 ))}
               </SelectContent>
             </Select>
-         </div>
+          </div>
+          <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         </div>
 
         <DiskActionButtons 

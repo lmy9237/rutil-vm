@@ -1,17 +1,18 @@
 import { useCallback } from "react";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
   useApplicationsFromVM
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name VmApplications
@@ -43,9 +44,11 @@ const VmApplications = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-2 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchApplications}/>
-        {/* <HostActionButtons actionType = "default"/> */}
+      <div className="dupl-header-group f-start gap-2 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isApplicationsLoading} isRefetching={isApplicationsRefetching} refetch={refetchApplications}
+        />
+        <LoadingFetch isLoading={isApplicationsLoading} isRefetching={isApplicationsRefetching} />
       </div>
       <TablesOuter target={"application"}
         columns={TableColumnsInfo.APPLICATIONS_FROM_VM}

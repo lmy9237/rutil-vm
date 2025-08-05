@@ -1,20 +1,23 @@
 import React, { Suspense, useState } from "react";
-import useUIState                from "@/hooks/useUIState";
-import useGlobal                 from "@/hooks/useGlobal";
-import useSearch                 from "@/hooks/useSearch";
-import SelectedIdView            from '@/components/common/SelectedIdView';
-import OVirtWebAdminHyperlink    from "@/components/common/OVirtWebAdminHyperlink";
-import Loading                   from '@/components/common/Loading';
-import { ActionButton }          from '@/components/button/ActionButtons';
-import SearchBox                 from '@/components/button/SearchBox';
-import TablesOuter               from "@/components/table/TablesOuter";
-import TableColumnsInfo          from "@/components/table/TableColumnsInfo";
-import DomainImportVmModal       from '@/components/modal/domain/DomainImportVmModal';
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import DomainImportVmModal              from "@/components/modal/domain/DomainImportVmModal";
 import { 
   useAllUnregisteredVMsFromDomain
 } from "@/api/RQHook";
-import { checkZeroSizeToMB } from '@/util';
-import Localization              from '@/utils/Localization';
+import {
+  checkZeroSizeToMB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainImportVms
@@ -59,8 +62,11 @@ const DomainImportVms = ({
   
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVms} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          isLoading={isVmsLoading} isRefetching={isVmsRefetching} refetch={refetchVms}
+        />
+        <LoadingFetch isLoading={isVmsLoading} isRefetching={isVmsRefetching} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default"

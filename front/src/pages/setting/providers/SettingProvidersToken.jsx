@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from "react";
-import SearchBox from "@/components/button/SearchBox";
-import TableColumnsInfo from "@/components/table/TableColumnsInfo";
-import TablesOuter from "@/components/table/TablesOuter";
+import SearchBox                 from "@/components/button/SearchBox";
+import TableColumnsInfo          from "@/components/table/TableColumnsInfo";
+import TablesOuter               from "@/components/table/TablesOuter";
 
-const SettingProvidersToken = () => {
+const SettingProvidersToken = ({
+
+}) => {
   // 상태 초기화
   const [searchQuery, setSearchQuery] = useState("");
   const [vmsSelected, setVmsSelected] = useState([]);
@@ -27,8 +29,9 @@ const SettingProvidersToken = () => {
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+        {/* <LoadingFetch isLoading={isUsersLoading} isRefetching={isUsersRefetching} /> */}
       </div>
       <TablesOuter
         target="vm"
@@ -37,12 +40,8 @@ const SettingProvidersToken = () => {
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
-        isLoading={false}
-        isRefetching={false}
-        isError={false}
-        isSuccess={true}
+        isLoading={false} isRefetching={false} isError={false} isSuccess={true}
       />
-   
     </>
   );
 };

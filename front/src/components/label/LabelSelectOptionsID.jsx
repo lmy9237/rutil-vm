@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import Loading from "@/components/common/Loading";
+import { Loading } from "@/components/common/Loading";
 import Localization from "@/utils/Localization";
 import "./LabelInput.css";
 
@@ -107,7 +107,7 @@ export default LabelSelectOptionsID;
 //   SelectContent,
 //   SelectItem
 // } from "@/components/ui/select";
-// import Loading                from "@/components/common/Loading";
+// import { Loading }                from "@/components/common/Loading";
 // import Localization           from "@/utils/Localization";
 // import Logger                 from "@/utils/Logger";
 // import "./LabelInput.css";

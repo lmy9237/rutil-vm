@@ -6,13 +6,13 @@
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
-    --hover: 0, 0%, 94%;
+    --hover: 0 0% 94%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 235, 97%, 24%;
-    --primary-inactive: 235, 55%, 40%;
+    --primary: 235 97% 24%;
+    --primary-inactive: 235 55% 40%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -26,7 +26,8 @@
     --success-foreground: 210 40% 98%; /* White/Light text */
     --info: 217.2 91.2% 59.8%;
     --info-foreground: 210 40% 98%; /* White/Light text */
-    --warning: 47.9 95.8% 53.1%;
+    /* --warning: 47.9 95.8% 53.1%; */
+    --warning: 9 88% 64%;
     --warning-foreground: 38.9 90.2% 7.5%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
@@ -60,7 +61,8 @@
     --success-foreground: 142.1 70.6% 95.3%;
     --info: 217.2 91.2% 49.8%; /* Darker Blue */
     --info-foreground: 217.2 91.2% 95.8%;
-    --warning: 47.9 95.8% 43.1%; /* Darker Yellow/Orange */
+    /* --warning: 47.9 95.8% 43.1%; */
+    --warning: 9 88% 64%;
     --warning-foreground: 47.9 95.8% 93.1%; /* Lighter text for dark warning */
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
@@ -148,8 +150,8 @@ html {
   --color-gray:#717171;    
   --color-gray-2:#CCCCCC;  
   --color-gray-3:#757575;  
-  --color-gray-4: #C6C6C6; 
-  --color-gray-disabled: #6d6d6d; 
+  --color-gray-4:#C6C6C6; 
+  --color-gray-disabled:#6d6d6d; 
   --color-input-disabled:#EDEDED; 
   --color-logo:#8CC453;
   --color-logo-text:#4679BC; 
@@ -168,7 +170,7 @@ html {
   --color-primary-white: #FFF;      
   --color-primary-h: #0b4db5;        
   --color-bg-tooltip: #333333;       /* 툴팁 */
-  --color-hover:#E7F2FF; 
+  --color-hover:#E7F2FF;
   
   --border-w: 1px; /* 테두리 두깨 */
   --thickness-border: 0.8px;

@@ -1,1 +1,1 @@
-nuitka --standalone --onefile --lto=no --show-progress --jobs=4 rutilvm-el8.py
+nuitka --standalone --onefile --lto=no --show-progress --jobs=1 rutilvm-el8.py

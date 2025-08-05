@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
+import { Separator }                    from "@/components/ui/separator"
 import BaseModal                        from "../BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -209,7 +210,7 @@ const NetworkModal = ({
           value={formState.comment}
           onChange={handleInputChange(setFormState, "comment", validationToast)}
         />
-        <hr />
+        <Separator />
 
         <div id="vlan-enabled-group" className="f-btw">
          <LabelCheckbox id="vlanEnabled" label="VLAN 태깅 활성화"
@@ -300,17 +301,17 @@ const NetworkModal = ({
               onChange={(index, value) => {
                 const updated = [...dnsServers];
                 updated[index] = { position: index, address: value };
-                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(updated, 0, 2)}`)
+                validationToast.debug(`dnsServer: ${JSON.stringify(updated, 0, 2)}`)
                 setDnsServers(updated);
               }}
               onAdd={() => {
-                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
+                validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
                 setDnsServers((prev) => [...prev, ""])
               }}
               onRemove={(index) => {
                 const updated = [...dnsServers];
                 updated.splice(index, 1);
-                import.meta.env.DEV && validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
+                validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
                 setDnsServers(updated);
               }}
             />
@@ -319,7 +320,7 @@ const NetworkModal = ({
         
         {!editMode && (
           <div className=" py-3">
-            <hr />
+            <Separator />
             <span className="my-3 block font-bold">{Localization.kr.CLUSTER}에서 {Localization.kr.NETWORK}를 연결/분리</span>
             <TablesOuter
               columns={[

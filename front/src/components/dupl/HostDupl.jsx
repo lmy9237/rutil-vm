@@ -1,20 +1,21 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import HostActionButtons      from "@/components/dupl/HostActionButtons";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import HostActionButtons                from "@/components/dupl/HostActionButtons";
 import {
   status2Icon, hostedEngineStatus2Icon
 } from "@/components/icons/RutilVmIcons";
-import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import { getStatusSortKey }             from "@/components/icons/GetStatusSortkey";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 const HostDupl = ({
   hosts = [], columns = [],
@@ -27,7 +28,7 @@ const HostDupl = ({
   const transformedData = [...hosts]?.map((host) => ({
     ...host,
     _name: (
-      <TableRowClick type="host" id={host?.id}>
+      <TableRowClick type="host" id={host?.id} hideIcon>
         {host?.name}
       </TableRowClick>
     ),
@@ -61,8 +62,11 @@ const HostDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch}
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <HostActionButtons actionType="default"/>
       </div>
       <TablesOuter target={"host"}
@@ -76,11 +80,11 @@ const HostDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
       />
-      {/* <SelectedIdView items={hostsSelected}/>
+      <SelectedIdView items={hostsSelected}/>
       <OVirtWebAdminHyperlink 
         name={`${Localization.kr.COMPUTING}>${Localization.kr.HOST}`} 
         path="hosts"
-      /> */}
+      />
     </>
   );
 };

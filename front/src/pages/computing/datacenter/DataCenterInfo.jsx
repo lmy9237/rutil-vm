@@ -44,6 +44,8 @@ const DataCenterInfo = () => {
     isLoading: isDataCenterLoading,
     isError: isDataCenterError,
     isSuccess: isDataCenterSuccess,
+    isRefetching: isDataCenterRefetching,
+    refetch: refetchDataCenter,
   } = useDataCenter(dataCenterId, (e) => ({ ...e }));
   const {
     activeModal, setActiveModal,
@@ -126,9 +128,9 @@ const DataCenterInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Datacenter()}
-        title={dataCenter?.name}
+      <HeaderButton titleIcon={rvi24Datacenter()} title={dataCenter?.name}
         buttons={sectionHeaderButtons}
+        isLoading={isDataCenterLoading} isRefetching={isDataCenterRefetching} refetch={refetchDataCenter}
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}

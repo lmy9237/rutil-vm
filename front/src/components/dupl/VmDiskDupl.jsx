@@ -1,18 +1,23 @@
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import SearchBox              from "@/components/button/SearchBox";
-import FilterButtons          from "@/components/button/FilterButtons";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import { status2Icon }        from "@/components/icons/RutilVmIcons";
-import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
-import VmDiskActionButtons    from "@/components/dupl/VmDiskActionButtons";
-import { checkZeroSizeToGiB } from "@/util";
-import Localization           from "@/utils/Localization";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import {
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
+import {
+  getStatusSortKey
+} from "@/components/icons/GetStatusSortkey";
+import SearchBox                        from "@/components/button/SearchBox";
+import FilterButtons                    from "@/components/button/FilterButtons";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import VmDiskActionButtons              from "@/components/dupl/VmDiskActionButtons";
+import { checkZeroSizeToGiB }           from "@/util";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name VmDiskDupl
@@ -40,7 +45,7 @@ const VmDiskDupl = ({
         icon: status2Icon(d?.active ? "UP" : "DOWN"),
         iconSortKey: getStatusSortKey(diskImage?.status),
         _alias: (
-          <TableRowClick type="disk" id={diskImage?.id}>
+          <TableRowClick type="disk" id={diskImage?.id} hideIcon>
             {diskImage?.alias}
           </TableRowClick>
         ),
@@ -85,9 +90,12 @@ const VmDiskDupl = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
         <FilterButtons options={diskFilters} activeOption={activeDiskType} onClick={setActiveDiskType} />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <VmDiskActionButtons />
       </div>
       <TablesOuter target={"vmdisk"}

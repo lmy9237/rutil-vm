@@ -1,26 +1,26 @@
 import React, { Suspense, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState                      from "@/hooks/useUIState";
-import useGlobal                       from "@/hooks/useGlobal";
-import useSearch                       from "@/hooks/useSearch";
-import { Checkbox }                    from "@/components/ui/checkbox"; 
-import Loading                         from "@/components/common/Loading";
-import SelectedIdView                  from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink          from "@/components/common/OVirtWebAdminHyperlink";
-import { ActionButton }                from "@/components/button/ActionButtons";
-import SearchBox                       from "@/components/button/SearchBox";
-import TableColumnsInfo                from "@/components/table/TableColumnsInfo";
-import TablesOuter                     from "@/components/table/TablesOuter";
-import TableRowClick                   from "@/components/table/TableRowClick";
-import NetworkClusterModal             from "@/components/modal/network/NetworkClusterModal";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
+import { Checkbox }                     from "@/components/ui/checkbox"; 
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import NetworkClusterModal              from "@/components/modal/network/NetworkClusterModal";
 import { 
   status2Icon
 } from "@/components/icons/RutilVmIcons";
 import {
   useAllClustersFromNetwork
 } from "@/api/RQHook";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name NetworkClusters
@@ -41,7 +41,7 @@ const NetworkClusters = ({
   } = useGlobal()
 
   const {
-    data: networks = [],
+    data: networks=[],
     isLoading: isNetworksLoading,
     isError: isNetworksError,
     isSuccess: isNetworksSuccess,
@@ -49,7 +49,7 @@ const NetworkClusters = ({
     isRefetching: isNetworksRefetching,
   } = useAllClustersFromNetwork(networkId, (e) => ({ ...e }));
 
-  const transformedData = networks.map((network) => ({
+  const transformedData = [...networks].map((network) => ({
     ...network,
     _name: (
       <TableRowClick type="cluster" id={network?.clusterVo?.id}>
@@ -75,8 +75,11 @@ const NetworkClusters = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNetworks} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          isLoading={isNetworksLoading} isRefetching={isNetworksRefetching} refetch={refetchNetworks}
+        />
+        <LoadingFetch isLoading={isNetworksLoading} isRefetching={isNetworksRefetching} />
         <div className="header-right-btns">
           <ActionButton actionType="default"
             label={`${Localization.kr.NETWORK} ${Localization.kr.MANAGEMENT}`}

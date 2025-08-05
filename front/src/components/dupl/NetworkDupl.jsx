@@ -1,18 +1,22 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import NetworkActionButtons   from "@/components/dupl/NetworkActionButtons";
-import Localization           from "@/utils/Localization"; 
-import Logger                 from "@/utils/Logger";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import {
+  status2Icon,
+  networkUsage2Icons,
+} from "@/components/icons/RutilVmIcons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import NetworkActionButtons             from "@/components/dupl/NetworkActionButtons";
+import Localization                     from "@/utils/Localization"; 
+import Logger                           from "@/utils/Logger";
 import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
-import { status2Icon } from "../icons/RutilVmIcons";
 
 /**
  * @name NetworkDupl
@@ -36,7 +40,7 @@ const NetworkDupl = ({
     ...network,
     icon: status2Icon(network?.status),
     _name: (
-      <TableRowClick type="network" id={network?.id}>
+      <TableRowClick type="network" id={network?.id} hideIcon>
         {network?.name}
       </TableRowClick>
     ),
@@ -49,13 +53,7 @@ const NetworkDupl = ({
         {network?.dataCenterVo?.name}
       </TableRowClick>
     ),
-    role: network?.roleInKr || [
-      network?.usage?.management ? Localization.kr.MANAGEMENT : null,
-      network?.usage?.display ? Localization.kr.PRINT : null,
-      network?.usage?.migration ? Localization.kr.MIGRATION : null,
-      network?.usage?.gluster ? "글러스터" : null,
-      network?.usage?.defaultRoute ? "기본라우팅" : null,
-    ].filter(Boolean).join(" / "),
+    role: (networkUsage2Icons(network?.usage, network?.roleInKr)),
     searchText: `${network?.name} ${network?.vlan} ${network?.mtu} ${network?.datacenterVo?.name || ""}`
   }));
 
@@ -68,9 +66,12 @@ const NetworkDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
-         <NetworkActionButtons />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
+        <NetworkActionButtons />
       </div>
       <TablesOuter target={"network"}
         columns={columns}

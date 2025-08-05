@@ -1,20 +1,23 @@
 import React, { useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
   useAllVMsFromDomain
 } from "@/api/RQHook";
-import { checkZeroSizeToGiB } from "@/util";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
-import { status2Icon } from "@/components/icons/RutilVmIcons";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainVms
@@ -44,7 +47,7 @@ const DomainVms = ({ domainId }) => {
 
   const transformedData = useMemo(() => [...vms].map((vm) => ({
     _name: (
-      <TableRowClick type="vm" id={vm?.id}>
+      <TableRowClick type="vm" id={vm?.id} hideIcon>
         {vm?.name}
       </TableRowClick>
     ),
@@ -80,15 +83,19 @@ const DomainVms = ({ domainId }) => {
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={isVmsRefetching} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isRefetching={isVmsRefetching} isLoading={isVmsLoading} refetch={isVmsRefetching}
+        />
+        <LoadingFetch isRefetching={isVmsRefetching} isLoading={isVmsLoading} />
+      </div>
       {/* <EventActionButtons /> */}
       <TablesOuter target={"vm"} 
         columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => {setVmsSelected(selectedRows)}}
-        refetch={refetchVms} isRefetching={isVmsRefetching}
-        isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        refetch={refetchVms} isRefetching={isVmsRefetching} isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

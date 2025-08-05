@@ -1,21 +1,24 @@
 import React, { Suspense, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import useSearch               from "@/hooks/useSearch";
-import SelectedIdView          from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
-import { ActionButton }        from "@/components/button/ActionButtons";
-import SearchBox               from "@/components/button/SearchBox";
-import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
-import TablesOuter             from "@/components/table/TablesOuter";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import DomainImportDiskModal            from "@/components/modal/domain/DomainImportDiskModal";
 import {
   useAllUnregisteredDisksFromDomain
 } from "@/api/RQHook";
-import { checkZeroSizeToGiB }  from "@/util";
-import Localization            from "@/utils/Localization";
-import Loading from "@/components/common/Loading";
-import DomainImportDiskModal from "@/components/modal/domain/DomainImportDiskModal";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainImportDisks
@@ -58,8 +61,11 @@ const DomainImportDisks = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDisks}/>
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isDisksLoading} isRefetching={isDisksRefetching} refetch={refetchDisks}
+        />
+        <LoadingFetch isLoading={isDisksLoading} isRefetching={isDisksRefetching} />
         <div className="header-right-btns">
           <ActionButton actionType="default" label={Localization.kr.IMPORT}
             disabled={disksSelected.length === 0} 

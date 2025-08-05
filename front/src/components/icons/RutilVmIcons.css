@@ -37,6 +37,9 @@
 .rvi.rvi-nav.active svg {
   color: var(--color-primary-white);
 }
-.rvi.rvi-nav.no-active {
+.rvi.rvi-nav.inverse:hover {
+  color: var(--color-hover);
+}
+.rvi.rvi-nav.inactive {
   background-color: transparent !important; 
 }

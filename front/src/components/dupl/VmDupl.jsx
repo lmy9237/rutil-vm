@@ -1,22 +1,24 @@
 import { useCallback,useMemo } from "react"
 import { useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Checkbox }                     from "@/components/ui/checkbox";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { getStatusSortKey }             from "@/components/icons/GetStatusSortkey";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
 import { 
   hostedEngineStatus2Icon,
+  RVI16,
+  rvi16Host,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
-import { getStatusSortKey }   from "@/components/icons/GetStatusSortkey";
-import VmActionButtons        from "@/components/dupl/VmActionButtons";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
-import { Checkbox } from "@/components/ui/checkbox";
+import VmActionButtons                  from "@/components/dupl/VmActionButtons";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name VmDupl
@@ -74,14 +76,11 @@ const VmDupl = ({
     ),
     iconSortKey: getStatusSortKey(vm?.status), 
     _name: (
-      <>
-      {/* {hostedEngineStatus2Icon(vm?.hostedEngineVm)} */} 
-      <TableRowClick type="vm" id={vm?.id}>
+      <TableRowClick type="vm" id={vm?.id} hideIcon>
         {vm?.name}
       </TableRowClick>
-      </>
     ),
-    host: (
+    _host: (
       <TableRowClick type="host" id={vm?.hostVo?.id}>
         {vm?.hostVo?.name}
       </TableRowClick>
@@ -96,7 +95,7 @@ const VmDupl = ({
         {vm?.dataCenterVo?.name}
       </TableRowClick>
     ),
-    ipv4: vm?.ipv4 + " " + vm?.ipv6,
+    ipv4: `${vm?.ipv4 || ""} ${vm?.ipv6 || ""}`,
     memoryUsage:
       vm?.usageDto?.memoryPercent === null || vm?.usageDto?.memoryPercent === undefined
         ? ""
@@ -168,8 +167,11 @@ const VmDupl = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <VmActionButtons />
       </div>
       <TablesOuter target={"vm"}

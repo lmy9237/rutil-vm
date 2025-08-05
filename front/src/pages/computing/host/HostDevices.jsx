@@ -1,13 +1,16 @@
 import React from "react";
-import useGlobal from "../../../hooks/useGlobal";
-import OVirtWebAdminHyperlink from "../../../components/common/OVirtWebAdminHyperlink";
-import useSearch from "../../../hooks/useSearch";
-import SelectedIdView from "../../../components/common/SelectedIdView";
-import SearchBox from "../../../components/button/SearchBox";
-import TablesOuter from "../../../components/table/TablesOuter";
-import TableColumnsInfo from "../../../components/table/TableColumnsInfo";
-import { useHostDevicesFromHost } from "../../../api/RQHook";
-import Localization from "../../../utils/Localization";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import {
+  useHostDevicesFromHost
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name HostDevices
@@ -38,8 +41,13 @@ const HostDevices = ({
   
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchHostDevices}/>
-      {/* <HostActionButtons actionType = "default"/> */}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isHostDevicesLoading} isRefetching={isHostDevicesRefetching} refetch={refetchHostDevices} 
+        />
+        <LoadingFetch isLoading={isHostDevicesLoading} isRefetching={isHostDevicesRefetching} />
+        {/* <HostActionButtons actionType = "default"/> */}  
+      </div>
       <TablesOuter target={"hostdevice"}
         columns={TableColumnsInfo.DEVICE_FROM_HOST}
         data={filteredData}

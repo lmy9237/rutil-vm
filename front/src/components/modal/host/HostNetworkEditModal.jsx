@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
+import { Separator }                    from "@/components/ui/separator"
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -68,6 +69,7 @@ const HostNetworkEditModal = ({
     setNetworkModalState(prev => {
       const updated = [...prev.dnsServers];
       updated.splice(idx, 1);
+      validationToast.debug(`field: dnsServers, value: ${JSON.stringify(updated, 2, null)}`)
       return { ...prev, dnsServers: updated };
     });
   };
@@ -244,7 +246,7 @@ const HostNetworkEditModal = ({
                   checked={networkModalState.inSync} 
                   onChange={checked => handleChange("inSync", null, !networkModalState.inSync)}
                 />
-                <hr/>
+                <Separator />
                 {import.meta.env.DEV && <pre>initialInSync: {initialInSync === true ? "T" : "F"} networkModalState: {networkModalState.inSync === true ? "T" : "F"}</pre>}
               </>
             )}

@@ -2,24 +2,27 @@ import React from "react";
 import Tippy from "@tippyjs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useContextMenu         from "@/hooks/useContextMenu";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import NicActionButtons       from "@/components/dupl/VmNicActionButtons";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import NicActionButtons                 from "@/components/dupl/VmNicActionButtons";
+import VmNicModals                      from "@/components/modal/vm/VmNicModals";
 import {
   useNetworkInterfacesFromVM
 } from "@/api/RQHook";
+import {
+  checkZeroSizeToMbps
+} from "@/util";
+import Localization                     from "@/utils/Localization";
 import "./Vm.css"
-import VmNicModals from "@/components/modal/vm/VmNicModals";
-import TablesOuter from "@/components/table/TablesOuter";
-import useSearch from "@/hooks/useSearch";
-import TableRowClick from "@/components/table/TableRowClick";
-import { checkZeroSizeToMbps } from "@/util";
-import Localization           from "@/utils/Localization";
+
 /**
  * @name VmNics2
  * @description 가상에 종속 된 네트워크 인터페이스 목록
@@ -116,8 +119,11 @@ const VmNics2 = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVmNics} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isVmNicsLoading} isRefetching={isVmNicsRefetching} refetch={refetchVmNics}
+        />
+        <LoadingFetch isLoading={isVmNicsLoading} isRefetching={isVmNicsRefetching} />
         <NicActionButtons />
       </div>
       <TablesOuter target={"nic"} 

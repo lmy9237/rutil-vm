@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import { Separator }                    from "@/components/ui/separator"
+import BaseModal                        from "@/components/modal/BaseModal";
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
 import LabelInput                       from "@/components/label/LabelInput";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
@@ -151,7 +152,6 @@ const TemplateEditModal = ({
     }
     
     Logger.debug(`TemplateEditModal > handleFormSubmit ... dataToSubmit: `, dataToSubmit);
-
     editTemplate({
       templateId: formState.id,
       templateData: dataToSubmit,
@@ -180,7 +180,7 @@ const TemplateEditModal = ({
               onChange={handleInputChange(setFormState, "optimizeOption", validationToast)}
             />
           </div>
-          <hr/>
+          <Separator />
           {activeTab === "general" && (
             <>
               <LabelInput id="name" label={Localization.kr.NAME}

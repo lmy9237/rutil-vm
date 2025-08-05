@@ -1,23 +1,28 @@
-import React, { useCallback, useState } from "react";
+ import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal               from "@/hooks/useGlobal";
-import useSearch               from "@/hooks/useSearch";
-import SelectedIdView          from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
-import FilterButtons           from "@/components/button/FilterButtons";
-import { ActionButton }        from "@/components/button/ActionButtons";
-import SearchBox               from "@/components/button/SearchBox";
-import TablesOuter             from "@/components/table/TablesOuter";
-import TableRowClick           from "@/components/table/TableRowClick";
-import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
-import { RVI16, rvi16TryRefresh, status2Icon }         from "@/components/icons/RutilVmIcons";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import FilterButtons                    from "@/components/button/FilterButtons";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import {
+  RVI16,
+  rvi16TryRefresh,
+  status2Icon
+} from "@/components/icons/RutilVmIcons";
 import {
   useConnectedHostsFromNetwork,
   useDisconnectedHostsFromNetwork,
 } from "@/api/RQHook";
-import { checkZeroSizeToMbps } from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import { checkZeroSizeToMbps }          from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 
 /**
@@ -74,7 +79,7 @@ const NetworkHosts = ({
             n?.networkVo?.id === networkId // 해당 네트워크 건만 추출
           )))?.inSync === false ? status2Icon("async") : <></>,
         host: ( 
-          <TableRowClick type="host" id={host?.id}>
+          <TableRowClick type="host" id={host?.id} hideIcon>
             {host?.name}
           </TableRowClick>
         ),
@@ -117,11 +122,17 @@ const NetworkHosts = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
+      <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
+          isRefetching={activeFilter === "connected" ? isConnectedHostsRefetching : isDisconnectedHostsRefetching}
           refetch={activeFilter === "connected" ? refetchConnectedHosts : refetchDisconnectedHosts}
         />
         <FilterButtons options={connectionFilters} activeOption={activeFilter} onClick={setActiveFilter} />
+        <LoadingFetch 
+          isLoading={activeFilter === "connected" ? isConnectedHostsLoading: isDisconnectedHostsLoading}
+          isRefetching={activeFilter === "connected" ? isConnectedHostsRefetching : isDisconnectedHostsRefetching}
+        />
         <div className="header-right-btns">
           <ActionButton
             label={`${Localization.kr.HOST} ${Localization.kr.NETWORK} 설정`}

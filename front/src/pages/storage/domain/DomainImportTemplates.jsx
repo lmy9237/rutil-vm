@@ -1,18 +1,23 @@
 import React, { Suspense, useState } from "react";
-import useUIState                                from "@/hooks/useUIState";
-import useGlobal                                 from "@/hooks/useGlobal";
-import useSearch                                 from "@/hooks/useSearch";
-import SelectedIdView                            from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink                    from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox                                 from "@/components/button/SearchBox";
-import { ActionButton }                          from "@/components/button/ActionButtons";
-import TablesOuter                               from "@/components/table/TablesOuter";
-import TableColumnsInfo                          from "@/components/table/TableColumnsInfo";
-import { useAllUnregisteredTemplatesFromDomain } from "@/api/RQHook";
-import { checkZeroSizeToMB } from "@/util";
-import Localization from "@/utils/Localization";
-import Loading from "@/components/common/Loading";
-import DomainImportTemplateModal from "@/components/modal/domain/DomainImportTemplateModal";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import DomainImportTemplateModal        from "@/components/modal/domain/DomainImportTemplateModal";
+import {
+  useAllUnregisteredTemplatesFromDomain
+} from "@/api/RQHook";
+import {
+  checkZeroSizeToMB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainImportTemplates
@@ -63,8 +68,11 @@ const DomainImportTemplates = ({
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchTemplates} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} refetch={refetchTemplates} 
+        />
+        <LoadingFetch isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} />
         <div className="header-right-btns">
           <ActionButton label={Localization.kr.IMPORT}
             actionType="default" 

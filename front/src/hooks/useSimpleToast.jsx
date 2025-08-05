@@ -150,7 +150,7 @@ export const useValidationToast = () => {
       value="",
     ) => {
       Logger.debug(`useValidationToast > validationToast.debug ... value: ${value}`);
-      toast({
+      import.meta.env.DEV && toast({
         variant: "info",
         title: Localization.kr.TITLE_DEBUGGING,
         description: value || ""

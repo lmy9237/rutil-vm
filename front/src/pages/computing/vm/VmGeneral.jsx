@@ -203,16 +203,18 @@ const VmGeneral = ({
   const relatedTableRows = [
     { 
       label: Localization.kr.DATA_CENTER, 
-      value: 
-      <TableRowClick type="datacenter" id={vm?.dataCenterVo?.id}>
-        {vm?.dataCenterVo?.name || "Default"}
-      </TableRowClick>
+      value: (
+        <TableRowClick type="datacenter" id={vm?.dataCenterVo?.id}>
+          {vm?.dataCenterVo?.name || "Default"}
+        </TableRowClick>
+      )
     }, { 
       label: Localization.kr.CLUSTER, 
-      value: 
+      value: (
         <TableRowClick type="cluster" id={vm?.clusterVo?.id}>
           {vm?.clusterVo?.name}
         </TableRowClick>
+      )
     }, { 
       label: Localization.kr.HOST, 
       value: 
@@ -477,7 +479,7 @@ const VmVncMonitor = ({
           </button>
           <button className="btn-vnc-icon ml-auto w-[38px] h-[38px] fs-12"
             onClick={onExclamationClick}
-            disabled={!vm?.qualified4ConsoleConnect}>
+          >
             <RVI24 iconDef={rvi24ExclamationCircle(CONSTANT.color.white)}/>
           </button>
         </div>

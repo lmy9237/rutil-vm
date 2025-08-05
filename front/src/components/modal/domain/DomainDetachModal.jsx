@@ -1,4 +1,5 @@
 import useGlobal                       from "@/hooks/useGlobal";
+import { Separator }                   from "@/components/ui/separator"
 import BaseModal                       from "@/components/modal/BaseModal";
 import { 
   RVI16, 
@@ -10,8 +11,8 @@ import {
   useAllVMsFromDomain,
   useDetachDomain,
 } from "@/api/RQHook";
-import Localization                     from "@/utils/Localization";
-import Logger                           from "@/utils/Logger";
+import Localization                    from "@/utils/Localization";
+import Logger                          from "@/utils/Logger";
 import { useMemo } from "react";
 
 /**
@@ -74,7 +75,7 @@ const DomainDetachModal = ({
         {label ? datacentersSelected[0]?.name : domainsSelected[0]?.name}
       </div><br/>
      
-      <hr/>
+      <Separator />
       <div className="flex py-4 associated-resource-lists">
         {transformedVmData.length > 0 && (
           <div>

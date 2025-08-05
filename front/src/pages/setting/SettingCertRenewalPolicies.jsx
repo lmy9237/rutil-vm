@@ -1,4 +1,5 @@
 import React from "react";
+import { Separator }                    from "@/components/ui/separator"
 import { 
   Accordion, AccordionItem, AccordionTrigger, AccordionContent
 } from "@/components/ui/accordion"
@@ -6,7 +7,7 @@ import {
   severity2Icon,
 } from "@/components/icons/RutilVmIcons";
 import "./SettingCertRenewalPolicies.css"
-import Localization from "@/utils/Localization";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name SettingCertRenewalPolicies
@@ -24,7 +25,7 @@ const SettingCertRenewalPolicies = () => {
           className="f-start w-full"
         >{severity2Icon("WARNING", true)}인증서 재갱신 정책</h2>
       </summary>
-      <hr/>
+      <Separator/>
       <ul>
         {[...Localization.kr.CERTIFICATE_GUIDES].map((e) => (<li>{e}</li>))}
       </ul>

@@ -1,18 +1,22 @@
 import React, { useMemo } from "react";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import { useNavigate } from "react-router-dom";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
   useAllTemplatesFromDomain
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import { useNavigate } from "react-router-dom";
-import { checkZeroSizeToGiB } from "@/util";
+import {
+  checkZeroSizeToGiB
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainTemplates
@@ -65,9 +69,11 @@ const DomainTemplates = ({
   // TODO: 필요하면 정리
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchTemplates} />
-        {/* <EventActionButtons /> */}
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery}
+          isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} refetch={refetchTemplates}
+        />
+        <LoadingFetch isLoading={isTemplatesLoading} isRefetching={isTemplatesRefetching} />
       </div>
       <TablesOuter target={"template"} 
         columns={TableColumnsInfo.TEMPLATES_FROM_STORAGE_DOMAIN}

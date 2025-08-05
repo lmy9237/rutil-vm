@@ -102,7 +102,7 @@ const DomainImportVmModal = ({
       <LabelCheckbox id={`relocation-${vm.id}`} label={""}
         checked={!!relocation[vm.id]}
         onChange={(checked) => {
-          import.meta.env.DEV && validationToast.debug(`relocation[${vm.id}]: ${checked}`);
+          validationToast.debug(`relocation[${vm.id}]: ${checked}`);
           setRelocation(prev => ({ ...prev, [vm.id]: checked }));
         }}
         /*
@@ -115,7 +115,7 @@ const DomainImportVmModal = ({
       <LabelCheckbox id={`allow-${vm.id}`} label={""}
         checked={!!partialAllow[vm.id]}
         onChange={(checked) => {
-          import.meta.env.DEV && validationToast.debug(`partialAllow[${vm.id}]: ${checked}`);
+          validationToast.debug(`partialAllow[${vm.id}]: ${checked}`);
           setPartialAllow(prev => ({ ...prev, [vm.id]: checked }));
         }}
         /*

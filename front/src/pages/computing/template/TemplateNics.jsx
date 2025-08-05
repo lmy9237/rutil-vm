@@ -1,18 +1,19 @@
 import { useCallback } from "react"
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import { status2Icon }        from "@/components/icons/RutilVmIcons";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TemplateNicActionbuttons         from "@/components/dupl/TemplateNicActionbuttons";
 import {
   useAllNicsFromTemplate
 } from "@/api/RQHook";
-import TemplateNicActionbuttons from "@/components/dupl/TemplateNicActionbuttons";
 
 /**
  * @name TemplateNics
@@ -39,33 +40,36 @@ const TemplateNics = ({
     isRefetching: isVnicProfilesRefetching,
   } = useAllNicsFromTemplate(templateId, (e) => ({ ...e }));
 
-  const transformedData = [...vnicProfiles]
-    .sort((a, b) => (a.name || "").localeCompare(b.name || ""))
-    .map((nic) => ({
-      ...nic,
-      status: status2Icon(nic?.linked ? "UP" : "DOWN"),
-      network: (
-        <TableRowClick type="network" id={nic?.networkVo?.id}>
-          {nic?.networkVo?.name}
-        </TableRowClick>
-      ),
-      vnicProfile: (
-        <TableRowClick type="vnicProfile" id={nic?.vnicProfileVo?.id}>
-          {nic?.vnicProfileVo?.name}
-        </TableRowClick>
-      ),
-      _linked: nic?.linked === true ? "UP" : "DOWN",
-      _plugged: (
-        <input type="checkbox" checked={nic?.plugged === true} disabled />
-      ),
+  const transformedData = [...vnicProfiles].sort((a, b) => 
+    (a.name || "").localeCompare(b.name || "")
+  ).map((nic) => ({
+    ...nic,
+    status: status2Icon(nic?.linked ? "UP" : "DOWN"),
+    network: (
+      <TableRowClick type="network" id={nic?.networkVo?.id}>
+        {nic?.networkVo?.name}
+      </TableRowClick>
+    ),
+    vnicProfile: (
+      <TableRowClick type="vnicProfile" id={nic?.vnicProfileVo?.id}>
+        {nic?.vnicProfileVo?.name}
+      </TableRowClick>
+    ),
+    _linked: nic?.linked === true ? "UP" : "DOWN",
+    _plugged: (
+      <input type="checkbox" checked={nic?.plugged === true} disabled/>
+    ),
   }))
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchVnicProfiles}/>
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching} refetch={refetchVnicProfiles}
+        />
+        <LoadingFetch isLoading={isVnicProfilesLoading} isRefetching={isVnicProfilesRefetching} />
         <TemplateNicActionbuttons />
       </div>
       <TablesOuter target={"templatenic"}

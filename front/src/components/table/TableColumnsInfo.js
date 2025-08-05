@@ -143,8 +143,8 @@ const TableColumnsInfo = {
     { accessor: "icon",          header: Localization.kr.STATUS,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
     // { accessor: "engine",        header: Localization.kr.ENGINE,      clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: "_name",         header: Localization.kr.NAME,        clickable: true , width: 150 },
-    { accessor: 'comment',       header: Localization.kr.COMMENT,     clickable: false, width: 150  },
-    { accessor: 'host',          header: Localization.kr.HOST,        clickable: true, width: 130 },
+    { accessor: 'comment',       header: Localization.kr.COMMENT,     clickable: false, width: 150 },
+    { accessor: '_host',         header: Localization.kr.HOST,        clickable: true,  width: 130 },
     { accessor: 'ipv4',          header: Localization.kr.IP_ADDRESS,  clickable: false, width: 180 },
     { accessor: 'fqdn',          header: 'FQDN',                      clickable: false },
     { accessor: 'statusKr',      header: Localization.kr.STATUS,      clickable: false, width: 100 },
@@ -323,8 +323,10 @@ const TableColumnsInfo = {
   ],
 
   NETWORKS: [
+    { accessor: "icon",          header: Localization.kr.STATUS,         clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: '_name',         header: Localization.kr.NAME,        clickable: true },
     { accessor: 'comment',       header: Localization.kr.COMMENT,     clickable: false },
+    // { accessor: 'status',        header: Localization.kr.STATUS,      clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'datacenter',    header: Localization.kr.DATA_CENTER, clickable: false },
     { accessor: 'description',   header: Localization.kr.DESCRIPTION, clickable: false },
     { accessor: 'vlan',          header: 'VLAN 태그',                 clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },
@@ -341,10 +343,10 @@ const TableColumnsInfo = {
     { accessor: 'description',    header: Localization.kr.DESCRIPTION,    clickable: false },
   ],
   CLUSTERS_FROM_NETWORK: [
-    { accessor: 'status',       header: '네트워크 상태',               clickable: false, width:  70  },
-    { accessor: '_name',        header: Localization.kr.NAME,        clickable: true,width:  120  },
-    { accessor: '_connected',   header: '연결된 네트워크',             clickable: false,  width:  130  },
-    { accessor: '_required',    header: '필수 네트워크',               clickable: false, width:  130  },
+    { accessor: 'status',       header: '네트워크 상태',               clickable: false,  width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: '_name',        header: Localization.kr.NAME,        clickable: true,  width: 120  },
+    { accessor: '_connected',   header: '연결된 네트워크',             clickable: false,  width: 130  },
+    { accessor: '_required',    header: '필수 네트워크',               clickable: false,  width: 130  },
     { accessor: 'networkRole',  header: '네트워크 역할',               clickable: false },
     // { accessor: 'description', header: Localization.kr.DESCRIPTION, clickable: false },
   ],
@@ -424,7 +426,7 @@ const TableColumnsInfo = {
     { accessor: 'description',  header: Localization.kr.DESCRIPTION,    clickable: false },
   ],
   VMS_FROM_VNIC_PROFILE: [
-    { accessor: 'name', header: Localization.kr.NAME, clickable: false },
+    { accessor: '_name', header: Localization.kr.NAME, clickable: false },
   ],
   TEMPLATE_FROM_VNIC_PROFILE: [
     { accessor: '_name',      header: Localization.kr.NAME, clickable: false },
@@ -657,7 +659,7 @@ GET_IMPORT_VMS: [
   ],
   VMS_FROM_DISK: [
     { accessor: "icon",         header: Localization.kr.STATUS,       clickable: false ,width: DEFAULT_WIDTH_ICON_COLUMN},
-    { accessor: 'name',         header: Localization.kr.NAME,         clickable: false },
+    { accessor: '_name',         header: Localization.kr.NAME,         clickable: false },
     { accessor: 'cluster',      header: Localization.kr.CLUSTER,      clickable: false },
     { accessor: 'ipAddress',    header: Localization.kr.IP_ADDRESS,   clickable: false },
     { accessor: 'uptime',       header: Localization.kr.UP_TIME,      clickable: false },

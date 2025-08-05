@@ -116,7 +116,14 @@ class NetworkEntity(
 ): Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
-	val status: NetworkStatusB? 		get() = networkClusters?.firstOrNull()?.status ?: NetworkStatusB.non_operational
+	val status: NetworkStatusB? 		get() =
+		if (
+			networkClusters?.isNotEmpty() == true &&
+			networkClusters?.all { it.status == NetworkStatusB.operational } == true
+		)
+			NetworkStatusB.operational
+		else
+			NetworkStatusB.non_operational
 	val isDisplay: Boolean			get() = networkClusters?.any { it.isDisplay } == true
 	val required: Boolean				get() = networkClusters?.any { it.required } == true
 	val migration: Boolean			get() = networkClusters?.any { it.migration } == true

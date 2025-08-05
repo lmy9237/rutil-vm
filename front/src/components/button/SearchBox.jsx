@@ -1,13 +1,14 @@
 import { useCallback, } from "react";
 import { useApiToast }           from "@/hooks/useSimpleToast";
+import Spinner                   from "@/components/common/Spinner"
 import {
   RVI16,
   rvi16Close,
   rvi16Refresh
 } from "@/components/icons/RutilVmIcons";
-import IconButton             from "@/components/Input/IconButton";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import IconButton                from "@/components/Input/IconButton";
+import Localization              from "@/utils/Localization";
+import Logger                    from "@/utils/Logger";
 import "./SearchBox.css";
 
 /**
@@ -16,13 +17,12 @@ import "./SearchBox.css";
  *
  * @prop {string} searchQuery - 현재 검색어
  * @prop {function} setSearchQuery - 검색어를 업데이트하는 함수
- * @prop {function} onRefresh - 목록을 다시 재갱신하는 이벤트
+ * @prop {function} refetch - 목록을 다시 재갱신하는 이벤트
  */
 const SearchBox = ({ 
   searchQuery,
   setSearchQuery,
-  onRefresh=()=>{},
-  refetch=()=>{},
+  isLoading, isRefetching, refetch,
  }) => {
   const { apiToast } = useApiToast();
 
@@ -32,7 +32,7 @@ const SearchBox = ({
     refetch()
     import.meta.env.DEV && apiToast.refetch();
   }, [])
-  
+
   return (
     <>
       {/* START: 검색박스 */}
@@ -43,7 +43,8 @@ const SearchBox = ({
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <RVI16 iconDef={rvi16Close()}
-          className="btn-search-box f-center" onClick={() => setSearchQuery("")}
+          className="btn-search-box f-center" 
+          onClick={() => setSearchQuery("")}
         />
         {/* END: 검색박스 */}
         {/* START: 다시 로딩 */}

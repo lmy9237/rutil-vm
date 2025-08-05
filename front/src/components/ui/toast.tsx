@@ -4,7 +4,7 @@ import { CheckCircle2, AlertCircle, AlertTriangle, XCircle } from "lucide-react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import Spinner                from "@/components/common/Spinner";
+import Spinner from "@/components/common/Spinner";
 
 type ToastVariant = VariantProps<typeof toastVariants>["variant"];
 
@@ -63,7 +63,6 @@ const Toast = React.forwardRef<
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
   return (
-    
     <ToastContext.Provider value={{ variant: variant || "default" }}>
       <ToastPrimitives.Root
         ref={ref}
@@ -147,7 +146,7 @@ const ToastTitle = React.forwardRef<
 
   return (
     <div className="flex items-center gap-x-2">
-      {IconComponent && <IconComponent className="h-5 w-5 shrink-0" />}
+      {IconComponent && <IconComponent className="h-[16px] w-[16px]" />}
       <ToastPrimitives.Title
         ref={ref}
         className={cn("text-sm font-semibold", className)}

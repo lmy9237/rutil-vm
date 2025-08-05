@@ -6,7 +6,7 @@ import {
   SelectContent,
   SelectItem
 } from "@/components/ui/select";
-import Loading                from "@/components/common/Loading";
+import { Loading }                from "@/components/common/Loading";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./LabelInput.css";
@@ -113,7 +113,7 @@ export default LabelSelectOptions;
 /*
 import { useState, useRef, useMemo } from "react";
 import useClickOutside from "../../hooks/useClickOutside";
-import Loading from "../common/Loading";
+import { Loading } from "../common/Loading";
 import { RVI16, rvi16ChevronDown, rvi16ChevronUp } from "../icons/RutilVmIcons";
 import Logger from "../../utils/Logger";
 import "./LabelInput.css";

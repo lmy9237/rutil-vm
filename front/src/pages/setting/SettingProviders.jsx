@@ -1,17 +1,20 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
-import SettingProvidersActionButtons from "@/components/dupl/SettingProvidersActionButtons";
-import { useAllProviders } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import SettingProvidersActionButtons    from "@/components/dupl/SettingProvidersActionButtons";
+import {
+  useAllProviders
+} from "@/api/RQHook";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name SettingProviders
@@ -51,8 +54,11 @@ const SettingProviders = () => {
 
   return (
     <>
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchProviders} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isProvidersLoading} isRefetching={isProvidersRefetching} refetch={refetchProviders}
+        />
+        <LoadingFetch isLoading={isProvidersLoading} isRefetching={isProvidersRefetching} />
         <SettingProvidersActionButtons />
       </div>
       <TablesOuter target={"provider"}

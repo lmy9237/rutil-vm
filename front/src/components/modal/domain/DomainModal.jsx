@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import { Separator }                    from "@/components/ui/separator"
+import BaseModal                        from "@/components/modal/BaseModal";
 import DomainNfs                        from "./create/DomainNfs";
 import DomainFibre                      from "./create/DomainFibre";
 import DomainCheckModal                 from "./DomainCheckModal";
@@ -22,7 +23,13 @@ import {
   useAllStorageDomains,
   useAllDataCentersWithHosts,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkName, emptyIdNameVo, useSelectItemEffect, useSelectItemOrDefaultEffect }                    from "@/util";
+import { 
+  checkDuplicateName, 
+  checkName, 
+  emptyIdNameVo, 
+  useSelectItemEffect, 
+  useSelectItemOrDefaultEffect
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 
@@ -104,10 +111,9 @@ const DomainModal = ({
     ];
   }, [domains]);
 
-  const hosts = useMemo(
-    () => hostsRaw.filter(h => h.status === "up"),
-    [hostsRaw]
-  );
+  const hosts = useMemo(() => 
+    hostsRaw.filter(h => h?.status?.toLowerCase() === "up".toLowerCase())
+  , [hostsRaw]);
   
   useEffect(() => {
     if (!editMode && isOpen) {
@@ -310,7 +316,7 @@ const DomainModal = ({
             onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
           />
         </div>
-        <hr/>
+        <Separator />
 
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
@@ -329,7 +335,7 @@ const DomainModal = ({
           />
         </div>
       </div>
-      <hr/>
+      <Separator />
 
       {/* NFS 의 경우 */}
       {isNfs && (
@@ -365,7 +371,7 @@ const DomainModal = ({
         )}
         </>
       )}
-      <hr />
+      <Separator />
 
       <div className="tab-content">
         <div className="storage-specific-content">

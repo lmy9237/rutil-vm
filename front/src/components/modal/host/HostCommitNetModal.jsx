@@ -74,7 +74,7 @@ const HostCommitNetModal = ({
           checked={approved}
           // onChange={(e) => setApproved(e.target.checked)}
           onChange={(checked) => {
-            import.meta.env.DEV && validationToast.debug(`approved: ${checked}`);
+            validationToast.debug(`approved: ${checked}`);
             setApproved(checked)
           }}
         />

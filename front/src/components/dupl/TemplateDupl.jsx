@@ -1,14 +1,15 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TemplateActionButtons  from "@/components/dupl/TemplateActionButtons";
-import Localization           from "@/utils/Localization";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TemplateActionButtons            from "@/components/dupl/TemplateActionButtons";
+import Localization                     from "@/utils/Localization";
 
 const TemplateDupl = ({
   templates = [],  columns = [],
@@ -23,7 +24,7 @@ const TemplateDupl = ({
   const transformedData = [...templates].map((temp) => ({
     ...temp,
     _name: (
-      <TableRowClick type="template" id={temp?.id}>
+      <TableRowClick type="template" id={temp?.id} hideIcon>
         {temp?.name}
       </TableRowClick>
     ),
@@ -52,8 +53,11 @@ const TemplateDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <TemplateActionButtons />
       </div>
       <TablesOuter target={"template"}

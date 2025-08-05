@@ -4,7 +4,7 @@ import { useValidationToast }           from "@/hooks/useSimpleToast";
 import {
   RVI24, rvi24CompareArrows,
 } from "@/components/icons/RutilVmIcons";
-import Loading                          from "@/components/common/Loading";
+import { Loading }                          from "@/components/common/Loading";
 import HostNetworkEditModal             from "@/components/modal/host/HostNetworkEditModal";
 import HostBondingModal                 from "@/components/modal/host/HostBondingModal";
 import { ActionButton }                 from "@/components/button/ActionButtons";
@@ -18,11 +18,11 @@ import {
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./HostNic.css";
-import BondNic from "./hostNics/BondNic";
-import BaseNic from "./hostNics/BaseNic";
-import MatchNetwork from "./hostNics/MatchNetwork";
-import NoneNetwork from "./hostNics/NoneNetwork";
-import ClusterNetworkList from "./hostNics/ClusterNetworkList";
+import BondNic                          from "./hostNics/BondNic";
+import BaseNic                          from "./hostNics/BaseNic";
+import MatchNetwork                     from "./hostNics/MatchNetwork";
+import NoneNetwork                      from "./hostNics/NoneNetwork";
+import ClusterNetworkList               from "./hostNics/ClusterNetworkList";
 import { 
   getBondModalStateForCreate, 
   getBondModalStateForEdit, 
@@ -69,7 +69,6 @@ const HostNics = ({
     networkAttachment: [], 
     network: [] 
   });
-
 
   // 기본 설정되어 있는 호스트 네트워크 목록 정보 출력용
   const transNicData = transNic(baseItems.nic, nicMap);
@@ -243,8 +242,7 @@ const HostNics = ({
     setIsNetworkEditPopup(true);
   };
 
-
-  // [모달에 들어갈 값] 본딩 데이터 
+  // [모달에 들어갈 값] 본딩 데이터
   const createBondingData = useCallback((newBond, nicData) => {
     // id 값이 없으면 임시 본딩
     if (isBondingEditMode && selectedNic) {
@@ -1196,7 +1194,7 @@ const HostNics = ({
           </div>
           <br/>
 
-          {transNicData.map((nic) => {
+          {[...transNicData].map((nic) => {
             const matchedNAs = [...baseItems.networkAttachment, ...movedItems.networkAttachment].filter(
               (na) => na.hostNicVo?.name === nic.name
             );
@@ -1206,25 +1204,25 @@ const HostNics = ({
                 <div className="col-40" onDragOver={(e) => e.preventDefault()} >
                   {nic?.bondingVo?.slaveVos?.length > 0 
                     ? <BondNic
-                        nic={nic}
-                        dragItem={dragItem}
-                        handleDragStart={handleDragStart}
-                        handleAddBaseNicToBond={handleAddBaseNicToBond}
-                        setSelectedNic={setSelectedNic}
-                        editBondingData={tossEditBondingData}
-                      />
+                      nic={nic}
+                      dragItem={dragItem}
+                      handleDragStart={handleDragStart}
+                      handleAddBaseNicToBond={handleAddBaseNicToBond}
+                      setSelectedNic={setSelectedNic}
+                      editBondingData={tossEditBondingData}
+                    />
                     : <BaseNic
-                        nic={nic}
-                        handleDragStart={handleDragStart}
-                        handleDrop={handleDrop}
-                        handleDragOver={handleDragOver}
-                      />
+                      nic={nic}
+                      handleDragStart={handleDragStart}
+                      handleDrop={handleDrop}
+                      handleDragOver={handleDragOver}
+                    />
                   }
                 </div>
 
                 {/* 화살표 */}
                 <div className="col-20 flex justify-center items-center">
-                  {matchedNAs.length > 0 && ( <RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
+                  {matchedNAs.length > 0 && (<RVI24 iconDef={rvi24CompareArrows()} className="icon" />)}
                 </div>
 
                 {/* 할당된 논리 네트워크 */}

@@ -5,6 +5,7 @@ import TableColumnsInfo                from "@/components/table/TableColumnsInfo
 import {
   RVI16,
   clusterStatus2Icon, 
+  networkUsage2Icons, 
   rvi16Install,
   rvi16VirtualMachine
 } from "@/components/icons/RutilVmIcons";
@@ -40,13 +41,7 @@ const NetworkClusterModal = ({
     migrationNetwork: <Checkbox checked={n?.usage?.migration} disabled />,
     glusterNetwork: <Checkbox checked={n?.usage?.gluster} disabled />,
     defaultRouting: <Checkbox checked={n?.usage?.defaultRoute} disabled />,
-    networkRole: [
-      n?.usage?.management && '관리',
-      n?.usage?.display && '출력',
-      n?.usage?.migration && Localization.kr.MIGRATION,
-      n?.usage?.gluster && '글러스터',
-      n?.usage?.defaultRoute && '기본라우팅',
-     ].filter(Boolean).join('/'),
+    networkRole: (networkUsage2Icons(n?.usage, n?.roleInKr || "")),
   }));
   
 

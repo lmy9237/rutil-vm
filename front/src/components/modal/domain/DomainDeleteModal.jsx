@@ -56,7 +56,7 @@ const DomainDeleteModal = ({
           checked={format}
           // onChange={(e) => setFormat(e.target.checked)}
           onChange={(checked) => {
-            import.meta.env.DEV && validationToast.debug(`format: ${checked}`);
+            validationToast.debug(`format: ${checked}`);
             setFormat(checked)
           }}
         />

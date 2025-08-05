@@ -1,15 +1,16 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import useGlobal                from "@/hooks/useGlobal";
-import useSearch                from "@/hooks/useSearch";
-import SelectedIdView           from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink   from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox                from "@/components/button/SearchBox";
-import TablesOuter              from "@/components/table/TablesOuter";
-import TableRowClick            from "@/components/table/TableRowClick";
-import VnicProfileActionButtons from "./VnicProfileActionButtons";
-import Localization             from "@/utils/Localization";
-import Logger                   from "@/utils/Logger";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import VnicProfileActionButtons         from "./VnicProfileActionButtons";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name VnicProfileDupl
@@ -33,7 +34,7 @@ const VnicProfileDupl = ({
   const transformedData = [...vnicProfiles].map((vnic) => ({
     ...vnic,
     _name: (
-      <TableRowClick type="vnicProfile" id={vnic?.id}>
+      <TableRowClick type="vnicProfile" id={vnic?.id} hideIcon>
         {vnic?.name}
       </TableRowClick>
     ),
@@ -62,8 +63,11 @@ const VnicProfileDupl = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetch} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isLoading} isRefetching={isRefetching} refetch={refetch} 
+        />
+        <LoadingFetch isLoading={isLoading} isRefetching={isRefetching} />
         <VnicProfileActionButtons />
       </div>
       <TablesOuter target={"vnicprofile"}

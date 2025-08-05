@@ -1,20 +1,21 @@
 import React, { useCallback } from "react";
-import useUIState                         from "@/hooks/useUIState";
-import useGlobal                          from "@/hooks/useGlobal";
-import useSearch                          from "@/hooks/useSearch";
-import SelectedIdView                     from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink             from "@/components/common/OVirtWebAdminHyperlink";
-import SearchBox                          from "@/components/button/SearchBox";
-import TablesOuter                        from "@/components/table/TablesOuter";
-import TableRowClick                      from "@/components/table/TableRowClick";
-import TableColumnsInfo                   from "@/components/table/TableColumnsInfo";
-import SettingCertActionButtons           from "@/components/dupl/SettingCertActionButtons";
-import SettingCertRenewalPolicies from "./SettingCertRenewalPolicies";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import SettingCertActionButtons         from "@/components/dupl/SettingCertActionButtons";
+import SettingCertRenewalPolicies       from "./SettingCertRenewalPolicies";
 import {
   useAllCerts
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 
 /**
@@ -47,8 +48,11 @@ const SettingCerts = () => {
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchCerts} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isCertsLoading} isRefetching={isCertsRefetching} refetch={refetchCerts}
+        />
+        <LoadingFetch isLoading={isCertsLoading} isRefetching={isCertsRefetching}  />
         <SettingCertActionButtons />
       </div>
       <TablesOuter target={"cert"}

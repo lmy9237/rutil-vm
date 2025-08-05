@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Separator }                    from "@/components/ui/separator"
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -219,7 +220,7 @@ const VmImportModal = ({
             onChange={handleSelectIdChange(setProviderVo, providers, validationToast)}
           />
         </div>
-        <hr/>
+        <Separator />
         <div className="vm-impor-outer">
           <LabelInput label="vcenter" id="vcenter"
             value={formState.vcenter}

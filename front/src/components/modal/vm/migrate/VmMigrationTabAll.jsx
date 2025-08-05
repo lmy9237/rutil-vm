@@ -1,5 +1,6 @@
-import VmMigrationTabDisk from "./VmMigrationTabDisk";
-import VmMigrationTabVM from "./VmMigrationTabVM";
+import { Separator }                    from "@/components/ui/separator"
+import VmMigrationTabDisk               from "@/components/modal/vm/VmMigrationTabDisk";
+import VmMigrationTabVM                 from "@/components/modal/vm/VmMigrationTabVM";
 
 const VmMigrationTabAll = ({
   // VM 관련 props
@@ -22,7 +23,7 @@ const VmMigrationTabAll = ({
       affinityClosure={affinityClosure}
       setAffinityClosure={setAffinityClosure}
     />
-    <hr />
+    <Separator />
     <VmMigrationTabDisk
       diskList={diskList}
       domainList={domainList}

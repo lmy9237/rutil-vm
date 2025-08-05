@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Label }                        from "@/components/ui/label";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
+import { Separator }                    from "@/components/ui/separator"
 import BaseModal                        from "@/components/modal/BaseModal";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
@@ -173,7 +174,7 @@ const HostModal = ({
         options={clusters}
         onChange={handleSelectIdChange(setClusterVo, clusters, validationToast)}
       />
-      <hr />
+      <Separator />
       <LabelInput id="name" label={Localization.kr.NAME}
         autoFocus
         disabled={reinstallMode}
@@ -195,7 +196,7 @@ const HostModal = ({
         disabled={(editMode || reinstallMode)}
         onChange={handleInputChange(setFormState, "sshPort", validationToast)}
       />
-      <hr />
+      <Separator />
       {!(editMode) && (
         <>
           <div className="font-semibold mt-4 mb-2">

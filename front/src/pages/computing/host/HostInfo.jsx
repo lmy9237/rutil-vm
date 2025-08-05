@@ -51,6 +51,8 @@ const HostInfo = () => {
     isLoading: isHostLoading,
     isError: isHostError, 
     isSuccess: isHostSuccess,
+    isRefetching: isHostRefetching,
+    refetch: refetchHost,
   } = useHost(hostId);
 
   const isUp = host?.status?.toUpperCase() === "UP";
@@ -135,10 +137,10 @@ const HostInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title={host?.name}
-        titleIcon={rvi24Host()}
-        buttons={sectionHeaderButtons}
+      <HeaderButton title={host?.name} titleIcon={rvi24Host()}
         status={Localization.kr.renderStatus(host?.status)}
+        isLoading={isHostLoading} isRefetching={isHostRefetching} refetch={refetchHost}
+        buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />
       <div className="content-outer">

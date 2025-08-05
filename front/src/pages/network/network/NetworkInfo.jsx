@@ -13,7 +13,8 @@ import NetworkVms             from "./NetworkVms";
 import NetworkTemplates       from "./NetworkTemplates";
 import NetworkClusters        from "./NetworkClusters";
 import {
-  rvi24Network
+  rvi24Network, 
+  rvi24NetworkDot,
 } from "@/components/icons/RutilVmIcons";
 import {
   useNetwork
@@ -38,8 +39,11 @@ const NetworkInfo = () => {
   const { networksSelected, setNetworksSelected } = useGlobal()
   const {
     data: network,
-    isError: isNetworkError,
     isLoading: isNetworkLoading,
+    isError: isNetworkError,
+    isSuccess: isNetworkSuccess,
+    isRefetching: isNetworkRefetching,
+    refetch: refetchNetwork,
    } = useNetwork(networkId);
 
   const [activeTab, setActiveTab] = useState("general");
@@ -86,6 +90,12 @@ const NetworkInfo = () => {
     setActiveTab(tab);
   }, [network]);
 
+  const _titleIcon = useMemo(() => {
+    return network?.status.toUpperCase() === "operational".toUpperCase()
+      ? rvi24NetworkDot()
+      : rvi24Network()
+  }, [network])
+
   useEffect(() => {
     setActiveTab(section || "general");
   }, [section]);
@@ -102,8 +112,9 @@ const NetworkInfo = () => {
   
   return (
     <SectionLayout>
-      <HeaderButton title={network?.name}
-        titleIcon={rvi24Network()}
+      <HeaderButton title={network?.name} titleIcon={_titleIcon}
+        status={Localization.kr.renderStatus(network?.status)}
+        isLoading={isNetworkLoading} isRefetching={isNetworkRefetching} refetch={refetchNetwork}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

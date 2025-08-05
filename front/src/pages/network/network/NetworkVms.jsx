@@ -1,23 +1,25 @@
 import { useCallback, useState } from "react";
-import useUIState              from "@/hooks/useUIState";
-import useGlobal               from "@/hooks/useGlobal";
-import useSearch               from "@/hooks/useSearch";
-import Loading                 from "@/components/common/Loading";
-import SelectedIdView          from "@/components/common/SelectedIdView";
-import OVirtWebAdminHyperlink  from "@/components/common/OVirtWebAdminHyperlink";
-import { ActionButton }        from "@/components/button/ActionButtons";
-import SearchBox               from "@/components/button/SearchBox";
-import FilterButtons           from "@/components/button/FilterButtons";
-import TableColumnsInfo        from "@/components/table/TableColumnsInfo";
-import TablesOuter             from "@/components/table/TablesOuter";
-import TableRowClick           from "@/components/table/TableRowClick";
-import { status2Icon }         from "@/components/icons/RutilVmIcons";
+import useUIState                       from "@/hooks/useUIState";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { Loading, LoadingFetch }        from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { ActionButton }                 from "@/components/button/ActionButtons";
+import SearchBox                        from "@/components/button/SearchBox";
+import FilterButtons                    from "@/components/button/FilterButtons";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import { status2Icon }                  from "@/components/icons/RutilVmIcons";
 import {
   useAllVmsFromNetwork
 } from "@/api/RQHook";
-import { checkZeroSizeToMbps } from "@/util";
-import Localization            from "@/utils/Localization";
-import Logger                  from "@/utils/Logger";
+import {
+  checkZeroSizeToMbps
+} from "@/util";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name NetworkVms
@@ -62,7 +64,7 @@ const NetworkVms = ({
         </TableRowClick>
       ),
       fqdn: vm?.fqdn,
-      ipAddress: vm?.ipv4 + "" + vm?.ipv6,
+      ipAddress: `${nic?.ipv4 || ""} ${nic?.ipv6 || ""}`,
       vnicStatus: status2Icon(nic?.status),
       vnic: nic?.name || "",
       vnicRx: checkZeroSizeToMbps(nic?.rxSpeed),
@@ -85,9 +87,12 @@ const NetworkVms = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchNics} />
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isNicsLoading} isRefetching={isNicsRefetching} refetch={refetchNics}
+        />
         <FilterButtons options={vmStatusFilters} activeOption={filterType} onClick={setFilterType} />
+        <LoadingFetch isLoading={isNicsLoading} isRefetching={isNicsRefetching} />
         {/* 
         <FilterButtons options={vmStatusFilters} activeOption={activeFilter} onClick={setActiveFilter} />
         <div className="header-right-btns">

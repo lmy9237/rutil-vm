@@ -9,6 +9,7 @@ import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
 import VmGeneral              from "./VmGeneral";
+import VmMonitor              from "./VmMonitor";
 import VmNics2                from "./VmNics2";
 import VmSnapshots            from "./VmSnapshots";
 import VmApplications         from "./VmApplications";
@@ -22,8 +23,6 @@ import {
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./Vm.css";
-import { Monitor } from "lucide-react";
-import VmMonitor from "./VmMonitor";
 
 /**
  * @name VmInfo
@@ -55,6 +54,8 @@ const VmInfo = () => {
     isLoading: isVmLoading,
     isError: isVmError,
     isSuccess: isVmSuccess,
+    isRefetching: isVmRefetching,
+    refetch: refetchVm,
   } = useVm(vmId);
   const { 
     data: snapshots = [] 
@@ -180,10 +181,10 @@ const VmInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title={vm?.name}
-        titleIcon={rvi24Desktop()}
-        buttons={sectionHeaderButtons}
+      <HeaderButton title={vm?.name} titleIcon={rvi24Desktop()}
         status={Localization.kr.renderStatus(vm?.status)}
+        isLoading={isVmLoading} isRefetching={isVmRefetching} refetch={refetchVm}
+        buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />
       <div className="content-outer">

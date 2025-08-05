@@ -1,12 +1,13 @@
 import React from "react";
-import { Tooltip } from "react-tooltip";
-import useGlobal              from "@/hooks/useGlobal";
-import useSearch              from "@/hooks/useSearch";
-import SelectedIdView         from "@/components/common/SelectedIdView";
-import SearchBox              from "@/components/button/SearchBox";
-import TablesOuter            from "@/components/table/TablesOuter";
-import TableRowClick          from "@/components/table/TableRowClick";
-import TableColumnsInfo       from "@/components/table/TableColumnsInfo";
+import Tippy from "@tippyjs/react";
+import useGlobal                        from "@/hooks/useGlobal";
+import useSearch                        from "@/hooks/useSearch";
+import { LoadingFetch }                 from "@/components/common/Loading";
+import SelectedIdView                   from "@/components/common/SelectedIdView";
+import SearchBox                        from "@/components/button/SearchBox";
+import TablesOuter                      from "@/components/table/TablesOuter";
+import TableRowClick                    from "@/components/table/TableRowClick";
+import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
   useAllDisksFromTemplate,
   useStorageDomain,
@@ -14,8 +15,7 @@ import {
 import { 
   checkZeroSizeToGiB,
 } from "@/util";
-import Localization           from "@/utils/Localization";
-import Tippy from "@tippyjs/react";
+import Localization                     from "@/utils/Localization";
 
 /**
  * @name TemplateDisks
@@ -66,8 +66,11 @@ const TemplateDisks = ({
 
   return (
     <>{/* v-start w-full으로 묶어짐*/}
-      <div className="dupl-header-group f-start align-start gap-4 w-full">
-        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} refetch={refetchDisks}/>
+      <div className="dupl-header-group f-start gap-4 w-full">
+        <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
+          isLoading={isDisksLoading} isRefetching={isDisksRefetching} refetch={refetchDisks}
+        />
+        <LoadingFetch isLoading={isDisksLoading} isRefetching={isDisksRefetching} />
         {/* <HostActionButtons actionType = "default"/> */}
       </div>
       <TablesOuter target={"disk"}

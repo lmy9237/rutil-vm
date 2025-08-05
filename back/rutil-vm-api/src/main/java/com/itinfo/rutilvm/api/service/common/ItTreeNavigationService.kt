@@ -6,11 +6,13 @@ import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenter4Cluster
 import com.itinfo.rutilvm.api.model.common.toNavigationalsFromNetworks
 import com.itinfo.rutilvm.api.model.common.toNavigationalsFromDataCenters4StorageDomains
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
+import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.findAllDataCenters
 
 import org.ovirt.engine.sdk4.types.DataCenter
+import org.postgresql.util.PSQLException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -45,26 +47,29 @@ interface ItTreeNavigationService {
 class TreeNavigationServiceImpl (
 
 ): BaseService(), ItTreeNavigationService {
-	@Autowired private lateinit var rVm: VmRepository
+	@Autowired private lateinit var rVms: VmRepository
+	@Autowired private lateinit var rNetworks: NetworkRepository
 	@Autowired private lateinit var rAllDisks: AllDisksRepository
 
-    @Throws(Error::class)
+	@Throws(Error::class, PSQLException::class)
     override fun findAllNavigationalsWithClusters(): List<TreeNavigationalDataCenter> {
-        log.info("toComputing ... ")
+        log.info("findAllNavigationalsWithClusters ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.toNavigationalsFromDataCenter4Clusters(conn, rVm)
+        return dataCenters.toNavigationalsFromDataCenter4Clusters(conn, rVms)
     }
 
+	@Throws(Error::class, PSQLException::class)
     override fun findAllNavigationalsWithNetworks(): List<TreeNavigationalDataCenter> {
-        log.info("toNetwork ... ")
+        log.info("findAllNavigationalsWithNetworks ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
-        return dataCenters.toNavigationalsFromNetworks(conn)
+        return dataCenters.toNavigationalsFromNetworks(conn, rNetworks)
     }
 
+	@Throws(Error::class, PSQLException::class)
     override fun findAllNavigationalsWithStorageDomains(): List<TreeNavigationalDataCenter> {
-        log.info("toStorageDomain ... ")
+        log.info("findAllNavigationalsWithStorageDomains ... ")
         val dataCenters: List<DataCenter> =
             conn.findAllDataCenters().getOrDefault(listOf())
         return dataCenters.toNavigationalsFromDataCenters4StorageDomains(conn, rAllDisks)

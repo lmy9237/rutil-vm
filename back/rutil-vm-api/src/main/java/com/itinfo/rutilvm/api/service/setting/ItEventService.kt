@@ -3,7 +3,6 @@ package com.itinfo.rutilvm.api.service.setting
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.model.computing.EventVo
-import com.itinfo.rutilvm.api.ovirt.business.AuditLogSeverity
 import com.itinfo.rutilvm.api.repository.engine.AuditLogRepository
 import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecification
 import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
@@ -13,11 +12,13 @@ import com.itinfo.rutilvm.common.formatEnhancedFromLDT
 import com.itinfo.rutilvm.common.rutilApiQueryDf
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.util.ovirt.removeEvent
+import org.postgresql.util.PSQLException
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import java.sql.SQLException
 import java.time.LocalDateTime
@@ -58,7 +59,7 @@ interface ItEventService {
 class EventServiceImpl (
 
 ): BaseService(), ItEventService {
-	@Autowired private lateinit var rAuditLog: AuditLogRepository
+	@Autowired private lateinit var rAuditLogs: AuditLogRepository
 
 	@Throws(SQLException::class)
     override fun findAll(
@@ -72,19 +73,16 @@ class EventServiceImpl (
 			param.minSeverityCode, rutilApiQueryDf.formatEnhancedFromLDT(param.startDate)
 		)
 		val spec = AuditLogSpecification.build(param)
-		val auditLogPage = rAuditLog.findAll(spec, pageable)
+		val auditLogPage = rAuditLogs.findAll(spec, pageable)
 		return auditLogPage.toEventVosPage()
     }
 
-	@Throws(SQLException::class)
+	@Throws(PSQLException::class)
+	@Transactional("engineTransactionManager")
 	override fun remove(eventIds2Remove: List<String>): Boolean {
-		log.info("findAll ... eventIds2Remove.size: {}", eventIds2Remove.size)
-		var res = false
-		for (id in eventIds2Remove) {
-			res = conn.removeEvent(id).getOrNull() ?: false
-			if (!res) throw ErrorPattern.EVENT_VO_INVALID.toException() // TODO: 상세한 예외 필요
-		}
-		return res
+		val res: Int = rAuditLogs.removeAllByIds(eventIds2Remove.mapNotNull { it.toLongOrNull() })
+		log.info("findAll ... eventIds2Remove.size: {}, eventIds2Remove FINISHED: {}", eventIds2Remove.size, res)
+		return res == eventIds2Remove.size
 	}
 
 	companion object {

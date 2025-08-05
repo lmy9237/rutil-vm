@@ -38,7 +38,7 @@ const VmVncClipboardPasteModal = ({
     if (!currentVncRfb) return
     currentVncRfb?.clipboardPasteFrom(txt2Paste);
     currentVncRfb?.sendKey("a");
-    import.meta.env.DEV && validationToast.debug(`${Localization.kr.PASTE} ${Localization.kr.REQ_COMPLETE}`);
+    validationToast.debug(`${Localization.kr.PASTE} ${Localization.kr.REQ_COMPLETE}`);
     onClose && onClose()
   }
 

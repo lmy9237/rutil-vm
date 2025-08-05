@@ -42,6 +42,8 @@ const ClusterInfo = () => {
     isLoading: isClusterLoading,
     isError: isClusterError,
     isSuccess: isClusterSuccess,
+    isRefetching: isClusterRefetching,
+    refetch: refetchCluster,
   } = useCluster(clusterId, (e) => ({ ...e }));
   const { 
     activeModal, setActiveModal,
@@ -107,8 +109,9 @@ const ClusterInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton title={cluster?.name}
-        titleIcon={rvi24Cluster()}
+      <HeaderButton title={cluster?.name} titleIcon={rvi24Cluster()}
+        // status={Localization.kr.renderStatus(cluster?.status)}
+        isLoading={isClusterLoading} isRefetching={isClusterRefetching} refetch={refetchCluster}
         buttons={sectionHeaderButtons}
       />
       <div className="content-outer">

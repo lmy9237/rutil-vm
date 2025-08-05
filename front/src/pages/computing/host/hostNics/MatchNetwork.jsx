@@ -1,18 +1,13 @@
 import { Tooltip } from "react-tooltip";
 import { 
   RVI16, 
-  rvi16Event, 
-  rvi16Monitor, 
-  rvi16StarGold, 
   rvi16TriangleDown, 
   rvi16TriangleUp, 
-  rvi16VmNetwork, 
-  rvi16Wrench, 
   RVI36, 
   rvi36Edit,
-  rvil16Migration,
+  networkUsage2Icons,
   status2Icon
-} from "../../../../components/icons/RutilVmIcons";
+} from "@/components/icons/RutilVmIcons";
 import NetworkToolTip from "./NetworkToolTip";
 
 const MatchNetwork = ({ 
@@ -52,17 +47,11 @@ const MatchNetwork = ({
             <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {networkVo.vlan})</span>
           )}
         </div>
-        <div style={{ display: "flex", alignItems: "center"}}>
-          {networkVo?.usage?.management === true ? <RVI16 iconDef={rvi16Wrench()} />:""}
-          {networkVo?.usage?.display === true ? <RVI16 iconDef={rvi16Monitor} />:""}
-          {networkVo?.usage?.migration === true ? <RVI16 iconDef={rvil16Migration("#555555")} />:""}
-          {networkVo?.usage?.defaultRoute === true ? <RVI16 iconDef={rvi16Event("#555555")} />:""}
-          {networkVo?.usage?.vm === true ? <RVI16 iconDef={rvi16VmNetwork("#555555")} />:""}
-          <br/>
-        </div>
+        {networkUsage2Icons(networkVo?.usage)}        
+        <br/>
         <div>
-          { import.meta.env.DEV && <>&nbsp;<span style={{ fontSize: "5px"}}>{networkAttach?.id}</span></>}
-          </div>
+          {import.meta.env.DEV && <>&nbsp;<span style={{ fontSize: "5px"}}>{networkAttach?.id}</span></>}
+        </div>
         <div className="right-section">
           <RVI36 className="icon cursor-pointer"
             iconDef={rvi36Edit()}

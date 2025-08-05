@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
+import { Separator }                    from "@/components/ui/separator"
 import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
 import LabelInput                       from "@/components/label/LabelInput";
@@ -193,8 +194,7 @@ const SettingProviderModal = ({
         options={datacenters}
         onChange={handleSelectIdChange(setDataCenterVo, datacenters, validationToast)}
       />
-      <hr/>
-      
+      <Separator />
       <LabelInput id="vCenter" label={"vCenter"}
         value={formState.vCenter}
         onChange={handleInputChange(setFormState, "vCenter", validationToast)}

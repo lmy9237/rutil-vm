@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import { Separator }                    from "@/components/ui/separator"
+import BaseModal                        from "@/components/modal/BaseModal";
 import LabelInput                       from "@/components/label/LabelInput";
 import ToggleSwitchButton               from "@/components/button/ToggleSwitchButton";
 import LabelSelectOptionsID             from "@/components/label/LabelSelectOptionsID";
@@ -220,9 +221,9 @@ const TemplateModal = ({
         options={cpuProfiles}
         onChange={handleSelectIdChange(setCpuProfileVo, cpuProfiles, validationToast)}
       />
-      <hr/><br/>
-
-      {disks && disks.length > 0 && (
+      <Separator />
+      <br/>
+      {[...disks] && [...disks].length > 0 && (
         <>
           <div className="font-bold">{Localization.kr.DISK} 할당</div>
             <div className="section-table-outer py-1">

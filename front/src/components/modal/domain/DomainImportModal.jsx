@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
-import BaseModal                        from "../BaseModal";
+import { Separator }                    from "@/components/ui/separator"
+import BaseModal                        from "@/components/modal/BaseModal";
 import DomainImportNfs                  from "./import/DomainImportNfs";
 import DomainImportFibre                from "./import/DomainImportFibre";
 import LabelInputNum                    from "@/components/label/LabelInputNum";
@@ -240,7 +241,7 @@ const DomainImportModal = ({
             onChange={handleSelectIdChange(setHostVo, hosts, validationToast)}
           />
         </div>
-        <hr/>
+        <Separator />
         <div className="domain-new-right">
           <LabelInput id="name" label={Localization.kr.NAME}
             value={formState.name}
@@ -257,7 +258,7 @@ const DomainImportModal = ({
           />
         </div>
       </div>
-      <hr/>
+      <Separator />
 
       {/* NFS 의 경우 */}
       {isNfs && (
@@ -274,8 +275,7 @@ const DomainImportModal = ({
           isFibresLoading={isFibresLoading} isFibresError={isFibresError} isFibresSuccess={isFibresSuccess}
         />
       )}
-      <hr />
-
+      <Separator />
       <div className="tab-content">
         <div className="storage-specific-content">
           <LabelInputNum id="warning" label={`${Localization.kr.DISK} 공간 부족 경고 표시 (%)`}

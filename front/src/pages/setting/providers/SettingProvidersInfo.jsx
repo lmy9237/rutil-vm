@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import useUIState             from "@/hooks/useUIState";
+import useGlobal              from "@/hooks/useGlobal";
 import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
@@ -7,12 +9,13 @@ import Path                   from "@/components/Header/Path";
 import {
   rvi24Gear
 } from "@/components/icons/RutilVmIcons";
-import Localization           from "@/utils/Localization";
-import useGlobal from "@/hooks/useGlobal";
 import SettingProvidersGeneral from "./SettingProvidersGeneral";
 import SettingProvidersToken from "./SettingProvidersToken";
-import { useProvider } from "@/api/RQHook";
-import useUIState from "@/hooks/useUIState";
+import {
+  useProvider
+} from "@/api/RQHook";
+import Localization           from "@/utils/Localization";
+import Logger                 from "@/utils/Logger";
 
 /**
  * @name SettingInfo
@@ -31,8 +34,11 @@ const SettingProvidersInfo = () => {
 
   const {
     data: provider,
-    isError: isNetworkError,
-    isLoading: isNetworkLoading,
+    isLoading: isProviderLoading,
+    isError: isProviderError,
+    isError: isProviderSuccess,
+    isRefetching: isProviderRefetching,
+    refetch: refetchVm,
    } = useProvider(providerId);
 
   useEffect(() => {
@@ -74,10 +80,9 @@ const SettingProvidersInfo = () => {
   
   return (
     <SectionLayout>
-      <HeaderButton 
-        title={provider?.name}
-        titleIcon={rvi24Gear()}
-         buttons={sectionHeaderButtons}
+      <HeaderButton title={provider?.name} titleIcon={rvi24Gear()}
+        isLoading={isProviderLoading} isRefetching={isProviderRefetching} refetch={refetchVm}
+        buttons={sectionHeaderButtons}
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}

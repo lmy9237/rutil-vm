@@ -7,7 +7,7 @@ import {
   useAllSnapshotsFromVm
 } from "@/api/RQHook";
 import Localization           from "@/utils/Localization";
-import Loading from "@/components/common/Loading";
+import { Loading } from "@/components/common/Loading";
 
 /**
  * @name VmDisks

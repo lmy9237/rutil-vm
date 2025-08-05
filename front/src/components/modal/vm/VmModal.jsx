@@ -2,8 +2,9 @@ import { useState, useEffect, useMemo } from "react";
 import CONSTANT                         from "@/Constants";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
 import useGlobal                        from "@/hooks/useGlobal";
+import { Separator }                    from "@/components/ui/separator"
 import TabNavButtonGroup                from "@/components/common/TabNavButtonGroup";
-import BaseModal                        from "../BaseModal";
+import BaseModal                        from "@/components/modal/BaseModal";
 import LabelSelectOptions               from '@/components/label/LabelSelectOptions';
 import LabelSelectOptionsID             from '@/components/label/LabelSelectOptionsID';
 import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
@@ -485,7 +486,7 @@ const VmModal = ({
   }, [editMode, diskAttachments]);
 
   useEffect(() => {
-    if (editMode && vnics.length > 0) {
+    if (editMode && [...vnics].length > 0) {
       setNicListState([...vnics].map((nic) => ({
         id: nic?.id || "",
         name: nic?.name || "",
@@ -503,10 +504,10 @@ const VmModal = ({
 
   
   useEffect(() => {
-    if (!editMode && hostsSelected.length > 0) {
+    if (!editMode && [...hostsSelected].length > 0) {
       setFormHostState((prev) => ({
         ...prev,
-        hostVos: (hostsSelected || []).map((h) => ({
+        hostVos: ([...hostsSelected]).map((h) => ({
           id: h?.id,
           name: h?.name
         }))
@@ -677,7 +678,7 @@ const VmModal = ({
               onChange={handleInputChange(setFormInfoState, "optimizeOption", validationToast)}
             />
           </div>
-          <hr/>
+          <Separator />
           {selectedModalTab === "common" && (
             <>
               <VmCommon

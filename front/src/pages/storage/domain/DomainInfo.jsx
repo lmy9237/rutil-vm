@@ -7,7 +7,8 @@ import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import HeaderButton           from "@/components/button/HeaderButton";
 import Path                   from "@/components/Header/Path";
 import {
-  rvi24Cloud, rvi24Storage 
+  rvi24Cloud,
+  rvi24Storage
 } from "@/components/icons/RutilVmIcons";
 import DomainGeneral          from "./DomainGeneral";
 import DomainDatacenters      from "./DomainDatacenters";
@@ -53,8 +54,11 @@ const DomainInfo = () => {
     data: domain,
     isLoading: isDomainLoading,
     isError: isDomainError,
-    isSuccess: isDomainSuccess
+    isSuccess: isDomainSuccess,
+    isRefetching: isDomainRefetching,
+    refetch: refetchDomain,
   } = useStorageDomain(domainId);
+
   const { data: importVms = [], refetch: importVmsRefetch } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
   const { data: importTemplates = [], refetch: importTemplatesRefetch } = useAllUnregisteredTemplatesFromDomain(domainId, (e) => ({ ...e }));
   const { data: importDisks = [], refetch: importDisksRefetch } = useAllUnregisteredDisksFromDomain(domainId, (e) => ({ ...e }));
@@ -62,10 +66,10 @@ const DomainInfo = () => {
   const { mutate: refreshDomain } = useRefreshLunDomain();
   const { mutate: ovfUpdateDomain } = useOvfUpdateDomain();
 
-  const isACTIVE = domain?.status?.toUpperCase() === "ACTIVE";
-  const isUnknown = domain?.status?.toUpperCase() === "UNKNOWN";
-  const isMaintenance = domain?.status?.toUpperCase() === "MAINTENANCE";
-  const isUnattached = domain?.status?.toUpperCase() === "UNATTACHED";
+  const isACTIVE = domain?.status?.toLowerCase() === "ACTIVE".toLowerCase();
+  const isUnknown = domain?.status?.toLowerCase() === "UNKNOWN".toLowerCase();
+  const isMaintenance = domain?.status?.toLowerCase() === "MAINTENANCE".toLowerCase();
+  const isUnattached = domain?.status?.toLowerCase() === "UNATTACHED".toLowerCase();
 
   const [activeTab, setActiveTab] = useState("general");
 /* 가져오기에 따른 탭 메뉴 활성화 */
@@ -74,22 +78,22 @@ const DomainInfo = () => {
 
     if (isImportExport) {
       return [
-        { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-        { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
-        { id: "importVms",    label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`,       onClick: () => handleTabClick("importVms") },
+        { id: "general",         label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+        { id: "datacenters",     label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
+        { id: "importVms",       label: `${Localization.kr.VM} ${Localization.kr.IMPORT}`,       onClick: () => handleTabClick("importVms") },
         { id: "importTemplates", label: `${Localization.kr.TEMPLATE} ${Localization.kr.IMPORT}`, onClick: () => handleTabClick("importTemplates") },
-        { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
+        { id: "events",          label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
       ];
     }
 
     const baseSections = [
-      { id: "general",      label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
-      { id: "datacenters",  label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
-      { id: "vms",          label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
-      { id: "templates",    label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
-      { id: "disks",        label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
-      { id: "diskSnapshots", label: "디스크 스냅샷",              onClick: () => handleTabClick("diskSnapshots") },
-      { id: "events",       label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
+      { id: "general",           label: Localization.kr.GENERAL,     onClick: () => handleTabClick("general") },
+      { id: "datacenters",       label: Localization.kr.DATA_CENTER, onClick: () => handleTabClick("datacenters") },
+      { id: "vms",               label: Localization.kr.VM,          onClick: () => handleTabClick("vms") },
+      { id: "templates",         label: Localization.kr.TEMPLATE,    onClick: () => handleTabClick("templates") },
+      { id: "disks",             label: Localization.kr.DISK,        onClick: () => handleTabClick("disks") },
+      { id: "diskSnapshots",     label: "디스크 스냅샷",              onClick: () => handleTabClick("diskSnapshots") },
+      { id: "events",            label: Localization.kr.EVENT,       onClick: () => handleTabClick("events") },
     ];
 
     if (!(isUnknown || isUnattached)) {
@@ -135,13 +139,13 @@ const DomainInfo = () => {
 
   const handleUpdateOvf = useCallback(async () => {
     if (!domainId) return;
-    ovfUpdateDomain(domainId);
+    await ovfUpdateDomain(domainId);
     Logger.info("DomainInfo > OVF 업데이트 ...");
   }, [domainId]);
 
   const handleRefresh = useCallback(async () => {
     if (!domainId) return;
-    refreshDomain(domainId);
+    await refreshDomain(domainId);
     Logger.info("DomainInfo > 디스크 검사 ...");
   }, [domainId]);
 
@@ -198,9 +202,9 @@ const DomainInfo = () => {
 
   return (
     <SectionLayout>
-      <HeaderButton titleIcon={rvi24Storage()} 
-        title={domain?.name}
+      <HeaderButton title={domain?.name} titleIcon={rvi24Storage()} 
         status={Localization.kr.renderStatus(domain?.status)}
+        isLoading={isDomainLoading} isRefetching={isDomainRefetching} refetch={refetchDomain}
         buttons={sectionHeaderButtons}
         popupItems={popupItems}
       />
