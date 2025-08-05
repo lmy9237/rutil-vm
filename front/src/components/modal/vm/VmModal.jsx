@@ -298,6 +298,7 @@ const VmModal = ({
       setDiskListState([]);
     }
     if (editMode && vm) { 
+    //if (editMode && vm && !formInfoState.id) { 
       setFormInfoState({
         id: vm?.id || "",
         name: vm?.name || "",

@@ -167,6 +167,7 @@ const DomainImportVmModal = ({
       value: (
         <LabelInput id={`vm-name-${vm.id}`}
           label={""}
+          className="domain-import-input p-0"
           value={editVmNames[vm.id] !== undefined ? editVmNames[vm.id] : vm.name || ""}
           onChange={e => {
             const newName = e.target.value;

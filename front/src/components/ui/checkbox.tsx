@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils"
 
 const checkboxVariants = cva(
   // "peer h-4 w-4 shrink-0 rounded-sm border shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-  "peer h-[15px] w-[15px] shrink-0 rounded-none border shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+  "peer h-[13px] w-[13px] shrink-0 rounded-sm border shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "border-primary data-[state=checked]:bg-primary-inactive data-[state=checked]:text-primary-foreground hover:bg-hover",
+          "border-gray-500 data-[state=checked]:bg-primary-inactive data-[state=checked]:text-primary-foreground hover:bg-hover",
         destructive:
           "border-destructive data-[state=checked]:bg-destructive data-[state=checked]:text-destructive-foreground",
         success:

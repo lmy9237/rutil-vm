@@ -21,9 +21,10 @@ const LabelCheckbox = ({
   onChange,
   disabled,
   required,
+  onClick,
   ...props
 }) => (
-  <div className={`input-checkbox f-start gap-4 ${props.className || ''}`}>
+  <div className={`input-checkbox f-start gap-4 ${props.className || ''}`} onClick={onClick}>
     <Checkbox variant="default" id={props.id}
       checked={checked}
       onCheckedChange={onChange}      

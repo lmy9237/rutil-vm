@@ -162,7 +162,7 @@ const VmDisk = ({
                     )} */}
                     {vm?.status !== "up" &&
                       <>
-                        <RVI36 className="btn-icon"
+                        <RVI36 className="btn-icon cursor-pointer"
                           iconDef={rvi36TrashHover}                      
                           currentColor="transparent"
                           onClick={() => handleRemoveDisk(index, disk.isExisting)}

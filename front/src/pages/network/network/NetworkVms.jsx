@@ -106,6 +106,7 @@ const NetworkVms = ({
         }
         data={filteredData}
         onRowClick={(rows) => setVmsSelected(rows)}
+        selectedRowIds={vmsSelected.map((vm) => vm.id)}
         isLoading={isNicsLoading} isRefetching={isNicsRefetching} isError={isNicsError} isSuccess={isNicsSuccess}
       />
       <SelectedIdView items={vmsSelected} />

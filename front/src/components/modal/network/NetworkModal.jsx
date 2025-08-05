@@ -29,6 +29,7 @@ import {
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MNetwork.css";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const initialFormState = {
   id: "",
@@ -327,10 +328,24 @@ const NetworkModal = ({
                   header: (
                     <div className="flex">
                       {/* <LabelCheckbox id="dns-connect_all" label="모두 연결" */}
-                      <input type="checkbox" id="connect_all"
+                      {/* <input type="checkbox" id="connect_all"
                         checked={clusterVoList.every((cluster) => cluster.isConnected)}
                         onChange={(e) => {
                           const isChecked = e.target.checked;
+                          setClusterVoList((prevState) =>
+                            prevState.map((cluster) => ({
+                              ...cluster,
+                              isConnected: isChecked,
+                              isRequired: isChecked ? cluster.isRequired : false,
+                            }))
+                          );
+                        }}
+                      /> */}
+                      <Checkbox
+                        id="connect_all"
+                        checked={clusterVoList.every((cluster) => cluster.isConnected)}
+                        onCheckedChange={(checked) => {
+                          const isChecked = !!checked;
                           setClusterVoList((prevState) =>
                             prevState.map((cluster) => ({
                               ...cluster,
@@ -349,7 +364,7 @@ const NetworkModal = ({
                 {
                   header: (
                     <div className="flex">
-                      <input type="checkbox" id="require_all"
+                      {/* <input type="checkbox" id="require_all"
                         checked={clusterVoList.every((c) => c.isRequired) && clusterVoList.every((c) => c.isConnected) }
                         disabled={!clusterVoList.every((c) => c.isConnected)}
                         onChange={(e) => {
@@ -357,6 +372,20 @@ const NetworkModal = ({
                           setClusterVoList((prevState) =>
                             prevState.map((cluster) => ({
                               ...cluster, isRequired: isChecked,
+                            }))
+                          );
+                        }}
+                      /> */}
+                      <Checkbox
+                        id="require_all"
+                        checked={clusterVoList.every((c) => c.isRequired) && clusterVoList.every((c) => c.isConnected)}
+                        disabled={!clusterVoList.every((c) => c.isConnected)}
+                        onCheckedChange={(checked) => {
+                          const isChecked = !!checked;
+                          setClusterVoList((prevState) =>
+                            prevState.map((cluster) => ({
+                              ...cluster,
+                              isRequired: isChecked,
                             }))
                           );
                         }}
@@ -373,10 +402,27 @@ const NetworkModal = ({
                 name: `${cluster.name}`,
                 connect: (
                   <div className="flex">
-                    <input type="checkbox" id={`connect_${cluster.id}`}
+                    {/* <input type="checkbox" id={`connect_${cluster.id}`}
                       checked={cluster.isConnected}
                       onChange={(e) => {
                         const isChecked = e.target.checked;
+                        setClusterVoList((prevState) =>
+                          prevState.map((c, i) => i === index
+                            ? {
+                                ...c,
+                                isConnected: isChecked,
+                                isRequired: isChecked ? c.isRequired : false,
+                              }
+                            : c
+                          )
+                        );
+                      }}
+                    /> */}
+                    <Checkbox
+                      id={`connect_${cluster.id}`}
+                      checked={cluster.isConnected}
+                      onCheckedChange={(checked) => {
+                        const isChecked = !!checked;
                         setClusterVoList((prevState) =>
                           prevState.map((c, i) => i === index
                             ? {
@@ -394,7 +440,7 @@ const NetworkModal = ({
                 ),
                 require: (
                   <div className="flex">
-                    <input type="checkbox" id={`require_${cluster.id}`}
+                    {/* <input type="checkbox" id={`require_${cluster.id}`}
                       checked={cluster.isRequired}
                       disabled={!cluster.isConnected}
                       onChange={(e) => {
@@ -402,6 +448,20 @@ const NetworkModal = ({
                         setClusterVoList((prevState) =>
                           prevState.map((c, i) => i === index 
                             ? { ...c, isRequired: isChecked } 
+                            : c
+                          )
+                        );
+                      }}
+                    /> */}
+                    <Checkbox
+                      id={`require_${cluster.id}`}
+                      checked={cluster.isRequired}
+                      disabled={!cluster.isConnected}
+                      onCheckedChange={(checked) => {
+                        const isChecked = !!checked;
+                        setClusterVoList((prevState) =>
+                          prevState.map((c, i) => i === index
+                            ? { ...c, isRequired: isChecked }
                             : c
                           )
                         );

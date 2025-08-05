@@ -148,6 +148,7 @@ const DiskDupl = ({
         data={transformedData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         filterType={filterType} setFilterType={setFilterType}
+        filterAccessor="contentType" 
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return
           setDisksSelected(selectedRows)

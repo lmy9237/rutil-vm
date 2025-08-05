@@ -18,7 +18,7 @@ const TablesOuter = ({
   shouldHighlight1stCol = false,
   onRowClick,
   clickableColumnIndex,
- selectedRowIds = [], 
+  selectedRowIds = [], 
   onClickableColumnClick,
 }) => {
 

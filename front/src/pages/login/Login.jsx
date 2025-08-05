@@ -15,7 +15,7 @@ import backgroundImg          from "./img/background-img.png";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 import "./Login.css";
-
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Login = () => {
   // 모달 관련 상태 및 함수
@@ -62,7 +62,7 @@ const Login = () => {
         <div className="login-form-outer v-center">
           <div className="login-form-box v-center">
             <RutilVmLogo className="bigger" />
-            <form id="form-login" className="v-center w-full h-[225px] mt-2" 
+            <form id="form-login" className="v-center w-full h-[225px] mt-4" 
               onSubmit={handleSubmit(doLogin)}
             >
               <IconInput className="login-input" type="text"
@@ -80,7 +80,7 @@ const Login = () => {
                 // onChange={(e) => setPassword(e.target.value)}
               />
 
-              <div className="f-start gap-4 w-full py-7">
+              {/* <div className="f-start gap-4 w-full py-7">
                 <input
                   type="checkbox"
                   id="rememberId"
@@ -90,8 +90,15 @@ const Login = () => {
                 <label htmlFor="rememberId" className="fs-13 save-id">
                   아이디 저장
                 </label>
+              </div> */}
+              <div className="f-start gap-4 w-full py-7">
+                <div className="flex items-center gap-2">
+                  <Checkbox id="rememberId" />
+                  <label htmlFor="rememberId" className="fs-13 ml-2 save-id cursor-pointer">
+                    아이디 저장
+                  </label>
+                </div>
               </div>
-
               <button type="submit"
                 className="login-button f-center fs-14 bgcolor-primary"
               >

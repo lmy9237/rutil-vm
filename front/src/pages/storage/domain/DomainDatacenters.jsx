@@ -30,8 +30,8 @@ const DomainDatacenters = ({
   const navigate = useNavigate();
   const { activeModal } = useUIState();
   const {
-    domainsSelected,
-    datacentersSelected, setDatacentersSelected
+    datacentersSelected, setDatacentersSelected,
+    domainsSelected
   } = useGlobal()
 
   const {

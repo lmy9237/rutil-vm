@@ -84,9 +84,11 @@ const ClusterGeneral = ({
               <hr className="w-full" />
               <InfoTable tableRows={tableRows} />
             </div>
-            <GeneralBoxProps title={Localization.kr.USAGE}>
-              <GeneralBarChart items={usageItems} />
-            </GeneralBoxProps>
+            <div>
+              <GeneralBoxProps title={Localization.kr.USAGE}>
+                <GeneralBarChart items={usageItems} />
+              </GeneralBoxProps>
+            </div>
           </>
         }
         bottom={<></>}

@@ -17,6 +17,7 @@ import { useValidationToast } from "@/hooks/useSimpleToast";
 import VmImportRender2Modal from "./VmImportRender2Modal";
 import { emptyIdNameVo, useSelectFirstItemEffect } from "@/util";
 import { handleInputChange, handleSelectIdChange } from "@/components/label/HandleInput";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const initialFormState = {
   step: 1,
@@ -286,12 +287,17 @@ const VmImportModal = ({
                   .filter(vm => !targetVMs.some(t => t.vm === vm.vm)) // 선택된 VM은 제외
                   .map(vm => (
                     <tr key={vm.vm}>
-                      <td>
-                        <input
+                      <td className="f-center">
+                        {/* <input
                           type="checkbox"
                           checked={false}
                           disabled={vm.powerState === "POWERED_ON"}
                           onChange={() => toggleSelect(vm.vm)}
+                        /> */}
+                        <Checkbox
+                          checked={false}
+                          disabled={vm.powerState === "POWERED_ON"}
+                          onCheckedChange={() => toggleSelect(vm.vm)}
                         />
                       </td>
                       <td>{vm.name}</td>
@@ -319,11 +325,15 @@ const VmImportModal = ({
                   <tbody>
                     {targetVMs.map(vm => (
                       <tr key={vm.vm}>
-                        <td>
-                          <input
+                        <td className="f-center">
+                          {/* <input
                             type="checkbox"
                             checked
                             onChange={() => toggleSelect(vm.vm)}
+                          /> */}
+                          <Checkbox
+                            checked
+                            onCheckedChange={() => toggleSelect(vm.vm)}
                           />
                         </td>
                         <td>{vm.name}</td>

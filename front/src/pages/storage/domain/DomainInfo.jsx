@@ -182,7 +182,8 @@ const DomainInfo = () => {
 
   useEffect(() => {
     Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
-    setDatacentersSelected(domain?.dataCenterVo)
+    // setDatacentersSelected(domain?.dataCenterVo)
+    setDatacentersSelected([]); 
     setDomainsSelected(domain);
     setSourceContext("fromDomain");
     // const currentTabInPage = ((importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0)) ? tabInPage("/storages/domains") : "general" 

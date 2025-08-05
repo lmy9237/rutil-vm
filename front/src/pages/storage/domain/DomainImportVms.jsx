@@ -80,6 +80,7 @@ const DomainImportVms = ({
         searchQuery={searchQuery}  setSearchQuery={setSearchQuery}
         shouldHighlight1stCol={true}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
+        selectedRowIds={vmsSelected.map(vm => vm.id)}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
