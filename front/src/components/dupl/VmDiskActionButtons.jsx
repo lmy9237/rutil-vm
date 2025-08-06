@@ -29,6 +29,8 @@ const VmDiskActionButtons = ({
   const isRunningOrPaused = ["UP", "PAUSED", "SUSPENDED"].includes(vm?.status?.toUpperCase());
 
   const basicActions = [
+    import.meta.env.DEV && { type: "create2",      onClick: () => setActiveModal("vmdisk:create2"),     label: `${Localization.kr.CREATE}2`,     disabled: false },
+    import.meta.env.DEV && { type: "update2",      onClick: () => setActiveModal("vmdisk:update2"),     label: `${Localization.kr.UPDATE}2`,      disabled: isLocked || isPoweringUp || disksSelected.length !== 1},
     { type: "create",      onClick: () => setActiveModal("vmdisk:create"),     label: Localization.kr.CREATE,     disabled: false },
     { type: "connect",     onClick: () => setActiveModal("vmdisk:connect"),    label: Localization.kr.CONNECTION, disabled: false },
     { type: "update",      onClick: () => setActiveModal("vmdisk:update"),     label: Localization.kr.UPDATE,      disabled: isLocked || isPoweringUp || disksSelected.length !== 1},

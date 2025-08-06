@@ -7,6 +7,7 @@ import VmDiskActionModal from "./VmDiskActionModal";
 import VmDiskDeleteModal from "./VmDiskDeleteModal";
 import { useAllDiskAttachmentsFromVm, useVm } from "../../../api/RQHook";
 import VmDiskMoveModal from "./VmDiskMoveModal";
+import VmDiskModal2 from "./VmDiskModal2";
 
 
 /**
@@ -44,9 +45,22 @@ const VmDiskModals = ({
         vmName={`${vm?.name}_Disk${diskCount}`}
         hasBootableDisk={hasBootableDisk}
       />
+    
     ), update: (
       <VmDiskModal isOpen={activeModal().includes("vmdisk:update")} 
         onClose={() => closeModal("vmdisk:update")}
+        editMode
+        hasBootableDisk={hasBootableDisk}
+      />
+    ), create2: (
+      <VmDiskModal2 isOpen={activeModal().includes("vmdisk:create2")}
+        onClose={() => closeModal("vmdisk:create2")}
+        vmName={`${vm?.name}_Disk${diskCount}`}
+        hasBootableDisk={hasBootableDisk}
+      />
+    ), update2: (
+      <VmDiskModal2 isOpen={activeModal().includes("vmdisk:update2")}
+        onClose={() => closeModal("vmdisk:update2")}
         editMode
         hasBootableDisk={hasBootableDisk}
       />
