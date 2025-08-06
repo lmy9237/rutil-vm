@@ -88,9 +88,11 @@ const RightClickMenu = () => {
   
   const menuRef = useRef(null); // ✅ context menu 영역 참조
   useClickOutside(menuRef, (e) => {
+    let timerId;
     if (contextMenu() !== null && e.type !== "contextmenu") {
-      setTimeout(() => clearAllContextMenu(), 0)
+      timerId = setTimeout(() => clearAllContextMenu(), 0)
     }
+    return () => clearTimeout(timerId);
   })
   const contextMenuStyleByPosition = () => (
     (contextMenu().mouseY+menuRef.current?.offsetHeight > window.innerHeight) ? {

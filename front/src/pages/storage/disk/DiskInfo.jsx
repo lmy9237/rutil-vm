@@ -1,24 +1,27 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import SectionLayout          from "@/components/SectionLayout";
-import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
-import HeaderButton           from "@/components/button/HeaderButton";
-import Path                   from "@/components/Header/Path";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import SectionLayout           from "@/components/SectionLayout";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import HeaderButton            from "@/components/button/HeaderButton";
+import Path                    from "@/components/Header/Path";
 import { 
   rvi24HardDrive,
   rvi24HardDriveDot,
 } from "@/components/icons/RutilVmIcons";
-import DiskGeneral            from "./DiskGeneral";
-import DiskVms                from "./DiskVms";
-import DiskDomains            from "./DiskDomains";
+import DiskGeneral             from "./DiskGeneral";
+import DiskVms                 from "./DiskVms";
+import DiskDomains             from "./DiskDomains";
 import {
   useStorageDomain,
   useDisk,
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import {
+  refetchIntervalInMilli
+} from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 /**
  * @name DiskInfo
  * @description 디스크 종합정보
@@ -89,6 +92,7 @@ const DiskInfo = () => {
   ];
 
   const handleTabClick = useCallback((tab) => {
+    Logger.debug(`DiskInfo > handleTabClick ... diskId: ${diskId}, tab: ${tab}`)
     const path = tab === "general"
         ? `/storages/disks/${diskId}`
         : `/storages/disks/${diskId}/${tab}`;
@@ -98,18 +102,33 @@ const DiskInfo = () => {
   }, [diskId]);
 
   useEffect(() => {
+    Logger.debug(`DiskInfo > useEffect ... section: ${section}`)
     setActiveTab(section || "general");
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`DiskInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isDiskError || (!isDiskLoading && !disk)) {
       navigate("/storages/disks");
     }
-    const currentTabInPage = tabInPage("/storages/disks")
+    const currentTabInPage = tabInPage("/storages/disks") 
     handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
     // setActiveTab(currentTabInPage)
     setDisksSelected(disk)
   }, [disk]);
+  
+  useEffect(() => {
+    Logger.debug(`DiskInfo > useEffect ... (for Disk status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(disk?.status, (
+      disk?.vmAttached || disk?.templateAttached
+    ))
+    Logger.debug(`DiskInfo > useEffect ... look for Disk status (${disk?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchDisk()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [diskId, disk, activeModal])
 
   return (
     <SectionLayout>

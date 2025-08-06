@@ -12,8 +12,9 @@ import {
   rvi16Storage,
   rvi16HardDrive,
   rvi16Network,
-  rvi16Template,
+  rvi16Lan,
   rvi16Lan2,
+  rvi16Template,
 } from "@/components/icons/RutilVmIcons";
 import Logger                           from "@/utils/Logger";
 import "./TableRowClick.css";
@@ -69,15 +70,15 @@ const TableRowClick = ({
     let iconByType = null;
     let color = isHovered ? CONSTANT.color.primary : CONSTANT.color.down
     switch(type) {
-      case "datacenter": iconByType = rvi16DataCenter(color);break;
-      case "cluster":    iconByType = rvi16Cluster(color);break;
-      case "host":       iconByType = rvi16Host(color);break;
-      case "vm":         iconByType = rvi16Desktop(color);break;
-      case "network":    iconByType = rvi16Network(color);break;
-      case "domain":     iconByType = rvi16Storage(color);break;
-      case "disk":       iconByType = rvi16HardDrive(color);break;
-      case "vnicProfile": iconByType = rvi16Lan2(color);break;
-      case "template":   iconByType = rvi16Template(color);break;
+      case "datacenter":  iconByType = rvi16DataCenter(color);break;
+      case "cluster":     iconByType = rvi16Cluster(color);break;
+      case "host":        iconByType = rvi16Host(color);break;
+      case "vm":          iconByType = rvi16Desktop(color);break;
+      case "network":     iconByType = rvi16Network(color);break;
+      case "domain":      iconByType = rvi16Storage(color);break;
+      case "disk":        iconByType = rvi16HardDrive(color);break;
+      case "vnicProfile": iconByType = rvi16Lan(color);break;
+      case "template":    iconByType = rvi16Template(color);break;
       default: break;
     }
     return (
@@ -115,6 +116,7 @@ const TableRowClick = ({
           onClick={props.onClick ?? handleClick}
           data-rowclick
           style={{
+            color: isHovered ? CONSTANT.color.primary : CONSTANT.color.gray,
             textAlign: "left",
             cursor: id ? "pointer" : "default",
             ...props.style,

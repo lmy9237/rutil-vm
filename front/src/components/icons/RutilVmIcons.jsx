@@ -1,13 +1,21 @@
 import React, { forwardRef, useMemo, useCallback } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faL } from "@fortawesome/free-solid-svg-icons";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/shift-away.css";
-import CONSTANT               from "@/Constants";
-import Localization           from "@/utils/Localization";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEye, 
+  faArrowCircleDown, faArrowCircleUp, 
+  faPlug, faPlugCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import CONSTANT                from "@/Constants";
+import Localization            from "@/utils/Localization";
 import "./RutilVmIcons.css";
-import { P } from "storybook/internal/components";
 
 /**
  * @name ItitinfoLogoIcon
@@ -408,6 +416,9 @@ export const rvi16ArrowsCrossed = (accentColor="#555555") => (
     <path d="M5 6.5L3 8L5 9.5M11 6.5L13 8L11 9.5M1.5 8V3.5A1.5 1.5 0 0 1 3 2h5.5A1.5 1.5 0 0 1 10 3.5V8M6 8v4.5A1.5 1.5 0 0 0 7.5 14h5.5a1.5 1.5 0 0 0 1.5-1.5V8M3 8h10" stroke={accentColor} strokeWidth="0.15" strokeLinecap="round" strokeLinejoin="round"/>
   </>
 )
+export const rvi16Lan = (accentColor=CONSTANT.color.down) => (
+  <path fill={accentColor} d="M2.16667 14.5V10.1667H4.16667V7.5H7.5V5.83333H5.5V1.5H10.5V5.83333H8.5V7.5H11.8333V10.1667H13.8333V14.5H8.83334V10.1667H10.8333V8.5H5.16667V10.1667H7.16667V14.5H2.16667ZM6.5 4.83333H9.5V2.5H6.5V4.83333ZM3.16667 13.5H6.16667V11.1667H3.16667V13.5ZM9.83334 13.5H12.8333V11.1667H9.83334V13.5Z" />
+)
 
 export const rvi16Lan2 = (accentColor="#999999") => (
   <>
@@ -618,6 +629,16 @@ export const severity2Icon = (severity, isLined=false) => {
   case "normal":  iconDef = isLined ? rvi16SeverityNormalLined() : rvi16Check();break;
   default:        iconDef = rvi16QuestionMark();break;
   }
+  /* return (
+     <Tooltip>
+      <TooltipTrigger asChild>
+        <RVI16 iconDef={iconDef} />
+      </TooltipTrigger>
+      <TooltipContent>
+        {Localization.kr.renderSeverity(severity)}
+      </TooltipContent>
+    </Tooltip>
+  ) */
   return (
     <>
       <Tippy
@@ -992,6 +1013,54 @@ export const networkUsage2Icons = (usage={
       : <>{iconsRendered()}</>
   )
 }
+
+export const nicLinked2Icon = (linked=false) => (
+  <Tippy content={<div className="v-center">{linked ? "UP" : "DOWN"}</div>}
+    placement="top"
+    theme="dark-tooltip"
+    animation="shift-away"
+    arrow={true}
+  >
+  <FontAwesomeIcon
+    icon={
+      linked
+        ? faArrowCircleUp
+        : faArrowCircleDown
+    }
+    style={{ 
+      color: linked
+        ? CONSTANT.color.ok2
+        : CONSTANT.color.alert,
+      marginLeft: "0.3rem"
+    }}
+    fixedWidth
+  />
+  </Tippy>
+)
+
+export const nicPlugged2Icon = (plugged=false) => (
+  <Tippy content={<div className="v-center">{plugged ? "연결 됨" : "분리"}</div>}
+    placement="top"
+    theme="dark-tooltip"
+    animation="shift-away"
+    arrow={true}
+  >
+    <FontAwesomeIcon
+      icon={
+        plugged
+          ? faPlug
+          : faPlugCircleXmark
+      }
+      style={{ 
+        color: Boolean(plugged) 
+          ? CONSTANT.color.ok2
+          : CONSTANT.color.alert,
+        marginLeft: "0.3rem"
+      }}
+      fixedWidth
+    />
+  </Tippy>
+)
 
 /**
  * @name hostedEngineStatus2Icon

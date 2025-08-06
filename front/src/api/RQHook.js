@@ -14,7 +14,7 @@ import Logger                        from "@/utils/Logger";
 import { useState } from "react";
 import { set } from "react-hook-form";
 
-export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1 분
+export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1분
 export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; // 5분
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 60 * 1000; // 30초
@@ -2542,9 +2542,9 @@ export const qpVm = (
   variant="default",
 ) => {
   const qpDefault = (
-    variant === "default" 
-      ? QP_DEFAULT
-      : {}
+    variant === "edit" 
+      ? QP_DEFAULT_MOD
+      : QP_DEFAULT
   )
   Logger.debug(`RQHook > qpVm ... variant: ${variant}`)
   return {
@@ -2556,7 +2556,7 @@ export const qpVm = (
       Logger.debug(`RQHook > qpVm ... vmId: ${vmId}, res: `, _res);
       return _res;
     },
-    enabled: !!vmId
+    enabled: !!vmId,
   }
 }
 /**  
@@ -3124,6 +3124,7 @@ export const useDeleteVm = (
       setVmsSelected([]);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
       queryClient.removeQueries([QK.VM, vmId, "default"]);
+      queryClient.removeQueries([QK.VM, vmId, "edit"]);
       queryClient.invalidateQueries([QK.ALL_VMS]);
       queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries([QK.SNAPSHOTS_FROM_VM, vmId]);
@@ -3142,7 +3143,6 @@ export const useDeleteVm = (
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
-      queryClient.removeQueries([QK.VM, vmId]);
       postError && postError(error);
     },
   });

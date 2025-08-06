@@ -102,7 +102,7 @@ export const UIStateProvider = ({ children }) => {
   //#endregion: Vnc 스크린샷 이미지 데이터
 
   //#region: 탭 지점 기록
-  const tabInPage = (path="") => _UIState()[KEY_TAB_IN_PAGE][path] ?? "general";
+  const tabInPage = (path="") => _UIState()[KEY_TAB_IN_PAGE][path] || "general";
   const setTabInPage = (path="", newV="") => {
     Logger.debug(`UIStateProvider > setTabInPage ... path: ${path} newV: ${newV}`)
     _setUIState({

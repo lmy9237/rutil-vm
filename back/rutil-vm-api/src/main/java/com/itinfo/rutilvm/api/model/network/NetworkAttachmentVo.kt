@@ -4,7 +4,6 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
 import org.ovirt.engine.sdk4.builders.HostNicBuilder
 import org.ovirt.engine.sdk4.builders.NetworkAttachmentBuilder
 import org.ovirt.engine.sdk4.builders.NetworkBuilder

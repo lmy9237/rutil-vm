@@ -78,20 +78,20 @@ const DomainImportTemplateModal = ({
   // 개별 템플릿 row 반환
   const templateTableRows = (template) => [
     { label: "ID", value: template.id || "" },
-    { label: Localization.kr.NAME, value: template.name || "" },
-    { label: Localization.kr.DESCRIPTION, value: template.description || "" },
+    { label: Localization.kr.NAME,                                 value: template.name || "" },
+    { label: Localization.kr.DESCRIPTION,                          value: template.description || "" },
     { label: `${Localization.kr.HOST} ${Localization.kr.CLUSTER}`, value: "" },
-    { label: Localization.kr.OPERATING_SYSTEM, value: template.osSystem || "" },
-    { label: "칩셋/펌웨어 유형", value: template.chipsetFirmwareType || "" },
-    { label: "그래픽 프로토콜", value: template.displayType || "" },
-    { label: Localization.kr.OPTIMIZATION_OPTION, value: template.optimizeOption || "" },
-    { label: `설정된 ${Localization.kr.MEMORY}`, value: template.memory || "" },
-    { label: "CPU 코어 수", value: `${template.cpuTopologyCnt} (${template.cpuTopologySocket}:${template.cpuTopologyCore}:${template.cpuTopologyThread})` || "" },
-    { label: "모니터 수", value: template.monitor || "" },
-    { label: Localization.kr.HA, value: template.ha === true ? "예":"아니요" || "" },
-    { label: "우선 순위", value: template.haPriority || "" },
-    { label: "USB", value: template.usb === true ? "활성화":"비활성화" || "" },
-    { label: Localization.kr.STATELESS, value: template.stateless === true ? "예":"아니요" || "" },
+    { label: Localization.kr.OPERATING_SYSTEM,                     value: template.osSystem || "" },
+    { label: "칩셋/펌웨어 유형",                                      value: template.chipsetFirmwareType || "" },
+    { label: "그래픽 프로토콜",                                       value: template.displayType || "" },
+    { label: Localization.kr.OPTIMIZATION_OPTION,                  value: template.optimizeOption || "" },
+    { label: `설정된 ${Localization.kr.MEMORY}`,                    value: checkZeroSizeToMB(template.memory) || "" },
+    { label: "CPU 코어 수",                                         value: `${template.cpuTopologyCnt} (${template.cpuTopologySocket}:${template.cpuTopologyCore}:${template.cpuTopologyThread})` || "" },
+    { label: "모니터 수",                                           value: template.monitor || "" },
+    { label: Localization.kr.HA,                                  value: !!template?.ha ? Localization.kr.YES : Localization.kr.NO || "" },
+    { label: "우선 순위",                                           value: template.haPriority || "" },
+    { label: "USB",                                               value: template.usb === true ? "활성화" : "비활성화" || "" },
+    { label: Localization.kr.STATELESS,                           value: !!template.stateless ? Localization.kr.YES : Localization.kr.NO || "" },
   ];
 
 

@@ -1,14 +1,15 @@
 import React from "react";
-import useGlobal                  from "@/hooks/useGlobal";
-import OVirtWebAdminHyperlink     from "@/components/common/OVirtWebAdminHyperlink";
-import { InfoTable }              from "@/components/table/InfoTable";
+import useGlobal                        from "@/hooks/useGlobal";
+import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import { InfoTable }                    from "@/components/table/InfoTable";
+import GeneralLayout                    from "@/components/GeneralLayout";
+import GeneralBoxProps                  from "@/components/common/GeneralBoxProps";
+import VmGeneralBarChart                from "@/components/Chart/GeneralBarChart";
 import {
   useNetwork
 } from "@/api/RQHook";
-import Localization               from "@/utils/Localization";
-import GeneralLayout from "@/components/GeneralLayout";
-import GeneralBoxProps from "@/components/common/GeneralBoxProps";
-import VmGeneralBarChart from "@/components/Chart/GeneralBarChart";
+import Localization                     from "@/utils/Localization";
+import Logger                           from "@/utils/Logger";
 
 /**
  * @name NetworkGeneral
@@ -47,7 +48,7 @@ const NetworkGeneral = ({
         <InfoTable tableRows={tableRows}/>
       </div>
       <GeneralBoxProps 
-        title="vNIC 프로파일" 
+        title={Localization.kr.VNIC_PROFILE}
         count={network?.vnicProfileVos?.length}
       >
         <div className="py-3">
@@ -57,11 +58,11 @@ const NetworkGeneral = ({
                 - {vnic.name} : 
                 {vnic.customProperties?.filter ? ` (${vnic.customProperties.filter} 필터)` : " (필터 없음)"} |  {" "}
                 {`${network.portIsolation} (포트 미러링)`} | {" "}
-                {vnic.passThrough ? "통과 (예)" : "통과 (아니요)"}
+                {`통과 (${!!vnic.passThrough ? Localization.kr.YES : Localization.kr.NO})`}
               </div>
             ))
           ) : (
-            <span className="text-gray-400">vNIC 프로파일이 없습니다.</span>
+            <span className="text-gray-400">{Localization.kr.VNIC_PROFILE}이 없습니다.</span>
           )}
         </div>
       </GeneralBoxProps>

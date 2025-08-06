@@ -13,14 +13,22 @@ import Logger                     from "@/utils/Logger";
 import "./Vnc.css"
 
 const Vnc = forwardRef(({
-  vmId, autoConnect = false,
+  vmId, api,
+  autoConnect = false,
   isPreview=false,
   onSuccess,
   ...props
 }, ref) => {
-  // 1. VM 정보 가져오기 (상태 확인용)
-  // const [intervalId, setIntervalId] = useState("");
-  const { data: vm } = useVm(vmId);
+ const { 
+    data: vm,
+    /*
+    isLoading: isVmLoading,
+    isError: isVmError,
+    isSuccess: isVmSuccess,
+    isRefetching: isVmRefetching,
+    refetch: refetchVm,
+    */
+  } = api;
   const status = vm?.status ?? "";
   const isVmQualified4ConsoleConnect = vm?.qualified4ConsoleConnect ?? false;
 
@@ -112,9 +120,7 @@ const Vnc = forwardRef(({
           debug
           onConnect={(rfb) => {
             Logger.debug("Vnc > onConnect ... ")
-            setTimeout(() => {
-              onSuccess && onSuccess(rfb)
-            }, 400)
+            onSuccess && onSuccess(rfb)
           }}
           onDisconnect={(rfb) => { 
             Logger.debug("Vnc > onDisconnect ... ")

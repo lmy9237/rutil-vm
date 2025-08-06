@@ -1,13 +1,15 @@
 import React from "react";
 import Tippy from "@tippyjs/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 import useUIState                       from "@/hooks/useUIState";
 import useGlobal                        from "@/hooks/useGlobal";
 import useSearch                        from "@/hooks/useSearch";
 import { LoadingFetch }                 from "@/components/common/Loading";
 import SelectedIdView                   from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
+import {
+  nicLinked2Icon,
+  nicPlugged2Icon,
+} from "@/components/icons/RutilVmIcons"
 import SearchBox                        from "@/components/button/SearchBox";
 import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import TablesOuter                      from "@/components/table/TablesOuter";
@@ -22,6 +24,7 @@ import {
 } from "@/util";
 import Localization                     from "@/utils/Localization";
 import "./Vm.css"
+import CONSTANT from "@/Constants";
 
 /**
  * @name VmNics2
@@ -55,19 +58,9 @@ const VmNics2 = ({
       id: nic?.id,
       name: nic?.name,
       _status: nic?.statusKr,
-      _linked: 
-        <FontAwesomeIcon
-          icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
-          style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
-          fixedWidth
-        />,
+      _linked: nicLinked2Icon(nic?.linked),
       // nic?.linked ? "연결됨": "연결해제됨",
-      _plugged: 
-        <FontAwesomeIcon
-          icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
-          style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
-          fixedWidth
-        />,
+      _plugged: nicPlugged2Icon(nic?.plugged),
       // nic?.plugged ? "연결됨" : "연결 해제됨",
       ipv4: nic?.ipv4 || "해당 없음",
       ipv6: nic?.ipv6 || "해당 없음",

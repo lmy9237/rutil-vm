@@ -19,6 +19,9 @@ import {
 import {
   useNetwork
 } from "@/api/RQHook";
+import {
+  refetchIntervalInMilli
+} from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
 
@@ -97,10 +100,12 @@ const NetworkInfo = () => {
   }, [network])
 
   useEffect(() => {
+    Logger.debug(`NetworkInfo > useEffect ... section: ${section}`)
     setActiveTab(section || "general");
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`NetworkInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isNetworkError || (!isNetworkLoading && !network)) {
       navigate("/networks");
     }
@@ -109,6 +114,17 @@ const NetworkInfo = () => {
     //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)
     setNetworksSelected(network)
   }, [network, navigate]);
+
+  useEffect(() => {
+    Logger.debug(`NetworkInfo > useEffect ... (for Network status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(network?.status)
+    Logger.debug(`NetworkInfo > useEffect ... look for Network status (${network?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchNetwork()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [network, networkId, activeModal]);
   
   return (
     <SectionLayout>

@@ -310,13 +310,13 @@ const TemplateModal = ({
         label="모든 사용자에게 이 템플릿 접근을 허용"
         checked={formState.allowAllAccess}
         onChange={() => setFormState((prev) => ({ ...prev, allowAllAccess: !formState.allowAllAccess }))}
-        tType={"네"} fType={"아니요"}
+        tType={Localization.kr.YES} fType={Localization.kr.NO}
       />
       {/* <ToggleSwitchButton
         label={`${Localization.kr.VM} 권한 복사`}
         checked={formState.copyVmPermissions}
         onChange={() => setFormState((prev) => ({ ...prev, copyVmPermissions: !formState.copyVmPermissions }))}
-        tType={"네"} fType={"아니요"}
+        tType={Localization.kr.YES} fType={Localization.kr.NO}
       /> */}
     </BaseModal>
   );

@@ -53,7 +53,9 @@ const VmDiskDupl = ({
         bootable: d?.bootable ? Localization.kr.YES: "",
         readOnly: d?.readOnly ? Localization.kr.YES : "",
         sharable: diskImage?.sharable ? Localization.kr.YES : "",
-        status: (diskImage?.imageTransferRunning) ? `잠김 (${diskImage?.imageTransferPercent.toFixed(2)}%)`: diskImage?.status.toUpperCase(),
+        _status: (diskImage?.imageTransferRunning) 
+          ? `잠김 (${diskImage?.imageTransferPercent.toFixed(2)}%)`
+          : Localization.kr.renderStatus(diskImage?.status),
         active: d?.active,
         interface: d?.interface_,
         storageType: diskImage?.storageTypeKr,

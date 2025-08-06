@@ -59,7 +59,7 @@ const NetworkVms = ({
       ...nic,
       icon: status2Icon(vm?.status),
       _name: (
-        <TableRowClick type="vm" id={vm?.id}>
+        <TableRowClick type="vm" id={vm?.id} hideIcon>
           {vm?.name}
         </TableRowClick>
       ),
@@ -76,8 +76,8 @@ const NetworkVms = ({
   });
 
   const vmStatusFilters = [
-    { key: "up", label: "실행중", icon: status2Icon("up") },
-    { key: "down", label: "정지중", icon: status2Icon("down") },
+    { key: "up",   label: "실행 중", icon: status2Icon("up") },
+    { key: "down", label: "정지 중", icon: status2Icon("down") },
   ];
   const {
     searchQuery, setSearchQuery, 

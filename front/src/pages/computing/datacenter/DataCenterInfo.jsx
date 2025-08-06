@@ -1,24 +1,27 @@
 import React, { useState, useEffect, Suspense, useCallback, useMemo } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import { rvi24Datacenter }    from "@/components/icons/RutilVmIcons";
-import SectionLayout          from "@/components/SectionLayout";
-import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
-import HeaderButton           from "@/components/button/HeaderButton";
-import Path                   from "@/components/Header/Path";
-import DataCenterClusters     from "./DataCenterClusters";
-import DataCenterHosts        from "./DataCenterHosts";
-import DataCenterVms          from "./DataCenterVms";
-import DataCenterDomains      from "./DataCenterDomains";
-import DataCenterNetworks     from "./DataCenterNetworks";
-import DataCenterEvents       from "./DataCenterEvents";
-import DataCenterGeneral      from "./DataCenterGeneral";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import { rvi24Datacenter }     from "@/components/icons/RutilVmIcons";
+import SectionLayout           from "@/components/SectionLayout";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import HeaderButton            from "@/components/button/HeaderButton";
+import Path                    from "@/components/Header/Path";
+import DataCenterClusters      from "./DataCenterClusters";
+import DataCenterHosts         from "./DataCenterHosts";
+import DataCenterVms           from "./DataCenterVms";
+import DataCenterDomains       from "./DataCenterDomains";
+import DataCenterNetworks      from "./DataCenterNetworks";
+import DataCenterEvents        from "./DataCenterEvents";
+import DataCenterGeneral       from "./DataCenterGeneral";
 import {
   useDataCenter
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import {
+  refetchIntervalInMilli
+} from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DataCenterInfo
@@ -112,10 +115,12 @@ const DataCenterInfo = () => {
   }, [homePath]);
 
   useEffect(() => {
+    Logger.debug(`DataCenterInfo > useEffect ... section: ${section}`)
     setActiveTab(section || "general");
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`DataCenterInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isDataCenterError || (!isDataCenterLoading && !dataCenter)) {
       navigate("/computing/rutil-manager/datacenters");
     }
@@ -125,6 +130,17 @@ const DataCenterInfo = () => {
     setDatacentersSelected(dataCenter)
     setSourceContext("fromDatacenter")
   }, [dataCenter, navigate]);
+
+  useEffect(() => {
+    Logger.debug(`DataCenterInfo > useEffect ... (for DataCenter status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(dataCenter?.status)
+    Logger.debug(`DataCenterInfo > useEffect ... look for DataCenter (${dataCenter?.status}) status in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchDataCenter()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [dataCenter, dataCenterId])
 
   return (
     <SectionLayout>

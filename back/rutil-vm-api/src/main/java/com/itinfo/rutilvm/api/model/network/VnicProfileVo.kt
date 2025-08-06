@@ -44,7 +44,7 @@ class VnicProfileVo(
 	val failover: IdentifiedVo = IdentifiedVo(),  // vnicprofile이 들어감
 	val networkFilterVo: IdentifiedVo =  IdentifiedVo(),
 	val dataCenterVo: IdentifiedVo = IdentifiedVo(),
-	val networkVo: IdentifiedVo = IdentifiedVo(),
+	val networkVo: NetworkVo = NetworkVo(),
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)
@@ -59,7 +59,7 @@ class VnicProfileVo(
 		private var bFailover: IdentifiedVo = IdentifiedVo();fun failover(block: () -> IdentifiedVo?) { bFailover = block() ?: IdentifiedVo() }
 		private var bNetworkFilterVo: IdentifiedVo = IdentifiedVo();fun networkFilterVo(block: () -> IdentifiedVo?) { bNetworkFilterVo = block() ?: IdentifiedVo() }
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
-		private var bNetworkVo: IdentifiedVo = IdentifiedVo();fun networkVo(block: () -> IdentifiedVo?) { bNetworkVo = block() ?: IdentifiedVo() }
+		private var bNetworkVo: NetworkVo = NetworkVo();fun networkVo(block: () -> NetworkVo?) { bNetworkVo = block() ?: NetworkVo() }
 
 		fun build(): VnicProfileVo = VnicProfileVo(bId, bName, bDescription, bPassThrough, bMigration, bPortMirroring, bFailover, bNetworkFilterVo, bDataCenterVo, bNetworkVo)
 	}
@@ -77,23 +77,23 @@ fun List<VnicProfile>.toVnicProfilesIdName(): List<VnicProfileVo> =
 	this@toVnicProfilesIdName.map { it.toVnicProfileIdName() }
 
 
-fun VnicProfile.toVnicProfileToVmVo(conn: Connection): VnicProfileVo {
-	val network: Network? = conn.findNetwork(this@toVnicProfileToVmVo.network().id()).getOrNull()
+fun VnicProfile.toVnicProfileToVmVo(conn: Connection?=null): VnicProfileVo {
+	val network: Network? = conn?.findNetwork(this@toVnicProfileToVmVo.network().id())?.getOrNull()
 	return VnicProfileVo.builder {
 		id { this@toVnicProfileToVmVo.id() }
 		name { this@toVnicProfileToVmVo.name() }
-		networkVo { network?.fromNetworkToIdentifiedVo() }
+		networkVo { network?.toNetworkVo(conn) }
 	}
 }
 fun List<VnicProfile>.toVnicProfileToVmVos(conn: Connection): List<VnicProfileVo> =
 	this@toVnicProfileToVmVos.map { it.toVnicProfileToVmVo(conn) }
 
 
-fun VnicProfile.toCVnicProfileMenu(): VnicProfileVo = VnicProfileVo.builder {
+fun VnicProfile.toCVnicProfileMenu(conn: Connection?=null): VnicProfileVo = VnicProfileVo.builder {
 	id { this@toCVnicProfileMenu.id() }
 	name { this@toCVnicProfileMenu.name() }
 	passThrough { this@toCVnicProfileMenu.passThrough().mode() }
-	networkVo { this@toCVnicProfileMenu.network().fromNetworkToIdentifiedVo() }
+	networkVo { this@toCVnicProfileMenu.network().toNetworkVo(conn) }
 }
 fun List<VnicProfile>.toCVnicProfileMenus(): List<VnicProfileVo> =
 	this@toCVnicProfileMenus.map { it.toCVnicProfileMenu() }
@@ -114,7 +114,7 @@ fun VnicProfile.toVnicProfileMenu(conn: Connection): VnicProfileVo {
         migration { if(vnic.migratablePresent()) vnic.migratable() else null }
         networkFilterVo { networkFilter?.fromNetworkFilterToIdentifiedVo() }
         dataCenterVo { vnic.network().dataCenter().fromDataCenterToIdentifiedVo() }
-        networkVo { vnic.network().fromNetworkToIdentifiedVo() }
+        networkVo { vnic.network().toNetworkVo(conn) }
     }
 }
 fun List<VnicProfile>.toVnicProfileMenus(conn: Connection): List<VnicProfileVo> =
@@ -169,7 +169,7 @@ fun Nic.toVnicProfileVoFromNic(conn: Connection): VnicProfileVo {
 	return VnicProfileVo.builder {
 		id { vnicProfile?.id() }
 		name { vnicProfile?.name() }
-		networkVo { network?.fromNetworkToIdentifiedVo() }
+		networkVo { network?.toNetworkVo(conn) }
 	}
 }
 

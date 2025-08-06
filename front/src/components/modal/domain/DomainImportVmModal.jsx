@@ -162,6 +162,7 @@ const DomainImportVmModal = ({
 
   // 개별 가상머신 row 반환
   const vmTableRows = (vm) => [
+    { label: "ID", value: vm.id || "" },
     {
       label: Localization.kr.NAME,
       value: (
@@ -188,13 +189,12 @@ const DomainImportVmModal = ({
     { label: Localization.kr.OPTIMIZATION_OPTION,   value: vm.optimizeOptionKr || vm.optimizeOption },
     { label: `설정된 ${Localization.kr.MEMORY}`,     value: checkZeroSizeToMB(vm.memoryGuaranteed) || "" },
     { label: `할당할 실제 ${Localization.kr.MEMORY}`, value: checkZeroSizeToMB(vm.memorySize) || "" },
-    { label: "CPU 코어 수", value: `${vm.cpuTopologyCnt} (${vm.cpuTopologySocket}:${vm.cpuTopologyCore}:${vm.cpuTopologyThread})` || "" },
+    { label: "CPU 코어 수",                          value: `${vm.cpuTopologyCnt} (${vm.cpuTopologySocket}:${vm.cpuTopologyCore}:${vm.cpuTopologyThread})` || "" },
     { label: "모니터 수",                             value: vm.monitor || "" },
-    { label: Localization.kr.HA,                     value: vm.ha === true ? "예":"아니요" || "" },
+    { label: Localization.kr.HA,                     value: !!vm?.ha ? Localization.kr.YES : Localization.kr.NO || "" },
     { label: "우선 순위",                              value: vm.haPriority || "" },
     { label: "USB",                                  value: vm.usb === true ? "활성화":"비활성화" || "" },
-    { label: Localization.kr.STATELESS,              value: vm.stateless === true ? "예":"아니요" || "" },
-    { label: "ID", value: vm.id || "" },
+    { label: Localization.kr.STATELESS,              value: !!vm?.stateless ? Localization.kr.YES : Localization.kr.NO || "" },
   ];
 
 

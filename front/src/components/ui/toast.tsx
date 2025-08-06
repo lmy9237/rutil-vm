@@ -48,7 +48,6 @@ const toastVariants = cva(
           "info group border-info bg-info text-info-foreground",
         warning: // Using the semantic colors defined
           "warning group border-warning bg-warning text-warning-foreground",
-
       },
     },
     defaultVariants: {

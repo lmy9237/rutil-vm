@@ -5,11 +5,16 @@ import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.repository.engine.NetworkRepository
+import com.itinfo.rutilvm.api.repository.engine.VmInterfaceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
+import com.itinfo.rutilvm.api.repository.engine.VnicProfileRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.VmEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VmInterfaceEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.VnicProfileEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.toNetworkVosFromNetworkEntities
 import com.itinfo.rutilvm.api.repository.engine.entity.toVmVosFromVmEntities
+import com.itinfo.rutilvm.api.repository.engine.entity.toVnicProfileVosFromVnicProfileEntities
 import com.itinfo.rutilvm.api.repository.history.dto.UsageDto
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.common.toUUID
@@ -311,14 +316,26 @@ class ClusterServiceImpl(
 		TODO("네트워크 관리 실행")
 	}
 
+	// @Autowired private lateinit var rVnicProfiles: VnicProfileRepository
+	@Autowired private lateinit var rVmInterfaces: VmInterfaceRepository
+
 	@Throws(Error::class)
 	override fun findAllVnicProfilesFromCluster(clusterId: String): List<VnicProfileVo> {
 		log.info("findAllVnicProfilesFromCluster ... clusterId: {}", clusterId)
-		val networks: List<Network> = conn.findAllNetworksFromCluster(clusterId).getOrDefault(emptyList())
+
+		val networks: List<Network> = conn.findAllNetworksFromCluster(clusterId)
+			.getOrDefault(emptyList())
 		val res: List<VnicProfile> = networks.flatMap { network ->
-			conn.findAllVnicProfilesFromNetwork(network.id(), follow = "network").getOrDefault(emptyList())
+			conn.findAllVnicProfilesFromNetwork(network.id(), follow = "network")
+				.getOrDefault(emptyList())
 		}
 		return res.toCVnicProfileMenus()
+		/*
+		val vmInterfacesFound: List<VmInterfaceEntity> = rVmInterfaces.findAllByClusterId(clusterId.toUUID())
+		return vmInterfacesFound.toVnicProfileVosFromVmInterfaceEntities()
+		val vnicProfilesFound: List<VnicProfileEntity> = rVnicProfiles.findAllByClusterId(clusterId.toUUID())
+		return vnicProfilesFound.toVnicProfileVosFromVnicProfileEntities()
+		*/
 	}
 
 	@Throws(Error::class)

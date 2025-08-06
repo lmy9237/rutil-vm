@@ -2,7 +2,7 @@ package com.itinfo.rutilvm.api.model.network
 
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.IdentifiedVo
-import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromNetwork
 import com.itinfo.rutilvm.api.model.fromVnicProfileToIdentifiedVo
 import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.computing.*
@@ -136,7 +136,7 @@ fun Nic.toVmNic(conn: Connection): NicVo {
 		plugged { this@toVmNic.plugged() }
 		linked { this@toVmNic.linked() }
 		vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
-		networkVo { network?.fromNetworkToIdentifiedVo() }
+		networkVo { network?.toIdentifiedVoFromNetwork() }
 	}
 }
 fun List<Nic>.toVmNics(conn: Connection): List<NicVo> =
@@ -158,7 +158,7 @@ fun Nic.toNicVoFromVm(conn: Connection): NicVo {
 	return NicVo.builder {
         id { nic.id() }
         name { nic.name() }
-        networkVo { network?.fromNetworkToIdentifiedVo() }
+        networkVo { network?.toIdentifiedVoFromNetwork() }
         vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
         plugged { nic.plugged() }
         synced { nic.synced() }
@@ -190,7 +190,7 @@ fun Nic.toNicVmMenu(): NicVo {
 	return NicVo.builder {
 		id { nic.id() }
 		name { nic.name() }
-		networkVo { nic.vnicProfile().network().fromNetworkToIdentifiedVo() }
+		networkVo { nic.vnicProfile().network().toIdentifiedVoFromNetwork() }
 		vnicProfileVo { nic.vnicProfile().fromVnicProfileToIdentifiedVo() }
 		plugged { nic.plugged() }
 		synced { nic.synced() }
@@ -215,7 +215,7 @@ fun List<Nic>.toNicVmMenus(): List<NicVo> =
 fun Nic.toNicVo(conn: Connection): NicVo = NicVo.builder {
 	id { this@toNicVo.id() }
 	name { this@toNicVo.name() }
-	networkVo { this@toNicVo.vnicProfile().network().fromNetworkToIdentifiedVo() }
+	networkVo { this@toNicVo.vnicProfile().network().toIdentifiedVoFromNetwork() }
 	vnicProfileVo { this@toNicVo.vnicProfile().fromVnicProfileToIdentifiedVo() }
 	plugged { this@toNicVo.plugged() }
 	synced { this@toNicVo.synced() }
@@ -266,7 +266,7 @@ fun Nic.toNicVoFromTemplate(conn: Connection): NicVo {
 		name { this@toNicVoFromTemplate.name() }
 		linked { this@toNicVoFromTemplate.linked() }
 		plugged { this@toNicVoFromTemplate.plugged() } // 연결됨
-		networkVo { network?.fromNetworkToIdentifiedVo() }
+		networkVo { network?.toIdentifiedVoFromNetwork() }
 		vnicProfileVo { vnicProfile?.fromVnicProfileToIdentifiedVo() }
 		interface_ { this@toNicVoFromTemplate.interface_().toVmInterfaceType() }
 	}

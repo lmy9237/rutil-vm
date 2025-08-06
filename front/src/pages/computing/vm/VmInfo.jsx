@@ -1,27 +1,30 @@
 import { useState, useEffect, Suspense, useMemo, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import { openNewTab }         from "@/navigation";
-import SectionLayout          from "@/components/SectionLayout";
-import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
-import HeaderButton           from "@/components/button/HeaderButton";
-import Path                   from "@/components/Header/Path";
-import { rvi24Desktop }       from "@/components/icons/RutilVmIcons";
-import VmGeneral              from "./VmGeneral";
-import VmMonitor              from "./VmMonitor";
-import VmNics2                from "./VmNics2";
-import VmSnapshots            from "./VmSnapshots";
-import VmApplications         from "./VmApplications";
-import VmHostDevices          from "./VmHostDevices";
-import VmEvents               from "./VmEvents";
-import VmDisks                from "./VmDisks";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import { openNewTab }          from "@/navigation";
+import SectionLayout           from "@/components/SectionLayout";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import { rvi24Desktop }        from "@/components/icons/RutilVmIcons";
+import HeaderButton            from "@/components/button/HeaderButton";
+import Path                    from "@/components/Header/Path";
+import VmGeneral               from "./VmGeneral";
+import VmMonitor               from "./VmMonitor";
+import VmNics2                 from "./VmNics2";
+import VmSnapshots             from "./VmSnapshots";
+import VmApplications          from "./VmApplications";
+import VmHostDevices           from "./VmHostDevices";
+import VmEvents                from "./VmEvents";
+import VmDisks                 from "./VmDisks";
 import {
   useAllSnapshotsFromVm,
   useVm
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import {
+  refetchIntervalInMilli
+} from "@/util";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 import "./Vm.css";
 
 /**
@@ -62,7 +65,7 @@ const VmInfo = () => {
   } = useAllSnapshotsFromVm(vmId, (e) => ({ ...e }));
 
   const hasLockedSnapshot = useMemo(() => {
-    return snapshots.some(s => s.status?.toUpperCase() === "locked");
+    return snapshots.some(s => s.status?.toLowerCase() === "locked".toLowerCase());
   }, [snapshots]);
   
   // const isUp = vm?.running ?? false;
@@ -103,16 +106,6 @@ const VmInfo = () => {
     } 
   }, [vmId, vm?.status]);
 
-  const handleTabClick = useCallback((tab) => {
-    Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}`)
-    const path = tab === "general"
-      ? `/computing/vms/${vmId}` 
-      : `/computing/vms/${vmId}/${tab}`;
-    navigate(path);
-    setTabInPage("/computing/vms", tab);
-    setActiveTab(tab);
-  }, [vmId]);
-
   const pathData = useMemo(() => ([
     vm?.name,
     tabs.find((section) => section.id === activeTab)?.label,
@@ -121,7 +114,6 @@ const VmInfo = () => {
   // 탭 메뉴 관리
   const renderSectionContent = useCallback(() => {
     Logger.debug(`VmInfo > renderSectionContent ...`)
-    
     const SectionComponent = {
       general: VmGeneral,
       monitor: VmMonitor,
@@ -157,12 +149,24 @@ const VmInfo = () => {
     { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: `ova로 ${Localization.kr.EXPORT}`,  disabled: isPause, },
   ];
 
+  const handleTabClick = useCallback((tab) => {
+    Logger.debug(`VmInfo > handleTabClick ... vmId: ${vmId}, tab: ${tab}`)
+    const path = tab === "general"
+      ? `/computing/vms/${vmId}` 
+      : `/computing/vms/${vmId}/${tab}`;
+    navigate(path);
+    setTabInPage("/computing/vms", tab);
+    setActiveTab(tab);
+  }, [vmId]);
+
   useEffect(() => {
+    Logger.debug(`VmInfo > useEffect ... section: ${section}`)
     setActiveTab(section || "general");
   }, [section]);
 
-  //탭 유효성 체크(만약 up인상태의 가상머신의 monitor탭에서 tree메뉴의 꺼진가상머신을 누르면 일반페이지로 가도록 설정)
+  //탭 유효성 체크 (만약 up인상태의 가상머신의 monitor탭에서 tree메뉴의 꺼진가상머신을 누르면 일반페이지로 가도록 설정)
   useEffect(() => {  
+    Logger.debug(`VmInfo > useEffect ... (for Automatic Tab Switch)`)
     if (!vm || !activeTab) return;
     if (activeTab === "monitor" && vm.status?.toUpperCase() !== "UP") {
       handleTabClick("general");
@@ -170,6 +174,7 @@ const VmInfo = () => {
   }, [vm?.status, activeTab]);
 
   useEffect(() => {
+    Logger.debug(`VmInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isVmError || (!isVmLoading && !vm)) {
       navigate("/computing/vms");
     }
@@ -178,6 +183,17 @@ const VmInfo = () => {
     // setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage);
     setVmsSelected(vm)
   }, [vm]);
+  
+  useEffect(() => {
+    Logger.debug(`VmInfo > useEffect ... (for VM status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(vm?.status)
+    Logger.debug(`VmInfo > useEffect ... look for VM status (${vm?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchVm()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [vmId, vm, activeModal])
 
   return (
     <SectionLayout>

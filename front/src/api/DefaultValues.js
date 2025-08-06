@@ -120,7 +120,7 @@ const DEFAULT_VALUES = {
 //       description: 'Management Network', 
 //       dataCenter: 'DC1', 
 //       provider: 'Provider1', 
-//       portSeparation: '아니요',
+//       portSeparation: Localization.kr.NO,
 //       vnicProfileVos: '',
 //     }
 //   ],
@@ -141,7 +141,7 @@ const DEFAULT_VALUES = {
 //       hostNameIP: 'host01.ititinfo.com',
 //       status: 'Up',
 //       loading: '1 대의 가상머신',
-//       displayAddress: '아니요',
+//       displayAddress: Localization.kr.NO,
 //     }
 //   ],
 //   // 클러스터 가상머신
@@ -192,7 +192,7 @@ const DEFAULT_VALUES = {
 //     description: 'Management Network', 
 //     dataCenter: 'DC1', 
 //     provider: 'Provider1', 
-//     portSeparation: '아니요',
+//     portSeparation: Localization.kr.NO,
 //     vnicProfileVos: [
 //       {
 //         id: '531162db-c6c3-40b2-a9a7-c9d91d7200fc',
@@ -202,7 +202,7 @@ const DEFAULT_VALUES = {
 //         qosName: '',
 //         networkFilter: 'wdsm-no-mac-spoofing',
 //         portMirroring: '',
-//         passthrough: '아니요',
+//         passthrough: Localization.kr.NO,
 //         overProfile: '',
 //         description: ''
 //       }
@@ -325,7 +325,7 @@ const DEFAULT_VALUES = {
 //     description: 'Management Network', 
 //     dataCenter: 'DC1', 
 //     provider: 'Provider1', 
-//     portSeparation: '아니요',
+//     portSeparation: Localization.kr.NO,
 //     vnicProfileVos: '',
 //   }
 // ],
@@ -336,7 +336,7 @@ const DEFAULT_VALUES = {
 //     description: 'Management Network', 
 //     dataCenter: 'DC1', 
 //     provider: 'Provider1', 
-//     portSeparation: '아니요',
+//     portSeparation: Localization.kr.NO,
 //     vnicProfileVos: '',
 //   }
 // ],
@@ -347,7 +347,7 @@ const DEFAULT_VALUES = {
 //     description: 'Management Network', 
 //     dataCenter: 'DC1', 
 //     provider: 'Provider1', 
-//     portSeparation: '아니요',
+//     portSeparation: Localization.kr.NO,
 //     vnicProfileVos: '',
 //   }
 // ],
@@ -358,7 +358,7 @@ const DEFAULT_VALUES = {
 //     description: 'Management Network', 
 //     dataCenter: 'DC1', 
 //     provider: 'Provider1', 
-//     portSeparation: '아니요',
+//     portSeparation: Localization.kr.NO,
 //     vnicProfileVos: '',
 //   }
 // ],

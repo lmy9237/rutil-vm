@@ -4,7 +4,7 @@ import com.itinfo.rutilvm.common.gson
 import com.itinfo.rutilvm.api.model.IdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostNicToIdentifiedVo
 import com.itinfo.rutilvm.api.model.fromHostToIdentifiedVo
-import com.itinfo.rutilvm.api.model.fromNetworkToIdentifiedVo
+import com.itinfo.rutilvm.api.model.toIdentifiedVoFromNetwork
 import com.itinfo.rutilvm.api.ovirt.business.InterfaceStatus
 import com.itinfo.rutilvm.api.ovirt.business.Ipv4BootProtocol
 import com.itinfo.rutilvm.api.ovirt.business.Ipv6BootProtocol
@@ -161,7 +161,7 @@ fun HostNic.toHostNicVo(conn: Connection): HostNicVo {
 		ipv6 { if(hostNic.ipv6Present()) hostNic.ipv6().toIpVo() else null }
 		bondingVo { bond?.toBondingVo(conn, hostNic.host().id()) }
 		hostVo { hostNic.host().fromHostToIdentifiedVo() }
-		networkVo { network?.fromNetworkToIdentifiedVo() }
+		networkVo { network?.toIdentifiedVoFromNetwork() }
 	}
 }
 fun List<HostNic>.toHostNicVos(conn: Connection): List<HostNicVo> =

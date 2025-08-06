@@ -29,17 +29,18 @@ const VnicProfileVms = ({
     datacentersSelected,
     networksSelected,
     vmsSelected, setVmsSelected,
-  } = useGlobal()
+  } = useGlobal();
+
   const {
+    data: vms=[],
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
-    data: vms = [],
     refetch: refetchVms,
     isRefetching: isVmsRefetching,
   } = useAllVmsFromVnicProfiles(vnicProfileId, (e) => ({ ...e }));
 
-  const transformedData = vms.map((vm) => ({
+  const transformedData = [...vms].map((vm) => ({
     ...vm,
     _name: (
       <TableRowClick type="vm" id={vm?.id}>

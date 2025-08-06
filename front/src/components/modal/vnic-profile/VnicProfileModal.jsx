@@ -235,7 +235,7 @@ const VnicProfileModal = ({
       />
       {/* 페일오버 vNIC 프로파일 */}
       {/* <div className="vnic-new-box">
-        <label htmlFor="failover_vnic_profile">페일오버 vNIC 프로파일</label>
+        <label htmlFor="failover_vnic_profile">페일오버 {Localization.kr.VNIC_PROFILE}</label>
         <select
           id="failover_vnic_profile"
           disabled={!formState.migration || !formState.passThrough}

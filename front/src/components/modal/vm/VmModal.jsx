@@ -121,9 +121,9 @@ const VmModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const vLabel = editMode 
-    ? Localization.kr.UPDATE : Localization.kr.CREATE;
-    // : copyMode 
-      // ? Localization.kr.COPY 
+    ? Localization.kr.UPDATE
+    : Localization.kr.CREATE;
+    // : copyMode
       
   const { 
     vmsSelected, templatesSelected, hostsSelected
@@ -488,6 +488,7 @@ const VmModal = ({
   useEffect(() => {
     if (editMode && [...vnics].length > 0) {
       setNicListState([...vnics].map((nic) => ({
+        ...nic,
         id: nic?.id || "",
         name: nic?.name || "",
         vnicProfileVo: {
@@ -495,6 +496,7 @@ const VmModal = ({
           name: nic?.vnicProfileVo?.name || "",
         },
         networkVo: {
+          ...nic?.networkVo,
           id: nic?.networkVo?.id || "",
           name: nic?.networkVo?.name || "",
         },

@@ -69,7 +69,9 @@ const DiskDupl = ({
       sharable: d?.sharable ? "O" : "",
       icon1: d?.bootable ? "O" : "",
       icon2: d?.readOnly ? "O" : "",
-      status: (d?.imageTransferRunning) ? (`${d?.imageTransferPhaseKr} (${d?.imageTransferPercent.toFixed(2)}%)`): d?.status.toUpperCase(),
+      _status: (d?.imageTransferRunning) 
+        ? (`${d?.imageTransferPhaseKr} (${d?.imageTransferPercent.toFixed(2)}%)`)
+        : Localization.kr.renderStatus(d?.status),
       sparse: d?.sparse ? Localization.kr.THIN_PROVISIONING : Localization.kr.PREALLOCATED,
       storageType: d?.storageTypeKr ?? d?.storageType, 
       type: d?.type,

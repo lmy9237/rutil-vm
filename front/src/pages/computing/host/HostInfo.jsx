@@ -11,13 +11,16 @@ import HostVms                 from "./HostVms";
 import HostNics                from "./HostNics";
 import HostDevices             from "./HostDevices";
 import HostNetworkAdapter      from "./HostNetworkAdapter";
-import HostEvents             from "./HostEvents";
+import HostEvents              from "./HostEvents";
 import {
   rvi24Host
 } from "@/components/icons/RutilVmIcons";
 import { 
   useHost
 } from "@/api/RQHook";
+import {
+  refetchIntervalInMilli
+} from "@/util";
 import Localization            from "@/utils/Localization";
 import Logger                  from "@/utils/Logger";
 import "./Host.css";
@@ -55,11 +58,11 @@ const HostInfo = () => {
     refetch: refetchHost,
   } = useHost(hostId);
 
-  const isUp = host?.status?.toUpperCase() === "UP";
-  const isMaintenance = host?.status?.toUpperCase() === "MAINTENANCE";
-  const isNonOperational = host?.status?.toUpperCase() === "NON_OPERATIONAL"
-  const isInstalling = host?.status?.toUpperCase() === "INSTALLING";
-  const isReboot = host?.status?.toUpperCase() === "REBOOT";
+  const isUp = host?.status?.toLowerCase() === "UP".toLowerCase();
+  const isMaintenance = host?.status?.toLowerCase() === "MAINTENANCE".toLowerCase();
+  const isNonOperational = host?.status?.toLowerCase() === "NON_OPERATIONAL".toLowerCase();
+  const isInstalling = host?.status?.toLowerCase() === "INSTALLING".toLowerCase();
+  const isReboot = host?.status?.toLowerCase() === "REBOOT".toLowerCase();
   const isGlobalMaintenance = host?.globalMaintenance === true
   const isHostedConfigured = host?.hostedConfigured === true
 
@@ -126,6 +129,7 @@ const HostInfo = () => {
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`HostInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isHostError || (!isHostLoading && !host)) {
       navigate("/computing/rutil-manager/hosts");
     }
@@ -134,6 +138,17 @@ const HostInfo = () => {
     // setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
     setHostsSelected(host)
   }, [host]);
+
+  useEffect(() => {
+    Logger.debug(`HostInfo > useEffect ... (for Host status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(host?.status)
+    Logger.debug(`HostInfo > useEffect ... look for Host status (${host?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchHost()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [hostId, host, activeModal])
 
   return (
     <SectionLayout>

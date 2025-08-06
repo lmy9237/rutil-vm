@@ -308,7 +308,9 @@ fun Collection<ClusterViewEntity>.toIdentifiedVosFromClusterViewEntities(): List
 //endregion: ClusterViewEntity
 
 //region: NetworkEntity
-fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder {
+fun NetworkEntity.toNetworkVoFromNetworkEntity(
+	withVnicProfiles: Boolean = true,
+): NetworkVo = NetworkVo.builder {
 	id { this@toNetworkVoFromNetworkEntity.id.toString() }
 	name { this@toNetworkVoFromNetworkEntity.name }
 	description { this@toNetworkVoFromNetworkEntity.description }
@@ -339,7 +341,9 @@ fun NetworkEntity.toNetworkVoFromNetworkEntity(): NetworkVo = NetworkVo.builder 
 	}
 	required { this@toNetworkVoFromNetworkEntity.required }
 	dnsNameServers { this@toNetworkVoFromNetworkEntity.dnsConfiguration?.nameServers?.toDnsVosFromNameServerEntities() }
-	vnicProfileVos { this@toNetworkVoFromNetworkEntity.vnicProfiles.toIdentifiedVosFromVnicProfileEntities() }
+	vnicProfileVos {
+		if (withVnicProfiles) this@toNetworkVoFromNetworkEntity.vnicProfiles.toIdentifiedVosFromVnicProfileEntities() else emptyList()
+	}
 }
 fun List<NetworkEntity>.toNetworkVosFromNetworkEntities(): List<NetworkVo> =
 	this@toNetworkVosFromNetworkEntities.map { it.toNetworkVoFromNetworkEntity() }
@@ -1217,7 +1221,7 @@ fun VnicProfileEntity.toVnicProfileVoFromVnicProfileEntity(): VnicProfileVo = Vn
 	networkFilterVo { this@toVnicProfileVoFromVnicProfileEntity.networkFilter?.toIdentifiedVoFromNetworkFilterEntity() }
 	failover { this@toVnicProfileVoFromVnicProfileEntity.failoverVnicProfile?.toIdentifiedVoFromVnicProfileEntity() }
 	dataCenterVo { this@toVnicProfileVoFromVnicProfileEntity.network?.storagePool?.toIdentifiedVoFromStoragePoolEntity() }
-	networkVo { this@toVnicProfileVoFromVnicProfileEntity.network?.toIdentifiedVoFromNetworkEntity() }
+	networkVo { this@toVnicProfileVoFromVnicProfileEntity.network?.toNetworkVoFromNetworkEntity(false) }
 }
 fun VnicProfileEntity.toIdentifiedVoFromVnicProfileEntity(): IdentifiedVo = IdentifiedVo.builder {
 	id { this@toIdentifiedVoFromVnicProfileEntity.id.toString() }

@@ -76,12 +76,12 @@ fun Template.fromTemplateToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 fun List<Template>.fromTemplatesToIdentifiedVos(): List<IdentifiedVo> =
 	this@fromTemplatesToIdentifiedVos.map { it.fromTemplateToIdentifiedVo() }
 
-fun Network.fromNetworkToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
+fun Network.toIdentifiedVoFromNetwork(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }
 	name { if (namePresent()) name() else "" }
 }
 fun List<Network>.fromNetworksToIdentifiedVos(): List<IdentifiedVo> =
-	this@fromNetworksToIdentifiedVos.map { it.fromNetworkToIdentifiedVo() }
+	this@fromNetworksToIdentifiedVos.map { it.toIdentifiedVoFromNetwork() }
 
 fun NetworkFilter.fromNetworkFilterToIdentifiedVo(): IdentifiedVo = IdentifiedVo.builder {
 	id { id() }

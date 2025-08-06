@@ -13,6 +13,7 @@ import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 /**
@@ -68,7 +69,7 @@ class VnicProfileEntity(
 	// This is a self-referencing relationship for failover
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="failover_vnic_profile_id")
-	val failoverVnicProfile: VnicProfileEntity? = null
+	val failoverVnicProfile: VnicProfileEntity? = null,
 ) : Serializable {
 	override fun toString(): String =
 		gson.toJson(this)

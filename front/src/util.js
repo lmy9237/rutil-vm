@@ -1,7 +1,7 @@
-
 import { useEffect } from 'react';
-import Localization                     from "@/utils/Localization";
-import Logger                           from "@/utils/Logger";
+import CONSTANT                from "@/Constants";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name readString
@@ -389,6 +389,29 @@ export const triggerDownload = (
   link.click();
   link.parentNode.removeChild(link);
   window.URL.revokeObjectURL(url); // Clean up
+}
+
+export const refetchIntervalInMilli = (
+  status="",
+  stopQuickRefetchByForce=false // 빠른 조회를 강제로 멈추게 하고 싶을 때
+) => {
+  Logger.debug(`util > refetchIntervalInMilli ... status: ${status}, stopQuickRefetchByForce: ${stopQuickRefetchByForce}`);
+  const avoidQuickRefetch = stopQuickRefetchByForce || 
+    status.toLowerCase() === "ok".toLowerCase() ||
+    status.toLowerCase() === "up".toLowerCase() ||
+    status.toLowerCase() === "down".toLowerCase() ||
+    status.toLowerCase() === "maintenance".toLowerCase() ||
+    status.toLowerCase() === "non_operational".toLowerCase() ||
+    status.toLowerCase() === "install_failed".toLowerCase() ||
+    status.toLowerCase() === "uninitialized".toLowerCase() ||
+    status.toLowerCase() === "suspended".toLowerCase() ||
+    status.toLowerCase() === "active".toLowerCase() ||
+    status.toLowerCase() === "inactive".toLowerCase() ||
+    status.toLowerCase() === "paused".toLowerCase();
+
+  return !avoidQuickRefetch
+    ? CONSTANT.defaultRefetchQuickInterval
+    : CONSTANT.defaultRefetchInterval;
 }
 
 /**

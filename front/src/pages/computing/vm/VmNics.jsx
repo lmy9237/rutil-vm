@@ -1,8 +1,6 @@
 // 삭제예정
 
 // import React, { useState, Suspense, useRef } from "react";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faArrowCircleDown, faArrowCircleUp, faPlug, faPlugCircleXmark} from "@fortawesome/free-solid-svg-icons";
 // import useUIState             from "@/hooks/useUIState";
 // import useGlobal              from "@/hooks/useGlobal";
 // import useContextMenu         from "@/hooks/useContextMenu";
@@ -135,12 +133,12 @@
 //                     <RVI24 iconDef={nicsSelected[0]?.id === nic.id ? rvi24ChevronDown() : rvi24ChevronRight()} />
 //                     <FontAwesomeIcon
 //                       icon={Boolean(nic?.linked) ? faArrowCircleUp : faArrowCircleDown}
-//                       style={{ color: Boolean(nic?.linked) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+//                       style={{ color: Boolean(nic?.linked) ?  CONSTANT.color.ok2 : CONSTANT.color.alert, marginLeft: "0.3rem" }}
 //                       fixedWidth
 //                     />
 //                     <FontAwesomeIcon
 //                       icon={Boolean(nic?.plugged) ? faPlug : faPlugCircleXmark}
-//                       style={{ color: Boolean(nic?.plugged) ? "#21c50b" : "#e80c0c", marginLeft: "0.3rem" }}
+//                       style={{ color: Boolean(nic?.plugged) ?  CONSTANT.color.ok2 : CONSTANT.color.alert, marginLeft: "0.3rem" }}
 //                       fixedWidth
 //                     />
 //                     <span>{nic?.name}</span>

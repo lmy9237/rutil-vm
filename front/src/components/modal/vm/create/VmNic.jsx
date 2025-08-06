@@ -92,7 +92,15 @@ const VmNic = ({
   }, [editMode, nicsState, setNicsState]);
 
   const isVmUp = useMemo(() => (
-    [...vmsSelected].length > 0 && vmsSelected[0]?.status?.toLowerCase() == "up"
+    [...vmsSelected].length > 0 && vmsSelected[0]?.status?.toLowerCase() == "up".toLowerCase()
+  ), [editMode, vmsSelected]);
+
+  const isVmDown = useMemo(() => (
+    [...vmsSelected].length > 0 && vmsSelected[0]?.status?.toLowerCase() == "down".toLowerCase()
+  ), [editMode, vmsSelected])
+
+  const isVmImageLocked = useMemo(() => (
+    [...vmsSelected].length > 0 && vmsSelected[0]?.status?.toLowerCase() == "image_locked".toLowerCase()
   ), [editMode, vmsSelected])
 
   return (
@@ -101,9 +109,10 @@ const VmNic = ({
     <div className="host-second-content py-3">
       <p className="mb-0.5">
         {Localization.kr.VNIC_PROFILE} 을 선택하여 {Localization.kr.VM} {Localization.kr.NICS}를 설정하세요.
-        <VmNicWarning active={editMode && isVmUp}/> 
+        <VmNicWarning active={editMode && !(isVmDown || isVmImageLocked)}/> 
       </p>
-      <DynamicInputList values={nicsState}
+      <DynamicInputList type="nic"
+        values={nicsState}
         onChange={handleChange} onAdd={handleAdd} onRemove={handleRemove}
         options={nics}
         showLabel={true}
@@ -124,10 +133,12 @@ const VmNicWarning = ({
       <AlertTitle><b className="f-center mt-1">주의</b></AlertTitle> 
       </div>
       <AlertDescription>
-        {Localization.kr.VM}이 {Localization.kr.RUNNING}인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 경우
-        <br/> 실패 할 수 있으므로 권고하지 않습니다.
+        {Localization.kr.VM}이 {Localization.kr.RUNNING} ({Localization.kr.PAUSE} 포함)인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 수 없습니다.
+        {/* 
+        2025-08-06: 문구가 너무 길어져 VmModal에 스크롤 바가 생겨 생략
         <br/>이 화면에서는 각 {Localization.kr.NICS}의 연결 상태를 확인 할 수 없습니다. 
         <br/>안전하게 처리하기 위해서 {Localization.kr.VM}을 종료 후 작업하시기 바랍니다.
+        */}
       </AlertDescription>
     </Alert>
     </div>

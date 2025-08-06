@@ -12,9 +12,6 @@ import SearchBox                        from "@/components/button/SearchBox";
 import TablesOuter                      from "@/components/table/TablesOuter";
 import TableRowClick                    from "@/components/table/TableRowClick";
 import { 
-  hostedEngineStatus2Icon,
-  RVI16,
-  rvi16Host,
   status2Icon
 } from "@/components/icons/RutilVmIcons";
 import VmActionButtons                  from "@/components/dupl/VmActionButtons";
@@ -38,7 +35,8 @@ const VmDupl = ({
     vmsSelected, setVmsSelected
   } = useGlobal();
 
-  const transformedData = [...vms].filter(vm => !!vm?.id).map((vm) => ({
+  const transformedData = [...vms].filter(vm => 
+    !!vm?.id).map((vm) => ({
     ...vm,
     checkbox: (
       <Checkbox
@@ -53,20 +51,22 @@ const VmDupl = ({
         }}
       />
     ),
-    // checkbox: (
-    //   <input
-    //     type="checkbox"
-    //     checked={vmsSelected.some((selected) => selected.id === vm.id)}
-    //     onClick={(e) => e.stopPropagation()} 
-    //     onChange={() => {
-    //       const isSelected = vmsSelected.some((v) => v.id === vm.id);
-    //       const updated = isSelected
-    //         ? vmsSelected.filter((v) => v.id !== vm.id)
-    //         : [...vmsSelected, vm];
-    //       setVmsSelected(updated);
-    //     }}
-    //   />
-    // ),
+    /*
+    checkbox: (
+      <input
+        type="checkbox"
+        checked={vmsSelected.some((selected) => selected.id === vm.id)}
+        onClick={(e) => e.stopPropagation()} 
+        onChange={() => {
+          const isSelected = vmsSelected.some((v) => v.id === vm.id);
+          const updated = isSelected
+            ? vmsSelected.filter((v) => v.id !== vm.id)
+            : [...vmsSelected, vm];
+          setVmsSelected(updated);
+        }}
+      />
+    ),
+    */
     icon: (
       <div className="f-center" style={{ gap: "4px" }}>
         {status2Icon(vm?.status)}
@@ -119,47 +119,46 @@ const VmDupl = ({
 
   // 컬럼에 체크박스추가
   const updatedColumns = useMemo(() => {
-  return columns.map(col => {
-    if (col.accessor === "checkbox") { 
-      return {
-        ...col,
-        header: (
-          // <input
-          //   type="checkbox"
-          //   checked={filteredData.length > 0 && filteredData.every(vm => vmsSelected.some(v => v.id === vm.id))}
-          //   onChange={(e) => {
-          //     if (e.target.checked) {
-          //       const toAdd = filteredData.filter(vm => !vmsSelected.some(v => v.id === vm.id));
-          //       setVmsSelected([...vmsSelected, ...toAdd]);
-          //     } else {
-          //       const remaining = vmsSelected.filter(v => !filteredData.some(vm => vm.id === v.id));
-          //       setVmsSelected(remaining);
-          //     }
-          //   }}
-          //   onClick={(e) => e.stopPropagation()}
-          // />
-          <Checkbox
-            checked={
-              filteredData.length > 0 &&
-              filteredData.every(vm => vmsSelected.some(v => v.id === vm.id))
-            }
-            onClick={(e) => e.stopPropagation()}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                const toAdd = filteredData.filter(vm => !vmsSelected.some(v => v.id === vm.id));
-                setVmsSelected([...vmsSelected, ...toAdd]);
-              } else {
-                const remaining = vmsSelected.filter(v => !filteredData.some(vm => vm.id === v.id));
-                setVmsSelected(remaining);
+    return columns.map(col => {
+      if (col.accessor === "checkbox") { 
+        return {
+          ...col,
+          header: (
+            // <input
+            //   type="checkbox"
+            //   checked={filteredData.length > 0 && filteredData.every(vm => vmsSelected.some(v => v.id === vm.id))}
+            //   onChange={(e) => {
+            //     if (e.target.checked) {
+            //       const toAdd = filteredData.filter(vm => !vmsSelected.some(v => v.id === vm.id));
+            //       setVmsSelected([...vmsSelected, ...toAdd]);
+            //     } else {
+            //       const remaining = vmsSelected.filter(v => !filteredData.some(vm => vm.id === v.id));
+            //       setVmsSelected(remaining);
+            //     }
+            //   }}
+            //   onClick={(e) => e.stopPropagation()}
+            // />
+            <Checkbox
+              checked={
+                [...filteredData].every(vm => vmsSelected.some(v => v.id === vm.id))
               }
-            }}
-          />
-        )
-      };
-    }
-    return col;
-  });
-}, [columns, filteredData, vmsSelected]);
+              onClick={(e) => e.stopPropagation()}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  const toAdd = filteredData.filter(vm => !vmsSelected.some(v => v.id === vm.id));
+                  setVmsSelected([...vmsSelected, ...toAdd]);
+                } else {
+                  const remaining = vmsSelected.filter(v => !filteredData.some(vm => vm.id === v.id));
+                  setVmsSelected(remaining);
+                }
+              }}
+            />
+          )
+        };
+      }
+      return col;
+    });
+  }, [columns, filteredData, vmsSelected]);
 
   const handleNameClick = useCallback((id) => {
     navigate(`/computing/vms/${id}`);
@@ -179,7 +178,9 @@ const VmDupl = ({
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => {
-          if (activeModal().length > 0 || activeModal().includes("vm:migration")) return
+          if (activeModal().length > 0 || activeModal().includes("vm:migration")) {
+            return
+          }
           setVmsSelected(selectedRows)
         }}
         onClickableColumnClick={(row) => handleNameClick(row.id)}

@@ -45,11 +45,39 @@ const watermarkText = () => {
     _value = import.meta.env.VITE_RUTIL_VM_WATERMARK_TEXT;
     if (import.meta.env.PROD) _value = `__RUTIL_VM_WATERMARK_TEXT__`;
   } catch(e) {
-     console.error(`Constants > baseUrl ... ${e.message}`)
+     console.error(`Constants > watermarkText ... ${e.message}`)
   }
+  console.log(`Constants > watermarkText ... value: ${_value}`)
   return _value
   // TODO: Boolean 대신 값을 검증하는 기능 필요
 }
+
+const defaultRefetchInterval = () => {
+  let _value = 5000; // 기본값
+  /* 
+  try {
+    _value = parseInt(import.meta.env.VITE_RUTIL_VM_REFETCH_INTERVAL);
+    if (import.meta.env.PROD) _value = parseInt('__RUTIL_VM_REFETCH_INTERVAL__');
+  } catch(e) {
+     console.error(`Constants > detailRefetchInterval ... ${e.message}`)
+  }
+  */
+  console.log(`Constants > detailRefetchInterval ... value: ${_value}`)
+  return _value;
+}
+
+const defaultRefetchQuickInterval = () => {
+  let _value = 2500; // 기본값
+  /* try {
+    _value = parseInt(import.meta.env.VITE_RUTIL_VM_REFETCH_INTERVAL_QUICK);
+    if (import.meta.env.PROD) _value = parseInt('__RUTIL_VM_REFETCH_INTERVAL_QUICK__');
+  } catch(e) {
+     console.error(`Constants > defaultRefetchQuickInterval ... ${e.message}`)
+  } */
+  console.log(`Constants > defaultRefetchQuickInterval ... value: ${_value}`)
+  return _value;
+}
+
 
 // 칩셋 옵션 (a.k.a. biosType)
 const chipsetOptions = () => [
@@ -90,6 +118,8 @@ const CONSTANT = {
   isLoggingEnabled: isLoggingEnabled(),
   isLicenseVerified: isLicenseVerified(),
   watermarkText: watermarkText(),
+  defaultRefetchInterval: defaultRefetchInterval(),
+  defaultRefetchQuickInterval: defaultRefetchQuickInterval(),
   templateIdDefault: "00000000-0000-0000-0000-000000000000",
   chipsetOptions: chipsetOptions(),
   cpuArcs: cpuArcs(),
@@ -107,6 +137,7 @@ const CONSTANT = {
     logText: "#4679BC",
     white: "#F8F8F8",
     black: "#1D1D1D",
+    gray: "#555555",
     down: "#999999",
     alert: "#E71825",
     orange: "#FF7925",

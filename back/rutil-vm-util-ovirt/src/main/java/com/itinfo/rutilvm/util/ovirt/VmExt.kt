@@ -548,18 +548,19 @@ fun Connection.updateNicFromVm(
 	// --- 2. Check VM Status
 	val vm = findVm(vmId
 		// ,"host" // TODO: follow 값이 실행 중일 때거나 또다른 상태일때만 이 조회가 유효하게 나옴
-	).getOrNull()
-		?: throw ErrorPattern.VM_NOT_FOUND.toError()
+	).getOrNull() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
 	// TODO: 변경 할 NIC가 현재 가상머신이 있는 호스트의 네트워크에도 존재하는지 확인필요
 	// 이 조건에 부합하지 않을 결우, 이 문구가 발생
 	//
 	// "Failed to deactivate VM Network Interface"
-	// if (vm.status() != VmStatus.DOWN) {
-	// 	// --- PATH A: VM is OFF - Simple Update ---
-	// 	log.warn("vm NOT DOWN! {}.", nic.id())
-	// 	throw ErrorPattern.VM_STATUS_ERROR.toError()
-	// 	// TODO: 더 정확하고 나은 에러 유형 생성
-	// }
+	/*
+	if (vm.status() != VmStatus.DOWN) {
+		// --- PATH A: VM is OFF - Simple Update ---
+		log.warn("vm NOT DOWN! {}.", nic.id())
+		throw ErrorPattern.VM_STATUS_ERROR.toError()
+		// TODO: 더 정확하고 나은 에러 유형 생성
+	}
+	*/
 	srv.update().nic(nic).send().nic()
 
 	/*else {

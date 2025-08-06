@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useUIState             from "@/hooks/useUIState";
-import useGlobal              from "@/hooks/useGlobal";
-import SectionLayout          from "@/components/SectionLayout";
-import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
-import HeaderButton           from "@/components/button/HeaderButton";
-import Path                   from "@/components/Header/Path";
+import CONSTANT                from "@/Constants";
+import useUIState              from "@/hooks/useUIState";
+import useGlobal               from "@/hooks/useGlobal";
+import SectionLayout           from "@/components/SectionLayout";
+import TabNavButtonGroup       from "@/components/common/TabNavButtonGroup";
+import HeaderButton            from "@/components/button/HeaderButton";
+import Path                    from "@/components/Header/Path";
 import {
   rvi24Cloud,
   rvi24Storage
 } from "@/components/icons/RutilVmIcons";
-import DomainGeneral          from "./DomainGeneral";
-import DomainDatacenters      from "./DomainDatacenters";
-import DomainVms              from "./DomainVms";
-import DomainEvents           from "./DomainEvents";
-import DomainDisks            from "./DomainDisks";
-import DomainTemplates        from "./DomainTemplates";
-import DomainDiskSnapshots    from "./DomainDiskSnapshots";
-import DomainImportVms        from "./DomainImportVms";
-import DomainImportTemplates  from "./DomainImportTemplates";
-import DomainImportDisks      from "./DomainImportDisks";
+import DomainGeneral           from "./DomainGeneral";
+import DomainDatacenters       from "./DomainDatacenters";
+import DomainVms               from "./DomainVms";
+import DomainEvents            from "./DomainEvents";
+import DomainDisks             from "./DomainDisks";
+import DomainTemplates         from "./DomainTemplates";
+import DomainDiskSnapshots     from "./DomainDiskSnapshots";
+import DomainImportVms         from "./DomainImportVms";
+import DomainImportTemplates   from "./DomainImportTemplates";
+import DomainImportDisks       from "./DomainImportDisks";
 import {
   useStorageDomain,
   useOvfUpdateDomain,
@@ -28,8 +29,8 @@ import {
   useAllUnregisteredVMsFromDomain,
   useAllUnregisteredTemplatesFromDomain,
 } from "@/api/RQHook";
-import Localization           from "@/utils/Localization";
-import Logger                 from "@/utils/Logger";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DomainInfo
@@ -166,29 +167,15 @@ const DomainInfo = () => {
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isDomainError || (!isDomainLoading && !domain)) {
       navigate("/computing/vms");
     }
     const currentTabInPage = tabInPage("/storages/domains");
     handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
-    setDomainsSelected(domain)
-  }, [domain]);
-
-  // 탭 유효성 체크(템플릿 가져오기 등등 없으면 일반페이지로 이동)
-  useEffect(() => {
-    if (!tabs || tabs.length === 0 || !activeTab) return;
-    const isTabValid = tabs.some((t) => t.id === activeTab);
-    if (!isTabValid) {
-      Logger.warn(`DomainInfo > Invalid activeTab "${activeTab}" → fallback to "general"`);
-      handleTabClick("general");
-    }
-  }, [tabs, activeTab]);
-
-  useEffect(() => {
-    Logger.debug(`DomainInfo > useEffect ... domain: `, domain)
+    setDomainsSelected(domain);
     // setDatacentersSelected(domain?.dataCenterVo)
     setDatacentersSelected([]); 
-    setDomainsSelected(domain);
     setSourceContext("fromDomain");
     // const currentTabInPage = ((importVms.length > 0 || importTemplates.length > 0 || importDisks.length > 0)) ? tabInPage("/storages/domains") : "general" 
     /* 
@@ -198,7 +185,29 @@ const DomainInfo = () => {
     importVmsRefetch();
     importTemplatesRefetch();
     importDisksRefetch();
-  }, [domain/* , importVms, importTemplates, importDisks */])
+  }, [domain]);
+
+  // 탭 유효성 체크(템플릿 가져오기 등등 없으면 일반페이지로 이동)
+  useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... (for Automatic Tab Switch)`)
+    if (!tabs || tabs.length === 0 || !activeTab) return;
+    const isTabValid = tabs.some((t) => t.id === activeTab);
+    if (!isTabValid) {
+      Logger.warn(`DomainInfo > Invalid activeTab "${activeTab}" → fallback to "general"`);
+      handleTabClick("general");
+    }
+  }, [tabs, activeTab]);
+
+  useEffect(() => {
+    Logger.debug(`DomainInfo > useEffect ... (for Domain status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(domain?.status)
+    Logger.debug(`DomainInfo > useEffect ... look for Domain status (${domain?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchDomain()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [domain, domainId, activeModal])
 
   return (
     <SectionLayout>

@@ -1,4 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { 
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@radix-ui/react-popover";
 import CONSTANT                   from "@/Constants";
 import { openNewTab }             from "@/navigation";
 import { useValidationToast }     from "@/hooks/useSimpleToast";
@@ -17,6 +22,7 @@ import {
   RVI16,
   rvi16Desktop,
   rvi16DesktopFlag,
+  rvi16SeverityNormalLined,
   RVI24,
   rvi24ExclamationCircle,
   status2Icon
@@ -440,16 +446,6 @@ const VmVncMonitor = ({
   onWebConsole=()=>{},
   onRemoteViewer=()=>{},
 }) => {
-  const { validationToast } = useValidationToast()
-
-  const onExclamationClick = (e) =>  {
-    Logger.debug(`VmVncMonitor > onExclamationClick ... `)
-    validationToast.debug(`아이콘 버튼 클릭!`)
-    // TODO: virt viewer를 받을 수 있는 페이지를 보여주기
-    //
-    // https://virt-manager.org/download.html
-  }
-
   return (
     <div className="vm-info-vnc v-center gap-8">
       {
@@ -477,11 +473,12 @@ const VmVncMonitor = ({
           >
             원격뷰어 접속파일 다운로드
           </button>
-          <button className="btn-vnc-icon ml-auto w-[38px] h-[38px] fs-12"
+          <VmRemoteViewerDownloadPopover/>
+          {/* <button className="btn-vnc-icon ml-auto w-[38px] h-[38px] fs-12"
             onClick={onExclamationClick}
           >
             <RVI24 iconDef={rvi24ExclamationCircle(CONSTANT.color.white)}/>
-          </button>
+          </button> */}
         </div>
         
       </div>
@@ -489,4 +486,31 @@ const VmVncMonitor = ({
   )
 }
 
+const VmRemoteViewerDownloadPopover = ({
+
+}) => {
+  return (
+   <Popover>
+      <PopoverTrigger asChild>
+        <button className="btn-vnc-icon ml-auto w-[38px] h-[38px] fs-12">
+          <RVI24 iconDef={rvi24ExclamationCircle(CONSTANT.color.white)}/>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-80">
+        <div className="grid gap-4">
+          <h4 className="fs-12">VirtViewer 다운로드</h4>
+          <a className="f-start text-muted-foreground"
+            target="_blank" rel="noopener noreferrer" href="https://virt-manager.org/download.html"  
+            style={{ color: CONSTANT.color.blue }}
+          >
+            <RVI16 iconDef={rvi16SeverityNormalLined()}/>
+            페이지로 이동
+          </a>
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
 export default VmGeneral;
+

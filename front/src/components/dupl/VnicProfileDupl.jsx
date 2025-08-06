@@ -50,7 +50,9 @@ const VnicProfileDupl = ({
       </TableRowClick>
     ),
     portMirroring: vnic?.portMirroring === true ? "O" : "",
-    passThrough: vnic?.passThrough === "DISABLED" ? "아니요" : Localization.kr.YES,
+    passThrough: vnic?.passThrough === "DISABLED" 
+      ? Localization.kr.NO
+      : Localization.kr.YES,
     networkFilter: vnic?.networkFilterVo?.name || "-",
     searchText: `${vnic?.name} ${vnic?.networkVo?.name || ""} ${vnic?.dataCenterVo?.name || ""} ${vnic?.networkFilterVo?.name || ""}`
   }));

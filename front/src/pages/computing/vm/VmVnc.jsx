@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useParams } from "react-router-dom";
 import CONSTANT                         from "@/Constants";
 import { useValidationToast }           from "@/hooks/useSimpleToast";
@@ -9,13 +9,14 @@ import RightClickMenu                   from "@/components/common/RightClickMenu
 import HeaderButton                     from "@/components/button/HeaderButton";
 import Vnc                              from "@/components/Vnc";
 import {
-  RVI24,
   rvi24Desktop,
-  rvi24Refresh
 } from "@/components/icons/RutilVmIcons";
 import {
   useVm,
 } from "@/api/RQHook";
+import {
+  refetchIntervalInMilli
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./VmVnc.css"
@@ -36,15 +37,9 @@ const VmVnc = ({
     vmsSelected, setVmsSelected,
     setCurrentVncRfb,
   } = useGlobal()
-  const { id: vmId, } = useParams();
-  const { 
-    data: vm,
-    isLoading: isVmLoading,
-    isError: isVmError,
-    isSuccess: isVmSuccess,
-    isRefetching: isVmRefetching,
-    refetch: refetchVm,
-  } = useVm(vmId);
+  const { id: vmId } = useParams();
+  const fetchVm = useVm(vmId);
+  const vm = fetchVm.data;
 
   const screenRef = useRef(null);
   const [dataUrl, setDataUrl] = useState("")
@@ -54,16 +49,19 @@ const VmVnc = ({
   const allUp = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.running ?? false);
   const allDown = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.notRunning ?? false);
   const allPause = vmsSelected.length > 0 && vmsSelected.every(vm => 
-    vm?.status?.toUpperCase() === "PAUSED" || vm?.status?.toUpperCase() === "SUSPENDED"
+    vm?.status?.toLowerCase() === "PAUSED".toLowerCase() || 
+    vm?.status?.toLowerCase() === "SUSPENDED".toLowerCase()
   );
-  const allMaintenance = vmsSelected.length > 0 && vmsSelected.every(vm => vm?.status?.toUpperCase() === "MAINTENANCE");
+  const allMaintenance = vmsSelected.length > 0 && vmsSelected.every(vm => 
+    vm?.status?.toLowerCase() === "MAINTENANCE".toLowerCase()
+  );
   const allOkay2PowerDown = vmsSelected.length > 0 && vmsSelected.every(vm => {
     const status = vm?.status?.toLowerCase();
     return (
       vm?.qualified4PowerDown ||
-      status === "DOWN" ||
-      status === "SUSPENDED" ||
-      status === "REBOOT_IN_PROGRESS"
+      status.toLowerCase() === "DOWN".toLowerCase() ||
+      status.toLowerCase() === "SUSPENDED".toLowerCase() ||
+      status.toLowerCase() === "REBOOT_IN_PROGRESS".toLowerCase()
     );
   });
 
@@ -81,7 +79,7 @@ const VmVnc = ({
         */
         setActiveModal("vm:start");
       }, 
-      label: Localization.kr.START, 
+      label: Localization.kr.START,
       disabled: !(allDown || allPause || allMaintenance) 
     },
     { type: "pause",             onClick: () => setActiveModal("vm:pause"),                   label: Localization.kr.PAUSE,                                   disabled: !allUp },
@@ -98,30 +96,6 @@ const VmVnc = ({
   if (import.meta.env.DEV) sectionHeaderButtons.push(
     { type: "vncClipboardPaste", onClick: () => setActiveModal("vm:vncClipboardPaste"),       label: `${Localization.kr.CLIPBOARD} ${Localization.kr.PASTE}`, disabled: !allUp }
   )
-
-  useEffect(() => {
-    Logger.debug(`VmVnc > useEffect ... (for VM)`)
-    setVmsSelected(vm)
-    if (vm?.name)
-      document.title = `RutilVM (${vm.name})`
-  }, [vmId, vm])
-
-  useEffect(() => {
-    Logger.debug(`VmVnc > useEffect ... (for vnc rfb)`)
-    if (!screenRef.current?.rfb) return;
-    setCurrentVncRfb(screenRef.current.rfb)
-  }, [screenRef.current])
-
-  useEffect(() => {
-    Logger.debug(`VmVnc > useEffect ... (for fullscreen)`)
-    const handleFullscreenChange = () => {
-      const isCurrentlyFullscreen = document.fullscreenElement !== null;
-      setIsFullscreen(isCurrentlyFullscreen);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => {document.removeEventListener('fullscreenchange', handleFullscreenChange);};
-  }, []);
 
   // Function to toggle fullscreen mode
   const vncContainerRef = useRef(null)
@@ -140,30 +114,6 @@ const VmVnc = ({
     }
   };
 
-  /*
-  useEffect(() => {
-    Logger.debug(`VmVnc > useEffect ... (for vnc clipboard paste)`)
-    const handlePaste = (e) => {
-      if (!screenRef.current?.rfb) return;
-      e.preventDefault();
-      e.stopPropagation();
-      const text = e.clipboardData.getData('text/plain');
-      if (text) {
-        Logger.debug(`VmVnc > Intercepted paste event. Sending to VNC: "${text}"`);
-        screenRef.current.rfb.clipboardPasteFrom(text);
-        // Assuming you add this translation key to your Localization file
-        validationToast.success("클립보드 내용이 원격 데스크톱으로 전송되었습니다.");
-      }
-    };
-    Logger.debug("VmVnc > Adding direct paste event listener.");
-    document.addEventListener('paste', handlePaste);
-    return () => {
-      Logger.debug("VmVnc > Removing direct paste event listener.");
-      document.removeEventListener('paste', handlePaste);
-    };
-  }, []);
-  */
-  
   const takeScreenshotFromRFB = (rfb) => {
     Logger.debug(`VmVnc > takeScreenshotFromRFB ...`)
     if (rfb && rfb._display && typeof rfb.toDataURL === "function") {
@@ -195,6 +145,35 @@ const VmVnc = ({
     validationToast.debug(`Ctrl+Alt+Del 입력 완료`);
   }
 
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for vnc rfb)`)
+    if (!screenRef.current?.rfb) return;
+    setCurrentVncRfb(screenRef.current.rfb)
+  }, [screenRef.current])
+
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for fullscreen)`)
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = document.fullscreenElement !== null;
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => {document.removeEventListener('fullscreenchange', handleFullscreenChange);};
+  }, []);
+
+  useEffect(() => {
+    Logger.debug(`VmVnc > useEffect ... (for VM status check)`)
+    setVmsSelected(vm)
+    if (vm?.name) document.title = `RutilVM (${vm.name})`
+    const intervalInMilli = refetchIntervalInMilli(vm?.status)
+    Logger.debug(`VmVnc > useEffect ... look for VM status (${vm?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      fetchVm.refetch()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [vmId, vm])
+
   return (<>
     <div ref={vncContainerRef}
       className="section-vnc w-full h-full v-center"
@@ -202,7 +181,7 @@ const VmVnc = ({
       <HeaderButton title={vm?.name ?? "RutilVM에 오신걸 환영합니다."}
         titleIcon={rvi24Desktop(CONSTANT.color.white)}
         status={Localization.kr.renderStatus(vm?.status)}
-        isLoading={isVmLoading} isRefetching={isVmRefetching} refetch={refetchVm}
+        isLoading={fetchVm.isLoading} isRefetching={fetchVm.isRefetching} refetch={fetchVm.refetch}
         buttons={sectionHeaderButtons}
         inverseColor
       />
@@ -210,6 +189,7 @@ const VmVnc = ({
         className="section-vnc-content" 
       >
         <Vnc vmId={vmId}
+          api={fetchVm}
           ref={screenRef}
           autoConnect={true}
         />

@@ -3,7 +3,7 @@ import CONSTANT                         from "@/Constants";
 import { useApiToast }                  from "@/hooks/useSimpleToast";
 import useClickOutside                  from "@/hooks/useClickOutside";
 import {
-  RVI16, rvi16DotsVertical,
+  rvi16DotsVertical,
   RVI24, rvi24Refresh
 } from "@/components/icons/RutilVmIcons";
 import { LoadingFetch }                      from "@/components/common/Loading";
@@ -87,6 +87,7 @@ const HeaderButton = ({
           <RVI24 iconDef={rvi24Refresh(inverseColor ? CONSTANT.color.white : "")} 
             disabled={isLoading || isRefetching}
             onClick={(e) => {
+              e.stopPropagation()
               Logger.debug(`HeaderButton > refetch ... `)
               refetch();
               import.meta.env.DEV && apiToast.refetch();

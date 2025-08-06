@@ -14,7 +14,8 @@ import TablesOuter                      from "@/components/table/TablesOuter";
 import TableRowClick                    from "@/components/table/TableRowClick";
 import NetworkClusterModal              from "@/components/modal/network/NetworkClusterModal";
 import { 
-  status2Icon
+  status2Icon,
+  networkUsage2Icons,
 } from "@/components/icons/RutilVmIcons";
 import {
   useAllClustersFromNetwork
@@ -56,8 +57,7 @@ const NetworkClusters = ({
         {network?.clusterVo?.name}
       </TableRowClick>
     ),
-    status: status2Icon(network?.status),
-    // _connected: network?.connected ? (
+    _status: status2Icon(network?.status),
     _connected: true ? (
       <Checkbox checked disabled />
     ) : (
@@ -68,7 +68,7 @@ const NetworkClusters = ({
     ) : (
       <Checkbox disabled />
     ),
-    networkRole: network?.usage?.roleInKr,
+    networkRole: networkUsage2Icons(network?.usage, network?.usage?.roleInKr),
   }));
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

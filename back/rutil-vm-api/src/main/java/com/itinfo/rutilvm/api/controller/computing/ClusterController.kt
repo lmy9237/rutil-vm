@@ -7,7 +7,6 @@ import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.util.ovirt.error.ErrorPattern
 import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.VnicProfileVo
-import com.itinfo.rutilvm.api.ovirt.business.VmOsType
 import com.itinfo.rutilvm.api.repository.engine.AuditLogSpecificationParam
 import com.itinfo.rutilvm.api.service.computing.ItClusterService
 import com.itinfo.rutilvm.api.service.setting.ItEventService

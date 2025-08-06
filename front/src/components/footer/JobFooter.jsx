@@ -14,7 +14,7 @@ import { LoadingFetch }                 from "@/components/common/Loading";
 import Spinner                          from "@/components/common/Spinner";
 import SelectedIdView                   from "@/components/common/SelectedIdView";
 import {
-  BadgeStatus, BadgeNumber
+  BadgeNumber
 } from "@/components/common/Badges";
 import TablesOuter                      from "@/components/table/TablesOuter";
 import TableRowClick                    from "@/components/table/TableRowClick";
@@ -91,8 +91,9 @@ const JobFooter = ({
   }))), [jobs]);
  
   const handleDescriptionClick = useCallback((job) => {
-    // toast({ description: job?.description})
+    // TODO: 메세지가 많거나 보여줘야하는 상황에 대해 어떻게 할지 정한 후 UI 구성
   }, [jobs])
+
   const FOOTER_TOP_HORIZ_BAR_HEIGHT = 40
   const [footerHeight, setFooterHeight] = useState(FOOTER_TOP_HORIZ_BAR_HEIGHT)
   const handleMouseDown = (mouseDownEvent) => {
@@ -125,12 +126,20 @@ const JobFooter = ({
 
   useEffect(() => {
     Logger.debug(`JobFooter > useEffect ... footerHeight: ${footerHeight}`)
-    if (footerHeight !== footerHeightInPx()) setTimeout(() => {
-      return () => {
-        setFooterHeightInPx(footerHeight)
-      }
+    const timerId = setTimeout(() => {
+      setFooterHeightInPx(footerHeight)
     }, 300)
+    return () => clearTimeout(timerId)
   }, [footerHeight])
+
+  useEffect(() => {
+    const intervalInMilli = CONSTANT.defaultRefetchInterval;    
+    Logger.debug(`JobFooter > useEffect ... 목록 자동 refetch 처리 (주기: ${intervalInMilli})`)
+    const intervalId = setInterval(() => {
+      refetchJobs()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [jobs])
 
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);
 
@@ -149,10 +158,12 @@ const JobFooter = ({
         <div
           className="footer f-start fs-16 w-full px-2"
           style={{ height: `40px` }}
-          // onClick={(e) => {
-          //   e.stopPropagation()
-          //   toggleFooterVisible()
-          // }}
+          /* 
+          onClick={(e) => {
+            e.stopPropagation()
+            toggleFooterVisible()
+          }}
+          */
         >
           <RVI24 className={`footer-opener${footerVisible() ? " open" : ""}`}
             iconDef={footerVisible() 
@@ -173,23 +184,18 @@ const JobFooter = ({
             최근 작업&nbsp;&nbsp;
             <LoadingFetch isLoading={isJobsLoading} isRefetching={isJobsRefetching} />
           </span>
-          
-          <RVI24 className="footer-ico footer-ico-refresh ml-auto" 
-            iconDef={rvi24Refresh(CONSTANT.color.black)} 
+          <RVI24 className="rvi rvi-nav" 
+            disabled={isJobsLoading || isJobsRefetching}
+            iconDef={rvi24Refresh("currentColor")} 
             onClick={(e) => {
               e.stopPropagation()
               if (footerVisible()) {
+                Logger.debug(`JobFooter > refetch ... `)
                 refetchJobs()
                 import.meta.env.DEV && apiToast.refetch()
               }
             }}
           />
-          {/*
-          <IconButton iconDef={rvi16Refresh("#717171")} 
-                onClick={handleRefresh}
-                 onClick={() =>  window.location.reload()}
-          />
-          */}
         </div>
 
         {/* 테이블 */}

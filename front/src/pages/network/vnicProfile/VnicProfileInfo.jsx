@@ -7,14 +7,21 @@ import SectionLayout          from "@/components/SectionLayout";
 import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import Path                   from "@/components/Header/Path";
 import HeaderButton           from "@/components/button/HeaderButton";
-import { RVI16, rvi16Lan2, rvi24Lan }           from "@/components/icons/RutilVmIcons";
+import { 
+  rvi16Lan2,
+  rvi24Lan
+} from "@/components/icons/RutilVmIcons";
+import VnicProfileVms         from "./VnicProfileVms";
+import VnicProfileTemplates   from "./VnicProfileTemplates";
+
 import {
   useVnicProfile
 } from "@/api/RQHook";
+import {
+  refetchIntervalInMilli
+} from "@/util";
 import Localization           from "@/utils/Localization";
 import Logger                 from "@/utils/Logger";
-import VnicProfileVms         from "./VnicProfileVms";
-import VnicProfileTemplates   from "./VnicProfileTemplates";
 
 /**
  * @name VnicProfileInfo
@@ -65,7 +72,8 @@ const VnicProfileInfo = () => {
   ]
 
   const handleTabClick = useCallback((tab) => {
-    const path = tab === 'vms' 
+    Logger.debug(`VnicProfileInfo > handleTabClick ... vnicProfileId: ${vnicProfileId}, tab: ${tab}`)
+    const path = tab === 'vms'
       ? `/vnicProfiles/${vnicProfileId}/vms`
       : `/vnicProfiles/${vnicProfileId}/${tab}`;
     navigate(path);
@@ -74,20 +82,35 @@ const VnicProfileInfo = () => {
   }, [vnicProfileId]);
 
   useEffect(() => {
-    setActiveTab(section || 'vms');
+    Logger.debug(`VnicProfileInfo > useEffect ... section: ${section}`)
+    setActiveTab(section || "vms");
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`VnicProfileInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isVnicProfileError || (!isVnicProfileLoading && !vnicProfile)) {
-      navigate('/vnicPrfiles');
+      navigate('/vnicProfiles/vms');
     }
-    const currentTabInPage = tabInPage("/vnicPrfiles") == "general" 
-      ? "vms"
-      : tabInPage("/vnicPrfiles");
-    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
-    //setActiveTab(currentTabInPage);
+    const currentTabInPage = tabInPage("/vnicProfiles")
+    handleTabClick(
+      currentTabInPage === "" || 
+      currentTabInPage === "general"
+        ? "vms" : currentTabInPage
+    );
     setVnicProfilesSelected(vnicProfile);
-  }, [isVnicProfileError, isVnicProfileLoading, vnicProfile]);
+    //setActiveTab(currentTabInPage);
+  }, [vnicProfile, navigate]);
+
+  useEffect(() => {
+    Logger.debug(`VnicProfileInfo > useEffect ... (for vNIC Profile status check)`)
+    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    const intervalInMilli = refetchIntervalInMilli(vnicProfile?.status, true)
+    Logger.debug(`VnicProfileInfo > useEffect ... look for vNIC Profile status (${vnicProfile?.status}) in ${intervalInMilli/1000} second(s)`)
+    const intervalId = setInterval(() => {
+      refetchVnicProfile()
+    }, intervalInMilli) // 주기적 조회
+    return () => {clearInterval(intervalId)}
+  }, [vnicProfile])
 
   return (
     <SectionLayout>

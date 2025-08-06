@@ -95,16 +95,6 @@ const AreaChart = ({
   // }, [datetimes, series]);
 
   // useEffect(() => {
-  //   updateChartSize();
-  
-  //   const resizeTimer = setTimeout(() => {
-  //     updateChartSize();
-  //   }, 200); // DOM 렌더 후 0.2초 뒤에 한 번 더
-  
-  //   return () => clearTimeout(resizeTimer);
-  // }, [datetimes, series]);
-
-  // useEffect(() => {
   //   if (!chartContainerRef.current) return;
   
   //   const observer = new ResizeObserver(() => {

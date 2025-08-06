@@ -89,10 +89,12 @@ const TemplateInfo = () => {
   }, [templateId]);
 
   useEffect(() => {
+    Logger.debug(`TemplateInfo > useEffect ... section: ${section}`)
     setActiveTab(section || "general");
   }, [section]);
 
   useEffect(() => {
+    Logger.debug(`TemplateInfo > useEffect ... (for Automatic Tab Switch)`)
     if (isTemplateError || (!isTemplateLoading && !template)) {
       navigate("/computing/templates");
     }
