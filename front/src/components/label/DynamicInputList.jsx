@@ -100,7 +100,7 @@ const DynamicInputList = ({
                   onChange={(e) => onChange(index, e.target.value)}
                   options={options.map(opt => ({
                     value: opt.id,
-                    label: `${opt.name} [${Localization.kr.NETWORK}}: ${opt.networkVo?.name || ""}]`
+                    label: `${opt.name} [${Localization.kr.NETWORK}: ${opt.networkVo?.name || ""}]`
                   }))}
                 />
               ) : (

@@ -1565,6 +1565,50 @@ const ApiManager = {
       throw error;
     }
   },
+  /**
+   * @name ApiManager.attachNicFromVM
+   * @description 가상머신 nic 연결
+   * 
+   * @param {string} vmId
+   * @param {string} nicId
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  attachNicFromVM: async (vmId, nicId) => {
+    Logger.debug(`ApiManager > attachNicFromVM ... vmId: ${vmId}, nicId: ${nicId}`);
+    try {
+      const res = await makeAPICall({
+        method: "PUT",
+        url: ENDPOINTS.ATTACH_NIC_FROM_VM(vmId, nicId),
+      });
+      Logger.debug(`ApiManager > attachNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      return res;
+    } catch (error) {
+      console.error('ApiManager > attachNicFromVM ... error:', error.response?.data || error.message);
+      throw error;
+    }
+  },
+  /**
+   * @name ApiManager.detachNicFromVM
+   * @description 가상머신 nic 분리
+   * 
+   * @param {string} vmId
+   * @param {string} nicId
+   * @returns {Promise<Object>} API 응답 결과
+   */
+  detachNicFromVM: async (vmId, nicId) => {
+    Logger.debug(`ApiManager > detachNicFromVM ... vmId: ${vmId}, nicId: ${nicId}`);
+    try {
+      const res = await makeAPICall({
+        method: "PUT",
+        url: ENDPOINTS.DETACH_NIC_FROM_VM(vmId, nicId),
+      });
+      Logger.debug(`ApiManager > detachNicFromVM ... res: ${JSON.stringify(res, null, 2)}`);
+      return res;
+    } catch (error) {
+      console.error('ApiManager > detachNicFromVM ... error:', error.response?.data || error.message);
+      throw error;
+    }
+  },
 
   /**
    * @name ApiManager.deleteNicFromVM

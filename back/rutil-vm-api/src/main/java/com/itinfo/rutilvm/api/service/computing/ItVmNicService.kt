@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.network.*
 import com.itinfo.rutilvm.api.service.BaseService
 import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.Error
+import org.ovirt.engine.sdk4.builders.NicBuilder
 import org.ovirt.engine.sdk4.types.Nic
 import org.springframework.stereotype.Service
 import kotlin.jvm.Throws
@@ -53,10 +54,21 @@ interface ItVmNicService {
 	 *
 	 * @param vmId [String] 가상머신 Id
 	 * @param nicVo [NicVo]
-	 * @return [NicVo]?
+	 * @return [IdentifiedVo]?
 	 */
 	@Throws(Error::class)
 	suspend fun updateFromVm(vmId: String, nicVo: NicVo): IdentifiedVo?
+	/**
+	 * [ItVmNicService.updatePluggedFromVm]
+	 * 네트워크 인터페이스 연결/분리 편집
+	 *
+	 * @param vmId [String] 가상머신 Id
+	 * @param nicId [String] nic id
+	 * @param attach [Boolean] 연결/분리 여부
+	 * @return [IdentifiedVo]?
+	 */
+	@Throws(Error::class)
+	fun updatePluggedFromVm(vmId: String, nicId: String, attach: Boolean): IdentifiedVo?
 	/**
 	 * [ItVmNicService.removeFromVm]
 	 * 네트워크 인터페이스 삭제
@@ -107,6 +119,18 @@ class VmNicServiceImpl(
 		val res: Nic? = conn.updateNicFromVm(
 			vmId,
 			nicVo.toEditNic()
+		).getOrNull()
+		return res?.toIdentifiedVoFromNic()
+	}
+
+	@Throws(Error::class)
+	override fun updatePluggedFromVm(vmId: String, nicId: String, attach: Boolean): IdentifiedVo? {
+		log.info("updatePluggedFromVm ... vmId: {}, nicId: {} attach: {}", vmId, nicId, attach )
+		val nic: Nic? = conn.findNicFromVm(vmId, nicId).getOrNull()
+		// nic 이름이 필수로 필요함
+		val res: Nic? = conn.updateNicFromVm(
+			vmId,
+			NicBuilder().id(nicId).name(nic?.name()).plugged(attach).build()
 		).getOrNull()
 		return res?.toIdentifiedVoFromNic()
 	}

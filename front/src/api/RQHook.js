@@ -3675,6 +3675,83 @@ export const useEditNicFromVM = (
   });
 };
 
+/** 
+ * @name useAttachNicFromVM
+ * @description 가상머신 네트워크 인터페이스 연결 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * 
+ * @todo 수정해야됨
+ */
+export const useAttachNicFromVM = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async ({ vmId, nicId }) => {
+      closeModal();
+      const res = await ApiManager.attachNicFromVM(vmId, nicId);
+      const _res = validateAPI(res) ?? {}
+      Logger.debug(`RQHook > useAttachNicFromVM ... vmId: ${vmId}, nicId: ${nicId}`);
+      return _res
+    },
+    onSuccess: (res, { vmId }) => {
+      Logger.debug(`RQHook > useAttachNicFromVM ... res: `, res);
+      apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.ATTACH} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      postSuccess(res);
+    },
+    onError: (error, { vmId }) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      postError && postError(error);
+    },
+  });
+};
+/** 
+ * @name useDetachNicFromVM
+ * @description 가상머신 네트워크 인터페이스 분리 useMutation 훅
+ * 
+ * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
+ * 
+ * @todo 수정해야됨
+ */
+export const useDetachNicFromVM = (
+  postSuccess=()=>{}, postError
+) => {
+  const queryClient = useQueryClient();
+  const { closeModal } = useUIState();
+  const { apiToast } = useApiToast();
+    return useMutation({
+    mutationFn: async ({ vmId, nicId }) => {
+      closeModal();
+      const res = await ApiManager.detachNicFromVM(vmId, nicId);
+      const _res = validateAPI(res) ?? {}
+      Logger.debug(`RQHook > useDetachNicFromVM ... vmId: ${vmId}, nicId: ${nicId}`);
+      return _res
+    },
+    onSuccess: (res, { vmId }) => {
+      Logger.debug(`RQHook > useDetachNicFromVM ... res: `, res);
+      apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.DETACH} ${Localization.kr.REQ_COMPLETE}`)
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      postSuccess(res);
+    },
+    onError: (error, { vmId }) => {
+      Logger.error(error.message);
+      apiToast.error(error.message);
+      invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      postError && postError(error);
+    },
+  });
+};
+
 /**
  * @name useDeleteNetworkInterface
  * @description 가상머신 네트워크 인터페이스 삭제 useMutation 훅

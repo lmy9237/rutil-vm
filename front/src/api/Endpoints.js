@@ -154,6 +154,8 @@ const ENDPOINTS = {
   FIND_NIC_FROM_VM: (vmId, nicId) =>                                       `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics/${nicId}`, 
   ADD_NICS_FROM_VM: (vmId) =>                                              `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics`, 
   EDIT_NIC_FROM_VM: (vmId, nicId) =>                                       `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics/${nicId}`, 
+  ATTACH_NIC_FROM_VM: (vmId, nicId) =>                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics/${nicId}/attach`, 
+  DETACH_NIC_FROM_VM: (vmId, nicId) =>                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics/${nicId}/detach`, 
   DELETE_NIC_FROM_VM: (vmId, nicId) =>                                     `${ENDPOINT_API_V1}/computing/vms/${vmId}/nics/${nicId}`, 
 
   FIND_APPLICATIONS_FROM_VM:(vmId) =>                                      `${ENDPOINT_API_V1}/computing/vms/${vmId}/applications`, 

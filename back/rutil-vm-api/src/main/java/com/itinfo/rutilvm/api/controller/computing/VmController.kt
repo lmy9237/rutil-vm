@@ -758,6 +758,60 @@ class VmController: BaseController() {
 	}
 
 	@ApiOperation(
+		httpMethod="PUT",
+		value="가상머신 네트워크 인터페이스 연결",
+		notes="선택된 가상머신의 네트워크 인터페이스를 연결한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="nicId", value="네트워크 인터페이스 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{vmId}/nics/{nicId}/attach")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun attachPluggedNic(
+		@PathVariable vmId: String? = null,
+		@PathVariable nicId: String? = null,
+	): ResponseEntity<IdentifiedVo?> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (nicId.isNullOrEmpty())
+			throw ErrorPattern.NIC_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/nics/{}/attach ... 가상머신 nic 연결 ", vmId, nicId)
+		return ResponseEntity.ok(vmNic.updatePluggedFromVm(vmId, nicId, true))
+	}
+
+	@ApiOperation(
+		httpMethod="PUT",
+		value="가상머신 네트워크 인터페이스 분리",
+		notes="선택된 가상머신의 네트워크 인터페이스를 분리한다"
+	)
+	@ApiImplicitParams(
+		ApiImplicitParam(name="vmId", value="가상머신 ID", dataTypeClass=String::class, required=true, paramType="path"),
+		ApiImplicitParam(name="nicId", value="네트워크 인터페이스 ID", dataTypeClass=String::class, required=true, paramType="path"),
+	)
+	@ApiResponses(
+		ApiResponse(code = 200, message = "OK")
+	)
+	@PutMapping("/{vmId}/nics/{nicId}/detach")
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
+	fun detachPluggedNic(
+		@PathVariable vmId: String? = null,
+		@PathVariable nicId: String? = null,
+	): ResponseEntity<IdentifiedVo?> {
+		if (vmId.isNullOrEmpty())
+			throw ErrorPattern.VM_ID_NOT_FOUND.toException()
+		if (nicId.isNullOrEmpty())
+			throw ErrorPattern.NIC_ID_NOT_FOUND.toException()
+		log.info("/computing/vms/{}/nics/{}/detach ... 가상머신 nic 분리 ", vmId, nicId)
+		return ResponseEntity.ok(vmNic.updatePluggedFromVm(vmId, nicId, false))
+	}
+
+	@ApiOperation(
 		httpMethod="DELETE",
 		value="가상머신 네트워크 인터페이스 삭제",
 		notes="선택된 가상머신의 네트워크 인터페이스를 삭제한다"

@@ -554,12 +554,12 @@ fun Connection.updateNicFromVm(
 	// 이 조건에 부합하지 않을 결우, 이 문구가 발생
 	//
 	// "Failed to deactivate VM Network Interface"
-	if (vm.status() != VmStatus.DOWN) {
-		// --- PATH A: VM is OFF - Simple Update ---
-		log.warn("vm NOT DOWN! {}.", nic.id())
-		throw ErrorPattern.VM_STATUS_ERROR.toError()
-		// TODO: 더 정확하고 나은 에러 유형 생성
-	}
+	// if (vm.status() != VmStatus.DOWN) {
+	// 	// --- PATH A: VM is OFF - Simple Update ---
+	// 	log.warn("vm NOT DOWN! {}.", nic.id())
+	// 	throw ErrorPattern.VM_STATUS_ERROR.toError()
+	// 	// TODO: 더 정확하고 나은 에러 유형 생성
+	// }
 	srv.update().nic(nic).send().nic()
 
 	/*else {
