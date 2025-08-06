@@ -47,19 +47,24 @@ const MatchNetwork = ({
             <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {networkVo.vlan})</span>
           )}
         </div>
-        {networkUsage2Icons(networkVo?.usage)}        
+       
         <br/>
         <div>
-          {import.meta.env.DEV && <>&nbsp;<span style={{ fontSize: "5px"}}>{networkAttach?.id}</span></>}
+          {/* {import.meta.env.DEV && <>&nbsp;<span style={{ fontSize: "5px"}}>{networkAttach?.id}</span></>} */}
         </div>
-        <div className="right-section">
-          <RVI36 className="icon cursor-pointer"
-            iconDef={rvi36Edit()}
-            onClick={() => {
-              setSelectedNetwork(networkAttach);
-              editNetworkAttachmentData(networkAttach);
-            }}
-          />
+        <div className="flex">
+          <div className="f-center host-icon-list mr-3">
+            {networkUsage2Icons(networkVo?.usage)}       
+          </div>
+          <div className="right-section">
+            <RVI36 className="icon cursor-pointer"
+              iconDef={rvi36Edit()}
+              onClick={() => {
+                setSelectedNetwork(networkAttach);
+                editNetworkAttachmentData(networkAttach);
+              }}
+            />
+          </div>
         </div>
       </div>
       <Tooltip id={`network-tooltip-${networkVo.id}`} place="top" effect="solid" />

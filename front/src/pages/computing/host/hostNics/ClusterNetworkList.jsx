@@ -24,7 +24,9 @@ const ClusterNetworkList = ({
         {network?.vlan === 0 ? "" : <span style={{ marginLeft: "4px", color: "#888" }}>(VLAN {network.vlan})</span>}
       </div>
       {/* {network?.usageVm === true && <RVI16 className="icon" iconDef={rvi16VirtualMachine()} />} */}
-      {networkUsage2Icons(network?.usage)}
+      <div className="f-center">
+        {networkUsage2Icons(network?.usage)}
+      </div>
     </div>
   );
 };

@@ -13,6 +13,7 @@ import {
   rvi16HardDrive,
   rvi16Network,
   rvi16Template,
+  rvi16Lan2,
 } from "@/components/icons/RutilVmIcons";
 import Logger                           from "@/utils/Logger";
 import "./TableRowClick.css";
@@ -75,7 +76,7 @@ const TableRowClick = ({
       case "network":    iconByType = rvi16Network(color);break;
       case "domain":     iconByType = rvi16Storage(color);break;
       case "disk":       iconByType = rvi16HardDrive(color);break;
-      // case "vnicProfile": iconByType = rvi16Lan(color);break;
+      case "vnicProfile": iconByType = rvi16Lan2(color);break;
       case "template":   iconByType = rvi16Template(color);break;
       default: break;
     }

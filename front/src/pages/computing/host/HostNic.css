@@ -96,3 +96,15 @@
   display: flex;
   width: 100%;
 }
+.right-section {
+  display: block;
+}
+.host-icon-list{
+  flex-shrink: 0;
+}
+ 
+@media (max-width: 1000px) {
+  .right-section {
+    display: none;
+  }
+}

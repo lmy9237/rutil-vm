@@ -409,6 +409,15 @@ export const rvi16ArrowsCrossed = (accentColor="#555555") => (
   </>
 )
 
+export const rvi16Lan2 = (accentColor="#999999") => (
+  <>
+    <path d="M0 13V8.66667H2V6H5.33333V4.33333H3.33333V0H8.33333V4.33333H6.33333V6H9.66667V8.66667H11.6667V13H6.66667V8.66667H8.66667V7H3V8.66667H5V13H0ZM4.33333 3.33333H7.33333V1H4.33333V3.33333ZM1 12H4V9.66667H1V12ZM7.66667 12H10.6667V9.66667H7.66667V12Z" fill={accentColor}/>
+    <rect x="1" y="9" width="4" height="3" fill={accentColor}/>
+    <rect x="7" y="9" width="4" height="3" fill={accentColor}/>
+    <rect x="4" y="1" width="4" height="3" fill={accentColor}/>
+  </>
+)
+
 export const RVI16 = forwardRef(({
   iconDef, width=16, height=16, currentColor="currentColor", 
   ...props
@@ -958,18 +967,21 @@ export const networkUsage2Icons = (usage={
     ].filter((e) => e != null).join(" / ")
   }
 
-  const iconsRendered = () => (<>
-    {!!usage?.management ? <RVI16 iconDef={rvi16Wrench(accentColor)} /> : null}
-    {!!usage?.display ? <RVI16 iconDef={rvi16Monitor(accentColor)} /> : null}
-    {!!usage?.migration ? <RVI16 iconDef={rvil16Migration(accentColor)} /> : null}
-    {!!usage?.defaultRoute ? <RVI16 iconDef={rvi16Event(accentColor)} /> : null}
-    {!!usage?.vm ? <RVI16 iconDef={rvi16VmNetwork(accentColor)} /> : null}
-  </>)
+  //span으로 묶어줘야 Tippy가 인식
+  const iconsRendered = () => (
+    <span className="inline-flex gap-1 items-center">
+      {!!usage?.management ? <RVI16 iconDef={rvi16Wrench(accentColor)} /> : null}
+      {!!usage?.display ? <RVI16 iconDef={rvi16Monitor(accentColor)} /> : null}
+      {!!usage?.migration ? <RVI16 iconDef={rvil16Migration(accentColor)} /> : null}
+      {!!usage?.defaultRoute ? <RVI16 iconDef={rvi16Event(accentColor)} /> : null}
+      {!!usage?.vm ? <RVI16 iconDef={rvi16VmNetwork(accentColor)} /> : null}
+    </span>
+  );
 
-  // TODO: 툴팁 안나옴
   return (
     !!_tooltipText()
-      ? <Tippy content={<div className="v-center">{_tooltipText()}</div>}
+      ? <Tippy 
+        content={<div className="v-center">{_tooltipText()}</div>}
         placement="top"
         theme="dark-tooltip"
         animation="shift-away"

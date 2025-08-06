@@ -383,14 +383,22 @@ const Tables = ({
       const newSelected = paginatedData
         .map((row, i) => selectedRowIds.includes(row.id) ? indexOfFirstItem + i : null)
         .filter(i => i !== null);
-      setSelectedRows(newSelected);
+
+      // 기존 selectedRows와 비교해서 실제로 바뀐 경우에만 setState
+      const isSame =
+        newSelected.length === selectedRows.length &&
+        newSelected.every((v, i) => v === selectedRows[i]);
+
+      if (!isSame) {
+        setSelectedRows(newSelected);
+      }
     }
-  }, [selectedRowIds, paginatedData, target, indexOfFirstItem]);
+  }, [selectedRowIds, paginatedData, target, indexOfFirstItem, selectedRows]);
 
   const renderTableBody = useCallback(() => {
     if (isFirstLoading) { // 재접속 or 첫로딩딩
       return <TableRowLoading colLen={columns.length} />;
-    } else if (isLoading) {
+    } else if (isRefetching || isLoading) {
       // 최초가 아닌 refetch 상황이면 로딩 띄우지 않음(이상함 수정필요)
       return <TableRowLoading colLen={columns.length} />;
     } else if (!!isError) { 

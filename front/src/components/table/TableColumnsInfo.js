@@ -323,7 +323,7 @@ const TableColumnsInfo = {
   ],
 
   NETWORKS: [
-    { accessor: "icon",          header: Localization.kr.STATUS,         clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: "icon",          header: Localization.kr.STATUS,         clickable: false , width: 30},
     { accessor: '_name',         header: Localization.kr.NAME,        clickable: true },
     { accessor: 'comment',       header: Localization.kr.COMMENT,     clickable: false },
     // { accessor: 'status',        header: Localization.kr.STATUS,      clickable: false, width: DEFAULT_WIDTH_ICON_COLUMN },

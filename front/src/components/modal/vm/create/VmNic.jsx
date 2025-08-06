@@ -118,9 +118,11 @@ const VmNicWarning = ({
 }) => (
   active && <><br/><br/>
     <div className="f-start">
-    <AlertTriangle color={CONSTANT.color.warn}/>
-    <Alert variant="warning" className="items-start gap-4">
-      <AlertTitle><b>주의</b></AlertTitle> 
+   
+    <Alert variant="warning" className="items-start gap-4 flex">
+      <div className="mr-3 "><AlertTriangle color={CONSTANT.color.warn}/>
+      <AlertTitle><b className="f-center mt-1">주의</b></AlertTitle> 
+      </div>
       <AlertDescription>
         {Localization.kr.VM}이 {Localization.kr.RUNNING}인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 경우
         <br/> 실패 할 수 있으므로 권고하지 않습니다.

@@ -42,7 +42,7 @@ const NetworkToolTip = (network) => {
     
   const ipv4Section = ipv4?.gateway
     ? `
-      <strong>IPv4 </strong><br/>
+      <strong>IPv4</strong><br/>
       <strong>부트 프로토콜: </strong>${ipv4Method}<br/>
       <strong>주소: </strong>${ipv4.address || "없음"}<br/>
       <strong>서브넷: </strong>${ipv4.netmask || "없음"}<br/>
@@ -55,7 +55,7 @@ const NetworkToolTip = (network) => {
   // IPv6은 그대로 출력
   const ipv6Section = ipv6?.gateway
     ? `
-      <strong>IPv6 </strong><br/>
+      <strong>IPv6</strong><br/>
       <strong>부트 프로토콜: </strong>${ipv6Method}<br/>
       <strong>주소: </strong>${ipv6.address || "없음"}<br/>
       <strong>서브넷: </strong>${ipv6.netmask || "없음"}<br/>
@@ -65,30 +65,24 @@ const NetworkToolTip = (network) => {
       <strong>부트 프로토콜: </strong>${ipv6Method}<br/><br/>
     `;
 
-  const usageDetail = 
-    `
-      <strong>사용 </strong><br/>
-      ${usage?.management === true 
-        ? `<span>${rvi16WrenchSvg} 관리</span><br/>`
-        : ""
-      }
-      ${usage?.display === true 
-        ? `<span>${rvi16MonitorSvg} 디스플레이</span><br/>`
-        : ""
-      }
-      ${usage?.migration === true 
-        ? `<span>${rvil16MigrationSvg} 마이그레이션</span><br/>`
-        : ""
-      }
-      ${usage?.defaultRoute === true 
-        ? `<span>${rvi16EventSvg} 기본 라우터</span><br/>`
-        : ""
-      }
-      ${usage?.vm === true 
-        ? `<span>${rvi16VmNetworkSvg} 가상머신 네트워크</span><br/>`
-        : ""
-      }
-    `;
+  const usageDetail = `
+    <strong>사용 </strong><br/>
+    ${usage?.management
+      ? `<div class="f-start gap-6">${rvi16WrenchSvg} 관리</div>`
+      : ""}
+    ${usage?.display
+      ? `<div class="f-start gap-6">${rvi16MonitorSvg} 디스플레이</div>`
+      : ""}
+    ${usage?.migration
+      ? `<div class="f-start gap-6">${rvil16MigrationSvg} 마이그레이션</div>`
+      : ""}
+    ${usage?.defaultRoute
+      ? `<div class="f-start gap-6">${rvi16EventSvg} 기본 라우터</div>`
+      : ""}
+    ${usage?.vm
+      ? `<div class="f-start gap-6">${rvi16VmNetworkSvg} 가상머신 네트워크</div>`
+      : ""}
+  `;
 
   return `
     <div style="text-align: left;">

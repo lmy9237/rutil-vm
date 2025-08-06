@@ -17,6 +17,7 @@ import NetworkActionButtons             from "@/components/dupl/NetworkActionBut
 import Localization                     from "@/utils/Localization"; 
 import Logger                           from "@/utils/Logger";
 import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
+import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name NetworkDupl
@@ -39,6 +40,7 @@ const NetworkDupl = ({
   const transformedData = [...networks].map((network) => ({
     ...network,
     icon: status2Icon(network?.status),
+    iconSortKey: getStatusSortKey(network?.status), // ✅ 추가
     _name: (
       <TableRowClick type="network" id={network?.id} hideIcon>
         {network?.name}

@@ -11,6 +11,7 @@ import TableRowClick                    from "@/components/table/TableRowClick";
 import VnicProfileActionButtons         from "./VnicProfileActionButtons";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
+import { RVI16, rvi16Lan2 } from "../icons/RutilVmIcons";
 
 /**
  * @name VnicProfileDupl
@@ -34,7 +35,7 @@ const VnicProfileDupl = ({
   const transformedData = [...vnicProfiles].map((vnic) => ({
     ...vnic,
     _name: (
-      <TableRowClick type="vnicProfile" id={vnic?.id} hideIcon>
+      <TableRowClick type="vnicProfile" id={vnic?.id}>
         {vnic?.name}
       </TableRowClick>
     ),
@@ -89,6 +90,7 @@ const VnicProfileDupl = ({
         onClickableColumnClick={(row) => handleNameClick(row.id)}
         isLoading={isLoading} isRefetching={isRefetching} isError={isError} isSuccess={isSuccess}
        />
+       {/* <RVI16 iconDef={rvi16Lan2()}/> */}
       <SelectedIdView items={vnicProfilesSelected} />
       <OVirtWebAdminHyperlink
         name={`${Localization.kr.NETWORK}>${Localization.kr.VNIC_PROFILE}`}

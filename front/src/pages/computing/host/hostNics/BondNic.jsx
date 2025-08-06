@@ -44,7 +44,7 @@ const BondNic = ({
               <RVI16 iconDef={slave.status?.toUpperCase() === "UP" ? rvi16TriangleUp() : rvi16TriangleDown()} className="mr-0.5" />
               {slave.name}
             </div>
-            <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" />
+            <Tooltip id={`nic-tooltip-${slave.id}`} place="top" effect="solid" zIndex={9999}/>
           </div>
         ))}
         { import.meta.env.DEV && <pre>size:{nic.bondingVo?.slaveVos.length} {nic?.id}</pre> }
