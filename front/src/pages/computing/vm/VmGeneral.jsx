@@ -496,19 +496,25 @@ const VmRemoteViewerDownloadPopover = ({
           <RVI24 iconDef={rvi24ExclamationCircle(CONSTANT.color.white)}/>
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
-        <div className="grid gap-4">
-          <h4 className="fs-12">VirtViewer 다운로드</h4>
-          <a className="f-start text-muted-foreground"
-            target="_blank" rel="noopener noreferrer" href="https://virt-manager.org/download.html"  
-            style={{ color: CONSTANT.color.blue }}
+      <PopoverContent className="virtviewer-popover">
+        <div className="grid gap-3">
+          <h4 className="virtviewer-popover-header font-bold">VirtViewer 다운로드</h4>
+          <a
+            className="virtviewer-popover-link"
+            href="https://virt-manager.org/download.html"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <RVI16 iconDef={rvi16SeverityNormalLined()}/>
+            <RVI16 iconDef={rvi16SeverityNormalLined()} />
             페이지로 이동
           </a>
         </div>
       </PopoverContent>
     </Popover>
+//   <Popover>
+//   <PopoverTrigger>Open</PopoverTrigger>
+//   <PopoverContent>Place content for the popover here.</PopoverContent>
+// </Popover>
   )
 }
 

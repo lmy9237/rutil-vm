@@ -13,7 +13,6 @@ import {
   rvi16HardDrive,
   rvi16Network,
   rvi16Lan,
-  rvi16Lan2,
   rvi16Template,
 } from "@/components/icons/RutilVmIcons";
 import Logger                           from "@/utils/Logger";
@@ -117,7 +116,7 @@ const TableRowClick = ({
           data-rowclick
           style={{
             color: isHovered ? CONSTANT.color.primary : CONSTANT.color.gray,
-            textAlign: "left",
+            textAlign: "left",marginLeft: showIcon ? 1.5 : 0,  //  아이콘이 있는경우
             cursor: id ? "pointer" : "default",
             ...props.style,
           }}

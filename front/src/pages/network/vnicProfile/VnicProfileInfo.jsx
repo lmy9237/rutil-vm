@@ -8,7 +8,6 @@ import TabNavButtonGroup      from "@/components/common/TabNavButtonGroup";
 import Path                   from "@/components/Header/Path";
 import HeaderButton           from "@/components/button/HeaderButton";
 import { 
-  rvi16Lan2,
   rvi24Lan
 } from "@/components/icons/RutilVmIcons";
 import VnicProfileVms         from "./VnicProfileVms";

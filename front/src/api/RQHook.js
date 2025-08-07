@@ -179,8 +179,8 @@ export const QP_DEFAULT = {
   cacheTime: DEFAULT_CACHE_TIME,
 }
 export const QP_DEFAULT_MOD = {
-  refetchInterval: DEFAULT_CACHE_TIME,
-  refetchInactive: true,
+  // refetchInterval: DEFAULT_CACHE_TIME,
+  // refetchInactive: true,
   staleTime: DEFAULT_STALE_TIME,
   cacheTime: DEFAULT_CACHE_TIME,
 }

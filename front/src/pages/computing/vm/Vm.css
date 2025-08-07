@@ -34,6 +34,34 @@
     margin: 20px 0;
   }
 }
+
+.virtviewer-popover {
+  margin-top: 4px;
+  z-index: 9999;
+  width: 130px; 
+  border-radius: 3px;
+  border: 1px solid var(--color-primary); 
+  background-color: var(--color-white);
+  padding: 10px; 
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -4px rgba(0, 0, 0, 0.1); 
+}
+.virtviewer-popover-header {
+  font-size: var(--fs-default); 
+}
+
+.virtviewer-popover-link {
+  display: flex;
+  align-items: center;
+  gap: 3px; 
+  font-size: var(--fs-10); 
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.virtviewer-popover-link:hover {
+  text-decoration: underline;
+}
 /* 네트워크 인터페이스 */
 .network-content {
   width: 100%;

@@ -41,7 +41,15 @@ const TemplateEditModal = ({
 }) => {
   const { validationToast } = useValidationToast();
   const { templatesSelected } = useGlobal()
-  const templateId = templatesSelected[0]?.id;
+  // const templateId = templatesSelected[0]?.id;
+  const [templateId, setTemplateId] = useState("");
+
+  //TODO 수정필요
+  useEffect(() => {
+    if (isOpen && templatesSelected.length > 0) {
+      setTemplateId(templatesSelected[0]?.id);
+    }
+  }, [isOpen, templatesSelected]);
 
   const [formState, setFormState] = useState(initialFormState);
   const [clusterVo, setClusterVo] = useState(emptyIdNameVo());
@@ -52,7 +60,7 @@ const TemplateEditModal = ({
     data: template,
     isLoading: isTemplateLoading,
     isSuccess: isTemplateSuccess,
-  } = useTemplate(templateId); // 바꾸면 id가 undefined 상태로변함
+  } = useTemplate(templateId); 
 
   useEffect(() => {
     Logger.debug(`TemplateEditModal > template ... ${JSON.stringify(template, 2, null)}`);
@@ -172,14 +180,13 @@ const TemplateEditModal = ({
         <TabNavButtonGroup tabs={tabs} tabActive={activeTab} />
 
         <div className="w-full px-7">
-          <div>
             <LabelSelectOptions id="optimization" label={Localization.kr.OPTIMIZATION_OPTION}
               value={formState.optimizeOption}
               options={vmTypes}
               loading={isVmTypesLoading}
               onChange={handleInputChange(setFormState, "optimizeOption", validationToast)}
             />
-          </div>
+
           <Separator />
           {activeTab === "general" && (
             <>

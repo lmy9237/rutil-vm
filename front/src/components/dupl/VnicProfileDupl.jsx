@@ -11,7 +11,7 @@ import TableRowClick                    from "@/components/table/TableRowClick";
 import VnicProfileActionButtons         from "./VnicProfileActionButtons";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
-import { RVI16, rvi16Lan2 } from "../icons/RutilVmIcons";
+import { RVI16 } from "../icons/RutilVmIcons";
 
 /**
  * @name VnicProfileDupl

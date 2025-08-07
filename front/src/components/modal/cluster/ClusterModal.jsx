@@ -225,6 +225,8 @@ const ClusterModal = ({
         value={formState.cpuType}
         options={cpuOptions}
         disabled={!(!editMode || editCpuArc)}
+        placeholderLabel={"자동 감지"}
+        // placeholderValue="
         onChange={handleInputChange(setFormState, "cpuType", validationToast)}
       />
       {!["ppc64", "s390x", "undefined"].includes(formState.cpuArc) && (
@@ -232,7 +234,6 @@ const ClusterModal = ({
           value={formState.biosType}
           options={biosTypeOptions}
           onChange={handleInputChange(setFormState, "biosType", validationToast)}
-          placeholderLabel="자동 감지"
           placeholderValue="none"
         />
       )}
@@ -285,8 +286,10 @@ const cpuTypeOptions = {
     { value: "IBM z13s, z13", label: "IBM z13s, z13" },
     { value: "IBM z14", label: "IBM z14" },
   ],
+
+  // TODO CPU유형 자동감지 값이 none선택하세요 중복
   undefined: [
-    { value: "none", label: "자동 감지" },
+    // { value: "none", label: "자동 감지" },
     { value: "Intel Nehalem Family", label: "Intel Nehalem Family" },
     { value: "Secure Intel Nehalem Family", label: "Secure Intel Nehalem Family" },
     { value: "Intel Westmere Family", label: "Intel Westmere Family" },
