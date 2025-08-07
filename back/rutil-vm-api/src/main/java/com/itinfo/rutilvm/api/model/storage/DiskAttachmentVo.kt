@@ -47,7 +47,7 @@ class DiskAttachmentVo(
 	val passDiscard: Boolean = false,
 	val interface_: DiskInterfaceB = DiskInterfaceB.virtio_scsi,
 	val logicalName: String = "",
-	val detachOnly: Boolean = false,
+	val detachOnly: Boolean? = null,
 	val diskImageVo: DiskImageVo = DiskImageVo(),
 	val vmVo: IdentifiedVo = IdentifiedVo(),
 ): Serializable {
@@ -63,7 +63,7 @@ class DiskAttachmentVo(
 		private var bPassDiscard: Boolean = false;fun passDiscard(block: () -> Boolean?) { bPassDiscard = block() ?: false }
 		private var bInterface_: DiskInterfaceB = DiskInterfaceB.virtio_scsi;fun interface_(block: () -> DiskInterfaceB?) { bInterface_ = (block() ?: DiskInterfaceB.virtio_scsi) }
 		private var bLogicalName: String = "";fun logicalName(block: () -> String?) { bLogicalName = block() ?: "" }
-		private var bDetachOnly: Boolean = false;fun detachOnly(block: () -> Boolean?) { bDetachOnly = block() ?: false }
+		private var bDetachOnly: Boolean? = null;fun detachOnly(block: () -> Boolean?) { bDetachOnly = block() }
 		private var bDiskImageVo: DiskImageVo = DiskImageVo();fun diskImageVo(block: () -> DiskImageVo?) { bDiskImageVo = block() ?: DiskImageVo() }
 		private var bVmVo: IdentifiedVo = IdentifiedVo();fun vmVo(block: () -> IdentifiedVo?) { bVmVo = block() ?: IdentifiedVo() }
 
@@ -142,7 +142,6 @@ fun List<DiskAttachmentVo>.toAddSnapshotDisks(): List<DiskAttachment> =
  * DiskAttachmentBuilder
  */
 fun DiskAttachmentVo.toDiskAttachmentBuilder(): DiskAttachmentBuilder {
-	log.info("disk:{}", this@toDiskAttachmentBuilder)
 	return DiskAttachmentBuilder()
 		.active(this.active)
 		.bootable(this.bootable)

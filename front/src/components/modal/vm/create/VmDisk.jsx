@@ -6,6 +6,8 @@ import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
 import VmDiskModal           from "@/components/modal/vm/VmDiskModal";
 import VmDiskConnectionModal from "@/components/modal/vm/VmDiskConnectionModal";
+import LabelCheckbox         from "@/components/label/LabelCheckbox";
+import { useValidationToast } from "@/hooks/useSimpleToast";
 
 const VmDisk = ({
   vm, vmName,
@@ -13,6 +15,8 @@ const VmDisk = ({
   diskListState, setDiskListState,
   disabled = false,
 }) => {
+  const { validationToast } = useValidationToast();
+
   const [createOpen, setCreateOpen] = useState(null);
   const [updateOpen, setUpdateOpen] = useState(null);
   const [connOpen, setConnOpen] = useState(false);
@@ -39,11 +43,16 @@ const VmDisk = ({
     return `${vmName}_Disk${nextIndex}`;
   };
 
+  // 디스크 생성
   const handleCreateDisk = useCallback((newDisk) => {
-    setDiskListState(prev => [...prev, { ...newDisk, isCreated: true }]);
+    setDiskListState(prev => [...prev, { 
+      ...newDisk, 
+      isCreated: true
+    }]);
     setCreateOpen(false);
   }, [setDiskListState]);
 
+  // 디스크 연결
   const handleConnDisk = useCallback((connDisks) => {
     const normalized = Array.isArray(connDisks) ? connDisks.flat() : [connDisks];
     const connectedIds = normalized.map(d => d.diskImageVo?.id || d.id);
@@ -63,16 +72,27 @@ const VmDisk = ({
     setConnOpen(false);
   }, [setDiskListState]);
 
+
   const handleUpdateDisk = useCallback(() => 
     setUpdateOpen(false)
   , []);
 
+
   const handleRemoveDisk = useCallback((index, isExisting) => {
     if (isExisting) {
       setDiskListState(prev =>
-        prev.map((disk, i) =>
-          i === index ? { ...disk, deleted: !disk.deleted } : disk
-        )
+        prev.map((disk, i) => {
+          if (i !== index) return disk;
+          if (disk.deleted) {  // 이미 삭제상태였다면(삭제취소), 복구하면서 detachOnly 제거
+            // 삭제 취소 (복구)
+            import.meta.env.DEV && validationToast?.debug(`삭제취소`)
+            const { detachOnly, ...rest } = disk;
+            return { ...rest, deleted: false };
+          }
+          // 삭제로 변경(처음 클릭)
+          import.meta.env.DEV && validationToast?.debug(`디스크 삭제`)
+          return { ...disk, deleted: true, detachOnly: true };
+        })
       );
     } else {
       setDiskListState(prev =>
@@ -81,11 +101,14 @@ const VmDisk = ({
     }
   }, [setDiskListState]);
 
+
   const getDiskLabel = (disk) => {
     const type = disk.isExisting ? "기존" : disk.isCreated ? "생성" : "연결";
     const boot = disk.bootable ? " & 부팅" : "";
     return `[${type}${boot}]`;
   };
+
+  // console.log("$ disk", diskListState)
 
   return (
     <>
@@ -108,13 +131,15 @@ const VmDisk = ({
           return (
             <div key={index} className="disk-item f-btw mb-0.5 mb-3">
               <div className="f-start">
-                <span >
+                <span>
                   {disk.deleted ? (
                     <del style={{ textDecorationColor: 'red' }}>
-                      <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) <strong style={{ color: 'red' }}>[삭제]</strong>
+                      <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB) 
+                      {/* <strong style={{ color: 'red' }}>{disk.detachOnly===true ? `[${Localization.kr.REMOVE}]` : `[완전 ${Localization.kr.REMOVE}]`}</strong> */}
                     </del>
                   ) : (
                     <>
+                    {/* 기존 디스크 목록 불러오기 */}
                       <strong>{label}</strong>&nbsp;{disk.alias}&nbsp;({size} GB)
                     </>
                   )}
@@ -123,27 +148,22 @@ const VmDisk = ({
               <div className="f-end">
                 {disk.deleted ? (
                   <>
-                    {/* <div>
-                      <LabelCheckbox id={`detachOnly-${index}`}
-                        label="완전삭제"
-                        checked={disk.detachOnly || false}
-                        onChange={(e) => {
+                    <div>
+                      <LabelCheckbox id={`detachOnly-${index}`} label="완전 삭제&nbsp;&nbsp;&nbsp;"
+                        checked={disk.detachOnly===false} // true면 단순 삭제, false면 완전삭제
+                        onChange={(checked) => {
+                          import.meta.env.DEV && validationToast?.debug(`checked: ${checked}`)
                           setDiskListState(prev =>
                             prev.map((d, i) =>
-                              i === index ? { ...d, detachOnly: checked } : d
+                              i === index ? { ...d, detachOnly: !checked } : d
                             )
                           );
                         }}
                       />
-                    </div> */}
-                    {/* <div>완전 삭제</div> */}
-
-                    <button className="instance-disk-btn ml-0" onClick={() => handleRemoveDisk(index, disk.isExisting)}>삭제 취소</button>  
-                    {/* <RVI36 className="btn-icon"
-                      iconDef={rvi24Close}
-                      currentColor="transparent"
-                      onClick={() => handleRemoveDisk(index, disk.isExisting)}
-                    /> */}
+                    </div>
+                    <button onClick={() => handleRemoveDisk(index, disk.isExisting)} className="instance-disk-btn ml-0" >
+                      {Localization.kr.REMOVE} {Localization.kr.CANCEL}
+                    </button>  
                   </>
                 ) : (
                   <>
@@ -160,15 +180,11 @@ const VmDisk = ({
                         }}
                       />
                     )} */}
-                    {/* {vm?.status !== "up" && */}
-                      <>
-                        <RVI36 className="btn-icon cursor-pointer"
-                          iconDef={rvi36TrashHover}                      
-                          currentColor="transparent"
-                          onClick={() => handleRemoveDisk(index, disk.isExisting)}
-                        />
-                      </>
-                    {/* }                     */}
+                    <RVI36 className="btn-icon cursor-pointer"
+                      iconDef={rvi36TrashHover}                      
+                      currentColor="transparent"
+                      onClick={() => handleRemoveDisk(index, disk.isExisting)}
+                    />
                   </>
                 )}
               </div>

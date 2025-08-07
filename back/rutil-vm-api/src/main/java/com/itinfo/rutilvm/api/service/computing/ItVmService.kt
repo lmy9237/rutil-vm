@@ -364,12 +364,19 @@ class VmServiceImpl(
 	private fun manageVmDisks(vmId: String, diskAttachmentVos: List<DiskAttachmentVo>) {
 		val vmDiskList: List<DiskAttachment> = conn.findAllDiskAttachmentsFromVm(vmId).getOrDefault(emptyList())
 		val existDisksMap = vmDiskList.associateBy { it.disk().id() }
-		val inputDiskAttachVoMap = diskAttachmentVos.associateBy { it.id }
+		// val inputDiskAttachVoMap = diskAttachmentVos.associateBy { it.id }
+
 
 		// 삭제 대상: 서버에는 있지만 사용자 입력에는 없는 디스크 (id 기준)
-		val disksToDelete = vmDiskList.filter { !inputDiskAttachVoMap.containsKey(it.id()) }
+		// val disksToDelete = vmDiskList.filter { !inputDiskAttachVoMap.containsKey(it.id()) }
+		val disksToDel: List<DiskAttachmentVo> = diskAttachmentVos.filter { it.detachOnly != null }
+		val delDiskId = disksToDel.map { it.id }.toSet()
+
 		val disksToUpdate: List<DiskAttachmentVo> = diskAttachmentVos
-			.filter { it.diskImageVo.id.isNotEmpty() && existDisksMap.containsKey(it.diskImageVo.id) }
+			.filter { it.diskImageVo.id.isNotEmpty() &&
+				existDisksMap.containsKey(it.diskImageVo.id) &&
+				!delDiskId.contains(it.id)
+			}
 			.filter {
 				val exist = existDisksMap[it.diskImageVo.id]!!
 				it.diskImageVo.appendSize > BigInteger.ZERO ||
@@ -384,13 +391,19 @@ class VmServiceImpl(
 		val disksToAdd: List<DiskAttachmentVo> = diskAttachmentVos
 			.filter { it.diskImageVo.id.isNullOrEmpty() || !existDisksMap.containsKey(it.diskImageVo.id) }
 
-		log.info("manageVmDisks: {} to add, {} to update, {} to remove.", disksToAdd.size, disksToUpdate.size, disksToDelete.size)
+		log.info("manageVmDisks: add:{}, update:{}, remove: {}.", disksToAdd.size, disksToUpdate.size, disksToDel.size)
+		// log.info("manageVmDisks: {} to add, {} to update, {} to remove.", disksToAdd.size, disksToUpdate.size, disksToDelete.size)
 
 		// 삭제
-		disksToDelete.forEach { attach ->
-			val detachOnly = inputDiskAttachVoMap[attach.id()]?.detachOnly ?: true // 기본값 단순 삭제 (false가 완전삭제)
-			log.info("disksToDelete: id={}, detachOnly={}", attach.id(), detachOnly)
-			conn.removeDiskAttachmentToVm(vmId, attach.id(), detachOnly)
+		// disksToDelete.forEach { attach ->
+		// 	val detachOnly = inputDiskAttachVoMap[attach.id()]?.detachOnly ?: true // 기본값 단순 삭제 (false가 완전삭제)
+		// 	log.info("disksToDelete: id={}, detachOnly={}", attach.id(), detachOnly)
+		// 	conn.removeDiskAttachmentToVm(vmId, attach.id(), detachOnly)
+		// }
+
+		disksToDel.forEach { disk ->
+			log.info("disksToDel: id={}, detachOnly={}", disk.id, disk.detachOnly)
+			disk.detachOnly?.let { conn.removeDiskAttachmentToVm(vmId, disk.id, it) }
 		}
 
 		// 생성

@@ -146,11 +146,11 @@ const VmModal = ({
   const [formSystemState, setFormSystemState] = useState(systemForm);
   const [formCloudState, setFormCloudState] = useState(cloudForm);
   const [formConsoleState, setFormConsoleState] = useState(consoleForm);
-  const [formHostState, setFormHostState] = useState({
-    ...hostForm,
-  });
+  const [formHostState, setFormHostState] = useState({ ...hostForm });
   const [formHaState, setFormHaState] = useState(haForm);
   const [formBootState, setFormBootState] = useState(bootForm);
+  
+  const [fetchIsosOnce, setFetchIsosOnce] = useState(false);
 
   const [architecture, setArchitecture] = useState("");
   const [dataCenterVo, setDataCenterVo] = useState(emptyIdNameVo());
@@ -158,7 +158,6 @@ const VmModal = ({
   const [templateVo, setTemplateVo] = useState(emptyIdNameVo());
   const [diskListState, setDiskListState] = useState([]);
   const [nicListState, setNicListState] = useState([ defaultNic ]);
-  const [fetchIsosOnce, setFetchIsosOnce] = useState(false);
   
   const { mutate: addVM } = useAddVm(
     (result) => {
@@ -480,7 +479,7 @@ const VmModal = ({
         bootable: d?.bootable || false,
         storageDomainVo: { id: d?.diskImageVo?.storageDomainVo?.id || "" },
         diskProfileVo: { id: d?.diskImageVo?.diskProfileVo?.id || "" },
-        isExisting: true,
+        isExisting: true, // 있는 디스크 목록 불러오는거니까 존재
       })));
     }
   }, [editMode, diskAttachments]);
@@ -575,8 +574,9 @@ const VmModal = ({
       })),
 
     // 디스크 데이터 (객체 형태 배열로 변환)
+    // detachonly가 있다면 삭제디스크로 가야하나
     diskAttachmentVos: diskListState
-      .filter((disk) => !disk.deleted)
+      // .filter((disk) => !disk.deleted)
       .map((disk) => ({
         id: disk?.id || "",
         active: true,
@@ -584,10 +584,11 @@ const VmModal = ({
         readOnly: disk?.readOnly,
         passDiscard: false,
         interface_: disk?.interface_,
+        detachOnly: disk?.detachOnly,
         diskImageVo: {
           id: disk?.id || "", // 기존 디스크 ID (새 디스크일 경우 빈 문자열)
           size: disk?.size * 1024 * 1024 * 1024 || 0, // GB → Bytes 변환
-          // appendSize: 0, // 임시
+          // appendSize: disk?.appendSize, // 임시
           alias: disk?.alias,
           description: disk?.description || "",
           storageDomainVo: { id: disk?.storageDomainVo?.id || "" },
@@ -597,7 +598,7 @@ const VmModal = ({
           sharable: disk?.sharable || false,
           backup: disk?.backup || false,
         },
-      })),    
+      })),
   };
 
   Logger.debug(`VmModal ... formHaState.storageDomainVo: `, formHaState.storageDomainVo);
