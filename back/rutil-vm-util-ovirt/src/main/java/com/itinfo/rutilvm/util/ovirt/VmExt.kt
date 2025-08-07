@@ -195,21 +195,14 @@ fun Connection.detachVm(vmId: String): Result<Boolean> = runCatching {
 	throw if (it is Error) it.toItCloudException(Term.VM, "분리", vmId) else it
 }
 
-fun Connection.addVm(vm: Vm, cdromFileId: String?=""): Result<Vm?> = runCatching {
+// fun Connection.addVm(vm: Vm, cdromFileId: String?=""): Result<Vm?> = runCatching {
+fun Connection.addVm(vm: Vm): Result<Vm?> = runCatching {
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
 
-	val vmAdded: Vm =
-		this.srvVms().add().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
-
-	if (!cdromFileId.isNullOrEmpty()){
-		this.srvVmCdromsFromVm(vmAdded.id())
-			.add()
-			.cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
-			.send()
-			.cdrom()
-	}
+	val vmAdded: Vm = this.srvVms().add().vm(vm).send().vm()
+		?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
 	vmAdded
 }.onSuccess {
@@ -223,8 +216,9 @@ fun Connection.updateVm(vm: Vm, cdromFileId: String?=""): Result<Vm?> = runCatch
 	if (this.findAllVms().getOrDefault(listOf()).nameDuplicateVm(vm.name(), vm.id())) {
 		throw ErrorPattern.VM_DUPLICATE.toError()
 	}
-	val vmUpdated: Vm =
-		this.srvVm(vm.id()).update().vm(vm).send().vm() ?: throw ErrorPattern.VM_NOT_FOUND.toError()
+
+	val vmUpdated: Vm = this.srvVm(vm.id()).update().vm(vm).send().vm()
+		?: throw ErrorPattern.VM_NOT_FOUND.toError()
 
 
 	if (!cdromFileId.isNullOrEmpty()){
@@ -382,6 +376,7 @@ fun Connection.findAllCdromsFromVm(vmId: String?=""): Result<List<Cdrom>> = runC
 private fun Connection.srvVmCdromFromVm(vmId: String?=""): VmCdromService =
 	this.srvVmCdromsFromVm(vmId).cdromService(DEFAULT_ID_CDROM)
 
+
 fun Connection.findCdromFromVm(
 	vmId: String?="",
 	current: Boolean?=false
@@ -402,11 +397,9 @@ fun Connection.findCdromFromVm(
 fun Connection.addCdromFromVm(vmId: String?="", cdromFileId: String?=""): Result<Cdrom?> = runCatching {
 	checkVmExists(vmId)
 	this.srvVmCdromsFromVm(vmId).add().apply {
-		cdrom(
-			CdromBuilder()
-				.file(FileBuilder().id(cdromFileId))
-		)
+		cdrom(CdromBuilder().file(FileBuilder().id(cdromFileId)))
 	}.send().cdrom()
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "생성", vmId)
 }.onFailure {
@@ -434,6 +427,7 @@ fun Connection.removeCdromFromVm(vmId: String?="", current:Boolean?=false): Resu
 		cdrom(CdromBuilder().file(FileBuilder().id("").build()).build())    // null로 할당
 		current(current)
 	}.send().cdrom()
+
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.CD_ROM, "삭제", vmId)
@@ -483,7 +477,6 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 		 * 진행하여, 새로 추가되는 개념으로 가지 않음. 왜 그러는지 확인 필요
 		 **/
 		throw ErrorPattern.NIC_DUPLICATE.toError()
-		// return FailureType.DUPLICATE.toResult(Term.NIC.desc)
 	}
 
 	if (nic.macPresent() &&
@@ -492,7 +485,6 @@ fun Connection.addNicFromVm(vmId: String, nic: Nic): Result<Nic?> = runCatching 
 	) {
 		if (existingNics.any { it.mac().address() == nic.mac().address() })
 			return FailureType.DUPLICATE.toResult("mac 주소")
-		// TODO
 	}
 
 	srvNicsFromVm(vmId).add().nic(nic).send().nic()
@@ -619,13 +611,11 @@ fun Connection.removeNicFromVm(vmId: String, nicId: String): Result<Boolean> = r
 	val nic = this@removeNicFromVm.findNicFromVm(vmId, nicId)
 		.getOrNull() ?: throw ErrorPattern.NIC_NOT_FOUND.toError()
 
-	if (vm?.status() != VmStatus.DOWN && nic.linked())
-		throw ErrorPattern.NIC_UNLINKED_REQUIRED.toError()
+	// if (vm?.status() != VmStatus.DOWN && nic.linked())
+	// 	throw ErrorPattern.NIC_UNLINKED_REQUIRED.toError()
 
-	srvNicFromVm(vmId, nic.id())
-		.remove()
-		.async(true)
-		.send()
+	srvNicFromVm(vmId, nic.id()).remove().async(true).send()
+
 	true
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.NIC, "제거", vmId)
@@ -811,16 +801,13 @@ fun Connection.removeDiskAttachmentToVm(
 	detachOnly: Boolean
 ): Result<Boolean> = runCatching {
 	checkVmExists(vmId)
-
 	val dah: DiskAttachment = this.findDiskAttachmentFromVm(vmId, diskAttachmentId)
 		.getOrNull() ?: throw ErrorPattern.DISK_ATTACHMENT_ID_NOT_FOUND.toError()
 
-	// if(dah.active()){
-	// 	throw ErrorPattern.DISK_ATTACHMENT_ACTIVE_INVALID.toError()
-	// }
 	// DiskAttachment 삭제 요청 및 결과 확인
 	this.srvDiskAttachmentFromVm(vmId, diskAttachmentId).remove().detachOnly(detachOnly).send()
 	true
+
 }.onSuccess {
 	Term.VM.logSuccessWithin(Term.DISK_ATTACHMENT, "삭제", vmId)
 }.onFailure {

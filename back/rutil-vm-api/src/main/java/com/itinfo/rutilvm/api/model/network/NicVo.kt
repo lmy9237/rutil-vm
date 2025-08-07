@@ -378,6 +378,14 @@ fun NicVo.toAddVmNic(): Nic {
 		.vnicProfile(VnicProfileBuilder().id(vnicProfileVo.id).build())
 		.build()
 }
+// 가상머신 편집할때 nic
+fun NicVo.toEditVmNic(): Nic {
+	return NicBuilder()
+		.id(id)
+		.name(name)
+		.vnicProfile(VnicProfileBuilder().id(vnicProfileVo.id).build())
+		.build()
+}
 // endregion
 
 
