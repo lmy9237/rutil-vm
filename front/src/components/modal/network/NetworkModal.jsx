@@ -20,7 +20,7 @@ import {
   useClustersFromDataCenter,
   useAddNetwork,
   useEditNetwork,
-  useNetwork,
+  useNetwork4Edit,
 } from "@/api/RQHook";
 import {
   checkName,
@@ -67,7 +67,12 @@ const NetworkModal = ({
   const [dnsServers, setDnsServers] = useState([]);
   const [isDnsHiddenBoxVisible, setDnsHiddenBoxVisible] = useState(false);
 
-  const { data: network } = useNetwork(networkId);
+  const { 
+    data: network,
+    isLoading: isNetworkLoading,
+    isSuccess: isNetworkSuccess,
+    isError: isNetworkError,
+  } = useNetwork4Edit(networkId);
   const { mutate: addNetwork } = useAddNetwork(onClose, onClose);
   const { mutate: editNetwork } = useEditNetwork(onClose, onClose);
 
@@ -183,8 +188,8 @@ const NetworkModal = ({
       isReady={
         editMode
           //    ? isDataCentersSuccess && isClustersSuccess
-          ? isDataCentersSuccess
-          : (!isDataCentersLoading && !isClustersLoading && isDataCentersSuccess && isClustersSuccess)
+          ? isDataCentersSuccess && isNetworkSuccess
+          : !isDataCentersLoading && !isClustersLoading && isDataCentersSuccess && isClustersSuccess
       }
       onSubmit={handleFormSubmit}
       contentStyle={{ width: "770px"}}
@@ -309,9 +314,13 @@ const NetworkModal = ({
                 setDnsServers((prev) => [...prev, ""])
               }}
               onRemove={(index) => {
-                const updated = [...dnsServers];
+                let updated = [...dnsServers];
                 updated.splice(index, 1);
-                validationToast.debug(`dnsServer: ${JSON.stringify(dnsServers, 0, 2)}`)
+                updated = updated.map((e, i) => ({
+                  ...e,
+                  position: i, // 지워진 후 position값 정리
+                }))
+                validationToast.debug(`dnsServer: ${JSON.stringify(updated, 0, 2)}`)
                 setDnsServers(updated);
               }}
             />

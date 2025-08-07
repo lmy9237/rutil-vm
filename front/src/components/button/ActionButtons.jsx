@@ -1,5 +1,6 @@
 import { RVI16 } from "@/components/icons/RutilVmIcons";
 import "./ActionButtons.css"
+import { icons } from "lucide-react";
 
 export const ActionButtons = ({
   actionType="default",
@@ -16,6 +17,7 @@ export const ActionButtons = ({
       {actions.map(({
         type, 
         label, 
+        iconPrefix, iconSuffix,
         disabled, 
         onClick,
         subactions = [],
@@ -24,6 +26,8 @@ export const ActionButtons = ({
           actionType={actionType}
           disabled={disabled}
           label={label}
+          iconPrefix={iconPrefix}
+          iconSuffix={iconSuffix}
           onClick={onClick}
         />
       </>))}
@@ -34,14 +38,16 @@ export const ActionButtons = ({
 
 export const ActionButton = ({ 
   actionType = "default",
-  label = "", iconDef, ...props 
+  label = "",
+  iconPrefix, iconSuffix, ...props 
 }) => {
   return (
     <button className={actionType === "context" ? "btn-right-click" : "btn-action"}
       {...props}
     >
+      {iconPrefix && <RVI16 iconDef={iconPrefix} />}
       {label}
-      {iconDef && <RVI16 iconDef={iconDef} />}
+      {iconSuffix && <RVI16 iconDef={iconSuffix} />}
     </button>
  );
 }

@@ -48,7 +48,7 @@ const DiskDomains = ({
   const transformedData = useMemo(() => 
     [...domains].map((domain) => ({
       ...domain,
-      status: domain?.status?.toUpperCase() === 'ACTIVE'.toUpperCase() ? '활성화' : '비활성화',
+      _status: domain?.statusKr || (domain?.status?.toLowerCase() === "active".toLowerCase() ? '활성화' : '비활성화'),
       icon: status2Icon(domain.status),
       storageDomain: (
         <TableRowClick type="domain" id={domain?.id}>
@@ -61,8 +61,8 @@ const DiskDomains = ({
           : domain?.storageDomainType === "data"
             ? `데이터`
             : domain?.storageDomainType === "import_export"
-              ?  `내보내기`
-              :`${domain?.storageDomainType}`,
+              ? `내보내기`
+              : `${domain?.storageDomainType}`,
       diskSize: sizeCheck(domain?.diskSize || 0),
       availableSize: sizeCheck(domain?.availableSize || 0),
       usedSize: sizeCheck(domain?.usedSize || 0),

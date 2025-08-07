@@ -77,6 +77,7 @@ class DiskImageVo(
 	val sparse: Boolean = false,
 	val wipeAfterDelete: Boolean = false,
 	val sharable: Boolean = false,
+	val bootable: Boolean = false,
 	val backup: Boolean = false,
 	val format: VolumeFormat = VolumeFormat.raw,
 	val imageId: String = "",
@@ -151,6 +152,7 @@ class DiskImageVo(
 		private var bSparse: Boolean = false;fun sparse(block: () -> Boolean?) { bSparse = block() ?: false }
 		private var bWipeAfterDelete: Boolean = false;fun wipeAfterDelete(block: () -> Boolean?) { bWipeAfterDelete = block() ?: false }
 		private var bSharable: Boolean = false;fun sharable(block: () -> Boolean?) { bSharable = block() ?: false }
+		private var bBootable: Boolean = false;fun bootable(block: () -> Boolean?) { bBootable = block() ?: false }
 		private var bBackup: Boolean = false;fun backup(block: () -> Boolean?) { bBackup = block() ?: false }
 		private var bFormat: VolumeFormat = VolumeFormat.raw;fun format(block: () -> VolumeFormat?) { bFormat = block() ?: VolumeFormat.raw }
 		private var bImageId: String = "";fun imageId(block: () -> String?) { bImageId = block() ?: "" }
@@ -172,7 +174,7 @@ class DiskImageVo(
 		private var bDataCenterVo: IdentifiedVo = IdentifiedVo();fun dataCenterVo(block: () -> IdentifiedVo?) { bDataCenterVo = block() ?: IdentifiedVo() }
 		// private var bDiskProfileVos: List<IdentifiedVo> = listOf();fun diskProfileVos(block: () -> List<IdentifiedVo>?) { bDiskProfileVos = block() ?: listOf() }
 
-        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bEntityType, bImageTransferPhase, bImageTransferType, bImageTransferBytesSent, bImageTransferBytesTotal, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo)
+        fun build(): DiskImageVo = DiskImageVo(bId, bSize, bAppendSize, bAlias, bDescription, bSparse, bWipeAfterDelete, bSharable, bBootable,bBackup, bFormat, bImageId, bVirtualSize, bActualSize, bStatus, bContentType, bStorageType, bDateCreated, bEntityType, bImageTransferPhase, bImageTransferType, bImageTransferBytesSent, bImageTransferBytesTotal, bConnectVm, bConnectTemplate, bDiskProfileVo, bStorageDomainVo, bDataCenterVo)
 	}
 	companion  object {
 		private val log by LoggerDelegate()
@@ -187,61 +189,6 @@ fun Disk.toDiskIdName(): DiskImageVo = DiskImageVo.builder {
 }
 fun List<Disk>.toDiskIdNames(): List<DiskImageVo> =
 	this@toDiskIdNames.map { it.toDiskIdName() }
-
-/*
-fun AllDiskEntity.toDiskEntity(): DiskImageVo {
-	val entity = this@toDiskEntity
-	return DiskImageVo.builder {
-		id { entity.diskId.toString() }
-		alias { entity.diskAlias }
-		sharable { entity.shareable }
-		virtualSize { entity.size }
-		actualSize { entity.actualSize }
-		status { DiskStatus.forValue(entity.imagestatus) }
-		storageType { DiskStorageType.forValue(entity.diskStorageType) }
-		sparse { entity.volumeType == 2 }
-		description { entity.description }
-		dateCreated { entity.creationDate }
-		dataCenterVo {
-			IdentifiedVo.builder {
-				id { entity.storagePoolId.toString() }
-			}
-		}
-		diskProfileVo {
-			IdentifiedVo.builder {
-				id { entity.diskProfileId }
-				name { entity.diskProfileName }
-			}
-		}
-		storageDomainVo {
-			IdentifiedVo.builder {
-				id { entity.storageId }
-				name { entity.storageName }
-			}
-		}
-		type { entity.entityType }
-		connectVm {
-			if(entity.entityType == "VM") {
-				IdentifiedVo.builder {
-					name { entity.vmNames }
-				}
-			}
-			else null
-		}
-		connectTemplate {
-			if(entity.entityType == "TEMPLATE") {
-				IdentifiedVo.builder {
-					name { entity.vmNames }
-				}
-			}
-			else null
-		}
-	}
-}
-fun List<AllDiskEntity>.toDiskEntities(): List<DiskImageVo> =
-	this@toDiskEntities.map { it.toDiskEntity() }
-*/
-
 
 /**
  * [Disk.toDiskMenu]
@@ -269,6 +216,7 @@ fun Disk.toDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		dataCenterVo { dataCenter?.fromDataCenterToIdentifiedVo() }
 		virtualSize { disk.provisionedSize() }
@@ -302,6 +250,7 @@ fun Disk.toDcDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		storageDomainVo { storageDomain?.toIdentifiedVoFromStorageDomain() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
@@ -335,6 +284,7 @@ fun Disk.toDomainDiskMenu(conn: Connection): DiskImageVo {
 		id { disk.id() }
 		alias { disk.alias() }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		storageDomainVo { disk.storageDomain().toIdentifiedVoFromStorageDomain() }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.actualSize() }
@@ -382,6 +332,7 @@ fun Disk.toDiskInfo(conn: Connection): DiskImageVo {
 		actualSize { disk.totalSize() }
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		connectVm { vmConn?.toIdentifiedVoFromVm() } // 연결된 가상머신
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
@@ -406,6 +357,7 @@ fun Disk.toVmDisk(conn: Connection): DiskImageVo {
 		sparse { disk.sparse() } // 할당정책
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { disk.provisionedSize() }
 		actualSize { disk.totalSize() }
@@ -443,6 +395,7 @@ fun Disk.toDiskImageVo(conn: Connection): DiskImageVo {
 		diskProfileVo { diskProfile?.toIdentifiedVoFromDiskProfile() }
 		wipeAfterDelete { this@toDiskImageVo.wipeAfterDelete() }
 		sharable { this@toDiskImageVo.shareable() }
+		bootable { this@toDiskImageVo.bootablePresent() && this@toDiskImageVo.bootable() }
 		backup { this@toDiskImageVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskImageVo.provisionedSize() }
 		actualSize { this@toDiskImageVo.actualSize() }
@@ -478,6 +431,7 @@ fun Disk.toDiskVo(conn: Connection, vmId: String): DiskImageVo {
 		diskProfileVo { diskProfile?.toIdentifiedVoFromDiskProfile() }
 		wipeAfterDelete { this@toDiskVo.wipeAfterDelete() }
 		sharable { this@toDiskVo.shareable() }
+		bootable { this@toDiskVo.bootablePresent() && this@toDiskVo.bootable() }
 		backup { this@toDiskVo.backup() == DiskBackup.INCREMENTAL }
 		virtualSize { this@toDiskVo.provisionedSize() }
 		actualSize { this@toDiskVo.actualSize() }
@@ -518,6 +472,7 @@ fun Disk.toTemplateDiskInfo(conn: Connection): DiskImageVo {
 		wipeAfterDelete { disk.wipeAfterDelete() }
 		storageType { DiskStorageType.forCode(disk.storageType().toString()) }
 		sharable { disk.shareable() }
+		bootable { disk.bootablePresent() && disk.bootable() }
 		backup { disk.backup() == DiskBackup.INCREMENTAL }
 		connectVm { vmConn?.toIdentifiedVoFromVm() } // 연결된 가상머신
 		connectTemplate { tmp?.fromTemplateToIdentifiedVo() }
@@ -531,6 +486,7 @@ fun Disk.toUnregisterdDisk(disk: UnregisteredDiskEntity?=null): DiskImageVo {
         id { this@toUnregisterdDisk.id() }
         alias { this@toUnregisterdDisk.alias() }
         sharable { this@toUnregisterdDisk.shareable() }
+		bootable { this@toUnregisterdDisk.bootablePresent() && this@toUnregisterdDisk.bootable() }
         virtualSize { this@toUnregisterdDisk.provisionedSize() }
         actualSize { this@toUnregisterdDisk.actualSize() }
         sparse { this@toUnregisterdDisk.sparse() }

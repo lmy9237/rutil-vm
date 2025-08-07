@@ -33,10 +33,10 @@ fun Connection.findAllDisks(searchQuery: String = ""): Result<List<Disk>> = runC
 	throw if (it is Error) it.toItCloudException(Term.DISK, "목록조회") else it
 }
 
-fun Connection.srvDisk(diskId: String): DiskService =
+fun Connection.srvDisk(diskId: String?=""): DiskService =
 	srvAllDisks().diskService(diskId)
 
-fun Connection.findDisk(diskId: String, follow: String = ""): Result<Disk?> = runCatching {
+fun Connection.findDisk(diskId: String?="", follow: String = ""): Result<Disk?> = runCatching {
 	this.srvDisk(diskId).get().allContent(true).apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().disk()

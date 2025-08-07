@@ -48,7 +48,7 @@ const ENDPOINTS = {
   
   ADD_DATA_CENTER: () =>                                                   `${ENDPOINT_API_V1}/computing/datacenters`,
   EDIT_DATA_CENTER: (dataCenterId) =>                                      `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
-  DELETE_DATA_CENTER: (dataCenterId) =>                                    `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
+  REMOVE_DATA_CENTER: (dataCenterId) =>                                    `${ENDPOINT_API_V1}/computing/datacenters/${dataCenterId}`, 
   //#endregion: DataCenter
   
   // region: Cluster
@@ -69,7 +69,7 @@ const ENDPOINTS = {
     
   ADD_CLUSTER: () =>                                                       `${ENDPOINT_API_V1}/computing/clusters`,
   EDIT_CLUSTER: (clusterId) =>                                             `${ENDPOINT_API_V1}/computing/clusters/${clusterId}`, 
-  DELETE_CLUSTER: (clusterId) =>                                           `${ENDPOINT_API_V1}/computing/clusters/${clusterId}`, 
+  REMOVE_CLUSTER: (clusterId) =>                                           `${ENDPOINT_API_V1}/computing/clusters/${clusterId}`, 
   // endregion: Cluster
 
   // region: Cluster Level

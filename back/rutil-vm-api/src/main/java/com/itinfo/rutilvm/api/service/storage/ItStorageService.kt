@@ -4,6 +4,8 @@ import com.itinfo.rutilvm.common.LoggerDelegate
 import com.itinfo.rutilvm.api.error.toException
 import com.itinfo.rutilvm.api.model.computing.*
 import com.itinfo.rutilvm.api.model.storage.*
+import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.DetailedDiskSnapshot
 import com.itinfo.rutilvm.api.repository.engine.DiskVmElementRepository
@@ -337,8 +339,11 @@ class StorageServiceImpl(
 		// val res: List<Disk> = conn.findAllDisksFromStorageDomain(storageDomainId)
 		// 	.getOrDefault(emptyList())
 		// return res.toDomainDiskMenus(conn)
-		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(storageDomainId)
-		return res?.toDiskImageVosFromAllDiskEntities()
+		val res: List<AllDiskEntity> = rAllDisks.findAllByStorageDomainIdOrderByDiskAliasAsc(storageDomainId)
+		return res.toDiskImageVosFromAllDiskEntities().filter {
+			(it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso) &&
+			(it.storageType == DiskStorageType.image || it.storageType == DiskStorageType.cinder)
+		}
 	}
 
 	@Autowired private lateinit var rImage: ImageRepository

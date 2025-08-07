@@ -2,8 +2,8 @@ import React from "react";
 import DynamicButton                    from "@/components/label/DynamicButton";
 import LabelSelectOptions               from "@/components/label/LabelSelectOptions";
 import Localization                     from "@/utils/Localization";
-import "./DynamicInputList.css";
 import { nicLinked2Icon, nicPlugged2Icon } from "../icons/RutilVmIcons";
+import "./DynamicInputList.css";
 
 /**
  * @name DynamicInputList
@@ -12,6 +12,7 @@ import { nicLinked2Icon, nicPlugged2Icon } from "../icons/RutilVmIcons";
 const DynamicInputList = ({
   type="nic",
   values=[],
+  disabled,
   onChange=()=>{}, onAdd=()=>{}, onRemove=()=>{},
   options = [],
   showLabel = true,
@@ -43,7 +44,7 @@ const DynamicInputList = ({
                 <LabelSelectOptions id={`dynamic-select-${index}`}
                   value={item.vnicProfileVo?.id || ""}
                   onChange={(e) => onChange(index, e.target.value)}
-                  disabled={showNicIcon}
+                  disabled={disabled}
                   options={options.map(opt => ({
                     value: opt.id,
                     label: `${opt.name} [${Localization.kr.NETWORK}: ${opt.networkVo?.name || ""}]`
@@ -58,13 +59,13 @@ const DynamicInputList = ({
               )}
 
               <div className="dynamic-btns f-end">
-                {isLastItem && !showNicIcon && (
+                {isLastItem && !disabled && (
                   <DynamicButton type="add"
                     onClick={onAdd}
                     disabled={inputType === "select" && !isProfileSelected}
                   />
                 )}
-                {values.length > 1 && !showNicIcon && (
+                {values.length > 1 && !disabled && (
                   <DynamicButton type="remove"
                     onClick={() => onRemove(index)}
                     disabled={inputType === "select" && !isProfileSelected}

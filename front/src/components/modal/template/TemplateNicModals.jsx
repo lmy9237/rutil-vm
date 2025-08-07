@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteNetworkFromTemplate, useDeleteNetworkInterface } from "../../../api/RQHook";
+import { useDeleteNetworkFromTemplate, useRemoveNicFromVm } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import TemplateNicModal from "./TemplateNicModal";
 

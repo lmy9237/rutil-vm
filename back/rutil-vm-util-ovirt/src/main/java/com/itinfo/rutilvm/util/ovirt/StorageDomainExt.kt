@@ -31,10 +31,13 @@ fun Connection.findAllStorageDomains(searchQuery: String = "", follow: String = 
 	throw if (it is Error) it.toItCloudException(Term.STORAGE_DOMAIN, "목록조회") else it
 }
 
-private fun Connection.srvStorageDomain(storageDomainId: String, follow: String = ""): StorageDomainService =
+private fun Connection.srvStorageDomain(storageDomainId: String?="", follow: String = ""): StorageDomainService =
 	this.srvStorageDomains().storageDomainService(storageDomainId)
 
-fun Connection.findStorageDomain(storageDomainId: String, follow: String = ""): Result<StorageDomain> = runCatching {
+fun Connection.findStorageDomain(
+	storageDomainId: String?="",
+	follow: String=""
+): Result<StorageDomain> = runCatching {
 	this.srvStorageDomain(storageDomainId).get().apply{
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().storageDomain()

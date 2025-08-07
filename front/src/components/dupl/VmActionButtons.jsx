@@ -16,7 +16,8 @@ import {
 } from "@/components/button/ActionButtons";
 import {
   rvi16ChevronUp,
-  rvi16ChevronDown
+  rvi16ChevronDown,
+  rvi16Template
 } from "@/components/icons/RutilVmIcons";
 import Localization             from "@/utils/Localization";
 import Logger                   from "@/utils/Logger";
@@ -169,7 +170,7 @@ const VmActionButtons = ({
     //   disabled: !isMigrateEnabled
     // },
     { type: "snapshot",   onClick: () => setActiveModal("vm:snapshot"),    label: `${Localization.kr.SNAPSHOT} ${Localization.kr.CREATE}`, disabled: vmsSelected.length !==1 || hasLockedSnapshot },
-    { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE },
+    { type: "template",   onClick: () => navigate("/computing/templates"), label: Localization.kr.TEMPLATE, iconPrefix: rvi16Template(CONSTANT.color.black) },
   ].filter(action => !(isContextMenu && action.type === "template"));
 
   return (
@@ -233,7 +234,7 @@ const VmActionButtons = ({
             className="dropdown-container"
           >
             <ActionButton
-              iconDef={mgmtDropdownActive ? rvi16ChevronUp(CONSTANT.color.black) : rvi16ChevronDown(CONSTANT.color.black)}
+              iconSuffix={mgmtDropdownActive ? rvi16ChevronUp(CONSTANT.color.black) : rvi16ChevronDown(CONSTANT.color.black)}
               label={Localization.kr.MANAGEMENT}
               onClick={toggleMgmtDropdown}
             />

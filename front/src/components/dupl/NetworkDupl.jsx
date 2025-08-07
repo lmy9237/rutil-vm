@@ -7,6 +7,9 @@ import { LoadingFetch }                 from "@/components/common/Loading";
 import SelectedIdView                   from "@/components/common/SelectedIdView";
 import OVirtWebAdminHyperlink           from "@/components/common/OVirtWebAdminHyperlink";
 import {
+  getStatusSortKey
+} from "@/components/icons/GetStatusSortkey";
+import {
   status2Icon,
   networkUsage2Icons,
 } from "@/components/icons/RutilVmIcons";
@@ -17,7 +20,6 @@ import NetworkActionButtons             from "@/components/dupl/NetworkActionBut
 import Localization                     from "@/utils/Localization"; 
 import Logger                           from "@/utils/Logger";
 import "./Dupl.css"; // NOTE: 제거필요여부 확인 필요
-import { getStatusSortKey } from "../icons/GetStatusSortkey";
 
 /**
  * @name NetworkDupl
@@ -47,7 +49,7 @@ const NetworkDupl = ({
       </TableRowClick>
     ),
     status: Localization.kr.renderStatus(network?.status),
-    // status: network?.status?.toUpperCase() === "OPERATIONAL" ? "가동 중" : "비 가동 중",
+    // status: network?.status?.toLowerCase() === "operational".toLowerCase() ? "가동 중" : "비 가동 중",
     vlan: network?.vlan === 0 ? "-" : network?.vlan,
     mtu: network?.mtu === 0 ? "기본값(1500)" : network?.mtu,
     datacenter: (

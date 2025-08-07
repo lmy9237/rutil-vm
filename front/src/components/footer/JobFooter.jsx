@@ -120,7 +120,7 @@ const JobFooter = ({
       setFooterHeight(40)
     } else if (footerVisible() && footerHeight === FOOTER_TOP_HORIZ_BAR_HEIGHT) { 
       /* 최초로 눌러서 열 때 */
-      setFooterHeight(168)
+      setFooterHeight(footerHeightInPx || 168)
     }
   }, [footerVisible, footerHeight])
 

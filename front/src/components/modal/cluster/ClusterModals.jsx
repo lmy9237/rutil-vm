@@ -4,7 +4,7 @@ import useGlobal            from "@/hooks/useGlobal";
 import DeleteModal          from "@/utils/DeleteModal";
 import ClusterModal         from "./ClusterModal";
 import {
-  useDeleteCluster
+  useRemoveCluster
 } from "@/api/RQHook";
 import Localization         from "@/utils/Localization";
 
@@ -33,7 +33,7 @@ const ClusterModals = () => {
         onClose={() => closeModal("cluster:remove")}
         label={Localization.kr.CLUSTER}
         data={clustersSelected}
-        api={useDeleteCluster()}
+        api={useRemoveCluster()}
       />
     ),
   };

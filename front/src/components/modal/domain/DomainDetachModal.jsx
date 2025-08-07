@@ -8,7 +8,7 @@ import {
 import {
   useAllDiskSnapshotsFromDomain,
   useAllTemplatesFromDomain,
-  useAllVMsFromDomain,
+  useAllVmsFromStorageDomain,
   useDetachDomain,
 } from "@/api/RQHook";
 import Localization                    from "@/utils/Localization";
@@ -40,7 +40,7 @@ const DomainDetachModal = ({
     data: vms=[],
     isLoading: isVmsLoading,
     isSuccess: isVmsSuccess,
-  } = useAllVMsFromDomain(domainId, (e) => ({ ...e, }));
+  } = useAllVmsFromStorageDomain(domainId, (e) => ({ ...e, }));
   const { 
     data: templates=[],
     isLoading: isTemplatesLoading,

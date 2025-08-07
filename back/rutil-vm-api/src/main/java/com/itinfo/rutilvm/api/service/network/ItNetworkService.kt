@@ -19,6 +19,7 @@ import com.itinfo.rutilvm.api.repository.engine.VmInterfaceRepository
 import com.itinfo.rutilvm.api.repository.engine.VmRepository
 import com.itinfo.rutilvm.api.repository.engine.VmStaticRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.DnsResolverConfigurationEntity
+import com.itinfo.rutilvm.api.repository.engine.entity.NameServerEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkClusterEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkEntity
 import com.itinfo.rutilvm.api.repository.engine.entity.NetworkFilterEntity
@@ -196,7 +197,7 @@ class NetworkServiceImpl(
 	@Autowired private lateinit var rNetworkClusterViews: NetworkClusterViewRepository
 	@Autowired private lateinit var rNetworkClusters: NetworkClusterRepository
 	@Autowired	private lateinit var rVmInterfaces: VmInterfaceRepository
-	@Autowired private lateinit var rDnsConfigs: DnsResolverConfigurationRepository
+	@Autowired private lateinit var rDnsResolverConfigs: DnsResolverConfigurationRepository
 	@Autowired private lateinit var rNameServers: NameServerRepository
 	@Autowired private lateinit var rNetworkFilters: NetworkFilterRepository
 	@Autowired private lateinit var rVms: VmRepository
@@ -230,7 +231,7 @@ class NetworkServiceImpl(
 		// 생성 후에 나온 network Id로 클러스터 네트워크 생성 및 레이블 생성 가능
 		networkVo.toAddClusterAttach(conn, res.id())	// 클러스터 연결, 필수 선택
 //		networkVo.toAddNetworkLabel(conn, res.id()) // 네트워크 레이블
-		applyDnsNameServers(networkVo.dnsNameServers, res.id().toUUID())
+		applyDnsNameServers(res.id().toUUID(), networkVo.dnsNameServers)
 		return res.toNetworkIdName()
 	}
 
@@ -241,22 +242,65 @@ class NetworkServiceImpl(
 		val res: Network? = conn.updateNetwork(
 			networkVo.toEditNetwork()
 		).getOrNull()
-		applyDnsNameServers(networkVo.dnsNameServers, networkVo.id.toUUID())
+		applyDnsNameServers(networkVo.id.toUUID(), networkVo.dnsNameServers, )
 		return res?.toNetworkIdName()
 	}
 
 	@Transactional("engineTransactionManager")
 	private fun applyDnsNameServers(
+		networkId: UUID,
 		dnsNameServers: List<DnsVo>,
-		networkId: UUID
 	) {
-		log.info("updateDnsNameServers ... dnsNameServers: {} networkId: {}", dnsNameServers, networkId)
+		log.info("updateDnsNameServers ... networkId: {}, dnsNameServers: {}", networkId, dnsNameServers)
 		val network2UpdateDns: NetworkEntity = rNetwork.findByNetworkId(networkId)
 			?: throw ErrorPattern.NETWORK_NOT_FOUND.toException()
+
+		// Get or create the DNS configuration entity
+		val dnsConfig = network2UpdateDns.dnsConfiguration ?: DnsResolverConfigurationEntity().also {
+			log.info("No existing DNS configuration found for network '{}'. Creating a new one.", network2UpdateDns.name)
+			it.id = UUID.randomUUID()
+			network2UpdateDns.dnsConfiguration = it
+		}
+
+		// STEP 1: CLEAR the existing collection.
+		// Thanks to `orphanRemoval=true`, this will schedule a DELETE statement
+		// for every NameServerEntity that was in this list.
+		if (dnsConfig.nameServers.isNotEmpty()) {
+			log.debug("Clearing all {} existing name servers for network '{}'.", dnsConfig.nameServers.size, network2UpdateDns.name)
+			dnsConfig.nameServers.clear()
+		}
+		// We need to flush the changes to ensure the DELETEs are sent to the DB before the INSERTs,
+		// especially if there are unique constraints on the 'position' column.
+		rDnsResolverConfigs.flush()
+
+		// STEP 2: RE-ADD all items from the desired list.
+		// This will schedule an INSERT statement for every new NameServerEntity.
+		if (dnsNameServers.isNotEmpty()) {
+			log.debug("Adding {} new name servers based on desired state.", dnsNameServers.size)
+			dnsNameServers.forEach { dnsVo ->
+				val newNameServer = NameServerEntity.builder {
+					// Create a completely new entity
+					address { dnsVo.address }
+					position { dnsVo.position } // The position from the new list is used
+				}
+				// Use your helper method to establish the bidirectional relationship
+				dnsConfig.addNameServer(newNameServer)
+			}
+		} else {
+			// If the desired list is empty, we might need to delete the config itself.
+			log.debug("Desired list is empty, removing the parent DNS configuration.")
+			network2UpdateDns.dnsConfiguration = null
+			rDnsResolverConfigs.delete(dnsConfig)
+		}
+
+		// Persist the aggregate root. JPA will orchestrate all the DELETEs and INSERTs.
+		rNetwork.save(network2UpdateDns)
+		log.info("Successfully applied DNS changes for network '{}'", network2UpdateDns.name)
+		/*
 		var dnsConfig: DnsResolverConfigurationEntity? = network2UpdateDns.dnsConfiguration
 		if (dnsNameServers.isEmpty()) {
 			if (dnsConfig != null) {
-				rDnsConfigs.delete(dnsConfig)
+				rDnsResolverConfigs.delete(dnsConfig)
 				rNameServers.deleteAll(dnsConfig.nameServers)
 				log.debug("updateDnsNameServers ... 네트워크 ${network2UpdateDns.name}에서 DNS 설정 제거 진행완료 ... dnsConfig.id: {}", dnsConfig.id)
 			}
@@ -276,6 +320,7 @@ class NetworkServiceImpl(
 			log.info("네트워크 ${network2UpdateDns.name} 에 추가 된 DNS servers: $dnsNameServers ")
 		}
 		rNetwork.save(network2UpdateDns)
+		*/
 	}
 
 	@Throws(Error::class)

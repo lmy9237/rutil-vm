@@ -38,7 +38,6 @@ import javax.persistence.Table
 @Entity
 @Table(name = "vm_static")
 class VmStaticEntity(
-
 	@Id
 	@Column(name="vm_guid") // Explicit @Column needed for PK
 	val vmGuid: UUID? = null,
@@ -168,7 +167,6 @@ class VmStaticEntity(
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="image_type_id")
 	val imageType: VmStaticEntity? = null, // Self-referencing FK
-
 	/*
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="cpu_profile_id")

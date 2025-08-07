@@ -15,7 +15,7 @@ import org.ovirt.engine.sdk4.types.Role
 private fun Connection.srvRoles(): RolesService =
 	this.systemService.rolesService()
 
-fun Connection.findAllRoles(follow: String = ""): Result<List<Role>> = runCatching {
+fun Connection.findAllRoles(follow: String=""): Result<List<Role>> = runCatching {
 	if (follow.isNotEmpty())
 		srvRoles().list().follow(follow).send().roles()
 	else
@@ -27,10 +27,10 @@ fun Connection.findAllRoles(follow: String = ""): Result<List<Role>> = runCatchi
 	throw if (it is Error) it.toItCloudException(Term.ROLE, "목록조회") else it
 }
 
-private fun Connection.srvRole(roleId: String): RoleService =
+private fun Connection.srvRole(roleId: String?=""): RoleService =
 	this.srvRoles().roleService(roleId)
 
-fun Connection.findRole(roleId: String): Result<Role?> = runCatching {
+fun Connection.findRole(roleId: String?=""): Result<Role?> = runCatching {
 	this.srvRole(roleId).get().send().role()
 }.onSuccess {
 	Term.ROLE.logSuccess("상세조회")

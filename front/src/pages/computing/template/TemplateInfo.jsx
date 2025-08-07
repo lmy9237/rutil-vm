@@ -86,7 +86,7 @@ const TemplateInfo = () => {
     navigate(path);
     setTabInPage("/computing/templates", tab);
     setActiveTab(tab);
-  }, [templateId]);
+  }, [navigate, templateId]);
 
   useEffect(() => {
     Logger.debug(`TemplateInfo > useEffect ... section: ${section}`)
@@ -112,10 +112,7 @@ const TemplateInfo = () => {
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}
-        <TabNavButtonGroup
-          tabs={tabs}
-          tabActive={activeTab} setTabActive={setActiveTab}
-        />
+        <TabNavButtonGroup tabs={tabs} tabActive={activeTab} setTabActive={setActiveTab} />
         <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/computing/templates/${templateId}`} />
           {renderSectionContent()}

@@ -47,18 +47,19 @@ const App = () => {
   const { setFooterVisible, footerJobRefetchInterval, setFoooterJobRefetchInterval } = useFooterState()
   const { closeModal, } = useUIState()
   const { setAsideVisible } = useAsideState()
-  const { setLoginBoxVisible, setEventBoxVisible, } = useBoxState()
+  const { setLoginBoxVisible, setEventBoxVisible } = useBoxState()
   const { setTmiLastSelected } = useTmi()
   
   useEffect(() => {
-    if (!footerJobRefetchInterval() || footerJobRefetchInterval() === 0) {
+    /* if (!footerJobRefetchInterval() || footerJobRefetchInterval() === 0) {
       setFoooterJobRefetchInterval(5000)
     }
+    */
     closeModal()
     // setAsideVisible(true)
     setEventBoxVisible(false)
     setLoginBoxVisible(false)
-    setFooterVisible(false)
+    // setFooterVisible(false)
 
     // Connect using STOMP
     /*

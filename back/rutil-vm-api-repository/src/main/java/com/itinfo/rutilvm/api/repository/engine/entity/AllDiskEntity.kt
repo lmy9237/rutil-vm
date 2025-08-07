@@ -13,9 +13,15 @@ import java.util.UUID
 import java.io.Serializable
 import java.math.BigDecimal
 import java.math.BigInteger
+import javax.persistence.CascadeType
 import javax.persistence.Id
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
+import javax.persistence.OneToOne
 import javax.persistence.Table
 
 /**
@@ -166,12 +172,20 @@ class AllDiskEntity(
 	val backup: String = "",
 	val backupMode: String = "",
 
+	@OneToMany(
+		mappedBy="disk",
+		fetch=FetchType.LAZY,
+		cascade=[CascadeType.ALL],
+		orphanRemoval=true
+	)
+	val diskVmElement: MutableSet<DiskVmElementEntity>? = mutableSetOf(),
 ): Serializable {
 	val diskStorageType: DiskStorageType				get() = DiskStorageType.forValue(_diskStorageType)
 	val diskContentType: DiskContentTypeB				get() = DiskContentTypeB.forValue(_diskContentType)
 	val diskImageStatus: DiskStatusB					get() = DiskStatusB.forValue(_imagestatus)
 	val imageTransferPhase: ImageTransferPhaseB?		get() = if (_imageTransferPhase == null) null else ImageTransferPhaseB.forValue(_imageTransferPhase)
 	val imageTransferType: ImageTransferType?			get() = if (_imageTransferType == null) null else ImageTransferType.forValue(_imageTransferType)
+	val bootable: Boolean								get() = diskVmElement?.isNotEmpty() == true && diskVmElement?.all { it.isBoot } == true
 
 	override fun toString(): String =
 		gson.toJson(this)

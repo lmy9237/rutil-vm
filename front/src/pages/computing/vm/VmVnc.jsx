@@ -32,7 +32,10 @@ const VmVnc = ({
   ...props
 }) => {
   const { validationToast } = useValidationToast()
-  const { setActiveModal, setVncScreenshotDataUrl } = useUIState()
+  const { 
+    activeModal, setActiveModal,
+    setVncScreenshotDataUrl
+  } = useUIState()
   const { 
     vmsSelected, setVmsSelected,
     setCurrentVncRfb,
@@ -166,6 +169,7 @@ const VmVnc = ({
     Logger.debug(`VmVnc > useEffect ... (for VM status check)`)
     setVmsSelected(vm)
     if (vm?.name) document.title = `RutilVM (${vm.name})`
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(vm?.status)
     Logger.debug(`VmVnc > useEffect ... look for VM status (${vm?.status}) in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {

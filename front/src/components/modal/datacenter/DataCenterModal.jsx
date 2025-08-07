@@ -12,12 +12,16 @@ import ToggleSwitchButton               from "@/components/button/ToggleSwitchBu
 import {
   useAddDataCenter,
   useEditDataCenter,
-  useDataCenter,
+  useDataCenter4Edit,
   useAllClusterLevels,
   useAllQuotaEnforcementTypes,
   useAllDataCenters,
 } from "@/api/RQHook";
-import { checkDuplicateName, checkKoreanName, checkName } from "@/util";
+import { 
+  checkDuplicateName, 
+  checkKoreanName, 
+  checkName
+} from "@/util";
 import Localization                     from "@/utils/Localization";
 import Logger                           from "@/utils/Logger";
 import "./MDatacenter.css";
@@ -64,7 +68,7 @@ const DataCenterModal = ({
     data: datacenter,
     isLoading: isDatacenterLoading,
     isSuccess: isDatacenterSuccess,
-  } = useDataCenter(datacenterId);
+  } = useDataCenter4Edit(datacenterId);
   // 지정된 데이터센터의 버전보다 높은것만 출력되도록
   const {
     data: clusterLevels = [],

@@ -42,7 +42,7 @@ const AlertTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h5
     ref={ref}
-    className={cn("mb-1 leading-none tracking-tight", className)}
+    className={cn("leading-none tracking-tight", className)}
     {...props}
   />
 ))
@@ -54,7 +54,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("text-sm [&_p]:leading-relaxed", className)}
+    className={cn("h-full [&_p]:leading-relaxed", className)}
     {...props}
   />
 ))

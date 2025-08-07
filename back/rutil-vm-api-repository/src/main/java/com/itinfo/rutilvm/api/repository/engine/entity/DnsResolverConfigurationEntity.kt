@@ -45,7 +45,7 @@ class DnsResolverConfigurationEntity(
 	@Id
 	@Column(name = "id", unique = true, nullable = true)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
-	val id: UUID? = null, // Or generate it if DB does it
+	var id: UUID? = null, // Or generate it if DB does it
 	// This is the "many" side of the one-to-many relationship
 	// It maps to the 'name_server' table.
 	// 'mappedBy = "dnsResolverConfiguration"' indicates that the NameServerEntity
@@ -68,23 +68,14 @@ class DnsResolverConfigurationEntity(
 		gson.toJson(this)
 
 	// Helper methods to manage the bidirectional relationship consistently
-	fun addNameServer(address: String, position: Short? = null) {
-		val nameServer = NameServerEntity(
-			address = address,
-			dnsResolverConfiguration = this, // Set the "one" side
-			position = position
-		)
-		if (!this.nameServers.any { it.address == address && it.dnsResolverConfiguration?.id == this.id }) {
-			this.nameServers.add(nameServer)
-		}
+	fun addNameServer(nameServer: NameServerEntity) {
+		nameServers.add(nameServer)
+		nameServer.dnsResolverConfiguration = this
 	}
 
-	fun removeNameServer(address: String) {
-		val serverToRemove = this.nameServers.find { it.address == address }
-		if (serverToRemove != null) {
-			this.nameServers.remove(serverToRemove)
-			// serverToRemove.dnsResolverConfiguration = null; // Not strictly needed due to orphanRemoval
-		}
+	fun removeNameServer(nameServer: NameServerEntity) {
+		nameServers.remove(nameServer)
+		nameServer.dnsResolverConfiguration = null
 	}
 
 	override fun equals(other: Any?): Boolean { // Basic equals/hashCode for entities

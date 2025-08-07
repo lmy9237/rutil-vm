@@ -35,10 +35,13 @@ fun Connection.findAllClusters(searchQuery: String = "", follow: String = ""): R
 	throw if (it is Error) it.toItCloudException(Term.CLUSTER, "목록조회") else it
 }
 
-fun Connection.srvCluster(id: String): ClusterService =
-	this.srvClusters().clusterService(id)
+fun Connection.srvCluster(clusterId: String?=""): ClusterService =
+	this.srvClusters().clusterService(clusterId)
 
-fun Connection.findCluster(clusterId: String, follow: String = ""): Result<Cluster?> = runCatching {
+fun Connection.findCluster(
+	clusterId: String?="",
+	follow: String=""
+): Result<Cluster?> = runCatching {
 	this.srvCluster(clusterId).get().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().cluster()

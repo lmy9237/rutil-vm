@@ -102,7 +102,7 @@ const VnicProfileInfo = () => {
 
   useEffect(() => {
     Logger.debug(`VnicProfileInfo > useEffect ... (for vNIC Profile status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(vnicProfile?.status, true)
     Logger.debug(`VnicProfileInfo > useEffect ... look for vNIC Profile status (${vnicProfile?.status}) in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {

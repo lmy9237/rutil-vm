@@ -22,10 +22,15 @@ const NetworkGeneral = ({
   networkId
 }) => {
   const {
-    datacentersSelected,
-    networksSelected,
+    datacentersSelected, networksSelected,
   } = useGlobal()
-  const { data: network } = useNetwork(networkId);
+  
+  const {
+    data: network,
+    isLoading: isNetworkLoading,
+    isSuccess: isNetworkSuccess,
+    isError: isNetworkError,
+  } = useNetwork(networkId);
 
   const tableRows = [
     { label: "ID", value: network?.id },
@@ -37,8 +42,7 @@ const NetworkGeneral = ({
     { label: "MTU", value: network?.mtu === 0 ? "기본값 (1500)" : network?.mtu },
   ];
 
-  return (
-    <>
+  return (<>
     <GeneralLayout
       top={
       <>
@@ -73,12 +77,11 @@ const NetworkGeneral = ({
       </>
       }
     />
-      <OVirtWebAdminHyperlink
-        name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
-        path={`networks-general;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
-      />
-    </>
-  );
+    <OVirtWebAdminHyperlink
+      name={`${Localization.kr.NETWORK}>${Localization.kr.NETWORK}>${networksSelected[0]?.name}`}
+      path={`networks-general;name=${networksSelected[0]?.name};dataCenter=${datacentersSelected[0]?.name}`}
+    />
+  </>);
 };
 
 export default NetworkGeneral;

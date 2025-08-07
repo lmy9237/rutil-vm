@@ -1,9 +1,16 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import useUIState from "@/hooks/useUIState";
-import useGlobal from "@/hooks/useGlobal";
-import { ActionButtons, ActionButton } from "@/components/button/ActionButtons";
-import Localization from "@/utils/Localization";
+import CONSTANT               from "@/Constants";
+import useGlobal              from "@/hooks/useGlobal";
+import useUIState             from "@/hooks/useUIState";
+import {
+  rvi16Lan
+} from "@/components/icons/RutilVmIcons";
+import { 
+  ActionButtons, 
+  ActionButton
+} from "@/components/button/ActionButtons";
+import Localization            from "@/utils/Localization";
 
 const NetworkActionButtons = ({
   actionType="default",
@@ -30,6 +37,7 @@ const NetworkActionButtons = ({
         {!isContextMenu && (
           <ActionButton label={Localization.kr.VNIC_PROFILE}
             onClick={() => navigate("/vnicProfiles")}
+            iconPrefix={rvi16Lan(CONSTANT.color.black)}
             actionType={actionType}
           />
         )}

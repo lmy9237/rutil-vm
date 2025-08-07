@@ -11,7 +11,7 @@ import TablesOuter                      from "@/components/table/TablesOuter";
 import TableRowClick                    from "@/components/table/TableRowClick";
 import TableColumnsInfo                 from "@/components/table/TableColumnsInfo";
 import {
-  useAllVMsFromDomain
+  useAllVmsFromStorageDomain
 } from "@/api/RQHook";
 import {
   checkZeroSizeToGiB
@@ -41,9 +41,9 @@ const DomainVms = ({ domainId }) => {
     isLoading: isVmsLoading,
     isError: isVmsError,
     isSuccess: isVmsSuccess,
+    isRefetching: isVmsRefetching,
     refetch: refetchVms,
-    isRetching, isVmsRefetching,
-  } = useAllVMsFromDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e, }));
+  } = useAllVmsFromStorageDomain(domainId ?? domainsSelected[0]?.id, (e) => ({ ...e, }));
 
   const transformedData = useMemo(() => [...vms].map((vm) => ({
     _name: (
@@ -85,17 +85,16 @@ const DomainVms = ({ domainId }) => {
     <>{/* v-start w-full으로 묶어짐*/}
       <div className="dupl-header-group f-start gap-4 w-full">
         <SearchBox searchQuery={searchQuery} setSearchQuery={setSearchQuery} 
-          isRefetching={isVmsRefetching} isLoading={isVmsLoading} refetch={isVmsRefetching}
+          isLoading={isVmsLoading} isRefetching={isVmsRefetching} refetch={refetchVms}
         />
-        <LoadingFetch isRefetching={isVmsRefetching} isLoading={isVmsLoading} />
+        <LoadingFetch isLoading={isVmsLoading} isRefetching={isVmsRefetching} />
       </div>
       {/* <EventActionButtons /> */}
-      <TablesOuter target={"vm"} 
-        columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
+      <TablesOuter target={"vm"} columns={TableColumnsInfo.VMS_FROM_STORAGE_DOMAIN}
         data={filteredData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => {setVmsSelected(selectedRows)}}
-        refetch={refetchVms} isRefetching={isVmsRefetching} isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
+        isRefetching={isVmsRefetching} isLoading={isVmsLoading} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />
       <OVirtWebAdminHyperlink

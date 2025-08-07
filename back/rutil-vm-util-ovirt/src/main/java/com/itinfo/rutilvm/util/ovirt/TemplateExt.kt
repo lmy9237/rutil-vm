@@ -29,10 +29,10 @@ fun Connection.findAllTemplates(searchQuery: String = "", follow: String = ""): 
 	throw if (it is Error) it.toItCloudException(Term.TEMPLATE, "목록조회") else it
 }
 
-private fun Connection.srvTemplate(templateId: String): TemplateService =
+private fun Connection.srvTemplate(templateId: String?=""): TemplateService =
 	systemService.templatesService().templateService(templateId)
 
-fun Connection.findTemplate(templateId: String, follow: String = ""): Result<Template?> = runCatching {
+fun Connection.findTemplate(templateId: String?="", follow: String = ""): Result<Template?> = runCatching {
 	this.srvTemplate(templateId).get().apply {
 		if (follow.isNotEmpty()) follow(follow)
 	}.send().template()

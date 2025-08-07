@@ -29,8 +29,7 @@ import Localization                     from "@/utils/Localization";
  * @param {Boolean} actionType datacenter-domain, domain-datacenter 버튼활성화,
  * @returns {JSX.Element}
  */
-const 
-DomainDupl = ({
+const DomainDupl = ({
   domains = [], columns = [],
   actionType, sourceContext = "all", 
   refetch, isRefetching, isLoading, isError, isSuccess,

@@ -468,16 +468,16 @@ const ApiManager = {
       });
     },
   /**
-   * @name ApiManager.deleteDataCenter
+   * @name ApiManager.removeDataCenter
    * @description 데이터센터 삭제
    * 
    * @param {String} dataCenterId - 삭제할 데이터센터 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  deleteDataCenter: async (dataCenterId) => {
+  removeDataCenter: async (dataCenterId) => {
     return makeAPICall({
       method: "DELETE",
-      url: ENDPOINTS.DELETE_DATA_CENTER(dataCenterId),  // ID를 URL에 포함
+      url: ENDPOINTS.REMOVE_DATA_CENTER(dataCenterId),  // ID를 URL에 포함
       data: dataCenterId
     });
   },
@@ -683,16 +683,16 @@ const ApiManager = {
     });
   },
   /**
-   * @name ApiManager.deleteCluster
+   * @name ApiManager.removeCluster
    * @description 클러스터 삭제
    * 
    * @param {String} clusterId - 삭제할 클러스터 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  deleteCluster: async (clusterId) => {
+  removeCluster: async (clusterId) => {
     return makeAPICall({
       method: "DELETE",
-      url: ENDPOINTS.DELETE_CLUSTER(clusterId),  // ID를 URL에 포함
+      url: ENDPOINTS.REMOVE_CLUSTER(clusterId),  // ID를 URL에 포함
       data: clusterId
     });
   },
@@ -823,13 +823,13 @@ const ApiManager = {
     data: hostNetwork
   }),
   /**
-   * @name ApiManager.syncallNetworksHost
+   * @name ApiManager.syncAllNetworksFromHost
    * @description 호스트 네트워크 동기화
    * 
    * @param {String} hostId - 호스트 ID
    * @returns {Promise<Object>} API 응답 결과
    */
-  syncallNetworksHost: async (hostId) => {
+  syncAllNetworksFromHost: async (hostId) => {
     return makeAPICall({
       method: "POST",
       url: ENDPOINTS.SYNCALL_NETWORKS_FROM_HOST(hostId),  // ID를 URL에 포함
@@ -1611,13 +1611,13 @@ const ApiManager = {
   },
 
   /**
-   * @name ApiManager.deleteNicFromVM
+   * @name ApiManager.removeNicFromVm
    * @description 가상머신 nic 삭제
    * 
    * @param {string} nicId
    * @returns {Promise<Object>}
    */
-  deleteNicFromVM: async (vmId, nicId) => {
+  removeNicFromVm: async (vmId, nicId) => {
     return makeAPICall({
       method: "DELETE",
       url: ENDPOINTS.DELETE_NIC_FROM_VM(vmId, nicId),
@@ -2068,7 +2068,7 @@ const ApiManager = {
   },
 
     /**
-   * @name ApiManager.deleteNicFromVM
+   * @name ApiManager.removeNicFromVm
    * @description 템플릿 nic 삭제
    * 
    * @param {string} nicId

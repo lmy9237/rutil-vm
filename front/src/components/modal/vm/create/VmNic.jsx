@@ -113,6 +113,7 @@ const VmNic = ({
       </p>
       <DynamicInputList type="nic"
         values={nicsState}
+        disabled={isVmUp}
         onChange={handleChange} onAdd={handleAdd} onRemove={handleRemove}
         options={nics}
         showLabel={true}
@@ -126,9 +127,9 @@ const VmNicWarning = ({
   active,
 }) => (
   active && <><br/><br/>
-    <div className="f-start">
-   
-    <Alert variant="warning" className="items-start gap-4 flex">
+    <Alert variant="warning"
+      className="f-start gap-4"
+    >
       <div className="mr-3 "><AlertTriangle color={CONSTANT.color.warn}/>
       <AlertTitle><b className="f-center mt-1">주의</b></AlertTitle> 
       </div>
@@ -141,17 +142,6 @@ const VmNicWarning = ({
         */}
       </AlertDescription>
     </Alert>
-    </div>
-    {/* 
-    <p className="f-start">
-      <AlertTriangle color={CONSTANT.color.orange}/><b>주의</b>
-    </p>
-    <p>
-      {Localization.kr.VM}이 {Localization.kr.RUNNING}인 경우, 연결 된 {Localization.kr.NICS}를 편집/제거 할 수 없습니다. 
-      <br/>이 화면에서는 각 {Localization.kr.NICS}의 연결 상태를 확인 할 수 없습니다. 
-      <br/>안전하게 처리하기 위해서 {Localization.kr.VM}을 종료 후 작업하시기 바랍니다.
-    </p>
-    */}
   </>
 )
 

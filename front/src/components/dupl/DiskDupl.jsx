@@ -66,8 +66,8 @@ const DiskDupl = ({
           {d?.storageDomainVo?.name}
         </TableRowClick>
       ),
-      sharable: d?.sharable ? "O" : "",
-      icon1: d?.bootable ? "O" : "",
+      _sharable: d?.sharable ? "O" : "",
+      _bootable: d?.bootable ? "O" : "",
       icon2: d?.readOnly ? "O" : "",
       _status: (d?.imageTransferRunning) 
         ? (`${d?.imageTransferPhaseKr} (${d?.imageTransferPercent.toFixed(2)}%)`)
@@ -81,21 +81,24 @@ const DiskDupl = ({
       ].filter(Boolean).join(", "), 
       */
       connect: d?.vmAttached 
-        ? <><RVI16 iconDef={rvi16Desktop()}/><p className="ml-1">{d?.connectVm?.name}</p></>
+        ? <TableRowClick type="vm" id={d?.connectVm?.id}>
+          {d?.connectVm?.name}
+        </TableRowClick>
         : d?.templateAttached
-          ? <><RVI16 iconDef={rvi16Template()}/><p className="ml-1">{d?.connectTemplate?.name}</p></>
+          ? <TableRowClick type="template" id={d?.connectTemplate?.id}>
+            {d?.connectTemplate?.name}
+          </TableRowClick>
           : <></>,
       virtualSizeToGB: checkZeroSizeToGiB(d?.virtualSize),
       actualSizeToGB: checkZeroSizeToGiB(d?.actualSize),
+      searchText: `[${d?.contentType}] ${d?.alias} ${d?.sparse} ${d?.virtualSize} ${d?.actualSize}` // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)
     };
-
-    // ✅ 검색 필드 추가 (모든 데이터를 하나의 문자열로 만듦)
-    diskData.searchText = `[${diskData?.contentType}] ${diskData?.alias} ${diskData?.sparse} ${diskData?.virtualSize} ${diskData?.actualSize}`;
     return diskData;
   });
 
   // 검색 기능 적용
-  /* const [selectedContentType, setSelectedContentType] = useState("__all__");
+  /*
+  const [selectedContentType, setSelectedContentType] = useState("__all__");
   const contentTypeFilteredData = useMemo(() => {
     if (selectedContentType === "__all__") return filteredData;
     return filteredData.filter(disk => String(disk?.contentType) === selectedContentType);
@@ -153,8 +156,7 @@ const DiskDupl = ({
       <TablesOuter target={"disk"} columns={columns}
         data={transformedData}
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
-        filterType={filterType} setFilterType={setFilterType}
-        filterAccessor="contentType" 
+        filterType={filterType} setFilterType={setFilterType} filterAccessor="contentType" 
         onRowClick={(selectedRows) => {
           if (activeModal().length > 0) return
           setDisksSelected(selectedRows)

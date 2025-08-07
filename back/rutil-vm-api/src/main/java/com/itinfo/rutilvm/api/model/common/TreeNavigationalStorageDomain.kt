@@ -3,6 +3,7 @@ package com.itinfo.rutilvm.api.model.common
 import com.itinfo.rutilvm.api.model.storage.DiskImageVo
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
 import com.itinfo.rutilvm.api.ovirt.business.DiskStatusB
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.ovirt.business.model.TreeNavigatableType
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.toDiskImageVosFromAllDiskEntities
@@ -42,9 +43,11 @@ fun StorageDomain.toNavigationalWithStorageDomains(
 	val allDisks: List<DiskImageVo> = (rAllDisks?.findAllByStorageDomainIdOrderByDiskAliasAsc(
 		this@toNavigationalWithStorageDomains.id()
 	) ?: emptyList())
-		.toDiskImageVosFromAllDiskEntities().filter {
-		it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso
-	}
+		.toDiskImageVosFromAllDiskEntities()
+		.filter {
+			(it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso) &&
+			(it.storageType == DiskStorageType.image || it.storageType == DiskStorageType.cinder)
+		}
 	return TreeNavigationalStorageDomain.builder {
 		id { this@toNavigationalWithStorageDomains.id() }
 		name { this@toNavigationalWithStorageDomains.name() }

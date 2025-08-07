@@ -21,7 +21,7 @@ import Logger                           from "@/utils/Logger";
 
 /**
  * @name DomainImportVms
- * @description 도메인에서 가상머신 가져오기 목록
+ * @description 스토리지 도메인 > 가상머신 가져오기 목록
  *
  * @param {string} domainId 도메인ID
  * @returns {JSX.Element} DomainImportVms
@@ -38,7 +38,9 @@ const DomainImportVms = ({
     isRefetching: isVmsRefetching,
   } = useAllUnregisteredVMsFromDomain(domainId, (e) => ({ ...e }));
 
-  const { activeModal, setActiveModal, } = useUIState()
+  const {
+    activeModal, setActiveModal
+  } = useUIState()
   const {
     vmsSelected, setVmsSelected,
     domainsSelected,

@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.configuration
 
+import com.itinfo.rutilvm.api.ovirt.business.ActionType
 import com.itinfo.rutilvm.api.repository.engine.JobsRepository
 import com.itinfo.rutilvm.api.repository.engine.entity.JobEntity
 import com.itinfo.rutilvm.common.LoggerDelegate
@@ -20,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional
 class JobRemoveScheduler {
 	@Autowired private lateinit var rJobs: JobsRepository
 
-	val jobs2RemoveVmScreenshot: List<JobEntity>
-		get() = rJobs.findAllByActionType(JobEntity.Companion.ACTION_TYPE_EXCLUDE).toList()
+	val jobs4PeriodicRemoval: List<JobEntity>
+		get() = rJobs.findAllByActionTypes(ActionType.actionTypes4PeriodicRemoval.map { it.name }).toList()
 	val jobs2RemoveRutilVmRelated: List<JobEntity>
 		get() = rJobs.findAllByActionTypeAndDescriptionLike(JobEntity.Companion.ACTION_TYPE_EXTERNAL, "Not Found").toList()
 
@@ -30,7 +31,7 @@ class JobRemoveScheduler {
 	@Transactional("engineTransactionManager")
 	open fun removeJobsInSchedule(): Boolean {
 		log.info("removeJobsInSchedule ... RUNNING!")
-		val allJobs2Remove: List<JobEntity> = jobs2RemoveVmScreenshot + jobs2RemoveRutilVmRelated
+		val allJobs2Remove: List<JobEntity> = jobs4PeriodicRemoval + jobs2RemoveRutilVmRelated
 		log.debug("removeJobsInSchedule ... allJobs2Remove: {}", allJobs2Remove.size)
 		if (allJobs2Remove.isEmpty()) {
 			log.info("removeJobsInSchedule ... NO job found. Abort RUNNING!")

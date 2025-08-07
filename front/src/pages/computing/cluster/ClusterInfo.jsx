@@ -82,20 +82,6 @@ const ClusterInfo = () => {
     { type: "remove", onClick: () => setActiveModal("cluster:remove"), label: Localization.kr.REMOVE, },
   ]), []);
 
-  useEffect(() => {
-    setActiveTab(section || "general");
-  }, [section]);
-
-  useEffect(() => {
-    if (isClusterError || (!isClusterLoading && !cluster)) {
-      navigate("/computing/rutil-manager/clusters");
-    }
-    const currentTabInPage = tabInPage("/computing/clusters")
-    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
-    //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
-    setClustersSelected(cluster)
-  }, [cluster, navigate]);
-
   const handleTabClick = useCallback((tab) => {
     Logger.debug(`ClusterInfo > handleTabClick ... tab: ${tab}`)
     const path =
@@ -107,6 +93,22 @@ const ClusterInfo = () => {
     setActiveTab(tab);
   }, [clusterId]);
 
+  useEffect(() => {
+    Logger.debug(`ClusterInfo > useEffect ... section: ${section}`)
+    setActiveTab(section || "general");
+  }, [section]);
+
+  useEffect(() => {
+    Logger.debug(`ClusterInfo > useEffect ... (for Automatic Tab Switch)`)
+    if (isClusterError || (!isClusterLoading && !cluster)) {
+      navigate("/computing/rutil-manager/clusters");
+    }
+    const currentTabInPage = tabInPage("/computing/clusters")
+    handleTabClick(currentTabInPage === "" ? "general" : currentTabInPage);
+    //setActiveTab(currentTabInPage === "" ? "general" : currentTabInPage)    
+    setClustersSelected(cluster)
+  }, [cluster, navigate]);
+ 
   return (
     <SectionLayout>
       <HeaderButton title={cluster?.name} titleIcon={rvi24Cluster()}

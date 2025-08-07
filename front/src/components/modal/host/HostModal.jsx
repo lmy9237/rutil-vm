@@ -17,7 +17,7 @@ import {
   useAddHost,
   useEditHost,
   useReinstallHost,
-  useHost,
+  useHost4Edit,
   useAllClusters,
   useAllHosts,
 } from "@/api/RQHook";
@@ -76,7 +76,7 @@ const HostModal = ({
     data: host,
     isLoading: isHostLoading,
     isSuccess: isHostSuccess,
-  } = useHost(hostId);
+  } = useHost4Edit(hostId);
 
   const { 
     data: hosts,

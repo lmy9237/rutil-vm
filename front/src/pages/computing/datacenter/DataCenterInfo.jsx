@@ -133,7 +133,7 @@ const DataCenterInfo = () => {
 
   useEffect(() => {
     Logger.debug(`DataCenterInfo > useEffect ... (for DataCenter status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(dataCenter?.status)
     Logger.debug(`DataCenterInfo > useEffect ... look for DataCenter (${dataCenter?.status}) status in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {

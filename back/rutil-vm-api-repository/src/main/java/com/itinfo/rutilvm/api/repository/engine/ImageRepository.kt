@@ -48,7 +48,6 @@ AND sd.id = :storageDomainId
 AND i.vmSnapshot IS NOT NULL
 AND i.active = false
 """, countQuery = """
-
 """)
 	fun findDiskSnapshotsByStorageDomain(
 		@Param("storageDomainId") storageDomainId: UUID

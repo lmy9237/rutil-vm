@@ -2,7 +2,7 @@ import React from "react";
 import useUIState             from "@/hooks/useUIState";
 import useGlobal              from "@/hooks/useGlobal";
 import {
-  useDeleteDataCenter,
+  useRemoveDataCenter,
 } from "@/api/RQHook";
 import DeleteModal            from "@/utils/DeleteModal";
 import Localization           from "@/utils/Localization";
@@ -35,7 +35,7 @@ const DataCenterModals = ({
         onClose={() => closeModal("datacenter:remove")}
         label={Localization.kr.DATA_CENTER}
         data={datacentersSelected}
-        api={useDeleteDataCenter()}
+        api={useRemoveDataCenter()}
         // navigation={'/computing/rutil-manager/datacenters'}
       />
     )

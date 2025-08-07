@@ -106,6 +106,7 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 		alias { entity.diskAlias }
 		description { entity.diskDescription }
 		sharable { entity.shareable }
+		bootable { entity.bootable }
 		virtualSize { entity.size }
 		actualSize { entity.actualSize }
 		status { entity.diskImageStatus }
@@ -138,6 +139,7 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 		connectVm {
 			if (entity.entityType == "VM") {
 				IdentifiedVo.builder {
+					id { entity.diskVmElement?.firstOrNull() { it.vm?.vmName == entity.vmNames }?.vm?.vmGuid.toString() }
 					name { entity.vmNames }
 				}
 			}
@@ -146,6 +148,7 @@ fun AllDiskEntity.toDiskImageVoFromAllDiskEntity(): DiskImageVo {
 		connectTemplate {
 			if (entity.entityType == "TEMPLATE") {
 				IdentifiedVo.builder {
+					id { entity.diskVmElement?.firstOrNull() { it.vm?.vmName == entity.vmNames }?.vm?.vmGuid.toString() }
 					name { entity.vmNames }
 				}
 			}

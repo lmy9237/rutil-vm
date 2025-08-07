@@ -61,7 +61,6 @@ const Header = () => {
       <div id="header-right" className="f-end h-full">
         <TopMenuIcon iconDef={rvi24Refresh("white")}
           onClick={() => {
-            setFooterHeightInPx(40)
             window.location.reload()
           }}
         />

@@ -25,6 +25,7 @@ enum class Term(
 	BOND("(네트워크) 본드"),
 	NIC("네트워크 인터페이스"),
 	VM("가상머신"),
+	VM_POOL("가상머신 풀"),
 	VM_NIC("가상머신 NIC"),
 	EXTERNAL_VM("외부 가상머신"),
 	CONSOLE("콘솔"),
@@ -73,6 +74,9 @@ enum class Term(
 	CERT("인증서"),
 	JOB("작업"),
 	STEP("작업과정"),
+	TAG("태그"),
+	BOOKMARK("북마크"),
+	LEASE("임대"),
 	UNKNOWN("알 수 없음")
 	;
 

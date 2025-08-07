@@ -13,7 +13,7 @@ import {
   handleSelectIdChange,
 } from "../../label/HandleInput";
 import {
-  useDisk,
+  useDisk4Edit,
   useAddDisk,
   useEditDisk,
   useAllActiveDataCenters,
@@ -61,7 +61,7 @@ const DiskModal = ({
   const [domainVo, setDomainVo] = useState(emptyIdNameVo());
   const [diskProfileVo, setDiskProfileVo] = useState(emptyIdNameVo());
   
-  const { data: disk } = useDisk(diskId);
+  const { data: disk } = useDisk4Edit(diskId);
   const { mutate: addDisk } = useAddDisk(onClose, onClose);
   const { mutate: editDisk } = useEditDisk(onClose, onClose);
 
@@ -140,7 +140,7 @@ const DiskModal = ({
   
   const handleInputSize = (field) => (e) => {
     const value = e.target.value;
-  
+    Logger.debug(`DiskModal > handleInputSize ... field: ${field}, value: ${value}`); // 데이터를 확인하기 위한 로그
     if (field === "size" || field === "appendSize") {
       if (value === "" || /^\d*$/.test(value)) {
         setFormState((prev) => ({ ...prev, [field]: value }));

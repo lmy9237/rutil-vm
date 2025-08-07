@@ -1,5 +1,6 @@
 package com.itinfo.rutilvm.api.repository.engine.entity
 
+import com.itinfo.rutilvm.api.ovirt.business.ActionType
 import com.itinfo.rutilvm.common.gson
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.UpdateTimestamp
@@ -41,15 +42,16 @@ private val log = LoggerFactory.getLogger(JobEntity::class.java)
 @Table(name="job", schema = "public")
 class JobEntity(
 	@Id
-	@Column(name="job_id", unique = true, nullable = true)
+	@Column(name="job_id", unique = true, nullable = false)
 	@Type(type = "org.hibernate.type.PostgresUUIDType")
 	val jobId: UUID? = null,
-	val actionType: String? = "",
+	@Column(name="action_type", unique = false, nullable = false)
+	private val _actionType: String? = "",
 	@Lob
 	@Type(type="org.hibernate.type.TextType")
 	val description: String? = "",
 	var status: String? = "",
-	@Column(name="owner_id", unique = true, nullable = true)
+	@Column(name="owner_id", unique = false, nullable = false)
 	@Type(type="org.hibernate.type.PostgresUUIDType")
 	val ownerId: UUID? = null,
 	val visible: Boolean? = true,
@@ -57,6 +59,7 @@ class JobEntity(
 	var endTime: LocalDateTime? = null,
 	@UpdateTimestamp
 	var lastUpdateTime: LocalDateTime? = null,
+	@Column(name="correlation_id", unique = false, nullable = false)
 	val correlationId: String? = "",
 	val isExternal: Boolean? = false,
 	val isAutoCleared: Boolean? = true,
@@ -79,6 +82,8 @@ class JobEntity(
 	val jobSubjects: MutableSet<JobSubjectEntity> = mutableSetOf()
 	*/
 ): Serializable {
+	val actionType: ActionType?		get() = ActionType.forCode(_actionType)
+
 	// Helper methods for bidirectional relationship management
 	fun addStep(step: StepEntity) {
 		steps.add(step)
@@ -132,7 +137,6 @@ class JobEntity(
 	}
 
 	companion object {
-		const val ACTION_TYPE_EXCLUDE = "ScreenshotVm"
 		const val ACTION_TYPE_EXTERNAL = "AddExternalJob"
 		inline fun builder(block: Builder.() -> Unit): JobEntity = Builder().apply(block).build()
 	}

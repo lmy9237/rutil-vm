@@ -26,7 +26,7 @@ const Home = () => {
         }
         className="f-btw w-full h-full"
       />
-      <Header/>
+      <Header />
       <MainOuter>
         <Outlet/>
       </MainOuter>

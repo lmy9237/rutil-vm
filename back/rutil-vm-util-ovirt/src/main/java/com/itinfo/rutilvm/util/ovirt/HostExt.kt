@@ -16,7 +16,7 @@ import org.ovirt.engine.sdk4.types.*
 fun Connection.srvHosts(): HostsService =
 	this.systemService.hostsService()
 
-fun Connection.srvHost(hostId: String): HostService =
+fun Connection.srvHost(hostId: String?=""): HostService =
 	this.srvHosts().hostService(hostId)
 
 fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Result<List<Host>> = runCatching {
@@ -32,7 +32,10 @@ fun Connection.findAllHosts(searchQuery: String = "", follow: String = ""): Resu
 	throw if (it is Error) it.toItCloudException(Term.HOST, "목록조회") else it
 }
 
-fun Connection.findHost(hostId: String, follow: String = ""): Result<Host?> = runCatching {
+fun Connection.findHost(
+	hostId: String?="",
+	follow: String=""
+): Result<Host?> = runCatching {
 	srvHost(hostId).get().apply {
 		if (follow.isNotEmpty()) follow("cluster,networkattachments,$follow")
 	}.allContent(true).send().host()

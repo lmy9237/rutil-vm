@@ -13,7 +13,7 @@ import {
 import {
   useAddCluster,
   useEditCluster,
-  useCluster,
+  useCluster4Edit,
   useAllDataCenters,
   useAllClusters,  
   useAllNetworksFromDataCenter,
@@ -72,7 +72,7 @@ const ClusterModal = ({
     data: cluster,
     isLoading: isClusterLoading,
     isSuccess: isClusterSuccess,
-  } = useCluster(clusterId);
+  } = useCluster4Edit(clusterId);
   const {
     data: clusters,
     isLoading: isClustersLoading,

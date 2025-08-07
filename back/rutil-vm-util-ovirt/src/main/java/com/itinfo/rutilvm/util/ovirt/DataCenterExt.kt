@@ -30,10 +30,13 @@ fun Connection.findAllDataCenters(searchQuery: String = "", follow: String = "")
 	throw if (it is Error) it.toItCloudException(Term.DATACENTER, "목록조회") else it
 }
 
-fun Connection.srvDataCenter(dataCenterId: String): DataCenterService =
-	this.srvDataCenters().dataCenterService(dataCenterId)
+fun Connection.srvDataCenter(datacenterId: String?=""): DataCenterService =
+	this.srvDataCenters().dataCenterService(datacenterId)
 
-fun Connection.findDataCenter(datacenterId: String, follow: String = ""): Result<DataCenter?> = runCatching {
+fun Connection.findDataCenter(
+	datacenterId: String?="",
+	follow: String=""
+): Result<DataCenter?> = runCatching {
 	this.srvDataCenter(datacenterId).get().apply {
 		if(follow.isNotEmpty()) follow(follow)
 	}.send().dataCenter()

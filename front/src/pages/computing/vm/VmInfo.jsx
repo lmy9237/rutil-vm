@@ -186,14 +186,14 @@ const VmInfo = () => {
   
   useEffect(() => {
     Logger.debug(`VmInfo > useEffect ... (for VM status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(vm?.status)
     Logger.debug(`VmInfo > useEffect ... look for VM status (${vm?.status}) in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {
       refetchVm()
     }, intervalInMilli) // 주기적 조회
     return () => {clearInterval(intervalId)}
-  }, [vmId, vm, activeModal])
+  }, [vmId, vm, activeModal, setActiveModal])
 
   return (
     <SectionLayout>

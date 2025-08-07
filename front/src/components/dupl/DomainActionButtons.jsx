@@ -1,12 +1,17 @@
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import CONSTANT               from "@/Constants";
 import useGlobal              from "@/hooks/useGlobal";
 import useUIState             from "@/hooks/useUIState";
+import {
+  rvi16HardDrive
+} from "@/components/icons/RutilVmIcons";
 import {
   ActionButton, 
   ActionButtons
 } from "@/components/button/ActionButtons";
-import Localization           from "@/utils/Localization";
+import Localization            from "@/utils/Localization";
+import Logger                  from "@/utils/Logger";
 
 /**
  * @name DomainActionButtons
@@ -29,12 +34,12 @@ const DomainActionButtons = ({
 
   const domain1st = useMemo(() => [...domainsSelected][0], [domainsSelected])
 
-  const isUp = domain1st?.status?.toUpperCase() === "UP";
-  const isActive = domain1st?.status?.toUpperCase() === "ACTIVE";
-  const isMaintenance = domain1st?.status?.toUpperCase() === "MAINTENANCE";
-  const isLocked = domain1st?.status?.toUpperCase() === "LOCKED"; // 잠겨있을 떄 파괴는 가능
-  const isUnknown = domain1st?.status?.toUpperCase() === "UNKNOWN";
-  const isUnattached = domain1st?.status?.toUpperCase() === "UNATTACHED";
+  const isUp = domain1st?.status?.toLowerCase() === "up".toLowerCase();
+  const isActive = domain1st?.status?.toLowerCase() === "active".toLowerCase();
+  const isMaintenance = domain1st?.status?.toLowerCase() === "maintenance".toLowerCase();
+  const isLocked = domain1st?.status?.toLowerCase() === "locked".toLowerCase(); // 잠겨있을 떄 파괴는 가능
+  const isUnknown = domain1st?.status?.toLowerCase() === "unknown".toLowerCase();
+  const isUnattached = domain1st?.status?.toLowerCase() === "unattached".toLowerCase();
 
   const basicActions = [
     { type: "create",  onClick: () => setActiveModal("domain:create"),  label: Localization.kr.CREATE,  disabled: isContextMenu },
@@ -50,7 +55,11 @@ const DomainActionButtons = ({
         actions={isContextMenu ? basicActions.slice(2) : basicActions}
       >
         {!isContextMenu && (
-          <ActionButton label={Localization.kr.DISK} onClick={() => navigate("/storages/disks")} actionType={actionType} />
+          <ActionButton actionType={actionType} 
+          label={Localization.kr.DISK} 
+          iconPrefix={rvi16HardDrive(CONSTANT.color.black)}
+          onClick={() => navigate("/storages/disks")} 
+          />
         )}
       </ActionButtons>
    </>

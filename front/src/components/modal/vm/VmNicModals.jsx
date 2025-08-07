@@ -3,7 +3,7 @@ import useUIState from "../../../hooks/useUIState";
 import useGlobal from "../../../hooks/useGlobal";
 import VmNicModal from "./VmNicModal";
 import DeleteModal from "../../../utils/DeleteModal";
-import { useDeleteNetworkInterface, useNetworkInterfacesFromVM } from "../../../api/RQHook";
+import { useRemoveNicFromVm, useNetworkInterfacesFromVM } from "../../../api/RQHook";
 import Localization from "../../../utils/Localization";
 import VmNicActionModal from "./VmNicActionModal";
 
@@ -25,7 +25,7 @@ const VmNicModals = ({
 
   const vmId = useMemo(() => [...vmsSelected][0]?.id, [vmsSelected]);
   const { data: nics = [] } = useNetworkInterfacesFromVM(vmId, (e) => ({ ...e }));
-  const { mutate: deleteNetworkInterface } = useDeleteNetworkInterface();
+  const { mutate: deleteNetworkInterface } = useRemoveNicFromVm();
 
   const wrappedApi = {
     mutate: (nicId, options) => {

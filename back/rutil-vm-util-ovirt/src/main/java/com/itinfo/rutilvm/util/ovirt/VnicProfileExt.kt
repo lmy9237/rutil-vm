@@ -27,10 +27,10 @@ fun Connection.findAllVnicProfiles(follow: String = ""): Result<List<VnicProfile
 	throw if (it is Error) it.toItCloudException(Term.VNIC_PROFILE, "목록조회") else it
 }
 
-private fun Connection.srvVnicProfile(vnicProfileId: String): VnicProfileService =
+private fun Connection.srvVnicProfile(vnicProfileId: String?=""): VnicProfileService =
 	this.srvVnicProfiles().profileService(vnicProfileId)
 
-fun Connection.findVnicProfile(vnicprofileId: String, follow: String = ""): Result<VnicProfile?> = runCatching {
+fun Connection.findVnicProfile(vnicprofileId: String?="", follow: String = ""): Result<VnicProfile?> = runCatching {
 	this.srvVnicProfile(vnicprofileId).get().apply {
 		if(follow.isNotEmpty()) follow(follow)
 	}.send().profile()

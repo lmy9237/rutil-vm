@@ -42,25 +42,25 @@ const DiskActionButtons = ({
     e?.templateAttached || !!e?.connectTemplate?.name || false
   )
   const isInTransfer = disksSelected.every((e) => (
-    !!e?.imageTransferType && (e?.imageTransferType || "").toUpperCase() == "upload".toUpperCase()
+    !!e?.imageTransferType && (e?.imageTransferType || "").toLowerCase() == "upload".toLowerCase()
   ))
   const isTransferPaused = disksSelected.every((e) => (
-    (e?.imageTransferPhase || "").toUpperCase() == "paused_system".toUpperCase()
+    (e?.imageTransferPhase || "").toLowerCase() == "paused_system".toLowerCase()
   ))
   const isTransferInProgress = disksSelected.every((e) => (
-    (e?.imageTransferPhase || "").toUpperCase() == "resuming".toUpperCase() || 
-    (e?.imageTransferPhase || "").toUpperCase() == "transferring".toUpperCase()
+    (e?.imageTransferPhase || "").toLowerCase() == "resuming".toLowerCase() || 
+    (e?.imageTransferPhase || "").toLowerCase() == "transferring".toLowerCase()
   ))
   const isTransferInFinalizing = disksSelected.every((e) => (
-    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_success".toUpperCase() || 
-    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_failure".toUpperCase() ||
-    (e?.imageTransferPhase || "").toUpperCase() == "finalizing_cleanup".toUpperCase() ||
-    (e?.imageTransferPhase || "").toUpperCase() == "finished_success".toUpperCase() || 
-    (e?.imageTransferPhase || "").toUpperCase() == "finished_failure".toUpperCase() ||
-    (e?.imageTransferPhase || "").toUpperCase() == "finished_cleanup".toUpperCase()
+    (e?.imageTransferPhase || "").toLowerCase() == "finalizing_success".toLowerCase() || 
+    (e?.imageTransferPhase || "").toLowerCase() == "finalizing_failure".toLowerCase() ||
+    (e?.imageTransferPhase || "").toLowerCase() == "finalizing_cleanup".toLowerCase() ||
+    (e?.imageTransferPhase || "").toLowerCase() == "finished_success".toLowerCase() || 
+    (e?.imageTransferPhase || "").toLowerCase() == "finished_failure".toLowerCase() ||
+    (e?.imageTransferPhase || "").toLowerCase() == "finished_cleanup".toLowerCase()
   ))
   const isLocked = disksSelected.every((e) => (
-    e?.statusCode.toUpperCase() == "LOCKED".toUpperCase()
+    e?.statusCode.toLowerCase() == "locked".toLowerCase()
   ))
 
   const basicActions = [

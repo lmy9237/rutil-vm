@@ -8,16 +8,16 @@ export const FooterStateProvider = ({ children }) => {
   const KEY_FOOTER_HEIGHT_IN_PX = "footerHeightInPx"                  /* Footer 높이 */
   const KEY_FOOTER_JOB_REFETCH_INTERVAL = "footerJobRefetchInterval"; /* 최근작업 조회 처리 주기 (기본 5초) */
   
-  const initialState = JSON.parse(sessionStorage.getItem(KEY_FOOTER_STATE)) ?? {
+  const initialState = JSON.parse(localStorage.getItem(KEY_FOOTER_STATE)) ?? {
     [KEY_FOOTER_HEIGHT_IN_PX]: 0,
     [KEY_FOOTER_JOB_REFETCH_INTERVAL]: 5000,
   }
   const [sFooterState, sSetFooterState] = useState(initialState)
-  const _footerState = () => Object.assign({}, JSON.parse(sessionStorage.getItem(KEY_FOOTER_STATE)), sFooterState)
+  const _footerState = () => Object.assign({}, JSON.parse(localStorage.getItem(KEY_FOOTER_STATE)), sFooterState)
   const _setFooterState = (newUIState) => {
     Logger.debug(`FooterStateProvider > _setFooterState ... newUIState: `, newUIState);
     sSetFooterState(newUIState)
-    sessionStorage.setItem(KEY_FOOTER_STATE, JSON.stringify(newUIState));
+    localStorage.setItem(KEY_FOOTER_STATE, JSON.stringify(newUIState));
   }
 
    //#region: Footer 표출

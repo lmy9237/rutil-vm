@@ -32,10 +32,10 @@ fun Connection.findAllEvents(searchQuery: String = "", follow: String = "", max:
 	throw if (it is Error) it.toItCloudException(Term.EVENT, "목록조회") else it
 }
 
-private fun Connection.srvEvent(eventId: String): EventService =
+private fun Connection.srvEvent(eventId: String?=""): EventService =
 	this.srvEvents().eventService(eventId)
 
-fun Connection.findEvent(eventId: String): Result<Event?> = runCatching {
+fun Connection.findEvent(eventId: String?=""): Result<Event?> = runCatching {
 	this.srvEvent(eventId).get().send().event()
 }.onSuccess {
 	Term.EVENT.logSuccess("상세조회")

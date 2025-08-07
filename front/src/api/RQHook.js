@@ -64,7 +64,7 @@ const QK = {
 
   ALL_HOSTS: "allHosts",
   HOST: "host",
-  VM_FROM_HOST: "vmFromHost",
+  VMS_FROM_HOST: "vmFromHost",
   NETWORK_INTERFACES_FROM_HOST: "NetworkInterfacesFromHost", 
   NETWORK_INTERFACE_FROM_HOST: "NetworkInterfaceFromHost",
   NETWORK_ATTACHMENTS_FROM_HOST: "NetworkAttachmentsFromHost",
@@ -189,7 +189,7 @@ export const QP_DEFAULT_MOD = {
 //#region: Navigation
 const qpAllTreeNavigations = (
   type,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => ({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: type }],  // queryKey에 type을 포함시켜 type이 변경되면 데이터를 다시 가져옴
@@ -214,7 +214,7 @@ const qpAllTreeNavigations = (
  */
 export const useAllTreeNavigations = (
   type = "none",
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   ...qpAllTreeNavigations(type, mapPredicate),
 });
@@ -290,7 +290,7 @@ export const useDashboardHostList = (
 });
 
 export const useDashboardDomain = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_DOMAIN],
@@ -306,7 +306,7 @@ export const useDashboardDomain = (
 
 export const useDashboardHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_HOST],
@@ -322,7 +322,7 @@ export const useDashboardHost = (
 });
 
 export const useDashboardVmCpu = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_VM_CPU],
@@ -338,7 +338,7 @@ export const useDashboardVmCpu = (
 });
 
 export const useDashboardVmMemory = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_VM_MEMORY],
@@ -354,7 +354,7 @@ export const useDashboardVmMemory = (
 
 export const useDashboardVm = (
   vmId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.DASHBOARD_VM],
@@ -370,7 +370,7 @@ export const useDashboardVm = (
 
 
 export const useDashboardStorageMemory = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
@@ -386,7 +386,7 @@ export const useDashboardStorageMemory = (
 });
 
 export const useDashboardPerVmCpu = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_PER_VM_CPU],
@@ -401,7 +401,7 @@ export const useDashboardPerVmCpu = (
 });
 
 export const useDashboardPerVmMemory = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['dashboardPerVmMemory'],
@@ -416,7 +416,7 @@ export const useDashboardPerVmMemory = (
   }
 });
 // export const useDashboardPerVmNetwork = (
-//   mapPredicate = (e) => ({ ...e })
+//   mapPredicate=(e)=>({...e})
 // ) => useQuery({
 //   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
 //   queryKey: ['dashboardPerVmNetwork'],
@@ -433,7 +433,7 @@ export const useDashboardPerVmMemory = (
 // });
 
 export const useDashboardMetricVmCpu = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_METRIC_VM_CPU],
@@ -448,7 +448,7 @@ export const useDashboardMetricVmCpu = (
   }
 });
 export const useDashboardMetricVmMemory = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_METRIC_VM_MEMORY],
@@ -462,7 +462,7 @@ export const useDashboardMetricVmMemory = (
   }
 });
 export const useDashboardMetricStorage = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DASHBOARD_METRIC_STORAGE],
@@ -518,7 +518,7 @@ export const useUsageCluster = (
  * @see ApiManager.findAllDataCenters
  */
 export const useAllDataCenters = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.ALL_DATACENTERS],
@@ -540,7 +540,7 @@ export const useAllDataCenters = (
  * @see ApiManager.findAllDataCenters
  */
 export const useAllDataCentersWithHosts = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.ALL_DATACENTERS],
@@ -553,6 +553,27 @@ export const useAllDataCentersWithHosts = (
     return _res;
   }
 });
+
+export const qpDataCenter = (
+  dataCenterId,
+  variant="default",
+) => {
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
+  Logger.debug(`RQHook > qpDataCenter ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.DATACENTER, dataCenterId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findDataCenter(dataCenterId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!dataCenterId,
+  }
+}
 /**
  * @name useDataCenter
  * @description 데이터센터 정보 useQuery훅
@@ -562,17 +583,17 @@ export const useAllDataCentersWithHosts = (
  */
 export const useDataCenter = (
   dataCenterId,
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
-  queryKey: [QK.DATACENTER, dataCenterId],  // queryKey에 dataCenterId를 포함시켜 dataCenterId가 변경되면 다시 요청
-  queryFn: async () => {
-    const res = await ApiManager.findDataCenter(dataCenterId);  // dataCenterId에 따라 API 호출
-    const _res = validateAPI(res) ?? {};  // 데이터를 반환, 없는 경우 빈 객체 반환
-    Logger.debug(`RQHook > useDataCenter ... dataCenterId: ${dataCenterId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!dataCenterId,
-});
+) => useQuery({ ...qpDataCenter(dataCenterId) });
+/**
+ * @name useDataCenter4Edit
+ * @description 데이터센터 정보 useQuery훅 (편집용)
+ *
+ * @param {function} mapPredicate 객체 변형 처리
+ * @see ApiManager.findDataCenter
+ */
+export const useDataCenter4Edit = (
+  dataCenterId,
+) => useQuery({ ...qpDataCenter(dataCenterId, "edit") });
 
 /**
  * @name useClustersFromDataCenter
@@ -586,7 +607,7 @@ export const useDataCenter = (
  */
 export const useClustersFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.CLUSTERS_FROM_DATA_CENTER, dataCenterId],
@@ -613,7 +634,7 @@ export const useClustersFromDataCenter = (
  */
 export const useHostsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT, staleTime: DEFAULT_STALE_TIME, cacheTime: DEFAULT_CACHE_TIME,
   queryKey: [QK.HOSTS_FROM_DATA_CENTER, dataCenterId],
@@ -639,7 +660,7 @@ export const useHostsFromDataCenter = (
  */
 export const useVMsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT,
   queryKey: [QK.VMS_FROM_DATA_CENTER, dataCenterId],
@@ -667,7 +688,7 @@ export const useVMsFromDataCenter = (
  */
 const qpAllDomainsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => ({
   // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DOMAINS_FROM_DATA_CENTER, dataCenterId],
@@ -694,7 +715,7 @@ const qpAllDomainsFromDataCenter = (
  */
 export const useAllDomainsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...qpAllDomainsFromDataCenter(dataCenterId, mapPredicate)
 });
@@ -712,7 +733,7 @@ export const useAllDomainsFromDataCenter = (
  */
 export const qpAllActiveDomainsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_ACTIVE_DOMAINS_FROM_DATA_CENTER, dataCenterId],
@@ -739,7 +760,7 @@ export const qpAllActiveDomainsFromDataCenter = (
  */
 export const useAllActiveDomainsFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...qpAllActiveDomainsFromDataCenter(dataCenterId, mapPredicate)
 });
@@ -755,7 +776,7 @@ export const useAllActiveDomainsFromDataCenter = (
  */
 export const useAllActiveDomainsFromDataCenter4EachDisk = (
   disks=[],
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQueries({
   queries: [...disks]?.map((d, i) => {
     Logger.debug(`RQHook > useAllActiveDomainsFromDataCenter4EachDisk ... d: `, d);
@@ -778,7 +799,7 @@ export const useAllActiveDomainsFromDataCenter4EachDisk = (
  */
 export const qpAllNetworksFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORKS_FROM_DATA_CENTER, dataCenterId],
@@ -795,14 +816,14 @@ export const qpAllNetworksFromDataCenter = (
 
 export const useAllNetworksFromDataCenter = (
   datacenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...qpAllNetworksFromDataCenter(datacenterId, mapPredicate)
 });
 
 export const useAllNetworksFromDataCenter4EachDataCenter = (
   datacenters=[], 
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQueries({
   queries: [...datacenters].map((d) => ({
     ...qpAllNetworksFromDataCenter(d?.id, mapPredicate)
@@ -822,7 +843,7 @@ export const useAllNetworksFromDataCenter4EachDataCenter = (
  */
 export const useFindTemplatesFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.TEMPLATES_FROM_DATA_CENTER, dataCenterId],
@@ -848,7 +869,7 @@ export const useFindTemplatesFromDataCenter = (
  */
 export const useAllAttachedDisksFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_ATTACHED_DISKS_FROM_DATA_CENTER, dataCenterId],
@@ -875,7 +896,7 @@ export const useAllAttachedDisksFromDataCenter = (
  */
 export const useCdromFromDataCenter = (
   dataCenterId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
   allowedToFetch, setAllowToFetch
 ) => useQuery({
   ...QP_DEFAULT,
@@ -965,13 +986,13 @@ export const useEditDataCenter = (
   });
 };
 /**
- * @name useDeleteDataCenter
+ * @name useRemoveDataCenter
  * @description 데이터센터 삭제 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
- * @see ApiManager.deleteDataCenter
+ * @see ApiManager.removeDataCenter
  */
-export const useDeleteDataCenter = (
+export const useRemoveDataCenter = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
@@ -981,13 +1002,13 @@ export const useDeleteDataCenter = (
     return useMutation({
     mutationFn: async (dataCenterId) => {
       closeModal();
-      const res = await ApiManager.deleteDataCenter(dataCenterId);
+      const res = await ApiManager.removeDataCenter(dataCenterId);
       const _res = validateAPI(res) ?? {}
-      Logger.debug(`RQHook > useDeleteDataCenter ... dataCenterId: ${dataCenterId}`)
+      Logger.debug(`RQHook > useRemoveDataCenter ... dataCenterId: ${dataCenterId}`)
       return _res;
     },
     onSuccess: (res, { dataCenterId }) => {
-      Logger.debug(`RQHook > useDeleteDataCenter ... res: `, res)
+      Logger.debug(`RQHook > useRemoveDataCenter ... res: `, res)
       apiToast.ok(`${Localization.kr.DATA_CENTER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_DATACENTERS]);
       queryClient.removeQueries(QK.DATACENTER, dataCenterId);
@@ -1002,7 +1023,6 @@ export const useDeleteDataCenter = (
     },
   });
 };
-
 //#endregion: DataCenter
 
 
@@ -1015,7 +1035,7 @@ export const useDeleteDataCenter = (
  * @see ApiManager.findAllClusters
  */
 export const useAllClusters = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_CLUSTERS],
@@ -1036,7 +1056,7 @@ export const useAllClusters = (
  * @see ApiManager.findAllUpClusters
  */
 export const useAllUpClusters = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_CLUSTERS],
@@ -1048,7 +1068,28 @@ export const useAllUpClusters = (
     Logger.debug(`RQHook > useAllUpClusters ... res: `, _res);
     return _res
   }
-})
+});
+
+export const qpCluster = (
+  clusterId,
+  variant="default",
+) => {
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
+  Logger.debug(`RQHook > qpCluster ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.CLUSTER, clusterId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findCluster(clusterId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpCluster ... clusterId: ${clusterId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!clusterId,
+  }
+}
 /**
  * @name useCluster
  * @description 클러스터 상세조회 useQuery 훅
@@ -1060,19 +1101,20 @@ export const useAllUpClusters = (
  */
 export const useCluster = (
   clusterId
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,  // 윈도우 포커스 시 데이터 리프레시
-  queryKey: [QK.CLUSTER, clusterId],  // queryKey에 clusterId를 포함시켜 clusterId가 변경되면 다시 요청
-  queryFn: async () => {
-    const res = await ApiManager.findCluster(clusterId);
-    const _res = validateAPI(res) ?? {};
-    Logger.debug(`RQHook > useCluster ... clusterId: ${clusterId}, res: `, _res);
-    return _res
-  },
-  enabled: !!clusterId,
-  staleTime: 0,  // 항상 최신 데이터를 유지
-  cacheTime: 0,  // 캐시를 유지하지 않고 매번 새로운 데이터를 요청
-});
+) => useQuery({ ...qpCluster(clusterId) });
+/**
+ * @name useCluster4Edit
+ * @description 클러스터 상세조회 useQuery 훅
+ * 
+ * @param {string} clusterId 클러스터 ID
+ * @returns useQuery 훅
+ * 
+ * @see ApiManager.findCluster
+ */
+export const useCluster4Edit = (
+  clusterId
+) => useQuery({ ...qpCluster(clusterId, "edit") });
+
 /**
  * @name useNetworkFromCluster
  * @description 클러스터 내 논리네트워크 목록조회 useQuery훅
@@ -1085,7 +1127,7 @@ export const useCluster = (
  */
 export const useNetworkFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORK_FROM_CLUSTER, clusterId],
@@ -1111,7 +1153,7 @@ export const useNetworkFromCluster = (
  */
 export const useHostsFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.HOSTS_FROM_CLUSTER, clusterId],
@@ -1139,7 +1181,7 @@ export const useHostsFromCluster = (
  */
 export const useVMsFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.VMS_FROM_CLUSTER, clusterId],
@@ -1166,7 +1208,7 @@ export const useVMsFromCluster = (
  */
 export const usePermissionsFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.PERMISSIONS_FROM_CLUSTER, clusterId],
@@ -1193,7 +1235,7 @@ export const usePermissionsFromCluster = (
  */
 export const useCpuProfilesFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.CPU_PROFILES_FROM_CLUSTER, clusterId],
@@ -1222,7 +1264,7 @@ export const useCpuProfilesFromCluster = (
  */
 export const useAllOpearatingSystemsFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.OS_SYSTEMS_FROM_CLUSTER, clusterId],
@@ -1251,7 +1293,7 @@ export const useAllOpearatingSystemsFromCluster = (
  */
 export const useAllVnicsFromCluster = (
   clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VNIC_FROM_CLUSTER, clusterId],
@@ -1298,7 +1340,6 @@ export const useAddCluster = (
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       postError && postError(error);
     },
   });
@@ -1327,7 +1368,7 @@ export const useEditCluster = (
     onSuccess: (res, { clusterId }) => {
       Logger.debug(`RQHook > useEditCluster ... res: `, res);
       apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS,QK.CLUSTERS_FROM_DATA_CENTER]);
+      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       queryClient.invalidateQueries(QK.ALL_CLUSTERS, clusterId);
       postSuccess(res);
     },
@@ -1341,13 +1382,13 @@ export const useEditCluster = (
   });
 };
 /**
- * @name useDeleteCluster
+ * @name useRemoveCluster
  * @description 클러스터 삭제 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
- * @see ApiManager.deleteCluster
+ * @see ApiManager.removeCluster
  */
-export const useDeleteCluster = (
+export const useRemoveCluster = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient()
@@ -1358,26 +1399,25 @@ export const useDeleteCluster = (
     return useMutation({
     mutationFn: async (clusterId) => {
       closeModal();
-      const res = await ApiManager.deleteCluster(clusterId);
+      const res = await ApiManager.removeCluster(clusterId);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useDeleteCluster ... clusterId: ${clusterId}`)
+      Logger.debug(`RQHook > useRemoveCluster ... clusterId: ${clusterId}`)
       return _res;
     },
     onSuccess: (res, { clusterId }) => {
-      Logger.debug(`RQHook > useDeleteCluster ... res: `, res);
+      Logger.debug(`RQHook > useRemoveCluster ... res: `, res);
       apiToast.ok(`${Localization.kr.CLUSTER} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       queryClient.removeQueries(QK.CLUSTER, clusterId)
       setClustersSelected([])
       const datacenterId = datacentersSelected[0]?.id
       datacenterId && clearTabInPage("/computing/datacenters");
-      navigate(datacenterId ? `/computing/datacenters/${datacenterId}/clusters` : `/computing/rutil-manager/clusters`)
+      navigate(`/computing/rutil-manager/clusters`)
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_CLUSTERS, QK.CLUSTERS_FROM_DATA_CENTER]);
       postError && postError(error);
     },
   });
@@ -1396,7 +1436,7 @@ export const useDeleteCluster = (
  */
 export const useAllClusterLevels = (
   category="",
-  mapPredicate=(e)=>({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_CLUSTER_LEVELS],
@@ -1405,7 +1445,7 @@ export const useAllClusterLevels = (
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useAllClusterLevels ... res: `, _res);
+    Logger.debug(`RQHook > useAllClusterLevels ... category: ${category}, res: `, _res);
     return _res;
   }
 })
@@ -1419,16 +1459,17 @@ export const useAllClusterLevels = (
 export const useClusterLevel = (
   clusterLevelId="",
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_CLUSTERS],
   queryFn: async () => {
     const res = await ApiManager.findClusterLevel(clusterLevelId)
     const _res = validateAPI(res) ?? {}
-    Logger.debug(`RQHook > useClusterLevel ... useClusterLevel: ${clusterLevelId}`)
+    Logger.debug(`RQHook > useClusterLevel ... useClusterLevel: ${clusterLevelId}, res: `, _res)
     return _res
   }
 })
 //#endregion: Cluster Level (클러스터레벨)
+
 
 //#region: Host (호스트)
 /**
@@ -1439,9 +1480,9 @@ export const useClusterLevel = (
  * @see ApiManager.findAllHosts
  */
 export const useAllHosts = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
+  ...QP_DEFAULT,
   queryKey: [QK.ALL_HOSTS],
   queryFn: async () => {
     const res = await ApiManager.findAllHosts()
@@ -1452,6 +1493,26 @@ export const useAllHosts = (
     return _res
   }
 })
+export const qpHost = (
+  hostId,
+  variant="default",
+) => {
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
+  Logger.debug(`RQHook > qpHost ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.HOST, hostId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findHost(hostId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpHost ... hostId: ${hostId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!hostId,
+  }
+}
 /**
  * @name useHost
  * @description 호스트 상세조회 useQuery훅
@@ -1463,18 +1524,20 @@ export const useAllHosts = (
  */
 export const useHost = (
   hostId
-) => useQuery({
-  refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.HOST, hostId], 
-  queryFn: async () => {
-    const res = await ApiManager.findHost(hostId)
-    const _res = validateAPI(res) ?? {}
-    Logger.debug(`RQHook > useHost ... hostId: ${hostId},  res: `, _res);
-    return _res
-  },
-  enabled: !!hostId
-})
+) => useQuery({ ...qpHost(hostId) })
 
+/**
+ * @name useHost4Edit
+ * @description 호스트 상세조회 useQuery훅 (편집 중일 때)
+ * 
+ * @param {string} hostId 호스트ID
+ * @returns useQuery훅
+ * 
+ * @see ApiManager.findHost
+ */
+export const useHost4Edit = (
+  hostId
+) => useQuery({ ...qpHost(hostId, "edit") })
 
 /**
  * @name useVmsFromHost
@@ -1488,10 +1551,10 @@ export const useHost = (
  */
 export const useVmsFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
-  queryKey: [QK.VM_FROM_HOST, hostId],
+  queryKey: [QK.VMS_FROM_HOST, hostId],
   queryFn: async () => {
     const res = await ApiManager.findVmsFromHost(hostId);
     const _res = mapPredicate
@@ -1506,7 +1569,7 @@ export const useVmsFromHost = (
  * @name useNetworkInterfacesFromHost
  * @description 호스트 내 네트워크인터페이스 목록조회 useQuery훅
  * 
- * @param {string} hostId
+ * @param {string} hostId 호스트 ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
@@ -1514,7 +1577,7 @@ export const useVmsFromHost = (
  */
 export const useNetworkInterfacesFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORK_INTERFACES_FROM_HOST, hostId],
@@ -1532,8 +1595,8 @@ export const useNetworkInterfacesFromHost = (
  * @name useNetworkInterfaceFromHost
  * @description 호스트 내 네트워크인터페이스 조회 useQuery훅
  * 
- * @param {string} hostId
- * @param {string} nicId
+ * @param {string} hostId 호스트 ID
+ * @param {string} nicId NIC ID
  * @returns useQuery훅
  * 
  * @see ApiManager.findHostNicsFromHost
@@ -1555,7 +1618,7 @@ export const useNetworkInterfaceFromHost = (
  * @name useNetworkAttachmentsFromHost
  * @description 호스트 내 네트워크 결합 목록조회 useQuery훅
  * 
- * @param {string} hostId
+ * @param {string} hostId 호스트 ID
  * @param {function} mapPredicate 목록객체 변형 처리
  * @returns useQuery훅
  * 
@@ -1563,7 +1626,7 @@ export const useNetworkInterfaceFromHost = (
  */
 export const useNetworkAttachmentsFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORK_ATTACHMENTS_FROM_HOST, hostId],
@@ -1642,13 +1705,13 @@ export const useSetupNetworksFromHost = (
 };
 
 /**
- * @name useSyncallNetworksHost
+ * @name useSyncAllNetworksFromHost
  * @description 호스트 네트워크 동기화 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
- * @see ApiManager.syncallNetworksHost
+ * @see ApiManager.syncAllNetworksFromHost
  */
-export const useSyncallNetworksHost = (
+export const useSyncAllNetworksFromHost = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
@@ -1657,13 +1720,13 @@ export const useSyncallNetworksHost = (
     return useMutation({
     mutationFn: async (hostId) => {
       closeModal();
-      const res = await ApiManager.syncallNetworksHost(hostId);
+      const res = await ApiManager.syncAllNetworksFromHost(hostId);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useSyncallNetworksHost ... hostId: ${hostId}`);
+      Logger.debug(`RQHook > useSyncAllNetworksFromHost ... hostId: ${hostId}`);
       return _res;
     },
     onSuccess: (res, { hostId }) => {
-      Logger.debug(`RQHook > useSyncallNetworksHost ... res: `, res);
+      Logger.debug(`RQHook > useSyncAllNetworksFromHost ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.NETWORK} 동기화 ${Localization.kr.REQ_COMPLETE}`);
       invalidateQueriesWithDefault(queryClient, [QK.ALL_HOSTS, QK.NETWORK_ATTACHMENTS_FROM_HOST]);
       queryClient.invalidateQueries(QK.HOST, hostId);
@@ -1791,14 +1854,14 @@ export const useEditBonding = (
 };
 */
 /**
- * @name useDeleteBonding
+ * @name useRemoveBonding
  * @description 호스트 네트워크 본딩 삭제 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
- * @see ApiManager.deleteCluster
+ * @see ApiManager.removeCluster
  */
 /*
-export const useDeleteBonding = (
+export const useRemoveBonding = (
   postSuccess=()=>{},postError
 ) => {
   const queryClient = useQueryClient();
@@ -1809,11 +1872,11 @@ export const useDeleteBonding = (
       closeModal();
       const res = await ApiManager.deleteBonding(hostId, hostNicData);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useDeleteBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
+      Logger.debug(`RQHook > useRemoveBonding ... hostId: ${hostId}, hostNicData: `, hostNicData);
       return _res;
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteBonding ... res: `, res);
+      Logger.debug(`RQHook > useRemoveBonding ... res: `, res);
       apiToast.ok(`${Localization.kr.HOST} ${Localization.kr.NETWORK} 본딩 ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)  
       queryClient.invalidateQueries('NetworkInterfacesFromHost');
       postSuccess(res);
@@ -1838,7 +1901,7 @@ export const useDeleteBonding = (
  */
 export const useHostDevicesFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.HOST_DEVICES_FROM_HOST, hostId],
@@ -1865,7 +1928,7 @@ export const useHostDevicesFromHost = (
  */
 export const useStoragesFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.STORAGES_FROM_HOST, hostId],
@@ -1891,7 +1954,7 @@ export const useStoragesFromHost = (
  */
 export const useIscsiFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ISCSI_FROM_HOST, hostId],
@@ -1917,7 +1980,7 @@ export const useIscsiFromHost = (
  */
 export const useFibreFromHost = (
   hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.FIBRE_FROM_HOST, hostId],
@@ -2522,7 +2585,7 @@ export const useDeactivateGlobalHaHost = (
  * @see ApiManager.findAllVMs
  */
 export const useAllVMs = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VMS],
@@ -2541,11 +2604,9 @@ export const qpVm = (
   vmId,
   variant="default",
 ) => {
-  const qpDefault = (
-    variant === "edit" 
-      ? QP_DEFAULT_MOD
-      : QP_DEFAULT
-  )
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
   Logger.debug(`RQHook > qpVm ... variant: ${variant}`)
   return {
     ...qpDefault,
@@ -2570,7 +2631,7 @@ export const qpVm = (
 export const useVm = (
   vmId
 ) => useQuery({
-  ...qpVm(vmId),  
+  ...qpVm(vmId),
 });
 /**  
  * @name useVm4Edit
@@ -2597,7 +2658,7 @@ export const useVm4Edit = (
  */
 export const useAllDiskAttachmentsFromVm = (
   vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS_FROM_VM, vmId],
@@ -2624,7 +2685,7 @@ export const useAllDiskAttachmentsFromVm = (
  */
 export const useAllSnapshotsFromVm = (
   vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_SNAPSHOTS_FROM_VM, vmId],
@@ -2849,7 +2910,7 @@ export const useUndoSnapshot = (
  */
 export const useHostDevicesFromVM = (
   vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.HOST_DEVICES_FROM_VM, vmId],
@@ -2878,7 +2939,7 @@ export const useHostDevicesFromVM = (
  */
 export const useNetworkInterfacesFromVM = (
   vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.NETWORK_INTERFACES_FROM_VM, vmId],
@@ -2934,7 +2995,7 @@ export const useNetworkInterfaceFromVM = (
  */
 export const useApplicationsFromVM = (
   vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.APPLICATION_FROM_VM, vmId],
@@ -3071,7 +3132,8 @@ export const useEditVm = (
     onSuccess: (res, { vmId }) => {
       Logger.debug(`RQHook > useEditVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.UPDATE} ${Localization.kr.REQ_COMPLETE}`)
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries([QK.VM, vmId, "default"]);
       queryClient.invalidateQueries([QK.VM, vmId, "edit"]);
       postSuccess(res);
@@ -3079,7 +3141,8 @@ export const useEditVm = (
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
       queryClient.invalidateQueries([QK.VM, vmId, "default"]);
       queryClient.invalidateQueries([QK.VM, vmId, "edit"]);
       postError && postError(error);
@@ -3088,12 +3151,12 @@ export const useEditVm = (
 };
 
 /**
- * @name useDeleteVm
+ * @name useRemoveVm
  * @description 가상머신 삭제 useMutation 훅(아이디 잘뜸)
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteVm = (
+export const useRemoveVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
@@ -3106,43 +3169,27 @@ export const useDeleteVm = (
       closeModal();
       const res = await ApiManager.deleteVM(vmId, detachOnly);
       const _res = validateAPI(res) ?? {};
-      Logger.debug(`RQHook > useDeleteVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
+      Logger.debug(`RQHook > useRemoveVm ... vmId: ${vmId}, detachOnly: ${detachOnly}`);
       return _res;
     },
-    // onSuccess: (res, { vmId }) => {
-    //   Logger.debug(`RQHook > useDeleteVm ... res: `, res);
-    //   apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
-    //   invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
-    //   queryClient.invalidateQueries([QK.VM, vmId]);
-    //   setVmsSelected([]);
-    //   const hostId = hostsSelected[0]?.id
-    //   navigate(hostId ? `/computing/hosts/${hostId}/vms` : `/computing/rutil-manager/vms`)
-    //   postSuccess(res);
-    // },
     onSuccess: (res, { vmId }) => {
-      Logger.debug(`RQHook > useDeleteVm ... res: `, res);
+      Logger.debug(`RQHook > useRemoveVm ... res: `, res);
       setVmsSelected([]);
       apiToast.ok(`${Localization.kr.VM} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`);
       queryClient.removeQueries([QK.VM, vmId, "default"]);
       queryClient.removeQueries([QK.VM, vmId, "edit"]);
       queryClient.invalidateQueries([QK.ALL_VMS]);
       queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
-      queryClient.invalidateQueries([QK.SNAPSHOTS_FROM_VM, vmId]);
-
-      // 라우팅
-      const hostId = hostsSelected[0]?.id
-      // navigate(!!hostId && hostId !== "null" 
-      //   ? `/computing/hosts/${hostId}/vms`
-      //   : `/computing/vms`
-      // )
+      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
       navigate(`/computing/vms`)
-
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
       Logger.error(error.message);
       apiToast.error(error.message);
-      invalidateQueriesWithDefault(queryClient, [QK.ALL_VMS, QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.ALL_VMS]);
+      queryClient.invalidateQueries([QK.ALL_DISKS_FROM_VM]);
+      queryClient.invalidateQueries([QK.ALL_SNAPSHOTS_FROM_VM, vmId]);
       postError && postError(error);
     },
   });
@@ -3689,6 +3736,7 @@ export const useAttachNicFromVM = (
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
+  const { setNicsSelected } = useGlobal();
     return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
       closeModal();
@@ -3702,6 +3750,7 @@ export const useAttachNicFromVM = (
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.ATTACH} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      setNicsSelected([]);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
@@ -3709,6 +3758,7 @@ export const useAttachNicFromVM = (
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      setNicsSelected([]);
       postError && postError(error);
     },
   });
@@ -3740,6 +3790,7 @@ export const useDetachNicFromVM = (
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.DETACH} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      setNicsSelected([]);
       postSuccess(res);
     },
     onError: (error, { vmId }) => {
@@ -3747,42 +3798,44 @@ export const useDetachNicFromVM = (
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
       queryClient.invalidateQueries([QK.NETWORK_INTERFACES_FROM_VM, vmId]); 
+      setNicsSelected([]);
       postError && postError(error);
     },
   });
 };
 
 /**
- * @name useDeleteNetworkInterface
+ * @name useRemoveNicFromVm
  * @description 가상머신 네트워크 인터페이스 삭제 useMutation 훅
  * 
  * @returns {import("@tanstack/react-query").UseMutationResult} useMutation 훅
  */
-export const useDeleteNetworkInterface = (
+export const useRemoveNicFromVm = (
   postSuccess=()=>{}, postError
 ) => {
   const queryClient = useQueryClient();
   const { closeModal } = useUIState();
   const { apiToast } = useApiToast();
-    // closeModal();
   return useMutation({
     mutationFn: async ({ vmId, nicId }) => {
       closeModal();
-      const res = await ApiManager.deleteNicFromVM(vmId, nicId);
+      const res = await ApiManager.removeNicFromVm(vmId, nicId);
       const _res = validateAPI(res) ?? {}
-      Logger.debug(`RQHook > useDeleteNetworkInterface ... vmId: ${vmId}, nicId: ${nicId}`);
+      Logger.debug(`RQHook > useRemoveNicFromVm ... vmId: ${vmId}, nicId: ${nicId}`);
       return _res
     },
     onSuccess: (res) => {
-      Logger.debug(`RQHook > useDeleteNetworkInterface ... res: `, res);
+      Logger.debug(`RQHook > useRemoveNicFromVm ... res: `, res);
       apiToast.ok(`${Localization.kr.VM}에 ${Localization.kr.NICS} ${Localization.kr.REMOVE} ${Localization.kr.REQ_COMPLETE}`)
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      setNicsSelected([]);
       postSuccess(res);
     },
     onError: (error) => {
       Logger.error(error.message);
       apiToast.error(error.message);
       invalidateQueriesWithDefault(queryClient, [QK.NETWORK_INTERFACE_FROM_VM]);
+      setNicsSelected([]);
       postError && postError(error);
     },
   });
@@ -4131,7 +4184,7 @@ export const useFindDiskFromVM = (vmId,diskId) => useQuery({
  * @param {function} mapPredicate 객체 변형 처리
  */
 export const useAllTemplates = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_TEMPLATES],
@@ -4179,7 +4232,7 @@ export const useTemplate = (
  */
 export const useAllVmsFromTemplate = (
   templateId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VMS_FROM_TEMPLATE, templateId],
@@ -4206,7 +4259,7 @@ export const useAllVmsFromTemplate = (
  */
 export const useAllNicsFromTemplate = (
   templateId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_NICS_FROM_TEMPLATE, templateId],
@@ -4237,7 +4290,7 @@ export const useAllNicsFromTemplate = (
 export const useNicFromTemplate = (
   templateId,
   nicId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) =>
   useQuery({
     queryKey: [QK.NIC_FROM_TEMPLATE, templateId, nicId],
@@ -4260,7 +4313,7 @@ export const useNicFromTemplate = (
  */
 export const useAllDisksFromTemplate = (
   templateId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS_FROM_TEMPLATE, templateId],
@@ -4287,7 +4340,7 @@ export const useAllDisksFromTemplate = (
  */
 export const useAllStoragesFromTemplate = (
   templateId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_STORAGES_FROM_TEMPLATE, templateId],
@@ -4422,7 +4475,7 @@ export const useDeleteTemplate = (
  * @see ApiManager.findAllBiosTypes
  */
 export const useAllBiosTypes = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_BIOS_TYPES],
@@ -4444,7 +4497,7 @@ export const useAllBiosTypes = (
  * @see ApiManager.findAllBiosTypes
  */
 export const useAllDiskContentTypes = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_DISK_CONTENT_TYPES],
@@ -4466,7 +4519,7 @@ export const useAllDiskContentTypes = (
  * @see ApiManager.findAllMigrationSupports
  */
 export const useAllMigrationSupports = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_MIGRATION_SUPPORTS],
@@ -4488,7 +4541,7 @@ export const useAllMigrationSupports = (
  * @see ApiManager.findAllMigrationSupports
  */
 export const useAllQuotaEnforcementTypes = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_QUOTA_ENFORCEMENT_TYPES],
@@ -4510,7 +4563,7 @@ export const useAllQuotaEnforcementTypes = (
  * @see ApiManager.findAllVmTypes
  */
 export const useAllVmTypes = (
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VM_TYPES],
@@ -4647,7 +4700,7 @@ export const useDeleteNetworkFromTemplate = (
  * @returns useQuery훅
  */
 export const useAllNetworks = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_NETWORKS],
@@ -4660,6 +4713,27 @@ export const useAllNetworks = (
     return _res
   }
 });
+
+export const qpNetwork = (
+  networkId,
+  variant="default",
+) => {
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
+  Logger.debug(`RQHook > qpNetwork ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.NETWORK, networkId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findNetwork(networkId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpNetwork ... networkId: ${networkId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!networkId,
+  }
+}
 /**
  * @name useNetwork
  * @description 네트워크 상세조회 useQuery 훅
@@ -4669,18 +4743,18 @@ export const useAllNetworks = (
  */
 export const useNetwork = (
   networkId
-) => useQuery({
-  queryKey: [QK.NETWORK, networkId],
-  queryFn: async () => {
-    const res = await ApiManager.findNetwork(networkId);
-    const _res = validateAPI(res) ?? {};
-    Logger.debug(`RQHook > useFibreFromHost ... networkId: ${networkId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!networkId,
-  staleTime: 0,
-  cacheTime: 0,
-});
+) => useQuery({ ...qpNetwork(networkId) })
+/**
+ * @name useNetwork4Edit
+ * @description 네트워크 상세조회 useQuery 훅 (편집용)
+ * 
+ * @param {string} networkId 네트워크 ID
+ * @returns useQuery 훅
+ */
+export const useNetwork4Edit = (
+  networkId
+) => useQuery({ ...qpNetwork(networkId, "edit") })
+
 /**
  * @name useAllClustersFromNetwork
  * @description 네트워크 내 클러스터 목록조회 useQuery훅
@@ -4693,7 +4767,7 @@ export const useNetwork = (
  */
 export const useAllClustersFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.CLUSTERS_FROM_NETWORK, networkId],
@@ -4719,7 +4793,7 @@ export const useAllClustersFromNetwork = (
  */
 export const useConnectedHostsFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.CONNECTED_HOSTS_FROM_NETWORK, networkId],
@@ -4749,7 +4823,7 @@ export const useConnectedHostsFromNetwork = (
  */
 export const useDisconnectedHostsFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.DISCONNECTED_HOSTS_FROM_NETWORK, networkId],
@@ -4779,7 +4853,7 @@ export const useDisconnectedHostsFromNetwork = (
  */
 export const useAllVmsFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.VM_FROM_NETWORK, networkId],
@@ -4802,7 +4876,7 @@ export const useAllVmsFromNetwork = (
  */
 export const useAllTemplatesFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.TEMPLATE_FROM_NETWORK, networkId],
@@ -4828,7 +4902,7 @@ export const useAllTemplatesFromNetwork = (
  */
 const qpAllVnicProfilesFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.VNIC_PROFILES_FROM_NETWORK, networkId],
@@ -4854,7 +4928,7 @@ const qpAllVnicProfilesFromNetwork = (
  */
 export const useAllVnicProfilesFromNetwork = (
   networkId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQuery({ 
   ...qpAllVnicProfilesFromNetwork(networkId, mapPredicate)
 });
@@ -4870,7 +4944,7 @@ export const useAllVnicProfilesFromNetwork = (
  */
 export const useAllVnicProfilesFromNetwork4EachNetwork = (
   networks=[],
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
 ) => useQueries({
   queries: [...networks].map((n) => ({
     ...qpAllVnicProfilesFromNetwork(n?.id, mapPredicate)
@@ -4993,7 +5067,7 @@ export const useDeleteNetwork = (
  * @returns useQuery훅
  */
 export const useAllNetworkProviders = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_NETWORK_PROVIDERS],
@@ -5008,7 +5082,7 @@ export const useAllNetworkProviders = (
 });
 export const useAllNetworksFromNetworkProvider = (
   providerId,
-  mapPredicate = (e) => ({ ...e }),
+  mapPredicate=(e)=>({...e}),
   onError = (err)=> {},
 ) => useQuery({
   ...QP_DEFAULT,
@@ -5027,7 +5101,7 @@ export const useAllNetworksFromNetworkProvider = (
 // TODO: 네트워크공급자가 일단 한건만 오는 API로 만들었는데 백엔드 설명에는 목록을 주는 걸로 돼있음.  왜 단일건으로 조회되게 만들었는지 확인필요
 /* 
 export const useAllNetworkProviders = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_NETWORK_PROVIDERS],
@@ -5052,7 +5126,7 @@ export const useAllNetworkProviders = (
  * @see ApiManager.findAllVnicProfiles
  */
 export const useAllVnicProfiles = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VNICPROFILES],
@@ -5097,7 +5171,7 @@ export const useVnicProfile = (vnicId) => useQuery({
  * @see ApiManager.findAllVmsFromVnicProfiles
  */
 export const useAllVmsFromVnicProfiles = (vnicProfileId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VMS_FROM_VNIC_PROFILES, vnicProfileId],
@@ -5123,7 +5197,7 @@ export const useAllVmsFromVnicProfiles = (vnicProfileId,
  * @see ApiManager.findAllTemplatesFromVnicProfiles
  */
 export const useAllTemplatesFromVnicProfiles = (vnicProfileId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_TEMPLATES_FROM_VNIC_PROFILES, vnicProfileId],
@@ -5257,7 +5331,7 @@ export const useDeleteVnicProfile = (
  * @see ApiManager.findAllNetworkFilters
  */
 export const useAllNetworkFilters = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_NETWORK_FILTERS],
@@ -5282,7 +5356,7 @@ export const useAllNetworkFilters = (
  * @returns useQuery훅
  */
 export const useAllStorageDomains = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_STORAGEDOMAINS],
@@ -5296,7 +5370,7 @@ export const useAllStorageDomains = (
   }
 });
 // export const qpAllValidDomains = (
-//   mapPredicate = (e) => ({ ...e })
+//   mapPredicate=(e)=>({...e})
 // ) => useQuery({
 //   // refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
 //   queryKey: [QK.ALL_VALID_DOMAINS],
@@ -5318,7 +5392,7 @@ export const useAllStorageDomains = (
  * @returns useQuery훅
  */
 export const useAllNfsStorageDomains = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_NFS_STORAGE_DOMAINS],
@@ -5362,7 +5436,7 @@ export const useStorageDomain = (storageDomainId) => useQuery({
  */
 export const useAllDataCentersFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_DATA_CENTERS_FROM_DOMAIN, storageDomainId],
@@ -5388,7 +5462,7 @@ export const useAllDataCentersFromDomain = (
  */
 export const useAllHostsFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   queryKey: [QK.ALL_HOSTS_FROM_DOMAIN, storageDomainId],
   queryFn: async () => {
@@ -5403,7 +5477,7 @@ export const useAllHostsFromDomain = (
 })
 
 /**
- * @name useAllVMsFromDomain
+ * @name useAllVmsFromStorageDomain
  * @description 도메인 내 디스크 목록조회 useQuery훅
  * 
  * @param {string} storageDomainId 도메인ID
@@ -5412,8 +5486,8 @@ export const useAllHostsFromDomain = (
  * 
  * @see ApiManager.findAllVMsFromDomain
  */
-export const useAllVMsFromDomain = (storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+export const useAllVmsFromStorageDomain = (storageDomainId,
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VMS_FROM_DOMAIN, storageDomainId],
@@ -5422,7 +5496,7 @@ export const useAllVMsFromDomain = (storageDomainId,
     const _res = mapPredicate
       ? validateAPI(res)?.map(mapPredicate) ?? [] // 데이터 가공
       : validateAPI(res) ?? [];
-    Logger.debug(`RQHook > useAllVMsFromDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
+    Logger.debug(`RQHook > useAllVmsFromStorageDomain ... storageDomainId: ${storageDomainId}, res: `, _res);
     return _res;
   },
   enabled: !!storageDomainId,
@@ -5441,7 +5515,7 @@ export const useAllVMsFromDomain = (storageDomainId,
  * @see ApiManager.findAllUnregisterdVMsFromDomain
  */
 export const useAllUnregisteredVMsFromDomain = (storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_UNREGISTER_VM_FROM_DOMAIN, storageDomainId], 
@@ -5505,7 +5579,7 @@ export const useRegisteredVmFromDomain = (
  * @see ApiManager.findAllDataCenterFromDomain
  */
 export const useAllDisksFromDomain = (storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS_FROM_DOMAIN, storageDomainId],
@@ -5530,7 +5604,7 @@ export const useAllDisksFromDomain = (storageDomainId,
  * @see ApiManager.findAllUnregisteredDisksFromDomain
  */
 export const useAllUnregisteredDisksFromDomain = (storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_UNREGISTERED_DISKS_FROM_DOMAIN, storageDomainId],
@@ -5644,7 +5718,7 @@ export const useDeletRegisteredDiskFromDomain = (
  */
 export const useAllTemplatesFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_TEMPLATES_FROM_DOMAIN, storageDomainId],
@@ -5670,7 +5744,7 @@ export const useAllTemplatesFromDomain = (
  */
 export const useAllUnregisteredTemplatesFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_UNREGISTERED_TEMPLATES_FROM_DOMAIN, storageDomainId],
@@ -5698,7 +5772,7 @@ export const useAllUnregisteredTemplatesFromDomain = (
  */
 export const qpAllDiskProfilesFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_DISK_PROFILES_FROM_DOMAIN, storageDomainId],
@@ -5724,7 +5798,7 @@ export const qpAllDiskProfilesFromDomain = (
  */
 export const useAllDiskProfilesFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...qpAllDiskProfilesFromDomain(storageDomainId, mapPredicate)
 });
@@ -5741,7 +5815,7 @@ export const useAllDiskProfilesFromDomain = (
  */
 export const useAllDiskProfilesFromDomain4EachDomain = (
   domains=[],
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQueries({
   queries: [...domains]?.map((d, i) => {
     Logger.debug(`RQHook > useAllDiskProfilesFromDomain4EachDomain ... d: `, d);
@@ -5765,7 +5839,7 @@ export const useAllDiskProfilesFromDomain4EachDomain = (
  */
 export const useAllDiskSnapshotsFromDomain = (
   storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_DISK_SNAPSHOT_FROM_DOMAIN, storageDomainId],
@@ -5791,7 +5865,7 @@ export const useAllDiskSnapshotsFromDomain = (
  * @see ApiManager.findActiveDataCenters
  */
 export const useAllActiveDataCenters = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_ACTIVE_DATA_CENTERS],
@@ -6203,7 +6277,7 @@ export const useMaintenanceDomain = (
  * @returns useQuery훅
  */
 export const useAllDisks = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_DISKS],
@@ -6234,6 +6308,26 @@ export const useCdromsDisks = (
   enabled: diskIds.length > 0,
 });
 
+export const qpDisk = (
+  diskId,
+  variant="default",
+) => {
+  const qpDefault = variant === "edit" 
+    ? QP_DEFAULT_MOD
+    : QP_DEFAULT
+  Logger.debug(`RQHook > qpDisk ... variant: ${variant}`)
+  return {
+    ...qpDefault,
+    queryKey: [QK.DISK, diskId, variant],
+    queryFn: async () => {
+      const res = await ApiManager.findDisk(diskId);
+      const _res = validateAPI(res) ?? {};
+      Logger.debug(`RQHook > qpDisk ... diskId: ${diskId}, res: `, _res);
+      return _res;
+    },
+    enabled: !!diskId,
+  }
+}
 /**
  * @name useDisk
  * @description 디스크 상세조회 useQuery 훅
@@ -6243,18 +6337,17 @@ export const useCdromsDisks = (
  */
 export const useDisk = (
   diskId
-) => useQuery({
-  queryKey: [QK.DISK, diskId],
-  queryFn: async () => {
-    const res = await ApiManager.findDisk(diskId);
-    const _res = validateAPI(res) ?? {};
-    Logger.debug(`RQHook > useDisk ... diskId: ${diskId}, res: `, _res);
-    return _res;
-  },
-  enabled: !!diskId,
-  staleTime: 0,
-  cacheTime: 0,
-});
+) => useQuery({ ...qpDisk(diskId) });
+/**
+ * @name useDisk4Edit
+ * @description 디스크 상세조회 useQuery 훅
+ * 
+ * @param {string} diskId 디스크ID
+ * @returns useQuery 훅
+ */
+export const useDisk4Edit = (
+  diskId
+) => useQuery({ ...qpDisk(diskId, "edit") });
 /**
  * @name useAllVmsFromDisk
  * @description 디스크 내 가상머신 목록조회 useQuery훅
@@ -6267,7 +6360,7 @@ export const useDisk = (
  */
 export const useAllVmsFromDisk = (
   diskId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_VMS_FROM_DISK, diskId],
@@ -6294,7 +6387,7 @@ export const useAllVmsFromDisk = (
  */
 export const useAllStorageDomainsFromDisk = (
   diskId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_STORAGE_DOMAINS_FROM_DISK, diskId],
@@ -6321,7 +6414,7 @@ export const useAllStorageDomainsFromDisk = (
  */
 export const qpAllStorageDomainsToMoveFromDisk = (
   diskId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => ({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allStorageDomainsToMoveFromDisk', diskId],
@@ -6347,7 +6440,7 @@ export const qpAllStorageDomainsToMoveFromDisk = (
  */
 export const useAllStorageDomainsToMoveFromDisk = (
   diskId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...qpAllStorageDomainsToMoveFromDisk(diskId, mapPredicate)
 });
@@ -6364,7 +6457,7 @@ export const useAllStorageDomainsToMoveFromDisk = (
  */
 export const useAllStorageDomainsToMoveFromDisk4EachDisk = (
   disks=[],
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQueries({
   queries: [...disks]?.map((d, i) => {
     Logger.debug(`RQHook > useAllStorageDomainsToMoveFromDisk4EachDisk ... d: `, d);
@@ -6711,7 +6804,7 @@ export const useCopyDisk = (
  */
 export const useAllEvents = ({
   page = null, size = null, minSeverity = null, startDate = null,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   refetchInterval: DEFAULT_CACHE_TIME,
@@ -6741,7 +6834,7 @@ export const useAllEvents = ({
  */
 export const useAllEventsFromDataCenter = ({
   page=null, size=null, datacenterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_DATA_CENTER, datacenterId],
@@ -6769,7 +6862,7 @@ export const useAllEventsFromDataCenter = ({
  */
 export const useAllEventsFromCluster = ({
   page=null, size=null, clusterId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_CLUSTER, clusterId],
@@ -6798,7 +6891,7 @@ export const useAllEventsFromCluster = ({
  */
 export const useAllEventsFromHost = ({
   page=null, size=null, hostId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_EVENTS_FROM_HOST, hostId],
@@ -6827,7 +6920,7 @@ export const useAllEventsFromHost = ({
  */
 export const useAllEventsFromVM = ({
   page=null, size=null, vmId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_VM, vmId],
@@ -6856,7 +6949,7 @@ export const useAllEventsFromVM = ({
  */
 export const useAllEventsFromDomain = ({
   page=null, size=null, storageDomainId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_DOMAIN, storageDomainId],
@@ -6885,7 +6978,7 @@ export const useAllEventsFromDomain = ({
  */
 export const useAllEventsFromTemplate = ({
   page=null, size=null, templateId,
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.EVENTS_FROM_TEMPLATE, templateId],
@@ -6908,7 +7001,7 @@ export const useAllEventsFromTemplate = ({
  * @returns useQuery훅
  */
 export const useAllEventsNormal = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_EVENTS_NORMAL],
@@ -6925,7 +7018,7 @@ export const useAllEventsNormal = (
 });
 
 export const useAllEventsAlert = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_EVENTS_ALERT],
@@ -7004,7 +7097,7 @@ export const useRemoveEvents = (
 
 //#region: job
 export const useAllJobs = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_JOBS],
@@ -7197,7 +7290,7 @@ export const useRemoveJobs = (
  * @returns useQuery훅
  */
 export const useAllProviders = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   ...QP_DEFAULT,
   queryKey: [QK.ALL_PROVIDERS],
@@ -7382,7 +7475,7 @@ export const useAuthenticate4VMWare = (
  */
 export const useVmsFromVMWare = ({
   baseUrl="", sessionId="", 
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['allVmsFromVMWare', baseUrl, sessionId],
@@ -7403,7 +7496,7 @@ export const useVmsFromVMWare = ({
  */
 export const useVmFromVMWare = ({
   baseUrl="", sessionId="", vmIds="",
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 }) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: ['vmFromVMWare', vmIds], 
@@ -7428,7 +7521,7 @@ export const useVmFromVMWare = ({
  * @returns useQuery훅
  */
 export const useAllUsers = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_USERS],
@@ -7654,7 +7747,7 @@ export const useRemoveUser = (
  */
 export const useAllUserSessions = (
   username = "",
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_USER_SESSIONS],
@@ -7671,7 +7764,7 @@ export const useAllUserSessions = (
 
 //#region: Certificate(s)
 export const useAllCerts = (
-  mapPredicate = (e) => ({ ...e })
+  mapPredicate=(e)=>({...e})
 ) => useQuery({
   refetchInterval: DEFAULT_REFETCH_INTERVAL_IN_MILLI,
   queryKey: [QK.ALL_CERTS],
@@ -7731,28 +7824,24 @@ export const useAttachCert = (
 };
 //#endregion: Certificate(s)
 
-export async function invalidateQueriesWithDefault(
+export function invalidateQueriesWithDefault(
   queryClient = null,
   qks=[],
 ) {
   for (let qk of qks) {
-    await queryClient.invalidateQueries(qk);
+    queryClient.invalidateQueries(qk);
   }
-  await queryClient.invalidateQueries({
+  queryClient.invalidateQueries({
     queryKey: [QK.ALL_JOBS],
-    refetchType: 'active',
   });
-  await queryClient.invalidateQueries({
-    queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "cluster" }],
-    refetchType: 'active'
+  queryClient.invalidateQueries({
+    queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "cluster" }],    
   });
-  await queryClient.invalidateQueries({
+  queryClient.invalidateQueries({
     queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "network" }],
-    refetchType: 'active'
   });
-  await queryClient.invalidateQueries({
+  queryClient.invalidateQueries({
     queryKey: [QK.ALL_TREE_NAVIGATIONS, { type: "storage" }],
-    refetchType: 'active'
   });
 }
 

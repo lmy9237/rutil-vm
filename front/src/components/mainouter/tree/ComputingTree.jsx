@@ -54,13 +54,14 @@ const ComputingTree = ({}) => {
     isLoading: isNavClustersLoading,
     isSuccess: isNavClustersSuccess,
     isError: isNavClustersError,
+    isRefetching: isNavClustersRefetching,
   } = useAllTreeNavigations("cluster");
 
   const renderTree = () => {
     Logger.debug(`ComputingTree > renderTree ... `)
     {/* 두 번째 레벨 (Data Center) */}
 
-    return !!isNavClustersLoading
+    return isNavClustersLoading
       ? (<Loading />)
       : (secondVisibleComputing() && [...navClusters].map((dc) => {
       const isDataCenterOpen = openDataCentersComputing(dc?.id) || false;

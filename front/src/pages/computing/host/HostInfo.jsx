@@ -112,7 +112,7 @@ const HostInfo = () => {
     { type: "host:remove", onClick: () => setActiveModal("host:remove"),             label: Localization.kr.REMOVE, disabled: !isMaintenance || isInstalling, },
   ]), [host])
 
-  const popupItems = [
+  const popupItems = useMemo(() => ([
     { type: "deactivate",    onClick: () => setActiveModal("host:deactivate"),       label: Localization.kr.MAINTENANCE,          disabled: isInstalling || isNonOperational || !isUp, },
     { type: "activate",      onClick: () => setActiveModal("host:activate"),         label: Localization.kr.ACTIVATE,             disabled: !isMaintenance || isUp || isInstalling, },
     { type: "restart",       onClick: () => setActiveModal("host:restart"),          label: Localization.kr.RESTART,              disabled: !isUp || isInstalling, },
@@ -121,7 +121,7 @@ const HostInfo = () => {
     { type: "enrollCert",    onClick: () => setActiveModal("host:enrollCert"),       label: `${Localization.kr.CERTIFICATE} ${Localization.kr.ENROLL}`, disabled: isUp || isInstalling, },
     { type: "haOn",          onClick: () => setActiveModal("host:haOn"),             label: "글로벌 HA 유지 관리를 활성화",           disabled: !isHostedConfigured || /*!isMaintenance ||*/ isGlobalMaintenance, }, 
     { type: "haOff",         onClick: () => setActiveModal("host:haOff"),            label: "글로벌 HA 유지 관리를 비활성화",          disabled: !isHostedConfigured || /*!isMaintenance ||*/ !isGlobalMaintenance, },
-  ];
+  ]), [host]);
 
   useEffect(() => {
     Logger.debug(`HostInfo > useEffect ... section: ${section}`)
@@ -141,14 +141,14 @@ const HostInfo = () => {
 
   useEffect(() => {
     Logger.debug(`HostInfo > useEffect ... (for Host status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(host?.status)
     Logger.debug(`HostInfo > useEffect ... look for Host status (${host?.status}) in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {
       refetchHost()
     }, intervalInMilli) // 주기적 조회
     return () => {clearInterval(intervalId)}
-  }, [hostId, host, activeModal])
+  }, [hostId, host, activeModal, setActiveModal])
 
   return (
     <SectionLayout>

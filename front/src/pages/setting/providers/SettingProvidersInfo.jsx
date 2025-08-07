@@ -27,10 +27,12 @@ import Logger                 from "@/utils/Logger";
  */
 const SettingProvidersInfo = () => {
   const navigate = useNavigate();
-  const { activeModal, setActiveModal, } = useUIState()
+  const { providersSelected, _setProvidersSelected } = useGlobal();
+  const { 
+    activeModal, setActiveModal
+  } = useUIState()
   const { id: providerId, section } = useParams();
   const [activeTab, setActiveTab] = useState(section || "general");
-  const { providersSelected, _setProvidersSelected } = useGlobal();
 
   const {
     data: provider,
@@ -41,11 +43,8 @@ const SettingProvidersInfo = () => {
     refetch: refetchVm,
    } = useProvider(providerId);
 
-  useEffect(() => {
-    setActiveTab(section || "general");  
-  }, [section]);
-
   const handleTabClick = useCallback((tab) => {
+    Logger.debug(`SettingProvidersInfo > handleTabClick ... tab: ${tab}, providerId: ${providerId}`)
     const path =
       tab === "general"
         ? `/settings/provider/${providerId}`
@@ -76,7 +75,12 @@ const SettingProvidersInfo = () => {
   const sectionHeaderButtons = useMemo(() => [
     { type: "update", onClick: () => setActiveModal("provider:update"), label: Localization.kr.UPDATE,  },
     { type: "remove", onClick: () => setActiveModal("provider:remove"), label: Localization.kr.REMOVE,},
-  ], [])
+  ], []);
+
+  useEffect(() => {
+    Logger.debug(`SettingProvidersInfo > useEffect ... section: ${section}`)
+    setActiveTab(section || "general");  
+  }, [section]);
   
   return (
     <SectionLayout>
@@ -86,10 +90,7 @@ const SettingProvidersInfo = () => {
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}
-        <TabNavButtonGroup
-          tabs={tabs}
-          tabActive={activeTab} setTabActive={setActiveTab}
-        />
+        <TabNavButtonGroup tabs={tabs} tabActive={activeTab} setTabActive={setActiveTab} />
         <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/settings/provider/${providerId}`} />
           {renderSectionContent()}

@@ -80,12 +80,12 @@ const DiskInfo = () => {
   const domainNotActive = domain?.status?.toLowerCase() !== "active";
   const hasVmAtttached = disk?.vmAttached || !!disk?.connectVm?.name || false
   const hasTemplateAtttached = disk?.templateAttached || !!disk?.connectTemplate?.name || false
-  const isLocked = disk?.statusCode.toUpperCase() == "LOCKED".toUpperCase()
-  const isInTransfer = !!disk?.imageTransferType && (disk?.imageTransferType || "").toUpperCase() == "upload".toUpperCase()
+  const islocked = disk?.statusCode.toLowerCase() == "locked".toLowerCase()
+  const isInTransfer = !!disk?.imageTransferType && (disk?.imageTransferType || "").toLowerCase() == "upload".toLowerCase()
 
   const sectionHeaderButtons = [
-    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update"), disabled: hasTemplateAtttached || isInTransfer || isLocked },
-    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove"), disabled: domainNotActive || hasVmAtttached || hasTemplateAtttached || isInTransfer || isLocked },
+    { type: "update", label: Localization.kr.UPDATE,   onClick: () => setActiveModal("disk:update"), disabled: hasTemplateAtttached || isInTransfer || islocked },
+    { type: "remove", label: Localization.kr.REMOVE,   onClick: () => setActiveModal("disk:remove"), disabled: domainNotActive || hasVmAtttached || hasTemplateAtttached || isInTransfer || islocked },
     { type: "move",   label: Localization.kr.MOVE,     onClick: () => setActiveModal("disk:move") },
     { type: "copy",   label: Localization.kr.COPY,     onClick: () => setActiveModal("disk:copy") },
     // { type: 'upload', label: Localization.kr.UPDATE, onClick: () => setActiveModal("disk:restart") },
@@ -119,7 +119,7 @@ const DiskInfo = () => {
   
   useEffect(() => {
     Logger.debug(`DiskInfo > useEffect ... (for Disk status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(disk?.status, (
       disk?.vmAttached || disk?.templateAttached
     ))
@@ -143,10 +143,7 @@ const DiskInfo = () => {
       />
       <div className="content-outer">
         {/* 왼쪽 네비게이션 */}
-        <TabNavButtonGroup
-          tabs={tabs}
-          tabActive={activeTab} setTabActive={setActiveTab}
-        />
+        <TabNavButtonGroup tabs={tabs} tabActive={activeTab} setTabActive={setActiveTab} />
         <div className="info-content v-start gap-8 w-full h-full">
           <Path pathElements={pathData} basePath={`/storages/disks/${diskId}`}/>
           {renderSectionContent()}

@@ -329,7 +329,7 @@ const DEFAULT_VALUES = {
 //     vnicProfileVos: '',
 //   }
 // ],
-// FIND_VM_FROM_HOST:[
+// FIND_VMS_FROM_HOST:[
 //   {
 //     id: '40dc4bc6-9016-4a90-ae86-f3d36095a29f',
 //     name: 'ovirtmgmt', 

@@ -6,7 +6,7 @@ import useGlobal                        from "@/hooks/useGlobal";
 import BaseModal                        from "../BaseModal";
 import LabelCheckbox                    from "@/components/label/LabelCheckbox";
 import {
-  useDeleteVm,
+  useRemoveVm,
 } from "@/api/RQHook";
 import ApiManager                       from "@/api/ApiManager";
 import Localization                     from "@/utils/Localization";
@@ -22,7 +22,7 @@ const VmDeleteModal = ({
   const { vmsSelected } = useGlobal()
   const {
     mutate: deleteVm
-  } = useDeleteVm(onClose, onClose);
+  } = useRemoveVm(onClose, onClose);
 
   const { ids, names } = useMemo(() => {
     if (!vmsSelected) return { ids: [], names: [] };

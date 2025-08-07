@@ -11,11 +11,12 @@ import java.util.*
 
 @Repository
 interface DiskVmElementRepository : JpaRepository<DiskVmElementEntity, UUID> {
+/*
 	fun findByDiskId(diskId: UUID): Optional<DiskVmElementEntity>
 	fun findByDiskIdIn(diskIds: List<UUID>): List<DiskVmElementEntity>
 	fun findByVmId(vmId: UUID): List<DiskVmElementEntity>
 
-/*
+
 	@Query("""
 SELECT ude FROM UnregisteredDiskEntity ude
 LEFT JOIN FETCH ude.diskToVmEntries dte

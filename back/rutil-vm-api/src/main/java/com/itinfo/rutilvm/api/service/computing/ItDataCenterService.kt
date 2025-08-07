@@ -9,6 +9,7 @@ import com.itinfo.rutilvm.api.model.network.NetworkVo
 import com.itinfo.rutilvm.api.model.network.toDcNetworkMenus
 import com.itinfo.rutilvm.api.model.storage.*
 import com.itinfo.rutilvm.api.ovirt.business.DiskContentTypeB
+import com.itinfo.rutilvm.api.ovirt.business.DiskStorageType
 import com.itinfo.rutilvm.api.repository.engine.AllDisksRepository
 import com.itinfo.rutilvm.api.repository.engine.StorageDomainRepository
 import com.itinfo.rutilvm.api.repository.engine.StoragePoolRepository
@@ -28,6 +29,7 @@ import com.itinfo.rutilvm.util.ovirt.*
 import org.ovirt.engine.sdk4.types.*
 import org.ovirt.engine.sdk4.Error
 import org.ovirt.engine.sdk4.types.DiskContentType.ISO
+
 import org.ovirt.engine.sdk4.types.DiskStatus.OK
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -322,8 +324,11 @@ class DataCenterServiceImpl(
 		log.info("findAllDisksFromDataCenter ... dataCenterId: {}", dataCenterId)
 		// val res: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks").getOrDefault(emptyList())
 		// return res.flatMap { it.disks() ?: emptyList() }.map { it.toDcDiskMenu(conn) }
-		val res: List<AllDiskEntity>? = rAllDisks.findByStorageId(dataCenterId)
-		return res?.toDiskImageVosFromAllDiskEntities()
+		val res: List<AllDiskEntity> = rAllDisks.findAllByStorageDomainIdOrderByDiskAliasAsc(dataCenterId)
+		return res.toDiskImageVosFromAllDiskEntities().filter {
+			(it.contentType == DiskContentTypeB.data || it.contentType == DiskContentTypeB.iso) &&
+			(it.storageType == DiskStorageType.image || it.storageType == DiskStorageType.cinder)
+		}
 	}
 
 	@Throws(Error::class)
@@ -354,29 +359,33 @@ class DataCenterServiceImpl(
 	@Throws(Error::class)
 	override fun findUnattachedDiskImageFromDataCenter(dataCenterId: String): List<DiskImageVo>? {
 		log.info("findUnattachedDiskImageFromDataCenter  ... dataCenterId: {}", dataCenterId)
-		val res: List<AllDiskEntity>? = rAllDisks.findAllByStoragePoolIdOrderByDiskAliasAsc(
+		val res: List<AllDiskEntity> = rAllDisks.findAllByStoragePoolIdOrderByDiskAliasAsc(
 			dataCenterId.toUUID()
-		)?.filter {
-			it.numberOfVms == 0 && (
-				it.diskContentType == DiskContentTypeB.data/* || it.diskContentType == DiskContentTypeB.iso*/
-			)
+		).filter {
+			it.numberOfVms == 0
 		}
-		return res?.toDiskImageVosFromAllDiskEntities()
-		// val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
-		// 	.getOrDefault(emptyList())
-		// // 디스크 포맷 필터링
-		// val disks: List<Disk> = storageDomains.flatMap {
-		// 	// it.disks()
-		// 	it.disks().filter { disk ->
-		// 		disk.format() == DiskFormat.COW
-		// 		||  disk.format() == DiskFormat.RAW
-		// 	}
-		// }
-		// // 이미 연결되어 있는 디스크는 제외
-		// val elements: List<DiskVmElementEntity> = rDiskVmElements.findAll()
-		//
-		// val res = disks.filter { disk -> disk.id() !in elements.toDiskIds() }
-		// return res.toDcDiskMenus(conn)
+		return res.toDiskImageVosFromAllDiskEntities().filter {
+			(it.storageType == DiskStorageType.image || it.storageType == DiskStorageType.cinder) &&
+			(it.contentType == DiskContentTypeB.data/* || it.diskContentType == DiskContentTypeB.iso*/)
+		}
+
+		/*
+		val storageDomains: List<StorageDomain> = conn.findAllAttachedStorageDomainsFromDataCenter(dataCenterId, follow = "disks")
+			.getOrDefault(emptyList())
+		// 디스크 포맷 필터링
+		val disks: List<Disk> = storageDomains.flatMap {
+			// it.disks()
+			it.disks().filter { disk ->
+				disk.format() == DiskFormat.COW
+				||  disk.format() == DiskFormat.RAW
+			}
+		}
+		// 이미 연결되어 있는 디스크는 제외
+		val elements: List<DiskVmElementEntity> = rDiskVmElements.findAll()
+
+		val res = disks.filter { disk -> disk.id() !in elements.toDiskIds() }
+		return res.toDcDiskMenus(conn)
+		*/
 	}
 
 	@Throws(Error::class)

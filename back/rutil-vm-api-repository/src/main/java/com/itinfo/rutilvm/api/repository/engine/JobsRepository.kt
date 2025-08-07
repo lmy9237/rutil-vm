@@ -14,9 +14,16 @@ interface JobsRepository : JpaRepository<JobEntity, UUID> {
 SELECT j FROM JobEntity j
 LEFT JOIN FETCH j.steps AS s
 WHERE 1=1
-AND j.actionType = :actionType
+AND j._actionType = :actionType
 """)
 	fun findAllByActionType(actionType: String): Collection<JobEntity>
+	@Query("""
+SELECT j FROM JobEntity j
+LEFT JOIN FETCH j.steps AS s
+WHERE 1=1
+AND j._actionType IN :actionTypes
+""")
+	fun findAllByActionTypes(actionTypes: List<String>): Collection<JobEntity>
 	@Query("""
 SELECT j FROM JobEntity j
 LEFT JOIN FETCH j.steps AS s
@@ -28,7 +35,7 @@ AND j.description LIKE CONCAT('%',:description,'%')
 SELECT j FROM JobEntity j
 LEFT JOIN FETCH j.steps AS s
 WHERE 1=1
-AND j.actionType = :actionType
+AND j._actionType = :actionType
 AND j.description LIKE CONCAT('%',:description,'%')
 """)
 	fun findAllByActionTypeAndDescriptionLike(actionType: String, description: String): Collection<JobEntity>

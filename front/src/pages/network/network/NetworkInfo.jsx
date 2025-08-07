@@ -117,7 +117,7 @@ const NetworkInfo = () => {
 
   useEffect(() => {
     Logger.debug(`NetworkInfo > useEffect ... (for Network status check)`)
-    if (!!activeModal) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
+    if ([...activeModal()].length > 0) return // 모달이 켜져 있을 떄 조회 및 렌더링 일시적으로 방지
     const intervalInMilli = refetchIntervalInMilli(network?.status)
     Logger.debug(`NetworkInfo > useEffect ... look for Network status (${network?.status}) in ${intervalInMilli/1000} second(s)`)
     const intervalId = setInterval(() => {

@@ -398,8 +398,8 @@ const Tables = ({
   const renderTableBody = useCallback(() => {
     if (isFirstLoading) { // 재접속 or 첫로딩딩
       return <TableRowLoading colLen={columns.length} />;
-    } else if (isRefetching || isLoading) {
-      // 최초가 아닌 refetch 상황이면 로딩 띄우지 않음(이상함 수정필요)
+    } else if (!isRefetching && isLoading) {
+      // 최초가 아닌 refetch 상황이면 로딩 띄우지 않음 (이상함 수정필요)
       return <TableRowLoading colLen={columns.length} />;
     } else if (!!isError) { 
       return <TableRowError colLen={columns.length} />
