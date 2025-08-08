@@ -45,7 +45,7 @@ export const ActionButton = ({
     <button className={actionType === "context" ? "btn-right-click" : "btn-action"}
       {...props}
     >
-      {iconPrefix && <RVI16 iconDef={iconPrefix} />}
+      {iconPrefix && <RVI16 iconDef={iconPrefix} className="mr-0.5"/>}
       {label}
       {iconSuffix && <RVI16 iconDef={iconSuffix} />}
     </button>

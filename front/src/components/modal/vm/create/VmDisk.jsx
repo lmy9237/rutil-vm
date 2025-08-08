@@ -6,8 +6,9 @@ import Localization          from "@/utils/Localization";
 import Logger                from "@/utils/Logger";
 import VmDiskModal           from "@/components/modal/vm/VmDiskModal";
 import VmDiskConnectionModal from "@/components/modal/vm/VmDiskConnectionModal";
-import LabelCheckbox         from "@/components/label/LabelCheckbox";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useValidationToast } from "@/hooks/useSimpleToast";
+import LabelCheckbox from "@/components/label/LabelCheckbox";
 
 const VmDisk = ({
   vm, vmName,
@@ -124,6 +125,7 @@ const VmDisk = ({
       </div>
 
       <div className="pb-3">
+        
         {diskListState.length > 0 && diskListState.map((disk, index) => {
           const label = getDiskLabel(disk);
           const size = disk?.size || disk?.virtualSize;
@@ -148,20 +150,21 @@ const VmDisk = ({
               <div className="f-end">
                 {disk.deleted ? (
                   <>
-                    <div>
-                      <LabelCheckbox id={`detachOnly-${index}`} label="완전 삭제&nbsp;&nbsp;&nbsp;"
-                        checked={disk.detachOnly===false} // true면 단순 삭제, false면 완전삭제
-                        onChange={(checked) => {
-                          import.meta.env.DEV && validationToast?.debug(`checked: ${checked}`)
-                          setDiskListState(prev =>
-                            prev.map((d, i) =>
-                              i === index ? { ...d, detachOnly: !checked } : d
-                            )
-                          );
-                        }}
-                      />
-                    </div>
-                    <button onClick={() => handleRemoveDisk(index, disk.isExisting)} className="instance-disk-btn ml-0" >
+                    <LabelCheckbox
+                      id={`detachOnly-${index}`}
+                      label="완전 삭제"
+                      checked={disk.detachOnly === false} // true면 단순 삭제, false면 완전 삭제
+                      onChange={(checked) => {
+                        const isChecked = checked === true; // "indeterminate" 대비
+                        import.meta.env.DEV && validationToast?.debug(`checked: ${isChecked}`);
+                        setDiskListState(prev =>
+                          prev.map((d, i) =>
+                            i === index ? { ...d, detachOnly: !isChecked } : d
+                          )
+                        );
+                      }}
+                    />
+                    <button onClick={() => handleRemoveDisk(index, disk.isExisting)} className="instance-disk-btn ml-2" >
                       {Localization.kr.REMOVE} {Localization.kr.CANCEL}
                     </button>  
                   </>

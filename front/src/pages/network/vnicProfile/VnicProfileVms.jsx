@@ -65,6 +65,7 @@ const VnicProfileVms = ({
         searchQuery={searchQuery} setSearchQuery={setSearchQuery}
         onRowClick={(selectedRows) => setVmsSelected(selectedRows)}
         shouldHighlight1stCol={true}
+        selectedRowIds={vmsSelected.map((vm) => vm.id)}
         isLoading={isVmsLoading} isRefetching={isVmsRefetching} isError={isVmsError} isSuccess={isVmsSuccess}
       />
       <SelectedIdView items={vmsSelected} />

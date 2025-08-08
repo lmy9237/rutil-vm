@@ -16,6 +16,7 @@ import { set } from "react-hook-form";
 
 export const DEFAULT_STALE_TIME = 1 * 60 * 1000; // 1분
 export const DEFAULT_CACHE_TIME = 5 * 60 * 1000; // 5분
+//export const DEFAULT_CACHE_TIME = 10* 1000; // 삭제예정(테스트용)
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_SHORT = 10 * 1000; // 10초
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI = 60 * 1000; // 30초
 export const DEFAULT_REFETCH_INTERVAL_IN_MILLI_LONG = 1 * 60 * 1000; // 15초
@@ -179,7 +180,7 @@ export const QP_DEFAULT = {
   cacheTime: DEFAULT_CACHE_TIME,
 }
 export const QP_DEFAULT_MOD = {
-  // refetchInterval: DEFAULT_CACHE_TIME,
+  // refetchInterval: DEFAULT_CACHE_TIME, // 불필요한 로딩 방지
   // refetchInactive: true,
   staleTime: DEFAULT_STALE_TIME,
   cacheTime: DEFAULT_CACHE_TIME,

@@ -343,7 +343,7 @@ const TableColumnsInfo = {
     { accessor: 'description',    header: Localization.kr.DESCRIPTION,    clickable: false },
   ],
   CLUSTERS_FROM_NETWORK: [
-    { accessor: '_status',       header: '네트워크 상태',               clickable: false,  width: DEFAULT_WIDTH_ICON_COLUMN },
+    { accessor: '_status',       header: '네트워크 상태',               clickable: false,  width: 70 },
     { accessor: '_name',         header: Localization.kr.NAME,       clickable: true,  width: 120  },
     { accessor: '_connected',    header: '연결된 네트워크',             clickable: false,  width: 130  },
     { accessor: '_required',     header: '필수 네트워크',               clickable: false,  width: 130  },
@@ -354,7 +354,7 @@ const TableColumnsInfo = {
     { accessor: "icon",                 header: Localization.kr.STATUS,         clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'host',                 header: Localization.kr.NAME,           clickable: false,  width: DEFAULT_WIDTH_ICON_COLUMN  },
     { accessor: 'cluster',              header: Localization.kr.CLUSTER,        clickable: true,   width: DEFAULT_WIDTH_ICON_COLUMN  },
-    { accessor: 'dataCenter',           header: Localization.kr.DATA_CENTER,    clickable: true },
+    { accessor: 'dataCenter',           header: Localization.kr.DATA_CENTER,    clickable: true ,   width: 80 },
     { accessor: 'networkDeviceStatus',  header: '네트워크 장치 상태',              clickable: false,   width: 140  },
     { accessor: 'async',                header: Localization.kr.ASYNC,                        clickable: false , width: DEFAULT_WIDTH_ICON_COLUMN },
     { accessor: 'networkDevice',        header: '네트워크 장치',                  clickable: false },

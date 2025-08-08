@@ -68,7 +68,7 @@ const NetworkClusters = ({
     ) : (
       <Checkbox disabled />
     ),
-    networkRole: networkUsage2Icons(network?.usage, network?.usage?.roleInKr),
+    networkRole: networkUsage2Icons(network?.usage, network?.roleInKr),
   }));
   
   const { searchQuery, setSearchQuery, filteredData } = useSearch(transformedData);

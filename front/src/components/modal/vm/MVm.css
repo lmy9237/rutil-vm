@@ -31,16 +31,12 @@
   background: var(--color-white-2);
 }
 .disk-item span{
-  margin-right: 25px;
   max-width: 352px;
   white-space: nowrap;
   padding: 2px 0;       
   overflow: hidden;          
   text-overflow: ellipsis;  
 }
-/*마이그레이션 팝업*/
-
-
 /*보류*/
 /*..버튼 가져오기 팝업*/
 .vm-impor-outer {
@@ -67,6 +63,9 @@
   height: 200px;
   overflow-y: auto;
   border: var(--border-default);
+}
+.vm-import-table-outer .section-table-outer td{
+  border-bottom: var(--border-default)!important;
 }
 .vm-import-panel{
   width: 49%;

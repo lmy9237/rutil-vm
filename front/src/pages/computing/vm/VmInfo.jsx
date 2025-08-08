@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense, useMemo, useCallback } from "react";
+import { useState, useEffect, Suspense, useMemo, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useUIState              from "@/hooks/useUIState";
 import useGlobal               from "@/hooks/useGlobal";
@@ -143,7 +143,7 @@ const VmInfo = () => {
 
   const popupItems = [
     /* { type: "import",  onClick: () => setActiveModal("vm:import"),       label: Localization.kr.IMPORT, }, */
-    { type: "copyVm",    onClick: () => setActiveModal("vm:copy"),          label: `${Localization.kr.VM} 복제` },
+    { type: "copyVm",    onClick: () => setActiveModal("vm:copy"),          label: `${Localization.kr.VM} 복제` , disabled:true}, // 임시  disabled
     { type: "remove",    onClick: () => setActiveModal("vm:remove"),        label: Localization.kr.REMOVE, disabled: !isDown },
     { type: "templates", onClick: () => setActiveModal("vm:templates"),     label: `${Localization.kr.TEMPLATE} ${Localization.kr.CREATE}`, disabled: !isDown, }, 
     { type: "ova",       onClick: () => setActiveModal("vm:ova"),           label: `ova로 ${Localization.kr.EXPORT}`,  disabled: isPause, },
